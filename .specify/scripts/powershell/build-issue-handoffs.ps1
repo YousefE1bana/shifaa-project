@@ -49,7 +49,7 @@ if (-not $match.Success) { Fail "origin is not a GitHub repository: $remote" }
 $repository = "$($match.Groups['owner'].Value)/$($match.Groups['repo'].Value)"
 
 if (-not $SkipGitChecks) {
-    if ((git status --porcelain).Count -gt 0) { Fail 'worktree is dirty; commit the immutable task baseline before publishing Issues.' }
+    if (@(git status --porcelain).Count -gt 0) { Fail 'worktree is dirty; commit the immutable task baseline before publishing Issues.' }
     $head = (git rev-parse HEAD).Trim()
     if ($head -ne $BaselineCommit) { Fail 'baseline commit does not equal HEAD.' }
     $upstream = (git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>$null).Trim()
@@ -80,7 +80,7 @@ for ($index = 0; $index -lt $lines.Count; $index++) {
     $rest = $taskMatch.Groups['rest'].Value
     if ($rest -match '(FR|NFR)-[A-Z0-9-]+/') { Fail "$taskId uses a compressed requirement ID." }
     if ($rest -match '\[(?:FR/NFR IDs|feature|app|path|evidence)\]|T0XX|NEEDS CLARIFICATION|TODO|TKTK') { Fail "$taskId contains a placeholder." }
-    $requirements = [regex]::Matches($rest, '\b(?:FR|NFR)-[A-Z0-9]+(?:-[A-Z0-9]+)+\b') | ForEach-Object Value | Select-Object -Unique
+    $requirements = @([regex]::Matches($rest, '\b(?:FR|NFR)-[A-Z0-9]+(?:-[A-Z0-9]+)+\b') | ForEach-Object Value | Select-Object -Unique)
     if ($requirements.Count -eq 0) { Fail "$taskId has no canonical FR/NFR requirement ID." }
 
     $dependsRaw = $dependsMatch.Groups['value'].Value.Replace('`', '').Trim()
