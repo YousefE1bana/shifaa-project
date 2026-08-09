@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "workflows": {
+    "speckit": {
+      "name": "Full SDD Cycle",
+      "version": "2.1.0",
+      "description": "Runs SHIFAA scope eligibility \u2192 specify \u2192 clarify \u2192 approve \u2192 plan \u2192 approve \u2192 tasks \u2192 analyze \u2192 approve \u2192 implement",
+      "source": "project-custom",
+      "installed_at": "2026-08-09T12:11:31.094958+00:00",
+      "updated_at": "2026-08-09T12:11:31.094971+00:00"
+    }
+  }
+}

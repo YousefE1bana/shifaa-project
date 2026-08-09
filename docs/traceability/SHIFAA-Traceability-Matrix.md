@@ -1,0 +1,143 @@
+# SHIFAA MVP Traceability Matrix
+
+> **Version:** 1.1.0 · **Status:** Proposed normative coverage index · **Last verified:** 2026-08-09  
+> API names refer to operation IDs in [`../architecture/SHIFAA-API-Catalog.md`](../architecture/SHIFAA-API-Catalog.md). Data names refer to [`../architecture/SHIFAA-Data-RLS.md`](../architecture/SHIFAA-Data-RLS.md). `TV-*` is the required deterministic test-vector family; feature specs expand it to concrete cases.
+
+## 1. Functional requirements
+
+`FR-AI-001..005` are active mandatory graduation-MVP requirements. `FR-FIN-001..003` retain their immutable mappings only as `DEFERRED_POST_MVP` reservation records; they are excluded from graduation specifications, tasks, implementation, and the 92-active-FR coverage denominator.
+
+| Requirement | Owning app/service | Data / API operation IDs | Required evidence |
+|---|---|---|---|
+| FR-AUTH-001 | patient, all apps, API | `people`, `identities`; `registerPerson`, `getMyProfile` | TV-AUTH-IDENTITY-UUID |
+| FR-AUTH-002 | all apps, API/Auth | `role_permissions`; login/OTP/MFA operations | TV-AUTH-AAL-MATRIX |
+| FR-AUTH-003 | patient, admin, identity adapter | `verification_cases`; proof/list/get/admin-worklist/review/callback operations | TV-AUTH-VALIFY-OUTCOMES; OPEN-VENDOR-001 |
+| FR-AUTH-004 | patient, admin | `verification_cases`; upload/review operations | TV-AUTH-MANUAL-PROOF |
+| FR-AUTH-005 | all apps, Auth | recovery/session tables; recovery/refresh/logout operations | TV-AUTH-RECOVERY-NO-DOWNGRADE |
+| FR-AUTH-006 | API, KMS adapter | encrypted identity columns/blind index; identity proof operations | TV-SEC-ENCRYPTION-BLIND-INDEX |
+| FR-AUTH-007 | patient, DPO, API | consent/DSR/event tables; subject operations plus `listAdminDsrs`, `decideDsr`, `fulfilDsr` | TV-PRIV-DSR-LIFECYCLE |
+| FR-AUTH-008 | admin, API | `processing_inventory`, purpose versions; privacy notice/consent | TV-PRIV-INVENTORY-BEFORE-COLLECT |
+| FR-FAM-001 | patient, API | `care_relationships`; relationship operations | TV-FAM-TYPE-CLOSED-SET |
+| FR-FAM-002 | patient, admin | guardianship/evidence; create/admin-worklist/review guardianship | TV-FAM-GUARDIAN-EVIDENCE |
+| FR-FAM-003 | patient, admin | relationship transition history; `transitionDependent` | TV-FAM-CAPACITY-TRANSITION |
+| FR-FAM-004 | patient, API/RLS | closed relationship-permission codes; delegation operations and negative tests for SOS/share/complaint/symptom routing | TV-FAM-DELEGATE-SCOPE-REVOKE |
+| FR-FAM-005 | patient, public token, API | `emergency_contacts`; create/respond/revoke | TV-FAM-CONTACT-TERMINAL |
+| FR-FAM-006 | patient, worker | contact + notification tables; `createSosIncident` | TV-PRIV-EMERGENCY-MINIMUM |
+| FR-FAM-007 | patient | relationship context; all managed-patient operations | TV-FAM-CONTEXT-CONFIRM |
+| FR-FAM-008 | API/audit | relationships + `audit.events`; all relationship mutations | TV-AUDIT-RELATIONSHIP |
+| FR-FAC-001 | facility apps, admin | facilities/licenses; facility create/submit/admin-worklist/review | TV-FAC-LICENSE-GATE |
+| FR-FAC-002 | facility apps, API | memberships/audit; membership operations | TV-FAC-NAMED-ACTOR |
+| FR-FAC-003 | all staff apps, API | memberships/role permissions; contextual operations | TV-AUTH-CROSS-FACILITY |
+| FR-FAC-004 | pharmacy, admin | directorship unique constraint; `assignPharmacyDirector` | TV-FAC-DIRECTOR-UNIQUE |
+| FR-FAC-005 | clinic | schedules/exceptions; schedule/delay/absence operations | TV-CLINIC-FACILITY-ABSENCE |
+| FR-FAC-006 | patient/facility apps | `trust.messages`; context message operations | TV-TRUST-CHAT-CONTEXT |
+| FR-FAC-007 | workforce/admin | `identity.professional_licenses`; license create/upload/get/worklist/review operations | TV-FAC-PROFESSIONAL-LICENSE-GATE |
+| FR-ADMIN-001 | admin | `identity.role_permissions`, `identity.admin_role_grants`, `identity.admin_role_revocation_requests`; grant and two-step revocation operations | TV-ADMIN-ROLE-ACTION-MATRIX |
+| FR-ADMIN-002 | admin/DPO, API/audit | role/designation/AAL/audit; sensitive admin/DSR operations plus `listAuditEvents`, `getAuditEvent`, `createAuditExport` | TV-ADMIN-MFA-PURPOSE |
+| FR-ADMIN-003 | admin | aggregate projections; `getAdminSummary` | TV-PRIV-SMALL-CELL-SUPPRESS |
+| FR-ADMIN-004 | admin, API/DB | approval/signature tables; facility-review, role-grant, role-revocation, and clinical-content operations | TV-GOV-SELF-APPROVAL-DENY |
+| FR-CLINIC-001 | patient | schedules/facilities; doctor search/availability | TV-CLINIC-VERIFIED-DISCOVERY |
+| FR-CLINIC-002 | patient, API/DB | appointments/slot constraint/idempotency; `createAppointment` | TV-CLINIC-SLOT-RACE-REPLAY |
+| FR-CLINIC-003 | patient/clinic | appointments state; appointment operations | TV-CLINIC-APPOINTMENT-STATES |
+| FR-CLINIC-004 | patient/clinic | queue entries; queue operations | TV-CLINIC-QUEUE-ORDER-REASON |
+| FR-CLINIC-005 | clinic, worker | schedule exceptions/outbox; delay/absence/reschedule | TV-CLINIC-DELAY-VS-ABSENCE |
+| FR-CLINIC-006 | clinic, patient | encounters/notes; encounter operations | TV-CLINIC-NOTE-VISIBILITY |
+| FR-CLINIC-007 | clinic, patient | referrals/authorized fields; create/list/accept referral | TV-CLINIC-REFERRAL-CONSENT |
+| FR-CLINIC-008 | patient/clinic | appointment fee/payment intent; appointment/payment operations | TV-PAY-CASH-DEFAULT |
+| FR-SAFE-001 | clinic, API | prescriptions/issues/medications/allergies; prescription create/check/sign | TV-SAFE-CROSS-PRESCRIBER |
+| FR-SAFE-002 | admin, API | content releases/rules; clinical content operations | TV-SAFE-UNSIGNED-CONTENT-DENY |
+| FR-SAFE-003 | clinic | detected issue enum; safety-check/sign operations | TV-SAFE-FOUR-OUTCOMES |
+| FR-SAFE-004 | clinic | acknowledgements; `acknowledgeWarning` | TV-SAFE-WARNING-JUSTIFICATION |
+| FR-SAFE-005 | clinic | prescription/issue constraints; override request/sign | TV-SAFE-CONTRAINDICATED-HARD-STOP |
+| FR-SAFE-006 | clinic/pharmacy | override request/signatures; request/decide/sign/dispense | TV-SAFE-INDEPENDENT-PHARMACIST |
+| FR-SAFE-007 | clinic/hospital/pharmacy | emergency override signatures/expiry | TV-SAFE-EMERGENCY-DUAL-PHYSICIAN; OPEN-CLIN-002 |
+| FR-SAFE-008 | patient/clinic | allergies/versioning; allergy operations | TV-SAFE-ALLERGY-PROVENANCE |
+| FR-SAFE-009 | clinic/pharmacy | substitutions/product flags; substitution operations | TV-SAFE-SUBSTITUTION-MATRIX |
+| FR-SAFE-010 | clinic/pharmacy | controlled flags, `pharmacy.controlled_dispense_register_entries`, fulfilment/refill | TV-SAFE-CONTROLLED-NO-REFILL; OPEN-LEGAL-003 |
+| FR-SAFE-011 | API/contracts | prescription/issues/provenance; prescription read/write | TV-CONTRACT-FHIR-SEMANTICS |
+| FR-SAFE-012 | admin, release pipeline | content signatures/releases | TV-GOV-CLINICAL-DUAL-SIGN; OPEN-CLIN-001 |
+| FR-PHARM-001 | pharmacy | products/packs/receipt items; receipt scan/complete | TV-PHARM-DATAMATRIX-AI-PARSE |
+| FR-PHARM-002 | pharmacy | receipts/aggregation; receipt operations | TV-PHARM-NO-FABRICATED-SERIALS |
+| FR-PHARM-003 | pharmacy | unverified packs/evidence; exception operation | TV-PHARM-DAMAGED-CODE |
+| FR-PHARM-004 | pharmacy, API/DB | packs/movements/dispense; fulfilment/dispense | TV-PHARM-EXACT-PACK-ATOMIC |
+| FR-PHARM-005 | pharmacy | pack balances/movements; dispense/adjust | TV-PHARM-PARTIAL-PACK |
+| FR-PHARM-006 | patient/pharmacy | stock projection/freshness; `searchPharmacyStock` | TV-PHARM-STOCK-PRIVACY-STALE |
+| FR-PHARM-007 | admin/worker | catalog versions/products; catalog import/search | TV-PHARM-CATALOG-PROVENANCE |
+| FR-PHARM-008 | pharmacy/worker | EPTTS batches; EPTTS operations/import | TV-EPTTS-FILE-NO-API |
+| FR-PHARM-009 | pharmacy | movements; `returnInventoryPackUnits`, adjust/state operations | TV-PHARM-APPEND-ONLY-MOVEMENTS |
+| FR-PHARM-010 | patient/pharmacy | fulfilments/refills; pharmacy worklist and fulfilment operations | TV-PHARM-FULFILMENT-STATES |
+| FR-HOSP-001 | hospital | arrivals/triage; arrival/SOS worklists and triage operations | TV-HOSP-HUMAN-CONFIRMED-TRIAGE |
+| FR-HOSP-002 | hospital | wards/beds; ward/bed operations | TV-HOSP-BED-STATES |
+| FR-HOSP-003 | hospital, API/DB | holds/assignments/version; hold/admit operations | TV-HOSP-BED-RACE-EXPIRY |
+| FR-HOSP-004 | hospital/patient | admissions; `createAdmissionPlan`, `markAdmissionArrived`, `admitPatient`, `transferAdmissionOut`, cancel/get/list | TV-HOSP-ADMISSION-STATES |
+| FR-HOSP-005 | hospital | transfers/assignments; `requestTransfer` | TV-HOSP-TRANSFER-ATOMIC |
+| FR-HOSP-006 | hospital/patient | discharge versions; discharge operations | TV-HOSP-DISCHARGE-AMEND |
+| FR-HOSP-007 | patient/discovery | capacity projection; capacity/search operations | TV-HOSP-CAPACITY-NO-PATIENT |
+| FR-LAB-001 | clinic/lab | test catalog/orders; lab search/order plus catalog create/publish operations | TV-LAB-CODED-ORDER-MINIMUM |
+| FR-LAB-002 | patient/lab | order/item/specimen states; lab lifecycle operations | TV-LAB-STATE-VISIBILITY |
+| FR-LAB-003 | lab/patient | result versions; result verify/release/correct | TV-LAB-NO-OVERWRITE |
+| FR-LAB-004 | lab/clinic/patient | critical policy/event/acknowledgement; policy create/publish, critical worklist, verify, and acknowledge operations | TV-LAB-CLOSED-LOOP-NO-CONTACT |
+| FR-DISC-001 | patient | facility/capacity/stock/review projections; discovery operations | TV-DISC-VERIFIED-FRESH-SIGNALS |
+| FR-SOS-001 | patient/API | SOS/capacity/geospatial; create/get SOS | TV-SOS-NO-QUALIFYING-CAPACITY |
+| FR-SOS-002 | patient/hospital | SOS acceptance; hospital pre-arrival worklist, accept/get incident | TV-SOS-NO-RESERVATION-CLAIM |
+| FR-SOS-003 | patient/public | share links/audit; create/revoke/view share | TV-SOS-LINK-EXPIRY-SCOPE |
+| FR-SOS-004 | patient/worker | SOS/contact/outbox; create SOS | TV-SOS-CONTACT-ALLOWLIST |
+| FR-VAX-001 | patient/admin | vaccine schedule/releases; vaccination read | TV-VAX-APPROVED-SCHEDULE; OPEN-CLIN-003 |
+| FR-VAX-002 | patient/clinic | vaccination provenance/rules; record/verify | TV-VAX-SELF-VS-CONFIRMED |
+| FR-CHRONIC-001 | patient/clinic | observations; observation operations | TV-OBS-SOURCE-UNIT-TIME |
+| FR-CHRONIC-002 | patient | observation projection; observation read | TV-OBS-NO-DIAGNOSIS |
+| FR-MED-001 | patient/worker | dose schedules/logs; create schedule/record dose | TV-MED-DOSE-RESPONSES |
+| FR-MED-002 | patient/clinic | dose logs/projection; get adherence | TV-MED-ADHERENCE-MISSINGNESS |
+| FR-MED-003 | patient/clinic/pharmacy | refill plans/requests; refill operations | TV-MED-NO-AUTO-AUTHORIZATION |
+| FR-ACCESS-001 | patient/admin/facility | identity entitlement/verification; disability operations | TV-ACCESS-CREDENTIAL-PROOF; OPEN-LEGAL-005 |
+| FR-ACCESS-002 | patient/facility | entitlement projection/payment method | TV-ACCESS-NOT-PAYMENT |
+| FR-TRUST-001 | patient/admin | reviews/reports; review/report/moderation-worklist/decision operations | TV-TRUST-VERIFIED-ANONYMOUS |
+| FR-TRUST-002 | patient/facility/admin | complaints/events; complaint role-projected worklist and actions | TV-TRUST-COMPLAINT-SLA |
+| FR-NOTIF-001 | worker/admin | templates/allowed field schema; notification-template list/create/publish operations | TV-NOTIF-TEMPLATE-DATA-MIN |
+| FR-NOTIF-002 | worker | outbox/receipts/notifications; callbacks/replay | TV-NOTIF-RETRY-DEDUP-DLQ |
+| FR-PAY-001 | patient/API/PSP | payment intents/callbacks; payment operations | TV-PAY-HOSTED-NO-PAN; OPEN-VENDOR-003 |
+| FR-FIN-001 | **DEFERRED_POST_MVP** | reserved donation cases/approvals/disbursements and operation IDs; no graduation artifacts | Future TV-FIN-STATES-FOUR-EYES after ADR-016 re-entry |
+| FR-FIN-002 | **DEFERRED_POST_MVP** | reserved licensed-partner donation boundary; no graduation artifacts | Future TV-FIN-PARTNER-CUSTODY after ADR-016 re-entry |
+| FR-FIN-003 | **DEFERRED_POST_MVP** | reserved impact aggregate and `getDonationImpact`; no graduation artifacts | Future TV-FIN-DEIDENTIFIED-AGGREGATE after ADR-016 re-entry |
+| FR-AI-001 | patient/hospital/API | AI run/red-flag rules; AI operations | TV-AI-RED-FLAG-FIRST; OPEN-AI-001 |
+| FR-AI-002 | patient/API/AI | AI run; `symptomCheck`, `getAiRun` | TV-AI-NO-DIAGNOSIS-SOURCES; OPEN-AI-001 |
+| FR-AI-003 | hospital/API/AI | triage assessment/AI run; severity/triage operations | TV-AI-HUMAN-CONFIRM; OPEN-AI-001 |
+| FR-AI-004 | API/AI adapter | processing inventory/AI run; AI operations | TV-AI-SYNTHETIC-BOUNDARY-NO-TRAINING; OPEN-AI-001 |
+| FR-AI-005 | admin/release pipeline | model release/evaluation/signature tables; AI model-release list/create/sign/publish operations | TV-AI-THRESHOLDS-ROLLBACK; OPEN-AI-001 |
+
+## 2. Non-functional requirements
+
+| Requirement | Owning layer | Contract / verification | Required evidence |
+|---|---|---|---|
+| NFR-SEC-001 | API/database | forced RLS, non-owner role, policy matrix | TV-RLS-ACTOR-RESOURCE-MATRIX |
+| NFR-SEC-002 | platform/security | TLS, encrypted storage/backups, KMS envelope encryption | TV-SEC-KEY-ROTATION-RESTORE |
+| NFR-SEC-003 | auth/apps | session contract, secure cookie/storage, rotation/reuse detection | TV-AUTH-TOKEN-REUSE-CSRF |
+| NFR-SEC-004 | auth/API | AAL2 policy on privileged operation catalog | TV-AUTH-AAL2-ENFORCEMENT |
+| NFR-SEC-005 | API/platform | global mutation idempotency contract | TV-API-IDEMPOTENCY-SAME-DIFFERENT |
+| NFR-SEC-006 | audit/platform | audit event/hash/export contract | TV-AUDIT-TAMPER-EXPORT |
+| NFR-SEC-007 | security/CI | ASVS/API test profile | signed scan/pen-test report |
+| NFR-PRIV-001 | patient/content | consent/notice and UI contract | TV-PRIV-ARABIC-GRANULAR-WITHDRAW |
+| NFR-PRIV-002 | governance/platform | compliance production gate | OPEN-LEGAL-001 evidence |
+| NFR-PRIV-003 | incident platform | breach timers/runbook | TV-PRIV-BREACH-TABLETOP |
+| NFR-PRIV-004 | data/governance | retention classes, no guessed schedule | OPEN-LEGAL-002 evidence |
+| NFR-I18N-001 | all apps/CI | UI contract, catalog parity/bidi tests | TV-I18N-ROUTE-PARITY |
+| NFR-A11Y-001 | all apps/CI | UI accessibility matrix | TV-A11Y-P0-MATRIX |
+| NFR-PERF-001 | patient/performance | UI reference device/network profile | TV-PERF-PATIENT-HOME |
+| NFR-PERF-002 | API/performance | endpoint SLOs/load scenarios | TV-PERF-API-SOS |
+| NFR-AVAIL-001 | platform | SLO/RPO/RTO/restore | TV-DR-QUARTERLY-RESTORE |
+| NFR-AVAIL-002 | apps/API/realtime | reconnect/reconcile/stale UI | TV-REALTIME-DISCONNECT-RECOVER |
+| NFR-DATA-001 | database/API | constraints/state functions/versioning | TV-DATA-STATE-CORRECTION |
+| NFR-DATA-002 | contracts/database | timestamp/money/unit schemas | TV-CONTRACT-TIME-MONEY-UNIT |
+| NFR-API-001 | contracts/API/CI | OpenAPI inventory and RFC 9457 | TV-CONTRACT-CATALOG-OPENAPI |
+| NFR-API-002 | API/contracts | cursor/Request-ID/version rules | TV-API-PAGINATION-CONCURRENCY |
+| NFR-OBS-001 | observability/CI | redaction schema/log scanner | TV-OBS-NO-PHI-SECRETS |
+| NFR-QUALITY-001 | CI/QA | required pipeline gates | release evidence manifest |
+| NFR-PORT-001 | core/adapters/CI | dependency rules and adapter contract tests | TV-ARCH-NO-VENDOR-IN-CORE |
+
+## 3. Coverage rules
+
+1. Every PRD `FR-*` and `NFR-*` appears exactly once in this matrix.
+2. Every remote operation named here exists in the API catalog and future generated OpenAPI.
+3. Every table/resource named here exists in the data contract and future migrations.
+4. Feature specs replace the test-family placeholder with concrete test IDs and evidence links; they do not delete the family.
+5. CI compares extracted PRD IDs, matrix IDs, OpenAPI `x-shifaa-requirements`, and SpecKit metadata. Missing, duplicate, malformed, or retired-without-history IDs fail.

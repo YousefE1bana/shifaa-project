@@ -1,0 +1,33 @@
+# Machine-local tools and editor state
+.obsidian/
+.remember/
+.claude/
+.specify/.workflow-install.lock
+.specify/integrations/.cache/
+
+# Render and review scratch artifacts (keep final ECU Markdown/PDF files)
+.qa/
+**/.qa/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+*.log
+
+# Node/tool outputs
+node_modules/
+dist/
+build/
+coverage/
+.turbo/
+.pnpm-store/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/

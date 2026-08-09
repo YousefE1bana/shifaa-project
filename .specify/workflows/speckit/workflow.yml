@@ -1,0 +1,102 @@
+schema_version: "1.0"
+workflow:
+  id: "speckit"
+  name: "Full SDD Cycle"
+  version: "2.1.0"
+  author: "SHIFAA (based on GitHub Spec Kit)"
+  description: "Runs SHIFAA scope eligibility → specify → clarify → approve → plan → approve → tasks → analyze → approve → implement"
+
+requires:
+  # The official built-in workflow documents this schema with a >=0.7.2
+  # minimum. OPEN-TECH-001 still requires the implementation team to record
+  # the exact installed tag/hash in the toolchain lock before release use.
+  speckit_version: ">=0.7.2"
+  integrations:
+    # The integration must provide the six commands referenced in steps.
+    # The list is advisory and not a closed set.
+    any:
+      - "claude"
+      - "copilot"
+      - "gemini"
+      - "opencode"
+      - "codex"
+      - "kimi"
+
+inputs:
+  spec:
+    type: string
+    required: true
+    prompt: "Describe what you want to build"
+  target_requirements:
+    type: string
+    required: true
+    prompt: "Comma-separated active PRD FR/NFR IDs targeted by this feature"
+  integration:
+    type: string
+    default: "auto"
+    prompt: "Integration to use (default: auto, which dispatches through the project's active integration)"
+  scope:
+    type: string
+    default: "full"
+    enum: ["full", "backend-only", "frontend-only"]
+
+steps:
+  - id: scope-eligibility
+    type: gate
+    message: "SHIFAA scope gate: verify every ID in target_requirements exists in the current PRD and is ACTIVE graduation-MVP scope. Reject DEFERRED_POST_MVP, RETIRED, reserved, or unknown IDs. A deferred ID requires an already-approved dated re-entry ADR and synchronized PRD/Master/trace/API/data/UI updates before a new run. On rejection, generate no feature artifacts."
+    options: [approve, reject]
+    on_reject: abort
+
+  - id: specify
+    command: speckit.specify
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "{{ inputs.spec }} Target requirement IDs: {{ inputs.target_requirements }}. Record ACTIVE scope evidence from the current PRD."
+
+  - id: clarify
+    command: speckit.clarify
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "Resolve every NEEDS CLARIFICATION that is objectively answerable from SHIFAA sources. Preserve legal, clinical, UX, and vendor judgment as an OPEN-* blocker."
+
+  - id: review-spec
+    type: gate
+    message: "SHIFAA specification gate: confirm immutable FR/NFR coverage, primary-source research, Egyptian legal checklist, edge/degraded states, deterministic acceptance vectors, and explicit blockers before planning. On rejection, set the feature status to DRAFT and record named findings before this run aborts."
+    options: [approve, reject]
+    on_reject: abort
+
+  - id: plan
+    command: speckit.plan
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "{{ inputs.spec }}"
+
+  - id: review-plan
+    type: gate
+    message: "SHIFAA plan gate: confirm Constitution I–XV, exact data/RLS/API/UI/events, migration, threat model, tests, rollout/rollback, and either applicable approvals or an explicit OPEN-* blocker mapped to a disabled capability/release gate. No plan-, safety-test-, or synthetic-implementation blocker may pass to tasks. On rejection, return status to the earliest affected pre-approval state and record named findings before this run aborts."
+    options: [approve, reject]
+    on_reject: abort
+
+  - id: tasks
+    command: speckit.tasks
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "{{ inputs.spec }}"
+
+  - id: analyze
+    command: speckit.analyze
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "Check spec, plan, tasks, PRD, Master, contracts, Constitution, and traceability. Any CRITICAL inconsistency blocks implementation."
+
+  - id: review-analysis
+    type: gate
+    message: "SHIFAA implementation gate: analysis reports zero CRITICAL inconsistencies and tasks contain requirement IDs, exact paths, test/evidence work, and no hidden legal/clinical/design decisions. On rejection, return status to the earliest affected state and record named findings before this run aborts."
+    options: [approve, reject]
+    on_reject: abort
+
+  - id: implement
+    command: speckit.implement
+    integration: "{{ inputs.integration }}"
+    input:
+      args: "{{ inputs.spec }}"
