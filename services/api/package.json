@@ -13,7 +13,7 @@
     "start": "node dist/server.js",
     "lint": "tsc -p tsconfig.json --noEmit",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --exclude dist/**",
+    "test": "vitest run --exclude='dist/**'",
     "test:integration": "vitest run test/identity-onboarding.integration.test.ts"
   },
   "dependencies": {
