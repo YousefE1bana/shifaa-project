@@ -56,7 +56,7 @@ export class IdentityOnboardingClient {
 
   public constructor(options: ShifaaClientOptions) {
     this.options = options;
-    this.fetcher = options.fetch ?? globalThis.fetch;
+    this.fetcher = (options.fetch ?? globalThis.fetch).bind(globalThis);
   }
 
   public registerPerson(body: RegisterPersonInput, idempotencyKey: string) {

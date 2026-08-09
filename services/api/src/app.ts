@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import { AesGcmIdentityCipher } from '@shifaa/core';
+import cors from '@fastify/cors';
 import Fastify from 'fastify';
 
 import {
@@ -49,6 +50,23 @@ export async function buildApp(
     ids: utilities.ids,
   });
   const app = Fastify({ logger: false, genReqId: () => randomUUID() });
+  await app.register(cors, {
+    origin: config.corsOrigins,
+    methods: ['GET', 'HEAD', 'POST', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Accept',
+      'Accept-Language',
+      'Authorization',
+      'Cache-Control',
+      'Content-Type',
+      'Idempotency-Key',
+      'If-Match',
+      'Pragma',
+      'X-AAL',
+      'X-Provider-Signature',
+      'X-Purpose',
+    ],
+  });
   installIdentityErrorHandler(app);
   app.get('/v1/health', async () => ({ status: 'ok', feature: 'identity-onboarding' }));
   await registerIdentityOnboardingRoutes(app, {

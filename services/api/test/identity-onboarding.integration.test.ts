@@ -36,6 +36,42 @@ async function registerAndVerify(
 }
 
 describe('identity onboarding API acceptance', () => {
+  it('allows the configured patient web origin to complete CORS preflight', async () => {
+    const harness = await buildApp();
+    const response = await harness.app.inject({
+      method: 'OPTIONS',
+      url: '/v1/auth/register',
+      headers: {
+        origin: 'http://127.0.0.1:8081',
+        'access-control-request-method': 'POST',
+        'access-control-request-headers':
+          'accept,accept-language,cache-control,content-type,idempotency-key,pragma',
+      },
+    });
+
+    expect(response.statusCode).toBe(204);
+    expect(response.headers['access-control-allow-origin']).toBe('http://127.0.0.1:8081');
+    expect(response.headers['access-control-allow-headers']).toContain('Cache-Control');
+  });
+
+  it('allows the configured admin origin and reviewer context headers', async () => {
+    const harness = await buildApp();
+    const response = await harness.app.inject({
+      method: 'OPTIONS',
+      url: '/v1/admin/identity-verifications',
+      headers: {
+        origin: 'http://127.0.0.1:3001',
+        'access-control-request-method': 'GET',
+        'access-control-request-headers':
+          'accept,authorization,cache-control,pragma,x-aal,x-purpose',
+      },
+    });
+
+    expect(response.statusCode).toBe(204);
+    expect(response.headers['access-control-allow-origin']).toBe('http://127.0.0.1:3001');
+    expect(response.headers['access-control-allow-headers']).toContain('X-Purpose');
+  });
+
   it('AC-01/02/03 registers once, rejects government ID login, and terminally replays OTP', async () => {
     const harness = await buildApp();
     const payload = {

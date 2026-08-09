@@ -7,14 +7,16 @@ import { FieldLabel, PatientScreen } from '../src/PatientScreen';
 import { authStateMessage, type AuthState } from '../src/view-models';
 import { StatusMessage } from '../src/PatientScreen';
 import { patientOnboardingApi } from '../src/identity-onboarding-api';
+import { usePatientLocale } from '../src/locale-context';
 
 export default function OnboardingRoute({
-  locale = 'ar-EG',
+  locale: localeOverride,
   state = 'ready',
 }: {
   locale?: Locale;
   state?: AuthState;
 }) {
+  const locale = usePatientLocale(localeOverride);
   const [handle, setHandle] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
@@ -73,7 +75,8 @@ export default function OnboardingRoute({
             try {
               await patientOnboardingApi.register(handle, password, locale);
               router.push('/login');
-            } catch {
+            } catch (error) {
+              console.error('Patient registration failed.', error);
               setFailed(true);
             } finally {
               setBusy(false);

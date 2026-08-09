@@ -31,4 +31,25 @@ describe('generated identity onboarding API client', () => {
     expect(headers.get('If-Match')).toBe('"2"');
     expect(init?.cache).toBe('no-store');
   });
+
+  it('binds fetch to the global receiver required by browser implementations', async () => {
+    let receiver: unknown;
+    const fetcher = async function (this: unknown) {
+      receiver = this;
+      return new Response(JSON.stringify({ kind: 'challenge', challenge_id: 'synthetic' }), {
+        status: 201,
+      });
+    } as typeof fetch;
+    const client = new IdentityOnboardingClient({
+      baseUrl: 'http://localhost:3000',
+      fetch: fetcher,
+    });
+
+    await client.registerPerson(
+      { handle: 'synthetic@example.test', password: 'Synthetic-Only-2026!', locale: 'en-EG' },
+      'browser-binding-0001',
+    );
+
+    expect(receiver).toBe(globalThis);
+  });
 });

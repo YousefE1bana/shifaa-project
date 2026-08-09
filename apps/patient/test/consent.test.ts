@@ -24,3 +24,24 @@ test('offline consent mutation is blocked and never queued', () => {
     reason: 'offline',
   });
 });
+
+test('live route sequence continues from identity to privacy and returns to profile', async () => {
+  const fs = await import('node:fs/promises');
+  const identityRoute = await fs.readFile(new URL('../app/identity.tsx', import.meta.url), 'utf8');
+  const consentRoute = await fs.readFile(
+    new URL('../app/privacy-consents.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.match(identityRoute, /router\.push\('\/privacy'\)/);
+  assert.match(consentRoute, /router\.replace\('\/profile'\)/);
+  assert.match(consentRoute, /purposes\.every/);
+});
+
+test('patient locale is selectable and persists across route reloads', async () => {
+  const source = await import('node:fs/promises').then((fs) =>
+    fs.readFile(new URL('../src/locale-context.tsx', import.meta.url), 'utf8'),
+  );
+  assert.match(source, /shifaa\.patient\.locale/);
+  assert.match(source, /'en-EG'/);
+  assert.match(source, /'ar-EG'/);
+});

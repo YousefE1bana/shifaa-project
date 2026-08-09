@@ -14,6 +14,53 @@ const palette = {
   border: '#BCCCDC',
   focus: '#A13D00',
 };
+
+const copy = {
+  ar: {
+    switchLocale: 'English',
+    eyebrow: 'شفاء · مساحة تشغيل آمنة',
+    title: 'مراجعة الهوية',
+    explainer: 'تعرض هذه الصفحة الحد الأدنى اللازم لاتخاذ القرار.',
+    queue: 'الحالات المكلّفة لك',
+    loadFailed: 'تعذر تحميل الحالات. حاول مرة أخرى.',
+    empty: 'لا توجد حالات مكلّفة لك الآن.',
+    wait: 'ساعات انتظار',
+    decision: 'القرار',
+    identityType: 'نوع الهوية',
+    maskedValue: 'الرقم المحجوب',
+    status: 'الحالة',
+    manualReview: 'تحتاج مراجعة بشرية',
+    reason: 'سبب القرار',
+    approve: 'قبول الهوية',
+    reject: 'رفض الهوية',
+    saved: 'تم حفظ القرار في سجل المراجعة.',
+    select: 'اختر حالة من قائمة العمل.',
+    aal2: 'أكمل التحقق بخطوتين لفتح الحالات.',
+    purpose: 'لا توجد صلاحية مراجعة نشطة لهذه الجلسة.',
+  },
+  en: {
+    switchLocale: 'العربية',
+    eyebrow: 'SHIFAA · Secure operations workspace',
+    title: 'Identity review',
+    explainer: 'This page shows only the information needed to make the decision.',
+    queue: 'Cases assigned to you',
+    loadFailed: 'Cases could not be loaded. Try again.',
+    empty: 'No cases are assigned to you now.',
+    wait: 'hours waiting',
+    decision: 'Decision',
+    identityType: 'Identity type',
+    maskedValue: 'Masked number',
+    status: 'Status',
+    manualReview: 'Needs manual review',
+    reason: 'Decision reason',
+    approve: 'Approve identity',
+    reject: 'Reject identity',
+    saved: 'The decision was saved in the review log.',
+    select: 'Choose a case from the worklist.',
+    aal2: 'Complete two-step verification to open cases.',
+    purpose: 'This session has no active review permission.',
+  },
+} as const;
 export function ReviewWorklist({
   gate = 'allowed',
 }: {
@@ -24,6 +71,8 @@ export function ReviewWorklist({
   const [reason, setReason] = useState('');
   const [saved, setSaved] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [locale, setLocale] = useState<'ar' | 'en'>('ar');
+  const text = copy[locale];
   useEffect(() => {
     if (gate !== 'allowed') return;
     void loadAssignedReviews()
@@ -31,33 +80,35 @@ export function ReviewWorklist({
         setCases(items);
         setSelected(items[0] ?? null);
       })
-      .catch(() => setLoadFailed(true));
+      .catch((error) => {
+        console.error('Identity review worklist failed to load.', error);
+        setLoadFailed(true);
+      });
   }, [gate]);
   if (gate !== 'allowed')
     return (
-      <main style={styles.main}>
-        <h1>مراجعة الهوية</h1>
-        <p role="alert">
-          {gate === 'aal2_required'
-            ? 'أكمل التحقق بخطوتين لفتح الحالات.'
-            : 'لا توجد صلاحية مراجعة نشطة لهذه الجلسة.'}
-        </p>
+      <main dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} style={styles.main}>
+        <h1>{text.title}</h1>
+        <p role="alert">{gate === 'aal2_required' ? text.aal2 : text.purpose}</p>
       </main>
     );
   return (
-    <main style={styles.main}>
+    <main dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} style={styles.main}>
+      <button onClick={() => setLocale(locale === 'ar' ? 'en' : 'ar')} style={styles.locale}>
+        {text.switchLocale}
+      </button>
       <header>
-        <p style={styles.eyebrow}>شفاء · مساحة تشغيل آمنة</p>
-        <h1 style={styles.heading}>مراجعة الهوية</h1>
-        <p style={styles.muted}>تعرض هذه الصفحة الحد الأدنى اللازم لاتخاذ القرار.</p>
+        <p style={styles.eyebrow}>{text.eyebrow}</p>
+        <h1 style={styles.heading}>{text.title}</h1>
+        <p style={styles.muted}>{text.explainer}</p>
       </header>
       <div style={styles.grid}>
         <section aria-labelledby="queue-title" style={styles.panel}>
-          <h2 id="queue-title">الحالات المكلّفة لك</h2>
+          <h2 id="queue-title">{text.queue}</h2>
           {loadFailed ? (
-            <p role="alert">تعذر تحميل الحالات. حاول مرة أخرى.</p>
+            <p role="alert">{text.loadFailed}</p>
           ) : cases.length === 0 ? (
-            <p>لا توجد حالات مكلّفة لك الآن.</p>
+            <p>{text.empty}</p>
           ) : (
             <ul style={styles.list}>
               {cases.map((item) => (
@@ -69,7 +120,9 @@ export function ReviewWorklist({
                   >
                     <b>{item.identityType}</b>
                     <span dir="ltr">{item.maskedValue}</span>
-                    <span>{item.ageHours} ساعات انتظار</span>
+                    <span>
+                      {item.ageHours} {text.wait}
+                    </span>
                   </button>
                 </li>
               ))}
@@ -77,19 +130,19 @@ export function ReviewWorklist({
           )}
         </section>
         <section aria-labelledby="decision-title" style={styles.panel}>
-          <h2 id="decision-title">القرار</h2>
+          <h2 id="decision-title">{text.decision}</h2>
           {selected ? (
             <>
               <dl>
-                <dt>نوع الهوية</dt>
+                <dt>{text.identityType}</dt>
                 <dd>{selected.identityType}</dd>
-                <dt>الرقم المحجوب</dt>
+                <dt>{text.maskedValue}</dt>
                 <dd dir="ltr">{selected.maskedValue}</dd>
-                <dt>الحالة</dt>
-                <dd>تحتاج مراجعة بشرية</dd>
+                <dt>{text.status}</dt>
+                <dd>{text.manualReview}</dd>
               </dl>
               <label htmlFor="reason">
-                <b>سبب القرار</b>
+                <b>{text.reason}</b>
               </label>
               <textarea
                 id="reason"
@@ -108,7 +161,7 @@ export function ReviewWorklist({
                   }}
                   style={styles.approve}
                 >
-                  قبول الهوية
+                  {text.approve}
                 </button>
                 <button
                   disabled={reason.trim().length < 3}
@@ -118,13 +171,13 @@ export function ReviewWorklist({
                   }}
                   style={styles.reject}
                 >
-                  رفض الهوية
+                  {text.reject}
                 </button>
               </div>
-              {saved ? <p role="status">تم حفظ القرار في سجل المراجعة.</p> : null}
+              {saved ? <p role="status">{text.saved}</p> : null}
             </>
           ) : (
-            <p>اختر حالة من قائمة العمل.</p>
+            <p>{text.select}</p>
           )}
         </section>
       </div>
@@ -144,6 +197,16 @@ const styles: Record<string, React.CSSProperties> = {
   eyebrow: { color: palette.blue, fontWeight: 700, marginBlockEnd: 4 },
   heading: { fontSize: 'clamp(2rem, 4vw, 3.5rem)', lineHeight: 1.15, marginBlock: 0 },
   muted: { color: palette.muted },
+  locale: {
+    minHeight: 44,
+    background: 'transparent',
+    color: palette.blue,
+    border: `1px solid ${palette.blue}`,
+    borderRadius: 10,
+    paddingInline: 16,
+    font: 'inherit',
+    fontWeight: 700,
+  },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',

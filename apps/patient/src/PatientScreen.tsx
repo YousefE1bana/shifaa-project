@@ -9,6 +9,7 @@ import {
 import { directionFor, translate, type Locale, type MessageKey } from '@shifaa/i18n';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { usePatientLocaleController } from './locale-context';
 
 const railKeys: readonly MessageKey[] = [
   'rail.account',
@@ -29,6 +30,7 @@ export function PatientScreen({
   current: number;
   critical?: boolean;
 }>) {
+  const { setLocale } = usePatientLocaleController();
   const items: RailItem[] = railKeys.map((key, index) => {
     const status = index < current ? 'complete' : index === current ? 'current' : 'pending';
     return {
@@ -45,8 +47,19 @@ export function PatientScreen({
         ...semanticStyles.screen,
         paddingBlock: spacing.lg,
         gap: spacing.lg,
+        direction: directionFor(locale),
       }}
     >
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={translate(locale, 'locale.switch')}
+        onPress={() => setLocale(locale === 'ar-EG' ? 'en-EG' : 'ar-EG')}
+        style={{ minHeight: 44, alignSelf: 'flex-start', justifyContent: 'center' }}
+      >
+        <Text style={{ ...type.label, color: color.careBlue }}>
+          {translate(locale, 'locale.switch')}
+        </Text>
+      </Pressable>
       <View style={{ direction: directionFor(locale) }}>
         <Text accessibilityRole="header" style={{ ...type.display, color: color.ink }}>
           {translate(locale, title)}

@@ -1,18 +1,20 @@
 import { color, semanticStyles, spacing, type } from '@shifaa/design-system';
 import { translate, type Locale } from '@shifaa/i18n';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { PatientScreen, StatusMessage } from '../src/PatientScreen';
 import { consentStateMessage, type ConsentState } from '../src/view-models';
 import { patientOnboardingApi } from '../src/identity-onboarding-api';
+import { usePatientLocale } from '../src/locale-context';
 
 const purposes = [
-  { code: 'care_updates', label: 'تذكيرات المواعيد' },
-  { code: 'identity_proofing', label: 'التحقق من الهوية' },
+  { code: 'care_updates', label: 'privacy.purpose.careUpdates' },
+  { code: 'identity_proofing', label: 'privacy.purpose.identityProofing' },
 ] as const;
 
 export default function PrivacyConsentsRoute({
-  locale = 'ar-EG',
+  locale: localeOverride,
   online = true,
   initialState = 'ready',
 }: {
@@ -20,6 +22,7 @@ export default function PrivacyConsentsRoute({
   online?: boolean;
   initialState?: ConsentState;
 }) {
+  const locale = usePatientLocale(localeOverride);
   const [saved, setSaved] = useState(false);
   const [choices, setChoices] = useState<Record<string, 'granted' | 'refused'>>({});
   const messageKey = consentStateMessage(initialState);
@@ -35,7 +38,7 @@ export default function PrivacyConsentsRoute({
       {saved ? <StatusMessage text={translate(locale, 'privacy.saved')} /> : null}
       {purposes.map((purpose) => (
         <View key={purpose.code} style={{ ...semanticStyles.card, gap: spacing.sm }}>
-          <Text style={{ ...type.body, color: color.ink }}>{purpose.label}</Text>
+          <Text style={{ ...type.body, color: color.ink }}>{translate(locale, purpose.label)}</Text>
           <View accessibilityRole="radiogroup" style={{ flexDirection: 'row', gap: spacing.sm }}>
             {(['granted', 'refused'] as const).map((decision) => (
               <Pressable
@@ -59,8 +62,10 @@ export default function PrivacyConsentsRoute({
       ))}
       <Pressable
         accessibilityRole="button"
-        accessibilityState={{ disabled: !online }}
-        disabled={!online}
+        accessibilityState={{
+          disabled: !online || !purposes.every((purpose) => choices[purpose.code]),
+        }}
+        disabled={!online || !purposes.every((purpose) => choices[purpose.code])}
         onPress={async () => {
           try {
             await Promise.all(
@@ -69,6 +74,7 @@ export default function PrivacyConsentsRoute({
               ),
             );
             setSaved(true);
+            router.replace('/profile');
           } catch {
             setSaved(false);
           }

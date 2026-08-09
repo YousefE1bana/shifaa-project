@@ -1,13 +1,15 @@
 import { color, semanticStyles, spacing, type } from '@shifaa/design-system';
 import { isolateLtr, translate, type Locale } from '@shifaa/i18n';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { FieldLabel, PatientScreen, StatusMessage } from '../src/PatientScreen';
 import { identityStateMessage, type IdentityState } from '../src/view-models';
 import { patientOnboardingApi } from '../src/identity-onboarding-api';
+import { usePatientLocale } from '../src/locale-context';
 
 export default function IdentityRoute({
-  locale = 'ar-EG',
+  locale: localeOverride,
   online = true,
   initialState = 'ready',
 }: {
@@ -15,6 +17,7 @@ export default function IdentityRoute({
   online?: boolean;
   initialState?: IdentityState;
 }) {
+  const locale = usePatientLocale(localeOverride);
   const [state, setState] = useState(initialState);
   const [identityValue, setIdentityValue] = useState('');
   const [maskedValue, setMaskedValue] = useState('');
@@ -51,7 +54,7 @@ export default function IdentityRoute({
             accessibilityLabel={translate(locale, 'identity.type')}
             style={{ ...type.body, color: color.ink }}
           >
-            بطاقة الرقم القومي
+            {translate(locale, 'identity.nationalId')}
           </Text>
           <FieldLabel>{translate(locale, 'identity.value')}</FieldLabel>
           <TextInput
@@ -92,6 +95,19 @@ export default function IdentityRoute({
             </Text>
           </Pressable>
         </View>
+      ) : null}
+      {(['pending', 'manual_review', 'quarantine', 'verified'] as IdentityState[]).includes(
+        state,
+      ) ? (
+        <Pressable
+          accessibilityRole="link"
+          onPress={() => router.push('/privacy')}
+          style={{ minHeight: 44, justifyContent: 'center' }}
+        >
+          <Text style={{ ...type.label, color: color.careBlue }}>
+            {translate(locale, 'nav.continue')}
+          </Text>
+        </Pressable>
       ) : null}
     </PatientScreen>
   );

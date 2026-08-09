@@ -4,6 +4,7 @@ export interface ApiConfig {
   environment: RuntimeEnvironment;
   host: string;
   port: number;
+  corsOrigins: string[];
   databaseUrl: string;
   identityOnboardingEnabled: boolean;
   syntheticMode: boolean;
@@ -51,6 +52,13 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
   const authAdapter = (env['AUTH_ADAPTER'] ?? 'local') as ApiConfig['authAdapter'];
   const proofingAdapter = (env['PROOFING_ADAPTER'] ?? 'local') as ApiConfig['proofingAdapter'];
   const uploadAdapter = (env['UPLOAD_ADAPTER'] ?? 'local') as ApiConfig['uploadAdapter'];
+  const corsOrigins = (
+    env['CORS_ALLOWED_ORIGINS'] ??
+    'http://127.0.0.1:8081,http://localhost:8081,http://127.0.0.1:3001,http://localhost:3001'
+  )
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 
   if (environment === 'production') {
     const forbidden = [
@@ -74,6 +82,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
       if (!env[required])
         throw new ConfigurationError(`Production startup denied: ${required} is required.`);
     }
+    if (!env['CORS_ALLOWED_ORIGINS']) {
+      throw new ConfigurationError('Production startup denied: CORS_ALLOWED_ORIGINS is required.');
+    }
   }
 
   if (!['local', 'supabase'].includes(authAdapter))
@@ -87,6 +98,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     environment,
     host: env['HOST'] ?? '127.0.0.1',
     port: Number(env['PORT'] ?? 3000),
+    corsOrigins,
     databaseUrl:
       env['DATABASE_URL'] ?? 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa',
     identityOnboardingEnabled: readBoolean(

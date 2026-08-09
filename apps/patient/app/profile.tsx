@@ -6,14 +6,16 @@ import { Pressable, Text, TextInput, View } from 'react-native';
 import { FieldLabel, PatientScreen, StatusMessage } from '../src/PatientScreen';
 import { profileStateMessage, type ProfileState } from '../src/view-models';
 import { patientOnboardingApi } from '../src/identity-onboarding-api';
+import { usePatientLocale } from '../src/locale-context';
 
 export default function ProfileRoute({
-  locale = 'ar-EG',
+  locale: localeOverride,
   initialState = 'ready',
 }: {
   locale?: Locale;
   initialState?: ProfileState;
 }) {
+  const locale = usePatientLocale(localeOverride);
   const [state, setState] = useState(initialState);
   const [displayName, setDisplayName] = useState('');
   const [birthDate, setBirthDate] = useState('');

@@ -17,6 +17,7 @@
     "test:integration": "vitest run test/identity-onboarding.integration.test.ts"
   },
   "dependencies": {
+    "@fastify/cors": "11.2.0",
     "@shifaa/contracts": "workspace:*",
     "@shifaa/core": "workspace:*",
     "fastify": "5.11.3"

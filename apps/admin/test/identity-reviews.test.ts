@@ -64,3 +64,15 @@ test('minimum projection contains no unrelated patient fields and reason is mand
   assert.equal(validateDecision('approve', ' ').valid, false);
   assert.equal(validateDecision('reject', 'Document unreadable').valid, true);
 });
+
+test('live admin review is bilingual and permits the documented local dev origin', async () => {
+  const fs = await import('node:fs/promises');
+  const worklist = await fs.readFile(
+    new URL('../src/app/identity-reviews/ReviewWorklist.tsx', import.meta.url),
+    'utf8',
+  );
+  const nextConfig = await fs.readFile(new URL('../next.config.ts', import.meta.url), 'utf8');
+  assert.match(worklist, /Identity review/);
+  assert.match(worklist, /مراجعة الهوية/);
+  assert.match(nextConfig, /allowedDevOrigins:\s*\['127\.0\.0\.1'\]/);
+});

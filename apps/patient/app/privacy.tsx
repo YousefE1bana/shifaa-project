@@ -7,14 +7,16 @@ import { PatientScreen } from '../src/PatientScreen';
 import { commonStateMessage, type AsyncState } from '../src/view-models';
 import { StatusMessage } from '../src/PatientScreen';
 import { patientOnboardingApi } from '../src/identity-onboarding-api';
+import { usePatientLocale } from '../src/locale-context';
 
 export default function PrivacyRoute({
-  locale = 'ar-EG',
+  locale: localeOverride,
   state = 'ready',
 }: {
   locale?: Locale;
   state?: AsyncState;
 }) {
+  const locale = usePatientLocale(localeOverride);
   const [notice, setNotice] = useState('');
   const [loadState, setLoadState] = useState<AsyncState>(state);
   useEffect(() => {

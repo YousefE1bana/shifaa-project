@@ -6,9 +6,10 @@ import { Pressable, Text, TextInput, View } from 'react-native';
 import { FieldLabel, PatientScreen, StatusMessage } from '../src/PatientScreen';
 import { authStateMessage, type AuthState } from '../src/view-models';
 import { patientOnboardingApi } from '../src/identity-onboarding-api';
+import { usePatientLocale } from '../src/locale-context';
 
 export default function LoginRoute({
-  locale = 'ar-EG',
+  locale: localeOverride,
   online = true,
   initialState = 'ready',
 }: {
@@ -16,6 +17,7 @@ export default function LoginRoute({
   online?: boolean;
   initialState?: AuthState;
 }) {
+  const locale = usePatientLocale(localeOverride);
   const [challenge, setChallenge] = useState(patientOnboardingApi.hasPendingChallenge());
   const [handle, setHandle] = useState('');
   const [password, setPassword] = useState('');
