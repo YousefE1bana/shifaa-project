@@ -16,6 +16,27 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## SHIFAA Issue-scoped mode
+
+When the user input contains a GitHub Issue URL or `#<number>`, resolve it before any normal prerequisite or file change:
+
+```powershell
+.specify/scripts/powershell/resolve-issue-handoff.ps1 -Issue <url-or-number> -Json
+```
+
+The resolver MUST fetch from the repository matching `origin`, require the versioned `shifaa-speckit-handoff:v1` marker, validate the feature path/task/baseline against local artifacts, require the baseline to be an ancestor of `HEAD`, and select the feature locally. Abort on any mismatch.
+
+In Issue-scoped mode:
+
+- set `SPECIFY_FEATURE_DIRECTORY` from the resolver result before running normal prerequisites;
+- execute only the selected task plus its transitive, incomplete dependency closure, in dependency order;
+- re-read each selected task's requirement IDs, pinned spec/plan/task definition, and acceptance evidence before editing;
+- mark only that selected set complete after its exact evidence passes;
+- report Issue-scoped completion without claiming every task in the feature is complete;
+- never infer a feature/task from conversation history when the Issue marker is absent.
+
+With no Issue argument, preserve the normal full-feature behavior below.
+
 ## Pre-Execution Checks
 
 **Check for extension hooks (before implementation)**:

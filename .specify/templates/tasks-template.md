@@ -1,7 +1,7 @@
 # Tasks: [FEATURE]
 
 > **Feature:** `[NNN-short-name]` · **Plan status:** `PLAN_APPROVED`  
-> Every task uses `- [ ] T### [P?] [US#?] [FR/NFR IDs] description — exact file/path`. A completed box means the named verification evidence exists.
+> Every task uses a three-line handoff block: `- [ ] T### [P?] [US#?] [FR/NFR IDs] description — exact file/path`, followed by exact `Depends on` and `Acceptance evidence` lines. A completed box means that evidence exists.
 
 ## Rules
 
@@ -12,6 +12,16 @@
 - Legal/clinical/design/vendor blockers become explicit gate tasks and cannot be “implemented around.”
 - Tasks cite actual repository paths. Generated artifacts name their source and generation command; generated files are not manually edited.
 - Each story ends with a checkpoint that can be demonstrated using synthetic data without relying on a later story.
+- Requirement IDs MUST be written individually in canonical form; compressed forms such as `NFR-API-001/002` are forbidden.
+- Every task is immediately followed by `  - Depends on: \`none\`` or a comma-separated list of earlier task IDs and `  - Acceptance evidence: \`<path or command plus expected result>\``. These lines are the machine-readable GitHub Issue handoff contract.
+
+## Required task block example
+
+```markdown
+- [ ] T001 [FR-AUTH-001, NFR-QUALITY-001] Create the workspace scaffold — `package.json`
+  - Depends on: `none`
+  - Acceptance evidence: `pnpm install --frozen-lockfile` exits 0 and `pnpm-lock.yaml` is unchanged
+```
 
 ## Phase 1 — Gates and contract fixtures
 
