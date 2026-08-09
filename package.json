@@ -1,0 +1,41 @@
+{
+  "name": "shifaa",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SHIFAA Egyptian integrated digital health platform",
+  "engines": {
+    "node": "24.18.0",
+    "pnpm": "11.13.0"
+  },
+  "packageManager": "pnpm@11.13.0",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "format:check": "prettier --check apps packages services tests tools .github package.json pnpm-workspace.yaml turbo.json compose.yml .prettierrc.json docs/TEAM-INSTALLATION-CHECKLIST.md infra/runbooks/identity-onboarding.md specs/001-identity-onboarding",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:integration": "turbo run test:integration",
+    "test:a11y": "pnpm --filter @shifaa/design-system test && pnpm --filter @shifaa/i18n test && pnpm --filter @shifaa/patient test && pnpm --filter @shifaa/admin test",
+    "test:e2e": "pnpm --filter @shifaa/api test:integration && pnpm --filter @shifaa/patient test:e2e",
+    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build && pnpm test && pnpm test:a11y && pnpm test:e2e && pnpm contracts:check && pnpm architecture:check && pnpm secrets:check && pnpm dependencies:check && docker compose config --quiet && docker compose up -d --wait postgres && pnpm db:migrate && pnpm db:test && pnpm db:rls-test",
+    "db:migrate": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/migrations/001_identity_onboarding.sql",
+    "db:test": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-onboarding-schema.sql",
+    "db:rls-test": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-onboarding-rls.sql",
+    "db:reset": "docker compose down -v && docker compose up -d --wait postgres && pnpm db:migrate",
+    "architecture:check": "node tools/verify-architecture.mjs",
+    "contracts:check": "node tools/verify-contracts.mjs && pnpm --filter @shifaa/contracts test && pnpm --filter @shifaa/api-client test",
+    "dependencies:check": "pnpm peers check && pnpm audit --audit-level high --ignore-unfixable && pnpm --filter @shifaa/patient exec expo install --check",
+    "secrets:check": "node tools/verify-secrets.mjs",
+    "test:performance": "node tools/run-performance.mjs",
+    "sbom:generate": "node -e \"require('node:fs').mkdirSync('artifacts',{recursive:true})\" && pnpm sbom --sbom-format cyclonedx --out artifacts/sbom.cdx.json"
+  },
+  "devDependencies": {
+    "@shifaa/api": "workspace:*",
+    "@types/node": "24.10.1",
+    "prettier": "3.6.2",
+    "turbo": "2.10.9",
+    "typescript": "7.0.2",
+    "vitest": "4.1.0"
+  }
+}

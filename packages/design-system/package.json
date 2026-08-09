@@ -1,0 +1,24 @@
+{
+  "name": "@shifaa/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --test src/tokens.test.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=19.2.3 <20",
+    "react-native": "0.86.2"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "typescript": "7.0.2"
+  }
+}

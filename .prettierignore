@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.turbo/
+pnpm-lock.yaml
+ECU-Deliverables/*.pdf

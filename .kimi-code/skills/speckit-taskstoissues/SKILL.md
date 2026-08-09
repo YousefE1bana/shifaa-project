@@ -55,14 +55,14 @@ You **MUST** consider the user input before proceeding (if not empty).
 ## Outline
 
 1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` from repo root and parse `FEATURE_DIR`. Load the Constitution.
-1. Generate the canonical, immutable payload set only after the task baseline is committed and pushed:
+1. Publish the canonical, immutable payload set only after the task baseline is committed and pushed:
 
 ```powershell
-.specify/scripts/powershell/build-issue-handoffs.ps1 -FeatureDirectory <FEATURE_DIR> -Json
+.specify/scripts/powershell/publish-issue-handoffs.ps1 -FeatureDirectory <FEATURE_DIR> -Json
 ```
 
-   Abort on any generator error. It rejects dirty/unpushed state, non-GitHub origins, task placeholders, compressed requirement IDs, duplicate IDs, invalid dependencies, and missing evidence.
-1. Parse the returned JSON. The repository in every payload MUST exactly match `origin`; under no circumstances create or update an Issue elsewhere.
+   This publisher uses authenticated GitHub CLI and the deterministic `build-issue-handoffs.ps1` payload generator. Abort on any error. The generator rejects dirty/unpushed state, non-GitHub origins, task placeholders, compressed requirement IDs, duplicate IDs, invalid dependencies, and missing evidence.
+1. Parse the returned JSON and verify the reported repository exactly matches `origin`; under no circumstances create or update an Issue elsewhere.
 1. Fetch all open and closed Issues whose title contains the exact feature-qualified prefix `[NNN-short-name] T###:` or whose body contains the exact hidden marker `shifaa-speckit-handoff:v1 feature=<feature path> task=<task ID>`.
 1. Use `(feature_path, task_id)` as the only deduplication identity. A bare `T001` is feature-local and MUST NOT suppress another feature's `T001`.
 1. For each payload:

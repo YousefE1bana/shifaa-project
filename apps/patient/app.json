@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "SHIFAA Patient",
+    "slug": "shifaa-patient",
+    "scheme": "shifaa",
+    "plugins": ["expo-router"],
+    "experiments": { "typedRoutes": true },
+    "web": { "bundler": "metro" }
+  }
+}

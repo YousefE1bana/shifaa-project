@@ -15,7 +15,12 @@ paths:
       x-shifaa-requirements: [FR-AUTH-001, FR-AUTH-002, NFR-SEC-005]
       parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
       requestBody: { $ref: '#/components/requestBodies/Register' }
-      responses: { '201': { $ref: '#/components/responses/AuthResult' }, '409': { $ref: '#/components/responses/Problem' }, '429': { $ref: '#/components/responses/Problem' } }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/AuthResult' },
+          '409': { $ref: '#/components/responses/Problem' },
+          '429': { $ref: '#/components/responses/Problem' },
+        }
   /auth/login:
     post:
       operationId: login
@@ -23,7 +28,12 @@ paths:
       x-shifaa-requirements: [FR-AUTH-002, NFR-SEC-005]
       parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
       requestBody: { $ref: '#/components/requestBodies/Login' }
-      responses: { '200': { $ref: '#/components/responses/AuthResult' }, '401': { $ref: '#/components/responses/Problem' }, '429': { $ref: '#/components/responses/Problem' } }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/AuthResult' },
+          '401': { $ref: '#/components/responses/Problem' },
+          '429': { $ref: '#/components/responses/Problem' },
+        }
   /auth/otp/verify:
     post:
       operationId: verifyOtp
@@ -33,72 +43,222 @@ paths:
       requestBody:
         required: true
         content: { application/json: { schema: { $ref: '#/components/schemas/OtpVerification' } } }
-      responses: { '200': { $ref: '#/components/responses/AuthResult' }, '400': { $ref: '#/components/responses/Problem' }, '410': { $ref: '#/components/responses/Problem' }, '429': { $ref: '#/components/responses/Problem' } }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/AuthResult' },
+          '400': { $ref: '#/components/responses/Problem' },
+          '410': { $ref: '#/components/responses/Problem' },
+          '429': { $ref: '#/components/responses/Problem' },
+        }
   /people/me:
     get:
       operationId: getMyProfile
       x-shifaa-requirements: [FR-AUTH-001, NFR-SEC-001]
-      responses: { '200': { description: Profile, content: { application/json: { schema: { $ref: '#/components/schemas/Profile' } } } }, '401': { $ref: '#/components/responses/Problem' } }
+      responses:
+        {
+          '200':
+            {
+              description: Profile,
+              content: { application/json: { schema: { $ref: '#/components/schemas/Profile' } } },
+            },
+          '401': { $ref: '#/components/responses/Problem' },
+        }
     patch:
       operationId: updateMyProfile
       x-shifaa-requirements: [FR-AUTH-001, NFR-SEC-005]
-      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }, { $ref: '#/components/parameters/IfMatch' }]
-      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ProfilePatch' } } } }
-      responses: { '200': { description: Updated profile, content: { application/json: { schema: { $ref: '#/components/schemas/Profile' } } } }, '409': { $ref: '#/components/responses/Problem' } }
+      parameters:
+        [
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody:
+        {
+          required: true,
+          content: { application/json: { schema: { $ref: '#/components/schemas/ProfilePatch' } } },
+        }
+      responses:
+        {
+          '200':
+            {
+              description: Updated profile,
+              content: { application/json: { schema: { $ref: '#/components/schemas/Profile' } } },
+            },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
   /people/me/identities:
     get:
       operationId: listMyIdentities
       x-shifaa-requirements: [FR-AUTH-003, FR-AUTH-004]
-      responses: { '200': { description: Masked identity list, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/IdentitySummary' } } } } } }
+      responses:
+        {
+          '200':
+            {
+              description: Masked identity list,
+              content:
+                {
+                  application/json:
+                    {
+                      schema:
+                        { type: array, items: { $ref: '#/components/schemas/IdentitySummary' } },
+                    },
+                },
+            },
+        }
     post:
       operationId: createIdentityProof
       x-shifaa-requirements: [FR-AUTH-003, FR-AUTH-004, FR-AUTH-006, FR-AUTH-008, NFR-SEC-005]
       parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
-      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/IdentityInput' } } } }
-      responses: { '201': { description: Masked identity and case, content: { application/json: { schema: { $ref: '#/components/schemas/IdentitySummary' } } } }, '409': { $ref: '#/components/responses/Problem' }, '503': { $ref: '#/components/responses/Problem' } }
+      requestBody:
+        {
+          required: true,
+          content: { application/json: { schema: { $ref: '#/components/schemas/IdentityInput' } } },
+        }
+      responses:
+        {
+          '201':
+            {
+              description: Masked identity and case,
+              content:
+                { application/json: { schema: { $ref: '#/components/schemas/IdentitySummary' } } },
+            },
+          '409': { $ref: '#/components/responses/Problem' },
+          '503': { $ref: '#/components/responses/Problem' },
+        }
   /identity-verifications/{caseId}/upload-intent:
     post:
       operationId: createIdentityUpload
       x-shifaa-requirements: [FR-AUTH-004, NFR-SEC-005]
-      parameters: [{ $ref: '#/components/parameters/CaseId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
-      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/UploadMetadata' } } } }
-      responses: { '201': { description: One-time private upload intent, content: { application/json: { schema: { $ref: '#/components/schemas/UploadIntent' } } } }, '403': { $ref: '#/components/responses/Problem' } }
+      parameters:
+        [
+          { $ref: '#/components/parameters/CaseId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+        ]
+      requestBody:
+        {
+          required: true,
+          content:
+            { application/json: { schema: { $ref: '#/components/schemas/UploadMetadata' } } },
+        }
+      responses:
+        {
+          '201':
+            {
+              description: One-time private upload intent,
+              content:
+                { application/json: { schema: { $ref: '#/components/schemas/UploadIntent' } } },
+            },
+          '403': { $ref: '#/components/responses/Problem' },
+        }
   /identity-verifications/{caseId}:
     get:
       operationId: getVerificationCase
       x-shifaa-requirements: [FR-AUTH-003, FR-AUTH-004]
       parameters: [{ $ref: '#/components/parameters/CaseId' }]
-      responses: { '200': { description: Projected case, content: { application/json: { schema: { $ref: '#/components/schemas/VerificationCase' } } } }, '403': { $ref: '#/components/responses/Problem' }, '404': { $ref: '#/components/responses/Problem' } }
+      responses:
+        {
+          '200':
+            {
+              description: Projected case,
+              content:
+                { application/json: { schema: { $ref: '#/components/schemas/VerificationCase' } } },
+            },
+          '403': { $ref: '#/components/responses/Problem' },
+          '404': { $ref: '#/components/responses/Problem' },
+        }
   /admin/identity-verifications:
     get:
       operationId: listIdentityVerificationCases
       x-shifaa-requirements: [FR-AUTH-003, FR-AUTH-004, FR-ADMIN-002, NFR-API-002]
-      parameters: [{ $ref: '#/components/parameters/Cursor' }, { $ref: '#/components/parameters/Limit' }]
-      responses: { '200': { description: Minimum reviewer worklist, content: { application/json: { schema: { $ref: '#/components/schemas/VerificationCasePage' } } } }, '403': { $ref: '#/components/responses/Problem' } }
+      parameters:
+        [{ $ref: '#/components/parameters/Cursor' }, { $ref: '#/components/parameters/Limit' }]
+      responses:
+        {
+          '200':
+            {
+              description: Minimum reviewer worklist,
+              content:
+                {
+                  application/json:
+                    { schema: { $ref: '#/components/schemas/VerificationCasePage' } },
+                },
+            },
+          '403': { $ref: '#/components/responses/Problem' },
+        }
   /admin/identity-verifications/{caseId}/decision:
     post:
       operationId: reviewVerificationCase
       x-shifaa-requirements: [FR-AUTH-003, FR-AUTH-004, FR-ADMIN-002, NFR-SEC-004, NFR-SEC-005]
-      parameters: [{ $ref: '#/components/parameters/CaseId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { $ref: '#/components/parameters/IfMatch' }]
-      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ReviewDecision' } } } }
-      responses: { '200': { description: Terminal case decision, content: { application/json: { schema: { $ref: '#/components/schemas/VerificationCase' } } } }, '403': { $ref: '#/components/responses/Problem' }, '409': { $ref: '#/components/responses/Problem' } }
+      parameters:
+        [
+          { $ref: '#/components/parameters/CaseId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody:
+        {
+          required: true,
+          content:
+            { application/json: { schema: { $ref: '#/components/schemas/ReviewDecision' } } },
+        }
+      responses:
+        {
+          '200':
+            {
+              description: Terminal case decision,
+              content:
+                { application/json: { schema: { $ref: '#/components/schemas/VerificationCase' } } },
+            },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
   /privacy/notices/current:
     get:
       operationId: getPrivacyNotice
       security: []
       x-shifaa-requirements: [FR-AUTH-007, FR-AUTH-008, NFR-PRIV-001]
-      responses: { '200': { description: Current localized notice, content: { application/json: { schema: { $ref: '#/components/schemas/PrivacyNotice' } } } } }
+      responses:
+        {
+          '200':
+            {
+              description: Current localized notice,
+              content:
+                { application/json: { schema: { $ref: '#/components/schemas/PrivacyNotice' } } },
+            },
+        }
   /privacy/consents:
     get:
       operationId: listMyConsents
       x-shifaa-requirements: [FR-AUTH-007]
-      responses: { '200': { description: Current consent decisions, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/Consent' } } } } } }
+      responses:
+        {
+          '200':
+            {
+              description: Current consent decisions,
+              content:
+                {
+                  application/json:
+                    { schema: { type: array, items: { $ref: '#/components/schemas/Consent' } } },
+                },
+            },
+        }
     post:
       operationId: recordConsent
       x-shifaa-requirements: [FR-AUTH-007, FR-AUTH-008, NFR-PRIV-001, NFR-SEC-005]
       parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
-      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ConsentInput' } } } }
-      responses: { '201': { description: Consent evidence, content: { application/json: { schema: { $ref: '#/components/schemas/Consent' } } } }, '503': { $ref: '#/components/responses/Problem' } }
+      requestBody:
+        {
+          required: true,
+          content: { application/json: { schema: { $ref: '#/components/schemas/ConsentInput' } } },
+        }
+      responses:
+        {
+          '201':
+            {
+              description: Consent evidence,
+              content: { application/json: { schema: { $ref: '#/components/schemas/Consent' } } },
+            },
+          '503': { $ref: '#/components/responses/Problem' },
+        }
   /privacy/consents/{consentId}/withdraw:
     post:
       operationId: withdrawConsent
@@ -107,49 +267,360 @@ paths:
         - { name: consentId, in: path, required: true, schema: { type: string, format: uuid } }
         - { $ref: '#/components/parameters/IdempotencyKey' }
         - { $ref: '#/components/parameters/IfMatch' }
-      requestBody: { required: false, content: { application/json: { schema: { type: object, additionalProperties: false, properties: { reason: { type: string, maxLength: 240 } } } } } }
-      responses: { '200': { description: Withdrawal evidence, content: { application/json: { schema: { $ref: '#/components/schemas/Consent' } } } }, '409': { $ref: '#/components/responses/Problem' } }
+      requestBody:
+        {
+          required: false,
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    {
+                      type: object,
+                      additionalProperties: false,
+                      properties: { reason: { type: string, maxLength: 240 } },
+                    },
+                },
+            },
+        }
+      responses:
+        {
+          '200':
+            {
+              description: Withdrawal evidence,
+              content: { application/json: { schema: { $ref: '#/components/schemas/Consent' } } },
+            },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
   /internal/callbacks/identity/{provider}:
     post:
       operationId: identityProviderCallback
       security: [{ providerSignature: [] }]
       x-shifaa-requirements: [FR-AUTH-003]
-      parameters: [{ name: provider, in: path, required: true, schema: { type: string, enum: [local, valify] } }]
-      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [event_id, case_id, outcome], properties: { event_id: { type: string }, case_id: { type: string, format: uuid }, outcome: { type: string, enum: [verified, failed, manual_review] } } } } } }
-      responses: { '200': { description: Recorded terminal/provider result }, '401': { $ref: '#/components/responses/Problem' }, '409': { $ref: '#/components/responses/Problem' } }
+      parameters:
+        [
+          {
+            name: provider,
+            in: path,
+            required: true,
+            schema: { type: string, enum: [local, valify] },
+          },
+        ]
+      requestBody:
+        {
+          required: true,
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    {
+                      type: object,
+                      required: [event_id, case_id, outcome],
+                      properties:
+                        {
+                          event_id: { type: string },
+                          case_id: { type: string, format: uuid },
+                          outcome: { type: string, enum: [verified, failed, manual_review] },
+                        },
+                    },
+                },
+            },
+        }
+      responses:
+        {
+          '200': { description: Recorded terminal/provider result },
+          '401': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
 components:
   securitySchemes:
     bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
     providerSignature: { type: apiKey, in: header, name: X-Provider-Signature }
   parameters:
-    IdempotencyKey: { name: Idempotency-Key, in: header, required: true, schema: { type: string, minLength: 16, maxLength: 128 } }
-    IfMatch: { name: If-Match, in: header, required: true, schema: { type: string, pattern: '^"[1-9][0-9]*"$' } }
+    IdempotencyKey:
+      {
+        name: Idempotency-Key,
+        in: header,
+        required: true,
+        schema: { type: string, minLength: 16, maxLength: 128 },
+      }
+    IfMatch:
+      {
+        name: If-Match,
+        in: header,
+        required: true,
+        schema: { type: string, pattern: '^"[1-9][0-9]*"$' },
+      }
     CaseId: { name: caseId, in: path, required: true, schema: { type: string, format: uuid } }
     Cursor: { name: cursor, in: query, required: false, schema: { type: string } }
-    Limit: { name: limit, in: query, required: false, schema: { type: integer, default: 25, minimum: 1, maximum: 100 } }
+    Limit:
+      {
+        name: limit,
+        in: query,
+        required: false,
+        schema: { type: integer, default: 25, minimum: 1, maximum: 100 },
+      }
   requestBodies:
     Register:
       required: true
-      content: { application/json: { schema: { type: object, additionalProperties: false, required: [locale, handle, password], properties: { locale: { type: string, enum: [ar-EG, en-EG] }, handle: { type: string, minLength: 5, maxLength: 254 }, password: { type: string, minLength: 12, maxLength: 128 } } } } }
+      content:
+        {
+          application/json:
+            {
+              schema:
+                {
+                  type: object,
+                  additionalProperties: false,
+                  required: [locale, handle, password],
+                  properties:
+                    {
+                      locale: { type: string, enum: [ar-EG, en-EG] },
+                      handle: { type: string, minLength: 5, maxLength: 254 },
+                      password: { type: string, minLength: 12, maxLength: 128 },
+                    },
+                },
+            },
+        }
     Login:
       required: true
-      content: { application/json: { schema: { type: object, additionalProperties: false, required: [handle, password], properties: { handle: { type: string }, password: { type: string } } } } }
+      content:
+        {
+          application/json:
+            {
+              schema:
+                {
+                  type: object,
+                  additionalProperties: false,
+                  required: [handle, password],
+                  properties: { handle: { type: string }, password: { type: string } },
+                },
+            },
+        }
   responses:
-    AuthResult: { description: Session or verification challenge, headers: { Cache-Control: { schema: { type: string }, example: 'private, no-store' } }, content: { application/json: { schema: { $ref: '#/components/schemas/AuthResult' } } } }
-    Problem: { description: RFC 9457 problem, content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } } }
+    AuthResult:
+      {
+        description: Session or verification challenge,
+        headers: { Cache-Control: { schema: { type: string }, example: 'private, no-store' } },
+        content: { application/json: { schema: { $ref: '#/components/schemas/AuthResult' } } },
+      }
+    Problem:
+      {
+        description: RFC 9457 problem,
+        content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } },
+      }
   schemas:
-    AuthResult: { type: object, required: [kind], properties: { kind: { type: string, enum: [challenge, session] }, challenge_id: { type: [string, 'null'], format: uuid }, access_token: { type: [string, 'null'], writeOnly: true }, aal: { type: [integer, 'null'], enum: [1, 2, null] } } }
-    OtpVerification: { type: object, additionalProperties: false, required: [challenge_id, code], properties: { challenge_id: { type: string, format: uuid }, code: { type: string, pattern: '^[0-9]{6}$' } } }
-    Profile: { type: object, required: [id, display_name, preferred_locale, verification_status, version], properties: { id: { type: string, format: uuid }, display_name: { type: string }, birth_date: { type: [string, 'null'], format: date }, nationality_code: { type: string, pattern: '^[A-Z]{2}$' }, preferred_locale: { type: string, enum: [ar-EG, en-EG] }, verification_status: { type: string }, version: { type: integer, minimum: 1 } } }
-    ProfilePatch: { type: object, additionalProperties: false, properties: { display_name: { type: string, minLength: 2, maxLength: 120 }, birth_date: { type: [string, 'null'], format: date }, nationality_code: { type: string, pattern: '^[A-Z]{2}$' }, preferred_locale: { type: string, enum: [ar-EG, en-EG] } } }
-    IdentityInput: { type: object, additionalProperties: false, required: [identity_type, value, issuing_country], properties: { identity_type: { type: string, enum: [egyptian_national_id, passport, unhcr_card] }, value: { type: string, minLength: 6, maxLength: 32 }, issuing_country: { type: string, pattern: '^[A-Z]{2}$' }, expires_on: { type: [string, 'null'], format: date } } }
-    IdentitySummary: { type: object, required: [id, identity_type, masked_value, verification_case], properties: { id: { type: string, format: uuid }, identity_type: { type: string }, masked_value: { type: string }, verification_case: { $ref: '#/components/schemas/VerificationCase' } } }
-    VerificationCase: { type: object, required: [id, status, version], properties: { id: { type: string, format: uuid }, identity_type: { type: string }, masked_value: { type: string }, status: { type: string, enum: [pending, manual_review, verified, rejected, failed, expired] }, reason_code: { type: [string, 'null'] }, next_action: { type: [string, 'null'] }, version: { type: integer, minimum: 1 } } }
-    VerificationCasePage: { type: object, required: [data, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/VerificationCase' } }, meta: { type: object, required: [next_cursor], properties: { next_cursor: { type: [string, 'null'] } } } } }
-    UploadMetadata: { type: object, additionalProperties: false, required: [mime_type, size_bytes, sha256], properties: { mime_type: { type: string, enum: [image/jpeg, image/png, application/pdf] }, size_bytes: { type: integer, minimum: 1, maximum: 10485760 }, sha256: { type: string, pattern: '^[0-9a-f]{64}$' } } }
-    UploadIntent: { type: object, required: [object_id, upload_url, expires_at], properties: { object_id: { type: string, format: uuid }, upload_url: { type: string, format: uri }, expires_at: { type: string, format: date-time } } }
-    ReviewDecision: { type: object, additionalProperties: false, required: [decision, reason], properties: { decision: { type: string, enum: [approve, reject] }, reason: { type: string, minLength: 3, maxLength: 500 }, evidence_object_id: { type: [string, 'null'], format: uuid } } }
-    PrivacyNotice: { type: object, required: [notice_code, version, locale, content, purposes], properties: { notice_code: { type: string }, version: { type: string }, locale: { type: string, enum: [ar-EG, en-EG] }, content: { type: string }, purposes: { type: array, items: { type: object, required: [purpose_code, version, label, optional], properties: { purpose_code: { type: string }, version: { type: string }, label: { type: string }, optional: { type: boolean } } } } } }
-    ConsentInput: { type: object, additionalProperties: false, required: [purpose_code, purpose_version, decision, notice_version], properties: { purpose_code: { type: string }, purpose_version: { type: string }, decision: { type: string, enum: [granted, refused] }, notice_version: { type: string } } }
-    Consent: { type: object, required: [id, purpose_code, purpose_version, decision, occurred_at, version], properties: { id: { type: string, format: uuid }, purpose_code: { type: string }, purpose_version: { type: string }, decision: { type: string, enum: [granted, refused, withdrawn] }, occurred_at: { type: string, format: date-time }, supersedes_id: { type: [string, 'null'], format: uuid }, version: { type: integer, minimum: 1 } } }
-    Problem: { type: object, required: [type, title, status, detail, code, request_id], properties: { type: { type: string, format: uri-reference }, title: { type: string }, status: { type: integer }, detail: { type: string }, instance: { type: string }, code: { type: string }, request_id: { type: string, format: uuid }, errors: { type: array, items: { type: object } }, retry_after_seconds: { type: integer } } }
+    AuthResult:
+      {
+        type: object,
+        required: [kind],
+        properties:
+          {
+            kind: { type: string, enum: [challenge, session] },
+            challenge_id: { type: [string, 'null'], format: uuid },
+            access_token: { type: [string, 'null'], writeOnly: true },
+            aal: { type: [integer, 'null'], enum: [1, 2, null] },
+          },
+      }
+    OtpVerification:
+      {
+        type: object,
+        additionalProperties: false,
+        required: [challenge_id, code],
+        properties:
+          {
+            challenge_id: { type: string, format: uuid },
+            code: { type: string, pattern: '^[0-9]{6}$' },
+          },
+      }
+    Profile:
+      {
+        type: object,
+        required: [id, display_name, preferred_locale, verification_status, version],
+        properties:
+          {
+            id: { type: string, format: uuid },
+            display_name: { type: string },
+            birth_date: { type: [string, 'null'], format: date },
+            nationality_code: { type: string, pattern: '^[A-Z]{2}$' },
+            preferred_locale: { type: string, enum: [ar-EG, en-EG] },
+            verification_status: { type: string },
+            version: { type: integer, minimum: 1 },
+          },
+      }
+    ProfilePatch:
+      {
+        type: object,
+        additionalProperties: false,
+        properties:
+          {
+            display_name: { type: string, minLength: 2, maxLength: 120 },
+            birth_date: { type: [string, 'null'], format: date },
+            nationality_code: { type: string, pattern: '^[A-Z]{2}$' },
+            preferred_locale: { type: string, enum: [ar-EG, en-EG] },
+          },
+      }
+    IdentityInput:
+      {
+        type: object,
+        additionalProperties: false,
+        required: [identity_type, value, issuing_country],
+        properties:
+          {
+            identity_type: { type: string, enum: [egyptian_national_id, passport, unhcr_card] },
+            value: { type: string, minLength: 6, maxLength: 32 },
+            issuing_country: { type: string, pattern: '^[A-Z]{2}$' },
+            expires_on: { type: [string, 'null'], format: date },
+          },
+      }
+    IdentitySummary:
+      {
+        type: object,
+        required: [id, identity_type, masked_value, verification_case],
+        properties:
+          {
+            id: { type: string, format: uuid },
+            identity_type: { type: string },
+            masked_value: { type: string },
+            verification_case: { $ref: '#/components/schemas/VerificationCase' },
+          },
+      }
+    VerificationCase:
+      {
+        type: object,
+        required: [id, status, version],
+        properties:
+          {
+            id: { type: string, format: uuid },
+            identity_type: { type: string },
+            masked_value: { type: string },
+            status:
+              { type: string, enum: [pending, manual_review, verified, rejected, failed, expired] },
+            reason_code: { type: [string, 'null'] },
+            next_action: { type: [string, 'null'] },
+            version: { type: integer, minimum: 1 },
+          },
+      }
+    VerificationCasePage:
+      {
+        type: object,
+        required: [data, meta],
+        properties:
+          {
+            data: { type: array, items: { $ref: '#/components/schemas/VerificationCase' } },
+            meta:
+              {
+                type: object,
+                required: [next_cursor],
+                properties: { next_cursor: { type: [string, 'null'] } },
+              },
+          },
+      }
+    UploadMetadata:
+      {
+        type: object,
+        additionalProperties: false,
+        required: [mime_type, size_bytes, sha256],
+        properties:
+          {
+            mime_type: { type: string, enum: [image/jpeg, image/png, application/pdf] },
+            size_bytes: { type: integer, minimum: 1, maximum: 10485760 },
+            sha256: { type: string, pattern: '^[0-9a-f]{64}$' },
+          },
+      }
+    UploadIntent:
+      {
+        type: object,
+        required: [object_id, upload_url, expires_at],
+        properties:
+          {
+            object_id: { type: string, format: uuid },
+            upload_url: { type: string, format: uri },
+            expires_at: { type: string, format: date-time },
+          },
+      }
+    ReviewDecision:
+      {
+        type: object,
+        additionalProperties: false,
+        required: [decision, reason],
+        properties:
+          {
+            decision: { type: string, enum: [approve, reject] },
+            reason: { type: string, minLength: 3, maxLength: 500 },
+            evidence_object_id: { type: [string, 'null'], format: uuid },
+          },
+      }
+    PrivacyNotice:
+      {
+        type: object,
+        required: [notice_code, version, locale, content, purposes],
+        properties:
+          {
+            notice_code: { type: string },
+            version: { type: string },
+            locale: { type: string, enum: [ar-EG, en-EG] },
+            content: { type: string },
+            purposes:
+              {
+                type: array,
+                items:
+                  {
+                    type: object,
+                    required: [purpose_code, version, label, optional],
+                    properties:
+                      {
+                        purpose_code: { type: string },
+                        version: { type: string },
+                        label: { type: string },
+                        optional: { type: boolean },
+                      },
+                  },
+              },
+          },
+      }
+    ConsentInput:
+      {
+        type: object,
+        additionalProperties: false,
+        required: [purpose_code, purpose_version, decision, notice_version],
+        properties:
+          {
+            purpose_code: { type: string },
+            purpose_version: { type: string },
+            decision: { type: string, enum: [granted, refused] },
+            notice_version: { type: string },
+          },
+      }
+    Consent:
+      {
+        type: object,
+        required: [id, purpose_code, purpose_version, decision, occurred_at, version],
+        properties:
+          {
+            id: { type: string, format: uuid },
+            purpose_code: { type: string },
+            purpose_version: { type: string },
+            decision: { type: string, enum: [granted, refused, withdrawn] },
+            occurred_at: { type: string, format: date-time },
+            supersedes_id: { type: [string, 'null'], format: uuid },
+            version: { type: integer, minimum: 1 },
+          },
+      }
+    Problem:
+      {
+        type: object,
+        required: [type, title, status, detail, code, request_id],
+        properties:
+          {
+            type: { type: string, format: uri-reference },
+            title: { type: string },
+            status: { type: integer },
+            detail: { type: string },
+            instance: { type: string },
+            code: { type: string },
+            request_id: { type: string, format: uuid },
+            errors: { type: array, items: { type: object } },
+            retry_after_seconds: { type: integer },
+          },
+      }

@@ -82,7 +82,7 @@
   - Acceptance evidence: `pnpm --filter @shifaa/observability test` exits 0 and finds zero synthetic ID/password/OTP/token/document sentinel values
 - [ ] T022 [NFR-SEC-007, NFR-QUALITY-001] Add GitHub CI for install/fmt/lint/type/unit/contract/migration/RLS/a11y/E2E/secret/dependency/SAST/SBOM/architecture checks — `.github/workflows/ci.yml`
   - Depends on: `T006`, `T011`, `T018`, `T019`, `T020`, `T021`
-  - Acceptance evidence: `pnpm verify; pnpm sbom` exits 0 locally and the pushed GitHub Actions run passes
+  - Acceptance evidence: `pnpm verify; pnpm sbom:generate` exits 0 locally and the pushed GitHub Actions run passes
 - [ ] T023 [NFR-PERF-002, NFR-QUALITY-001] Add the 100-session synthetic API load profile and store the reproducible p95 evidence — `services/api/test/performance/identity-onboarding.k6.js`, `specs/001-identity-onboarding/evidence/performance.json`
   - Depends on: `T011`
   - Acceptance evidence: `pnpm test:performance` exits 0 with read p95 <=400ms and mutation p95 <=800ms or records a blocking finding

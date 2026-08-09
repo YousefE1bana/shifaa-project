@@ -1,0 +1,30 @@
+{
+  "name": "@shifaa/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/app.ts",
+    "./config": "./src/config.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/server.ts",
+    "start": "node dist/server.js",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --exclude dist/**",
+    "test:integration": "vitest run test/identity-onboarding.integration.test.ts"
+  },
+  "dependencies": {
+    "@shifaa/contracts": "workspace:*",
+    "@shifaa/core": "workspace:*",
+    "fastify": "5.11.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "tsx": "4.21.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.0"
+  }
+}

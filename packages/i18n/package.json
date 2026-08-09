@@ -1,0 +1,17 @@
+{
+  "name": "@shifaa/i18n",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --test src/catalogs.test.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

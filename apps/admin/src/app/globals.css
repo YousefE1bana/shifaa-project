@@ -1,0 +1,19 @@
+*,
+*::before,
+*::after {
+  animation-duration: 0s !important;
+  transition-duration: 0s !important;
+}
+:focus-visible {
+  outline: 3px solid #a13d00;
+  outline-offset: 3px;
+}
+button,
+textarea {
+  min-height: 44px;
+}
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid CanvasText;
+  }
+}

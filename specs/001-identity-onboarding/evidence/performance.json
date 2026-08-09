@@ -1,0 +1,36 @@
+{
+  "schema": "shifaa-performance-evidence:v1",
+  "generated_at": "2026-08-09T17:30:29.583Z",
+  "target": "http://host.docker.internal:3000/v1",
+  "sessions": 100,
+  "slo_ms": {
+    "read_p95": 400,
+    "mutation_p95": 800
+  },
+  "observed_ms": {
+    "read_p95": 34.80681825,
+    "mutation_p95": 89.2201725
+  },
+  "thresholds": {
+    "identity_mutation_duration": {
+      "p(95)<800": {
+        "ok": true
+      }
+    },
+    "identity_journey_failures": {
+      "rate<0.01": {
+        "ok": true
+      }
+    },
+    "identity_read_duration": {
+      "p(95)<400": {
+        "ok": true
+      }
+    },
+    "checks": {
+      "rate>=0.99": {
+        "ok": true
+      }
+    }
+  }
+}

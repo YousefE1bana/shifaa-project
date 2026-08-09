@@ -1,0 +1,13 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'services/*'
+
+catalog:
+  typescript: 7.0.2
+  vitest: 4.1.0
+
+allowBuilds:
+  esbuild: true
+
+auditConfig: { ignoreGhsas: null }

@@ -1,0 +1,7 @@
+{
+  "name": "@shifaa/test-kit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared synthetic fixture and verification helpers placeholder."
+}

@@ -97,7 +97,7 @@ Allowed dependency direction is `apps/services → api-client/design-system/auth
 
 ### 2.1 Runtime and toolchain
 
-- Node.js 24 LTS, Corepack-managed pnpm, TypeScript strict mode, and Turborepo are the JavaScript baseline. Exact patch versions, OCI image digests, lockfiles, and SBOM become authoritative only when the Phase-0 scaffold closes OPEN-TECH-001; this document does not claim those currently absent files exist.
+- Node.js 24 LTS, Corepack-managed pnpm, TypeScript strict mode, and Turborepo are the JavaScript baseline. The Phase-0 scaffold now supplies exact patch versions, OCI image digests, a lockfile, and an SBOM command; `OPEN-TECH-001` remains `IMPLEMENTING` until a clean reproducible-build log and the required Architecture/Platform acceptance exist.
 - Next.js powers dense staff PWAs; Expo powers the patient native/web app. Shared UI means shared tokens/primitives, not forced reuse of web DOM components inside native screens.
 - `services/api` uses Fastify with JSON Schema generated from `packages/contracts`. REST/OpenAPI 3.1.1 is the sole external application protocol. gRPC is deliberately absent from the MVP, so there is no parallel inventory to drift.
 - PostgreSQL 17 is the system of record. Supabase Auth, Storage, and Realtime are self-hosted components behind the same deployment boundary. User-facing domain tables are never directly exposed.
@@ -288,7 +288,7 @@ This order places SOS/Core foundations before dependent hospital behavior. Work 
 
 ## 11. Mandatory SpecKit specification lifecycle
 
-The repository uses GitHub Spec Kit’s `scope eligibility → specify → plan → tasks → implement` model with SHIFAA-specific gates. Complex epics are decomposed into independent vertical slices; every slice has its own artifacts and immutable requirement mapping. The checked-in workflow follows the [official custom-workflow schema](https://github.github.com/spec-kit/reference/workflows.html), uses its documented `>=0.7.2` minimum, and selects the officially supported [`codex` integration](https://github.github.com/spec-kit/reference/integrations.html) explicitly by default. On 2026-08-09, `specify workflow info` on the review host’s installed Spec Kit 0.11.8 parsed the file and reported all ten ordered steps. The exact release/tag and reproducible lock evidence remain blocked by `OPEN-TECH-001`.
+The repository uses GitHub Spec Kit’s `scope eligibility → specify → clarify → plan → tasks → analyze → taskstoissues → implement → post-implementation analyze` model with SHIFAA-specific gates. Complex epics are decomposed into independent vertical slices; every slice has its own artifacts and immutable requirement mapping. The checked-in workflow follows the [official custom-workflow schema](https://github.github.com/spec-kit/reference/workflows.html) and is registered as SHIFAA workflow `2.2.0`. Both `codex` and `kimi` integrations are installed with skills enabled; `kimi` is the repository default while Codex remains supported for Issue-scoped implementation. On 2026-08-09, `specify workflow info speckit` on SpecKit `0.16.2.dev0` from upstream commit `684b3d8e05263a7c1948d3d0699ab1cb4f77c3d5` parsed all thirteen ordered steps. Reproducible-build acceptance remains tracked by `OPEN-TECH-001`.
 
 ### 11.1 Directory and metadata
 

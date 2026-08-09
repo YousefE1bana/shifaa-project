@@ -20,9 +20,12 @@
 node_modules/
 dist/
 build/
+.next/
+*.tsbuildinfo
 coverage/
 .turbo/
 .pnpm-store/
+artifacts/
 
 # OS/editor noise
 .DS_Store
