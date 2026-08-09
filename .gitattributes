@@ -1,16 +1,12 @@
-* text=auto
+# Canonical cross-platform text representation. Windows tools may read LF directly;
+# keeping checkout and CI bytes identical makes formatting checks reproducible.
+* text=auto eol=lf
 
-*.md text eol=lf
-*.json text eol=lf
-*.yml text eol=lf
-*.yaml text eol=lf
-*.sh text eol=lf
-*.py text eol=lf
-*.ps1 text eol=lf
-
-*.pdf binary
+# Preserve binary assets byte-for-byte.
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
-*.webp binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
