@@ -60,12 +60,15 @@ async function otpFor(recipient: string): Promise<string> {
 }
 
 beforeAll(async () => {
+  const statusCommand =
+    process.platform === 'win32'
+      ? {
+          file: process.env['ComSpec'] ?? 'cmd.exe',
+          args: ['/d', '/s', '/c', 'pnpm supabase status -o json'],
+        }
+      : { file: 'pnpm', args: ['supabase', 'status', '-o', 'json'] };
   status = JSON.parse(
-    execFileSync(
-      process.env['ComSpec'] ?? 'cmd.exe',
-      ['/d', '/s', '/c', 'pnpm supabase status -o json'],
-      { cwd: '../..', encoding: 'utf8' },
-    ),
+    execFileSync(statusCommand.file, statusCommand.args, { cwd: '../..', encoding: 'utf8' }),
   ) as Status;
   first = await buildApp({ config: runtimeConfig() });
 });
