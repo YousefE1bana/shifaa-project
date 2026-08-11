@@ -2,6 +2,7 @@
 .obsidian/
 .remember/
 .claude/
+.playwright-mcp/
 .specify/.workflow-install.lock
 .specify/integrations/.cache/
 
