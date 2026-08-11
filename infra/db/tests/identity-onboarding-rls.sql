@@ -14,10 +14,10 @@ INSERT INTO identity.care_relationships(subject_patient_id,actor_person_id,relat
  ('30000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000001','self'),
  ('30000000-0000-4000-8000-000000000002','10000000-0000-4000-8000-000000000002','self')
 ON CONFLICT DO NOTHING;
-INSERT INTO identity.identities(id,person_id,identity_type,ciphertext,nonce,authentication_tag,key_version,blind_index,issuing_country,verification_status)
+INSERT INTO identity.identities(id,person_id,identity_type,ciphertext,nonce,authentication_tag,key_version,blind_index,masked_value,issuing_country,verification_status)
 VALUES
- ('40000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000001','egyptian_national_id',decode('01','hex'),decode('000000000000000000000001','hex'),decode('00000000000000000000000000000001','hex'),1,digest('synthetic-invalid-date-id-one','sha256'),'EG','manual_review'),
- ('40000000-0000-4000-8000-000000000002','10000000-0000-4000-8000-000000000002','egyptian_national_id',decode('02','hex'),decode('000000000000000000000002','hex'),decode('00000000000000000000000000000002','hex'),1,digest('synthetic-invalid-date-id-two','sha256'),'EG','manual_review')
+ ('40000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000001','egyptian_national_id',decode('01','hex'),decode('000000000000000000000001','hex'),decode('00000000000000000000000000000001','hex'),1,digest('synthetic-invalid-date-id-one','sha256'),'••••••••••0001','EG','manual_review'),
+ ('40000000-0000-4000-8000-000000000002','10000000-0000-4000-8000-000000000002','egyptian_national_id',decode('02','hex'),decode('000000000000000000000002','hex'),decode('00000000000000000000000000000002','hex'),1,digest('synthetic-invalid-date-id-two','sha256'),'••••••••••0002','EG','manual_review')
 ON CONFLICT DO NOTHING;
 INSERT INTO identity.verification_cases(id,identity_id,provider,state,assigned_reviewer_person_id)
 VALUES
