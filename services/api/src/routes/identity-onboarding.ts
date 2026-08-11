@@ -21,7 +21,7 @@ import {
   type IdentityOnboardingService,
   type RequestActor,
 } from '../modules/identity-onboarding/index.js';
-import { InMemoryIdempotencyStore, preauthPrincipal } from '../platform/idempotency.js';
+import { preauthPrincipal, type IdempotencyStore } from '../platform/idempotency.js';
 
 export const registeredIdentityOnboardingOperationIds = routeCatalog.map(
   ({ operationId }) => operationId,
@@ -30,7 +30,7 @@ export const registeredIdentityOnboardingOperationIds = routeCatalog.map(
 export interface IdentityRouteDependencies {
   config: ApiConfig;
   service: IdentityOnboardingService;
-  idempotency: InMemoryIdempotencyStore;
+  idempotency: IdempotencyStore;
 }
 
 const noStoreHeaders = {
@@ -80,7 +80,7 @@ async function actorFor(
   if (token.startsWith('synthetic-reviewer:')) {
     return {
       kind: 'ADM-FACILITY',
-      personId: token.slice('synthetic-reviewer:'.length),
+      personId: '00000000-0000-4000-8000-000000000002',
       principal: token,
       aal: request.headers['x-aal'] === '2' ? 2 : 1,
       purposes:
@@ -113,6 +113,27 @@ async function executeMutation<T>(
   return reply.status(result.status).headers(result.headers).send(result.body);
 }
 
+async function executePreparedMutation<T, P>(
+  request: FastifyRequest,
+  reply: FastifyReply,
+  deps: IdentityRouteDependencies,
+  principal: string,
+  status: number,
+  prepare: () => Promise<P>,
+  work: (prepared: P) => Promise<T>,
+) {
+  const result = await deps.idempotency.execute({
+    principal,
+    method: request.method,
+    route: request.routeOptions.url ?? request.url,
+    key: idempotencyKey(request),
+    body: request.body,
+    prepare,
+    work: async (prepared) => ({ status, headers: noStoreHeaders, body: await work(prepared) }),
+  });
+  return reply.status(result.status).headers(result.headers).send(result.body);
+}
+
 export async function registerIdentityOnboardingRoutes(
   app: FastifyInstance,
   deps: IdentityRouteDependencies,
@@ -126,26 +147,32 @@ export async function registerIdentityOnboardingRoutes(
     { schema: { body: requestSchemas.registerPerson } },
     async (request, reply) => {
       const body = request.body as RegisterPersonInput;
-      return executeMutation(
+      return executePreparedMutation(
         request,
         reply,
         deps,
         preauthPrincipal(body.handle, deps.config.preauthHmacKey),
         201,
-        () => deps.service.register({ ...body, requestId: request.id }),
+        () => deps.service.prepareRegistration(body),
+        (challenge) =>
+          deps.service.completeRegistration(
+            { handle: body.handle, locale: body.locale, requestId: request.id },
+            challenge,
+          ),
       );
     },
   );
 
   app.post('/v1/auth/login', { schema: { body: requestSchemas.login } }, async (request, reply) => {
     const body = request.body as LoginInput;
-    return executeMutation(
+    return executePreparedMutation(
       request,
       reply,
       deps,
       preauthPrincipal(body.handle, deps.config.preauthHmacKey),
       200,
       () => deps.service.login(body),
+      async (result) => result,
     );
   });
 
@@ -154,12 +181,14 @@ export async function registerIdentityOnboardingRoutes(
     { schema: { body: requestSchemas.verifyOtp } },
     async (request, reply) => {
       const body = request.body as OtpVerificationInput;
-      return executeMutation(request, reply, deps, body.challenge_id, 200, () =>
-        deps.service.verifyOtp({
-          challengeId: body.challenge_id,
-          code: body.code,
-          requestId: request.id,
-        }),
+      return executePreparedMutation(
+        request,
+        reply,
+        deps,
+        body.challenge_id,
+        200,
+        () => deps.service.prepareOtpVerification(body.challenge_id, body.code),
+        (session) => deps.service.completeOtpVerification(session, request.id),
       );
     },
   );
@@ -214,8 +243,14 @@ export async function registerIdentityOnboardingRoutes(
     async (request, reply) => {
       const actor = await actorFor(request, deps.service);
       const { caseId } = request.params as { caseId: string };
-      return executeMutation(request, reply, deps, actor.principal, 201, () =>
-        deps.service.createUpload(actor, caseId, request.body as UploadMetadata),
+      return executePreparedMutation(
+        request,
+        reply,
+        deps,
+        actor.principal,
+        201,
+        () => deps.service.prepareUpload(actor, caseId, request.body as UploadMetadata),
+        (intent) => deps.service.completeUpload(intent),
       );
     },
   );

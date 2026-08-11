@@ -82,7 +82,7 @@ for (const relativeFile of candidateFiles()) {
 
   if (
     /^\.env(?:\.|$)/.test(path.basename(normalized)) &&
-    path.basename(normalized) !== '.env.example'
+    !/^\.env(?:\.[^.]+)*\.example$/.test(path.basename(normalized))
   ) {
     failures.push(`${normalized}: local environment files must not be committed.`);
   }

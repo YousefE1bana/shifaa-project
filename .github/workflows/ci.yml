@@ -75,6 +75,30 @@ jobs:
         if: always()
         run: docker compose down -v
 
+  supabase-runtime:
+    name: Supabase Auth, PostgreSQL, Storage, and RLS
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: 11.13.0
+          run_install: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24.18.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm supabase:start
+      - run: pnpm supabase:test
+      - name: Supabase status on failure
+        if: failure()
+        run: pnpm supabase status || true
+      - name: Stop Supabase
+        if: always()
+        run: pnpm supabase:stop --no-backup || true
+
   accessibility-and-e2e:
     name: Accessibility and patient E2E
     runs-on: ubuntu-latest

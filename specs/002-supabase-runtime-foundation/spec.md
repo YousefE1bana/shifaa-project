@@ -37,7 +37,7 @@ The working 001 journey still stores all runtime state in one API process and us
 
 - Commit and pin Supabase CLI `2.113.0`; local `supabase/config.toml`, migrations, seed, private `identity-evidence` bucket, and deterministic bootstrap commands.
 - Use real local Supabase Auth for email registration, password login, email OTP verification, session issuance, and server-side JWKS JWT verification.
-- Preserve one stable mapping from `auth.users.id` to SHIFAA `identity.people.id`; atomically create patient and active self relationship after verified authentication.
+- Preserve one stable mapping from `auth.users.id` to SHIFAA `identity.people.user_id`; atomically create the separate internal person UUID, patient, and active self relationship after Supabase accepts registration. Protected sessions remain unavailable until OTP verification succeeds.
 - Replace runtime in-memory identity/consent/review/idempotency/audit/outbox storage with PostgreSQL repository transactions using the existing schema and forced RLS.
 - Make `AUTH_ADAPTER`, `UPLOAD_ADAPTER`, and repository configuration select real implementations. Local adapters remain unit-test-only; production startup continues to fail closed.
 - Store evidence only in a private quarantine bucket with random object names and no public URL.
@@ -109,7 +109,7 @@ Given a synthetic identity in `manual_review`, the admin app loads its masked pr
 
 ## 5. Domain model and invariants
 
-No new domain entity or state transition is introduced. `auth.users.id` is an external authentication subject, not a patient ID. `identity.people.auth_subject_id` is unique and immutable; Core API resolves it to the internal person UUID. Person/patient/self creation, idempotency response, audit, and outbox effects commit in one PostgreSQL transaction. External Auth/Storage calls are outside that transaction. All existing verification/consent state guards remain authoritative.
+No new domain entity or state transition is introduced. `auth.users.id` is an external authentication subject, not a patient ID. Existing `identity.people.user_id` is the unique immutable mapping; Core API resolves it to the separate internal person UUID. Person/patient/self creation, idempotency response, audit, and outbox effects commit in one PostgreSQL transaction. External Auth/Storage calls are outside that transaction. All existing verification/consent state guards remain authoritative.
 
 ## 6. Exact data and RLS contract
 
@@ -117,7 +117,7 @@ No new domain entity or state transition is introduced. `auth.users.id` is an ex
 - Add the immutable unique auth-subject mapping and local synthetic reviewer seed required by the runtime.
 - Every domain table keeps `ENABLE` and `FORCE ROW LEVEL SECURITY`.
 - Online queries run as a non-owner, non-`BYPASSRLS` API role. Each transaction uses `set_config(..., true)` for actor kind/person/AAL/purpose; pooled connections must never retain context.
-- RLS predicates use indexed relationship/owner/assignment columns. Security-definer helpers use `search_path=''` and revoke direct execution from public client roles.
+- RLS predicates use indexed relationship/owner/assignment columns. Security-definer helpers use a fixed `pg_catalog`-only search path, schema-qualified objects, and revoke direct execution from public client roles.
 - `identity-evidence` is private; object key is random UUID, owner/case linkage is metadata, and public URL generation is forbidden.
 
 ## 7. API contract

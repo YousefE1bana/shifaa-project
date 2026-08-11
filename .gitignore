@@ -13,6 +13,7 @@
 .env
 .env.*
 !.env.example
+!.env.*.example
 *.local
 *.log
 
@@ -24,6 +25,11 @@ build/
 *.tsbuildinfo
 coverage/
 .turbo/
+.expo/
+expo-env.d.ts
+/apps/admin/AGENTS.md
+/apps/admin/CLAUDE.md
+/apps/patient/.gitignore
 .pnpm-store/
 artifacts/
 

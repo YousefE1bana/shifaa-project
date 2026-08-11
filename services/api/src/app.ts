@@ -8,6 +8,10 @@ import {
   LocalAuthIssuer,
   LocalProofingProvider,
   LocalQuarantineUploadStore,
+  PostgresIdentityRepository,
+  PostgresIdempotencyStore,
+  SupabaseAuthIssuer,
+  SupabaseQuarantineUploadStore,
 } from './adapters/index.js';
 import { loadConfig, type ApiConfig } from './config.js';
 import {
@@ -15,6 +19,7 @@ import {
   InMemoryIdentityRepository,
   defaultPortUtilities,
 } from './modules/identity-onboarding/index.js';
+import type { IdentityRepository } from './modules/identity-onboarding/ports.js';
 import { InMemoryIdempotencyStore } from './platform/idempotency.js';
 import {
   installIdentityErrorHandler,
@@ -25,7 +30,7 @@ export interface AppHarness {
   app: ReturnType<typeof Fastify>;
   config: ApiConfig;
   service: IdentityOnboardingService;
-  repository: InMemoryIdentityRepository;
+  repository: IdentityRepository;
 }
 
 export async function buildApp(
@@ -38,13 +43,33 @@ export async function buildApp(
   const config = options.config ?? loadConfig({ NODE_ENV: 'test' });
   if (!config.identityOnboardingEnabled)
     throw new Error('Identity onboarding feature is disabled.');
-  const repository = new InMemoryIdentityRepository();
+  const repository =
+    config.repositoryAdapter === 'postgres'
+      ? new PostgresIdentityRepository(config.databaseUrl)
+      : new InMemoryIdentityRepository();
+  if (repository instanceof PostgresIdentityRepository) await repository.ready();
   const utilities = defaultPortUtilities();
+  const auth =
+    config.authAdapter === 'supabase'
+      ? new SupabaseAuthIssuer({
+          url: config.supabaseUrl!,
+          anonKey: config.supabaseAnonKey!,
+          jwksUrl: config.supabaseJwksUrl!,
+          issuer: config.supabaseJwtIssuer!,
+          audience: config.supabaseJwtAudience,
+        })
+      : new LocalAuthIssuer();
+  const uploads =
+    config.uploadAdapter === 'supabase'
+      ? new SupabaseQuarantineUploadStore(config.supabaseUrl!, config.supabaseServiceRoleKey!)
+      : new LocalQuarantineUploadStore();
+  if (auth instanceof SupabaseAuthIssuer) await auth.ready();
+  if (uploads instanceof SupabaseQuarantineUploadStore) await uploads.ready();
   const service = new IdentityOnboardingService({
-    auth: new LocalAuthIssuer(),
+    auth,
     cipher: new AesGcmIdentityCipher(config.identityEncryptionKey, config.identityBlindIndexKey, 1),
     proofing: options.proofing ?? new LocalProofingProvider(),
-    uploads: new LocalQuarantineUploadStore(),
+    uploads,
     repository,
     clock: options.clock ?? utilities.clock,
     ids: utilities.ids,
@@ -72,7 +97,13 @@ export async function buildApp(
   await registerIdentityOnboardingRoutes(app, {
     config,
     service,
-    idempotency: new InMemoryIdempotencyStore(),
+    idempotency:
+      repository instanceof PostgresIdentityRepository
+        ? new PostgresIdempotencyStore(repository)
+        : new InMemoryIdempotencyStore(),
   });
+  if (repository instanceof PostgresIdentityRepository) {
+    app.addHook('onClose', () => repository.close());
+  }
   return { app, config, service, repository };
 }

@@ -1,6 +1,6 @@
 # Identity onboarding seeded-synthetic runbook
 
-> Scope: `001-identity-onboarding`. This runbook authorizes local/test seeded-synthetic operation only. It does not authorize production identity proofing, SMS, PHI processing, or real identity documents.
+> Scope: `001-identity-onboarding` on `002-supabase-runtime-foundation`. This runbook authorizes local/test seeded-synthetic operation only. It does not authorize production identity proofing, SMS, PHI processing, or real identity documents.
 
 ## Operating boundary
 
@@ -20,14 +20,14 @@ $ErrorActionPreference = 'Stop'
 fnm use 24.18.0
 corepack install --global pnpm@11.13.0
 pnpm install --frozen-lockfile
-if (-not (Test-Path '.env.local')) { Copy-Item '.env.example' '.env.local' }
-docker compose --env-file .env.local config
-docker compose --env-file .env.local up -d --wait postgres
-pnpm db:migrate
-pnpm db:test
-pnpm db:rls-test
+pnpm supabase:start
+pnpm supabase:reset
+if (-not (Test-Path '.env.local')) { Copy-Item '.env.supabase.example' '.env.local' }
+pnpm supabase:test
 pnpm verify
 ```
+
+Start the three application processes in separate PowerShell windows with `pnpm dev:supabase:api`, `pnpm dev:patient:web`, and `pnpm dev:admin:web`.
 
 ## Verification and evidence
 
@@ -55,14 +55,13 @@ The run is passing only when the evidence records read p95 at or below 400 ms an
 
 ## Local database reset
 
-`pnpm db:reset` destroys this repository's local PostgreSQL volume. It is forbidden against shared, staging, or production databases.
+`pnpm supabase:reset` destroys this repository's named local Supabase database. It is forbidden against shared, staging, or production databases.
 
 ```powershell
 $confirmation = Read-Host 'Type RESET-SHIFAA-LOCAL to delete the local database volume'
 if ($confirmation -ne 'RESET-SHIFAA-LOCAL') { throw 'Reset cancelled' }
-pnpm db:reset
-pnpm db:test
-pnpm db:rls-test
+pnpm supabase:reset
+pnpm supabase:test
 ```
 
 Append-only consent and audit records must be corrected by forward migration after shared use; they must not be deleted as a rollback technique.
@@ -88,7 +87,7 @@ Append-only consent and audit records must be corrected by forward migration aft
 Preserve the local database volume:
 
 ```powershell
-docker compose --env-file .env.local down
+pnpm supabase:stop
 ```
 
 Delete the local synthetic volume only through the confirmed reset procedure above.

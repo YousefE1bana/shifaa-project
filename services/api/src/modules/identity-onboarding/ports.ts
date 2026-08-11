@@ -105,39 +105,80 @@ export interface OutboxOutcome {
 }
 
 export interface IdentityRepository {
-  transaction<T>(work: () => Promise<T> | T): Promise<T>;
-  createRegistration(authSubjectId: string, handle: string, locale: Locale): PersonAggregate;
-  profileByAuthSubject(authSubjectId: string): ProfileRecord | undefined;
+  transaction<T>(work: () => Promise<T> | T, context?: RepositoryContext): Promise<T>;
+  createRegistration(
+    authSubjectId: string,
+    handle: string,
+    locale: Locale,
+  ): Promise<PersonAggregate> | PersonAggregate;
+  profileByAuthSubject(
+    authSubjectId: string,
+  ): Promise<ProfileRecord | undefined> | ProfileRecord | undefined;
   updateProfile(
     personId: string,
     expectedVersion: number,
     patch: Partial<
       Pick<ProfileRecord, 'displayName' | 'birthDate' | 'nationalityCode' | 'preferredLocale'>
     >,
-  ): ProfileRecord;
-  hasActiveInventory(purposeCode: string): boolean;
-  createIdentity(input: Omit<StoredIdentity, 'id' | 'version'>): StoredIdentity;
-  identitiesForPerson(personId: string): readonly StoredIdentity[];
+  ): Promise<ProfileRecord> | ProfileRecord;
+  hasActiveInventory(purposeCode: string): Promise<boolean> | boolean;
+  setInventory(purposeCode: string, enabled: boolean): Promise<void> | void;
+  createIdentity(
+    input: Omit<StoredIdentity, 'id' | 'version'>,
+  ): Promise<StoredIdentity> | StoredIdentity;
+  identitiesForPerson(
+    personId: string,
+  ): Promise<readonly StoredIdentity[]> | readonly StoredIdentity[];
   createVerificationCase(
     input: Omit<StoredVerificationCase, 'id' | 'version'>,
-  ): StoredVerificationCase;
-  verificationCase(caseId: string): StoredVerificationCase | undefined;
-  verificationCases(): readonly StoredVerificationCase[];
-  replaceVerificationCase(value: StoredVerificationCase): void;
-  currentNotice(locale: Locale): {
-    noticeCode: string;
-    version: string;
-    locale: Locale;
-    content: string;
-    purposes: readonly { purposeCode: string; version: string; label: string; optional: boolean }[];
-  };
-  consentsForPerson(personId: string): readonly ConsentRecord[];
-  appendConsent(record: ConsentRecord): void;
-  consent(consentId: string): ConsentRecord | undefined;
-  appendAudit(value: AuditOutcome): void;
-  appendOutbox(value: OutboxOutcome): void;
+  ): Promise<StoredVerificationCase> | StoredVerificationCase;
+  verificationCase(
+    caseId: string,
+  ): Promise<StoredVerificationCase | undefined> | StoredVerificationCase | undefined;
+  verificationCases():
+    | Promise<readonly StoredVerificationCase[]>
+    | readonly StoredVerificationCase[];
+  replaceVerificationCase(value: StoredVerificationCase): Promise<void> | void;
+  currentNotice(locale: Locale):
+    | Promise<{
+        noticeCode: string;
+        version: string;
+        locale: Locale;
+        content: string;
+        purposes: readonly {
+          purposeCode: string;
+          version: string;
+          label: string;
+          optional: boolean;
+        }[];
+      }>
+    | {
+        noticeCode: string;
+        version: string;
+        locale: Locale;
+        content: string;
+        purposes: readonly {
+          purposeCode: string;
+          version: string;
+          label: string;
+          optional: boolean;
+        }[];
+      };
+  consentsForPerson(personId: string): Promise<readonly ConsentRecord[]> | readonly ConsentRecord[];
+  appendConsent(record: ConsentRecord): Promise<void> | void;
+  consent(consentId: string): Promise<ConsentRecord | undefined> | ConsentRecord | undefined;
+  appendAudit(value: AuditOutcome): Promise<void> | void;
+  appendOutbox(value: OutboxOutcome): Promise<void> | void;
   readonly audits: readonly AuditOutcome[];
   readonly outbox: readonly OutboxOutcome[];
+}
+
+export interface RepositoryContext {
+  personId: string;
+  role: 'PAT' | 'ADM-FACILITY' | 'SYS';
+  aal: 1 | 2;
+  purposes: readonly string[];
+  principal: string;
 }
 
 export type IdentityOnboardingPorts = {

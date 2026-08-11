@@ -48,9 +48,9 @@ describe('identity onboarding use-case module', () => {
 
   it('defaults to deny and commits audit/outbox with the domain result', async () => {
     const { service, repository } = serviceHarness();
-    expect(() => service.listReviewCases({ kind: 'PUB', principal: 'anonymous' })).toThrowError(
-      expect.objectContaining({ code: 'permission-denied' }),
-    );
+    await expect(
+      service.listReviewCases({ kind: 'PUB', principal: 'anonymous' }),
+    ).rejects.toMatchObject({ code: 'permission-denied' });
 
     const challenge = await service.register({
       handle: 'patient.two@synthetic.shifaa.test',

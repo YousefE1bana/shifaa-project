@@ -10,11 +10,18 @@ export interface ApiConfig {
   syntheticMode: boolean;
   syntheticProofingEnabled: boolean;
   authAdapter: 'local' | 'supabase';
+  repositoryAdapter: 'memory' | 'postgres';
   proofingAdapter: 'local' | 'valify';
   uploadAdapter: 'local' | 'supabase';
   identityEncryptionKey: Uint8Array;
   identityBlindIndexKey: Uint8Array;
   preauthHmacKey: Uint8Array;
+  supabaseUrl?: string;
+  supabaseAnonKey?: string;
+  supabaseServiceRoleKey?: string;
+  supabaseJwksUrl?: string;
+  supabaseJwtIssuer?: string;
+  supabaseJwtAudience: string;
 }
 
 export class ConfigurationError extends Error {
@@ -49,7 +56,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     env['SYNTHETIC_PROOFING_ENABLED'],
     environment !== 'production',
   );
-  const authAdapter = (env['AUTH_ADAPTER'] ?? 'local') as ApiConfig['authAdapter'];
+  const authAdapter = (env['AUTH_ADAPTER'] ??
+    (environment === 'test' ? 'local' : 'supabase')) as ApiConfig['authAdapter'];
+  const repositoryAdapter = (env['REPOSITORY_ADAPTER'] ??
+    (environment === 'test' ? 'memory' : 'postgres')) as ApiConfig['repositoryAdapter'];
   const proofingAdapter = (env['PROOFING_ADAPTER'] ?? 'local') as ApiConfig['proofingAdapter'];
   const uploadAdapter = (env['UPLOAD_ADAPTER'] ?? 'local') as ApiConfig['uploadAdapter'];
   const corsOrigins = (
@@ -65,6 +75,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
       syntheticMode && 'SHIFAA_SYNTHETIC_MODE',
       syntheticProofingEnabled && 'SYNTHETIC_PROOFING_ENABLED',
       authAdapter === 'local' && 'AUTH_ADAPTER=local',
+      repositoryAdapter === 'memory' && 'REPOSITORY_ADAPTER=memory',
       proofingAdapter === 'local' && 'PROOFING_ADAPTER=local',
       uploadAdapter === 'local' && 'UPLOAD_ADAPTER=local',
     ].filter(Boolean);
@@ -89,10 +100,33 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
 
   if (!['local', 'supabase'].includes(authAdapter))
     throw new ConfigurationError('Invalid AUTH_ADAPTER.');
+  if (!['memory', 'postgres'].includes(repositoryAdapter))
+    throw new ConfigurationError('Invalid REPOSITORY_ADAPTER.');
   if (!['local', 'valify'].includes(proofingAdapter))
     throw new ConfigurationError('Invalid PROOFING_ADAPTER.');
   if (!['local', 'supabase'].includes(uploadAdapter))
     throw new ConfigurationError('Invalid UPLOAD_ADAPTER.');
+
+  if (
+    environment !== 'test' &&
+    (authAdapter === 'local' || repositoryAdapter === 'memory' || uploadAdapter === 'local')
+  ) {
+    throw new ConfigurationError(
+      'Executable development runtime requires Supabase Auth, PostgreSQL, and Supabase Storage adapters.',
+    );
+  }
+  if (authAdapter === 'supabase' || uploadAdapter === 'supabase') {
+    for (const required of [
+      'SUPABASE_URL',
+      'SUPABASE_ANON_KEY',
+      'SUPABASE_SERVICE_ROLE_KEY',
+      'SUPABASE_JWKS_URL',
+      'SUPABASE_JWT_ISSUER',
+    ]) {
+      if (!env[required])
+        throw new ConfigurationError(`${required} is required for the Supabase runtime.`);
+    }
+  }
 
   return {
     environment,
@@ -108,6 +142,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     syntheticMode,
     syntheticProofingEnabled,
     authAdapter,
+    repositoryAdapter,
     proofingAdapter,
     uploadAdapter,
     identityEncryptionKey: readKey(
@@ -122,5 +157,13 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
       'PREAUTH_HMAC_KEY_BASE64',
       env['PREAUTH_HMAC_KEY_BASE64'] ?? Buffer.alloc(32, 2).toString('base64'),
     ),
+    ...(env['SUPABASE_URL'] ? { supabaseUrl: env['SUPABASE_URL'] } : {}),
+    ...(env['SUPABASE_ANON_KEY'] ? { supabaseAnonKey: env['SUPABASE_ANON_KEY'] } : {}),
+    ...(env['SUPABASE_SERVICE_ROLE_KEY']
+      ? { supabaseServiceRoleKey: env['SUPABASE_SERVICE_ROLE_KEY'] }
+      : {}),
+    ...(env['SUPABASE_JWKS_URL'] ? { supabaseJwksUrl: env['SUPABASE_JWKS_URL'] } : {}),
+    ...(env['SUPABASE_JWT_ISSUER'] ? { supabaseJwtIssuer: env['SUPABASE_JWT_ISSUER'] } : {}),
+    supabaseJwtAudience: env['SUPABASE_JWT_AUDIENCE'] ?? 'authenticated',
   };
 }

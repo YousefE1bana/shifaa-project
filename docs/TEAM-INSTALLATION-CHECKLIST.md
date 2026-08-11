@@ -1,6 +1,6 @@
 # SHIFAA team installation checklist
 
-> Baseline: `001-identity-onboarding` seeded-synthetic engineering only. Run these commands in Windows PowerShell. Do not add real patient, identity, document, vendor, or production credentials.
+> Baseline: `002-supabase-runtime-foundation` seeded-synthetic engineering only. Run these commands in Windows PowerShell. Do not add real patient, identity, document, vendor, or production credentials.
 
 ## 1. Install machine prerequisites
 
@@ -83,21 +83,28 @@ if (-not (Test-Path '.kimi-code/skills/speckit-implement/SKILL.md')) { throw 'Ki
 if (-not (Test-Path '.agents/skills/speckit-implement/SKILL.md')) { throw 'Codex SpecKit integration is missing' }
 ```
 
-## 4. Create the synthetic-only local environment
+## 4. Create the synthetic-only Supabase environment
 
 ```powershell
 $ErrorActionPreference = 'Stop'
+pnpm supabase:start
+pnpm supabase:reset
+pnpm supabase:status
 if (Test-Path '.env.local') { throw '.env.local already exists; review it instead of overwriting it' }
-Copy-Item '.env.example' '.env.local'
-docker compose --env-file .env.local config
-docker compose --env-file .env.local up -d --wait postgres
-pnpm db:migrate
-pnpm db:test
-pnpm db:rls-test
+Copy-Item '.env.supabase.example' '.env.local'
+pnpm supabase:test
 pnpm verify
 ```
 
-`.env.local` is ignored by Git. The checked-in example contains synthetic local defaults only. Production Supabase, Valify, SMS, encryption, signing, or PHI credentials are neither required nor permitted for this slice.
+Open three PowerShell windows from the repository root and run one command in each:
+
+```powershell
+pnpm dev:supabase:api
+pnpm dev:patient:web
+pnpm dev:admin:web
+```
+
+`.env.local` is ignored by Git. Copy the generated local keys printed by `pnpm supabase:status` into it and never commit it. Production Supabase, Valify, SMS, encryption, signing, or PHI credentials are neither required nor permitted for this slice.
 
 ## 5. Start an Issue-scoped implementation
 
@@ -149,15 +156,14 @@ Get-Content 'specs/001-identity-onboarding/evidence/performance.json'
 ## 7. Stop local services
 
 ```powershell
-docker compose --env-file .env.local down
+pnpm supabase:stop
 ```
 
 To deliberately delete only this repository's local PostgreSQL volume and rebuild its synthetic data:
 
 ```powershell
-$confirmation = Read-Host 'Type RESET-SHIFAA-LOCAL to delete the local database volume'
+$confirmation = Read-Host 'Type RESET-SHIFAA-LOCAL to reset the named local Supabase database'
 if ($confirmation -ne 'RESET-SHIFAA-LOCAL') { throw 'Reset cancelled' }
-pnpm db:reset
-pnpm db:test
-pnpm db:rls-test
+pnpm supabase:reset
+pnpm supabase:test
 ```

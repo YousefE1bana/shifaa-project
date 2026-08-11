@@ -12,7 +12,13 @@ import {
 } from '@shifaa/core';
 
 import { ApiPolicyError, deny } from './errors.js';
-import type { IdentityOnboardingPorts, ProfileRecord, StoredVerificationCase } from './ports.js';
+import type {
+  AuthChallenge,
+  AuthSession,
+  IdentityOnboardingPorts,
+  ProfileRecord,
+  StoredVerificationCase,
+} from './ports.js';
 
 export interface PublicActor {
   kind: 'PUB';
@@ -70,15 +76,26 @@ export class IdentityOnboardingService {
     locale: Locale;
     requestId: string;
   }) {
+    const challenge = await this.prepareRegistration(input);
+    return this.completeRegistration(input, challenge);
+  }
+
+  public async prepareRegistration(input: { handle: string; password: string; locale: Locale }) {
     this.assertLoginHandle(input.handle);
+    return this.ports.auth.register(input.handle, input.password, input.locale);
+  }
+
+  public async completeRegistration(
+    input: { handle: string; locale: Locale; requestId: string },
+    challenge: AuthChallenge,
+  ) {
     return this.ports.repository.transaction(async () => {
-      const challenge = await this.ports.auth.register(input.handle, input.password, input.locale);
-      const aggregate = this.ports.repository.createRegistration(
+      const aggregate = await this.ports.repository.createRegistration(
         challenge.subjectId,
         input.handle,
         input.locale,
       );
-      this.ports.repository.appendAudit({
+      await this.ports.repository.appendAudit({
         actorPersonId: aggregate.personId,
         action: 'identity.registration.created',
         resourceType: 'person',
@@ -98,15 +115,23 @@ export class IdentityOnboardingService {
   }
 
   public async verifyOtp(input: { challengeId: string; code: string; requestId: string }) {
-    const session = await this.ports.auth.verifyOtp(input.challengeId, input.code);
-    const profile = this.ports.repository.profileByAuthSubject(session.subjectId);
+    const session = await this.prepareOtpVerification(input.challengeId, input.code);
+    return this.completeOtpVerification(session, input.requestId);
+  }
+
+  public async prepareOtpVerification(challengeId: string, code: string) {
+    return this.ports.auth.verifyOtp(challengeId, code);
+  }
+
+  public async completeOtpVerification(session: AuthSession, requestId: string) {
+    const profile = await this.ports.repository.profileByAuthSubject(session.subjectId);
     if (!profile) throw new ApiPolicyError('profile-not-found', 404, 'Profile not found.');
-    this.ports.repository.appendAudit({
+    await this.ports.repository.appendAudit({
       actorPersonId: profile.id,
       action: 'auth.otp.verified',
       resourceType: 'session',
       outcome: 'allowed',
-      requestId: input.requestId,
+      requestId,
     });
     return { kind: 'session' as const, access_token: session.accessToken, aal: session.aal };
   }
@@ -114,7 +139,7 @@ export class IdentityOnboardingService {
   public async actorFromAccessToken(accessToken: string): Promise<PatientActor | undefined> {
     const session = await this.ports.auth.resolveSession(accessToken);
     if (!session) return undefined;
-    const profile = this.ports.repository.profileByAuthSubject(session.subjectId);
+    const profile = await this.ports.repository.profileByAuthSubject(session.subjectId);
     if (!profile) return undefined;
     return {
       kind: 'PAT',
@@ -125,9 +150,9 @@ export class IdentityOnboardingService {
     };
   }
 
-  public getProfile(actor: RequestActor) {
+  public async getProfile(actor: RequestActor) {
     const patient = this.requirePatient(actor);
-    const profile = this.ports.repository.profileByAuthSubject(patient.subjectId);
+    const profile = await this.ports.repository.profileByAuthSubject(patient.subjectId);
     if (!profile || profile.id !== patient.personId) deny();
     return profileDto(profile);
   }
@@ -144,8 +169,8 @@ export class IdentityOnboardingService {
     requestId: string,
   ) {
     const patient = this.requirePatient(actor);
-    return this.ports.repository.transaction(() => {
-      const profile = this.ports.repository.updateProfile(patient.personId, expectedVersion, {
+    return this.ports.repository.transaction(async () => {
+      const profile = await this.ports.repository.updateProfile(patient.personId, expectedVersion, {
         ...(patch.display_name !== undefined ? { displayName: patch.display_name } : {}),
         ...(patch.birth_date !== undefined ? { birthDate: patch.birth_date } : {}),
         ...(patch.nationality_code !== undefined
@@ -155,7 +180,7 @@ export class IdentityOnboardingService {
           ? { preferredLocale: patch.preferred_locale }
           : {}),
       });
-      this.ports.repository.appendAudit({
+      await this.ports.repository.appendAudit({
         actorPersonId: patient.personId,
         action: 'identity.profile.updated',
         resourceType: 'person',
@@ -164,7 +189,7 @@ export class IdentityOnboardingService {
         requestId,
       });
       return profileDto(profile);
-    });
+    }, this.repositoryContext(patient));
   }
 
   public async createIdentity(
@@ -178,7 +203,7 @@ export class IdentityOnboardingService {
     requestId: string,
   ) {
     const patient = this.requirePatient(actor);
-    if (!this.ports.repository.hasActiveInventory('identity_proofing')) {
+    if (!(await this.ports.repository.hasActiveInventory('identity_proofing'))) {
       throw new ApiPolicyError(
         'processing-purpose-disabled',
         503,
@@ -194,8 +219,8 @@ export class IdentityOnboardingService {
     });
     const status = provider.outcome === 'timeout' ? 'pending' : provider.outcome;
 
-    return this.ports.repository.transaction(() => {
-      const identity = this.ports.repository.createIdentity({
+    return this.ports.repository.transaction(async () => {
+      const identity = await this.ports.repository.createIdentity({
         personId: patient.personId,
         identityType: input.identity_type,
         encrypted,
@@ -204,7 +229,7 @@ export class IdentityOnboardingService {
         maskedValue,
         verificationStatus: status,
       });
-      const verificationCase = this.ports.repository.createVerificationCase({
+      const verificationCase = await this.ports.repository.createVerificationCase({
         identityId: identity.id,
         identityType: identity.identityType,
         maskedValue,
@@ -212,9 +237,11 @@ export class IdentityOnboardingService {
         provider: this.ports.proofing.name,
         ...(provider.transactionId ? { providerTransactionId: provider.transactionId } : {}),
         status,
-        ...(status === 'manual_review' ? { assignedReviewerPersonId: 'synthetic-reviewer' } : {}),
+        ...(status === 'manual_review'
+          ? { assignedReviewerPersonId: '00000000-0000-4000-8000-000000000002' }
+          : {}),
       });
-      this.ports.repository.appendAudit({
+      await this.ports.repository.appendAudit({
         actorPersonId: patient.personId,
         action: 'identity.proof.created',
         resourceType: 'verification_case',
@@ -223,7 +250,7 @@ export class IdentityOnboardingService {
         requestId,
         metadata: { identity_type: input.identity_type, status },
       });
-      this.ports.repository.appendOutbox({
+      await this.ports.repository.appendOutbox({
         eventType:
           status === 'manual_review'
             ? 'identity.manual_review.requested'
@@ -237,28 +264,30 @@ export class IdentityOnboardingService {
         masked_value: identity.maskedValue,
         verification_case: caseDto(verificationCase),
       };
-    });
+    }, this.repositoryContext(patient));
   }
 
-  public listIdentities(actor: RequestActor) {
+  public async listIdentities(actor: RequestActor) {
     const patient = this.requirePatient(actor);
-    return this.ports.repository.identitiesForPerson(patient.personId).map((identity) => {
-      const verificationCase = this.ports.repository
-        .verificationCases()
-        .find((candidate) => candidate.identityId === identity.id);
-      if (!verificationCase)
-        throw new ApiPolicyError(
-          'verification-case-not-found',
-          500,
-          'Verification state is missing.',
-        );
-      return {
-        id: identity.id,
-        identity_type: identity.identityType,
-        masked_value: identity.maskedValue,
-        verification_case: caseDto(verificationCase),
-      };
-    });
+    return this.ports.repository.transaction(async () => {
+      const identities = await this.ports.repository.identitiesForPerson(patient.personId);
+      const cases = await this.ports.repository.verificationCases();
+      return identities.map((identity) => {
+        const verificationCase = cases.find((candidate) => candidate.identityId === identity.id);
+        if (!verificationCase)
+          throw new ApiPolicyError(
+            'verification-case-not-found',
+            500,
+            'Verification state is missing.',
+          );
+        return {
+          id: identity.id,
+          identity_type: identity.identityType,
+          masked_value: identity.maskedValue,
+          verification_case: caseDto(verificationCase),
+        };
+      });
+    }, this.repositoryContext(patient));
   }
 
   public async createUpload(
@@ -270,15 +299,36 @@ export class IdentityOnboardingService {
       sha256: string;
     },
   ) {
+    const intent = await this.prepareUpload(actor, caseId, input);
+    return this.completeUpload(intent);
+  }
+
+  public async prepareUpload(
+    actor: RequestActor,
+    caseId: string,
+    input: {
+      mime_type: 'image/jpeg' | 'image/png' | 'application/pdf';
+      size_bytes: number;
+      sha256: string;
+    },
+  ) {
     const patient = this.requirePatient(actor);
-    const verificationCase = this.ports.repository.verificationCase(caseId);
+    const verificationCase = await this.ports.repository.transaction(
+      () => this.ports.repository.verificationCase(caseId),
+      this.repositoryContext(patient),
+    );
     if (!verificationCase || verificationCase.ownerPersonId !== patient.personId) deny();
-    const intent = await this.ports.uploads.createIntent({
+    return this.ports.uploads.createIntent({
       caseId,
       mimeType: input.mime_type,
       sizeBytes: input.size_bytes,
       sha256: input.sha256,
     });
+  }
+
+  public async completeUpload(
+    intent: Awaited<ReturnType<IdentityOnboardingPorts['uploads']['createIntent']>>,
+  ) {
     return {
       object_id: intent.objectId,
       upload_url: intent.uploadUrl,
@@ -286,8 +336,11 @@ export class IdentityOnboardingService {
     };
   }
 
-  public getVerificationCase(actor: RequestActor, caseId: string) {
-    const value = this.ports.repository.verificationCase(caseId);
+  public async getVerificationCase(actor: RequestActor, caseId: string) {
+    const value = await this.ports.repository.transaction(
+      () => this.ports.repository.verificationCase(caseId),
+      actor.kind === 'PUB' ? undefined : this.repositoryContext(actor),
+    );
     if (!value)
       throw new ApiPolicyError('verification-case-not-found', 404, 'Verification case not found.');
     if (actor.kind === 'PAT' && value.ownerPersonId === actor.personId) return caseDto(value);
@@ -295,11 +348,14 @@ export class IdentityOnboardingService {
     return deny();
   }
 
-  public listReviewCases(actor: RequestActor) {
+  public async listReviewCases(actor: RequestActor) {
     const reviewer = this.requireReviewer(actor);
+    const cases = await this.ports.repository.transaction(
+      () => this.ports.repository.verificationCases(),
+      this.repositoryContext(reviewer),
+    );
     return {
-      data: this.ports.repository
-        .verificationCases()
+      data: cases
         .filter((value) => value.assignedReviewerPersonId === reviewer.personId)
         .map(caseDto),
       meta: { next_cursor: null },
@@ -314,11 +370,14 @@ export class IdentityOnboardingService {
     requestId: string,
   ) {
     const reviewer = this.requireReviewer(actor);
-    const current = this.ports.repository.verificationCase(caseId);
+    const current = await this.ports.repository.transaction(
+      () => this.ports.repository.verificationCase(caseId),
+      this.repositoryContext(reviewer),
+    );
     if (!current || !this.isAuthorizedReviewer(reviewer, current)) deny();
     if (current.ownerPersonId === reviewer.personId) deny('separation-of-duties');
 
-    return this.ports.repository.transaction(() => {
+    return this.ports.repository.transaction(async () => {
       let transitioned;
       try {
         transitioned = transitionVerification(
@@ -340,8 +399,8 @@ export class IdentityOnboardingService {
         reasonCode: input.reason,
         ...(input.evidence_object_id ? { evidenceObjectId: input.evidence_object_id } : {}),
       };
-      this.ports.repository.replaceVerificationCase(next);
-      this.ports.repository.appendAudit({
+      await this.ports.repository.replaceVerificationCase(next);
+      await this.ports.repository.appendAudit({
         actorPersonId: reviewer.personId,
         action: 'identity.review.decided',
         resourceType: 'verification_case',
@@ -350,17 +409,17 @@ export class IdentityOnboardingService {
         requestId,
         metadata: { decision: input.decision },
       });
-      this.ports.repository.appendOutbox({
+      await this.ports.repository.appendOutbox({
         eventType: 'identity.verification.changed',
         aggregateId: next.id,
         payload: { case_id: next.id, status: next.status },
       });
       return caseDto(next);
-    });
+    }, this.repositoryContext(reviewer));
   }
 
-  public currentNotice(locale: Locale) {
-    const notice = this.ports.repository.currentNotice(locale);
+  public async currentNotice(locale: Locale) {
+    const notice = await this.ports.repository.currentNotice(locale);
     return {
       notice_code: notice.noticeCode,
       version: notice.version,
@@ -375,17 +434,21 @@ export class IdentityOnboardingService {
     };
   }
 
-  public listConsents(actor: RequestActor) {
+  public async listConsents(actor: RequestActor) {
     const patient = this.requirePatient(actor);
-    return this.ports.repository.consentsForPerson(patient.personId).map((record) => ({
-      id: record.id,
-      purpose_code: record.purposeCode,
-      purpose_version: record.purposeVersion,
-      decision: record.decision,
-      occurred_at: record.occurredAt,
-      supersedes_id: record.supersedesId ?? null,
-      version: record.version,
-    }));
+    return this.ports.repository.transaction(
+      async () =>
+        (await this.ports.repository.consentsForPerson(patient.personId)).map((record) => ({
+          id: record.id,
+          purpose_code: record.purposeCode,
+          purpose_version: record.purposeVersion,
+          decision: record.decision,
+          occurred_at: record.occurredAt,
+          supersedes_id: record.supersedesId ?? null,
+          version: record.version,
+        })),
+      this.repositoryContext(patient),
+    );
   }
 
   public async recordConsent(
@@ -399,14 +462,14 @@ export class IdentityOnboardingService {
     requestId: string,
   ) {
     const patient = this.requirePatient(actor);
-    if (!this.ports.repository.hasActiveInventory(input.purpose_code)) {
+    if (!(await this.ports.repository.hasActiveInventory(input.purpose_code))) {
       throw new ApiPolicyError(
         'processing-purpose-disabled',
         503,
         'This privacy purpose is not active.',
       );
     }
-    return this.ports.repository.transaction(() => {
+    return this.ports.repository.transaction(async () => {
       const record = appendConsentDecision({
         id: this.ports.ids.uuid(),
         personId: patient.personId,
@@ -416,8 +479,8 @@ export class IdentityOnboardingService {
         decision: input.decision,
         occurredAt: this.ports.clock.now().toISOString(),
       });
-      this.ports.repository.appendConsent(record);
-      this.ports.repository.appendAudit({
+      await this.ports.repository.appendConsent(record);
+      await this.ports.repository.appendAudit({
         actorPersonId: patient.personId,
         action: 'consent.decision.recorded',
         resourceType: 'consent',
@@ -426,7 +489,7 @@ export class IdentityOnboardingService {
         requestId,
         metadata: { purpose_code: record.purposeCode, decision: record.decision },
       });
-      this.ports.repository.appendOutbox({
+      await this.ports.repository.appendOutbox({
         eventType: 'consent.changed',
         aggregateId: record.id,
         payload: {
@@ -444,7 +507,7 @@ export class IdentityOnboardingService {
         supersedes_id: null,
         version: record.version,
       };
-    });
+    }, this.repositoryContext(patient));
   }
 
   public async withdrawConsent(
@@ -454,7 +517,10 @@ export class IdentityOnboardingService {
     requestId: string,
   ) {
     const patient = this.requirePatient(actor);
-    const current = this.ports.repository.consent(consentId);
+    const current = await this.ports.repository.transaction(
+      () => this.ports.repository.consent(consentId),
+      this.repositoryContext(patient),
+    );
     if (!current || current.personId !== patient.personId) deny();
     if (current.version !== expectedVersion) {
       throw new ApiPolicyError(
@@ -463,7 +529,7 @@ export class IdentityOnboardingService {
         'Refresh your privacy choices before trying again.',
       );
     }
-    return this.ports.repository.transaction(() => {
+    return this.ports.repository.transaction(async () => {
       let record;
       try {
         record = withdrawConsent({
@@ -476,8 +542,8 @@ export class IdentityOnboardingService {
           throw new ApiPolicyError(error.code, 409, error.message);
         throw error;
       }
-      this.ports.repository.appendConsent(record);
-      this.ports.repository.appendAudit({
+      await this.ports.repository.appendConsent(record);
+      await this.ports.repository.appendAudit({
         actorPersonId: patient.personId,
         action: 'consent.withdrawn',
         resourceType: 'consent',
@@ -485,7 +551,7 @@ export class IdentityOnboardingService {
         outcome: 'allowed',
         requestId,
       });
-      this.ports.repository.appendOutbox({
+      await this.ports.repository.appendOutbox({
         eventType: 'consent.changed',
         aggregateId: record.id,
         payload: { consent_id: record.id, purpose_code: record.purposeCode, decision: 'withdrawn' },
@@ -499,7 +565,7 @@ export class IdentityOnboardingService {
         supersedes_id: record.supersedesId ?? null,
         version: record.version,
       };
-    });
+    }, this.repositoryContext(patient));
   }
 
   public async providerCallback(
@@ -507,34 +573,47 @@ export class IdentityOnboardingService {
     outcome: 'verified' | 'failed' | 'manual_review',
     requestId: string,
   ) {
-    const current = this.ports.repository.verificationCase(caseId);
-    if (!current)
-      throw new ApiPolicyError('verification-case-not-found', 404, 'Verification case not found.');
-    if (['verified', 'rejected', 'failed', 'expired'].includes(current.status)) {
-      return caseDto(current);
-    }
-    return this.ports.repository.transaction(() => {
-      const transitioned = transitionVerification(
-        { id: current.id, state: current.status, version: current.version },
-        outcome,
-        current.version,
-      );
-      const next = { ...current, status: transitioned.state, version: transitioned.version };
-      this.ports.repository.replaceVerificationCase(next);
-      this.ports.repository.appendAudit({
-        action: 'identity.provider.callback',
-        resourceType: 'verification_case',
-        resourceId: next.id,
-        outcome: 'allowed',
-        requestId,
-      });
-      this.ports.repository.appendOutbox({
-        eventType: 'identity.verification.changed',
-        aggregateId: next.id,
-        payload: { case_id: next.id, status: next.status },
-      });
-      return caseDto(next);
-    });
+    return this.ports.repository.transaction(
+      async () => {
+        const current = await this.ports.repository.verificationCase(caseId);
+        if (!current)
+          throw new ApiPolicyError(
+            'verification-case-not-found',
+            404,
+            'Verification case not found.',
+          );
+        if (['verified', 'rejected', 'failed', 'expired'].includes(current.status)) {
+          return caseDto(current);
+        }
+        const transitioned = transitionVerification(
+          { id: current.id, state: current.status, version: current.version },
+          outcome,
+          current.version,
+        );
+        const next = { ...current, status: transitioned.state, version: transitioned.version };
+        await this.ports.repository.replaceVerificationCase(next);
+        await this.ports.repository.appendAudit({
+          action: 'identity.provider.callback',
+          resourceType: 'verification_case',
+          resourceId: next.id,
+          outcome: 'allowed',
+          requestId,
+        });
+        await this.ports.repository.appendOutbox({
+          eventType: 'identity.verification.changed',
+          aggregateId: next.id,
+          payload: { case_id: next.id, status: next.status },
+        });
+        return caseDto(next);
+      },
+      {
+        personId: '00000000-0000-4000-8000-000000000000',
+        role: 'SYS',
+        aal: 2,
+        purposes: ['identity.provider_callback'],
+        principal: 'provider-callback',
+      },
+    );
   }
 
   private requirePatient(actor: RequestActor): PatientActor {
@@ -573,6 +652,16 @@ export class IdentityOnboardingService {
       actor.purposes.includes('identity.review') &&
       value.assignedReviewerPersonId === actor.personId
     );
+  }
+
+  private repositoryContext(actor: PatientActor | ReviewerActor) {
+    return {
+      personId: actor.personId,
+      role: actor.kind,
+      aal: actor.aal,
+      purposes: actor.kind === 'ADM-FACILITY' ? actor.purposes : [],
+      principal: actor.principal,
+    } as const;
   }
 }
 

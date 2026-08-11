@@ -15,7 +15,7 @@ type ReviewList = {
 
 const client = new IdentityOnboardingClient({
   baseUrl: process.env['NEXT_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000',
-  accessToken: 'synthetic-reviewer:synthetic-reviewer',
+  accessToken: 'synthetic-reviewer:00000000-0000-4000-8000-000000000002',
   defaultHeaders: { 'X-AAL': '2', 'X-Purpose': 'identity.review' },
 });
 

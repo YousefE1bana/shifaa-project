@@ -30,16 +30,29 @@ export function preauthPrincipal(handle: string, key: Uint8Array): string {
   return createHmac('sha256', key).update(handle.trim().toLowerCase()).digest('base64url');
 }
 
-export class InMemoryIdempotencyStore {
-  private readonly records = new Map<string, IdempotencyRecord<unknown>>();
-
-  public async execute<T>(input: {
+export interface IdempotencyStore {
+  execute<T, P = undefined>(input: {
     principal: string;
     method: string;
     route: string;
     key: string;
     body: unknown;
-    work: () => Promise<StoredHttpResult<T>>;
+    prepare?: () => Promise<P>;
+    work: (prepared: P) => Promise<StoredHttpResult<T>>;
+  }): Promise<StoredHttpResult<T>>;
+}
+
+export class InMemoryIdempotencyStore implements IdempotencyStore {
+  private readonly records = new Map<string, IdempotencyRecord<unknown>>();
+
+  public async execute<T, P = undefined>(input: {
+    principal: string;
+    method: string;
+    route: string;
+    key: string;
+    body: unknown;
+    prepare?: () => Promise<P>;
+    work: (prepared: P) => Promise<StoredHttpResult<T>>;
   }): Promise<StoredHttpResult<T>> {
     if (input.key.length < 16 || input.key.length > 128) {
       throw new ApiPolicyError(
@@ -64,7 +77,8 @@ export class InMemoryIdempotencyStore {
       return existing.result;
     }
 
-    const result = input.work();
+    const prepared = input.prepare ? await input.prepare() : (undefined as P);
+    const result = input.work(prepared);
     this.records.set(composite, { requestHash, result });
     try {
       return await result;

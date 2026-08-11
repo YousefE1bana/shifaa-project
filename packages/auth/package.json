@@ -3,5 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Session-client boundary placeholder; domain authorization remains in API/core/RLS."
+  "description": "Session-client boundary placeholder; domain authorization remains in API/core/RLS.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --exclude='dist/**'"
+  },
+  "dependencies": {
+    "jose": "6.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "typescript": "7.0.2",
+    "vitest": "4.1.0"
+  }
 }

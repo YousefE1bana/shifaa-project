@@ -13,14 +13,18 @@
     "start": "node dist/server.js",
     "lint": "tsc -p tsconfig.json --noEmit",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --exclude='dist/**'",
-    "test:integration": "vitest run test/identity-onboarding.integration.test.ts"
+    "test": "vitest run --exclude='dist/**' --exclude='test/supabase-runtime.integration.test.ts'",
+    "test:integration": "vitest run test/identity-onboarding.integration.test.ts",
+    "test:supabase": "vitest run test/supabase-runtime.integration.test.ts --testTimeout=30000"
   },
   "dependencies": {
     "@fastify/cors": "11.2.0",
+    "@shifaa/auth": "workspace:*",
     "@shifaa/contracts": "workspace:*",
     "@shifaa/core": "workspace:*",
-    "fastify": "5.11.3"
+    "@supabase/supabase-js": "2.112.2",
+    "fastify": "5.11.3",
+    "postgres": "3.4.9"
   },
   "devDependencies": {
     "@types/node": "24.10.1",

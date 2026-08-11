@@ -173,6 +173,23 @@ for (const { root, manifest } of manifests) {
           );
         }
       }
+      if (root.startsWith('apps/')) {
+        const external = packageNameFromSpecifier(specifier);
+        if (['postgres', 'pg', '@supabase/supabase-js'].includes(external)) {
+          failures.push(
+            `${relative(file)} imports direct data client ${specifier}; apps must use the Core API client`,
+          );
+        }
+      }
+    }
+
+    if (
+      root.startsWith('apps/') &&
+      /\/rest\/v1|\/storage\/v1\/(?:bucket|object\/list)/.test(contents)
+    ) {
+      failures.push(
+        `${relative(file)} contains a direct Supabase data-plane path; apps must use /v1 Core API routes`,
+      );
     }
   }
 }

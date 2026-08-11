@@ -11,5 +11,14 @@
     "allowImportingTsExtensions": true,
     "types": ["node"]
   },
-  "include": ["app/**/*.tsx", "src/**/*.ts", "src/**/*.tsx", "test/**/*.ts", "e2e/**/*.ts"]
+  "include": [
+    "app/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "test/**/*.ts",
+    "e2e/**/*.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "extends": "expo/tsconfig.base"
 }

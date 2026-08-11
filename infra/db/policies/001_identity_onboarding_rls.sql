@@ -18,7 +18,7 @@ LANGUAGE sql STABLE SET search_path = pg_catalog AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION platform.case_owner_is_other(p_identity_id uuid, p_actor_person_id uuid) RETURNS boolean
-LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, identity AS $$
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog AS $$
   SELECT EXISTS (
     SELECT 1 FROM identity.identities own
     WHERE own.id = p_identity_id AND own.person_id <> p_actor_person_id
@@ -26,10 +26,23 @@ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, identity AS $
 $$;
 REVOKE ALL ON FUNCTION platform.case_owner_is_other(uuid, uuid) FROM PUBLIC;
 
+CREATE OR REPLACE FUNCTION platform.identity_assigned_to_reviewer(p_identity_id uuid, p_reviewer_person_id uuid) RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM identity.verification_cases c
+    JOIN identity.identities own ON own.id = c.identity_id
+    WHERE c.identity_id = p_identity_id
+      AND c.assigned_reviewer_person_id = p_reviewer_person_id
+      AND own.person_id <> p_reviewer_person_id
+  )
+$$;
+REVOKE ALL ON FUNCTION platform.identity_assigned_to_reviewer(uuid, uuid) FROM PUBLIC;
+
 GRANT USAGE ON SCHEMA identity, consent, platform, audit TO shifaa_api;
 GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA identity TO shifaa_api;
 GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA consent TO shifaa_api;
 GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA platform TO shifaa_api;
+GRANT DELETE ON platform.idempotency_records TO shifaa_api;
 GRANT INSERT ON ALL TABLES IN SCHEMA audit TO shifaa_api;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA platform, identity TO shifaa_api;
 
@@ -78,10 +91,33 @@ CREATE POLICY relationships_self_select ON identity.care_relationships FOR SELEC
 
 DROP POLICY IF EXISTS identities_self_select ON identity.identities;
 CREATE POLICY identities_self_select ON identity.identities FOR SELECT TO shifaa_api
-  USING (person_id = platform.context_person_id() AND platform.context_role() = 'PAT');
+  USING (
+    (person_id = platform.context_person_id() AND platform.context_role() = 'PAT')
+    OR (
+      platform.context_role() = 'ADM-FACILITY'
+      AND platform.context_aal() >= 2
+      AND 'identity.review' = ANY(platform.context_purposes())
+      AND platform.identity_assigned_to_reviewer(id, platform.context_person_id())
+    )
+    OR (platform.context_role() = 'SYS' AND 'identity.provider_callback' = ANY(platform.context_purposes()))
+  );
 DROP POLICY IF EXISTS identities_self_insert ON identity.identities;
 CREATE POLICY identities_self_insert ON identity.identities FOR INSERT TO shifaa_api
   WITH CHECK (person_id = platform.context_person_id() AND platform.context_role() = 'PAT');
+DROP POLICY IF EXISTS identities_review_update ON identity.identities;
+CREATE POLICY identities_review_update ON identity.identities FOR UPDATE TO shifaa_api
+  USING (
+    (platform.context_role() = 'ADM-FACILITY' AND platform.context_aal() >= 2
+      AND 'identity.review' = ANY(platform.context_purposes())
+      AND platform.identity_assigned_to_reviewer(id, platform.context_person_id()))
+    OR (platform.context_role() = 'SYS' AND 'identity.provider_callback' = ANY(platform.context_purposes()))
+  )
+  WITH CHECK (
+    (platform.context_role() = 'ADM-FACILITY' AND platform.context_aal() >= 2
+      AND 'identity.review' = ANY(platform.context_purposes())
+      AND platform.identity_assigned_to_reviewer(id, platform.context_person_id()))
+    OR (platform.context_role() = 'SYS' AND 'identity.provider_callback' = ANY(platform.context_purposes()))
+  );
 
 DROP POLICY IF EXISTS cases_subject_or_reviewer_select ON identity.verification_cases;
 CREATE POLICY cases_subject_or_reviewer_select ON identity.verification_cases FOR SELECT TO shifaa_api
@@ -94,6 +130,7 @@ CREATE POLICY cases_subject_or_reviewer_select ON identity.verification_cases FO
       AND assigned_reviewer_person_id = platform.context_person_id()
       AND platform.case_owner_is_other(identity_id, platform.context_person_id())
     )
+    OR (platform.context_role() = 'SYS' AND 'identity.provider_callback' = ANY(platform.context_purposes()))
   );
 DROP POLICY IF EXISTS cases_subject_insert ON identity.verification_cases;
 CREATE POLICY cases_subject_insert ON identity.verification_cases FOR INSERT TO shifaa_api
@@ -106,10 +143,12 @@ CREATE POLICY cases_reviewer_update ON identity.verification_cases FOR UPDATE TO
     AND 'identity.review' = ANY(platform.context_purposes())
     AND assigned_reviewer_person_id = platform.context_person_id()
     AND platform.case_owner_is_other(identity_id, platform.context_person_id())
+    OR (platform.context_role() = 'SYS' AND 'identity.provider_callback' = ANY(platform.context_purposes()))
   )
   WITH CHECK (
-    reviewer_person_id = platform.context_person_id()
-    AND platform.case_owner_is_other(identity_id, platform.context_person_id())
+    (reviewer_person_id = platform.context_person_id()
+    AND platform.case_owner_is_other(identity_id, platform.context_person_id()))
+    OR (platform.context_role() = 'SYS' AND 'identity.provider_callback' = ANY(platform.context_purposes()))
   );
 
 DROP POLICY IF EXISTS consent_self_select ON consent.records;
