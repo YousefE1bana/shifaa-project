@@ -633,11 +633,11 @@ components:
     MembershipInvite:
       type: object
       additionalProperties: false
-      required: [person_id, role_code, valid_from]
+      required: [person_id, role_code, employment_license_id, valid_from]
       properties:
         person_id: { type: string, format: uuid }
-        role_code: { type: string, minLength: 2, maxLength: 80 }
-        employment_license_id: { type: [string, 'null'], format: uuid }
+        role_code: { type: string, enum: [doctor, pharmacist, nurse, lab_professional] }
+        employment_license_id: { type: string, format: uuid }
         valid_from: { type: string, format: date-time }
         valid_until: { type: [string, 'null'], format: date-time }
     MembershipPatch:
@@ -645,20 +645,20 @@ components:
       additionalProperties: false
       minProperties: 1
       properties:
-        role_code: { type: string, minLength: 2, maxLength: 80 }
-        employment_license_id: { type: [string, 'null'], format: uuid }
-        membership_status: { type: string, enum: [active, suspended] }
+        role_code: { type: string, enum: [doctor, pharmacist, nurse, lab_professional] }
+        employment_license_id: { type: string, format: uuid }
+        valid_from: { type: string, format: date-time }
+        status: { type: string, enum: [active, suspended] }
         valid_until: { type: [string, 'null'], format: date-time }
     Membership:
       type: object
-      required: [id, facility_id, person_id, role_code, membership_status, version]
+      required: [id, facility_id, person_id, role_code, status, version]
       properties:
         id: { type: string, format: uuid }
         facility_id: { type: string, format: uuid }
         person_id: { type: string, format: uuid }
         role_code: { type: string }
-        membership_status:
-          { type: string, enum: [invited, active, suspended, ended, rejected, expired] }
+        status: { type: string, enum: [invited, active, suspended, ended, rejected, expired] }
         valid_from: { type: string, format: date-time }
         valid_until: { type: [string, 'null'], format: date-time }
         version: { type: integer, minimum: 1 }

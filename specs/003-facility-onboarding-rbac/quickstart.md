@@ -37,7 +37,7 @@ Use the generated seeded accounts documented in `evidence/fixtures.md`. Retrieve
 ## Deterministic acceptance checkpoint
 
 1. For each facility type, create a draft, upload the matching committed synthetic evidence fixture, confirm quarantine blocks approval, release it through the deterministic scanner, and submit.
-2. As an assigned AAL2 `facility_approver`, inspect only the minimum projection and approve two fixtures/reject two fixtures with reasons.
+2. As an eligible AAL2/purpose-bound `facility_approver`, inspect only the minimum projection and approve two fixtures/reject two fixtures with reasons.
 3. Create and verify a synthetic professional license, invite the licensed worker, and accept the membership.
 4. Confirm the worker enters only the facility application matching the facility type; attempt the same session against another facility/type and observe denial.
 5. Exercise AAL1, missing purpose, wrong admin role, expired/suspended/rejected/unverified license, and direct SQL RLS negatives.

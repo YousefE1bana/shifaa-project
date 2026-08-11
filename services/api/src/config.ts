@@ -7,6 +7,7 @@ export interface ApiConfig {
   corsOrigins: string[];
   databaseUrl: string;
   identityOnboardingEnabled: boolean;
+  facilityOnboardingEnabled: boolean;
   syntheticMode: boolean;
   syntheticProofingEnabled: boolean;
   authAdapter: 'local' | 'supabase';
@@ -71,6 +72,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     .filter(Boolean);
 
   if (environment === 'production') {
+    if (readBoolean(env['FACILITY_ONBOARDING_ENABLED'], false)) {
+      throw new ConfigurationError(
+        'Production startup denied: facility onboarding remains blocked by OPEN-SEC-001.',
+      );
+    }
     const forbidden = [
       syntheticMode && 'SHIFAA_SYNTHETIC_MODE',
       syntheticProofingEnabled && 'SYNTHETIC_PROOFING_ENABLED',
@@ -137,6 +143,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
       env['DATABASE_URL'] ?? 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa',
     identityOnboardingEnabled: readBoolean(
       env['IDENTITY_ONBOARDING_ENABLED'],
+      environment !== 'production',
+    ),
+    facilityOnboardingEnabled: readBoolean(
+      env['FACILITY_ONBOARDING_ENABLED'],
       environment !== 'production',
     ),
     syntheticMode,

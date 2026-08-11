@@ -29,15 +29,15 @@ An authenticated owner of a clinic, pharmacy, hospital, or laboratory needs to c
 
 ### Actors and authorization context
 
-| Actor                                     | Facility/patient relationship                                             | Permitted outcome                                                                                                  | Explicitly prohibited                                                                                                  |
-| ----------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| Verified owner candidate                  | no membership until draft creation; then owner membership at one facility | create/update/submit own draft, upload quarantine evidence, view own facility, manage memberships after activation | approve/suspend own facility, enumerate private objects, use another facility context                                  |
-| Invited workforce person                  | named invitation for one facility                                         | accept invitation and enter only the matching facility app after all gates pass                                    | shared account, self-selected role/facility, cross-facility access, regulated action with invalid professional license |
-| `ADM-FACILITY` (`facility_approver`) AAL2 | assigned facility/professional-license case and explicit review purpose   | minimum-data worklist; approve/reject/suspend with evidence and reason                                             | own-case approval, unrelated person/profile/clinical data, role-grant decisions                                        |
-| First `ADM-SUPER` (`super_admin`) AAL2    | active grant                                                              | propose a canonical admin-role grant or revocation                                                                 | decide own proposal, obtain target-role data access from proposal alone                                                |
-| Independent second `ADM-SUPER` AAL2       | active grant and not proposer/target                                      | approve/reject a pending grant or revocation                                                                       | decide own proposal, mutate grant directly outside state function                                                      |
-| Other canonical admin roles               | exact action-level grants                                                 | only the operation families listed in the canonical role matrix                                                    | implicit hierarchy, arbitrary facility/patient/clinical access                                                         |
-| Core API / PostgreSQL / Storage           | verified request context                                                  | enforce policy twice, atomically persist mutation/audit/outbox/idempotency, keep evidence private                  | trust client claims, use owner/service-role for user requests, bypass forced RLS                                       |
+| Actor                                     | Facility/patient relationship                                               | Permitted outcome                                                                                                  | Explicitly prohibited                                                                                                  |
+| ----------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Verified owner candidate                  | no membership until draft creation; then owner membership at one facility   | create/update/submit own draft, upload quarantine evidence, view own facility, manage memberships after activation | approve/suspend own facility, enumerate private objects, use another facility context                                  |
+| Invited workforce person                  | named invitation for one facility                                           | accept invitation and enter only the matching facility app after all gates pass                                    | shared account, self-selected role/facility, cross-facility access, regulated action with invalid professional license |
+| `ADM-FACILITY` (`facility_approver`) AAL2 | eligible facility/professional-license worklist and explicit review purpose | minimum-data worklist; approve/reject/suspend with evidence and reason                                             | own-case approval, unrelated person/profile/clinical data, role-grant decisions                                        |
+| First `ADM-SUPER` (`super_admin`) AAL2    | active grant                                                                | propose a canonical admin-role grant or revocation                                                                 | decide own proposal, obtain target-role data access from proposal alone                                                |
+| Independent second `ADM-SUPER` AAL2       | active grant and not proposer/target                                        | approve/reject a pending grant or revocation                                                                       | decide own proposal, mutate grant directly outside state function                                                      |
+| Other canonical admin roles               | exact action-level grants                                                   | only the operation families listed in the canonical role matrix                                                    | implicit hierarchy, arbitrary facility/patient/clinical access                                                         |
+| Core API / PostgreSQL / Storage           | verified request context                                                    | enforce policy twice, atomically persist mutation/audit/outbox/idempotency, keep evidence private                  | trust client claims, use owner/service-role for user requests, bypass forced RLS                                       |
 
 ### In scope
 
@@ -93,12 +93,12 @@ An authenticated owner of a clinic, pharmacy, hospital, or laboratory needs to c
 1. Given a verified synthetic owner at AAL2 and one of `clinic`, `pharmacy`, `hospital`, or `laboratory`.
 2. When the owner creates a draft, enters bilingual/address/license metadata, uploads private evidence, and submits the current version.
 3. The system creates one attributable owner membership, keeps evidence quarantined until scan release, and creates one `pending_review` case without claiming approval.
-4. An independent assigned `facility_approver` sees only the minimum projection and approves or rejects; approval activates the facility, rejection records localized next steps, and all effects are audited.
+4. An independent eligible `facility_approver` sees only the minimum projection and approves or rejects; approval activates the facility, rejection records localized next steps, and all effects are audited.
 
 ### Journey J-02 — Verify a professional license and join a facility
 
 1. Given an approved facility owner and a synthetic worker with a pending professional license.
-2. When the worker uploads evidence and an independent assigned `facility_approver` verifies the released evidence, the owner invites the worker with a named facility role and validity.
+2. When the worker uploads evidence and an independent eligible `facility_approver` verifies the released evidence, the owner invites the worker with a named facility role and validity.
 3. The worker accepts once and enters only the application matching that facility type.
 4. Regulated authorization returns allow only while membership, permission, AAL/purpose, facility context, patient relationship when required, and professional license are all valid.
 
@@ -205,7 +205,7 @@ stateDiagram-v2
 | ------------------------------------------- | -------------------------------------------------- | ---------------------------------- | ------------------------------------- | ------ | ------------------------- |
 | owner at matching facility                  | own full authorized facility/membership projection | own facility/license/member invite | draft/update/submit/team actions only | denied | `TV-RLS-FAC-OWNER`        |
 | active facility member                      | own membership + authorized facility minimum       | license subject only               | accept own invite; named action only  | denied | `TV-RLS-FAC-MEMBER`       |
-| assigned `facility_approver`, AAL2, purpose | minimum assigned facility/license cases            | denied                             | guarded decision/suspension only      | denied | `TV-RLS-FAC-APPROVER`     |
+| eligible `facility_approver`, AAL2, purpose | minimum facility/license worklist projection       | denied                             | guarded decision/suspension only      | denied | `TV-RLS-FAC-APPROVER`     |
 | active independent `super_admin`, AAL2      | role-grant governance projection                   | proposal                           | guarded independent decision only     | denied | `TV-RLS-ADMIN-FOUR-EYES`  |
 | other/missing/cross-facility                | none                                               | denied                             | denied                                | denied | `TV-RLS-FAC-DEFAULT-DENY` |
 
@@ -217,8 +217,8 @@ The machine-readable feature contract defines exactly these canonical operations
 
 | Operation IDs                                                                                                                                         | Method/path family         | Actors/controls                                                                                         | Success/primary problems                                                                             | Audit/events                                      |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| `createProfessionalLicense`, `createProfessionalLicenseUpload`, `getProfessionalLicense`, `listProfessionalLicenseCases`, `reviewProfessionalLicense` | exact API Catalog §2 paths | subject or assigned `facility_approver`; review AAL2/purpose/version                                    | pending/masked/upload/worklist/verify-reject-suspend; evidence/role/state conflicts                  | `professional_license.*`; minimum IDs/status only |
-| `createFacility`, `updateFacility`, `submitFacility`, `createFacilityLicenseUpload`, `listFacilityApprovalCases`, `reviewFacility`, `getFacility`     | exact API Catalog §3 paths | verified owner; assigned `facility_approver` AAL2/purpose; version on update/submit/review              | draft/pending/active/rejected/suspended projections; quarantine, self-review, stale/version problems | `facility.*`; no license number/document          |
+| `createProfessionalLicense`, `createProfessionalLicenseUpload`, `getProfessionalLicense`, `listProfessionalLicenseCases`, `reviewProfessionalLicense` | exact API Catalog §2 paths | subject or eligible `facility_approver`; review AAL2/purpose/version                                    | pending/masked/upload/worklist/verify-reject-suspend; evidence/role/state conflicts                  | `professional_license.*`; minimum IDs/status only |
+| `createFacility`, `updateFacility`, `submitFacility`, `createFacilityLicenseUpload`, `listFacilityApprovalCases`, `reviewFacility`, `getFacility`     | exact API Catalog §3 paths | verified owner; eligible `facility_approver` AAL2/purpose; version on update/submit/review              | draft/pending/active/rejected/suspended projections; quarantine, self-review, stale/version problems | `facility.*`; no license number/document          |
 | `listFacilityMemberships`, `inviteFacilityMember`, `acceptFacilityMembership`, `updateFacilityMembership`, `endFacilityMembership`                    | exact API Catalog §3 paths | owner or invitee; version on update/end                                                                 | paged membership/invited/active/ended; cross-facility, invalid license, terminal invite problems     | `membership.*`; actor+facility+role/status only   |
 | `listAdminRoleGrants`, `proposeAdminRoleGrant`, `decideAdminRoleGrant`, `proposeAdminRoleRevocation`, `decideAdminRoleRevocation`                     | exact API Catalog §9 paths | two distinct active `super_admin` actors; AAL2 for mutations; versions on decisions/revocation proposal | paged governance projection, pending/active/rejected/revoked; self-decision, stale, invalid role     | `admin_role.*`; immutable proposer/decider IDs    |
 
@@ -238,12 +238,12 @@ Arabic uses root `dir=rtl`, logical properties, mirrored directional icons, and 
 
 ## 9. Notifications and asynchronous events
 
-| Source event                    | Recipient policy    | Allowed fields                                      | Dedup/retry                         | Emergency Contact                         |
-| ------------------------------- | ------------------- | --------------------------------------------------- | ----------------------------------- | ----------------------------------------- | ----------------------------------------------- | ------------------------------------------------------ | ----- | ----- |
-| `facility.submitted             | approved            | rejected                                            | suspended`                          | owner and assigned worklist as applicable | facility ID/type/status/reason code/next action | source event + recipient + template; bounded retry/DLQ | Never |
-| `professional_license.submitted | verified            | rejected                                            | suspended                           | expired`                                  | license subject and assigned reviewer           | license ID/profession/status/reason code/expiry band   | same  | Never |
-| `membership.invited             | accepted            | changed                                             | ended`                              | invitee/owner                             | membership/facility/role/status/validity only   | same; token never in event                             | Never |
-| `admin_role.grant               | revocation.changed` | proposal target/proposer/decider governance channel | grant/request/role/status/actor IDs | same                                      | Never                                           |
+| Source event family                                                  | Recipient policy                             | Allowed fields                                       | Dedup/retry                                               | Emergency Contact |
+| -------------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------- | ----------------- |
+| `facility.submitted/approved/rejected/suspended`                     | owner and eligible review worklist           | facility ID/type/status/reason code/next action      | source event + recipient + template; bounded retry/DLQ    | Never             |
+| `professional_license.submitted/verified/rejected/suspended/expired` | license subject and eligible review worklist | license ID/profession/status/reason code/expiry band | source event + recipient + template; bounded retry/DLQ    | Never             |
+| `membership.invited/accepted/changed/ended`                          | invitee/owner                                | membership/facility/role/status/validity only        | source event + recipient + template; token never in event | Never             |
+| `admin_role.grant/revocation.changed`                                | target/proposer/decider governance channel   | grant/request/role/status/actor IDs                  | source event + recipient + template; bounded retry/DLQ    | Never             |
 
 ## 10. Security, privacy, and abuse cases
 
@@ -254,7 +254,7 @@ Arabic uses root `dir=rtl`, logical properties, mirrored directional icons, and 
 | Self-approval/collusion path              | structural proposer/decider/owner/target checks and immutable audit                                        | API + direct SQL negative tests                         |
 | Malicious/private upload exposure         | random private key, MIME/magic/size/checksum, quarantine/scanner release, short-lived single-object access | anonymous/list/cross-owner/quarantine denial            |
 | Replay/race                               | atomic reservation/result, canonical body hash, `If-Match`, DB unique/check constraints                    | same/different/concurrent vectors                       |
-| Excessive admin projection                | assigned case, AAL2, purpose, field allow-list                                                             | snapshot/contract/RLS assertions                        |
+| Excessive admin projection                | eligible role, AAL2, purpose, field allow-list                                                             | snapshot/contract/RLS assertions                        |
 | License expiry bypass                     | request-time status/expiry predicate                                                                       | clock-bound expired/suspended/rejected/unverified tests |
 | PHI/secret telemetry                      | recursive redaction and event allow-lists; no full bodies/URLs/numbers/docs                                | sentinel scan                                           |
 | Supply-chain/secret regression            | lockfile, audit, CodeQL, secret/SBOM and install-script gates                                              | CI required checks                                      |
@@ -277,7 +277,7 @@ Arabic uses root `dir=rtl`, logical properties, mirrored directional icons, and 
 
 - `AC-01`: each exact facility type creates one draft and owner membership atomically.
 - `AC-02`: only released private evidence allows submission; quarantine/unscanned evidence denies.
-- `AC-03`: assigned AAL2/purpose approver receives only the minimum facility projection.
+- `AC-03`: eligible AAL2/purpose approver receives only the minimum facility projection.
 - `AC-04`: owner/self/wrong-role facility decision denies in API and forced RLS.
 - `AC-05`: facility approve/reject/suspend follows only the state matrix and current version.
 - `AC-06`: active owner invites a named worker; token hash only is stored.
@@ -287,7 +287,7 @@ Arabic uses root `dir=rtl`, logical properties, mirrored directional icons, and 
 - `AC-10`: cross-facility and wrong-role reads/mutations deny without existence/field oracle.
 - `AC-11`: missing purpose or AAL1 denies every catalogued sensitive admin action.
 - `AC-12`: professional license private upload/review returns masked projection only.
-- `AC-13`: professional worklist is assigned/minimum and self-review denies.
+- `AC-13`: professional worklist is role/purpose eligible and minimum; self-review denies.
 - `AC-14`: expired, suspended, rejected, and unverified licenses deny regulated actions.
 - `AC-15`: the five-role action matrix denies every non-mapped operation and grants no hierarchy.
 - `AC-16`: private Storage cannot be enumerated/fetched by anonymous, other owner, other facility, or quarantined reviewer.
@@ -334,7 +334,8 @@ Concrete fixture values and automated test paths are defined in `quickstart.md` 
 | `OPEN-UX-001/002`        | Product + Design + QA   | approve compositions, reference render matrix, baselines, and tolerances            | pixel-identical/automated visual claim |
 | `OPEN-TECH-001/002/003`  | canonical owners        | continue reproducibility/full-contract/reference-environment evidence               | claims owned by canonical register     |
 
-| Date       | Version | Change and affected FR/NFR/contracts                                                                                                                                                                                              |
-| ---------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-08-11 | `0.1.1` | Pre-implementation analysis corrections: partial facility PATCH, typed facility/professional decisions, immutable facility type, exact five-role active-operation registry, and 24-criterion task traceability                    |
-| 2026-08-11 | `0.1.0` | Initial active 003 specification for facility/professional licensing, memberships, contextual RBAC, exact admin roles, and four-eyes grants/revocations; excludes downstream operational workflows and production approval claims |
+| Date       | Version | Change and affected FR/NFR/contracts                                                                                                                                                                                                                                                   |
+| ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-11 | `0.1.2` | Final consistency correction: use canonical eligible AAL2/purpose reviewer semantics because 003 defines no case-assignment field or operation; enforce scanner-only release, license-bound memberships, facility-license activation, actor-bound four-eyes SQL, and opaque pagination |
+| 2026-08-11 | `0.1.1` | Pre-implementation analysis corrections: partial facility PATCH, typed facility/professional decisions, immutable facility type, exact five-role active-operation registry, and 24-criterion task traceability                                                                         |
+| 2026-08-11 | `0.1.0` | Initial active 003 specification for facility/professional licensing, memberships, contextual RBAC, exact admin roles, and four-eyes grants/revocations; excludes downstream operational workflows and production approval claims                                                      |

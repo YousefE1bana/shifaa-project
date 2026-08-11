@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/identity-onboarding.ts",
-    "./identity-onboarding": "./src/identity-onboarding.ts"
+    "./identity-onboarding": "./src/identity-onboarding.ts",
+    "./facility-onboarding": "./src/facility-onboarding.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

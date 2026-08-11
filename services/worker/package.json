@@ -4,12 +4,16 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/identity-onboarding.ts"
+    ".": "./src/identity-onboarding.ts",
+    "./facility-onboarding": "./src/facility-onboarding.ts"
   },
   "scripts": {
-    "test": "node --test src/identity-onboarding.test.ts",
+    "test": "node --test src/*.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@shifaa/observability": "workspace:*"
   },
   "devDependencies": {
     "typescript": "7.0.2"

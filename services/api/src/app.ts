@@ -10,6 +10,7 @@ import {
   LocalQuarantineUploadStore,
   PostgresIdentityRepository,
   PostgresIdempotencyStore,
+  PostgresFacilityOnboardingService,
   SupabaseAuthIssuer,
   SupabaseQuarantineUploadStore,
 } from './adapters/index.js';
@@ -25,12 +26,15 @@ import {
   installIdentityErrorHandler,
   registerIdentityOnboardingRoutes,
 } from './routes/identity-onboarding.js';
+import { FacilityOnboardingService } from './modules/facility-onboarding/index.js';
+import { registerFacilityOnboardingRoutes } from './routes/facility-onboarding.js';
 
 export interface AppHarness {
   app: ReturnType<typeof Fastify>;
   config: ApiConfig;
   service: IdentityOnboardingService;
   repository: IdentityRepository;
+  facilityService: FacilityOnboardingService | PostgresFacilityOnboardingService;
 }
 
 export async function buildApp(
@@ -75,6 +79,17 @@ export async function buildApp(
     ids: utilities.ids,
   });
   const app = Fastify({ logger: false, genReqId: () => randomUUID() });
+  const facilityService =
+    repository instanceof PostgresIdentityRepository
+      ? new PostgresFacilityOnboardingService(
+          repository,
+          config.identityEncryptionKey,
+          config.identityBlindIndexKey,
+          options.clock ? () => options.clock!.now() : undefined,
+        )
+      : options.clock
+        ? new FacilityOnboardingService(() => options.clock!.now())
+        : new FacilityOnboardingService();
   await app.register(cors, {
     origin: config.corsOrigins,
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'OPTIONS'],
@@ -102,8 +117,18 @@ export async function buildApp(
         ? new PostgresIdempotencyStore(repository)
         : new InMemoryIdempotencyStore(),
   });
+  if (config.facilityOnboardingEnabled) {
+    await registerFacilityOnboardingRoutes(app, {
+      service: facilityService,
+      syntheticMode: config.syntheticMode,
+      idempotency:
+        repository instanceof PostgresIdentityRepository
+          ? new PostgresIdempotencyStore(repository)
+          : new InMemoryIdempotencyStore(),
+    });
+  }
   if (repository instanceof PostgresIdentityRepository) {
     app.addHook('onClose', () => repository.close());
   }
-  return { app, config, service, repository };
+  return { app, config, service, repository, facilityService };
 }

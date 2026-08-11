@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./staff-facility": "./src/StaffFacilityWorkspace.tsx"
   },
   "scripts": {
-    "test": "node --test src/tokens.test.ts",
+    "test": "node --test src/*.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },

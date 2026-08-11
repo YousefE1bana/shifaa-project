@@ -125,9 +125,11 @@ for (const { root, manifest } of manifests) {
       if (specifier.startsWith('@shifaa/')) {
         const dependency = packageNameFromSpecifier(specifier);
         const suffix = specifier.slice(dependency.length);
-        if (suffix && suffix !== '/') {
+        const targetManifest = packageByName.get(dependency)?.manifest;
+        const publicSubpath = suffix ? `.${suffix}` : '.';
+        if (suffix && suffix !== '/' && !targetManifest?.exports?.[publicSubpath]) {
           failures.push(
-            `${relative(file)} deep-imports ${specifier}; import the package public entrypoint`,
+            `${relative(file)} deep-imports unpublished subpath ${specifier}; declare an explicit package export`,
           );
         }
         if (!declared[dependency]) {

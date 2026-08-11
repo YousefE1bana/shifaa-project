@@ -27,7 +27,7 @@ Required columns: `id`, `person_id`, `profession`, `specialty_code`, encrypted/n
 - Profession fixture closed set for 003 probes: `doctor|pharmacist|nurse|lab_professional`; the domain port permits later approved catalog expansion without changing authorization shape.
 - Status: `pending|verified|rejected|suspended|expired`.
 - Partial unique `(profession,license_number_hash)` while non-terminal.
-- Index `(person_id,profession,status,expires_on)`, assigned review/status ordering, and all FKs.
+- Index `(person_id,profession,status,expires_on)`, review/status ordering, and all FKs.
 
 ### `identity.facility_memberships`
 
@@ -63,7 +63,7 @@ Columns: `id`, `grant_id`, `status`, `reason`, `proposed_by_person_id`, `decided
 
 ## Private Storage metadata
 
-Use bucket `identity-evidence`, `public=false`. Random object names have no person/facility/license semantics. Allow-listed metadata contains `resource_type`, `resource_id`, `owner_person_id`, `facility_id` when applicable, `mime_type`, `size_bytes`, `sha256`, and `scan_status=quarantined|released|rejected`. Upload intent accepts JPEG/PNG/PDF up to 10 MiB. Approval download/preview is a short-lived single-object authorization and only for released evidence assigned to the reviewer. Anonymous/client list, public URL, cross-owner, cross-facility, and quarantined/rejected fetch all deny.
+Use bucket `identity-evidence`, `public=false`. Random object names have no person/facility/license semantics. Allow-listed metadata contains `resource_type`, `resource_id`, `owner_person_id`, `facility_id` when applicable, `mime_type`, `size_bytes`, `sha256`, and `scan_status=quarantined|released|rejected`. Upload intent accepts JPEG/PNG/PDF up to 10 MiB. Approval download/preview is a short-lived single-object authorization and only for released evidence requested by an eligible role/AAL/purpose reviewer. Anonymous/client list, public URL, cross-owner, cross-facility, and quarantined/rejected fetch all deny.
 
 ## State transition functions
 
@@ -98,14 +98,14 @@ Missing data denies. JWT metadata is never a grant. Membership/license/grant exp
 
 - Owner sees/manages only the matching facility and membership rows allowed by named actions.
 - Member sees own membership and minimum facility shell only.
-- Assigned facility approver at AAL2 with `facility.review` or `professional_license.review` purpose sees only minimum assigned/current worklist projections.
+- Eligible facility approver at AAL2 with the exact facility or professional-license review purpose sees only minimum current worklist projections.
 - Active super admin at AAL2 can see governance projections and use proposal/independent-decision functions; roles do not grant arbitrary patient/facility detail.
 - Missing context, other facility, other person, wrong role, AAL1, wrong/missing purpose, inactive membership/grant, and invalid license deny.
 
 ## Transaction boundaries
 
 1. Facility creation: idempotency reservation + facility + owner membership + audit + outbox + stored response.
-2. Facility/license/professional decision: version lock + assignment/evidence/AAL/purpose/separation check + transition + audit/outbox + stored response.
+2. Facility/license/professional decision: version lock + evidence/AAL/purpose/separation check + transition + audit/outbox + stored response.
 3. Membership invite/accept/change/end: token preparation outside transaction where needed; current facility/license/policy lock + mutation + audit/outbox + stored response.
 4. Admin grant/revocation: lock resources in deterministic UUID order + independence checks + state changes + audit/outbox + stored response.
 

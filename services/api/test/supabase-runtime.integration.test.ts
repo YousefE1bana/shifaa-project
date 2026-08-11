@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 
 import postgres from 'postgres';
+import { createClient } from '@supabase/supabase-js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp, type AppHarness } from '../src/app.js';
@@ -11,6 +12,7 @@ type Status = { API_URL: string; ANON_KEY: string; SERVICE_ROLE_KEY: string; MAI
 let status: Status;
 let first: AppHarness;
 let second: AppHarness;
+let facilityRuntime: AppHarness;
 let token = '';
 let profileId = '';
 let caseId = '';
@@ -75,6 +77,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await first?.app.close();
   await second?.app.close();
+  await facilityRuntime?.app.close();
 });
 
 describe.sequential('002 Supabase runtime', () => {
@@ -206,6 +209,163 @@ describe.sequential('002 Supabase runtime', () => {
       { headers: { apikey: status.ANON_KEY } },
     );
     expect([400, 401, 403, 404]).toContain(publicRead.status);
+  });
+
+  it('does not enumerate or fetch facility evidence for anonymous or unrelated actors', async () => {
+    const subject = JSON.parse(Buffer.from(token.split('.')[1]!, 'base64url').toString('utf8')).sub;
+    const storageAdmin = createClient(status.API_URL, status.SERVICE_ROLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    for (const bucket of ['facility-license-evidence', 'professional-license-evidence']) {
+      const objectPath = `${subject}/runtime-${randomUUID()}.pdf`;
+      const uploaded = await storageAdmin.storage
+        .from(bucket)
+        .upload(objectPath, Buffer.from('%PDF-1.4 synthetic private evidence'), {
+          contentType: 'application/pdf',
+          upsert: false,
+        });
+      expect(uploaded.error).toBeNull();
+      const ownerFetch = await fetch(
+        `${status.API_URL}/storage/v1/object/${bucket}/${objectPath}`,
+        {
+          headers: { apikey: status.ANON_KEY, authorization: `Bearer ${token}` },
+        },
+      );
+      expect(ownerFetch.status).toBe(200);
+      const anonymousList = await fetch(`${status.API_URL}/storage/v1/object/list/${bucket}`, {
+        method: 'POST',
+        headers: { apikey: status.ANON_KEY, 'content-type': 'application/json' },
+        body: JSON.stringify({ prefix: '', limit: 100, offset: 0 }),
+      });
+      if (anonymousList.ok) expect(await anonymousList.json()).toEqual([]);
+      else expect([400, 401, 403, 404]).toContain(anonymousList.status);
+      const unrelatedFetch = await fetch(
+        `${status.API_URL}/storage/v1/object/${bucket}/${randomUUID()}/missing.pdf`,
+        { headers: { apikey: status.ANON_KEY, authorization: `Bearer ${token}` } },
+      );
+      expect([400, 401, 403, 404]).toContain(unrelatedFetch.status);
+      expect((await storageAdmin.storage.from(bucket).remove([objectPath])).error).toBeNull();
+    }
+  });
+
+  it('runs facility evidence and approval through TCP, PostgreSQL, and private Storage', async () => {
+    const admin = postgres('postgresql://postgres:postgres@127.0.0.1:54322/postgres', { max: 1 });
+    const approverId = randomUUID();
+    await admin`insert into identity.people(id,user_id,display_name,nationality_code,preferred_locale,profile_status)
+      values(${approverId}::uuid,${randomUUID()}::uuid,'Synthetic runtime approver','EG','en-EG','active')`;
+    facilityRuntime = await buildApp({ config: runtimeConfig() });
+    const address = await facilityRuntime.app.listen({ host: '127.0.0.1', port: 0 });
+    const request = async (
+      method: string,
+      path: string,
+      actor: string,
+      body?: unknown,
+      extra: Record<string, string> = {},
+    ) => {
+      const response = await fetch(`${address}/v1${path}`, {
+        method,
+        headers: {
+          authorization: `Bearer ${actor}`,
+          ...(body === undefined ? {} : { 'content-type': 'application/json' }),
+          ...extra,
+        },
+        ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+      });
+      return {
+        response,
+        body: (await response.json()) as {
+          id: string;
+          object_id: string;
+          scan_status: string;
+          facility_status: string;
+        },
+      };
+    };
+    const created = await request(
+      'POST',
+      '/facilities',
+      `synthetic-person:${profileId}`,
+      {
+        facility_type: 'clinic',
+        name_ar: 'عيادة اصطناعية متصلة',
+        name_en: 'Connected synthetic clinic',
+        governorate_code: 'CA',
+        city: 'Cairo',
+        district: 'Synthetic',
+        address_line: 'Connected synthetic address',
+      },
+      { 'idempotency-key': `runtime-facility-${randomUUID()}` },
+    );
+    expect(created.response.status).toBe(201);
+    const upload = await request(
+      'POST',
+      `/facilities/${created.body.id}/licenses/upload-intent`,
+      `synthetic-person:${profileId}`,
+      {
+        mime_type: 'application/pdf',
+        size_bytes: 35,
+        sha256: createHash('sha256').update('%PDF-1.4 connected synthetic evidence').digest('hex'),
+        license_type: 'synthetic-clinic',
+        license_number: `SYN-${randomUUID()}`,
+        issuer: 'Synthetic authority',
+        expires_on: '2030-08-11',
+        licensed_activities: ['synthetic-onboarding'],
+      },
+      { 'idempotency-key': `runtime-upload-${randomUUID()}` },
+    );
+    expect(upload.response.status).toBe(201);
+    expect(upload.body.scan_status).toBe('quarantined');
+    const [object] = await admin<{ object_key: string }[]>`
+      select object_key from identity.private_evidence_objects where id=${upload.body.object_id}::uuid`;
+    expect(object?.object_key).toBeTruthy();
+    const storageAdmin = createClient(status.API_URL, status.SERVICE_ROLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const stored = await storageAdmin.storage
+      .from('facility-license-evidence')
+      .upload(object!.object_key, Buffer.from('%PDF-1.4 connected synthetic evidence'), {
+        contentType: 'application/pdf',
+        upsert: false,
+      });
+    expect(stored.error).toBeNull();
+    await admin`update identity.private_evidence_objects set scan_status='released',released_at=now()
+      where id=${upload.body.object_id}::uuid`;
+    const submitted = await request(
+      'POST',
+      `/facilities/${created.body.id}/submit`,
+      `synthetic-person:${profileId}`,
+      {},
+      {
+        'idempotency-key': `runtime-submit-${randomUUID()}`,
+        'if-match': '"2"',
+        'x-aal': '2',
+      },
+    );
+    expect(submitted.response.status).toBe(200);
+    const reviewed = await request(
+      'POST',
+      `/admin/facilities/${created.body.id}/decision`,
+      `synthetic-admin:facility_approver:${approverId}`,
+      { decision: 'approve', reason: 'Connected synthetic evidence released' },
+      {
+        'idempotency-key': `runtime-review-${randomUUID()}`,
+        'if-match': '"3"',
+        'x-aal': '2',
+        'x-purpose': 'facility_approval',
+      },
+    );
+    expect(reviewed.response.status).toBe(200);
+    expect(reviewed.body.facility_status).toBe('active');
+    const [effects] = await admin<{ facilities: number; audits: number; outbox: number }[]>`select
+      (select count(*)::int from identity.facilities where id=${created.body.id}::uuid) facilities,
+      (select count(*)::int from audit.events where resource_id=${created.body.id}::uuid) audits,
+      (select count(*)::int from platform.outbox_events where aggregate_id=${created.body.id}::uuid) outbox`;
+    expect(effects).toEqual({ facilities: 1, audits: 4, outbox: 4 });
+    expect(
+      (await storageAdmin.storage.from('facility-license-evidence').remove([object!.object_key]))
+        .error,
+    ).toBeNull();
+    await admin.end();
   });
 
   it('collapses concurrent same-key consent into one domain/audit/outbox effect', async () => {

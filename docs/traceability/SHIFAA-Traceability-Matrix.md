@@ -141,3 +141,17 @@
 3. Every table/resource named here exists in the data contract and future migrations.
 4. Feature specs replace the test-family placeholder with concrete test IDs and evidence links; they do not delete the family.
 5. CI compares extracted PRD IDs, matrix IDs, OpenAPI `x-shifaa-requirements`, and SpecKit metadata. Missing, duplicate, malformed, or retired-without-history IDs fail.
+
+## 4. Feature 003 evidence overlay
+
+> Seeded-synthetic engineering evidence only. `OPEN-SEC-001`, the legal/retention open items, and formal reviewer gates remain open; this overlay makes no production or Egyptian licensing-approval claim.
+
+| Requirement | Concrete 003 implementation and evidence |
+|---|---|
+| FR-FAC-001 | `TV-FAC-LICENSE-GATE`: facility state policy, forced-RLS migration, four-type E2E, connected Supabase runtime test, and `specs/003-facility-onboarding-rbac/evidence/live-qa.md` |
+| FR-FAC-002 | `TV-FAC-NAMED-ACTOR`: membership API/SQL tests and `specs/003-facility-onboarding-rbac/evidence/workforce-checkpoint.md` |
+| FR-FAC-003 | `TV-AUTH-CROSS-FACILITY`: portable policy, generated-client TCP probe, and forced-RLS negatives |
+| FR-FAC-007 | `TV-FAC-PROFESSIONAL-LICENSE-GATE`: license clock/state tests, professional review UI evidence, and invalid-status denial matrix |
+| FR-ADMIN-001 | `TV-ADMIN-ROLE-ACTION-MATRIX`: exact five-role catalog parity and API/SQL allow-deny tests |
+| FR-ADMIN-002 | `TV-ADMIN-MFA-PURPOSE`: minimum-projection worklists plus AAL2/purpose negative tests |
+| FR-ADMIN-004 | `TV-GOV-SELF-APPROVAL-DENY`: grant/revocation API, PostgreSQL, forced-RLS, and `specs/003-facility-onboarding-rbac/evidence/admin-role-checkpoint.md` |

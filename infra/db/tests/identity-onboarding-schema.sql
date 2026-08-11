@@ -9,7 +9,7 @@ BEGIN
   SELECT count(*) INTO forced_count
   FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
   WHERE n.nspname IN ('identity', 'consent', 'platform', 'audit') AND c.relkind = 'r' AND c.relforcerowsecurity;
-  IF forced_count <> 13 THEN RAISE EXCEPTION 'expected forced RLS on all 13 online tables, found %', forced_count; END IF;
+  IF forced_count < 13 THEN RAISE EXCEPTION 'expected forced RLS on at least the 13 identity-onboarding tables, found %', forced_count; END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE schemaname='identity' AND indexname='identities_active_blind_index_unique') THEN
     RAISE EXCEPTION 'active identity blind-index uniqueness is missing';
   END IF;
