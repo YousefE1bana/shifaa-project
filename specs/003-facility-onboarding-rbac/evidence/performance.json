@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-08-11T07:04:23.551Z",
+  "mode": "seeded-synthetic Fastify inject, 100 concurrent sessions",
+  "samples": 100,
+  "thresholds_ms": {
+    "read_p95": 400,
+    "mutation_p95": 800
+  },
+  "measured_ms": {
+    "read_p95": 13.96,
+    "mutation_p95": 209.26
+  },
+  "result": "PASS"
+}

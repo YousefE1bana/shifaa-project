@@ -20,6 +20,9 @@ importers:
       supabase:
         specifier: 2.113.0
         version: 2.113.0
+      tsx:
+        specifier: 4.21.0
+        version: 4.21.0
       turbo:
         specifier: 2.10.9
         version: 2.10.9
@@ -31,6 +34,99 @@ importers:
         version: 4.1.0(@types/node@24.10.1)(vite@7.3.6(@types/node@24.10.1)(lightningcss@1.33.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.8.1))
 
   apps/admin:
+    dependencies:
+      '@shifaa/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
+      '@shifaa/design-system':
+        specifier: workspace:*
+        version: link:../../packages/design-system
+      '@shifaa/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      next:
+        specifier: 16.3.0
+        version: 16.3.0(@types/node@24.10.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react:
+        specifier: 19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+
+  apps/clinic:
+    dependencies:
+      '@shifaa/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
+      '@shifaa/design-system':
+        specifier: workspace:*
+        version: link:../../packages/design-system
+      '@shifaa/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      next:
+        specifier: 16.3.0
+        version: 16.3.0(@types/node@24.10.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react:
+        specifier: 19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+
+  apps/hospital:
+    dependencies:
+      '@shifaa/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
+      '@shifaa/design-system':
+        specifier: workspace:*
+        version: link:../../packages/design-system
+      '@shifaa/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      next:
+        specifier: 16.3.0
+        version: 16.3.0(@types/node@24.10.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react:
+        specifier: 19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+
+  apps/lab:
     dependencies:
       '@shifaa/api-client':
         specifier: workspace:*
@@ -106,6 +202,37 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+
+  apps/pharmacy:
+    dependencies:
+      '@shifaa/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
+      '@shifaa/design-system':
+        specifier: workspace:*
+        version: link:../../packages/design-system
+      '@shifaa/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      next:
+        specifier: 16.3.0
+        version: 16.3.0(@types/node@24.10.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react:
+        specifier: 19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
 
   packages/api-client:
     dependencies:
@@ -196,7 +323,17 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
 
-  packages/test-kit: {}
+  packages/test-kit:
+    devDependencies:
+      '@types/node':
+        specifier: 24.10.1
+        version: 24.10.1
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: 4.1.0
+        version: 4.1.0(@types/node@24.10.1)(vite@7.3.6(@types/node@24.10.1)(lightningcss@1.33.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.8.1))
 
   services/api:
     dependencies:
@@ -236,6 +373,10 @@ importers:
         version: 4.1.0(@types/node@24.10.1)(vite@7.3.6(@types/node@24.10.1)(lightningcss@1.33.0)(terser@5.49.2)(tsx@4.21.0)(yaml@2.8.1))
 
   services/worker:
+    dependencies:
+      '@shifaa/observability':
+        specifier: workspace:*
+        version: link:../../packages/observability
     devDependencies:
       typescript:
         specifier: 7.0.2
@@ -2666,12 +2807,6 @@ packages:
 
   expo-constants@57.0.10:
     resolution: {integrity: sha512-GCDXYEsloBfouMdT3BzoGhAkcLnYxEFNLQoSbNKIvIrD9FY5MmSeWuvRSveJdOiuydwQY2iH6hy020vTaQflCQ==}
-    peerDependencies:
-      expo: '*'
-      react-native: '*'
-
-  expo-constants@57.0.9:
-    resolution: {integrity: sha512-Y47sGiF+U8fwicUSPdJPjB27PuU+FgLK4Mpai0ksZF5hv8jNN3HBqKuDNxsiu70uHBKf80TaR4gwMPh0pmETiQ==}
     peerDependencies:
       expo: '*'
       react-native: '*'
@@ -6741,14 +6876,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  expo-constants@57.0.9(expo@57.0.12)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3)):
-    dependencies:
-      '@expo/env': 2.4.2
-      expo: 57.0.12(@babel/core@7.29.7)(@expo/dom-webview@57.0.1)(@expo/metro-runtime@57.0.9)(expo-router@57.0.12)(react-dom@19.2.3(react@19.2.3))(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native-worklets@0.10.1(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)(typescript@6.0.3)
-      react-native: 0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3)
-    transitivePeerDependencies:
-      - supports-color
-
   expo-file-system@57.0.2(expo@57.0.12)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3)):
     dependencies:
       expo: 57.0.12(@babel/core@7.29.7)(@expo/dom-webview@57.0.1)(@expo/metro-runtime@57.0.9)(expo-router@57.0.12)(react-dom@19.2.3(react@19.2.3))(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native-worklets@0.10.1(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)(typescript@6.0.3)
@@ -6774,7 +6901,7 @@ snapshots:
 
   expo-linking@57.0.5(expo@57.0.12)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3):
     dependencies:
-      expo-constants: 57.0.9(expo@57.0.12)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3))
+      expo-constants: 57.0.10(expo@57.0.12)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3))
       invariant: 2.2.4
       react: 19.2.3
       react-native: 0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.3)

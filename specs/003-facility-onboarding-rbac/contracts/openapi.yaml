@@ -1,0 +1,765 @@
+openapi: 3.1.1
+info:
+  title: SHIFAA Facility Onboarding and Contextual RBAC Slice
+  version: 0.1.0
+  description: Seeded-synthetic engineering contract. Production and official licensing gates remain disabled.
+servers:
+  - url: /v1
+security:
+  - bearerAuth: []
+paths:
+  /people/me/professional-licenses:
+    post:
+      operationId: createProfessionalLicense
+      x-shifaa-requirements: [FR-FAC-007, NFR-SEC-005]
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { $ref: '#/components/requestBodies/ProfessionalLicenseCreate' }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/ProfessionalLicense' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /professional-licenses/{licenseId}/upload-intent:
+    post:
+      operationId: createProfessionalLicenseUpload
+      x-shifaa-requirements: [FR-FAC-007, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/LicenseId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/UploadMetadata' }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/UploadIntent' },
+          '403': { $ref: '#/components/responses/Problem' },
+        }
+  /professional-licenses/{licenseId}:
+    get:
+      operationId: getProfessionalLicense
+      x-shifaa-requirements: [FR-FAC-007, NFR-SEC-001]
+      parameters: [{ $ref: '#/components/parameters/LicenseId' }]
+      responses:
+        {
+          '200': { $ref: '#/components/responses/ProfessionalLicense' },
+          '404': { $ref: '#/components/responses/Problem' },
+        }
+  /admin/professional-licenses:
+    get:
+      operationId: listProfessionalLicenseCases
+      x-shifaa-requirements: [FR-FAC-007, FR-ADMIN-002, NFR-API-002]
+      parameters:
+        [{ $ref: '#/components/parameters/Cursor' }, { $ref: '#/components/parameters/Limit' }]
+      responses:
+        {
+          '200': { $ref: '#/components/responses/ProfessionalLicensePage' },
+          '403': { $ref: '#/components/responses/Problem' },
+        }
+  /admin/professional-licenses/{licenseId}/decision:
+    post:
+      operationId: reviewProfessionalLicense
+      x-shifaa-requirements: [FR-FAC-007, FR-ADMIN-002, FR-ADMIN-004, NFR-SEC-004, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/LicenseId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/ProfessionalReviewDecision' }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/ProfessionalLicense' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /facilities:
+    post:
+      operationId: createFacility
+      x-shifaa-requirements: [FR-FAC-001, FR-FAC-002, NFR-SEC-005]
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { $ref: '#/components/requestBodies/FacilityCreate' }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/Facility' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /facilities/{facilityId}:
+    get:
+      operationId: getFacility
+      x-shifaa-requirements: [FR-FAC-001, FR-FAC-003, NFR-SEC-001]
+      parameters: [{ $ref: '#/components/parameters/FacilityId' }]
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Facility' },
+          '404': { $ref: '#/components/responses/Problem' },
+        }
+    patch:
+      operationId: updateFacility
+      x-shifaa-requirements: [FR-FAC-001, FR-FAC-002, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/FacilityId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/FacilityPatch' }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Facility' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /facilities/{facilityId}/submit:
+    post:
+      operationId: submitFacility
+      x-shifaa-requirements: [FR-FAC-001, FR-FAC-002, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/FacilityId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Facility' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /facilities/{facilityId}/licenses/upload-intent:
+    post:
+      operationId: createFacilityLicenseUpload
+      x-shifaa-requirements: [FR-FAC-001, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/FacilityId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/FacilityLicenseUpload' }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/UploadIntent' },
+          '403': { $ref: '#/components/responses/Problem' },
+        }
+  /admin/facilities:
+    get:
+      operationId: listFacilityApprovalCases
+      x-shifaa-requirements: [FR-FAC-001, FR-ADMIN-002, NFR-API-002]
+      parameters:
+        [{ $ref: '#/components/parameters/Cursor' }, { $ref: '#/components/parameters/Limit' }]
+      responses:
+        {
+          '200': { $ref: '#/components/responses/FacilityPage' },
+          '403': { $ref: '#/components/responses/Problem' },
+        }
+  /admin/facilities/{facilityId}/decision:
+    post:
+      operationId: reviewFacility
+      x-shifaa-requirements: [FR-FAC-001, FR-ADMIN-002, FR-ADMIN-004, NFR-SEC-004, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/FacilityId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/FacilityReviewDecision' }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Facility' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /facilities/{facilityId}/memberships:
+    get:
+      operationId: listFacilityMemberships
+      x-shifaa-requirements: [FR-FAC-002, FR-FAC-003, NFR-API-002]
+      parameters:
+        [
+          { $ref: '#/components/parameters/FacilityId' },
+          { $ref: '#/components/parameters/Cursor' },
+          { $ref: '#/components/parameters/Limit' },
+        ]
+      responses:
+        {
+          '200': { $ref: '#/components/responses/MembershipPage' },
+          '403': { $ref: '#/components/responses/Problem' },
+        }
+    post:
+      operationId: inviteFacilityMember
+      x-shifaa-requirements: [FR-FAC-002, FR-FAC-003, FR-FAC-007, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/FacilityId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/MembershipInvite' }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/Membership' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /facility-membership-invites/{token}/accept:
+    post:
+      operationId: acceptFacilityMembership
+      security: []
+      x-shifaa-requirements: [FR-FAC-002, FR-FAC-007, NFR-SEC-005]
+      parameters:
+        [
+          {
+            name: token,
+            in: path,
+            required: true,
+            schema: { type: string, minLength: 32, maxLength: 256 },
+          },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+        ]
+      requestBody:
+        {
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    {
+                      type: object,
+                      additionalProperties: false,
+                      properties: { confirmation: { type: boolean, const: true } },
+                      required: [confirmation],
+                    },
+                },
+            },
+          required: true,
+        }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Membership' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /facilities/{facilityId}/memberships/{membershipId}:
+    patch:
+      operationId: updateFacilityMembership
+      x-shifaa-requirements: [FR-FAC-002, FR-FAC-003, FR-FAC-007, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/FacilityId' },
+          { $ref: '#/components/parameters/MembershipId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/MembershipPatch' }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Membership' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /facilities/{facilityId}/memberships/{membershipId}/end:
+    post:
+      operationId: endFacilityMembership
+      x-shifaa-requirements: [FR-FAC-002, FR-FAC-003, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/FacilityId' },
+          { $ref: '#/components/parameters/MembershipId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/Reason' }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Membership' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /admin/role-grants:
+    get:
+      operationId: listAdminRoleGrants
+      x-shifaa-requirements: [FR-ADMIN-001, FR-ADMIN-002, NFR-API-002]
+      parameters:
+        [{ $ref: '#/components/parameters/Cursor' }, { $ref: '#/components/parameters/Limit' }]
+      responses:
+        {
+          '200': { $ref: '#/components/responses/AdminGrantPage' },
+          '403': { $ref: '#/components/responses/Problem' },
+        }
+    post:
+      operationId: proposeAdminRoleGrant
+      x-shifaa-requirements: [FR-ADMIN-001, FR-ADMIN-004, NFR-SEC-004, NFR-SEC-005]
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { $ref: '#/components/requestBodies/AdminGrantProposal' }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/AdminGrant' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /admin/role-grants/{grantId}/decision:
+    post:
+      operationId: decideAdminRoleGrant
+      x-shifaa-requirements: [FR-ADMIN-004, NFR-SEC-004, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/GrantId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/GrantDecision' }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/AdminGrant' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /admin/role-grants/{grantId}/revocation-requests:
+    post:
+      operationId: proposeAdminRoleRevocation
+      x-shifaa-requirements: [FR-ADMIN-001, FR-ADMIN-002, FR-ADMIN-004, NFR-SEC-004, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/GrantId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/Reason' }
+      responses:
+        {
+          '201': { $ref: '#/components/responses/Revocation' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+  /admin/role-grant-revocations/{requestId}/decision:
+    post:
+      operationId: decideAdminRoleRevocation
+      x-shifaa-requirements: [FR-ADMIN-001, FR-ADMIN-002, FR-ADMIN-004, NFR-SEC-004, NFR-SEC-005]
+      parameters:
+        [
+          { $ref: '#/components/parameters/RequestId' },
+          { $ref: '#/components/parameters/IdempotencyKey' },
+          { $ref: '#/components/parameters/IfMatch' },
+        ]
+      requestBody: { $ref: '#/components/requestBodies/GrantDecision' }
+      responses:
+        {
+          '200': { $ref: '#/components/responses/Revocation' },
+          '403': { $ref: '#/components/responses/Problem' },
+          '409': { $ref: '#/components/responses/Problem' },
+        }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  parameters:
+    IdempotencyKey:
+      {
+        name: Idempotency-Key,
+        in: header,
+        required: true,
+        schema: { type: string, minLength: 16, maxLength: 128 },
+      }
+    IfMatch:
+      {
+        name: If-Match,
+        in: header,
+        required: true,
+        schema: { type: string, pattern: '^"[1-9][0-9]*"$' },
+      }
+    FacilityId:
+      { name: facilityId, in: path, required: true, schema: { type: string, format: uuid } }
+    LicenseId: { name: licenseId, in: path, required: true, schema: { type: string, format: uuid } }
+    MembershipId:
+      { name: membershipId, in: path, required: true, schema: { type: string, format: uuid } }
+    GrantId: { name: grantId, in: path, required: true, schema: { type: string, format: uuid } }
+    RequestId: { name: requestId, in: path, required: true, schema: { type: string, format: uuid } }
+    Cursor: { name: cursor, in: query, required: false, schema: { type: string } }
+    Limit:
+      {
+        name: limit,
+        in: query,
+        required: false,
+        schema: { type: integer, default: 25, minimum: 1, maximum: 100 },
+      }
+  requestBodies:
+    FacilityCreate:
+      {
+        required: true,
+        content: { application/json: { schema: { $ref: '#/components/schemas/FacilityCreate' } } },
+      }
+    FacilityPatch:
+      {
+        required: true,
+        content: { application/json: { schema: { $ref: '#/components/schemas/FacilityPatch' } } },
+      }
+    FacilityLicenseUpload:
+      {
+        required: true,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/FacilityLicenseUpload' } } },
+      }
+    ProfessionalLicenseCreate:
+      {
+        required: true,
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/ProfessionalLicenseCreate' } },
+          },
+      }
+    UploadMetadata:
+      {
+        required: true,
+        content: { application/json: { schema: { $ref: '#/components/schemas/UploadMetadata' } } },
+      }
+    FacilityReviewDecision:
+      {
+        required: true,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/FacilityReviewDecision' } } },
+      }
+    ProfessionalReviewDecision:
+      {
+        required: true,
+        content:
+          {
+            application/json:
+              { schema: { $ref: '#/components/schemas/ProfessionalReviewDecision' } },
+          },
+      }
+    MembershipInvite:
+      {
+        required: true,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/MembershipInvite' } } },
+      }
+    MembershipPatch:
+      {
+        required: true,
+        content: { application/json: { schema: { $ref: '#/components/schemas/MembershipPatch' } } },
+      }
+    AdminGrantProposal:
+      {
+        required: true,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/AdminGrantProposal' } } },
+      }
+    GrantDecision:
+      {
+        required: true,
+        content: { application/json: { schema: { $ref: '#/components/schemas/GrantDecision' } } },
+      }
+    Reason:
+      {
+        required: true,
+        content: { application/json: { schema: { $ref: '#/components/schemas/Reason' } } },
+      }
+  responses:
+    Facility:
+      {
+        description: Facility projection,
+        content: { application/json: { schema: { $ref: '#/components/schemas/Facility' } } },
+      }
+    FacilityPage:
+      {
+        description: Minimum facility worklist,
+        content: { application/json: { schema: { $ref: '#/components/schemas/FacilityPage' } } },
+      }
+    ProfessionalLicense:
+      {
+        description: Masked professional license,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/ProfessionalLicense' } } },
+      }
+    ProfessionalLicensePage:
+      {
+        description: Minimum professional license worklist,
+        content:
+          {
+            application/json: { schema: { $ref: '#/components/schemas/ProfessionalLicensePage' } },
+          },
+      }
+    UploadIntent:
+      {
+        description: Private quarantine upload intent,
+        content: { application/json: { schema: { $ref: '#/components/schemas/UploadIntent' } } },
+      }
+    Membership:
+      {
+        description: Membership projection,
+        content: { application/json: { schema: { $ref: '#/components/schemas/Membership' } } },
+      }
+    MembershipPage:
+      {
+        description: Membership page,
+        content: { application/json: { schema: { $ref: '#/components/schemas/MembershipPage' } } },
+      }
+    AdminGrant:
+      {
+        description: Admin grant projection,
+        content: { application/json: { schema: { $ref: '#/components/schemas/AdminGrant' } } },
+      }
+    AdminGrantPage:
+      {
+        description: Admin grant page,
+        content: { application/json: { schema: { $ref: '#/components/schemas/AdminGrantPage' } } },
+      }
+    Revocation:
+      {
+        description: Revocation request projection,
+        content: { application/json: { schema: { $ref: '#/components/schemas/Revocation' } } },
+      }
+    Problem:
+      {
+        description: RFC 9457 problem,
+        content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } },
+      }
+  schemas:
+    FacilityType: { type: string, enum: [clinic, pharmacy, hospital, laboratory] }
+    FacilityStatus:
+      { type: string, enum: [draft, pending_review, active, suspended, rejected, closed] }
+    LicenseStatus: { type: string, enum: [pending, verified, rejected, suspended, expired] }
+    AdminRole:
+      {
+        type: string,
+        enum: [super_admin, support_admin, medical_reviewer, facility_approver, finance_reviewer],
+      }
+    FacilityCreate:
+      type: object
+      additionalProperties: false
+      required: [facility_type, name_ar, name_en, governorate_code, city, district, address_line]
+      properties:
+        facility_type: { $ref: '#/components/schemas/FacilityType' }
+        name_ar: { type: string, minLength: 2, maxLength: 160 }
+        name_en: { type: string, minLength: 2, maxLength: 160 }
+        governorate_code: { type: string, minLength: 2, maxLength: 16 }
+        city: { type: string, minLength: 2, maxLength: 120 }
+        district: { type: string, minLength: 2, maxLength: 120 }
+        address_line: { type: string, minLength: 4, maxLength: 300 }
+    FacilityPatch:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        name_ar: { type: string, minLength: 2, maxLength: 160 }
+        name_en: { type: string, minLength: 2, maxLength: 160 }
+        governorate_code: { type: string, minLength: 2, maxLength: 16 }
+        city: { type: string, minLength: 2, maxLength: 120 }
+        district: { type: string, minLength: 2, maxLength: 120 }
+        address_line: { type: string, minLength: 4, maxLength: 300 }
+    Facility:
+      type: object
+      required: [id, facility_type, name_ar, name_en, facility_status, version]
+      properties:
+        id: { type: string, format: uuid }
+        facility_type: { $ref: '#/components/schemas/FacilityType' }
+        name_ar: { type: string }
+        name_en: { type: string }
+        facility_status: { $ref: '#/components/schemas/FacilityStatus' }
+        evidence_scan_status:
+          { type: [string, 'null'], enum: [quarantined, released, rejected, null] }
+        decision_reason: { type: [string, 'null'] }
+        version: { type: integer, minimum: 1 }
+    FacilityLicenseUpload:
+      allOf:
+        - { $ref: '#/components/schemas/UploadMetadata' }
+        - type: object
+          required: [license_type, license_number, issuer, expires_on, licensed_activities]
+          properties:
+            license_type: { type: string, minLength: 2, maxLength: 80 }
+            license_number: { type: string, minLength: 4, maxLength: 80, writeOnly: true }
+            issuer: { type: string, minLength: 2, maxLength: 160 }
+            expires_on: { type: string, format: date }
+            licensed_activities:
+              {
+                type: array,
+                minItems: 1,
+                maxItems: 30,
+                uniqueItems: true,
+                items: { type: string, maxLength: 80 },
+              }
+    ProfessionalLicenseCreate:
+      type: object
+      additionalProperties: false
+      required: [profession, license_number, issuer, expires_on]
+      properties:
+        profession: { type: string, enum: [doctor, pharmacist, nurse, lab_professional] }
+        specialty_code: { type: [string, 'null'], maxLength: 80 }
+        license_number: { type: string, minLength: 4, maxLength: 80, writeOnly: true }
+        issuer: { type: string, minLength: 2, maxLength: 160 }
+        expires_on: { type: string, format: date }
+    ProfessionalLicense:
+      type: object
+      required: [id, profession, masked_license_number, status, expires_on, version]
+      properties:
+        id: { type: string, format: uuid }
+        profession: { type: string }
+        specialty_code: { type: [string, 'null'] }
+        masked_license_number: { type: string }
+        status: { $ref: '#/components/schemas/LicenseStatus' }
+        expires_on: { type: string, format: date }
+        evidence_scan_status:
+          { type: [string, 'null'], enum: [quarantined, released, rejected, null] }
+        decision_reason: { type: [string, 'null'] }
+        version: { type: integer, minimum: 1 }
+    UploadMetadata:
+      type: object
+      additionalProperties: false
+      required: [mime_type, size_bytes, sha256]
+      properties:
+        mime_type: { type: string, enum: [image/jpeg, image/png, application/pdf] }
+        size_bytes: { type: integer, minimum: 1, maximum: 10485760 }
+        sha256: { type: string, pattern: '^[0-9a-f]{64}$' }
+    UploadIntent:
+      type: object
+      required: [object_id, upload_url, expires_at, scan_status]
+      properties:
+        object_id: { type: string, format: uuid }
+        upload_url: { type: string, format: uri, writeOnly: true }
+        expires_at: { type: string, format: date-time }
+        scan_status: { type: string, const: quarantined }
+    FacilityReviewDecision:
+      type: object
+      additionalProperties: false
+      required: [decision, reason]
+      properties:
+        decision: { type: string, enum: [approve, reject, suspend] }
+        reason: { type: string, minLength: 3, maxLength: 500 }
+        evidence_object_id: { type: [string, 'null'], format: uuid }
+    ProfessionalReviewDecision:
+      type: object
+      additionalProperties: false
+      required: [decision, reason]
+      properties:
+        decision: { type: string, enum: [verify, reject, suspend] }
+        reason: { type: string, minLength: 3, maxLength: 500 }
+        evidence_object_id: { type: [string, 'null'], format: uuid }
+    MembershipInvite:
+      type: object
+      additionalProperties: false
+      required: [person_id, role_code, employment_license_id, valid_from]
+      properties:
+        person_id: { type: string, format: uuid }
+        role_code: { type: string, enum: [doctor, pharmacist, nurse, lab_professional] }
+        employment_license_id: { type: string, format: uuid }
+        valid_from: { type: string, format: date-time }
+        valid_until: { type: [string, 'null'], format: date-time }
+    MembershipPatch:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        role_code: { type: string, enum: [doctor, pharmacist, nurse, lab_professional] }
+        employment_license_id: { type: string, format: uuid }
+        valid_from: { type: string, format: date-time }
+        status: { type: string, enum: [active, suspended] }
+        valid_until: { type: [string, 'null'], format: date-time }
+    Membership:
+      type: object
+      required: [id, facility_id, person_id, role_code, status, version]
+      properties:
+        id: { type: string, format: uuid }
+        facility_id: { type: string, format: uuid }
+        person_id: { type: string, format: uuid }
+        role_code: { type: string }
+        status: { type: string, enum: [invited, active, suspended, ended, rejected, expired] }
+        valid_from: { type: string, format: date-time }
+        valid_until: { type: [string, 'null'], format: date-time }
+        version: { type: integer, minimum: 1 }
+    AdminGrantProposal:
+      type: object
+      additionalProperties: false
+      required: [person_id, role_code, valid_from, reason]
+      properties:
+        person_id: { type: string, format: uuid }
+        role_code: { $ref: '#/components/schemas/AdminRole' }
+        valid_from: { type: string, format: date-time }
+        valid_until: { type: [string, 'null'], format: date-time }
+        reason: { type: string, minLength: 3, maxLength: 500 }
+    GrantDecision:
+      type: object
+      additionalProperties: false
+      required: [decision, reason]
+      properties:
+        decision: { type: string, enum: [approve, reject] }
+        reason: { type: string, minLength: 3, maxLength: 500 }
+    AdminGrant:
+      type: object
+      required: [id, person_id, role_code, status, proposed_by, version]
+      properties:
+        id: { type: string, format: uuid }
+        person_id: { type: string, format: uuid }
+        role_code: { $ref: '#/components/schemas/AdminRole' }
+        status: { type: string, enum: [pending, active, rejected, revoked, expired] }
+        proposed_by: { type: string, format: uuid }
+        decided_by: { type: [string, 'null'], format: uuid }
+        version: { type: integer, minimum: 1 }
+    Revocation:
+      type: object
+      required: [id, grant_id, status, proposed_by, version]
+      properties:
+        id: { type: string, format: uuid }
+        grant_id: { type: string, format: uuid }
+        status: { type: string, enum: [pending, approved, rejected, cancelled] }
+        proposed_by: { type: string, format: uuid }
+        decided_by: { type: [string, 'null'], format: uuid }
+        version: { type: integer, minimum: 1 }
+    Reason:
+      type: object
+      additionalProperties: false
+      required: [reason]
+      properties: { reason: { type: string, minLength: 3, maxLength: 500 } }
+    PageMeta:
+      {
+        type: object,
+        required: [next_cursor],
+        properties: { next_cursor: { type: [string, 'null'] } },
+      }
+    FacilityPage:
+      {
+        type: object,
+        required: [data, meta],
+        properties:
+          {
+            data: { type: array, items: { $ref: '#/components/schemas/Facility' } },
+            meta: { $ref: '#/components/schemas/PageMeta' },
+          },
+      }
+    ProfessionalLicensePage:
+      {
+        type: object,
+        required: [data, meta],
+        properties:
+          {
+            data: { type: array, items: { $ref: '#/components/schemas/ProfessionalLicense' } },
+            meta: { $ref: '#/components/schemas/PageMeta' },
+          },
+      }
+    MembershipPage:
+      {
+        type: object,
+        required: [data, meta],
+        properties:
+          {
+            data: { type: array, items: { $ref: '#/components/schemas/Membership' } },
+            meta: { $ref: '#/components/schemas/PageMeta' },
+          },
+      }
+    AdminGrantPage:
+      {
+        type: object,
+        required: [data, meta],
+        properties:
+          {
+            data: { type: array, items: { $ref: '#/components/schemas/AdminGrant' } },
+            meta: { $ref: '#/components/schemas/PageMeta' },
+          },
+      }
+    Problem:
+      type: object
+      required: [type, title, status, detail, code, request_id]
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        code: { type: string }
+        request_id: { type: string, format: uuid }
+        errors: { type: array, items: { type: object } }
+        retry_after_seconds: { type: integer }

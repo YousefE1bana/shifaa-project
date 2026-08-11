@@ -8,6 +8,16 @@ const openApiPath = path.join(repoRoot, 'specs/001-identity-onboarding/contracts
 const catalogPath = path.join(repoRoot, 'docs/architecture/SHIFAA-API-Catalog.md');
 const contractModulePath = path.join(repoRoot, 'packages/contracts/src/identity-onboarding.ts');
 const clientPath = path.join(repoRoot, 'packages/api-client/src/identity-onboarding.ts');
+const facilityOpenApiPath = path.join(
+  repoRoot,
+  'specs/003-facility-onboarding-rbac/contracts/openapi.yaml',
+);
+const facilityContractModulePath = path.join(
+  repoRoot,
+  'packages/contracts/src/facility-onboarding.ts',
+);
+const facilityClientPath = path.join(repoRoot, 'packages/api-client/src/facility-onboarding.ts');
+const facilityRoutesPath = path.join(repoRoot, 'services/api/src/routes/facility-onboarding.ts');
 const failures = [];
 
 function mustRead(file) {
@@ -138,6 +148,40 @@ if (!/@generated\b/i.test(client))
     'API client is missing an @generated marker; handwritten endpoint drift is not allowed.',
   );
 
+const facilityOpenApiText = mustRead(facilityOpenApiPath);
+const facilityContractModule = mustRead(facilityContractModulePath);
+const facilityClient = mustRead(facilityClientPath);
+const facilityRoutes = mustRead(facilityRoutesPath);
+const facilityOpenApi = parseOpenApi(facilityOpenApiText);
+if (!/^openapi:\s*3\.1\.1\s*$/m.test(facilityOpenApiText))
+  failures.push('Facility feature contract must declare OpenAPI 3.1.1.');
+if (facilityOpenApi.size !== 22)
+  failures.push(
+    `Facility feature OpenAPI must contain 22 operations; found ${facilityOpenApi.size}.`,
+  );
+for (const [operationId, operation] of facilityOpenApi) {
+  const canonical = catalog.get(operationId);
+  if (!canonical) {
+    failures.push(`Facility operation ${operationId} is absent from the canonical API catalog.`);
+    continue;
+  }
+  if (canonical.method !== operation.method || canonical.path !== operation.path) {
+    failures.push(
+      `${operationId} drift: facility OpenAPI ${operation.method} ${operation.path}; catalog ${canonical.method} ${canonical.path}.`,
+    );
+  }
+  for (const [label, source] of [
+    ['contract module', facilityContractModule],
+    ['generated client', facilityClient],
+    ['registered routes', facilityRoutes],
+  ]) {
+    if (!new RegExp(`\\b${operationId}\\b`).test(source))
+      failures.push(`Facility ${label} is missing ${operationId}.`);
+  }
+}
+if (!/@generated\b/i.test(facilityClient))
+  failures.push('Facility API client is missing an @generated marker.');
+
 if (failures.length > 0) {
   console.error('Contract verification failed:');
   for (const failure of failures.sort()) console.error(`- ${failure}`);
@@ -145,5 +189,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  'Contract verification passed: 16 OpenAPI operations match the catalog, generated contracts, and generated client.',
+  'Contract verification passed: 38 OpenAPI operations match the catalog, generated contracts, generated clients, and registered facility routes.',
 );

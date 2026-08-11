@@ -30,6 +30,14 @@ coverage/
 expo-env.d.ts
 /apps/admin/AGENTS.md
 /apps/admin/CLAUDE.md
+/apps/clinic/AGENTS.md
+/apps/clinic/CLAUDE.md
+/apps/pharmacy/AGENTS.md
+/apps/pharmacy/CLAUDE.md
+/apps/hospital/AGENTS.md
+/apps/hospital/CLAUDE.md
+/apps/lab/AGENTS.md
+/apps/lab/CLAUDE.md
 /apps/patient/.gitignore
 .pnpm-store/
 artifacts/
