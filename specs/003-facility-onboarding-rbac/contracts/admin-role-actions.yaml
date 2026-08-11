@@ -1,0 +1,120 @@
+version: 1
+source: docs/architecture/SHIFAA-API-Catalog.md
+policy:
+  hierarchy: false
+  default: deny
+  seed_availability: [existing, feature_003]
+  excluded_availability: [later_feature, forbidden]
+roles:
+  super_admin:
+    - { operation_id: getAdminSummary, availability: later_feature }
+    - {
+        operation_id: listAuditEvents,
+        availability: later_feature,
+        min_aal: 2,
+        purpose_required: true,
+      }
+    - {
+        operation_id: getAuditEvent,
+        availability: later_feature,
+        min_aal: 2,
+        purpose_required: true,
+      }
+    - {
+        operation_id: createAuditExport,
+        availability: later_feature,
+        min_aal: 2,
+        purpose_required: true,
+      }
+    - { operation_id: listAdminRoleGrants, availability: feature_003 }
+    - { operation_id: proposeAdminRoleGrant, availability: feature_003, min_aal: 2 }
+    - {
+        operation_id: decideAdminRoleGrant,
+        availability: feature_003,
+        min_aal: 2,
+        independent_actor: true,
+      }
+    - { operation_id: proposeAdminRoleRevocation, availability: feature_003, min_aal: 2 }
+    - {
+        operation_id: decideAdminRoleRevocation,
+        availability: feature_003,
+        min_aal: 2,
+        independent_actor: true,
+      }
+    - {
+        operation_id: signAiModelRelease,
+        availability: later_feature,
+        min_aal: 2,
+        signature_role: security,
+        independent_actor: true,
+      }
+  support_admin:
+    - { operation_id: getAdminSummary, availability: later_feature }
+    - { operation_id: listGuardianshipCases, availability: later_feature, min_aal: 2 }
+    - { operation_id: reviewGuardianship, availability: later_feature, min_aal: 2 }
+    - { operation_id: listReviewReports, availability: later_feature, min_aal: 2 }
+    - { operation_id: moderateReview, availability: later_feature }
+    - { operation_id: listComplaints, availability: later_feature }
+    - { operation_id: getComplaint, availability: later_feature }
+    - { operation_id: respondComplaint, availability: later_feature }
+    - { operation_id: listNotificationTemplates, availability: later_feature }
+    - { operation_id: createNotificationTemplateRelease, availability: later_feature }
+    - {
+        operation_id: publishNotificationTemplateRelease,
+        availability: later_feature,
+        min_aal: 2,
+        independent_actor: true,
+      }
+  medical_reviewer:
+    - { operation_id: getAdminSummary, availability: later_feature }
+    - { operation_id: listCriticalPolicies, availability: later_feature }
+    - {
+        operation_id: publishCriticalPolicy,
+        availability: later_feature,
+        min_aal: 2,
+        independent_actor: true,
+      }
+    - { operation_id: listClinicalContent, availability: later_feature }
+    - { operation_id: createClinicalContentRelease, availability: later_feature }
+    - { operation_id: publishClinicalContentRelease, availability: later_feature, min_aal: 2 }
+    - { operation_id: getAiRun, availability: later_feature }
+    - { operation_id: listAiModelReleases, availability: later_feature }
+    - { operation_id: createAiModelRelease, availability: later_feature, min_aal: 2 }
+    - {
+        operation_id: signAiModelRelease,
+        availability: later_feature,
+        min_aal: 2,
+        signature_role: clinical,
+        independent_actor: true,
+      }
+    - {
+        operation_id: publishAiModelRelease,
+        availability: later_feature,
+        min_aal: 2,
+        independent_actor: true,
+      }
+  facility_approver:
+    - { operation_id: getAdminSummary, availability: later_feature }
+    - { operation_id: createIdentityUpload, availability: existing }
+    - { operation_id: getVerificationCase, availability: existing }
+    - { operation_id: listIdentityVerificationCases, availability: existing, min_aal: 2 }
+    - { operation_id: reviewVerificationCase, availability: existing, min_aal: 2 }
+    - { operation_id: getProfessionalLicense, availability: feature_003 }
+    - { operation_id: listProfessionalLicenseCases, availability: feature_003, min_aal: 2 }
+    - { operation_id: reviewProfessionalLicense, availability: feature_003, min_aal: 2 }
+    - { operation_id: listFacilityApprovalCases, availability: feature_003, min_aal: 2 }
+    - { operation_id: reviewFacility, availability: feature_003, min_aal: 2 }
+    - { operation_id: assignPharmacyDirector, availability: later_feature }
+    - { operation_id: reviewDisabilityCredential, availability: later_feature }
+    - { operation_id: listEpttsBatches, availability: later_feature }
+    - { operation_id: getEpttsBatch, availability: later_feature }
+  finance_reviewer:
+    - { operation_id: getAdminSummary, availability: later_feature }
+    - { operation_id: getPaymentIntent, availability: later_feature }
+forbidden_reserved_operations:
+  - createDonationCase
+  - listDonationCases
+  - getDonationCase
+  - decideDonationCase
+  - recordDonationDisbursement
+  - getDonationImpact
