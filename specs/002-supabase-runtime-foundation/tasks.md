@@ -43,6 +43,6 @@
 - [x] T011 [NFR-I18N-001, NFR-A11Y-001, NFR-QUALITY-001] Drive Arabic RTL and English live browser journeys against Supabase, restart API, verify patient profile and admin queue, and record evidence — `specs/002-supabase-runtime-foundation/evidence/manual-live-qa.md`
   - Depends on: `T008`, `T010`
   - Acceptance evidence: browser evidence records URLs, states, masked projections, dependency logs and restart persistence with no real data
-- [ ] T012 [NFR-QUALITY-001, NFR-PORT-001] Run full verification, SpecKit analyze, enriched Issue generation, commit/push and CI verification — `specs/002-supabase-runtime-foundation/analysis.md`
+- [x] T012 [NFR-QUALITY-001, NFR-PORT-001] Run full verification, SpecKit analyze, enriched Issue generation, commit/push and CI verification — `specs/002-supabase-runtime-foundation/analysis.md`
   - Depends on: `T011`
   - Acceptance evidence: `pnpm verify` and post-implementation analysis pass; GitHub Issues include feature/task/FR-NFR/dependency/evidence/baseline fields
