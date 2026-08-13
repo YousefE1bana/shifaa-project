@@ -1,0 +1,638 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-13",
+  "canonicalSkillRoot": ".agents/skills",
+  "policy": {
+    "nativeAuthority": ["shifaa-project-guardrails", "shifaa-ui-governor"],
+    "projectLifecycle": "SpecKit",
+    "externalSkillsAreAdvisory": true,
+    "globalInstallationAllowed": false,
+    "symlinksUsed": false,
+    "thirdPartyExecutablesAllowedByDefault": false,
+    "reviewedExecutableExceptions": [
+      ".agents/skills/codex-delegate/scripts/relay.mjs",
+      ".agents/skills/kimi-delegate/scripts/relay.mjs",
+      ".agents/skills/claude-delegate/scripts/relay.mjs",
+      ".agents/skills/opencode-delegate/scripts/relay.mjs",
+      ".agents/skills/agy-delegate/scripts/relay.mjs"
+    ]
+  },
+  "toolingReviewed": {
+    "npxSkills": {
+      "package": "skills",
+      "version": "1.5.22",
+      "license": "MIT",
+      "repository": "vercel-labs/skills",
+      "use": "help and metadata audit only; vendoring performed from reviewed Git checkouts"
+    },
+    "kimiCodeCli": {
+      "version": "0.34.0",
+      "projectDiscoveryRoot": ".agents/skills",
+      "restartRequiredAfterChanges": true
+    },
+    "delegateCliAudit": {
+      "platform": "native Windows",
+      "statusPath": "docs/agent-skills/delegate-runtime-status.json",
+      "reviewedAt": "2026-08-13"
+    }
+  },
+  "nativeSkills": [
+    {
+      "name": "shifaa-project-guardrails",
+      "purpose": "Enforce SHIFAA architecture, data, API, authorization, security, compliance, gate, and verification contracts.",
+      "category": "governance",
+      "installedPath": ".agents/skills/shifaa-project-guardrails",
+      "status": "native-core"
+    },
+    {
+      "name": "shifaa-ui-governor",
+      "purpose": "Enforce the SHIFAA bilingual UI, accessibility, responsive, route-state, safety, and motion contract.",
+      "category": "governance-ui",
+      "installedPath": ".agents/skills/shifaa-ui-governor",
+      "status": "native-core"
+    }
+  ],
+  "vendoredSkills": [
+    {
+      "name": "frontend-design",
+      "purpose": "Distinctive and intentional frontend execution within SHIFAA's fixed design system.",
+      "category": "ui-ux",
+      "upstreamRepository": "anthropics/skills",
+      "upstreamCommit": "f17010c9bb483898c1d9c9f42dde2b3a98889434",
+      "upstreamSkillPath": "skills/frontend-design",
+      "license": "Apache-2.0",
+      "installedPath": ".agents/skills/frontend-design",
+      "status": "core",
+      "allowedSurfaces": ["all SHIFAA UI surfaces after shifaa-ui-governor"],
+      "prohibitedSurfaces": [
+        "independent token systems",
+        "decorative motion on safety-critical surfaces"
+      ],
+      "knownConflicts": [
+        "generic typography, palette, layout, and motion choices are fixed by the SHIFAA UI Contract"
+      ],
+      "localChanges": [
+        "added SHIFAA UI precedence overlay",
+        "reconciled typography, semantic tokens, color, layout risk, copy feedback, and exact motion guidance with the SHIFAA UI Contract"
+      ],
+      "treeDigestSha256": "4a311c13ce1589856482ca38ea54dea1a75e02ee5bdb1797c8374ea7510cf648",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "ux-designer",
+      "purpose": "UX principles, accessibility, interaction design, forms, navigation, onboarding, notifications, search, tables, ethics, and review.",
+      "category": "ui-ux",
+      "upstreamRepository": "szilu/ux-designer-skill",
+      "upstreamCommit": "28b24d5a9511f692b89420b8b0ee9bf565ebdd44",
+      "upstreamSkillPath": ".",
+      "license": "MIT",
+      "installedPath": ".agents/skills/ux-designer",
+      "status": "core",
+      "allowedSurfaces": ["all SHIFAA UX design and review after shifaa-ui-governor"],
+      "prohibitedSurfaces": [
+        "overriding SHIFAA metrics, states, safety semantics, navigation, or motion"
+      ],
+      "knownConflicts": [
+        "generic timing and navigation recommendations differ from SHIFAA contract values"
+      ],
+      "localChanges": [
+        "added SHIFAA UI precedence and external-data overlay",
+        "reconciled typography, targets, navigation, Arabic-first RTL parity, notification/error anatomy, offline critical writes, route states, and exact motion values across the skill and relevant references"
+      ],
+      "treeDigestSha256": "16545032be3be417359e1e5ea1494591f394def6213ae51dd98a0b33a9be5167",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "web-design-guidelines",
+      "purpose": "Implementation and accessibility review against pinned web interface guidelines.",
+      "category": "ui-qa",
+      "upstreamRepository": "vercel-labs/agent-skills",
+      "upstreamCommit": "b8caa260a420a73042e35521de4b5c8baf6446cc",
+      "upstreamSkillPath": "skills/web-design-guidelines",
+      "license": "MIT",
+      "installedPath": ".agents/skills/web-design-guidelines",
+      "status": "core",
+      "allowedSurfaces": ["SHIFAA web UI implementation review"],
+      "prohibitedSurfaces": ["remote moving-rule fetch during review", "sending source externally"],
+      "knownConflicts": ["generic rules are subordinate to the SHIFAA UI Contract"],
+      "localChanges": [
+        "replaced remote fetch with local pinned rules",
+        "added SHIFAA UI precedence"
+      ],
+      "additionalSources": [
+        {
+          "repository": "vercel-labs/web-interface-guidelines",
+          "commit": "4e799d45c17aec1498c269287a83b9dba22b966b",
+          "path": "command.md",
+          "license": "MIT"
+        }
+      ],
+      "treeDigestSha256": "844cec4d01374b846eed457fe84d41decbe6512f1caf03ba33bf9087f59eac26",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "vercel-react-best-practices",
+      "purpose": "React and Next.js performance review and implementation guidance.",
+      "category": "react-nextjs",
+      "upstreamRepository": "vercel-labs/agent-skills",
+      "upstreamCommit": "b8caa260a420a73042e35521de4b5c8baf6446cc",
+      "upstreamSkillPath": "skills/react-best-practices",
+      "license": "MIT",
+      "installedPath": ".agents/skills/vercel-react-best-practices",
+      "status": "core",
+      "allowedSurfaces": ["SHIFAA Next.js and React code"],
+      "prohibitedSurfaces": [
+        "architecture migration",
+        "unsafe PHI caching",
+        "direct domain access",
+        "unreviewed dependency changes"
+      ],
+      "knownConflicts": [
+        "performance advice cannot override generated clients, security, route states, or pinned versions"
+      ],
+      "localChanges": [
+        "renamed folder to match current skill name",
+        "added SHIFAA precedence overlay"
+      ],
+      "treeDigestSha256": "daec3caa55e675f6aa9c1dcb1aea4031a0478b124c41676b1b2a6da6984c803b",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "supabase",
+      "purpose": "Supabase implementation, security, CLI, documentation, and diagnosis guidance.",
+      "category": "supabase",
+      "upstreamRepository": "supabase/agent-skills",
+      "upstreamCommit": "8331f910845103c08d51f6ca1d86ebb7d1f745e3",
+      "upstreamSkillPath": "skills/supabase",
+      "license": "MIT",
+      "installedPath": ".agents/skills/supabase",
+      "status": "core",
+      "allowedSurfaces": [
+        "self-hosted Supabase Auth, Storage, Realtime, CLI, and infrastructure behind SHIFAA boundaries"
+      ],
+      "prohibitedSurfaces": [
+        "client domain-table access",
+        "service_role in online requests",
+        "implicit MCP setup",
+        "external PHI or secret transmission"
+      ],
+      "knownConflicts": [
+        "generic exposed-schema guidance conflicts with SHIFAA private domain schemas and Core API-only mutations"
+      ],
+      "localChanges": [
+        "added SHIFAA Architecture/Data-RLS and external-action overlay",
+        "omitted changelog"
+      ],
+      "treeDigestSha256": "f6bacec7027929f14e9604375213574265230789418a5d075124d7bde9ab5ac8",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "supabase-postgres-best-practices",
+      "purpose": "PostgreSQL schema, query, concurrency, performance, privilege, and RLS guidance.",
+      "category": "postgresql-rls",
+      "upstreamRepository": "supabase/agent-skills",
+      "upstreamCommit": "8331f910845103c08d51f6ca1d86ebb7d1f745e3",
+      "upstreamSkillPath": "skills/supabase-postgres-best-practices",
+      "license": "MIT",
+      "installedPath": ".agents/skills/supabase-postgres-best-practices",
+      "status": "core",
+      "allowedSurfaces": [
+        "SHIFAA PostgreSQL, migrations, functions, indexes, constraints, tests, RLS"
+      ],
+      "prohibitedSurfaces": [
+        "weakening forced RLS",
+        "renaming contracted data models",
+        "inventing retention"
+      ],
+      "knownConflicts": [
+        "SHIFAA logical data/RLS and transaction contracts override generic recommendations"
+      ],
+      "localChanges": ["added SHIFAA Data/RLS precedence overlay", "omitted changelog"],
+      "treeDigestSha256": "9dfdde1a5b5760e6deb8341a763ef3a3cb8e131521f8695c46aa2e1e6ddcc2bd",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "expo-native-ui",
+      "purpose": "Current official Expo native UI implementation guidance.",
+      "category": "expo-react-native",
+      "upstreamRepository": "expo/skills",
+      "upstreamCommit": "6dfc552dc8675a3c3664de12defb6a78edfe9606",
+      "upstreamSkillPath": "plugins/expo/skills/expo-native-ui",
+      "license": "MIT",
+      "installedPath": ".agents/skills/expo-native-ui",
+      "status": "core-restricted-by-ui-governor",
+      "allowedSurfaces": ["SHIFAA patient Expo app implementation under shifaa-ui-governor"],
+      "prohibitedSurfaces": [
+        "Apple-only design authority",
+        "glass/blur",
+        "alternate colors or typography",
+        "generic decorative motion on safety surfaces",
+        "implicit package install or feedback submission"
+      ],
+      "knownConflicts": [
+        "upstream Apple HIG, semantic-color, glass, animation, font, and styling advice conflicts with SHIFAA tokens and safety rules"
+      ],
+      "localChanges": ["added prominent SHIFAA UI precedence and no-feedback/no-package overlay"],
+      "treeDigestSha256": "a64c7a465f22d493371ab263bdc8c236878378bb983200b353fdcea710e62f1e",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "expo-data-fetching",
+      "purpose": "Current official Expo networking, caching, error, offline, and cancellation guidance.",
+      "category": "expo-react-native",
+      "upstreamRepository": "expo/skills",
+      "upstreamCommit": "6dfc552dc8675a3c3664de12defb6a78edfe9606",
+      "upstreamSkillPath": "plugins/expo/skills/expo-data-fetching",
+      "license": "MIT",
+      "installedPath": ".agents/skills/expo-data-fetching",
+      "status": "core-restricted-by-project-guardrails",
+      "allowedSurfaces": ["SHIFAA patient app networking through the generated Core API client"],
+      "prohibitedSurfaces": [
+        "direct Supabase or vendor domain calls",
+        "invented endpoints",
+        "offline critical mutations",
+        "implicit package install or feedback submission"
+      ],
+      "knownConflicts": [
+        "generic examples do not implement SHIFAA generated-client, RFC 9457, idempotency, auth, or PHI cache rules"
+      ],
+      "localChanges": ["added SHIFAA Core API and no-feedback/no-package overlay"],
+      "treeDigestSha256": "7f5da8cb83c839e31a89bc20249cffa33007018228793d2ef66fe8ad7c7b155a",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "systematic-debugging",
+      "purpose": "Root-cause-first debugging and evidence collection.",
+      "category": "engineering-discipline",
+      "upstreamRepository": "obra/superpowers",
+      "upstreamCommit": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+      "upstreamSkillPath": "skills/systematic-debugging",
+      "license": "MIT",
+      "installedPath": ".agents/skills/systematic-debugging",
+      "status": "core",
+      "allowedSurfaces": [
+        "SHIFAA bugs, test failures, build failures, integration and performance diagnosis"
+      ],
+      "prohibitedSurfaces": [
+        "logging PHI, tokens, secrets, identities, or full clinical payloads",
+        "executing omitted upstream helpers"
+      ],
+      "knownConflicts": [
+        "upstream examples can print environment values and reference non-installed lifecycle skills"
+      ],
+      "localChanges": [
+        "added SHIFAA redaction and lifecycle overlay",
+        "omitted upstream shell/TypeScript executables, tests, creation log, and unneeded files"
+      ],
+      "treeDigestSha256": "a54b72f24fcacaaed5e28b1aa41a39eec71425f7c116547c3017c702bafdb270",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "verification-before-completion",
+      "purpose": "Require fresh evidence before completion, fix, test, build, commit, or PR claims.",
+      "category": "engineering-discipline",
+      "upstreamRepository": "obra/superpowers",
+      "upstreamCommit": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+      "upstreamSkillPath": "skills/verification-before-completion",
+      "license": "MIT",
+      "installedPath": ".agents/skills/verification-before-completion",
+      "status": "core",
+      "allowedSurfaces": ["all SHIFAA completion and verification claims"],
+      "prohibitedSurfaces": [
+        "replacing SpecKit evidence",
+        "closing OPEN gates",
+        "authorizing Git integration"
+      ],
+      "knownConflicts": ["generic verification cannot define SHIFAA completion"],
+      "localChanges": ["added AGENTS/spec/OPEN-gate precedence overlay"],
+      "treeDigestSha256": "9a4835a946997938004265cf14a5c2ed7d8486825abae3d58ba411a16eaef1e5",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "using-git-worktrees",
+      "purpose": "Create and verify isolated workspaces without bypassing repository Git policy.",
+      "category": "engineering-discipline",
+      "upstreamRepository": "obra/superpowers",
+      "upstreamCommit": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+      "upstreamSkillPath": "skills/using-git-worktrees",
+      "license": "MIT",
+      "installedPath": ".agents/skills/using-git-worktrees",
+      "status": "core",
+      "allowedSurfaces": ["SHIFAA branch/worktree isolation"],
+      "prohibitedSurfaces": [
+        "direct main push",
+        "automatic merge",
+        "generic npm install",
+        "discarding dirty changes",
+        "new lifecycle"
+      ],
+      "knownConflicts": ["upstream setup uses generic npm and generic branch/worktree conventions"],
+      "localChanges": ["added SHIFAA Git, pnpm, dirty-tree, and SpecKit overlay"],
+      "treeDigestSha256": "f32ae3ffc16fb59fbec88890a493fe2396c3ea3f632329ad6860f7273ded82cc",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "clean-code-guard",
+      "purpose": "Second-pass review of production and tooling changes for objective maintainability defects.",
+      "category": "engineering-guard",
+      "upstreamRepository": "amElnagdy/guard-skills",
+      "upstreamCommit": "ffa26036b7b5e77b20b5d679304a703b6fd1a43d",
+      "upstreamSkillPath": "skills/clean-code-guard",
+      "license": "MIT",
+      "installedPath": ".agents/skills/clean-code-guard",
+      "status": "core-second-pass",
+      "allowedSurfaces": ["production and repository-tooling diffs after implementation"],
+      "prohibitedSurfaces": [
+        "redesigning SHIFAA architecture",
+        "replacing SpecKit",
+        "treating intentional contract choices as defects"
+      ],
+      "knownConflicts": [
+        "generic clean-code preferences cannot override SHIFAA contracts or generated boundaries"
+      ],
+      "localChanges": [
+        "added SHIFAA authority, SpecKit, architecture, and objective-defect overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "treeDigestSha256": "7734ccc71cac60bd3b0a44635dff8a52e7062c026e87241dfa47109d66fb1c3f",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "test-guard",
+      "purpose": "Second-pass review of tests and verification logic for reliability, isolation, behavior coverage, and false confidence.",
+      "category": "testing-guard",
+      "upstreamRepository": "amElnagdy/guard-skills",
+      "upstreamCommit": "ffa26036b7b5e77b20b5d679304a703b6fd1a43d",
+      "upstreamSkillPath": "skills/test-guard",
+      "license": "MIT",
+      "installedPath": ".agents/skills/test-guard",
+      "status": "core-second-pass",
+      "allowedSurfaces": ["test code, validation scripts, and verification logic"],
+      "prohibitedSurfaces": [
+        "weakening SHIFAA acceptance gates",
+        "replacing SpecKit",
+        "redesigning architecture to satisfy a test preference"
+      ],
+      "knownConflicts": [
+        "generic framework guidance is subordinate to repository verification and SHIFAA safety evidence"
+      ],
+      "localChanges": [
+        "added SHIFAA authority, SpecKit, architecture, and objective-defect overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "treeDigestSha256": "37c536d23ee93ea972f7a2d04af09804a4825a618e0f9552c02020a75b4cfd9e",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "docs-guard",
+      "purpose": "Second-pass review of documentation and governance changes for truthfulness, consistency, and verifiability.",
+      "category": "documentation-guard",
+      "upstreamRepository": "amElnagdy/guard-skills",
+      "upstreamCommit": "ffa26036b7b5e77b20b5d679304a703b6fd1a43d",
+      "upstreamSkillPath": "skills/docs-guard",
+      "license": "MIT",
+      "installedPath": ".agents/skills/docs-guard",
+      "status": "core-second-pass",
+      "allowedSurfaces": ["documentation, governance, provenance, and setup claims"],
+      "prohibitedSurfaces": [
+        "rewriting SHIFAA authority",
+        "replacing SpecKit",
+        "presenting optional tools as runtime dependencies"
+      ],
+      "knownConflicts": [
+        "generic documentation structure cannot silently reinterpret normative SHIFAA language"
+      ],
+      "localChanges": [
+        "added SHIFAA authority, SpecKit, architecture, and objective-defect overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "treeDigestSha256": "8e58cbd76cf3cfc2b5577c53365d18dcf368cb9e179c71f489d7aab919608107",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "codex-delegate",
+      "purpose": "Dispatch a bounded brief to OpenAI Codex and return a structured, diff-reviewable result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/codex-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/codex-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or review briefs under parent-agent supervision"
+      ],
+      "prohibitedSurfaces": [
+        "unstated context",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "delegate autonomy cannot replace SHIFAA guardrails, UI governance, SpecKit, or parent verification"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation and parent-ownership overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "af233fd912947ee3e721aaeb488a2b3149db58e0e5471eda0eea361dd937cba1",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "kimi-delegate",
+      "purpose": "Dispatch a bounded brief to Kimi Code and return a structured, diff-reviewable result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/kimi-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/kimi-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or review briefs in disposable or parent-reviewed workspaces"
+      ],
+      "prohibitedSurfaces": [
+        "unstated context",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets in the process-visible brief",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "the relay has no read-only mode; parent diff review and disposable testing remain mandatory"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation and parent-ownership overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "b11bd86b76c1d1c9affddb25ea39dde34e02da2c8ccf28862f5880caf30e0d35",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "claude-delegate",
+      "purpose": "Dispatch a bounded brief to Claude Code and return a structured, diff-reviewable result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/claude-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/claude-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or read-only review briefs under parent-agent supervision"
+      ],
+      "prohibitedSurfaces": [
+        "claims of native-Windows shell isolation",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "native Windows has no Claude shell sandbox and upstream native-Windows behavior remains unverified"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation, parent-ownership, and native-Windows caveat overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "7864ee782358de46f12607a50ff443284b49fc44b68ced865ed55751055ddcbf",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "opencode-delegate",
+      "purpose": "Dispatch a bounded brief to OpenCode with an explicit approved model and return a structured result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/opencode-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/opencode-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or plan-mode review using a human-approved configured model"
+      ],
+      "prohibitedSurfaces": [
+        "inventing a provider, model, key, or paid account choice",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "fresh runs require an explicit provider/model; no project default may be invented"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation, parent-ownership, and explicit-model overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "0cab663a8f302b2ffce5764e8adc20be338bcfdf692472adbe6b33153851e1df",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "agy-delegate",
+      "purpose": "Dispatch a bounded brief to Google Antigravity and return a structured, diff-reviewable result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/agy-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/agy-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or read-only review briefs under parent-agent supervision"
+      ],
+      "prohibitedSurfaces": [
+        "permission bypass without explicit task-specific authorization",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets in the process-visible brief",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "Antigravity owns its permission boundary; parent review remains mandatory"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation, parent-ownership, and permission-bypass overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "4f5ee523c0a22aafa505b5317fd7e0ce2ac891dd77273109ab51cb548c6e0330",
+      "dateReviewed": "2026-08-13"
+    }
+  ],
+  "evaluatedNotInstalled": [
+    {
+      "name": "design-taste-frontend",
+      "repository": "Leonxlnx/taste-skill",
+      "commit": "e988add20dab0fa97d7a76781c48961c8184288e",
+      "path": "skills/taste-skill",
+      "license": "MIT",
+      "classification": "restricted optional",
+      "reason": "Current v2 is experimental and explicitly excludes dashboards, data tables, and multi-step product UI; its high-motion/landing-page guidance is unsuitable as a general SHIFAA trigger."
+    },
+    {
+      "name": "transitions-dev",
+      "repository": "Jakubantalik/transitions.dev",
+      "commit": "b512578b136563ecd9aabc4125a26275eaaaa618",
+      "path": "skills/transitions-dev",
+      "license": "MIT for the reviewed skill/CLI; transition terms also published by upstream",
+      "classification": "restricted optional",
+      "reason": "Broad auto-trigger, animation catalog, blur, shake, shimmer, tilt, and alternate motion tokens conflict with SHIFAA timing and zero-motion safety surfaces."
+    },
+    {
+      "name": "app-store-screenshots",
+      "repository": "ParthJadhav/app-store-screenshots",
+      "commit": "e58f81961b5fd9e3969c680061f7cfd8f286ae55",
+      "path": "skills/app-store-screenshots",
+      "license": "MIT",
+      "classification": "release/marketing optional",
+      "reason": "Large standalone Next.js/ShadCN editor template with dependency installation; not normal product implementation."
+    },
+    {
+      "name": "canvas-design",
+      "repository": "anthropics/skills",
+      "commit": "f17010c9bb483898c1d9c9f42dde2b3a98889434",
+      "path": "skills/canvas-design",
+      "license": "Apache-2.0",
+      "classification": "creative asset optional",
+      "reason": "Static artwork guidance is not SHIFAA product-interface authority."
+    },
+    {
+      "name": "web-artifacts-builder",
+      "repository": "anthropics/skills",
+      "commit": "f17010c9bb483898c1d9c9f42dde2b3a98889434",
+      "path": "skills/web-artifacts-builder",
+      "license": "Apache-2.0",
+      "classification": "rejected default",
+      "reason": "Scaffolds React 18/Vite/Tailwind/shadcn artifacts and runs dependency-installing shell scripts outside SHIFAA architecture."
+    },
+    {
+      "name": "requesting-code-review",
+      "repository": "obra/superpowers",
+      "commit": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+      "path": "skills/requesting-code-review",
+      "license": "MIT",
+      "classification": "rejected default",
+      "reason": "Mandates a subagent review cadence that overlaps repository PR review and SpecKit evidence."
+    },
+    {
+      "name": "security-diff-scan",
+      "repository": "openai/plugins",
+      "commit": "11c74d6ba24d3a6d48f54a194cd00ef3beea18f9",
+      "path": "plugins/codex-security/skills/security-diff-scan",
+      "license": "Proprietary",
+      "classification": "agent-provided Codex optional",
+      "reason": "Depends on proprietary Codex Security plugin tools, sibling skills, scripts, scan goals, and app setup; unsafe to redistribute as a shared Kimi/Codex folder."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SHIFAA UI Governor"
+  short_description: "Enforce SHIFAA UI safety and accessibility contracts"
+  default_prompt: "Apply the SHIFAA UI Contract to this UI or UX task."
