@@ -1,5 +1,7 @@
 # Internationalization & Localization
 
+> SHIFAA application: Arabic Egypt (`ar-EG`) is the first/default experience with root RTL direction and IBM Plex Sans Arabic. English Egypt (`en-EG`) must provide complete LTR parity using Inter. Both locales require equivalent routes, content, states, accessibility, and acceptance evidence.
+
 Internationalization (**i18n**) is designing and building a product so it *can* be
 adapted to different languages, regions, and cultures without re-engineering.
 Localization (**l10n**) is the adaptation itself—translating strings, swapping
@@ -47,7 +49,7 @@ Logical properties resolve against the document/element direction automatically.
 ### Set direction at the root, let it cascade
 
 ```html
-<html lang="ar" dir="rtl">
+<html lang="ar-EG" dir="rtl">
 ```
 
 Use `dir="auto"` on user-generated content fields so a single input handles either

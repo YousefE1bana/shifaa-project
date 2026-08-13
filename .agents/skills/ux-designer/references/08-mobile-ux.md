@@ -1,5 +1,7 @@
 # Mobile UX Design
 
+> SHIFAA application: all interactive targets use a 44×44px minimum and patient primary actions use the contracted 48px height. Follow the patient-app shell and responsive behavior in the UI Contract; the generic bottom-navigation and FAB examples below are not defaults and may not replace contracted navigation or stable primary-action placement.
+
 Mobile-first design is essential in 2026, with over 60% of web traffic coming from mobile devices.
 
 ---
@@ -48,9 +50,8 @@ Coined by mobile UX expert Steven Hoober, the Thumb Zone defines how users inter
 
 | Platform | Minimum Size | Recommended |
 |----------|--------------|-------------|
-| Apple iOS | 44×44pt | 44-48pt |
-| Material Design | 48×48dp | 48dp |
-| WCAG 2.2 | 24×24px | 44×44px |
+| SHIFAA all surfaces | 44×44px | Contracted minimum |
+| SHIFAA patient primary action | 44×48px | Contracted minimum height |
 
 ### Implementation
 
@@ -177,7 +178,7 @@ html {
 - Space-constrained headers
 
 **When to Avoid:**
-- Primary navigation (use bottom bar)
+- Contracted primary navigation for the current SHIFAA app shell
 - When discoverability is crucial
 - E-commerce main categories
 

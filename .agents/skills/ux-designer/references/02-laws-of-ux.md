@@ -1,5 +1,7 @@
 # Laws of UX
 
+> SHIFAA application: the UI Contract is the fixed implementation standard. Every interactive target is at least 44×44px, patient primary actions use the contracted 48px height, and success delight never adds decorative motion to safety, emergency, approval, or finance-decision surfaces.
+
 Psychological principles that inform user experience design, collected and popularized by Jon Yablonski.
 
 ---
@@ -32,8 +34,8 @@ Avoid:
 ```
 
 ### Minimum Target Sizes
-- **Touch (mobile):** 44×44px (Apple) / 48×48dp (Material Design)
-- **Mouse (desktop):** 24×24px minimum, 44×44px recommended
+- **SHIFAA touch and mouse targets:** 44×44px minimum
+- **SHIFAA patient primary actions:** 48px contracted height
 - **Spacing between targets:** 8px minimum
 
 ---
@@ -152,7 +154,7 @@ Risky Innovations:
 
 ```
 Positive Peaks:
-- Delightful animations on success
+- Clear success confirmation; tasteful motion only on eligible non-safety surfaces
 - Personalized welcome messages
 - Achievement celebrations
 - Surprise and delight moments

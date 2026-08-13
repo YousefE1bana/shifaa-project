@@ -1,5 +1,7 @@
 # Interaction Design
 
+> SHIFAA application: semantic tokens and interaction states come from `packages/design-system`. Motion is limited to press 120ms, content enter 180ms, and route 220ms; use 0ms where reduced motion is contracted and 0ms decorative motion on safety, emergency, approval, and finance-decision surfaces. Actionable errors use contextual inline or persistent banner treatment, never a transient toast alone.
+
 Interaction design (IxD) focuses on creating engaging interfaces with well-thought-out behaviors—how the system responds to user actions.
 
 ---
@@ -145,14 +147,12 @@ Modes:
 ### Timing
 
 ```css
-/* Natural feeling durations */
-.quick { transition-duration: 100ms; }   /* Hovers, immediate feedback */
-.normal { transition-duration: 200ms; }  /* Standard transitions */
-.smooth { transition-duration: 300ms; }  /* Panel transitions */
-.slow { transition-duration: 500ms; }    /* Large/complex animations */
-
-/* Maximum for focused attention */
-.complex { animation-duration: 500ms; }  /* Don't exceed 500ms typically */
+/* SHIFAA contracted durations */
+.press { transition-duration: 120ms; }
+.enter { transition-duration: 180ms; }
+.route { transition-duration: 220ms; }
+.reduced-motion,
+.safety-critical { animation-duration: 0ms; transition-duration: 0ms; }
 ```
 
 ### Easing Functions
@@ -311,7 +311,7 @@ Indeterminate (unknown duration):
 }
 .page-enter-active {
   transform: translateX(0);
-  transition: transform 300ms ease-out;
+  transition: transform 180ms ease-out;
 }
 ```
 
@@ -345,7 +345,7 @@ Indeterminate (unknown duration):
 .accordion-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 300ms ease-out;
+  transition: max-height 180ms ease-out;
 }
 .accordion-content.open {
   max-height: 500px; /* Use calculated height for best results */
@@ -364,9 +364,9 @@ Indeterminate (unknown duration):
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
+    animation-duration: 0ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 0ms !important;
     scroll-behavior: auto !important;
   }
 }
@@ -375,7 +375,7 @@ Indeterminate (unknown duration):
 @media (prefers-reduced-motion: reduce) {
   .animated {
     animation: none;
-    transition: opacity 0.01ms;
+    transition: opacity 0ms;
   }
 }
 ```

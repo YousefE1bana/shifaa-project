@@ -8,7 +8,7 @@ license: Complete terms in LICENSE.txt
 
 > SHIFAA overlay: Consult `shifaa-ui-governor` before this skill. The SHIFAA UI Contract fixes typography, semantic tokens, spacing, radii, breakpoints, route states, safety semantics, accessibility, and motion. Treat the process below as optional execution guidance inside those constraints; it does not add a project lifecycle. Never invent alternate SHIFAA tokens or add decorative motion to safety-critical surfaces.
 
-Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
+Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. SHIFAA has already fixed its palette, typography, tokens, and safety semantics. Create distinction through the approved type scale, weight, spacing, hierarchy, layout, copy, whitespace, content, and composition. Aesthetic risk is acceptable only on patient-facing, non-safety surfaces and only when it stays inside the UI Contract.
 
 ## Ground it in the subject
 
@@ -16,13 +16,13 @@ If the brief does not pin down what the product or subject is, pin it yourself b
 
 ## Design principles
 
-For web designs, the hero is a thesis. Open with the most characteristic thing in the subject's world, in whatever form makes sense for it: a headline, an image, an animation, a live demo, an interactive moment. Be deliberate with your choice: a big number with a small label, supporting stats, and a gradient accent is the template answer, only use if that's truly the best option.
+On patient-facing, non-safety pages where a hero is appropriate, make it a clear thesis using real content and an intentional composition. Do not introduce landing-page heroes, experimental layouts, ambient effects, or moving primary actions into staff, emergency, clinical-safety, approval, or finance-decision routes. Those surfaces prioritize stable placement, density, keyboard access, and rapid scanning.
 
-Typography carries the personality of the page. Pair the display and body faces deliberately, not the same families you would reach for on any other project, and set a clear type scale with intentional weights, widths, and spacing. Make the type treatment itself a memorable part of the design, not a neutral delivery vehicle for the content.
+Typography carries the personality of the page, but the families are fixed: IBM Plex Sans Arabic for Arabic, Inter for Latin, and the approved monospace treatment only for codes. Use the contracted scale with intentional weights, widths, spacing, and hierarchy. Do not add or substitute typefaces.
 
 Structure is information. Structural devices, numbering, eyebrows, dividers, labels, should encode something true about the content, not decorate it. Many generic designs use numbered markers (01 / 02 / 03), but that's only appropriate if the content actually is a sequence - like a real process or a typed timeline where order carries information the reader needs. Question if choices like numbered markers actually make sense before incorporating them.
 
-Leverage motion deliberately. Think about where and if animation can serve the subject: a page-load sequence, a scroll-triggered reveal, hover micro-interactions, ambient atmosphere. An orchestrated moment usually lands harder than scattered effects; choose what the direction calls for. However, sometimes less is more, and extra animation contributes to the feeling that the design is AI-generated.
+Use motion only when it explains state or interaction. SHIFAA timings are fixed: press feedback 120ms, content enter 180ms, and route transition 220ms. Use 0ms where reduced motion is contracted, and 0ms decorative motion on safety, emergency, approval, and finance-decision routes. Do not add generic page-load sequences, scroll reveals, ambient animation, or motion merely for polish.
 
 Match complexity to the vision. Maximalist directions need elaborate execution; minimal directions need precision in spacing, type, and detail. Elegance is executing the chosen vision well.
 
@@ -32,9 +32,9 @@ Consider written content carefully. Often a design brief may not contain real co
 
 For calibration: AI-generated design right now clusters around three looks: (1) a warm cream background (near #F4F1EA) with a high-contrast serif display and a terracotta accent; (2) a near-black background with a single bright acid-green or vermilion accent; (3) a broadsheet-style layout with hairline rules, zero border-radius, and dense newspaper-like columns. All three are legitimate for some briefs, but they are defaults rather than choices, and they appear regardless of subject. Where the brief pins down a visual direction, follow it exactly — the brief's own words always win, including when it asks for one of these looks. Where it leaves an axis free, don't spend that freedom on one of these defaults. Just like a human designer who's hired, there's often a careful balance between doing what you're good at and taking each project as a chance to experiment and learn.
 
-Work in two passes. First, brainstorm a short design plan based on the human's design brief: create a compact token system with color, type, layout, and signature. Color: describe the palette as 4–6 named hex values. Type: the typefaces for 2+ roles (a characterful display face that's used with restraint, a complementary body face, and a utility face for captions or data if needed). Layout: a layout concept, using one-sentence prose descriptions and ASCII wireframes to ideate and compare. Signature: the single unique element this page will be remembered by that embodies the brief in an appropriate way.
+Work in two passes. First, brainstorm a short design plan based on the human's design brief and the SHIFAA UI Contract. Map every color idea to an existing semantic token from `packages/design-system`; do not create app-local colors, hex palettes, or a parallel token system. Use only IBM Plex Sans Arabic, Inter, and approved monospace usage. Explore layout with concise prose or ASCII wireframes, then identify one suitable signature element based on content, hierarchy, or composition. The signature must preserve safety semantics, route states, stable staff layouts, accessibility, and the contracted motion rules.
 
-Then review that plan against the brief before building: if any part of it reads like the generic default you would produce for any similar page (work through a similar prompt to see if you arrive somewhere similar) rather than a choice made for this specific brief — revise that part, say what you changed and why. Only after you've confirmed the relative uniqueness of your design plan should you start to write the code, following the revised plan exactly and deriving every color and type decision from it.
+Then review that plan against the brief and UI Contract before building. If any free design choice reads like a generic default rather than a choice made for this SHIFAA context, revise it and say why. Derive every implementation value from `packages/design-system` and the approved contract, never from a new local palette, type system, spacing scale, or radius scale.
 
 When writing the code, be careful of structuring your CSS selector specificities. It's easy to generate CSS classes that cancel each other out (especially with a type-based selector like .section and a element-based selector like .cta). This can happen often with paddings/margins between sections.
 
@@ -42,7 +42,7 @@ Try to do a lot of this planning and iteration in your thinking, and only show i
 
 ## Restraint and self-critique
 
-Spend your boldness in one place. Let the signature element be the one memorable thing, keep everything around it quiet and disciplined, and cut any decoration that does not serve the brief. Not taking a risk can be a risk itself! Build to a quality floor without announcing it: responsive down to mobile, visible keyboard focus, reduced motion respected. Critique your own work as you build, taking screenshots if your environment supports it – a picture is worth 1000 tokens. Consider Chanel's advice: before leaving the house, take a look in the mirror and remove one accessory. Human creators have memory and always try to do something new, so if you have a space to quickly jot down notes about what you've tried, it can help you in future passes.
+On a suitable patient-facing, non-safety surface, spend visual distinction in one place and keep everything around it quiet and disciplined. On staff and safety-critical surfaces, clarity, density, stability, keyboard use, and safety outrank novelty. Build to the SHIFAA quality floor: responsive behavior, visible keyboard focus, screen-reader semantics, 200% text scaling, and reduced motion. Critique your own work as you build, using screenshots when available, and remove decoration that does not help the task.
 
 ## More on writing in design
 
@@ -50,7 +50,7 @@ Words appear in a design for one reason: to make it easier to understand, and th
 
 Write from the end user's side of the screen. Name things by what people control and recognize, never by how the system is built. A person manages notifications, not webhook config. Describe what something does in plain terms rather than selling it. Being specific is always better than being clever.
 
-Use active voice as default. A control should say exactly what happens when it's used: "Save changes," not "Submit." An action keeps the same name through the whole flow, so the button that says "Publish" produces a toast that says "Published." The vocabulary of an interface is the signposting for someone navigating the product. Cohesion and consistency are how people learn their way around.
+Use active voice as default. A control should say exactly what happens when used: "Save changes," not "Submit." Keep action names consistent through the flow. Use the SHIFAA route-state and notification contract for confirmation: a transient toast is supplementary feedback only and never the sole carrier of a critical decision or actionable error.
 
 Treat failure and emptiness as moments for direction, not mood. Explain what went wrong and how to fix it, in the interface's voice rather than a person's. Errors don't apologize, and they are never vague about what happened. An empty screen is an invitation to act.
 

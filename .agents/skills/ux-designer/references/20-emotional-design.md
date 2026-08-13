@@ -1,5 +1,7 @@
 # Emotional Design & Trust
 
+> SHIFAA application: emotional polish is limited to eligible non-safety patient surfaces. Do not add decorative motion, jokes, confetti, playful loading, badges, or aesthetic risk to emergency, prescribing, clinical-safety, critical-lab, approval, or finance-decision surfaces. Never fabricate credentials, regulator approval, compliance badges, reviews, activity, or healthcare success.
+
 Emotional design goes beyond usability to create meaningful, trustworthy, and delightful experiences. This reference covers Don Norman's three levels of design, trust-building patterns, microinteraction delight, error empathy, and brand personality in UI.
 
 ---
@@ -160,7 +162,7 @@ Checkout:
 
 ```
 Good moments for delight:
-  ✅ Task completion (confetti on milestone)
+  ✅ Meaningful non-safety patient milestones, using contracted motion only
   ✅ First-time achievement (badge unlock)
   ✅ Loading waits (playful animation)
   ✅ Empty states (friendly illustration)
@@ -168,7 +170,7 @@ Good moments for delight:
 
 Bad moments for delight:
   ❌ During errors (not the time for jokes)
-  ❌ In critical workflows (checkout, payment)
+  ❌ In safety, emergency, approval, or finance-decision workflows
   ❌ Repeated actions (animation fatigue)
   ❌ When it slows the user down
 ```
@@ -186,8 +188,8 @@ Achievement unlocked:
 │            [🏆 View Badge]               │
 │                                          │
 └──────────────────────────────────────────┘
-  + confetti particle animation (1.5s)
-  + Scale-up entrance (300ms, ease-out)
+  + Optional restrained non-safety celebration within the contracted 180ms enter timing
+  + No decorative motion when reduced motion is requested
   + Respect prefers-reduced-motion
 ```
 

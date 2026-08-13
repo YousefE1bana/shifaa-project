@@ -7,7 +7,15 @@
     "projectLifecycle": "SpecKit",
     "externalSkillsAreAdvisory": true,
     "globalInstallationAllowed": false,
-    "symlinksUsed": false
+    "symlinksUsed": false,
+    "thirdPartyExecutablesAllowedByDefault": false,
+    "reviewedExecutableExceptions": [
+      ".agents/skills/codex-delegate/scripts/relay.mjs",
+      ".agents/skills/kimi-delegate/scripts/relay.mjs",
+      ".agents/skills/claude-delegate/scripts/relay.mjs",
+      ".agents/skills/opencode-delegate/scripts/relay.mjs",
+      ".agents/skills/agy-delegate/scripts/relay.mjs"
+    ]
   },
   "toolingReviewed": {
     "npxSkills": {
@@ -21,6 +29,11 @@
       "version": "0.34.0",
       "projectDiscoveryRoot": ".agents/skills",
       "restartRequiredAfterChanges": true
+    },
+    "delegateCliAudit": {
+      "platform": "native Windows",
+      "statusPath": "docs/agent-skills/delegate-runtime-status.json",
+      "reviewedAt": "2026-08-13"
     }
   },
   "nativeSkills": [
@@ -58,8 +71,11 @@
       "knownConflicts": [
         "generic typography, palette, layout, and motion choices are fixed by the SHIFAA UI Contract"
       ],
-      "localChanges": ["added SHIFAA UI precedence overlay"],
-      "treeDigestSha256": "7ae5784e9f2ee5908313b22f384e390cb91685a7417850f990af02060558de0a",
+      "localChanges": [
+        "added SHIFAA UI precedence overlay",
+        "reconciled typography, semantic tokens, color, layout risk, copy feedback, and exact motion guidance with the SHIFAA UI Contract"
+      ],
+      "treeDigestSha256": "4a311c13ce1589856482ca38ea54dea1a75e02ee5bdb1797c8374ea7510cf648",
       "dateReviewed": "2026-08-13"
     },
     {
@@ -79,8 +95,11 @@
       "knownConflicts": [
         "generic timing and navigation recommendations differ from SHIFAA contract values"
       ],
-      "localChanges": ["added SHIFAA UI precedence and external-data overlay"],
-      "treeDigestSha256": "d2927951b2e8874ba1a6bd9eca329fb1aa4e5356b0680fc6add44d853deae002",
+      "localChanges": [
+        "added SHIFAA UI precedence and external-data overlay",
+        "reconciled typography, targets, navigation, Arabic-first RTL parity, notification/error anatomy, offline critical writes, route states, and exact motion values across the skill and relevant references"
+      ],
+      "treeDigestSha256": "16545032be3be417359e1e5ea1494591f394def6213ae51dd98a0b33a9be5167",
       "dateReviewed": "2026-08-13"
     },
     {
@@ -310,6 +329,244 @@
       "knownConflicts": ["upstream setup uses generic npm and generic branch/worktree conventions"],
       "localChanges": ["added SHIFAA Git, pnpm, dirty-tree, and SpecKit overlay"],
       "treeDigestSha256": "f32ae3ffc16fb59fbec88890a493fe2396c3ea3f632329ad6860f7273ded82cc",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "clean-code-guard",
+      "purpose": "Second-pass review of production and tooling changes for objective maintainability defects.",
+      "category": "engineering-guard",
+      "upstreamRepository": "amElnagdy/guard-skills",
+      "upstreamCommit": "ffa26036b7b5e77b20b5d679304a703b6fd1a43d",
+      "upstreamSkillPath": "skills/clean-code-guard",
+      "license": "MIT",
+      "installedPath": ".agents/skills/clean-code-guard",
+      "status": "core-second-pass",
+      "allowedSurfaces": ["production and repository-tooling diffs after implementation"],
+      "prohibitedSurfaces": [
+        "redesigning SHIFAA architecture",
+        "replacing SpecKit",
+        "treating intentional contract choices as defects"
+      ],
+      "knownConflicts": [
+        "generic clean-code preferences cannot override SHIFAA contracts or generated boundaries"
+      ],
+      "localChanges": [
+        "added SHIFAA authority, SpecKit, architecture, and objective-defect overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "treeDigestSha256": "7734ccc71cac60bd3b0a44635dff8a52e7062c026e87241dfa47109d66fb1c3f",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "test-guard",
+      "purpose": "Second-pass review of tests and verification logic for reliability, isolation, behavior coverage, and false confidence.",
+      "category": "testing-guard",
+      "upstreamRepository": "amElnagdy/guard-skills",
+      "upstreamCommit": "ffa26036b7b5e77b20b5d679304a703b6fd1a43d",
+      "upstreamSkillPath": "skills/test-guard",
+      "license": "MIT",
+      "installedPath": ".agents/skills/test-guard",
+      "status": "core-second-pass",
+      "allowedSurfaces": ["test code, validation scripts, and verification logic"],
+      "prohibitedSurfaces": [
+        "weakening SHIFAA acceptance gates",
+        "replacing SpecKit",
+        "redesigning architecture to satisfy a test preference"
+      ],
+      "knownConflicts": [
+        "generic framework guidance is subordinate to repository verification and SHIFAA safety evidence"
+      ],
+      "localChanges": [
+        "added SHIFAA authority, SpecKit, architecture, and objective-defect overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "treeDigestSha256": "37c536d23ee93ea972f7a2d04af09804a4825a618e0f9552c02020a75b4cfd9e",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "docs-guard",
+      "purpose": "Second-pass review of documentation and governance changes for truthfulness, consistency, and verifiability.",
+      "category": "documentation-guard",
+      "upstreamRepository": "amElnagdy/guard-skills",
+      "upstreamCommit": "ffa26036b7b5e77b20b5d679304a703b6fd1a43d",
+      "upstreamSkillPath": "skills/docs-guard",
+      "license": "MIT",
+      "installedPath": ".agents/skills/docs-guard",
+      "status": "core-second-pass",
+      "allowedSurfaces": ["documentation, governance, provenance, and setup claims"],
+      "prohibitedSurfaces": [
+        "rewriting SHIFAA authority",
+        "replacing SpecKit",
+        "presenting optional tools as runtime dependencies"
+      ],
+      "knownConflicts": [
+        "generic documentation structure cannot silently reinterpret normative SHIFAA language"
+      ],
+      "localChanges": [
+        "added SHIFAA authority, SpecKit, architecture, and objective-defect overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "treeDigestSha256": "8e58cbd76cf3cfc2b5577c53365d18dcf368cb9e179c71f489d7aab919608107",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "codex-delegate",
+      "purpose": "Dispatch a bounded brief to OpenAI Codex and return a structured, diff-reviewable result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/codex-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/codex-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or review briefs under parent-agent supervision"
+      ],
+      "prohibitedSurfaces": [
+        "unstated context",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "delegate autonomy cannot replace SHIFAA guardrails, UI governance, SpecKit, or parent verification"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation and parent-ownership overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "af233fd912947ee3e721aaeb488a2b3149db58e0e5471eda0eea361dd937cba1",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "kimi-delegate",
+      "purpose": "Dispatch a bounded brief to Kimi Code and return a structured, diff-reviewable result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/kimi-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/kimi-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or review briefs in disposable or parent-reviewed workspaces"
+      ],
+      "prohibitedSurfaces": [
+        "unstated context",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets in the process-visible brief",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "the relay has no read-only mode; parent diff review and disposable testing remain mandatory"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation and parent-ownership overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "b11bd86b76c1d1c9affddb25ea39dde34e02da2c8ccf28862f5880caf30e0d35",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "claude-delegate",
+      "purpose": "Dispatch a bounded brief to Claude Code and return a structured, diff-reviewable result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/claude-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/claude-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or read-only review briefs under parent-agent supervision"
+      ],
+      "prohibitedSurfaces": [
+        "claims of native-Windows shell isolation",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "native Windows has no Claude shell sandbox and upstream native-Windows behavior remains unverified"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation, parent-ownership, and native-Windows caveat overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "7864ee782358de46f12607a50ff443284b49fc44b68ced865ed55751055ddcbf",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "opencode-delegate",
+      "purpose": "Dispatch a bounded brief to OpenCode with an explicit approved model and return a structured result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/opencode-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/opencode-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or plan-mode review using a human-approved configured model"
+      ],
+      "prohibitedSurfaces": [
+        "inventing a provider, model, key, or paid account choice",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "fresh runs require an explicit provider/model; no project default may be invented"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation, parent-ownership, and explicit-model overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "0cab663a8f302b2ffce5764e8adc20be338bcfdf692472adbe6b33153851e1df",
+      "dateReviewed": "2026-08-13"
+    },
+    {
+      "name": "agy-delegate",
+      "purpose": "Dispatch a bounded brief to Google Antigravity and return a structured, diff-reviewable result.",
+      "category": "delegation",
+      "upstreamRepository": "amElnagdy/delegate-skills",
+      "upstreamCommit": "c00918a6609495ccd9c3ce80a2ff5dd01c752f4f",
+      "upstreamSkillPath": "skills/agy-delegate",
+      "license": "MIT",
+      "installedPath": ".agents/skills/agy-delegate",
+      "status": "core-delegation",
+      "allowedSurfaces": [
+        "bounded implementation, diagnosis, or read-only review briefs under parent-agent supervision"
+      ],
+      "prohibitedSurfaces": [
+        "permission bypass without explicit task-specific authorization",
+        "requirements or architecture changes",
+        "invented APIs",
+        "OPEN gate bypass",
+        "PHI or secrets in the process-visible brief",
+        "commit, push, merge, Issue closure, or branch cleanup"
+      ],
+      "knownConflicts": [
+        "Antigravity owns its permission boundary; parent review remains mandatory"
+      ],
+      "localChanges": [
+        "added SHIFAA delegation, parent-ownership, and permission-bypass overlay",
+        "added upstream MIT LICENSE notice"
+      ],
+      "reviewedExecutables": ["scripts/relay.mjs"],
+      "treeDigestSha256": "4f5ee523c0a22aafa505b5317fd7e0ce2ac891dd77273109ab51cb548c6e0330",
       "dateReviewed": "2026-08-13"
     }
   ],

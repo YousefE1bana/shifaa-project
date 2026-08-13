@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-13",
+  "hostPlatform": "native Windows",
+  "statusModel": [
+    "STATIC_VERIFIED",
+    "RUNTIME_VERIFIED",
+    "AUTH_REQUIRED",
+    "MODEL_REQUIRED",
+    "WINDOWS_UNVERIFIED",
+    "UNAVAILABLE"
+  ],
+  "delegates": [
+    {
+      "name": "codex-delegate",
+      "cliVersion": "codex-cli 0.147.0",
+      "authState": "authenticated with ChatGPT",
+      "verificationStatus": "RUNTIME_VERIFIED",
+      "relayLaunch": "completed",
+      "structuredResult": true,
+      "touchedFilesDetection": "verified: zero changes in disposable Git repository",
+      "readOnly": "available; zero Git-visible changes, but this host's Codex Windows sandbox could not launch PowerShell to read the fixture",
+      "resume": "available; session id captured",
+      "nativeWindows": "relay verified; read-only shell execution degraded on this host",
+      "remainingUserAction": null
+    },
+    {
+      "name": "kimi-delegate",
+      "cliVersion": "0.34.0",
+      "authState": "configuration files valid; no provider or default model configured",
+      "verificationStatus": "AUTH_REQUIRED",
+      "relayLaunch": "launched and captured the expected no-model failure",
+      "structuredResult": true,
+      "touchedFilesDetection": "verified: zero changes in disposable Git repository",
+      "readOnly": "not provided by upstream relay; disposable-repository diff detection is the boundary",
+      "resume": "available statically; not runtime-tested without authentication",
+      "nativeWindows": "native binary and relay launch verified",
+      "remainingUserAction": "Run `kimi login`."
+    },
+    {
+      "name": "claude-delegate",
+      "cliVersion": "2.1.226 (Claude Code)",
+      "authState": "not logged in",
+      "verificationStatus": "AUTH_REQUIRED",
+      "platformStatus": "WINDOWS_UNVERIFIED",
+      "relayLaunch": "launched and captured the expected login failure",
+      "structuredResult": true,
+      "touchedFilesDetection": "verified: zero changes in disposable Git repository",
+      "readOnly": "plan-mode surface and Git tripwire launched; native Windows provides no Claude shell sandbox",
+      "resume": "session id captured; authenticated continuation not tested",
+      "nativeWindows": "launch path exercised, but upstream native-Windows support remains explicitly unverified and not OS-isolated",
+      "remainingUserAction": "Run `claude auth login`."
+    },
+    {
+      "name": "opencode-delegate",
+      "cliVersion": "1.18.14",
+      "authState": "three existing providers detected without exposing credentials",
+      "verificationStatus": "MODEL_REQUIRED",
+      "relayLaunch": "static help and source verification only; a fresh relay correctly requires an explicit model",
+      "structuredResult": false,
+      "touchedFilesDetection": "static only",
+      "readOnly": "available through the plan agent; not runtime-tested without an approved model",
+      "resume": "available statically; not runtime-tested",
+      "nativeWindows": "CLI and relay preconditions detected; model invocation not tested",
+      "remainingUserAction": "Choose an already configured provider/model and pass `--model provider/model`."
+    },
+    {
+      "name": "agy-delegate",
+      "cliVersion": "1.1.12",
+      "authState": "configured; model listing succeeded without exposing credentials",
+      "verificationStatus": "RUNTIME_VERIFIED",
+      "relayLaunch": "completed",
+      "structuredResult": true,
+      "touchedFilesDetection": "verified: zero changes in disposable Git repository",
+      "readOnly": "verified; readOnlyViolation=false",
+      "resume": "available; conversation id captured",
+      "nativeWindows": "runtime verified",
+      "remainingUserAction": null
+    }
+  ]
+}

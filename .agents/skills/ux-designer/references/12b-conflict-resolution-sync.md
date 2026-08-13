@@ -1,5 +1,7 @@
 # Collaborative UX: Conflict Resolution & Sync
 
+> SHIFAA application: generic offline-first and optimistic-write patterns do not authorize queued or speculative clinical, medication, authorization, approval, finance-decision, or other safety-critical mutations. Those writes require the contracted server response, authorization, idempotency, audit, and route-state behavior. Offline mode may expose explicitly approved cached reads and must explain that critical writes are unavailable.
+
 This reference covers the technical and UX aspects of concurrent editing, conflict resolution, version control, sharing permissions, and offline synchronization in collaborative applications.
 
 ---

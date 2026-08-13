@@ -1,5 +1,7 @@
 # Accessibility & WCAG 2.2
 
+> SHIFAA application: WCAG 2.2 AA is the floor, while the project contract is stricter where stated. Use 44×44px minimum targets everywhere, preserve keyboard and screen-reader behavior at 200% text scaling, and reduce contracted motion to 0ms rather than leaving imperceptible animation running.
+
 Accessibility ensures digital products are usable by people with disabilities. Beyond ethics and inclusion, it's increasingly a legal requirement.
 
 ---
@@ -60,6 +62,8 @@ Functionality using dragging can be operated with a single pointer without dragg
 
 ### Target Size (Minimum) - 2.5.8 (AA)
 Touch targets must be at least 24×24 CSS pixels, with exceptions for inline links, user agent controls, and essential presentations.
+
+SHIFAA deliberately exceeds this WCAG minimum: implement a 44×44px minimum interactive area, with the contracted 48px patient primary-action height.
 
 ### Accessible Authentication (Minimum) - 3.3.8 (AA)
 Authentication processes don't require cognitive function tests (like remembering passwords) unless alternatives are provided.
@@ -274,9 +278,9 @@ Standard expectations:
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
+    animation-duration: 0ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 0ms !important;
   }
 }
 
@@ -303,7 +307,7 @@ Standard expectations:
 
 ### Target Sizes (WCAG 2.2)
 ```css
-/* Minimum 24×24px for WCAG 2.2 AA */
+/* SHIFAA minimum 44×44px (stricter than WCAG 2.2 AA) */
 /* Recommended 44×44px for comfortable tapping */
 .button {
   min-width: 44px;

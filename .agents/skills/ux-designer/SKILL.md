@@ -71,27 +71,28 @@ Use this skill when:
 
 ### Visual Design
 - [ ] Clear visual hierarchy (size, color, spacing)
-- [ ] Consistent typography (16px+ body, 1.3-1.6x heading scale)
+- [ ] Use the SHIFAA contracted type scale with IBM Plex Sans Arabic for Arabic, Inter for Latin, and approved monospace only for codes
 - [ ] Sufficient color contrast (4.5:1 for text)
 - [ ] Adequate whitespace and breathing room
 
 ### Interaction Design
-- [ ] Touch targets minimum 44×44px (iOS) / 48×48dp (Android)
+- [ ] All interactive targets are at least 44×44px; patient primary actions use the contracted 48px height
 - [ ] Important actions in thumb-friendly zones (bottom/center on mobile)
 - [ ] Clear feedback for all interactions (< 100ms response)
-- [ ] Smooth animations (300-500ms duration)
-- [ ] Support `prefers-reduced-motion`
+- [ ] Use only SHIFAA motion timings: press 120ms, enter 180ms, route 220ms
+- [ ] Use 0ms where reduced motion is contracted and 0ms decorative motion on safety, emergency, approval, and finance-decision routes
 
 ### Forms
 - [ ] Inline validation (on blur, not during typing)
 - [ ] Clear error messages near the field
+- [ ] On submit, focus a page-level error summary that links to invalid fields
 - [ ] Required fields marked with asterisk (*)
 - [ ] Logical field order and grouping
 
 ### Navigation
 - [ ] Limited top-level items (7±2 rule)
 - [ ] Current location always visible
-- [ ] Mobile: bottom navigation preferred
+- [ ] Use the contracted SHIFAA app shell and route navigation for the current product; do not substitute generic mobile defaults
 - [ ] Consistent navigation across pages
 
 ### Accessibility
@@ -132,7 +133,7 @@ Use this skill when:
 - [ ] Notification severity matches visual treatment
 - [ ] Push permission requested in context (not on first visit)
 - [ ] Users can control notification preferences per channel
-- [ ] Toasts auto-dismiss (4-8s) with action button option
+- [ ] Non-critical supplementary toasts use the contracted 6-second treatment; actionable errors and critical decisions use inline or persistent banner behavior
 
 ### Ethical Design
 - [ ] Accept/reject buttons have equal visual prominence
@@ -141,7 +142,7 @@ Use this skill when:
 - [ ] No confirmshaming in decline copy
 
 ### Internationalization
-- [ ] RTL-ready (logical CSS properties, layout verified in `dir="rtl"`)
+- [ ] Arabic `ar-EG` is first with root `dir="rtl"`; complete `en-EG` LTR parity is verified
 - [ ] Tolerant of ~30-40% text expansion (no fixed-width labels/buttons)
 - [ ] No text baked into images; all strings externalized
 - [ ] Locale-aware date/number/currency formatting (`Intl`); ICU plurals
@@ -180,9 +181,9 @@ What needs the user's attention?
 │       └── → Banner (top of page, persistent until dismissed)
 ├── Feedback on a completed action?
 │   ├── Success or low-importance info?
-│   │   └── → Toast (auto-dismiss 4-8s)
+│   │   └── → Page-region confirmation; optional supplementary toast auto-dismisses at 6s
 │   └── Warning or error?
-│       └── → Toast with action button (manual dismiss)
+│       └── → Contextual inline error or persistent banner with a recovery action
 ├── Background event (new message, update from others)?
 │   ├── User is in the same context?
 │   │   └── → Badge + subtle inline indicator
@@ -227,9 +228,9 @@ What needs the user's attention?
 
 | Metric | Value | Context |
 |--------|-------|---------|
-| Touch target | 44-48px | Minimum tappable area |
-| Body text | 16px+ | Minimum readable size |
-| Line height | 1.2-1.45 | Optimal readability |
+| Touch target | 44×44px minimum | Patient primary actions use 48px height |
+| Body text | Contracted token | Use the UI Contract and design-system scale |
+| Typefaces | IBM Plex Sans Arabic / Inter | Approved monospace only for codes |
 | Line length | 50-75 chars | Ideal for reading |
 | Contrast ratio | 4.5:1 | WCAG AA for normal text |
 | Contrast ratio | 3:1 | WCAG AA for large text |
@@ -240,8 +241,8 @@ What needs the user's attention?
 
 | Metric | Value | Context |
 |--------|-------|---------|
-| Animation | 300-500ms | Natural feeling duration |
-| Touch feedback | < 100ms | Perceived instant response |
+| Press / enter / route | 120 / 180 / 220ms | SHIFAA contracted motion |
+| Reduced / safety motion | 0ms | Contracted reduced motion and decorative safety motion |
 | Form abandonment | 81% | Users who start but don't finish |
 | Canvas zoom range | 10%-4000% | Typical design tool range |
 | Smart guide snap | 2-8px | Distance before snapping |
@@ -269,7 +270,7 @@ What needs the user's attention?
 |--------|-------|---------|
 | Onboarding completion | > 65% | Checklist finish rate |
 | Time to first value | < 5 min | Sign-up to activation |
-| Toast duration | 4-8s | Auto-dismiss timing |
+| Toast duration | 6s | Supplementary non-critical feedback only |
 | Search success | > 70% | Users finding results |
 | NPS | > 50 | User sentiment |
 

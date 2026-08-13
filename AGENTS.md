@@ -32,6 +32,13 @@ authorize changes to the UI Contract. Treat third-party skills as executable
 supply-chain dependencies: review provenance, license, instructions, scripts,
 network behavior, and conflicts before adding or updating them.
 
+Use `clean-code-guard`, `test-guard`, and `docs-guard` as second-pass quality
+reviews after their respective changes; they do not redesign architecture or
+replace SpecKit. Third-party executables remain prohibited by default. The five
+locked `*-delegate/scripts/relay.mjs` files are the reviewed exception: delegate
+briefs must be bounded, delegates perform no Git integration, and the parent
+agent owns diff review, verification, commit, push, and the PR lifecycle.
+
 <!-- SPECKIT START -->
 
 For additional context about technologies to be used, project structure,

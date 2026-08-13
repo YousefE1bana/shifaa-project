@@ -1,5 +1,7 @@
 # Onboarding & User Activation
 
+> SHIFAA application: onboarding follows Arabic-first RTL and complete English LTR parity. Celebration is allowed only on eligible patient-facing, non-safety milestones, uses contracted motion, and becomes 0ms with reduced motion. Never add decorative motion to safety, emergency, approval, or finance-decision routes.
+
 Onboarding is the critical bridge between sign-up and engaged usage. This reference covers patterns for first-run experiences, progressive disclosure, activation metrics, and re-engagement.
 
 ---
@@ -78,7 +80,7 @@ Onboarding is the critical bridge between sign-up and engaged usage. This refere
 - Progress bar/percentage for motivation
 - Link each item directly to the relevant action
 - Dismissible but recoverable from settings
-- Celebrate completion (confetti, congratulations message)
+- Confirm completion clearly; reserve contracted celebration for eligible non-safety patient milestones
 - Order items by value delivered, not complexity
 
 ### Empty States as Onboarding

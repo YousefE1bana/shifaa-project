@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { existsSync, lstatSync, readFileSync, readdirSync } from 'node:fs';
-import { join, relative, resolve, sep } from 'node:path';
+import { extname, join, relative, resolve, sep } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const sharedRoot = join(root, '.agents', 'skills');
@@ -9,6 +9,18 @@ const lockPath = join(root, 'docs', 'agent-skills', 'skills-lock.json');
 const lock = JSON.parse(readFileSync(lockPath, 'utf8'));
 const errors = [];
 const names = new Map();
+const executableExtensions = new Set([
+  '.bat',
+  '.cjs',
+  '.cmd',
+  '.exe',
+  '.js',
+  '.mjs',
+  '.ps1',
+  '.py',
+  '.sh',
+  '.ts',
+]);
 
 function filesUnder(directory) {
   return readdirSync(directory, { withFileTypes: true })
@@ -57,18 +69,42 @@ for (const required of [
   '.agents/skills/speckit-implement/SKILL.md',
   '.kimi-code/skills/speckit-implement/SKILL.md',
 ]) {
-  if (!existsSync(join(root, ...required.split('/'))))
+  const path = join(root, ...required.split('/'));
+  if (!existsSync(path)) {
     errors.push(`${required}: required SpecKit skill missing`);
+    continue;
+  }
+  const fields = frontmatter(readFileSync(path, 'utf8'));
+  if (fields?.get('name') !== 'speckit-implement')
+    errors.push(`${required}: SpecKit implementation frontmatter changed or invalid`);
 }
 
+const lockedNames = new Set();
+const lockedPaths = new Set();
+const lockedExecutables = new Set();
 for (const skill of lock.vendoredSkills) {
+  if (lockedNames.has(skill.name)) errors.push(`${skill.name}: duplicate lock name`);
+  lockedNames.add(skill.name);
+  if (lockedPaths.has(skill.installedPath))
+    errors.push(`${skill.installedPath}: duplicate locked path`);
+  lockedPaths.add(skill.installedPath);
+
   const directory = join(root, ...skill.installedPath.split('/'));
   if (!existsSync(directory)) {
     errors.push(`${skill.name}: locked path missing`);
     continue;
   }
-  const lines = filesUnder(directory).map((file) => {
+  if (!names.has(skill.name)) errors.push(`${skill.name}: locked skill is not discoverable`);
+  const reviewedExecutables = new Set(skill.reviewedExecutables ?? []);
+  const files = filesUnder(directory);
+  const lines = files.map((file) => {
     const path = relative(directory, file).split(sep).join('/');
+    if (executableExtensions.has(extname(path).toLowerCase())) {
+      const repositoryPath = relative(root, file).split(sep).join('/');
+      lockedExecutables.add(repositoryPath);
+      if (!reviewedExecutables.has(path))
+        errors.push(`${repositoryPath}: executable is not reviewed in its lock entry`);
+    }
     // Vendored skill trees are text-only. Normalize CRLF so a lock generated on
     // Windows verifies against the same Git content on Linux CI.
     const content = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
@@ -79,6 +115,22 @@ for (const skill of lock.vendoredSkills) {
   if (digest !== skill.treeDigestSha256) {
     errors.push(`${skill.name}: tree digest differs from skills-lock.json (${digest})`);
   }
+  for (const path of reviewedExecutables) {
+    if (!files.some((file) => relative(directory, file).split(sep).join('/') === path))
+      errors.push(`${skill.name}: reviewed executable missing (${path})`);
+  }
+}
+
+const executableExceptions = new Set(lock.policy.reviewedExecutableExceptions ?? []);
+if (lock.policy.thirdPartyExecutablesAllowedByDefault !== false)
+  errors.push('policy: third-party executables must be prohibited by default');
+for (const path of lockedExecutables) {
+  if (!executableExceptions.has(path))
+    errors.push(`${path}: vendored executable is not a policy exception`);
+}
+for (const path of executableExceptions) {
+  if (!lockedExecutables.has(path))
+    errors.push(`${path}: executable policy exception is missing or not locked`);
 }
 
 for (const entry of readdirSync(kimiRoot, { withFileTypes: true })) {

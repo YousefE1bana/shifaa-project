@@ -1,5 +1,7 @@
 # Notification & Attention Design
 
+> SHIFAA application: critical decisions and actionable errors must remain in the relevant page region or a persistent safety banner with text, icon, severity, consequence, and recovery action. Never rely on color, icon, sound, or a transient toast alone. A toast is supplementary, non-critical feedback and uses the contracted 6-second duration.
+
 Notifications are a cross-cutting concern that affects every product. This reference covers notification types, delivery channels, attention management, and permission patterns for responsible notification design.
 
 ---
@@ -117,11 +119,10 @@ Info       █░░░░░░░░░░░  Background context (changelog, 
                               └──────────────────────────┘
 ```
 
-**Duration guidelines:**
-- Short messages (no action): 4 seconds
-- Messages with action button: 6-8 seconds
-- Error messages: 8-10 seconds or until dismissed
-- Never auto-dismiss critical errors
+**SHIFAA duration and severity rules:**
+- Supplementary, non-critical toast: 6 seconds
+- Actionable error: contextual inline treatment or persistent banner, not a toast
+- Critical decision or safety alert: persistent contracted anatomy; never auto-dismiss
 
 **Placement:**
 - Bottom-center or bottom-right (most common)
@@ -161,7 +162,7 @@ Older toasts slide out or collapse
 - Position: top-right of the icon
 - Color: red for requiring attention, blue/gray for informational
 - Clear on interaction (opening the relevant section)
-- Animate on increment (subtle scale pulse)
+- Do not animate on safety-critical routes; elsewhere use motion only when the UI Contract permits it
 
 #### Modals / Dialogs
 

@@ -1,5 +1,7 @@
 # Information Architecture
 
+> SHIFAA application: preserve the contracted patient and staff app shells, route structure, stable staff layouts, and route states. The generic navigation patterns below are evaluation vocabulary, not permission to replace SHIFAA navigation with a hamburger menu, bottom bar, or marketing-site hierarchy.
+
 Information Architecture (IA) is the structural design of shared information environments—how content is organized, labeled, and navigated.
 
 ---

@@ -1,5 +1,7 @@
 # Visual Design
 
+> SHIFAA application: do not use this reference to select colors, typefaces, sizes, spacing, or tokens. Map every decision to `packages/design-system` and the UI Contract. Arabic uses IBM Plex Sans Arabic, Latin uses Inter, and monospace is limited to approved code treatments.
+
 Visual design encompasses color theory, typography, layout, and the principles that make interfaces aesthetically pleasing and functional.
 
 ---
@@ -108,20 +110,21 @@ Best Practices:
 
 ### Font Selection
 
+For SHIFAA, font selection is already complete: IBM Plex Sans Arabic for Arabic, Inter for Latin, and approved monospace usage for codes. The generic categories and example stack below are background material for other products, not SHIFAA implementation options.
+
 **Categories:**
 - **Sans-serif:** Clean, modern, screen-friendly (Roboto, Inter, SF Pro)
 - **Serif:** Traditional, authoritative, editorial (Georgia, Merriweather)
 - **Monospace:** Technical, code, data (Fira Code, JetBrains Mono)
 
 **Guidelines:**
-- Limit to 2-3 typefaces maximum
-- Use web-safe fonts or system fonts for performance
+- Use IBM Plex Sans Arabic for Arabic and Inter for Latin
+- Use approved monospace only for codes and preserve the repository font-loading strategy
 - Consider font loading strategy (FOUT, FOIT)
 
 ```css
-/* System font stack for performance */
-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
-             Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+/* SHIFAA families are supplied by packages/design-system. */
+font-family: var(--font-family-latin); /* Inter; Arabic uses the contracted Arabic token. */
 ```
 
 ### Size Scale

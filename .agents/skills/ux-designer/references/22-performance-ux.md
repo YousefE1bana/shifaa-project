@@ -1,5 +1,7 @@
 # Performance & Loading UX
 
+> SHIFAA application: use the explicit loading, empty, error, offline, stale, and success route states in the UI Contract. Optimistic or queued writes are prohibited for clinical, medication, authorization, approval, finance-decision, and other safety-critical mutations. Actionable failures use inline or persistent banner recovery, not a toast. Visual transitions use only 120ms press, 180ms enter, and 220ms route timing, with contracted 0ms reduced/safety motion.
+
 Perceived performance is often more important than actual performance. Users judge an app's speed not by stopwatch measurements but by how fast it *feels*. This reference covers techniques for making interfaces feel instant, responsive, and reliable.
 
 ---
@@ -19,12 +21,12 @@ Perceived performance is often more important than actual performance. Users jud
 
 ### Techniques for Feeling Fast
 
-1. **Optimistic updates** — Apply changes immediately, sync later
+1. **Contract-safe immediacy** — Optimistic updates only for low-risk, explicitly approved interactions; never for SHIFAA critical mutations
 2. **Skeleton screens** — Show content shape before data arrives
 3. **Progressive loading** — Show most important content first
 4. **Prefetching** — Load likely-next content before user requests it
 5. **Instant navigation** — Use client-side routing with prefetch
-6. **Animation as distraction** — Meaningful transitions mask load time
+6. **Contracted state feedback** — Explain progress without decorative distraction
 
 ---
 
@@ -148,7 +150,7 @@ function showContent(container, data) {
 ```css
 .skeleton-wrapper,
 .content-wrapper {
-  transition: opacity 300ms ease;
+  transition: opacity 180ms ease;
 }
 
 .content-wrapper {
@@ -177,7 +179,7 @@ async function toggleFavorite(itemId) {
   } catch (error) {
     // 3. Rollback on failure
     updateItemUI(itemId, { isFavorite: previousState });
-    showToast('Failed to update. Please try again.', { type: 'error' });
+    showInlineError('Failed to update. Please try again.');
   }
 }
 ```
@@ -341,7 +343,7 @@ Show a tiny, blurred preview that transitions to the full image.
 
 .image-full {
   opacity: 0;
-  transition: opacity 300ms ease;
+  transition: opacity 180ms ease;
 }
 
 .image-full.loaded {
@@ -442,7 +444,7 @@ body {
 
 .notification-area {
   min-height: 0;
-  transition: min-height 300ms ease; /* Smooth expansion */
+  transition: min-height 180ms ease; /* SHIFAA content enter */
 }
 ```
 
@@ -476,7 +478,7 @@ body {
   font-size: 14px;
   z-index: 9999;
   transform: translateY(100%);
-  transition: transform 300ms ease;
+  transition: transform 180ms ease;
 }
 
 .offline-banner--visible {
