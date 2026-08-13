@@ -18,6 +18,20 @@ Every spec 003+ must complete this sequence in order:
    Issue or Issues.
 8. Only then clean up the feature worktree and branch.
 
+## Shared agent skills
+
+Project-scoped skills shared by Codex and Kimi Code CLI live in
+`.agents/skills/`. Keep `.kimi-code/skills/` for existing or genuinely
+Kimi-specific integrations; do not duplicate generic skills there.
+
+For SHIFAA work, `shifaa-project-guardrails` outranks every external skill and
+`shifaa-ui-governor` must govern all UI/UX/frontend/mobile work. The approved
+SHIFAA baseline and current feature spec always override third-party advice.
+SpecKit remains the only project lifecycle. External design skills do not
+authorize changes to the UI Contract. Treat third-party skills as executable
+supply-chain dependencies: review provenance, license, instructions, scripts,
+network behavior, and conflicts before adding or updating them.
+
 <!-- SPECKIT START -->
 
 For additional context about technologies to be used, project structure,
