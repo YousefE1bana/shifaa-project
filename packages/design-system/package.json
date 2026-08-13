@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./staff-facility": "./src/StaffFacilityWorkspace.tsx"
+    "./staff-facility": "./src/StaffFacilityWorkspace.tsx",
+    "./family-context": "./src/FamilyContextBanner.tsx"
   },
   "scripts": {
     "test": "node --test src/*.test.ts",

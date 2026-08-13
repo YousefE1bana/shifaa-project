@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { parseDocument } from 'yaml';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const openApiPath = path.join(repoRoot, 'specs/001-identity-onboarding/contracts/openapi.yaml');
@@ -18,6 +19,13 @@ const facilityContractModulePath = path.join(
 );
 const facilityClientPath = path.join(repoRoot, 'packages/api-client/src/facility-onboarding.ts');
 const facilityRoutesPath = path.join(repoRoot, 'services/api/src/routes/facility-onboarding.ts');
+const familyOpenApiPath = path.join(
+  repoRoot,
+  'specs/004-family-care-relationships/contracts/openapi.yaml',
+);
+const familyContractModulePath = path.join(repoRoot, 'packages/contracts/src/family-care.ts');
+const familyClientPath = path.join(repoRoot, 'packages/api-client/src/family-care.ts');
+const familyRoutesPath = path.join(repoRoot, 'services/api/src/routes/family-care.ts');
 const failures = [];
 
 function mustRead(file) {
@@ -30,36 +38,25 @@ function mustRead(file) {
 
 function parseOpenApi(text) {
   const operations = new Map();
-  let currentPath;
-  let currentMethod;
-  for (const line of text.split(/\r?\n/)) {
-    const pathMatch = line.match(/^  (\/[^:]+):\s*$/);
-    if (pathMatch) {
-      currentPath = pathMatch[1];
-      currentMethod = undefined;
-      continue;
-    }
-    const methodMatch = line.match(/^    (get|post|put|patch|delete):\s*$/i);
-    if (methodMatch) {
-      currentMethod = methodMatch[1].toUpperCase();
-      continue;
-    }
-    const operationMatch = line.match(/^      operationId:\s*([A-Za-z0-9_-]+)\s*$/);
-    if (operationMatch && currentPath && currentMethod) {
-      operations.set(operationMatch[1], {
-        method: currentMethod,
-        path: currentPath,
-        requirements: [],
-      });
-      continue;
-    }
-    const requirementsMatch = line.match(/^      x-shifaa-requirements:\s*\[([^\]]*)\]\s*$/);
-    if (requirementsMatch && operations.size > 0) {
-      const operation = [...operations.values()].at(-1);
-      operation.requirements = requirementsMatch[1]
-        .split(',')
-        .map((item) => item.trim())
-        .filter(Boolean);
+  const document = parseDocument(text, { uniqueKeys: true });
+  for (const error of document.errors) failures.push(`Invalid OpenAPI YAML: ${error.message}`);
+  const value = document.toJS();
+  for (const [apiPath, pathItem] of Object.entries(value?.paths ?? {})) {
+    for (const method of ['get', 'post', 'put', 'patch', 'delete']) {
+      const operation = pathItem?.[method];
+      if (!operation) continue;
+      if (typeof operation.operationId !== 'string' || !operation.operationId)
+        failures.push(`OpenAPI operation ${method.toUpperCase()} ${apiPath} has no operationId.`);
+      else if (operations.has(operation.operationId))
+        failures.push(`Duplicate OpenAPI operationId: ${operation.operationId}.`);
+      else
+        operations.set(operation.operationId, {
+          method: method.toUpperCase(),
+          path: apiPath,
+          requirements: Array.isArray(operation['x-shifaa-requirements'])
+            ? operation['x-shifaa-requirements'].map(String)
+            : [],
+        });
     }
   }
   return operations;
@@ -88,6 +85,15 @@ function expandCatalogRequirements(cell) {
   }
   return result;
 }
+
+const quotedOperationProbe = parseOpenApi(`openapi: 3.1.0
+paths:
+  /probe:
+    post:
+      operationId: "transitionDependent"
+`);
+if (!quotedOperationProbe.has('transitionDependent'))
+  failures.push('OpenAPI parser failed the quoted operationId security probe.');
 
 function parseCatalog(text) {
   const operations = new Map();
@@ -182,6 +188,61 @@ for (const [operationId, operation] of facilityOpenApi) {
 if (!/@generated\b/i.test(facilityClient))
   failures.push('Facility API client is missing an @generated marker.');
 
+const familyOpenApiText = mustRead(familyOpenApiPath);
+const familyContractModule = mustRead(familyContractModulePath);
+const familyClient = mustRead(familyClientPath);
+const familyRoutes = mustRead(familyRoutesPath);
+const familyOpenApi = parseOpenApi(familyOpenApiText);
+const activeFamilyRequirements = new Set([
+  'FR-FAM-001',
+  'FR-FAM-002',
+  'FR-FAM-004',
+  'FR-FAM-005',
+  'FR-FAM-006',
+  'FR-FAM-007',
+  'FR-FAM-008',
+]);
+if (!/^openapi:\s*3\.1\.(?:0|1)\s*$/m.test(familyOpenApiText))
+  failures.push('Family Care feature contract must declare OpenAPI 3.1.x.');
+if (familyOpenApi.size !== 12)
+  failures.push(`Family Care OpenAPI must contain 12 operations; found ${familyOpenApi.size}.`);
+for (const [operationId, operation] of familyOpenApi) {
+  for (const requirement of operation.requirements)
+    if (requirement.startsWith('FR-FAM-') && !activeFamilyRequirements.has(requirement))
+      failures.push(`${operationId} references excluded or unknown requirement ${requirement}.`);
+  const canonical = catalog.get(operationId);
+  if (!canonical) {
+    failures.push(`Family Care operation ${operationId} is absent from the canonical API catalog.`);
+    continue;
+  }
+  if (canonical.method !== operation.method || canonical.path !== operation.path) {
+    failures.push(
+      `${operationId} drift: Family Care OpenAPI ${operation.method} ${operation.path}; catalog ${canonical.method} ${canonical.path}.`,
+    );
+  }
+  for (const requirement of canonical.requirements.filter((value) =>
+    activeFamilyRequirements.has(value),
+  )) {
+    if (!operation.requirements.includes(requirement))
+      failures.push(
+        `${operationId} is missing catalog requirement ${requirement} in Family Care x-shifaa-requirements.`,
+      );
+  }
+  for (const [label, source] of [
+    ['contract module', familyContractModule],
+    ['generated client', familyClient],
+    ['registered routes', familyRoutes],
+  ]) {
+    if (!new RegExp(`\\b${operationId}\\b`).test(source))
+      failures.push(`Family Care ${label} is missing ${operationId}.`);
+  }
+}
+if (!/@generated\b/i.test(familyClient))
+  failures.push('Family Care API client is missing an @generated marker.');
+for (const forbidden of ['transitionDependent', 'createGuardianshipUpload', 'createSosIncident'])
+  if (familyOpenApi.has(forbidden))
+    failures.push(`Forbidden Family Care operation is present: ${forbidden}.`);
+
 if (failures.length > 0) {
   console.error('Contract verification failed:');
   for (const failure of failures.sort()) console.error(`- ${failure}`);
@@ -189,5 +250,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  'Contract verification passed: 38 OpenAPI operations match the catalog, generated contracts, generated clients, and registered facility routes.',
+  'Contract verification passed: 50 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
 );

@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-08-13T13:58:28.407Z",
+  "mode": "seeded-synthetic PostgreSQL + forced RLS, 5k relationships / 20k permissions / 5k contacts / 100 concurrent sessions",
+  "samples": 100,
+  "capacity": {
+    "relationships": 5000,
+    "permissions": 20000,
+    "contacts": 5000
+  },
+  "thresholds_ms": {
+    "read_p95": 400,
+    "mutation_p95": 800
+  },
+  "measured_ms": {
+    "read_p95": 367.13,
+    "mutation_p95": 672.33
+  },
+  "prohibited_sentinel_scan": "PASS",
+  "result": "PASS"
+}

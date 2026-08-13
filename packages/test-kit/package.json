@@ -5,7 +5,9 @@
   "type": "module",
   "description": "Shared deterministic seeded-synthetic fixture and verification helpers.",
   "exports": {
-    ".": "./src/facility-onboarding.ts"
+    ".": "./src/index.ts",
+    "./facility-onboarding": "./src/facility-onboarding.ts",
+    "./family-care": "./src/family-care.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

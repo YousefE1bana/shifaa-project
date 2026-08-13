@@ -1,5 +1,5 @@
 import type { Locale } from '@shifaa/i18n';
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 type PatientLocaleContextValue = {
   locale: Locale;
@@ -22,6 +22,10 @@ export function PatientLocaleProvider({ children }: React.PropsWithChildren) {
       localStorage.setItem('shifaa.patient.locale', nextLocale);
     }
   }, []);
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    document.documentElement.dir = locale === 'ar-EG' ? 'rtl' : 'ltr';
+  }, [locale]);
   const value = useMemo(() => ({ locale, setLocale }), [locale, setLocale]);
   return <PatientLocaleContext.Provider value={value}>{children}</PatientLocaleContext.Provider>;
 }

@@ -13,3 +13,15 @@ test('direction and bidi isolation are deterministic', () => {
   assert.equal(directionFor('en-EG'), 'ltr');
   assert.equal(isolateLtr('***1234'), '\u2066***1234\u2069');
 });
+
+test('family care catalog has authored parity and explicit safety consequences', () => {
+  const familyKeys = Object.keys(arEG).filter((key) =>
+    /^(family|admin\.guardianship)/.test(key),
+  ) as (keyof typeof arEG)[];
+  assert.ok(familyKeys.length >= 50);
+  assert.ok(familyKeys.every((key) => arEG[key] && enEG[key]));
+  assert.match(arEG['family.contact.disclosure'], /SOS/);
+  assert.match(enEG['family.contact.disclosure'], /never send/i);
+  assert.match(arEG['family.problem.offline'], /لم نضع/);
+  assert.match(enEG['family.problem.offline'], /not queued/i);
+});

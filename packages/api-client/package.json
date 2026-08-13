@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/identity-onboarding.ts",
     "./identity-onboarding": "./src/identity-onboarding.ts",
-    "./facility-onboarding": "./src/facility-onboarding.ts"
+    "./facility-onboarding": "./src/facility-onboarding.ts",
+    "./family-care": "./src/family-care.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

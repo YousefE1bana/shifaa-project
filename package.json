@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "turbo run dev --parallel",
     "build": "turbo run build",
-    "format:check": "prettier --check apps packages services tests tools .github package.json pnpm-workspace.yaml turbo.json compose.yml .prettierrc.json docs/TEAM-INSTALLATION-CHECKLIST.md infra/runbooks specs/001-identity-onboarding specs/003-facility-onboarding-rbac",
+    "format:check": "prettier --check apps packages services tests tools .github package.json pnpm-workspace.yaml turbo.json compose.yml .prettierrc.json docs/TEAM-INSTALLATION-CHECKLIST.md infra/runbooks specs/001-identity-onboarding specs/003-facility-onboarding-rbac specs/004-family-care-relationships",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
@@ -19,12 +19,16 @@
     "test:a11y": "pnpm --filter @shifaa/design-system test && pnpm --filter @shifaa/i18n test && pnpm --filter @shifaa/patient test && pnpm --filter @shifaa/admin test",
     "test:e2e": "pnpm --filter @shifaa/api test:integration && pnpm --filter @shifaa/patient test:e2e",
     "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build && pnpm test && pnpm test:a11y && pnpm test:e2e && pnpm contracts:check && pnpm architecture:check && pnpm secrets:check && pnpm dependencies:check && docker compose config --quiet && docker compose up -d --wait postgres && pnpm db:migrate && pnpm db:test && pnpm db:rls-test",
-    "db:migrate": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/migrations/001_identity_onboarding.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000300_facility_onboarding_rbac.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
-    "db:test": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-onboarding-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/facility-onboarding-schema.sql",
-    "db:rls-test": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-onboarding-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/facility-onboarding-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/admin-role-governance-rls.sql",
+    "db:migrate": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/migrations/001_identity_onboarding.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000300_facility_onboarding_rbac.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000500_family_care_relationships.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000600_family_care_storage.sql",
+    "db:test": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-onboarding-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/facility-onboarding-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/family-care-schema.sql",
+    "db:rls-test": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-onboarding-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/facility-onboarding-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/admin-role-governance-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/family-care-rls.sql",
     "test:facility:stack": "pnpm db:test && pnpm db:rls-test && node tools/run-postgres-adapter-test.mjs && pnpm --filter @shifaa/api test:integration",
     "test:facility:e2e": "tsx --test tests/e2e/facility-onboarding.spec.ts tests/e2e/facility-access.spec.ts tests/e2e/admin-role-governance.spec.ts",
     "test:facility:performance": "tsx tools/facility-performance.ts",
+    "test:family:stack": "pnpm db:test && pnpm db:rls-test && pnpm --filter @shifaa/core test && pnpm --filter @shifaa/contracts test && node tools/run-family-postgres-test.mjs && pnpm --filter @shifaa/api test:integration",
+    "test:family:e2e": "tsx --test tests/e2e/family-guardianship.spec.ts tests/e2e/family-delegation.spec.ts tests/e2e/family-emergency-contact.spec.ts",
+    "test:family:security": "pnpm db:rls-test && pnpm secrets:check && pnpm architecture:check && pnpm --filter @shifaa/observability test",
+    "test:family:performance": "tsx tools/family-care-performance.ts",
     "db:reset": "docker compose down -v && docker compose up -d --wait postgres && pnpm db:migrate",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
@@ -43,12 +47,15 @@
   },
   "devDependencies": {
     "@shifaa/api": "workspace:*",
+    "@shifaa/worker": "workspace:*",
     "@types/node": "24.10.1",
+    "postgres": "3.4.9",
     "prettier": "3.6.2",
     "supabase": "2.113.0",
+    "tsx": "4.21.0",
     "turbo": "2.10.9",
     "typescript": "7.0.2",
-    "tsx": "4.21.0",
-    "vitest": "4.1.0"
+    "vitest": "4.1.0",
+    "yaml": "2.8.2"
   }
 }

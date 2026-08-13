@@ -74,7 +74,7 @@ Common problem codes include `authentication-required`, `mfa-required`, `forbidd
 | `revokeRelationship` | `POST /relationships/{relationshipId}/revoke` | delegator/authorized reviewer | reason → revoked | I,V | FAM-003/004/008 |
 | `createEmergencyContact` | `POST /patients/{managedPatientId}/emergency-contacts` | PAT/GUA | name/phone/location precision → pending contact | I | FAM-005/006 |
 | `listEmergencyContacts` | `GET /patients/{managedPatientId}/emergency-contacts` | PAT/GUA | — → masked contacts/status | — | FAM-005 |
-| `respondEmergencyContact` | `POST /emergency-contact-invites/{token}/response` | PUB | confirmed/declined → terminal response | token | FAM-005 |
+| `respondEmergencyContact` | `POST /emergency-contact-invites/response` | PUB | confirmed/declined → terminal response | token in write-only request body | FAM-005 |
 | `revokeEmergencyContact` | `POST /emergency-contacts/{contactId}/revoke` | PAT/GUA | reason → revoked | I,V | FAM-005 |
 
 ## 3. Facilities, workforce, discovery, and SOS
