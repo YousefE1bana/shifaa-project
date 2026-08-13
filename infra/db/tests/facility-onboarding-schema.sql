@@ -6,9 +6,9 @@ DO $$ DECLARE table_name text; BEGIN
   END LOOP;
 END $$;
 DO $$ BEGIN
- IF (SELECT count(DISTINCT role_code) FROM identity.role_permissions)<>2 THEN RAISE EXCEPTION 'only shipped roles should be seeded'; END IF;
+ IF (SELECT count(DISTINCT role_code) FROM identity.role_permissions)<>3 THEN RAISE EXCEPTION 'only shipped roles through feature 004 should be seeded'; END IF;
  IF EXISTS(SELECT 1 FROM identity.role_permissions WHERE role_code NOT IN ('super_admin','support_admin','medical_reviewer','facility_approver','finance_reviewer')) THEN RAISE EXCEPTION 'unexpected admin role'; END IF;
- IF (SELECT count(*) FROM identity.role_permissions)<>14 THEN RAISE EXCEPTION 'expected exact existing plus 003 permission rows'; END IF;
+ IF (SELECT count(*) FROM identity.role_permissions)<>16 THEN RAISE EXCEPTION 'expected exact existing plus 003 and 004 permission rows'; END IF;
 END $$;
 INSERT INTO identity.people(id,user_id,display_name,nationality_code,preferred_locale,profile_status) VALUES
 ('30000000-0000-4000-8000-000000000001','30000000-0000-4000-9000-000000000001','Synthetic Owner','EG','ar-EG','active'),

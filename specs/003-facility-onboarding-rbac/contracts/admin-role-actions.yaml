@@ -3,7 +3,7 @@ source: docs/architecture/SHIFAA-API-Catalog.md
 policy:
   hierarchy: false
   default: deny
-  seed_availability: [existing, feature_003]
+  seed_availability: [existing, feature_003, feature_004]
   excluded_availability: [later_feature, forbidden]
 roles:
   super_admin:
@@ -50,8 +50,19 @@ roles:
       }
   support_admin:
     - { operation_id: getAdminSummary, availability: later_feature }
-    - { operation_id: listGuardianshipCases, availability: later_feature, min_aal: 2 }
-    - { operation_id: reviewGuardianship, availability: later_feature, min_aal: 2 }
+    - {
+        operation_id: listGuardianshipCases,
+        availability: feature_004,
+        min_aal: 2,
+        purpose_required: true,
+      }
+    - {
+        operation_id: reviewGuardianship,
+        availability: feature_004,
+        min_aal: 2,
+        purpose_required: true,
+        independent_actor: true,
+      }
     - { operation_id: listReviewReports, availability: later_feature, min_aal: 2 }
     - { operation_id: moderateReview, availability: later_feature }
     - { operation_id: listComplaints, availability: later_feature }

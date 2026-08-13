@@ -22,23 +22,23 @@ After closure, every route/state row in Section 8 receives an immutable design n
 
 All values are sRGB hex. Components consume semantic tokens only.
 
-| Token | Light | Dark | Use |
-|---|---|---|---|
-| `canvas` | `#F7FAF9` | `#0C1413` | page background |
-| `surface` | `#FFFFFF` | `#121D1B` | primary surfaces |
-| `surface-subtle` | `#EDF4F2` | `#192825` | secondary grouping |
-| `text` | `#102522` | `#F2F7F6` | primary text |
-| `text-muted` | `#4E6662` | `#AFC2BE` | secondary text |
-| `border` | `#C9D8D5` | `#344A46` | controls/dividers |
-| `brand` | `#087F6C` | `#36C2A8` | primary action/brand |
-| `brand-hover` | `#066858` | `#68D4C0` | hover |
-| `brand-pressed` | `#064F45` | `#8EE0D0` | pressed |
-| `info` | `#1264A3` | `#69B6F0` | neutral information |
-| `success` | `#19733D` | `#63C985` | confirmed/success |
-| `warning` | `#8A5400` | `#FFBE55` | interruptive warning |
-| `danger` | `#B42318` | `#FF8A80` | error/contraindicated |
-| `emergency` | `#8E1111` | `#FF6B6B` | SOS/life safety only |
-| `focus` | `#6D4AFF` | `#A991FF` | 3 px focus ring |
+| Token            | Light     | Dark      | Use                   |
+| ---------------- | --------- | --------- | --------------------- |
+| `canvas`         | `#F7FAF9` | `#0C1413` | page background       |
+| `surface`        | `#FFFFFF` | `#121D1B` | primary surfaces      |
+| `surface-subtle` | `#EDF4F2` | `#192825` | secondary grouping    |
+| `text`           | `#102522` | `#F2F7F6` | primary text          |
+| `text-muted`     | `#4E6662` | `#AFC2BE` | secondary text        |
+| `border`         | `#C9D8D5` | `#344A46` | controls/dividers     |
+| `brand`          | `#087F6C` | `#36C2A8` | primary action/brand  |
+| `brand-hover`    | `#066858` | `#68D4C0` | hover                 |
+| `brand-pressed`  | `#064F45` | `#8EE0D0` | pressed               |
+| `info`           | `#1264A3` | `#69B6F0` | neutral information   |
+| `success`        | `#19733D` | `#63C985` | confirmed/success     |
+| `warning`        | `#8A5400` | `#FFBE55` | interruptive warning  |
+| `danger`         | `#B42318` | `#FF8A80` | error/contraindicated |
+| `emergency`      | `#8E1111` | `#FF6B6B` | SOS/life safety only  |
+| `focus`          | `#6D4AFF` | `#A991FF` | 3 px focus ring       |
 
 Text/background combinations must meet WCAG 2.2 AA. Status always includes visible text and accessible name; semantic color/icon never carries meaning alone.
 
@@ -46,17 +46,17 @@ Text/background combinations must meet WCAG 2.2 AA. Status always includes visib
 
 Fonts are locally bundled and checksummed: `IBM Plex Sans Arabic` for Arabic, `Inter` for Latin, and platform monospace for codes only. Fallbacks are `system-ui, sans-serif`. Default numeric style is tabular for queue, bed, lab, inventory, time, and money.
 
-| Style | Size/line | Weight |
-|---|---|---:|
-| Display | 32/40 | 700 |
-| H1 | 28/36 | 700 |
-| H2 | 24/32 | 700 |
-| H3 | 20/28 | 600 |
-| Body large | 18/28 | 400 |
-| Body | 16/24 | 400 |
-| Body small | 14/20 | 400 |
-| Label | 14/20 | 600 |
-| Caption | 12/18 | 500 |
+| Style      | Size/line | Weight |
+| ---------- | --------- | -----: |
+| Display    | 32/40     |    700 |
+| H1         | 28/36     |    700 |
+| H2         | 24/32     |    700 |
+| H3         | 20/28     |    600 |
+| Body large | 18/28     |    400 |
+| Body       | 16/24     |    400 |
+| Body small | 14/20     |    400 |
+| Label      | 14/20     |    600 |
+| Caption    | 12/18     |    500 |
 
 Minimum patient body size is 16 px. OS text scaling through 200% must not clip or hide actions.
 
@@ -71,25 +71,25 @@ Minimum patient body size is 16 px. OS text scaling through 200% must not clip o
 
 ### 3.4 Breakpoints and grids
 
-| Name | Width | Grid |
-|---|---:|---|
-| `compact` | 0–599 | 4 columns, 16 margin, 12 gutter |
-| `medium` | 600–1023 | 8 columns, 24 margin, 16 gutter |
-| `wide` | 1024–1439 | 12 columns, 32 margin, 20 gutter |
-| `xwide` | ≥1440 | 12 columns, max content 1440, 40 margin, 24 gutter |
+| Name      |     Width | Grid                                               |
+| --------- | --------: | -------------------------------------------------- |
+| `compact` |     0–599 | 4 columns, 16 margin, 12 gutter                    |
+| `medium`  |  600–1023 | 8 columns, 24 margin, 16 gutter                    |
+| `wide`    | 1024–1439 | 12 columns, 32 margin, 20 gutter                   |
+| `xwide`   |     ≥1440 | 12 columns, max content 1440, 40 margin, 24 gutter |
 
 Patient content max width is 720 except discovery/map. Staff app shell is side navigation 256 px at wide/xwide, 72 px collapsed; compact uses bottom navigation or menu sheet. Tables convert to labeled stacked rows below 768, never horizontal page scrolling for core actions.
 
 ## 4. Application shells
 
-| App | Wide navigation | Compact navigation | Persistent action |
-|---|---|---|---|
-| Patient | 104 px top bar + optional 240 px context rail | 64 px top bar + 72 px bottom tabs | 56 px SOS button fixed 16 px from logical end/bottom above navigation |
-| Clinic | 256 px side nav + 64 px top utility | top bar + drawer; queue route may use bottom tabs | patient-context banner while record open |
-| Pharmacy | side nav + scan action in top utility | top bar + bottom scan action | 56 px scan control, never overlays submit |
-| Hospital | side nav + facility/ward switcher | top bar + drawer | capacity freshness indicator |
-| Lab | side nav + worklist filters | top bar + drawer | specimen accession action |
-| Admin | side nav filtered by permission | top bar + drawer | environment/role badge |
+| App      | Wide navigation                               | Compact navigation                                | Persistent action                                                     |
+| -------- | --------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------- |
+| Patient  | 104 px top bar + optional 240 px context rail | 64 px top bar + 72 px bottom tabs                 | 56 px SOS button fixed 16 px from logical end/bottom above navigation |
+| Clinic   | 256 px side nav + 64 px top utility           | top bar + drawer; queue route may use bottom tabs | patient-context banner while record open                              |
+| Pharmacy | side nav + scan action in top utility         | top bar + bottom scan action                      | 56 px scan control, never overlays submit                             |
+| Hospital | side nav + facility/ward switcher             | top bar + drawer                                  | capacity freshness indicator                                          |
+| Lab      | side nav + worklist filters                   | top bar + drawer                                  | specimen accession action                                             |
+| Admin    | side nav filtered by permission               | top bar + drawer                                  | environment/role badge                                                |
 
 Patient/guardian/delegate context is always shown as avatar/initial, full display name, relationship label, and a “switch person” action before mutations. Staff apps always show facility name/type, staff role, AAL state, and environment.
 
@@ -129,25 +129,33 @@ Every interactive component implements default, keyboard focus, pressed, disable
 
 Every route requires loading skeleton, empty, permission denied, recoverable error, unrecoverable error, offline, success, and Arabic/English visual tests. A route displaying queue, bed, capacity, inventory, message, delivery, or other freshness-qualified data additionally requires a stale state with its last-updated timestamp. Parenthesized states are additional mandatory states.
 
+### Family Care implementation slice (004)
+
+- Patient routes `/care-switcher`, `/relationships`, and `/emergency-contacts` implement Arabic RTL and English LTR, compact/tablet/desktop reflow, keyboard-visible controls, reduced-motion behavior, offline no-queue messaging, and persistent explicit patient context.
+- The Family Context banner always announces the selected patient and relationship and requires confirmation before a managed-patient action. No dependent login or automatic age/capacity transition exists.
+- Guardianship and delegation surfaces expose only minimum relationship, current-permission, purpose, validity, and status projections. Guardianship decisions remain exclusive to the Support Admin `/relationships` workspace with AAL2 and `guardianship_review` purpose.
+- Invitation bearer material is accepted from a URL fragment, scrubbed immediately, and sent only in an anonymous request body. It is never rendered, cached, logged in a path, or retained in browser history.
+- Emergency Contact UI is a separate consent surface with masked owner projections and a closed future-SOS disclosure preview. It does not create an SOS or contact a provider in feature 004.
+
 ### 8.1 Patient app
 
-| Route | Primary content | Additional states |
-|---|---|---|
-| `/onboarding`, `/login`, `/recovery`, `/mfa` | locale, credential, proof/recovery | vendor pending/failed, MFA challenge, locked/rate-limited |
-| `/identity` | identity documents and verification | upload quarantine, manual review, rejected with reason |
-| `/privacy`, `/privacy/consents`, `/privacy/requests` | Arabic-first notice, consent, DSR | withdrawal impact, export ready/expired |
-| `/care-switcher`, `/relationships`, `/emergency-contacts` | guardianship/delegation/contact | invitation pending/declined/revoked/expired |
-| `/home` | next appointment, medicines, results, quick actions | managed patient, no data, stale signals |
-| `/symptom-check` | structured synthetic-scenario symptom routing with no-diagnosis notice | deterministic red flag, identifiers/free text rejected, model timeout/fallback, uncertainty/sources, kill-switch unavailable |
-| `/discover`, `/discover/map`, `/doctors/:id` | filters, verified facilities/doctors, live signals | location denied, stale/unknown, no qualifying SOS capacity |
-| `/appointments/new`, `/appointments/:id` | slot/fee/confirmation/queue | slot conflict, reschedule required, live queue reconnect |
-| `/records`, `/encounters/:id`, `/prescriptions/:id` | released record projections | not fully checked, warning, cancelled/superseded |
-| `/medications`, `/medications/:id` | schedule/dose/adherence/refill | missed/snoozed, insufficient prediction data |
-| `/observations`, `/vaccinations`, `/entitlements` | trends/schedule/credential | self-reported, clinical review required, unverified benefit |
-| `/lab-orders/:id`, `/lab-results/:id` | lifecycle/released result | not released, corrected, critical acknowledgement |
-| `/complaints`, `/reviews` | private timeline/public review | SLA escalation, moderation state |
-| `/payments/:id` | cash instruction or hosted care-payment status | provider pending, failed, expired, reconciled |
-| `/sos`, `/sos/:id`, `/sos/:id/share` | emergency action/match/share | consent, no confirmed capacity, contact delivery, link revoke/expiry |
+| Route                                                     | Primary content                                                        | Additional states                                                                                                            |
+| --------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `/onboarding`, `/login`, `/recovery`, `/mfa`              | locale, credential, proof/recovery                                     | vendor pending/failed, MFA challenge, locked/rate-limited                                                                    |
+| `/identity`                                               | identity documents and verification                                    | upload quarantine, manual review, rejected with reason                                                                       |
+| `/privacy`, `/privacy/consents`, `/privacy/requests`      | Arabic-first notice, consent, DSR                                      | withdrawal impact, export ready/expired                                                                                      |
+| `/care-switcher`, `/relationships`, `/emergency-contacts` | guardianship/delegation/contact                                        | invitation pending/declined/revoked/expired                                                                                  |
+| `/home`                                                   | next appointment, medicines, results, quick actions                    | managed patient, no data, stale signals                                                                                      |
+| `/symptom-check`                                          | structured synthetic-scenario symptom routing with no-diagnosis notice | deterministic red flag, identifiers/free text rejected, model timeout/fallback, uncertainty/sources, kill-switch unavailable |
+| `/discover`, `/discover/map`, `/doctors/:id`              | filters, verified facilities/doctors, live signals                     | location denied, stale/unknown, no qualifying SOS capacity                                                                   |
+| `/appointments/new`, `/appointments/:id`                  | slot/fee/confirmation/queue                                            | slot conflict, reschedule required, live queue reconnect                                                                     |
+| `/records`, `/encounters/:id`, `/prescriptions/:id`       | released record projections                                            | not fully checked, warning, cancelled/superseded                                                                             |
+| `/medications`, `/medications/:id`                        | schedule/dose/adherence/refill                                         | missed/snoozed, insufficient prediction data                                                                                 |
+| `/observations`, `/vaccinations`, `/entitlements`         | trends/schedule/credential                                             | self-reported, clinical review required, unverified benefit                                                                  |
+| `/lab-orders/:id`, `/lab-results/:id`                     | lifecycle/released result                                              | not released, corrected, critical acknowledgement                                                                            |
+| `/complaints`, `/reviews`                                 | private timeline/public review                                         | SLA escalation, moderation state                                                                                             |
+| `/payments/:id`                                           | cash instruction or hosted care-payment status                         | provider pending, failed, expired, reconciled                                                                                |
+| `/sos`, `/sos/:id`, `/sos/:id/share`                      | emergency action/match/share                                           | consent, no confirmed capacity, contact delivery, link revoke/expiry                                                         |
 
 ### 8.2 Clinic app
 

@@ -7,7 +7,43 @@ import {
 import { PostgresIdentityRepository } from './identity-repository.js';
 
 export class PostgresIdempotencyStore implements IdempotencyStore {
-  public constructor(private readonly repository: PostgresIdentityRepository) {}
+  public constructor(
+    private readonly repository: PostgresIdentityRepository,
+    private readonly responseEncryptionKey: Uint8Array,
+  ) {}
+
+  private protect(value: unknown) {
+    const nonce = randomBytes(12);
+    const cipher = createCipheriv('aes-256-gcm', this.responseEncryptionKey, nonce);
+    const ciphertext = Buffer.concat([
+      cipher.update(JSON.stringify(value), 'utf8'),
+      cipher.final(),
+    ]);
+    return {
+      encoding: 'aes-256-gcm-v1',
+      nonce: nonce.toString('base64url'),
+      tag: cipher.getAuthTag().toString('base64url'),
+      ciphertext: ciphertext.toString('base64url'),
+    };
+  }
+
+  private unprotect<T>(value: unknown): T {
+    if (!value || typeof value !== 'object' || (value as any).encoding !== 'aes-256-gcm-v1')
+      throw new Error('Stored idempotency response is not a protected envelope.');
+    const envelope = value as { nonce: string; tag: string; ciphertext: string };
+    const decipher = createDecipheriv(
+      'aes-256-gcm',
+      this.responseEncryptionKey,
+      Buffer.from(envelope.nonce, 'base64url'),
+    );
+    decipher.setAuthTag(Buffer.from(envelope.tag, 'base64url'));
+    return JSON.parse(
+      Buffer.concat([
+        decipher.update(Buffer.from(envelope.ciphertext, 'base64url')),
+        decipher.final(),
+      ]).toString('utf8'),
+    ) as T;
+  }
 
   public async execute<T, P = undefined>(input: {
     principal: string;
@@ -59,13 +95,13 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
         return {
           status: record.response_status,
           headers: record.response_headers ?? {},
-          body: record.response_body as T,
+          body: this.unprotect<T>(record.response_body),
         };
       }
       const result = await input.work(undefined as P);
       await sql`
         update platform.idempotency_records set state='completed',response_status=${result.status},
-          response_headers=${sql.json(result.headers)},response_body=${sql.json(result.body as any)},updated_at=now()
+          response_headers=${sql.json(result.headers)},response_body=${sql.json(this.protect(result.body))},updated_at=now()
         where id=${record.id}::uuid`;
       return result;
     });
@@ -103,7 +139,7 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
         return {
           status: record.response_status,
           headers: record.response_headers ?? {},
-          body: record.response_body as T,
+          body: this.unprotect<T>(record.response_body),
         };
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
@@ -132,7 +168,7 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
       >`select * from platform.idempotency_records where principal=${input.principal} and method=${input.method.toUpperCase()} and route=${input.route} and idempotency_key=${input.key} and request_hash=${requestHash} for update`;
       if (!record) throw new Error('Prepared idempotency reservation was lost.');
       const result = await input.work(prepared);
-      await sql`update platform.idempotency_records set state='completed',response_status=${result.status},response_headers=${sql.json(result.headers)},response_body=${sql.json(result.body as any)},updated_at=now() where id=${record.id}::uuid`;
+      await sql`update platform.idempotency_records set state='completed',response_status=${result.status},response_headers=${sql.json(result.headers)},response_body=${sql.json(this.protect(result.body))},updated_at=now() where id=${record.id}::uuid`;
       return result;
     });
   }
@@ -149,3 +185,4 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
     });
   }
 }
+import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';

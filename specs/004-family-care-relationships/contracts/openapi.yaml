@@ -1,0 +1,572 @@
+openapi: 3.1.0
+info:
+  title: SHIFAA Family Care Relationships API
+  version: 0.1.0
+  description: >-
+    Seeded-synthetic contract for the active 004 Family Care slice. It deliberately
+    excludes FR-FAM-003, transitionDependent, guardianship upload, SOS creation,
+    and provider delivery.
+servers:
+  - url: http://127.0.0.1:3000
+    description: Local seeded-synthetic Core API
+security:
+  - bearerAuth: []
+tags:
+  - name: Relationships
+  - name: Guardianship review
+  - name: Emergency Contacts
+paths:
+  /patients/{managedPatientId}/relationships:
+    get:
+      operationId: listRelationships
+      x-shifaa-requirements: [FR-FAM-001, FR-FAM-007]
+      tags: [Relationships]
+      summary: List the minimum relationship projection for one authorized patient context
+      parameters:
+        - $ref: '#/components/parameters/ManagedPatientId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Scoped relationships
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipPage'
+        '401': { $ref: '#/components/responses/AuthenticationRequired' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+  /patients/{managedPatientId}/guardianships:
+    post:
+      operationId: createGuardianship
+      x-shifaa-requirements: [FR-FAM-002, FR-FAM-007, FR-FAM-008]
+      tags: [Relationships]
+      summary: Propose an evidence-backed guardianship
+      parameters:
+        - $ref: '#/components/parameters/ManagedPatientId'
+        - $ref: '#/components/parameters/PatientContext'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGuardianshipInput'
+      responses:
+        '201':
+          description: Pending guardianship
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Relationship' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /admin/guardianships:
+    get:
+      operationId: listGuardianshipCases
+      x-shifaa-requirements: [FR-FAM-002, FR-FAM-008]
+      tags: [Guardianship review]
+      summary: List minimum pending guardianship cases for Support Admin review
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, active, rejected, revoked, expired]
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Minimum worklist
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GuardianshipCasePage' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+  /admin/guardianships/{relationshipId}/decision:
+    post:
+      operationId: reviewGuardianship
+      x-shifaa-requirements: [FR-FAM-002, FR-FAM-008]
+      tags: [Guardianship review]
+      summary: Independently approve or reject the current guardianship version
+      parameters:
+        - $ref: '#/components/parameters/RelationshipId'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/GuardianshipDecisionInput' }
+      responses:
+        '200':
+          description: Decided guardianship
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Relationship' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /patients/{managedPatientId}/delegations:
+    post:
+      operationId: createDelegation
+      x-shifaa-requirements: [FR-FAM-004, FR-FAM-007, FR-FAM-008]
+      tags: [Relationships]
+      summary: Invite one adult to exact patient-management permissions
+      parameters:
+        - $ref: '#/components/parameters/ManagedPatientId'
+        - $ref: '#/components/parameters/PatientContext'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateDelegationInput' }
+      responses:
+        '201':
+          description: Pending delegation and protected one-time invitation result
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DelegationInvitation' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /delegations/{relationshipId}/accept:
+    post:
+      operationId: acceptDelegation
+      x-shifaa-requirements: [FR-FAM-004, FR-FAM-008]
+      tags: [Relationships]
+      summary: Accept a named, unexpired delegation invitation once
+      parameters:
+        - $ref: '#/components/parameters/RelationshipId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [token, confirmed]
+              properties:
+                token: { type: string, minLength: 32, maxLength: 512 }
+                confirmed: { const: true }
+      responses:
+        '200':
+          description: Active delegation
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Relationship' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /delegations/{relationshipId}:
+    patch:
+      operationId: updateDelegation
+      x-shifaa-requirements: [FR-FAM-004, FR-FAM-007, FR-FAM-008]
+      tags: [Relationships]
+      summary: Replace exact permissions or validity on the current delegation version
+      parameters:
+        - $ref: '#/components/parameters/RelationshipId'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/PatientContext'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateDelegationInput' }
+      responses:
+        '200':
+          description: Updated delegation
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Relationship' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /relationships/{relationshipId}/revoke:
+    post:
+      operationId: revokeRelationship
+      x-shifaa-requirements: [FR-FAM-002, FR-FAM-004, FR-FAM-008]
+      tags: [Relationships]
+      summary: Revoke a guardianship or delegation without any dependent transition
+      parameters:
+        - $ref: '#/components/parameters/RelationshipId'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/PatientContext'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RevokeInput' }
+      responses:
+        '200':
+          description: Revoked relationship
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Relationship' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /patients/{managedPatientId}/emergency-contacts:
+    get:
+      operationId: listEmergencyContacts
+      x-shifaa-requirements: [FR-FAM-005]
+      tags: [Emergency Contacts]
+      summary: List masked consent status for one patient
+      parameters:
+        - $ref: '#/components/parameters/ManagedPatientId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Masked contacts
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmergencyContactPage' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+    post:
+      operationId: createEmergencyContact
+      x-shifaa-requirements: [FR-FAM-005, FR-FAM-006, FR-FAM-007, FR-FAM-008]
+      tags: [Emergency Contacts]
+      summary: Invite a separate Emergency Contact
+      parameters:
+        - $ref: '#/components/parameters/ManagedPatientId'
+        - $ref: '#/components/parameters/PatientContext'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateEmergencyContactInput' }
+      responses:
+        '201':
+          description: Pending contact and protected invitation result
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmergencyContactInvitation' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /emergency-contact-invites/response:
+    post:
+      operationId: respondEmergencyContact
+      x-shifaa-requirements: [FR-FAM-005, FR-FAM-008]
+      tags: [Emergency Contacts]
+      security: []
+      summary: Confirm or decline one unexpired contact invitation
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [token, decision]
+              properties:
+                token: { type: string, minLength: 32, maxLength: 512, writeOnly: true }
+                decision: { type: string, enum: [confirmed, declined] }
+      responses:
+        '200':
+          description: Terminal invitation response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [status]
+                properties:
+                  status: { type: string, enum: [confirmed, declined] }
+        '403': { $ref: '#/components/responses/InviteDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /emergency-contacts/{contactId}/revoke:
+    post:
+      operationId: revokeEmergencyContact
+      x-shifaa-requirements: [FR-FAM-005, FR-FAM-007, FR-FAM-008]
+      tags: [Emergency Contacts]
+      summary: Revoke a pending or confirmed Emergency Contact
+      parameters:
+        - in: path
+          name: contactId
+          required: true
+          schema: { type: string, format: uuid }
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/PatientContext'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RevokeInput' }
+      responses:
+        '200':
+          description: Revoked masked contact
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmergencyContact' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ManagedPatientId:
+      in: path
+      name: managedPatientId
+      required: true
+      schema: { type: string, format: uuid }
+    RelationshipId:
+      in: path
+      name: relationshipId
+      required: true
+      schema: { type: string, format: uuid }
+    Cursor:
+      in: query
+      name: cursor
+      schema: { type: string, maxLength: 512 }
+    Limit:
+      in: query
+      name: limit
+      schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      schema: { type: string, minLength: 8, maxLength: 128 }
+    IfMatch:
+      in: header
+      name: If-Match
+      required: true
+      schema: { type: integer, minimum: 1 }
+    PatientContext:
+      in: header
+      name: X-SHIFAA-Patient-Context
+      required: true
+      description: Explicitly selected patient UUID; must equal the affected patient.
+      schema: { type: string, format: uuid }
+  schemas:
+    PermissionCode:
+      type: string
+      enum:
+        - profile.view
+        - appointment.manage
+        - record.view
+        - medication.manage
+        - sos.activate
+        - sos.share
+        - complaint.create
+        - symptom_routing.use
+        - consent.manage
+    DelegablePermissionCode:
+      type: string
+      enum:
+        - profile.view
+        - appointment.manage
+        - record.view
+        - medication.manage
+        - sos.activate
+        - sos.share
+        - complaint.create
+        - symptom_routing.use
+    Relationship:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          managed_patient_id,
+          actor_person_id,
+          relationship_type,
+          status,
+          permissions,
+          valid_from,
+          version,
+        ]
+      properties:
+        id: { type: string, format: uuid }
+        managed_patient_id: { type: string, format: uuid }
+        actor_person_id: { type: string, format: uuid }
+        relationship_type: { type: string, enum: [self, guardianship, delegation] }
+        status: { type: string, enum: [pending, active, suspended, rejected, revoked, expired] }
+        purpose_code: { type: [string, 'null'], maxLength: 128 }
+        permissions:
+          type: array
+          uniqueItems: true
+          items: { $ref: '#/components/schemas/PermissionCode' }
+        valid_from: { type: string, format: date-time }
+        valid_until: { type: [string, 'null'], format: date-time }
+        next_action_code: { type: [string, 'null'], maxLength: 64 }
+        version: { type: integer, minimum: 1 }
+    RelationshipPage:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Relationship' } }
+        next_cursor: { type: [string, 'null'] }
+    CreateGuardianshipInput:
+      type: object
+      additionalProperties: false
+      required: [evidence_object_id, purpose_code, requested_permissions]
+      properties:
+        evidence_object_id: { type: string, format: uuid }
+        purpose_code: { type: string, minLength: 3, maxLength: 128 }
+        requested_permissions:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { $ref: '#/components/schemas/PermissionCode' }
+    GuardianshipDecisionInput:
+      type: object
+      additionalProperties: false
+      required: [decision, reason_code]
+      properties:
+        decision: { type: string, enum: [approved, rejected] }
+        reason_code: { type: string, pattern: '^[a-z][a-z0-9_.-]{2,63}$' }
+        valid_until: { type: [string, 'null'], format: date-time }
+        approved_permissions:
+          type: array
+          uniqueItems: true
+          items: { $ref: '#/components/schemas/PermissionCode' }
+    GuardianshipCase:
+      type: object
+      additionalProperties: false
+      required: [relationship, evidence_status, evidence_type, submitted_at]
+      properties:
+        relationship: { $ref: '#/components/schemas/Relationship' }
+        evidence_status: { const: released }
+        evidence_type: { type: string, enum: [guardianship-evidence] }
+        submitted_at: { type: string, format: date-time }
+    GuardianshipCasePage:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/GuardianshipCase' } }
+        next_cursor: { type: [string, 'null'] }
+    CreateDelegationInput:
+      type: object
+      additionalProperties: false
+      required: [delegate_person_id, purpose_code, permissions, valid_until]
+      properties:
+        delegate_person_id: { type: string, format: uuid }
+        purpose_code: { type: string, minLength: 3, maxLength: 128 }
+        permissions:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { $ref: '#/components/schemas/DelegablePermissionCode' }
+        valid_until: { type: string, format: date-time }
+    UpdateDelegationInput:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        permissions:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { $ref: '#/components/schemas/DelegablePermissionCode' }
+        valid_until: { type: string, format: date-time }
+    DelegationInvitation:
+      type: object
+      additionalProperties: false
+      required: [relationship, invitation_token, invitation_expires_at]
+      properties:
+        relationship: { $ref: '#/components/schemas/Relationship' }
+        invitation_token:
+          type: string
+          description: Returned once to the protected seeded invitation channel; never persisted in plaintext or logged.
+        invitation_expires_at: { type: string, format: date-time }
+    CreateEmergencyContactInput:
+      type: object
+      additionalProperties: false
+      required: [display_name, phone_e164, preferred_locale, location_precision]
+      properties:
+        display_name: { type: string, minLength: 2, maxLength: 120 }
+        phone_e164: { type: string, pattern: '^\\+[1-9][0-9]{7,14}$' }
+        preferred_locale: { type: string, enum: [ar-EG, en-EG] }
+        location_precision: { type: string, enum: [none, coarse, exact] }
+    EmergencyContact:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          managed_patient_id,
+          masked_phone,
+          preferred_locale,
+          location_precision,
+          status,
+          version,
+        ]
+      properties:
+        id: { type: string, format: uuid }
+        managed_patient_id: { type: string, format: uuid }
+        masked_phone: { type: string }
+        preferred_locale: { type: string, enum: [ar-EG, en-EG] }
+        location_precision: { type: string, enum: [none, coarse, exact] }
+        status: { type: string, enum: [pending, confirmed, declined, revoked, expired] }
+        invite_expires_at: { type: [string, 'null'], format: date-time }
+        version: { type: integer, minimum: 1 }
+    EmergencyContactPage:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/EmergencyContact' } }
+        next_cursor: { type: [string, 'null'] }
+    EmergencyContactInvitation:
+      type: object
+      additionalProperties: false
+      required: [contact, invitation_token]
+      properties:
+        contact: { $ref: '#/components/schemas/EmergencyContact' }
+        invitation_token:
+          type: string
+          description: Returned once to the protected seeded invitation channel; never persisted in plaintext or logged.
+    RevokeInput:
+      type: object
+      additionalProperties: false
+      required: [reason_code]
+      properties:
+        reason_code: { type: string, pattern: '^[a-z][a-z0-9_.-]{2,63}$' }
+    Problem:
+      type: object
+      additionalProperties: true
+      required: [type, title, status, code]
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer }
+        code: { type: string }
+        request_id: { type: [string, 'null'] }
+  responses:
+    AuthenticationRequired:
+      description: Authentication is required
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    PermissionDenied:
+      description: Current actor, patient context, purpose, AAL, state, validity, or permission denied
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    InviteDenied:
+      description: Invitation cannot be used; response deliberately avoids an existence oracle
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Conflict:
+      description: Idempotency, version, terminal-state, or equivalent-active-row conflict
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    ValidationProblem:
+      description: Closed-schema validation failed
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
