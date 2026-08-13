@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/identity-onboarding.ts",
-    "./facility-onboarding": "./src/facility-onboarding.ts"
+    "./facility-onboarding": "./src/facility-onboarding.ts",
+    "./family-care": "./src/family-care.ts"
   },
   "scripts": {
     "test": "node --test src/*.test.ts",
@@ -13,6 +14,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@shifaa/core": "workspace:*",
     "@shifaa/observability": "workspace:*"
   },
   "devDependencies": {

@@ -11,6 +11,7 @@ import {
   PostgresIdentityRepository,
   PostgresIdempotencyStore,
   PostgresFacilityOnboardingService,
+  PostgresFamilyCareService,
   SupabaseAuthIssuer,
   SupabaseQuarantineUploadStore,
 } from './adapters/index.js';
@@ -28,6 +29,8 @@ import {
 } from './routes/identity-onboarding.js';
 import { FacilityOnboardingService } from './modules/facility-onboarding/index.js';
 import { registerFacilityOnboardingRoutes } from './routes/facility-onboarding.js';
+import { FamilyCareService, type FamilyCareServicePort } from './modules/family-care/index.js';
+import { registerFamilyCareRoutes } from './routes/family-care.js';
 
 export interface AppHarness {
   app: ReturnType<typeof Fastify>;
@@ -35,6 +38,7 @@ export interface AppHarness {
   service: IdentityOnboardingService;
   repository: IdentityRepository;
   facilityService: FacilityOnboardingService | PostgresFacilityOnboardingService;
+  familyService: FamilyCareServicePort;
 }
 
 export async function buildApp(
@@ -90,6 +94,18 @@ export async function buildApp(
       : options.clock
         ? new FacilityOnboardingService(() => options.clock!.now())
         : new FacilityOnboardingService();
+  const familyService =
+    repository instanceof PostgresIdentityRepository
+      ? new PostgresFamilyCareService(
+          repository,
+          config.identityEncryptionKey,
+          config.identityBlindIndexKey,
+          config.preauthHmacKey,
+          options.clock ? () => options.clock!.now() : undefined,
+        )
+      : options.clock
+        ? new FamilyCareService(() => options.clock!.now(), config.preauthHmacKey)
+        : new FamilyCareService(undefined, config.preauthHmacKey);
   await app.register(cors, {
     origin: config.corsOrigins,
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'OPTIONS'],
@@ -105,6 +121,7 @@ export async function buildApp(
       'X-AAL',
       'X-Provider-Signature',
       'X-Purpose',
+      'X-SHIFAA-Patient-Context',
     ],
   });
   installIdentityErrorHandler(app);
@@ -114,7 +131,7 @@ export async function buildApp(
     service,
     idempotency:
       repository instanceof PostgresIdentityRepository
-        ? new PostgresIdempotencyStore(repository)
+        ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)
         : new InMemoryIdempotencyStore(),
   });
   if (config.facilityOnboardingEnabled) {
@@ -123,12 +140,22 @@ export async function buildApp(
       syntheticMode: config.syntheticMode,
       idempotency:
         repository instanceof PostgresIdentityRepository
-          ? new PostgresIdempotencyStore(repository)
+          ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)
+          : new InMemoryIdempotencyStore(),
+    });
+  }
+  if (config.familyCareEnabled) {
+    await registerFamilyCareRoutes(app, {
+      service: familyService,
+      syntheticMode: config.syntheticMode,
+      idempotency:
+        repository instanceof PostgresIdentityRepository
+          ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)
           : new InMemoryIdempotencyStore(),
     });
   }
   if (repository instanceof PostgresIdentityRepository) {
     app.addHook('onClose', () => repository.close());
   }
-  return { app, config, service, repository, facilityService };
+  return { app, config, service, repository, facilityService, familyService };
 }

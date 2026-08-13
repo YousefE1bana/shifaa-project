@@ -19,6 +19,7 @@ paths:
   /patients/{managedPatientId}/relationships:
     get:
       operationId: listRelationships
+      x-shifaa-requirements: [FR-FAM-001, FR-FAM-007]
       tags: [Relationships]
       summary: List the minimum relationship projection for one authorized patient context
       parameters:
@@ -37,6 +38,7 @@ paths:
   /patients/{managedPatientId}/guardianships:
     post:
       operationId: createGuardianship
+      x-shifaa-requirements: [FR-FAM-002, FR-FAM-007, FR-FAM-008]
       tags: [Relationships]
       summary: Propose an evidence-backed guardianship
       parameters:
@@ -61,6 +63,7 @@ paths:
   /admin/guardianships:
     get:
       operationId: listGuardianshipCases
+      x-shifaa-requirements: [FR-FAM-002, FR-FAM-008]
       tags: [Guardianship review]
       summary: List minimum pending guardianship cases for Support Admin review
       parameters:
@@ -81,6 +84,7 @@ paths:
   /admin/guardianships/{relationshipId}/decision:
     post:
       operationId: reviewGuardianship
+      x-shifaa-requirements: [FR-FAM-002, FR-FAM-008]
       tags: [Guardianship review]
       summary: Independently approve or reject the current guardianship version
       parameters:
@@ -104,6 +108,7 @@ paths:
   /patients/{managedPatientId}/delegations:
     post:
       operationId: createDelegation
+      x-shifaa-requirements: [FR-FAM-004, FR-FAM-007, FR-FAM-008]
       tags: [Relationships]
       summary: Invite one adult to exact patient-management permissions
       parameters:
@@ -127,6 +132,7 @@ paths:
   /delegations/{relationshipId}/accept:
     post:
       operationId: acceptDelegation
+      x-shifaa-requirements: [FR-FAM-004, FR-FAM-008]
       tags: [Relationships]
       summary: Accept a named, unexpired delegation invitation once
       parameters:
@@ -154,6 +160,7 @@ paths:
   /delegations/{relationshipId}:
     patch:
       operationId: updateDelegation
+      x-shifaa-requirements: [FR-FAM-004, FR-FAM-007, FR-FAM-008]
       tags: [Relationships]
       summary: Replace exact permissions or validity on the current delegation version
       parameters:
@@ -178,6 +185,7 @@ paths:
   /relationships/{relationshipId}/revoke:
     post:
       operationId: revokeRelationship
+      x-shifaa-requirements: [FR-FAM-002, FR-FAM-004, FR-FAM-008]
       tags: [Relationships]
       summary: Revoke a guardianship or delegation without any dependent transition
       parameters:
@@ -201,6 +209,7 @@ paths:
   /patients/{managedPatientId}/emergency-contacts:
     get:
       operationId: listEmergencyContacts
+      x-shifaa-requirements: [FR-FAM-005]
       tags: [Emergency Contacts]
       summary: List masked consent status for one patient
       parameters:
@@ -216,6 +225,7 @@ paths:
         '403': { $ref: '#/components/responses/PermissionDenied' }
     post:
       operationId: createEmergencyContact
+      x-shifaa-requirements: [FR-FAM-005, FR-FAM-006, FR-FAM-007, FR-FAM-008]
       tags: [Emergency Contacts]
       summary: Invite a separate Emergency Contact
       parameters:
@@ -236,17 +246,14 @@ paths:
         '403': { $ref: '#/components/responses/PermissionDenied' }
         '409': { $ref: '#/components/responses/Conflict' }
         '422': { $ref: '#/components/responses/ValidationProblem' }
-  /emergency-contact-invites/{token}/response:
+  /emergency-contact-invites/response:
     post:
       operationId: respondEmergencyContact
+      x-shifaa-requirements: [FR-FAM-005, FR-FAM-008]
       tags: [Emergency Contacts]
       security: []
       summary: Confirm or decline one unexpired contact invitation
       parameters:
-        - in: path
-          name: token
-          required: true
-          schema: { type: string, minLength: 32, maxLength: 512 }
         - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
@@ -255,8 +262,9 @@ paths:
             schema:
               type: object
               additionalProperties: false
-              required: [decision]
+              required: [token, decision]
               properties:
+                token: { type: string, minLength: 32, maxLength: 512, writeOnly: true }
                 decision: { type: string, enum: [confirmed, declined] }
       responses:
         '200':
@@ -274,6 +282,7 @@ paths:
   /emergency-contacts/{contactId}/revoke:
     post:
       operationId: revokeEmergencyContact
+      x-shifaa-requirements: [FR-FAM-005, FR-FAM-007, FR-FAM-008]
       tags: [Emergency Contacts]
       summary: Revoke a pending or confirmed Emergency Contact
       parameters:

@@ -8,6 +8,7 @@ export interface ApiConfig {
   databaseUrl: string;
   identityOnboardingEnabled: boolean;
   facilityOnboardingEnabled: boolean;
+  familyCareEnabled: boolean;
   syntheticMode: boolean;
   syntheticProofingEnabled: boolean;
   authAdapter: 'local' | 'supabase';
@@ -75,6 +76,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     if (readBoolean(env['FACILITY_ONBOARDING_ENABLED'], false)) {
       throw new ConfigurationError(
         'Production startup denied: facility onboarding remains blocked by OPEN-SEC-001.',
+      );
+    }
+    if (readBoolean(env['FAMILY_CARE_ENABLED'], false)) {
+      throw new ConfigurationError(
+        'Production startup denied: Family Care remains seeded-synthetic only.',
       );
     }
     const forbidden = [
@@ -149,6 +155,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
       env['FACILITY_ONBOARDING_ENABLED'],
       environment !== 'production',
     ),
+    familyCareEnabled: readBoolean(env['FAMILY_CARE_ENABLED'], environment !== 'production'),
     syntheticMode,
     syntheticProofingEnabled,
     authAdapter,
