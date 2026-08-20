@@ -7,7 +7,7 @@
 - Date: 2026-08-20 (Africa/Cairo)
 - Branch: `codex/005-privacy-dsr-notifications`
 - Starting commit: `51b66adaae5256101ddd2c6387a7644abe436f09`
-- Verified implementation commit: `ae56b8a97a48ec31f04cc676aa0edb72fd03a834`
+- Verified implementation commit: `3b3896d5a938d43b7692a26cf7a890bf0705ebef`
 - Runtime: local in-memory feature API on port 3000, Expo web patient on 8082, Next admin on 3002, Chromium in the reviewed Docker browser relay
 - Data: deterministic synthetic patient, guardian, DPO, evidence, template, export, and notification fixtures only
 - Browser origin accommodation: `host.docker.internal` is explicitly allowed in Next development mode and in the local API CORS list; it is not a production origin.

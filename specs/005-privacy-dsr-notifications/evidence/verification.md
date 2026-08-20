@@ -2,7 +2,7 @@
 
 > Seeded-synthetic engineering verification only. No production, legal, DPO, regulator, vendor, design, or accessibility-lab approval is claimed.
 
-Verified implementation commit: `ae56b8a97a48ec31f04cc676aa0edb72fd03a834`.
+Verified implementation commit: `3b3896d5a938d43b7692a26cf7a890bf0705ebef`.
 
 ## Clean repository gate
 
