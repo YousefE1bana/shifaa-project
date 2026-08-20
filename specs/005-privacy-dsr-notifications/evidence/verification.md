@@ -34,6 +34,8 @@ The final post-evidence clean run completed through the forced-RLS matrix and em
 - The first performance sample during implementation measured read p95 426.07ms and failed the 400ms target. PostgreSQL pool capacity was corrected from 10 to 20; subsequent samples passed (381.33ms on 2026-08-13, then 235.18ms and the final pre-PR 345.55ms on 2026-08-20). The failed sample is not represented as a pass.
 - A live DPO partial-approval returned 400 because free text was sent as `reason_code`. The UI now sends `request.reviewed` plus the free text in `reason_summary`; the live mutation then advanced v2 to partial v3 and fulfilment v4.
 - Stale-volume migration and exact-count test failures were diagnosed as order-dependent local/test state. The named volume was cleaned, and assertions now prove authorized identities/scopes without assuming no prior valid fixture rows.
+- The first PR Supabase runtime job exposed a 005 compatibility defect: the new aggregate-version index also constrained pre-005 facility/family/identity outbox producers. The index is now partial to the privacy/notification event set claimed by the 005 worker, and a schema regression proves two legacy facility events may coexist while a duplicate 005 aggregate version is rejected. A post-fix clean run emitted `CI_FIX_VERIFY_EXIT=0`.
+- A local `supabase db reset --local` applied every migration but the local CLI stopped while restarting its legacy Storage gateway, before API tests. This local environment failure is not represented as a pass; the required GitHub Supabase job is the authoritative rerun for this fix.
 
 ## Boundaries
 

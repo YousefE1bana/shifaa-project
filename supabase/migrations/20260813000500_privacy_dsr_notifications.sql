@@ -232,7 +232,11 @@ ALTER TABLE platform.outbox_events ALTER COLUMN aggregate_version SET NOT NULL;
 ALTER TABLE platform.outbox_events ADD CONSTRAINT outbox_events_aggregate_version_check CHECK (aggregate_version>0);
 ALTER TABLE platform.outbox_events ADD COLUMN IF NOT EXISTS lease_owner text;
 ALTER TABLE platform.outbox_events ADD COLUMN IF NOT EXISTS lease_expires_at timestamptz;
-CREATE UNIQUE INDEX IF NOT EXISTS outbox_aggregate_version_uq ON platform.outbox_events(aggregate_type,aggregate_id,aggregate_version);
+DROP INDEX IF EXISTS platform.outbox_aggregate_version_uq;
+CREATE UNIQUE INDEX outbox_aggregate_version_uq ON platform.outbox_events(aggregate_type,aggregate_id,aggregate_version) WHERE event_type IN (
+ 'privacy.dsr.submitted','privacy.dsr.status_changed','privacy.dsr.export_ready','privacy.dsr.export_consumed','privacy.dsr.identity_required',
+ 'notification.template.drafted','notification.template.published','notification.delivery.requested','notification.delivery.receipt_recorded','notification.delivery.replay_requested'
+);
 ALTER TABLE platform.outbox_events DROP CONSTRAINT IF EXISTS outbox_events_event_type_check;
 ALTER TABLE platform.outbox_events ADD CONSTRAINT outbox_events_event_type_check CHECK(event_type IN (
  'identity.verification.changed','identity.manual_review.requested','consent.changed','facility.changed','professional_license.changed','membership.changed','admin_role.changed',

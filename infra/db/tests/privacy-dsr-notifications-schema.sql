@@ -30,4 +30,19 @@ DO $$ BEGIN
  BEGIN UPDATE consent.data_subject_request_events SET reason_code='mutated' WHERE id='55000000-0000-4000-8000-000000000001'; RAISE EXCEPTION 'append-only event mutated'; EXCEPTION WHEN object_not_in_prerequisite_state THEN NULL; END;
 END $$;
 
+INSERT INTO platform.outbox_events(id,aggregate_type,aggregate_id,event_type,payload)
+VALUES
+ ('59000000-0000-4000-8000-000000000010','facility-governance','59000000-0000-4000-8000-000000000099','facility.changed','{}'),
+ ('59000000-0000-4000-8000-000000000011','facility-governance','59000000-0000-4000-8000-000000000099','facility.changed','{}');
+DO $$ BEGIN
+ BEGIN
+  INSERT INTO platform.outbox_events(id,aggregate_type,aggregate_id,aggregate_version,event_type,payload)
+  VALUES
+   ('59000000-0000-4000-8000-000000000012','privacy-dsr','59000000-0000-4000-8000-000000000098',7,'privacy.dsr.status_changed','{}'),
+   ('59000000-0000-4000-8000-000000000013','privacy-dsr','59000000-0000-4000-8000-000000000098',7,'privacy.dsr.status_changed','{}');
+  RAISE EXCEPTION 'duplicate privacy aggregate version accepted';
+ EXCEPTION WHEN unique_violation THEN NULL;
+ END;
+END $$;
+
 ROLLBACK;
