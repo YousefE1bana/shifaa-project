@@ -1,6 +1,6 @@
 # Research: Discovery and SOS Foundation
 
-**Date:** 2026-08-20  
+**Date:** 2026-08-20
 **Scope:** Decisions required to implement the approved seeded-synthetic 006 specification without pulling later clinical, hospital, pharmacy, review, or vendor behavior forward.
 
 ## Decision 1 — Freeze the Phase 2 slice at ten operations

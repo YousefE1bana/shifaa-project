@@ -1,6 +1,6 @@
 # Tasks: Discovery and SOS Foundation
 
-> **Feature:** `006-discovery-sos-foundation` · **Plan status:** `PLAN_APPROVED — seeded-synthetic engineering`  
+> **Feature:** `006-discovery-sos-foundation` · **Plan status:** `PLAN_APPROVED — seeded-synthetic engineering`
 > A completed checkbox requires the exact evidence below. Formal production, legal, vendor, emergency-safety Product review, design, UAT, team, and reproducibility gates remain open; clinical dual governance is N/A because 006 adds no clinical rule/content.
 
 ## Phase 1 — Gates, provenance, fixtures, and frozen contracts

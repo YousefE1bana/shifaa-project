@@ -1,7 +1,7 @@
 # Specification Quality Checklist: Discovery and SOS Foundation
 
-**Purpose**: Validate specification completeness and quality before planning  
-**Created**: 2026-08-20  
+**Purpose**: Validate specification completeness and quality before planning
+**Created**: 2026-08-20
 **Feature**: [spec.md](../spec.md)
 
 ## Content Quality

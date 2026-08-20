@@ -1,7 +1,7 @@
 # Data Model: Discovery and SOS Foundation
 
-**Feature:** `006-discovery-sos-foundation`  
-**Date:** 2026-08-20  
+**Feature:** `006-discovery-sos-foundation`
+**Date:** 2026-08-20
 **Boundary:** seeded-synthetic Phase 2 engineering; no production capacity publisher, maps/SMS, ambulance, bed, or shadow clinical source
 
 ## 1. Design rules
