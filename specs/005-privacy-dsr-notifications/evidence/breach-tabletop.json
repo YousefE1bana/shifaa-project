@@ -1,0 +1,17 @@
+{
+  "fixture_id": "SYNTHETIC-TABLETOP-005-001",
+  "classification": "seeded-synthetic engineering tabletop only",
+  "disclaimer": "No real incident occurred. No regulator, data subject, vendor, or third party was contacted.",
+  "awareness_at": "2026-08-10T08:00:00.000Z",
+  "regulator_target_at": "2026-08-13T08:00:00.000Z",
+  "regulator_notified_fixture_at": "2026-08-13T07:00:00.000Z",
+  "subject_target_at": "2026-08-18T07:00:00.000Z",
+  "subject_notified_fixture_at": "2026-08-18T06:00:00.000Z",
+  "decision_recorded_at": "2026-08-10T09:00:00.000Z",
+  "containment_evidence_at": "2026-08-10T11:00:00.000Z",
+  "closed_at": "2026-08-18T12:00:00.000Z",
+  "decision_code": "synthetic.tabletop.notify",
+  "evidence_digest": "b7f4e85b6af09c7a25ce37d7eb55ef93247c62169513fba33f90390835dca880",
+  "open_legal_gate": "OPEN-LEGAL-007",
+  "named_incident_owner_gate": "OPEN-TEAM-001"
+}

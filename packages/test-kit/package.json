@@ -7,7 +7,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./facility-onboarding": "./src/facility-onboarding.ts",
-    "./family-care": "./src/family-care.ts"
+    "./family-care": "./src/family-care.ts",
+    "./privacy-dsr-notifications": "./src/privacy-dsr-notifications.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

@@ -1,0 +1,21 @@
+{
+  "captured_at": "2026-08-20T09:44:00Z",
+  "mode": "seeded-synthetic Expo web development server in reviewed Docker Chromium",
+  "route": "/privacy/requests?qa=empty",
+  "samples": [
+    { "viewport": "412x915", "lcp_ms": 268, "input_ms": 10.6 },
+    { "viewport": "412x915", "lcp_ms": 232, "input_ms": 8.1 },
+    { "viewport": "412x915", "lcp_ms": 264, "input_ms": 7.2 },
+    { "viewport": "412x915", "lcp_ms": 292, "input_ms": 7.2 },
+    { "viewport": "412x915", "lcp_ms": 312, "input_ms": 7.1 },
+    { "viewport": "768x1024", "lcp_ms": 260, "input_ms": 7.6 },
+    { "viewport": "768x1024", "lcp_ms": 240, "input_ms": 7.3 },
+    { "viewport": "768x1024", "lcp_ms": 236, "input_ms": 7.7 },
+    { "viewport": "768x1024", "lcp_ms": 348, "input_ms": 7.6 },
+    { "viewport": "768x1024", "lcp_ms": 308, "input_ms": 7.6 }
+  ],
+  "p95": { "lcp_ms": 348, "input_ms": 10.6 },
+  "thresholds": { "lcp_ms": 3000, "input_ms": 200 },
+  "result": "PASS",
+  "limitations": "Local seeded-synthetic engineering profile; not a production field metric or formal OPEN-UX-002 renderer approval."
+}

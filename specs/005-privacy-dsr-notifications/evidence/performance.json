@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-08-20T09:57:13.256Z",
+  "mode": "seeded-synthetic PostgreSQL forced RLS; 100 sessions; 5,000 DSR rows; 100 worker claims",
+  "samples": {
+    "sessions": 100,
+    "dsr_rows": 5000,
+    "worker_claims": 100
+  },
+  "thresholds_ms": {
+    "read_p95": 400,
+    "mutation_p95": 800,
+    "worker_claim_p95": 800
+  },
+  "measured_ms": {
+    "read_p95": 345.55,
+    "mutation_p95": 671.15,
+    "worker_claim_p95": 9.79
+  },
+  "visible_delivery_count": 100,
+  "prohibited_sentinel_scan": "PASS",
+  "result": "PASS"
+}

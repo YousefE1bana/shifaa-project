@@ -14,7 +14,7 @@
     "lint": "tsc -p tsconfig.json --noEmit",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --exclude='dist/**' --exclude='test/supabase-runtime.integration.test.ts'",
-    "test:integration": "vitest run test/identity-onboarding.integration.test.ts test/facility-onboarding.integration.test.ts test/admin-role-governance.integration.test.ts test/family-care.integration.test.ts",
+    "test:integration": "vitest run test/identity-onboarding.integration.test.ts test/facility-onboarding.integration.test.ts test/admin-role-governance.integration.test.ts test/family-care.integration.test.ts test/privacy-dsr-notifications.integration.test.ts",
     "test:supabase": "vitest run test/supabase-runtime.integration.test.ts --testTimeout=30000"
   },
   "dependencies": {

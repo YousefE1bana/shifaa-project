@@ -200,3 +200,11 @@ Every sensitive read and every mutation emits: `id`, `occurred_at`, `request_id`
 ## 11. Retention classes
 
 Every row/object references one of: `IDENTITY_PROOF`, `CLINICAL_RECORD`, `PRESCRIPTION_DISPENSE`, `LAB_RECORD`, `CONSENT_EVIDENCE`, `SECURITY_AUDIT`, `FINANCE_RECORD`, `COMMUNICATION`, `SOS_LOCATION`, or `TRANSIENT_TECHNICAL`. Durations and post-expiry actions remain unset until OPEN-LEGAL-002 supplies a signed Egyptian retention schedule. Specs may define shorter transient/cache periods but cannot invent statutory medical retention.
+
+## 12. Feature 005 privacy/notification realization
+
+- DSR/event/assignment/export-capability and notification governance/delivery tables use forced RLS. Subject access is self or active guardianship plus `consent.manage`; delegation and facility membership are denied.
+- DPO access composes a current designation, AAL2, `privacy.dsr.review`, and active exact-request assignment. The API performs a current-fact preflight and RLS independently rechecks it.
+- Export objects remain private; capability plaintext is never persisted, the digest is person-bound, and issuance/consumption are limited to five minutes and once.
+- `shifaa_worker` is a dedicated `NOBYPASSRLS` role. It may read published releases, claim/update minimum notification metadata, and append delivery attempts; it cannot delete or directly read DSR/export data.
+- Statutory retention and production erasure/pseudonymization automation remain absent under `OPEN-LEGAL-002`.

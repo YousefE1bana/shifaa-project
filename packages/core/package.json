@@ -9,7 +9,10 @@
     "./facility-onboarding": "./src/facility-onboarding/index.ts",
     "./family-care": "./src/family-care/index.ts",
     "./family-care/policy": "./src/family-care/policy.ts",
-    "./family-care/types": "./src/family-care/types.ts"
+    "./family-care/types": "./src/family-care/types.ts",
+    "./privacy-dsr-notifications": "./src/privacy-dsr-notifications/index.ts",
+    "./privacy-dsr-notifications/policy": "./src/privacy-dsr-notifications/policy.ts",
+    "./privacy-dsr-notifications/types": "./src/privacy-dsr-notifications/types.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

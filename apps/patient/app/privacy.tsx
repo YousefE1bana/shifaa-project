@@ -53,6 +53,15 @@ export default function PrivacyRoute({
             {translate(locale, 'nav.continue')}
           </Text>
         </Pressable>
+        <Pressable
+          accessibilityRole="link"
+          onPress={() => router.push('/privacy/requests')}
+          style={{ ...semanticStyles.primaryAction, backgroundColor: color.surface }}
+        >
+          <Text style={{ ...type.label, color: color.careBlue, textAlign: 'center' }}>
+            {translate(locale, 'privacy.requests.title')}
+          </Text>
+        </Pressable>
       </View>
     </PatientScreen>
   );
