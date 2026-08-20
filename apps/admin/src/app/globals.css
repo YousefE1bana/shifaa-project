@@ -9,8 +9,86 @@
   outline-offset: 3px;
 }
 button,
-textarea {
+textarea,
+select {
   min-height: 44px;
+}
+.workspace {
+  min-height: 100vh;
+  padding: clamp(16px, 4vw, 56px);
+  background: #f4f9fc;
+  color: #102a43;
+  font-family: Cairo, 'Noto Sans Arabic', system-ui, sans-serif;
+}
+.workspace-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 24px;
+  margin-block-start: 24px;
+}
+.workspace-card {
+  display: grid;
+  gap: 12px;
+  border: 1px solid #bcccdc;
+  border-radius: 18px;
+  background: #fff;
+  padding: clamp(16px, 3vw, 24px);
+}
+.work-item {
+  display: grid;
+  width: 100%;
+  gap: 6px;
+  min-height: 72px;
+  text-align: start;
+  padding: 14px;
+  background: #edf6fa;
+  border: 2px solid #075985;
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+.action-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.workspace button {
+  min-height: 48px;
+  padding-inline: 18px;
+  border-radius: 10px;
+  border: 0;
+  background: #075985;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+}
+.workspace button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.workspace .danger {
+  border: 2px solid #b42318;
+  background: #fff;
+  color: #b42318;
+}
+.workspace textarea {
+  width: 100%;
+  min-height: 120px;
+  font: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
+@media (max-width: 360px) {
+  .workspace {
+    padding: 12px;
+  }
+  .action-row > * {
+    width: 100%;
+  }
 }
 @media (forced-colors: active) {
   :focus-visible {

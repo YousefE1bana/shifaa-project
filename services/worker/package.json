@@ -5,8 +5,10 @@
   "type": "module",
   "exports": {
     ".": "./src/identity-onboarding.ts",
+    "./adapters/local-synthetic-messaging": "./src/adapters/local-synthetic-messaging.ts",
     "./facility-onboarding": "./src/facility-onboarding.ts",
-    "./family-care": "./src/family-care.ts"
+    "./family-care": "./src/family-care.ts",
+    "./privacy-dsr-notifications": "./src/privacy-dsr-notifications.ts"
   },
   "scripts": {
     "test": "node --test src/*.test.ts",
@@ -15,7 +17,8 @@
   },
   "dependencies": {
     "@shifaa/core": "workspace:*",
-    "@shifaa/observability": "workspace:*"
+    "@shifaa/observability": "workspace:*",
+    "postgres": "3.4.9"
   },
   "devDependencies": {
     "typescript": "7.0.2"

@@ -1,0 +1,755 @@
+openapi: 3.1.1
+info:
+  title: SHIFAA Privacy DSR and Notifications API
+  version: 0.1.0
+  description: >-
+    Seeded-synthetic contract for active 005 operations. Runtime routes use the /v1
+    server prefix. Production SMS and automated erasure are disabled.
+servers:
+  - url: http://127.0.0.1:3000/v1
+    description: Local seeded-synthetic Core API
+security:
+  - bearerAuth: []
+tags:
+  - name: Privacy requests
+  - name: DPO privacy review
+  - name: Notification governance
+  - name: Internal delivery
+paths:
+  /privacy/requests:
+    get:
+      operationId: listMyDsrs
+      x-shifaa-requirements: [FR-AUTH-007]
+      tags: [Privacy requests]
+      summary: List the authorized subject's minimum DSR projection
+      parameters:
+        - $ref: '#/components/parameters/ManagedPatientIdQuery'
+        - $ref: '#/components/parameters/DsrTypeQuery'
+        - $ref: '#/components/parameters/DsrStatusQuery'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Authorized request page
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/DsrPage' } }
+        '401': { $ref: '#/components/responses/AuthenticationRequired' }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+    post:
+      operationId: createDsr
+      x-shifaa-requirements: [FR-AUTH-007, FR-AUTH-008, NFR-SEC-005]
+      tags: [Privacy requests]
+      summary: Create one closed-set data-subject request
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/PatientContextOptional'
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/CreateDsrInput' } }
+      responses:
+        '201':
+          description: Created request
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/DsrDetail' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /privacy/requests/{requestId}:
+    get:
+      operationId: getDsr
+      x-shifaa-requirements: [FR-AUTH-007, FR-ADMIN-002]
+      tags: [Privacy requests]
+      summary: Get a role-minimized DSR and event history
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/AalContext'
+        - $ref: '#/components/parameters/PurposeContext'
+      responses:
+        '200':
+          description: Authorized role-specific detail
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/DsrDetail' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /privacy/requests/{requestId}/download-link:
+    post:
+      operationId: downloadDsrExport
+      x-shifaa-requirements: [FR-AUTH-007, FR-AUTH-008, NFR-PRIV-002]
+      tags: [Privacy requests]
+      summary: Issue a short-lived one-time Core API export capability
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/Aal2'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [capability_token]
+              properties:
+                capability_token: { type: string, minLength: 32, maxLength: 512, writeOnly: true }
+      responses:
+        '200':
+          description: Issue returns a one-time patient-app link; consume returns private export bytes once
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/ExportCapability' } }
+            application/octet-stream:
+              schema: { type: string, contentEncoding: binary }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '410': { $ref: '#/components/responses/Gone' }
+  /admin/privacy/requests:
+    get:
+      operationId: listAdminDsrs
+      x-shifaa-requirements: [FR-AUTH-007, FR-ADMIN-002]
+      tags: [DPO privacy review]
+      summary: List only DSRs assigned to the current designated DPO
+      parameters:
+        - $ref: '#/components/parameters/Aal2'
+        - $ref: '#/components/parameters/PurposeDsrReview'
+        - $ref: '#/components/parameters/DsrTypeQuery'
+        - $ref: '#/components/parameters/DsrStatusQuery'
+        - in: query
+          name: due_before
+          schema: { type: string, format: date-time }
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Purpose-limited assigned worklist
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/DsrPage' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+  /admin/privacy/requests/{requestId}/decision:
+    post:
+      operationId: decideDsr
+      x-shifaa-requirements: [FR-AUTH-007, FR-ADMIN-002, NFR-SEC-005]
+      tags: [DPO privacy review]
+      summary: Approve, partially approve, or refuse the assigned current DSR version
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Aal2'
+        - $ref: '#/components/parameters/PurposeDsrReview'
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/DsrDecisionInput' } }
+      responses:
+        '200':
+          description: Decided request and appended event
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/DsrDetail' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /admin/privacy/requests/{requestId}/fulfilment:
+    post:
+      operationId: fulfilDsr
+      x-shifaa-requirements: [FR-AUTH-007, FR-AUTH-008, FR-ADMIN-002, NFR-SEC-005]
+      tags: [DPO privacy review]
+      summary: Record evidence-backed fulfilment without unapproved erasure automation
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Aal2'
+        - $ref: '#/components/parameters/PurposeDsrReview'
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/DsrFulfilmentInput' } }
+      responses:
+        '200':
+          description: Fulfilled request and appended event
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/DsrDetail' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /admin/notification-templates:
+    get:
+      operationId: listNotificationTemplates
+      x-shifaa-requirements: [FR-NOTIF-001]
+      tags: [Notification governance]
+      summary: List minimum notification release governance metadata
+      parameters:
+        - $ref: '#/components/parameters/PurposeTemplateManage'
+        - in: query
+          name: code
+          schema: { type: string, maxLength: 64 }
+        - in: query
+          name: locale
+          schema: { $ref: '#/components/schemas/Locale' }
+        - in: query
+          name: channel
+          schema: { const: sms }
+        - in: query
+          name: status
+          schema: { type: string, enum: [draft, published, retired] }
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Template release page
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/TemplateReleasePage' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+  /admin/notification-templates/{templateCode}/releases:
+    post:
+      operationId: createNotificationTemplateRelease
+      x-shifaa-requirements: [FR-AUTH-008, FR-NOTIF-001, NFR-SEC-005]
+      tags: [Notification governance]
+      summary: Create one paired Arabic/English draft release
+      parameters:
+        - in: path
+          name: templateCode
+          required: true
+          schema: { type: string, pattern: '^[A-Z][A-Z0-9_]{2,63}$' }
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/PurposeTemplateManage'
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/CreateTemplateReleaseInput' } }
+      responses:
+        '201':
+          description: Draft release
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/TemplateRelease' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationProblem' }
+  /admin/notification-templates/releases/{releaseId}/publish:
+    post:
+      operationId: publishNotificationTemplateRelease
+      x-shifaa-requirements: [FR-NOTIF-001, FR-ADMIN-004, NFR-SEC-005]
+      tags: [Notification governance]
+      summary: Independently publish an unchanged draft at AAL2
+      parameters:
+        - $ref: '#/components/parameters/ReleaseId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Aal2'
+        - $ref: '#/components/parameters/PurposeTemplatePublish'
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/PublishTemplateInput' } }
+      responses:
+        '200':
+          description: Published release
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/TemplateRelease' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /internal/callbacks/messages/{provider}:
+    post:
+      operationId: smsProviderCallback
+      x-shifaa-requirements: [FR-AUTH-008, FR-NOTIF-002]
+      tags: [Internal delivery]
+      security: []
+      summary: Accept one signed minimum synthetic provider receipt
+      parameters:
+        - in: path
+          name: provider
+          required: true
+          schema: { const: local-synthetic }
+        - $ref: '#/components/parameters/ProviderSignature'
+        - $ref: '#/components/parameters/ProviderTimestamp'
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/ProviderCallbackInput' } }
+      responses:
+        '200':
+          description: New valid receipt recorded
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/ProviderCallbackResult' } }
+        '401': { $ref: '#/components/responses/AuthenticationRequired' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /internal/outbox/dead-letters/{eventId}/replay:
+    post:
+      operationId: replayDeadLetter
+      x-shifaa-requirements: [FR-NOTIF-002, FR-ADMIN-002, NFR-SEC-005]
+      tags: [Internal delivery]
+      summary: Append an authorized replay attempt without mutating the original event
+      parameters:
+        - $ref: '#/components/parameters/EventId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Aal2'
+        - $ref: '#/components/parameters/PurposeReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [reason_code]
+              properties:
+                reason_code: { $ref: '#/components/schemas/ReasonCode' }
+      responses:
+        '202':
+          description: Replay attempt appended
+          headers:
+            {
+              Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+              X-Request-Id: { $ref: '#/components/headers/RequestId' },
+            }
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/ReplayResult' } }
+        '403': { $ref: '#/components/responses/PermissionDenied' }
+        '409': { $ref: '#/components/responses/Conflict' }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  headers:
+    PrivateNoStore:
+      schema: { type: string, const: 'private, no-store' }
+    RequestId:
+      schema: { type: string, format: uuid }
+  parameters:
+    RequestId: { in: path, name: requestId, required: true, schema: { type: string, format: uuid } }
+    ReleaseId: { in: path, name: releaseId, required: true, schema: { type: string, format: uuid } }
+    EventId: { in: path, name: eventId, required: true, schema: { type: string, format: uuid } }
+    Cursor: { in: query, name: cursor, schema: { type: string, maxLength: 512 } }
+    Limit:
+      { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 100, default: 25 } }
+    ManagedPatientIdQuery:
+      { in: query, name: managed_patient_id, schema: { type: string, format: uuid } }
+    DsrTypeQuery: { in: query, name: type, schema: { $ref: '#/components/schemas/DsrType' } }
+    DsrStatusQuery: { in: query, name: status, schema: { $ref: '#/components/schemas/DsrStatus' } }
+    PatientContextOptional:
+      in: header
+      name: X-SHIFAA-Patient-Context
+      required: false
+      description: Required for guardian-managed subjects and must equal the affected patient.
+      schema: { type: string, format: uuid }
+    IdempotencyKey:
+      {
+        in: header,
+        name: Idempotency-Key,
+        required: true,
+        schema: { type: string, minLength: 8, maxLength: 128 },
+      }
+    IfMatch: { in: header, name: If-Match, required: true, schema: { type: integer, minimum: 1 } }
+    AalContext:
+      in: header
+      name: X-AAL
+      required: false
+      description: Required as value 2 when the caller uses the DPO projection.
+      schema: { type: integer, minimum: 1, maximum: 2 }
+    PurposeContext:
+      in: header
+      name: X-Purpose
+      required: false
+      description: Required as privacy.dsr.review when the caller uses the DPO projection.
+      schema: { type: string, maxLength: 128 }
+    Aal2:
+      in: header
+      name: X-AAL
+      required: true
+      schema: { type: integer, const: 2 }
+    PurposeDsrReview:
+      in: header
+      name: X-Purpose
+      required: true
+      schema: { type: string, const: privacy.dsr.review }
+    PurposeTemplateManage:
+      in: header
+      name: X-Purpose
+      required: true
+      schema: { type: string, const: notification.template.manage }
+    PurposeTemplatePublish:
+      in: header
+      name: X-Purpose
+      required: true
+      schema: { type: string, const: notification.template.publish }
+    PurposeReplay:
+      in: header
+      name: X-Purpose
+      required: true
+      schema: { type: string, const: platform.outbox.replay }
+    ProviderSignature:
+      in: header
+      name: X-Provider-Signature
+      required: true
+      schema: { type: string, pattern: '^sha256=[a-f0-9]{64}$' }
+    ProviderTimestamp:
+      in: header
+      name: X-Provider-Timestamp
+      required: true
+      description: Signed timestamp accepted only within plus or minus 5 minutes of server time.
+      schema: { type: string, format: date-time }
+  schemas:
+    Locale: { type: string, enum: [ar-EG, en-EG] }
+    ReasonCode: { type: string, pattern: '^[a-z][a-z0-9_.-]{2,63}$' }
+    DsrType:
+      { type: string, enum: [access_export, correction, restriction, erasure_pseudonymization] }
+    DsrStatus:
+      type: string
+      enum:
+        [
+          submitted,
+          identity_verification_required,
+          under_review,
+          approved,
+          partially_approved,
+          refused,
+          fulfilled,
+          cancelled,
+        ]
+    DsrScope:
+      type: object
+      additionalProperties: false
+      required: [data_category_codes]
+      properties:
+        data_category_codes:
+          {
+            type: array,
+            minItems: 1,
+            maxItems: 32,
+            uniqueItems: true,
+            items: { type: string, pattern: '^[a-z][a-z0-9_.-]{1,63}$' },
+          }
+        record_reference_codes:
+          { type: array, maxItems: 50, uniqueItems: true, items: { type: string, maxLength: 128 } }
+        correction_codes:
+          {
+            type: array,
+            maxItems: 20,
+            uniqueItems: true,
+            items: { type: string, pattern: '^[a-z][a-z0-9_.-]{1,63}$' },
+          }
+    CreateDsrInput:
+      type: object
+      additionalProperties: false
+      required: [request_type, scope, contact_preference]
+      properties:
+        managed_patient_id: { type: string, format: uuid }
+        request_type: { $ref: '#/components/schemas/DsrType' }
+        scope: { $ref: '#/components/schemas/DsrScope' }
+        contact_preference: { type: string, enum: [in_app, sms] }
+    DsrSummary:
+      type: object
+      additionalProperties: false
+      required:
+        [id, patient_id, request_type, status, submitted_at, due_at, due_policy_label, version]
+      properties:
+        id: { type: string, format: uuid }
+        patient_id: { type: string, format: uuid }
+        request_type: { $ref: '#/components/schemas/DsrType' }
+        status: { $ref: '#/components/schemas/DsrStatus' }
+        submitted_at: { type: string, format: date-time }
+        due_at: { type: string, format: date-time }
+        due_policy_label: { type: string, enum: [synthetic_non_statutory] }
+        released_at: { type: [string, 'null'], format: date-time }
+        version: { type: integer, minimum: 1 }
+    DsrEvent:
+      type: object
+      additionalProperties: false
+      required: [id, event_type, to_status, aggregate_version, occurred_at]
+      properties:
+        id: { type: string, format: uuid }
+        event_type: { type: string, maxLength: 64 }
+        from_status: { anyOf: [{ $ref: '#/components/schemas/DsrStatus' }, { type: 'null' }] }
+        to_status: { $ref: '#/components/schemas/DsrStatus' }
+        reason_code: { anyOf: [{ $ref: '#/components/schemas/ReasonCode' }, { type: 'null' }] }
+        aggregate_version: { type: integer, minimum: 1 }
+        occurred_at: { type: string, format: date-time }
+    DsrDetail:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          patient_id,
+          request_type,
+          status,
+          submitted_at,
+          due_at,
+          due_policy_label,
+          version,
+          scope,
+          events,
+        ]
+      properties:
+        id: { type: string, format: uuid }
+        patient_id: { type: string, format: uuid }
+        request_type: { $ref: '#/components/schemas/DsrType' }
+        status: { $ref: '#/components/schemas/DsrStatus' }
+        submitted_at: { type: string, format: date-time }
+        due_at: { type: string, format: date-time }
+        due_policy_label: { type: string, enum: [synthetic_non_statutory] }
+        released_at: { type: [string, 'null'], format: date-time }
+        version: { type: integer, minimum: 1 }
+        scope: { $ref: '#/components/schemas/DsrScope' }
+        decision_code: { type: [string, 'null'], maxLength: 64 }
+        included_scope: { anyOf: [{ $ref: '#/components/schemas/DsrScope' }, { type: 'null' }] }
+        excluded_scope: { anyOf: [{ $ref: '#/components/schemas/DsrScope' }, { type: 'null' }] }
+        fulfilment_action_codes:
+          { type: array, items: { type: string, maxLength: 64 }, uniqueItems: true }
+        events: { type: array, items: { $ref: '#/components/schemas/DsrEvent' } }
+    DsrPage:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/DsrSummary' } }
+        next_cursor: { type: [string, 'null'] }
+    DsrDecisionInput:
+      type: object
+      additionalProperties: false
+      required: [decision, reason_code, evidence_object_id]
+      properties:
+        decision: { type: string, enum: [approve, partially_approve, refuse] }
+        reason_code: { $ref: '#/components/schemas/ReasonCode' }
+        reason_summary: { type: string, minLength: 3, maxLength: 500 }
+        included_scope: { anyOf: [{ $ref: '#/components/schemas/DsrScope' }, { type: 'null' }] }
+        excluded_scope: { anyOf: [{ $ref: '#/components/schemas/DsrScope' }, { type: 'null' }] }
+        evidence_object_id: { type: string, format: uuid }
+    DsrFulfilmentInput:
+      type: object
+      additionalProperties: false
+      required: [action_codes, action_summary, evidence_object_id, subject_notice_code]
+      properties:
+        action_codes:
+          {
+            type: array,
+            minItems: 1,
+            maxItems: 20,
+            uniqueItems: true,
+            items: { type: string, pattern: '^[a-z][a-z0-9_.-]{2,63}$' },
+          }
+        action_summary: { type: string, minLength: 3, maxLength: 500 }
+        evidence_object_id: { type: string, format: uuid }
+        subject_notice_code: { type: string, pattern: '^[A-Z][A-Z0-9_]{2,63}$' }
+    ExportCapability:
+      type: object
+      additionalProperties: false
+      required: [download_url, expires_at, one_time]
+      properties:
+        download_url: { type: string, format: uri, writeOnly: true }
+        expires_at: { type: string, format: date-time }
+        one_time: { const: true }
+    FieldSchema:
+      type: object
+      additionalProperties: false
+      required: [type, additionalProperties, properties, required]
+      properties:
+        type: { const: object }
+        additionalProperties: { const: false }
+        properties: { type: object, maxProperties: 16, additionalProperties: { type: object } }
+        required:
+          { type: array, maxItems: 16, uniqueItems: true, items: { type: string, maxLength: 64 } }
+    CreateTemplateReleaseInput:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          channel,
+          arabic_body,
+          english_body,
+          allowed_recipient_types,
+          allowed_field_schema,
+          content_digest,
+        ]
+      properties:
+        channel: { const: sms }
+        arabic_body: { type: string, minLength: 1, maxLength: 500 }
+        english_body: { type: string, minLength: 1, maxLength: 500 }
+        allowed_recipient_types:
+          { type: array, minItems: 1, uniqueItems: true, items: { const: patient } }
+        allowed_field_schema: { $ref: '#/components/schemas/FieldSchema' }
+        content_digest: { type: string, pattern: '^[a-f0-9]{64}$' }
+    TemplateRelease:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          template_code,
+          release_version,
+          channel,
+          allowed_recipient_types,
+          allowed_field_schema,
+          content_digest,
+          status,
+          created_by_person_id,
+          version,
+        ]
+      properties:
+        id: { type: string, format: uuid }
+        template_code: { type: string, pattern: '^[A-Z][A-Z0-9_]{2,63}$' }
+        release_version: { type: integer, minimum: 1 }
+        channel: { const: sms }
+        arabic_body: { type: string, maxLength: 500 }
+        english_body: { type: string, maxLength: 500 }
+        allowed_recipient_types: { type: array, items: { const: patient }, uniqueItems: true }
+        allowed_field_schema: { $ref: '#/components/schemas/FieldSchema' }
+        content_digest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        status: { type: string, enum: [draft, published, retired] }
+        created_by_person_id: { type: string, format: uuid }
+        published_by_person_id: { type: [string, 'null'], format: uuid }
+        effective_at: { type: [string, 'null'], format: date-time }
+        version: { type: integer, minimum: 1 }
+    TemplateReleasePage:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/TemplateRelease' } }
+        next_cursor: { type: [string, 'null'] }
+    PublishTemplateInput:
+      type: object
+      additionalProperties: false
+      required: [approval_digest, effective_at]
+      properties:
+        approval_digest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        effective_at: { type: string, format: date-time }
+    ProviderCallbackInput:
+      type: object
+      additionalProperties: false
+      required: [event_reference, receipt_reference, delivery_status, occurred_at, nonce]
+      properties:
+        event_reference: { type: string, minLength: 8, maxLength: 128 }
+        receipt_reference: { type: string, minLength: 8, maxLength: 128 }
+        delivery_status: { type: string, enum: [accepted, delivered, failed] }
+        occurred_at: { type: string, format: date-time }
+        nonce: { type: string, minLength: 16, maxLength: 128, writeOnly: true }
+    ProviderCallbackResult:
+      type: object
+      additionalProperties: false
+      required: [accepted]
+      properties:
+        accepted: { const: true }
+    ReplayResult:
+      type: object
+      additionalProperties: false
+      required: [original_event_id, replay_event_id, status, version]
+      properties:
+        original_event_id: { type: string, format: uuid }
+        replay_event_id: { type: string, format: uuid }
+        status: { const: pending }
+        version: { type: integer, minimum: 1 }
+    Problem:
+      type: object
+      additionalProperties: true
+      required: [type, title, status, code]
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer }
+        code: { type: string }
+        request_id: { type: [string, 'null'] }
+  responses:
+    AuthenticationRequired:
+      description: Authentication or provider signature is required
+      headers:
+        {
+          Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+          X-Request-Id: { $ref: '#/components/headers/RequestId' },
+        }
+      content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } }
+    PermissionDenied:
+      description: Current subject relation, designation, assignment, AAL, purpose, role, or action denied
+      headers:
+        {
+          Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+          X-Request-Id: { $ref: '#/components/headers/RequestId' },
+        }
+      content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } }
+    NotFound:
+      description: Resource is absent or deliberately hidden to avoid enumeration
+      headers:
+        {
+          Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+          X-Request-Id: { $ref: '#/components/headers/RequestId' },
+        }
+      content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } }
+    Conflict:
+      description: Idempotency, version, transition, inventory, separation, retention, receipt, or replay conflict
+      headers:
+        {
+          Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+          X-Request-Id: { $ref: '#/components/headers/RequestId' },
+        }
+      content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } }
+    Gone:
+      description: One-time export capability is expired, used, or revoked
+      headers:
+        {
+          Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+          X-Request-Id: { $ref: '#/components/headers/RequestId' },
+        }
+      content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } }
+    ValidationProblem:
+      description: Closed-schema validation failed
+      headers:
+        {
+          Cache-Control: { $ref: '#/components/headers/PrivateNoStore' },
+          X-Request-Id: { $ref: '#/components/headers/RequestId' },
+        }
+      content: { application/problem+json: { schema: { $ref: '#/components/schemas/Problem' } } }

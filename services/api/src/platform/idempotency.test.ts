@@ -36,6 +36,8 @@ describe('atomic idempotency policy', () => {
 
   it('uses canonical hashing and a non-reversible pre-auth principal', () => {
     expect(hashRequest({ b: 2, a: 1 })).toBe(hashRequest({ a: 1, b: 2 }));
+    expect(hashRequest(undefined)).toMatch(/^[a-f0-9]{64}$/);
+    expect(hashRequest(undefined)).not.toBe(hashRequest(null));
     const principal = preauthPrincipal('Patient@Synthetic.Shifaa.Test', Buffer.alloc(32, 7));
     expect(principal).not.toContain('patient');
     expect(principal).toHaveLength(43);

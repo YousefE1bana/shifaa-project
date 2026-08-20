@@ -74,5 +74,7 @@ test('live admin review is bilingual and permits the documented local dev origin
   const nextConfig = await fs.readFile(new URL('../next.config.ts', import.meta.url), 'utf8');
   assert.match(worklist, /Identity review/);
   assert.match(worklist, /مراجعة الهوية/);
-  assert.match(nextConfig, /allowedDevOrigins:\s*\['127\.0\.0\.1'\]/);
+  assert.match(nextConfig, /allowedDevOrigins:/);
+  assert.match(nextConfig, /'127\.0\.0\.1'/);
+  assert.match(nextConfig, /'host\.docker\.internal'/);
 });

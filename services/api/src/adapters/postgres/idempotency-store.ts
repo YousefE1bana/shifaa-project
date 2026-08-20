@@ -15,8 +15,12 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
   private protect(value: unknown) {
     const nonce = randomBytes(12);
     const cipher = createCipheriv('aes-256-gcm', this.responseEncryptionKey, nonce);
+    const payload =
+      value instanceof Uint8Array
+        ? { kind: 'bytes', value: Buffer.from(value).toString('base64') }
+        : { kind: 'json', value };
     const ciphertext = Buffer.concat([
-      cipher.update(JSON.stringify(value), 'utf8'),
+      cipher.update(JSON.stringify(payload), 'utf8'),
       cipher.final(),
     ]);
     return {
@@ -37,12 +41,19 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
       Buffer.from(envelope.nonce, 'base64url'),
     );
     decipher.setAuthTag(Buffer.from(envelope.tag, 'base64url'));
-    return JSON.parse(
+    const decoded: unknown = JSON.parse(
       Buffer.concat([
         decipher.update(Buffer.from(envelope.ciphertext, 'base64url')),
         decipher.final(),
       ]).toString('utf8'),
-    ) as T;
+    );
+    if (decoded && typeof decoded === 'object' && (decoded as any).kind === 'bytes') {
+      return new Uint8Array(Buffer.from((decoded as any).value, 'base64')) as T;
+    }
+    if (decoded && typeof decoded === 'object' && (decoded as any).kind === 'json') {
+      return (decoded as any).value as T;
+    }
+    return decoded as T;
   }
 
   public async execute<T, P = undefined>(input: {

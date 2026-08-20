@@ -26,6 +26,22 @@ const familyOpenApiPath = path.join(
 const familyContractModulePath = path.join(repoRoot, 'packages/contracts/src/family-care.ts');
 const familyClientPath = path.join(repoRoot, 'packages/api-client/src/family-care.ts');
 const familyRoutesPath = path.join(repoRoot, 'services/api/src/routes/family-care.ts');
+const privacyOpenApiPath = path.join(
+  repoRoot,
+  'specs/005-privacy-dsr-notifications/contracts/openapi.yaml',
+);
+const privacyContractModulePath = path.join(
+  repoRoot,
+  'packages/contracts/src/privacy-dsr-notifications.ts',
+);
+const privacyClientPath = path.join(
+  repoRoot,
+  'packages/api-client/src/privacy-dsr-notifications.ts',
+);
+const privacyRoutesPath = path.join(
+  repoRoot,
+  'services/api/src/routes/privacy-dsr-notifications.ts',
+);
 const failures = [];
 
 function mustRead(file) {
@@ -243,6 +259,38 @@ for (const forbidden of ['transitionDependent', 'createGuardianshipUpload', 'cre
   if (familyOpenApi.has(forbidden))
     failures.push(`Forbidden Family Care operation is present: ${forbidden}.`);
 
+const privacyOpenApiText = mustRead(privacyOpenApiPath);
+const privacyContractModule = mustRead(privacyContractModulePath);
+const privacyClient = mustRead(privacyClientPath);
+const privacyRoutes = mustRead(privacyRoutesPath);
+const privacyOpenApi = parseOpenApi(privacyOpenApiText);
+if (!/^openapi:\s*3\.1\.1\s*$/m.test(privacyOpenApiText))
+  failures.push('Privacy DSR and Notifications contract must declare OpenAPI 3.1.1.');
+if (privacyOpenApi.size !== 12)
+  failures.push(
+    `Privacy DSR and Notifications OpenAPI must contain 12 operations; found ${privacyOpenApi.size}.`,
+  );
+for (const [operationId, operation] of privacyOpenApi) {
+  const canonical = catalog.get(operationId);
+  if (!canonical) {
+    failures.push(`Privacy operation ${operationId} is absent from the canonical API catalog.`);
+    continue;
+  }
+  if (canonical.method !== operation.method || canonical.path !== operation.path)
+    failures.push(
+      `${operationId} drift: Privacy OpenAPI ${operation.method} ${operation.path}; catalog ${canonical.method} ${canonical.path}.`,
+    );
+  for (const [label, source] of [
+    ['contract module', privacyContractModule],
+    ['generated client', privacyClient],
+    ['registered routes', privacyRoutes],
+  ])
+    if (!new RegExp(`\\b${operationId}\\b`).test(source))
+      failures.push(`Privacy ${label} is missing ${operationId}.`);
+}
+if (!/@generated\b/i.test(privacyClient))
+  failures.push('Privacy API client is missing an @generated marker.');
+
 if (failures.length > 0) {
   console.error('Contract verification failed:');
   for (const failure of failures.sort()) console.error(`- ${failure}`);
@@ -250,5 +298,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  'Contract verification passed: 50 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
+  'Contract verification passed: 62 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
 );

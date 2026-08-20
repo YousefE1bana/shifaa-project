@@ -13,7 +13,7 @@ BEGIN
  IF NOT EXISTS(SELECT 1 FROM pg_trigger WHERE tgname='family_relationship_guard' AND tgenabled<>'D') OR NOT EXISTS(SELECT 1 FROM pg_trigger WHERE tgname='emergency_contact_guard' AND tgenabled<>'D') OR NOT EXISTS(SELECT 1 FROM pg_trigger WHERE tgname='relationship_authorization_uses_append_only' AND tgenabled<>'D') THEN RAISE EXCEPTION 'state or immutability trigger missing'; END IF;
  IF EXISTS(SELECT 1 FROM identity.care_relationships WHERE relationship_type NOT IN ('self','guardianship','delegation')) THEN RAISE EXCEPTION 'relationship type widened'; END IF;
  IF EXISTS(SELECT 1 FROM identity.care_relationships WHERE relationship_type='self' AND status<>'active') THEN RAISE EXCEPTION 'self invariant changed'; END IF;
- IF (SELECT count(*) FROM identity.private_evidence_objects WHERE bucket_code='guardianship-evidence')<>4 THEN RAISE EXCEPTION 'deterministic evidence seed missing'; END IF;
+ IF (SELECT count(*) FROM identity.private_evidence_objects WHERE bucket_code='guardianship-evidence' AND id IN ('42000000-0000-4000-8000-000000000001','42000000-0000-4000-8000-000000000002','42000000-0000-4000-8000-000000000003','42000000-0000-4000-8000-000000000004'))<>4 THEN RAISE EXCEPTION 'deterministic family evidence seed missing'; END IF;
  IF NOT EXISTS(
   SELECT 1 FROM identity.care_relationships r
   WHERE r.id='43000000-0000-4000-8000-000000000002'

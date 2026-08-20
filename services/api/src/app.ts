@@ -12,6 +12,7 @@ import {
   PostgresIdempotencyStore,
   PostgresFacilityOnboardingService,
   PostgresFamilyCareService,
+  PostgresPrivacyDsrNotificationService,
   SupabaseAuthIssuer,
   SupabaseQuarantineUploadStore,
 } from './adapters/index.js';
@@ -31,6 +32,8 @@ import { FacilityOnboardingService } from './modules/facility-onboarding/index.j
 import { registerFacilityOnboardingRoutes } from './routes/facility-onboarding.js';
 import { FamilyCareService, type FamilyCareServicePort } from './modules/family-care/index.js';
 import { registerFamilyCareRoutes } from './routes/family-care.js';
+import { PrivacyDsrNotificationService } from './modules/privacy-dsr-notifications/index.js';
+import { registerPrivacyDsrNotificationRoutes } from './routes/privacy-dsr-notifications.js';
 
 export interface AppHarness {
   app: ReturnType<typeof Fastify>;
@@ -39,6 +42,7 @@ export interface AppHarness {
   repository: IdentityRepository;
   facilityService: FacilityOnboardingService | PostgresFacilityOnboardingService;
   familyService: FamilyCareServicePort;
+  privacyService: PrivacyDsrNotificationService | PostgresPrivacyDsrNotificationService;
 }
 
 export async function buildApp(
@@ -106,6 +110,16 @@ export async function buildApp(
       : options.clock
         ? new FamilyCareService(() => options.clock!.now(), config.preauthHmacKey)
         : new FamilyCareService(undefined, config.preauthHmacKey);
+  const privacyService =
+    repository instanceof PostgresIdentityRepository
+      ? new PostgresPrivacyDsrNotificationService(
+          repository,
+          'synthetic-005-callback-secret-not-production',
+          options.clock ? () => options.clock!.now() : undefined,
+        )
+      : options.clock
+        ? new PrivacyDsrNotificationService(() => options.clock!.now())
+        : new PrivacyDsrNotificationService();
   await app.register(cors, {
     origin: config.corsOrigins,
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'OPTIONS'],
@@ -120,6 +134,7 @@ export async function buildApp(
       'Pragma',
       'X-AAL',
       'X-Provider-Signature',
+      'X-Provider-Timestamp',
       'X-Purpose',
       'X-SHIFAA-Patient-Context',
     ],
@@ -154,8 +169,18 @@ export async function buildApp(
           : new InMemoryIdempotencyStore(),
     });
   }
+  if (config.privacyDsrNotificationsEnabled) {
+    await registerPrivacyDsrNotificationRoutes(app, {
+      service: privacyService,
+      syntheticMode: config.syntheticMode,
+      idempotency:
+        repository instanceof PostgresIdentityRepository
+          ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)
+          : new InMemoryIdempotencyStore(),
+    });
+  }
   if (repository instanceof PostgresIdentityRepository) {
     app.addHook('onClose', () => repository.close());
   }
-  return { app, config, service, repository, facilityService, familyService };
+  return { app, config, service, repository, facilityService, familyService, privacyService };
 }

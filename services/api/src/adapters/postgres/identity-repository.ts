@@ -2,7 +2,7 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { createHash, randomUUID } from 'node:crypto';
 
 import type { ConsentRecord, Locale, PersonAggregate } from '@shifaa/core';
-import postgres, { type Sql } from 'postgres';
+import postgres, { type Sql, type TransactionSql } from 'postgres';
 
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
 import type {
@@ -15,7 +15,7 @@ import type {
   StoredVerificationCase,
 } from '../../modules/identity-onboarding/ports.js';
 
-type TxState = { sql: any; context?: RepositoryContext };
+type TxState = { sql: TransactionSql; context?: RepositoryContext };
 
 export class PostgresIdentityRepository implements IdentityRepository {
   private readonly sql: Sql;
@@ -23,7 +23,7 @@ export class PostgresIdentityRepository implements IdentityRepository {
 
   public constructor(databaseUrl: string) {
     this.sql = postgres(databaseUrl, {
-      max: 10,
+      max: 20,
       idle_timeout: 20,
       connect_timeout: 10,
       prepare: true,
@@ -58,7 +58,7 @@ export class PostgresIdentityRepository implements IdentityRepository {
     }) as Promise<T>;
   }
 
-  public async withRawTransaction<T>(work: (sql: any) => Promise<T>): Promise<T> {
+  public async withRawTransaction<T>(work: (sql: TransactionSql) => Promise<T>): Promise<T> {
     const active = this.scope.getStore();
     if (active) return work(active.sql);
     return this.sql.begin(async (tx) => this.scope.run({ sql: tx }, () => work(tx))) as Promise<T>;

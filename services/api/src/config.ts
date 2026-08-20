@@ -9,6 +9,7 @@ export interface ApiConfig {
   identityOnboardingEnabled: boolean;
   facilityOnboardingEnabled: boolean;
   familyCareEnabled: boolean;
+  privacyDsrNotificationsEnabled: boolean;
   syntheticMode: boolean;
   syntheticProofingEnabled: boolean;
   authAdapter: 'local' | 'supabase';
@@ -81,6 +82,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     if (readBoolean(env['FAMILY_CARE_ENABLED'], false)) {
       throw new ConfigurationError(
         'Production startup denied: Family Care remains seeded-synthetic only.',
+      );
+    }
+    if (readBoolean(env['PRIVACY_DSR_NOTIFICATIONS_ENABLED'], false)) {
+      throw new ConfigurationError(
+        'Production startup denied: Privacy DSR and messaging remain seeded-synthetic only.',
       );
     }
     const forbidden = [
@@ -156,6 +162,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
       environment !== 'production',
     ),
     familyCareEnabled: readBoolean(env['FAMILY_CARE_ENABLED'], environment !== 'production'),
+    privacyDsrNotificationsEnabled: readBoolean(
+      env['PRIVACY_DSR_NOTIFICATIONS_ENABLED'],
+      environment !== 'production',
+    ),
     syntheticMode,
     syntheticProofingEnabled,
     authAdapter,

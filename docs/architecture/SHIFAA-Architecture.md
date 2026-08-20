@@ -166,3 +166,7 @@ Load tests cover concurrent slot booking, queue check-in, bed assignment, SOS se
 ## 12. Architecture change control
 
 Any change to application count, public protocol, data store, auth subject, event delivery, field encryption, deployment geography, clinical override, payment custody, or AI authority requires an ADR, Constitution check, threat/privacy impact, migration, trace update, and Product Owner approval. Legal/clinical facts additionally require the named domain approval.
+
+### Feature 005 foundation realization
+
+The Core API owns DSR state changes, purpose-limited DPO decisions, private export capabilities, template governance, signed receipt callbacks, and append-only replay requests. PostgreSQL is authoritative and every new table is forced-RLS. A separate non-owner `shifaa_worker` claims minimum notification metadata with `SKIP LOCKED`, resolves only published paired templates, calls the deterministic local adapter, and appends attempts. The provider boundary stores digests and minimum statuses, not raw destinations or rendered bodies. This foundation adds no 006 discovery/SOS behavior and does not enable production messaging or erasure automation.

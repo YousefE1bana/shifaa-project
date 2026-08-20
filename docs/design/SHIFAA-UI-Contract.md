@@ -177,6 +177,8 @@ Routes: `/orders`, `/orders/:id`, `/specimens/:id`, `/results/:id`, `/critical-r
 
 Routes are permission-filtered: `/dashboard`, `/identity-reviews`, `/facility-approvals`, `/relationships`, `/complaints`, `/reviews`, `/clinical-content`, `/notification-templates`, `/ai-model-releases`, `/role-grants`, `/audit`, `/privacy-requests`. Mandatory states include AAL2 step-up, purpose capture, separation-of-duties conflict, pending independent role grant/revocation decision, minimum-cell aggregate suppression, missing mapped AI signatures, legal/clinical feature gate, and immutable evidence digest. DPO-designated users see only the purpose-limited privacy-request worklist and AI privacy-signature evidence assigned to them, not general admin routes. `/donations` and `/donation-cases` are explicitly absent from the graduation route inventory under ADR-016.
 
+Feature 005 realizes `/privacy/requests`, `/privacy-requests`, and `/notification-templates` with Arabic RTL and English LTR parity. The patient surface exposes all four DSR types, due/history state, identity and retention gates, and a memory-only one-time export download. The DPO surface exposes minimum assigned fields plus reasoned approve/partial/refuse/fulfil actions. The template surface pairs both locales, shows the exact field schema, and separates author from AAL2 publisher. All three surfaces must retain loading, empty, offline, permission/AAL2/purpose, stale/conflict, failure, and success states at compact and desktop widths with keyboard focus, 200% reflow, high contrast, and reduced motion.
+
 ## 9. Safety and emergency copy rules
 
 - Use plain Egyptian Modern Standard Arabic suitable for low health literacy; never use humor, blame, or reassurance unsupported by a clinician/system state.
