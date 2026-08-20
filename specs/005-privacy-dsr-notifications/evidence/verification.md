@@ -2,6 +2,8 @@
 
 > Seeded-synthetic engineering verification only. No production, legal, DPO, regulator, vendor, design, or accessibility-lab approval is claimed.
 
+Verified implementation commit: `ae56b8a97a48ec31f04cc676aa0edb72fd03a834`.
+
 ## Clean repository gate
 
 On 2026-08-20, from `D:\ECU\Gradution-Project-005-privacy-dsr-notifications`:
