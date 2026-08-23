@@ -7,6 +7,7 @@
 - Existing Issue range only: #146–#183 (38 tasks); no Issue recreation or early closure
 - Branch: `codex/006-discovery-sos-foundation`
 - Dedicated worktree: `D:\ECU\Gradution-Project-006-discovery-sos-foundation`
+- Verified implementation/evidence commit: `30e9f46603dea36b158fb86d96a5b83830aa3b36`
 
 ## Required clean gate
 

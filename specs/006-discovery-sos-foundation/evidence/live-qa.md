@@ -2,7 +2,7 @@
 
 **Observed:** 2026-08-23  
 **Runtime:** seeded-synthetic PostgreSQL 17 + PostGIS 3.5, forced-RLS API, local worker, patient Expo web, hospital Next.js  
-**Source revision:** the final PR HEAD and clean-verification SHA are recorded in `verification.md`; the live run used the same 006 worktree with configuration digest `0861710303d2ebe0135774ef529ac29cc577568721b87a7ece4ae0d3d30cfe26`.
+**Source revision:** implementation/evidence commit `30e9f46603dea36b158fb86d96a5b83830aa3b36`; the final PR HEAD is recorded in `verification.md`. Configuration digest: `0861710303d2ebe0135774ef529ac29cc577568721b87a7ece4ae0d3d30cfe26`.
 
 This is engineering acceptance evidence, not production emergency, design-baseline, pixel-identity, ambulance-dispatch, bed-reservation, provider-delivery, or clinical assurance.
 
