@@ -36,3 +36,12 @@ All verification uses repository-scoped seeded-synthetic data. It does not close
 - `git diff --check`: exit 0
 
 This result binds to the complete pre-commit 006 tree. The immutable commit and PR HEAD are recorded after commit/push; documentation-only gate records do not alter the verified runtime behavior.
+
+## Pull-request gate
+
+- PR: #184
+- Clean-verified implementation/evidence commit: `30e9f46603dea36b158fb86d96a5b83830aa3b36`
+- Evidence-binding commit before final task bookkeeping: `3e2baba`
+- Merge authority: Yousef Osama's explicit advance squash-merge authorization in the 2026-08-23 execution request, usable only after exact-head CI, mergeability/up-to-date, zero unresolved conversations, complete evidence/tasks, and zero unresolved CRITICAL/HIGH findings are all proven.
+
+The final task-bookkeeping commit becomes the frozen PR HEAD. GitHub check/review/merge results are validated directly against that exact OID before merge and again against the resulting `origin/main` squash commit.
