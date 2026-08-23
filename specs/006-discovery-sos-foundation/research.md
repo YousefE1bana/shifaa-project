@@ -13,9 +13,9 @@
 
 ## Decision 2 — Use a digest-pinned PostGIS container for local and CI
 
-**Decision:** Plan local/CI on `postgis/postgis:17-3.5-alpine@sha256:fae81f3e8da88b8e684c58c8a8616aadda72e6fc1affcb050b490891ecb3db1c`. The inspected linux/amd64 image manifest is `sha256:966243672c7d98cb996f26854a790b3b76e3cb77455d6eeb19d72ff82d20e7af` and reports PostgreSQL `17.11`, PostGIS `3.5.7`, `PGDATA=/var/lib/postgresql/data`, and source label `https://github.com/postgis/docker-postgis`.
+**Decision:** Build the repository-owned local/CI runtime from `infra/db/Dockerfile.postgis`, whose immutable upstream is `postgis/postgis:17-3.5-alpine@sha256:fae81f3e8da88b8e684c58c8a8616aadda72e6fc1affcb050b490891ecb3db1c`. The inspected linux/amd64 upstream manifest is `sha256:966243672c7d98cb996f26854a790b3b76e3cb77455d6eeb19d72ff82d20e7af` and reports PostgreSQL `17.11`, PostGIS `3.5.7`, `PGDATA=/var/lib/postgresql/data`, and source label `https://github.com/postgis/docker-postgis`. The derivative pins `su-exec=0.3-r0`, removes the unused raster/GDAL extension surface, replaces the vulnerable static `gosu` helper, and copies the effective filesystem into a clean final OCI layer so removed bytes are absent from its SBOM.
 
-**Rationale:** It preserves the repository's PostgreSQL 17 and Alpine/data-volume shape while providing a reviewed PostGIS build. A digest prevents tag drift in the planned x86-64 environment. Migration and CI must still assert `version()` and `PostGIS_Full_Version()`.
+**Rationale:** It preserves the repository's PostgreSQL 17 and Alpine/data-volume shape while providing only the required vector/geography PostGIS surface. A digest prevents upstream tag drift; the explicit derivative makes the scanner-visible runtime match the feature boundary. Migration and CI must still assert `version()` and `PostGIS_Full_Version()`.
 
 **Alternatives considered:** install PostGIS into the plain `postgres:17.5-alpine` container at runtime (not reproducible); use a floating tag (drift); use `*-master` (unreleased source); upgrade PostgreSQL/PostGIS major versions during 006 (unnecessary migration risk); use the Debian image (larger baseline change without a feature need).
 
@@ -26,7 +26,7 @@
 - <https://hub.docker.com/r/postgis/postgis>
 - `docker buildx imagetools inspect` against the pinned registry artifact on 2026-08-20.
 
-This resolves the feature's local/CI image selection only. `OPEN-TECH-001` remains open for the repository change, SBOM/vulnerability record, clean reproducibility log, platform policy, and named Architecture/Platform acceptance.
+This resolves the feature's local/CI image selection only. Docker Scout initially reported 2 critical and 21 high findings in upstream `gosu` and raster `giflib`; the derived effective filesystem reports zero vulnerabilities after those unused surfaces are removed. `OPEN-TECH-001` remains open for formal platform policy and named Architecture/Platform acceptance.
 
 ## Decision 3 — Store WGS84 geography and keep search points transient
 
@@ -46,9 +46,9 @@ This resolves the feature's local/CI image selection only. `OPEN-TECH-001` remai
 
 ## Decision 5 — Capacity is aggregate, versioned, synthetic, and fail-closed
 
-**Decision:** Add one current aggregate capacity projection per hospital with nonnegative emergency available/held counts, a closed public signal, `observed_at`, `fresh_until`, approved source code, and version. A match requires active verified hospital authority, a configured allowed source, `observed_at <= transaction_time <= fresh_until`, and positive usable aggregate capacity. Public contracts return a count band/signal/freshness, never exact counts or patient/ward/bed detail. Missing production source/radius/freshness configuration is stale/no match.
+**Decision:** Add one current aggregate capacity projection per hospital with nonnegative emergency available/held counts, a closed public signal, `observed_at`, `fresh_until`, approved source code, and version. A match requires active verified hospital authority, a configured allowed source, `observed_at <= transaction_time <= fresh_until`, and positive usable aggregate capacity. Public contracts derive `count_band` only from the aggregate available count using the closed rule: absent projection or `unknown` signal -> `unknown`; zero -> `none`; 1–4 -> `one_to_four`; 5–9 -> `five_to_nine`; 10 or more -> `ten_or_more`. They return that band with signal/freshness, never exact counts or patient/ward/bed detail. Staleness does not erase the last aggregate band but is displayed explicitly and never qualifies a match. Missing production source/radius/freshness configuration is stale/no match.
 
-**Rationale:** It supports deterministic stale-boundary and matching tests while respecting `FR-HOSP-007` and the absence of a capacity publisher. Transaction-time rechecking prevents a stale search result from becoming a match.
+**Rationale:** It supports deterministic boundary, stale-state, and matching tests while respecting `FR-HOSP-007` and the absence of a capacity publisher. Coarse bands make the canonical aggregate useful without publishing an exact operational count. Transaction-time rechecking prevents a stale search result from becoming a match.
 
 **Alternatives considered:** infer capacity from future beds; accept client-published counts; create a write endpoint; treat absent data as available; expose exact internal counts. All are out of scope or unsafe.
 
@@ -107,6 +107,14 @@ This resolves the feature's local/CI image selection only. `OPEN-TECH-001` remai
 **Rationale:** The canonical performance and observability requirements need reproducible proof, while emergency and capability data must not leak into that proof. `OPEN-TECH-003` remains open until the formal reference harness is approved.
 
 **Alternatives considered:** unrecorded laptop timings, production/vendor latency claims, coordinate-labeled metrics, body logging for debugging, or treating a local pass as formal release evidence.
+
+## Decision 13 — Synthetic abuse limits are explicit and token-safe
+
+**Decision:** The bounded engineering runtime applies fixed-window limits of 120 discovery/capacity reads per minute, 10 SOS activations per five minutes, and 30 public share views per minute. Authenticated buckets use a one-way digest of the synthetic principal; anonymous buckets use a one-way digest of the request IP. Coordinates and raw/hashed share tokens never become limiter keys or telemetry. A limited response returns `429` plus `Retry-After`, while patient UI keeps direct call-`123` guidance available.
+
+**Rationale:** The contract requires observable abuse controls but canonical authority does not supply production quotas. Named, tested synthetic values provide bounded evidence without silently becoming emergency policy or a vendor guarantee.
+
+**Alternatives considered:** no limit; keying public attempts by bearer token; coordinate-based buckets; hiding call guidance; or claiming these local thresholds are production-approved. Those choices enable abuse, retain sensitive data, or overstate an open policy decision.
 
 ## Provenance and unresolved gates
 

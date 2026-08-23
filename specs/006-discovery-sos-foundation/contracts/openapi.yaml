@@ -542,9 +542,10 @@ components:
     CapacityProjection:
       type: object
       additionalProperties: false
-      required: [signal, freshness, observed_at, fresh_until]
+      required: [signal, count_band, freshness, observed_at, fresh_until]
       properties:
         signal: { type: string, enum: [available, limited, unavailable, unknown] }
+        count_band: { type: string, enum: [none, one_to_four, five_to_nine, ten_or_more, unknown] }
         freshness: { type: string, enum: [fresh, stale, unknown] }
         observed_at:
           anyOf:

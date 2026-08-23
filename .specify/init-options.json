@@ -1,9 +1,9 @@
 {
-  "ai": "kimi",
+  "ai": "codex",
   "ai_skills": true,
   "feature_numbering": "sequential",
   "here": true,
-  "integration": "kimi",
+  "integration": "codex",
   "script": "ps",
-  "speckit_version": "0.16.2.dev0"
+  "speckit_version": "1.0.1"
 }

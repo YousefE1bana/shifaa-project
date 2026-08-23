@@ -1,0 +1,29 @@
+FROM postgis/postgis:17-3.5-alpine@sha256:fae81f3e8da88b8e684c58c8a8616aadda72e6fc1affcb050b490891ecb3db1c AS postgis_trimmed
+
+# SHIFAA 006 needs only the PostGIS vector/geography extension. The upstream
+# convenience image also ships a raster/GDAL surface and a statically linked
+# gosu helper; neither is part of this local/CI feature boundary. Replace the
+# helper with Alpine's small su-exec package and remove raster support so the
+# scanner and runtime match the feature's actual attack surface.
+RUN apk add --no-cache su-exec=0.3-r0 libstdc++ geos proj json-c protobuf-c libxml2 libgcc \
+    && sed -i 's/exec gosu postgres/exec su-exec postgres/' /usr/local/bin/docker-entrypoint.sh \
+    && rm -f /usr/local/bin/gosu \
+    && rm -f /usr/local/lib/postgresql/postgis_raster-3.so \
+    && rm -f /usr/local/share/postgresql/extension/postgis_raster* \
+    && apk del --no-cache .postgis-rundeps
+
+# Copy the effective filesystem into one final layer. Besides reducing the
+# runtime surface, this ensures removed vulnerable helper/raster bytes are not
+# retained in a lower OCI layer and therefore remain visible to SBOM scanners.
+FROM scratch
+COPY --from=postgis_trimmed / /
+
+ENV LANG=en_US.utf8 \
+    PG_MAJOR=17 \
+    PG_VERSION=17.11 \
+    PGDATA=/var/lib/postgresql/data \
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+STOPSIGNAL SIGINT
+CMD ["postgres"]

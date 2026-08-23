@@ -13,6 +13,7 @@ import {
   PostgresFacilityOnboardingService,
   PostgresFamilyCareService,
   PostgresPrivacyDsrNotificationService,
+  PostgresDiscoverySosService,
   SupabaseAuthIssuer,
   SupabaseQuarantineUploadStore,
 } from './adapters/index.js';
@@ -34,6 +35,11 @@ import { FamilyCareService, type FamilyCareServicePort } from './modules/family-
 import { registerFamilyCareRoutes } from './routes/family-care.js';
 import { PrivacyDsrNotificationService } from './modules/privacy-dsr-notifications/index.js';
 import { registerPrivacyDsrNotificationRoutes } from './routes/privacy-dsr-notifications.js';
+import {
+  DiscoverySosService,
+  type DiscoverySosServicePort,
+} from './modules/discovery-sos/index.js';
+import { registerDiscoverySosRoutes } from './routes/discovery-sos.js';
 
 export interface AppHarness {
   app: ReturnType<typeof Fastify>;
@@ -43,6 +49,7 @@ export interface AppHarness {
   facilityService: FacilityOnboardingService | PostgresFacilityOnboardingService;
   familyService: FamilyCareServicePort;
   privacyService: PrivacyDsrNotificationService | PostgresPrivacyDsrNotificationService;
+  discoverySosService: DiscoverySosServicePort;
 }
 
 export async function buildApp(
@@ -120,6 +127,19 @@ export async function buildApp(
       : options.clock
         ? new PrivacyDsrNotificationService(() => options.clock!.now())
         : new PrivacyDsrNotificationService();
+  const discoverySosService: DiscoverySosServicePort =
+    repository instanceof PostgresIdentityRepository
+      ? new PostgresDiscoverySosService(repository, {
+          discoveryRadiusM: config.discoveryRadiusM,
+          sosMatchRadiusM: config.sosMatchRadiusM,
+          capacitySourceCode: config.capacitySourceCode,
+          publicAppUrl: config.discoverySosPublicAppUrl,
+          environment: config.environment === 'test' ? 'ci' : 'local',
+        })
+      : new DiscoverySosService(
+          options.clock ? () => options.clock!.now() : undefined,
+          config.discoverySosPublicAppUrl,
+        );
   await app.register(cors, {
     origin: config.corsOrigins,
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'OPTIONS'],
@@ -137,6 +157,14 @@ export async function buildApp(
       'X-Provider-Timestamp',
       'X-Purpose',
       'X-SHIFAA-Patient-Context',
+    ],
+    exposedHeaders: [
+      'Cache-Control',
+      'Content-Language',
+      'Pragma',
+      'Referrer-Policy',
+      'Retry-After',
+      'X-Request-Id',
     ],
   });
   installIdentityErrorHandler(app);
@@ -179,8 +207,27 @@ export async function buildApp(
           : new InMemoryIdempotencyStore(),
     });
   }
+  if (config.discoverySosEnabled) {
+    await registerDiscoverySosRoutes(app, {
+      service: discoverySosService,
+      syntheticMode: config.syntheticMode,
+      idempotency:
+        repository instanceof PostgresIdentityRepository
+          ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)
+          : new InMemoryIdempotencyStore(),
+    });
+  }
   if (repository instanceof PostgresIdentityRepository) {
     app.addHook('onClose', () => repository.close());
   }
-  return { app, config, service, repository, facilityService, familyService, privacyService };
+  return {
+    app,
+    config,
+    service,
+    repository,
+    facilityService,
+    familyService,
+    privacyService,
+    discoverySosService,
+  };
 }

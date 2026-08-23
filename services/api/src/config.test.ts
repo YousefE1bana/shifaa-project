@@ -9,7 +9,20 @@ describe('production-deny runtime configuration', () => {
       environment: 'test',
       syntheticMode: true,
       authAdapter: 'local',
+      discoverySosEnabled: true,
+      discoveryRadiusM: 25_000,
+      sosMatchRadiusM: 25_000,
+      capacitySourceCode: 'synthetic_seed',
     });
+  });
+
+  it('rejects production SOS enablement and invalid synthetic radius configuration', () => {
+    expect(() =>
+      loadConfig({ NODE_ENV: 'production', DISCOVERY_SOS_ENABLED: 'true' }),
+    ).toThrowError(/Discovery and SOS remain seeded-synthetic only/);
+    expect(() => loadConfig({ NODE_ENV: 'test', DISCOVERY_RADIUS_M: '99' })).toThrowError(
+      /DISCOVERY_RADIUS_M/,
+    );
   });
 
   it('rejects every local/synthetic adapter in production before listening', () => {

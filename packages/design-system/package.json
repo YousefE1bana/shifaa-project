@@ -5,6 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./tokens": "./src/tokens.ts",
+    "./emergency-foundation": "./src/EmergencyFoundation.tsx",
     "./staff-facility": "./src/StaffFacilityWorkspace.tsx",
     "./family-context": "./src/FamilyContextBanner.tsx"
   },

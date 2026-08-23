@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto';
 
+import postgres, { type Sql } from 'postgres';
+
 import type { MessagingAdapter, MessagingResult } from '../privacy-dsr-notifications.ts';
 
 export class LocalSyntheticMessagingAdapter implements MessagingAdapter {
@@ -37,6 +39,43 @@ export class LocalSyntheticMessagingAdapter implements MessagingAdapter {
         ? { providerReceiptReference: `synthetic-receipt-${input.idempotencyKey.slice(0, 16)}` }
         : { safeErrorCode: `synthetic-${outcome}` }),
     };
+  }
+}
+
+export class DurableLocalSyntheticMessagingAdapter implements MessagingAdapter {
+  public readonly code = 'local-synthetic' as const;
+  private readonly sql: Sql;
+  private readonly environment: 'local' | 'ci';
+
+  public constructor(databaseUrl: string, environment: 'local' | 'ci' = 'local') {
+    this.sql = postgres(databaseUrl, { max: 1, prepare: true });
+    this.environment = environment;
+  }
+
+  public close() {
+    return this.sql.end({ timeout: 5 });
+  }
+
+  public async send(input: {
+    idempotencyKey: string;
+    destinationAlias: string;
+    renderedBody: string;
+  }): Promise<MessagingResult> {
+    if (!input.destinationAlias.startsWith('SYNTHETIC-')) {
+      throw new Error('production-messaging-disabled');
+    }
+    const destinationDigest = createHash('sha256').update(input.destinationAlias).digest('hex');
+    const renderedDigest = createHash('sha256').update(input.renderedBody).digest('hex');
+    const receipt = await this.sql.begin(async (sql) => {
+      await sql`select set_config('shifaa.environment',${this.environment},true)`;
+      const [row] = await sql<{ receipt: string }[]>`
+        select platform.deliver_local_synthetic_message(
+          ${input.idempotencyKey},${destinationDigest},${renderedDigest}
+        ) receipt`;
+      if (!row) throw new Error('synthetic-provider-receipt-missing');
+      return row.receipt;
+    });
+    return { outcome: 'delivered', providerReceiptReference: receipt };
   }
 }
 

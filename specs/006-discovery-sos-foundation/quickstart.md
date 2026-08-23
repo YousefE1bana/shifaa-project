@@ -19,11 +19,13 @@ Expected branch: `codex/006-discovery-sos-foundation`. Expected base ancestor: `
 ```powershell
 docker buildx imagetools inspect postgis/postgis:17-3.5-alpine
 docker compose config --quiet
+docker compose build postgres
+docker scout cves --only-severity critical,high shifaa/postgis:17-3.5-006-local
 docker compose up -d --wait postgres
 docker compose exec -T postgres psql -U shifaa_owner -d shifaa -c "select version(), postgis_full_version();"
 ```
 
-Expected OCI index digest: `sha256:fae81f3e8da88b8e684c58c8a8616aadda72e6fc1affcb050b490891ecb3db1c`. A changed digest requires dependency/provenance review; do not silently update it.
+Expected upstream OCI index digest: `sha256:fae81f3e8da88b8e684c58c8a8616aadda72e6fc1affcb050b490891ecb3db1c`. The derived runtime must report zero critical/high vulnerabilities. A changed upstream digest or dependency requires review; do not silently update it.
 
 ## 3. Planned automated gates
 
@@ -45,12 +47,13 @@ Evidence must cover PostGIS/GiST plans, freshness boundaries, forced RLS, exact 
 ## 4. Start local services
 
 ```powershell
-pnpm dev:supabase:api
+pnpm dev:discovery-sos:api
+pnpm dev:discovery-sos:worker
 pnpm dev:patient:web
 pnpm --filter @shifaa/hospital dev
 ```
 
-Startup must state that production capacity publishing, maps/geocoding, messaging, and production PHI are disabled. Use only deterministic synthetic IDs from `packages/test-kit`.
+Start each command in a separate terminal. The API launcher checks for the 006 migration and idempotently loads `infra/db/fixtures/discovery-sos.sql` into the repository-scoped PostGIS database; it does not use or reset Supabase. Startup must state that production capacity publishing, maps/geocoding, messaging, and production PHI are disabled. Use only deterministic synthetic IDs from `packages/test-kit`.
 
 ## 5. Discovery acceptance
 

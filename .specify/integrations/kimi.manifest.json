@@ -1,17 +1,17 @@
 {
   "integration": "kimi",
-  "version": "0.16.2.dev0",
-  "installed_at": "2026-08-09T12:56:06.313040+00:00",
+  "version": "1.0.1",
+  "installed_at": "2026-08-23T13:03:18.370217+00:00",
   "files": {
     ".kimi-code/skills/speckit-analyze/SKILL.md": "8637c58b643795a1b568f746856ebd7799be4e090288bc7c954207ce88a2c57f",
     ".kimi-code/skills/speckit-clarify/SKILL.md": "b59a593a59dd53c203db896f1b1a6d7c164ee5425e512b209b89877a777f1f16",
-    ".kimi-code/skills/speckit-constitution/SKILL.md": "a42de31250400928a884eac1fcd7b57782c84a8290d9dd9b2ff2f1971c8cbc37",
-    ".kimi-code/skills/speckit-implement/SKILL.md": "eb387d4e03d66fc8b1fa0b0123503decc2113ebd413ad3b66439ee1f65c6bf12",
+    ".kimi-code/skills/speckit-constitution/SKILL.md": "a1903f43f2afdb38290c49c1a00d3cec194a161b3e4fe8e692e0cdf5e285e8de",
+    ".kimi-code/skills/speckit-implement/SKILL.md": "48f630c45251ec5276257bbbd587f251b83adabef70eec3d2f9a870794045d68",
     ".kimi-code/skills/speckit-converge/SKILL.md": "dc2a97c9eb38becb374833ada01ad95d1ac5f939cd6dccf5435f11a415caf06b",
     ".kimi-code/skills/speckit-plan/SKILL.md": "1d436f7b59ac76103336a571ec6f57a07edba67a59631605c8509fa738bb4225",
-    ".kimi-code/skills/speckit-checklist/SKILL.md": "da44d10d01c99578bc7f5439e5f77da418cd902f0a9831dd9f2d44a8a3a404cf",
+    ".kimi-code/skills/speckit-checklist/SKILL.md": "5cbd29e2a6bd889f647488a1e8b473f693c1b85ff08093029b1f68bc631cc570",
     ".kimi-code/skills/speckit-specify/SKILL.md": "c6ef48351185c376a2aea64ddf32609324048c9ec9da281cf6c860ae5aee267c",
-    ".kimi-code/skills/speckit-tasks/SKILL.md": "360408bc6d5f00513425a230ec771dd9a043af06335b878ac5d61d4a7a0d6bdc",
-    ".kimi-code/skills/speckit-taskstoissues/SKILL.md": "6f8cb990cc5baa486ec22be639665cafe7da97d6224425ff295548022c395df4"
+    ".kimi-code/skills/speckit-tasks/SKILL.md": "1396e0a32b431cf88352811ec0b918e547603aef650357f9140f827937cf810d",
+    ".kimi-code/skills/speckit-taskstoissues/SKILL.md": "06f97e2d1424d78ea54d51563887ba3a305b9a7337662b6b9c2fac7e12a2449f"
   }
 }

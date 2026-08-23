@@ -16,7 +16,7 @@
 
 ## 2. Runtime and extension
 
-Local/CI Compose uses the reviewed multi-architecture image `postgis/postgis:17-3.5-alpine@sha256:fae81f3e8da88b8e684c58c8a8616aadda72e6fc1affcb050b490891ecb3db1c`. The migration uses bare `CREATE EXTENSION IF NOT EXISTS postgis`; it does not request an extension version because current Supabase behavior ignores/deprecates version clauses. Runtime provenance remains an `OPEN-TECH-001` formal-evidence item.
+Local/CI Compose builds `infra/db/Dockerfile.postgis` from the reviewed multi-architecture image `postgis/postgis:17-3.5-alpine@sha256:fae81f3e8da88b8e684c58c8a8616aadda72e6fc1affcb050b490891ecb3db1c`. The derivative retains vector/geography PostGIS and removes the unused raster/GDAL and vulnerable helper surfaces. The migration uses bare `CREATE EXTENSION IF NOT EXISTS postgis`; it does not request an extension version because current Supabase behavior ignores/deprecates version clauses. Runtime provenance remains an `OPEN-TECH-001` formal-evidence item.
 
 ## 3. Existing table expansion — `identity.facilities`
 
@@ -57,6 +57,8 @@ Invariants:
 - `available` requires `emergency_available_count > 0`; `unavailable` requires zero; `unknown` never qualifies.
 - A row is qualifying only while `statement_timestamp() <= fresh_until`, the hospital/facility/license/geodata remain eligible, and the signal is `available|limited` with a positive available count.
 - 006 seeds deterministic projections through migrations/test fixtures only. No production write operation or public policy is added.
+
+Public projections never expose either stored count. They compute the closed `count_band` from `emergency_available_count`: absent projection or `unknown` signal -> `unknown`; `0` -> `none`; `1..4` -> `one_to_four`; `5..9` -> `five_to_nine`; `>=10` -> `ten_or_more`. The same rule applies to discovery cards and the capacity endpoint. A stale projection may show its last band only alongside explicit stale freshness; it cannot qualify an SOS match.
 
 Indexes: unique B-tree on `facility_id`; B-tree on `(fresh_until, facility_id)` for freshness joins.
 

@@ -1,10 +1,7 @@
 {
-  "version": "0.16.2.dev0",
+  "version": "1.0.1",
   "integration_state_schema": 1,
-  "installed_integrations": [
-    "codex",
-    "kimi"
-  ],
+  "installed_integrations": ["codex"],
   "integration_settings": {
     "codex": {
       "script": "ps",
@@ -13,16 +10,8 @@
         "skills": true
       },
       "invoke_separator": "-"
-    },
-    "kimi": {
-      "script": "ps",
-      "raw_options": "--skills",
-      "parsed_options": {
-        "skills": true
-      },
-      "invoke_separator": "-"
     }
   },
-  "integration": "kimi",
-  "default_integration": "kimi"
+  "integration": "codex",
+  "default_integration": "codex"
 }

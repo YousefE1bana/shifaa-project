@@ -343,9 +343,40 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
       'validation' in error &&
       Array.isArray((error as { validation?: unknown }).validation);
     const policy = error instanceof ApiPolicyError;
-    const code = validation ? 'validation-failed' : policy ? error.code : 'internal-error';
-    const status = validation ? 400 : policy ? error.status : 500;
+    const databaseCode =
+      typeof error === 'object' && error !== null && 'code' in error
+        ? String((error as { code?: unknown }).code ?? '')
+        : '';
+    const databaseMessage = error instanceof Error ? error.message : '';
+    const mappedDatabase =
+      databaseCode === '22023'
+        ? { code: 'validation-failed', status: 400 }
+        : databaseCode === '23505'
+          ? { code: 'state-transition-invalid', status: 409 }
+          : databaseCode === '40001'
+            ? {
+                code: databaseMessage.includes('capacity-stale')
+                  ? 'capacity-stale'
+                  : 'version-conflict',
+                status: 409,
+              }
+            : databaseCode === '42501'
+              ? {
+                  code: databaseMessage.includes('disabled') ? 'vendor-unavailable' : 'forbidden',
+                  status: databaseMessage.includes('disabled') ? 503 : 403,
+                }
+              : undefined;
+    const code = validation
+      ? 'validation-failed'
+      : policy
+        ? error.code
+        : (mappedDatabase?.code ?? 'internal-error');
+    const status = validation ? 400 : policy ? error.status : (mappedDatabase?.status ?? 500);
     const locale = request.headers['accept-language'] ?? 'ar-EG';
+    const shareRequest = request.url.startsWith('/v1/sos/share/');
+    const safeInstance = shareRequest
+      ? request.url.replace(/(\/v1\/sos\/share\/)[^/?#]+/, '$1[REDACTED]')
+      : request.url.replace(/([?&]near=)[^&]*/i, '$1[REDACTED]');
     const detail = validation
       ? 'Check the highlighted fields and try again.'
       : policy
@@ -354,7 +385,10 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
     void reply
       .status(status)
       .type('application/problem+json')
-      .headers(noStoreHeaders)
+      .headers({
+        ...noStoreHeaders,
+        ...(shareRequest ? { pragma: 'no-cache', 'referrer-policy': 'no-referrer' } : {}),
+      })
       .send({
         type: `https://shifaa.test/problems/${code}`,
         title: problemTitle(code, locale),
@@ -362,7 +396,8 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
         detail,
         code,
         request_id: request.id,
-        instance: request.url,
+        instance: safeInstance,
+        errors: [],
       });
   });
 }

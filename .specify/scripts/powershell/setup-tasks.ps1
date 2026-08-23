@@ -34,14 +34,14 @@ if (-not $paths) {
 
 if (-not (Test-Path $paths.IMPL_PLAN -PathType Leaf)) {
     [Console]::Error.WriteLine("ERROR: plan.md not found in $($paths.FEATURE_DIR)")
-    $planCommand = '/skill:speckit-plan'
+    $planCommand = '$speckit-plan'
     [Console]::Error.WriteLine("Run $planCommand first to create the implementation plan.")
     exit 1
 }
 
 if (-not (Test-Path $paths.FEATURE_SPEC -PathType Leaf)) {
     [Console]::Error.WriteLine("ERROR: spec.md not found in $($paths.FEATURE_DIR)")
-    $specifyCommand = '/skill:speckit-specify'
+    $specifyCommand = '$speckit-specify'
     [Console]::Error.WriteLine("Run $specifyCommand first to create the feature structure.")
     exit 1
 }
@@ -57,12 +57,17 @@ if (Test-Path $paths.QUICKSTART) { $docs += 'quickstart.md' }
 
 # Resolve tasks template through override stack
 $tasksTemplate = Resolve-Template -TemplateName 'tasks-template' -RepoRoot $paths.REPO_ROOT
-if (-not $tasksTemplate -or -not (Test-Path -LiteralPath $tasksTemplate -PathType Leaf)) {
+$tasksTemplateContent = Resolve-TemplateContent -TemplateName 'tasks-template' -RepoRoot $paths.REPO_ROOT
+if ($null -eq $tasksTemplateContent) {
     [Console]::Error.WriteLine("ERROR: Could not resolve required tasks-template from the template override stack for $($paths.REPO_ROOT)")
     [Console]::Error.WriteLine("Template 'tasks-template' was not found in any supported location (overrides, presets, extensions, or shared core). Add an override at .specify/templates/overrides/tasks-template.md, or run 'specify init' / reinstall shared infra to restore the core .specify/templates/tasks-template.md template.")
     exit 1
 }
-$tasksTemplate = (Resolve-Path -LiteralPath $tasksTemplate).Path
+if ($tasksTemplate -and (Test-Path -LiteralPath $tasksTemplate -PathType Leaf)) {
+    $tasksTemplate = (Resolve-Path -LiteralPath $tasksTemplate).Path
+} else {
+    $tasksTemplate = ''
+}
 
 # Output results
 if ($Json) {
@@ -70,13 +75,19 @@ if ($Json) {
         FEATURE_DIR    = $paths.FEATURE_DIR
         AVAILABLE_DOCS = $docs
         TASKS_TEMPLATE = $tasksTemplate
+        TASKS_TEMPLATE_CONTENT = $tasksTemplateContent
     } | ConvertTo-Json -Compress
 } else {
     Write-Output "FEATURE_DIR: $($paths.FEATURE_DIR)"
     Write-Output "TASKS_TEMPLATE: $(if ($tasksTemplate) { $tasksTemplate } else { 'not found' })"
     Write-Output "AVAILABLE_DOCS:"
-    Test-FileExists -Path $paths.RESEARCH -Description 'research.md' | Out-Null
-    Test-FileExists -Path $paths.DATA_MODEL -Description 'data-model.md' | Out-Null
-    Test-DirHasFiles -Path $paths.CONTRACTS_DIR -Description 'contracts/' | Out-Null
-    Test-FileExists -Path $paths.QUICKSTART -Description 'quickstart.md' | Out-Null
+    # These helpers report their line with Write-Output and ALSO return a
+    # bool, both on the Success stream, so 'Out-Null' discarded the report
+    # line along with the return value and left AVAILABLE_DOCS empty. Drop
+    # only the boolean so the per-document lines reach stdout like the
+    # bash and Python twins.
+    Test-FileExists -Path $paths.RESEARCH -Description 'research.md' | Where-Object { $_ -isnot [bool] }
+    Test-FileExists -Path $paths.DATA_MODEL -Description 'data-model.md' | Where-Object { $_ -isnot [bool] }
+    Test-DirHasFiles -Path $paths.CONTRACTS_DIR -Description 'contracts/' | Where-Object { $_ -isnot [bool] }
+    Test-FileExists -Path $paths.QUICKSTART -Description 'quickstart.md' | Where-Object { $_ -isnot [bool] }
 }

@@ -63,6 +63,7 @@ export class PostgresPrivacyNotificationProcessor {
         from platform.notifications n
         join platform.notification_template_releases t on t.id=n.template_release_id
         where n.status in ('pending','failed') and n.next_attempt_at<=now()
+          and n.recipient_type='patient'
           and t.status='published' and t.effective_at<=now()
         order by n.next_attempt_at,n.created_at,n.id
         for update of n skip locked limit 1`;
