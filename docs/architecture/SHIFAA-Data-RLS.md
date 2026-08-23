@@ -208,3 +208,12 @@ Every row/object references one of: `IDENTITY_PROOF`, `CLINICAL_RECORD`, `PRESCR
 - Export objects remain private; capability plaintext is never persisted, the digest is person-bound, and issuance/consumption are limited to five minutes and once.
 - `shifaa_worker` is a dedicated `NOBYPASSRLS` role. It may read published releases, claim/update minimum notification metadata, and append delivery attempts; it cannot delete or directly read DSR/export data.
 - Statutory retention and production erasure/pseudonymization automation remain absent under `OPEN-LEGAL-002`.
+
+## 13. Feature 006 discovery/SOS realization
+
+- `identity.facilities.location` is `geography(Point,4326)` with verified-at attribution and a GiST index. Public search points remain request-transient; only explicit SOS activation persists a point under `SOS_LOCATION`.
+- `hospital.capacity_projections` contains aggregate synthetic signals and freshness/version metadata only. No patient, ward, bed, publisher endpoint, or production feed is introduced.
+- `platform.sos_incidents` and `platform.emergency_share_links` use closed states, optimistic versions, constrained transitions, forced RLS, exact fixed-search-path helpers, and one-winner transaction boundaries. Share storage contains a 32-byte digest, never bearer plaintext.
+- ER-share availability reads canonical `identity.patients.blood_group` only. Allergies, medicines, chronic conditions, and emergency notes remain explicitly unavailable until their later canonical sources exist; 006 adds no shadow clinical table.
+- Hospital worklists expose only incidents matched to the actor's current facility membership and recheck purpose/AAL2. Subject actions independently recheck self/current relationship plus `sos.activate` or `sos.share`.
+- The dedicated non-`BYPASSRLS` worker can claim only SOS contact events, rechecks active incident/current confirmed contact and consented precision, and uses the local-synthetic adapter. Production messaging and statutory location deletion remain blocked by `OPEN-VENDOR-002` and `OPEN-LEGAL-002`.

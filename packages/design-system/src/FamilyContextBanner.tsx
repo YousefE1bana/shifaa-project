@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { color, minimumTargetSize, spacing, type } from './tokens.ts';
+import { FocusVisiblePressable } from './EmergencyFoundation.tsx';
+import { color, localizedType, minimumTargetSize, spacing } from './tokens.ts';
 
 export type FamilyContextKind = 'self' | 'guardian' | 'delegate';
 
@@ -33,7 +34,6 @@ export function FamilyContextBanner({
   };
   return (
     <View
-      accessibilityRole="summary"
       accessibilityLabel={`${title}: ${patientName}, ${relationshipLabel}`}
       style={{
         borderWidth: 2,
@@ -45,21 +45,38 @@ export function FamilyContextBanner({
         direction,
       }}
     >
-      <Text ref={heading} accessibilityRole="header" style={type.label}>
+      <Text
+        ref={heading}
+        accessibilityRole="header"
+        style={localizedType(direction === 'rtl' ? 'ar-EG' : 'en-EG', 'label')}
+      >
         {title}
       </Text>
-      <Text style={{ ...type.body, color: color.ink }}>
-        <Text style={type.label}>{patientName}</Text> · {relationshipLabel}
+      <Text
+        style={{
+          ...localizedType(direction === 'rtl' ? 'ar-EG' : 'en-EG', 'body'),
+          color: color.ink,
+        }}
+      >
+        <Text style={localizedType(direction === 'rtl' ? 'ar-EG' : 'en-EG', 'label')}>
+          {patientName}
+        </Text>{' '}
+        · {relationshipLabel}
       </Text>
-      <Pressable
+      <FocusVisiblePressable
         accessibilityRole="button"
         onPress={confirmed ? onChange : activate}
         style={{ minHeight: minimumTargetSize, justifyContent: 'center', alignSelf: 'flex-start' }}
       >
-        <Text style={{ ...type.label, color: color.careBlue }}>
+        <Text
+          style={{
+            ...localizedType(direction === 'rtl' ? 'ar-EG' : 'en-EG', 'label'),
+            color: color.careBlue,
+          }}
+        >
           {confirmed ? changeLabel : confirmLabel}
         </Text>
-      </Pressable>
+      </FocusVisiblePressable>
     </View>
   );
 }

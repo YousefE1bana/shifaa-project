@@ -1,7 +1,10 @@
 name: shifaa-local
 services:
   postgres:
-    image: postgres:17.5-alpine@sha256:6567bca8d7bc8c82c5922425a0baee57be8402df92bae5eacad5f01ae9544daa
+    build:
+      context: .
+      dockerfile: infra/db/Dockerfile.postgis
+    image: shifaa/postgis:17-3.5-006-local
     environment:
       POSTGRES_DB: shifaa
       POSTGRES_USER: shifaa_owner
@@ -9,7 +12,14 @@ services:
     ports:
       - '127.0.0.1:5432:5432'
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U shifaa_owner -d shifaa']
+      # The upstream entrypoint briefly starts a temporary bootstrap server.
+      # Require the final PID 1 postmaster so `--wait` cannot release migrations
+      # against that disposable initialization process.
+      test:
+        [
+          'CMD-SHELL',
+          'test "$(head -n 1 "$${PGDATA}/postmaster.pid" 2>/dev/null)" = "1" && pg_isready -U shifaa_owner -d shifaa',
+        ]
       interval: 2s
       timeout: 3s
       retries: 20

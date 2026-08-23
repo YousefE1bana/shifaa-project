@@ -179,6 +179,8 @@ Routes are permission-filtered: `/dashboard`, `/identity-reviews`, `/facility-ap
 
 Feature 005 realizes `/privacy/requests`, `/privacy-requests`, and `/notification-templates` with Arabic RTL and English LTR parity. The patient surface exposes all four DSR types, due/history state, identity and retention gates, and a memory-only one-time export download. The DPO surface exposes minimum assigned fields plus reasoned approve/partial/refuse/fulfil actions. The template surface pairs both locales, shows the exact field schema, and separates author from AAL2 publisher. All three surfaces must retain loading, empty, offline, permission/AAL2/purpose, stale/conflict, failure, and success states at compact and desktop widths with keyboard focus, 200% reflow, high contrast, and reduced motion.
 
+Feature 006 realizes patient `/discover`, `/discover/map`, `/sos`, `/sos/:id`, `/sos/:id/share`, and the fragment-fed public `/sos/share` viewer, plus hospital `/capacity` and `/sos-prearrivals`. The engineering surfaces use Arabic-first RTL/English LTR copy, shared emergency/freshness primitives, semantic list fallback without external map traffic, no offline mutation queue, fragment scrubbing before share use, aggregate-only hospital capacity, and minimum pre-arrival rows. They preserve explicit `123` guidance and never claim dispatch or reservation. Evidence remains engineering-only and cannot claim pixel identity or formal design approval while `OPEN-UX-001/002` are open.
+
 ## 9. Safety and emergency copy rules
 
 - Use plain Egyptian Modern Standard Arabic suitable for low health literacy; never use humor, blame, or reassurance unsupported by a clinician/system state.

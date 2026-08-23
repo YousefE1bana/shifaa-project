@@ -43,6 +43,6 @@ agent owns diff review, verification, commit, push, and the PR lifecycle.
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/005-privacy-dsr-notifications/plan.md
+at specs/006-discovery-sos-foundation/plan.md
 
 <!-- SPECKIT END -->

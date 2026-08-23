@@ -8,9 +8,11 @@
     "./adapters/local-synthetic-messaging": "./src/adapters/local-synthetic-messaging.ts",
     "./facility-onboarding": "./src/facility-onboarding.ts",
     "./family-care": "./src/family-care.ts",
+    "./discovery-sos": "./src/discovery-sos.ts",
     "./privacy-dsr-notifications": "./src/privacy-dsr-notifications.ts"
   },
   "scripts": {
+    "dev:discovery-sos": "tsx src/discovery-sos-runner.ts",
     "test": "node --test src/*.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
@@ -21,6 +23,7 @@
     "postgres": "3.4.9"
   },
   "devDependencies": {
+    "tsx": "4.21.0",
     "typescript": "7.0.2"
   }
 }

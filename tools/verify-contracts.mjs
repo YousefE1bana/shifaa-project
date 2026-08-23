@@ -42,6 +42,16 @@ const privacyRoutesPath = path.join(
   repoRoot,
   'services/api/src/routes/privacy-dsr-notifications.ts',
 );
+const discoverySosOpenApiPath = path.join(
+  repoRoot,
+  'specs/006-discovery-sos-foundation/contracts/openapi.yaml',
+);
+const discoverySosContractModulePath = path.join(
+  repoRoot,
+  'packages/contracts/src/discovery-sos.ts',
+);
+const discoverySosClientPath = path.join(repoRoot, 'packages/api-client/src/discovery-sos.ts');
+const discoverySosRoutesPath = path.join(repoRoot, 'services/api/src/routes/discovery-sos.ts');
 const failures = [];
 
 function mustRead(file) {
@@ -115,7 +125,7 @@ function parseCatalog(text) {
   const operations = new Map();
   for (const line of text.split(/\r?\n/)) {
     const match = line.match(
-      /^\| `([^`]+)` \| `(GET|POST|PUT|PATCH|DELETE) ([^`]+)` \|[^|]*\|[^|]*\|[^|]*\| ([^|]+) \|\s*$/,
+      /^\|\s*`([^`]+)`\s*\|\s*`(GET|POST|PUT|PATCH|DELETE) ([^`]+)`\s*\|[^|]*\|[^|]*\|[^|]*\|\s*([^|]+?)\s*\|\s*$/,
     );
     if (!match) continue;
     operations.set(match[1], {
@@ -291,6 +301,49 @@ for (const [operationId, operation] of privacyOpenApi) {
 if (!/@generated\b/i.test(privacyClient))
   failures.push('Privacy API client is missing an @generated marker.');
 
+const discoverySosOpenApiText = mustRead(discoverySosOpenApiPath);
+const discoverySosContractModule = mustRead(discoverySosContractModulePath);
+const discoverySosClient = mustRead(discoverySosClientPath);
+const discoverySosRoutes = mustRead(discoverySosRoutesPath);
+const discoverySosOpenApi = parseOpenApi(discoverySosOpenApiText);
+if (!/^openapi:\s*3\.1\.1\s*$/m.test(discoverySosOpenApiText))
+  failures.push('Discovery and SOS contract must declare OpenAPI 3.1.1.');
+if (discoverySosOpenApi.size !== 10)
+  failures.push(
+    `Discovery and SOS OpenAPI must contain exactly 10 operations; found ${discoverySosOpenApi.size}.`,
+  );
+for (const [operationId, operation] of discoverySosOpenApi) {
+  const canonical = catalog.get(operationId);
+  if (!canonical) {
+    failures.push(
+      `Discovery/SOS operation ${operationId} is absent from the canonical API catalog.`,
+    );
+    continue;
+  }
+  if (canonical.method !== operation.method || canonical.path !== operation.path)
+    failures.push(
+      `${operationId} drift: Discovery/SOS OpenAPI ${operation.method} ${operation.path}; catalog ${canonical.method} ${canonical.path}.`,
+    );
+  for (const [label, source] of [
+    ['contract module', discoverySosContractModule],
+    ['generated client', discoverySosClient],
+    ['registered routes', discoverySosRoutes],
+  ])
+    if (!new RegExp(`\\b${operationId}\\b`).test(source))
+      failures.push(`Discovery/SOS ${label} is missing ${operationId}.`);
+}
+if (!/@generated\b/i.test(discoverySosClient))
+  failures.push('Discovery and SOS API client is missing an @generated marker.');
+for (const forbidden of [
+  'searchDoctors',
+  'searchPharmacyStock',
+  'changeBedState',
+  'recordArrival',
+  'updateTriage',
+])
+  if (discoverySosOpenApi.has(forbidden))
+    failures.push(`Forbidden later-phase operation is present in 006: ${forbidden}.`);
+
 if (failures.length > 0) {
   console.error('Contract verification failed:');
   for (const failure of failures.sort()) console.error(`- ${failure}`);
@@ -298,5 +351,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  'Contract verification passed: 62 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
+  'Contract verification passed: 72 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
 );

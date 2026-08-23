@@ -10,6 +10,11 @@ export interface ApiConfig {
   facilityOnboardingEnabled: boolean;
   familyCareEnabled: boolean;
   privacyDsrNotificationsEnabled: boolean;
+  discoverySosEnabled: boolean;
+  discoveryRadiusM: number;
+  sosMatchRadiusM: number;
+  capacitySourceCode: string;
+  discoverySosPublicAppUrl: string;
   syntheticMode: boolean;
   syntheticProofingEnabled: boolean;
   authAdapter: 'local' | 'supabase';
@@ -48,6 +53,20 @@ function readKey(name: string, value: string | undefined): Uint8Array {
   return decoded;
 }
 
+function readBoundedInteger(
+  name: string,
+  value: string | undefined,
+  fallback: number,
+  minimum: number,
+  maximum: number,
+): number {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isInteger(parsed) || parsed < minimum || parsed > maximum) {
+    throw new ConfigurationError(`${name} must be an integer from ${minimum} to ${maximum}.`);
+  }
+  return parsed;
+}
+
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
   const environment = (env['NODE_ENV'] ?? 'development') as RuntimeEnvironment;
   if (!['development', 'test', 'production'].includes(environment)) {
@@ -67,7 +86,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
   const uploadAdapter = (env['UPLOAD_ADAPTER'] ?? 'local') as ApiConfig['uploadAdapter'];
   const corsOrigins = (
     env['CORS_ALLOWED_ORIGINS'] ??
-    'http://127.0.0.1:8081,http://localhost:8081,http://127.0.0.1:3001,http://localhost:3001'
+    'http://127.0.0.1:8081,http://localhost:8081,http://127.0.0.1:3001,http://localhost:3001,http://127.0.0.1:3013,http://localhost:3013'
   )
     .split(',')
     .map((origin) => origin.trim())
@@ -87,6 +106,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     if (readBoolean(env['PRIVACY_DSR_NOTIFICATIONS_ENABLED'], false)) {
       throw new ConfigurationError(
         'Production startup denied: Privacy DSR and messaging remain seeded-synthetic only.',
+      );
+    }
+    if (readBoolean(env['DISCOVERY_SOS_ENABLED'], false)) {
+      throw new ConfigurationError(
+        'Production startup denied: Discovery and SOS remain seeded-synthetic only.',
       );
     }
     const forbidden = [
@@ -166,6 +190,23 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
       env['PRIVACY_DSR_NOTIFICATIONS_ENABLED'],
       environment !== 'production',
     ),
+    discoverySosEnabled: readBoolean(env['DISCOVERY_SOS_ENABLED'], environment !== 'production'),
+    discoveryRadiusM: readBoundedInteger(
+      'DISCOVERY_RADIUS_M',
+      env['DISCOVERY_RADIUS_M'],
+      25_000,
+      100,
+      100_000,
+    ),
+    sosMatchRadiusM: readBoundedInteger(
+      'SOS_MATCH_RADIUS_M',
+      env['SOS_MATCH_RADIUS_M'],
+      25_000,
+      100,
+      100_000,
+    ),
+    capacitySourceCode: env['CAPACITY_SOURCE_CODE'] ?? 'synthetic_seed',
+    discoverySosPublicAppUrl: env['DISCOVERY_SOS_PUBLIC_APP_URL'] ?? 'http://127.0.0.1:8081',
     syntheticMode,
     syntheticProofingEnabled,
     authAdapter,

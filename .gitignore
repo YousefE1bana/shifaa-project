@@ -41,6 +41,7 @@ expo-env.d.ts
 /apps/patient/.gitignore
 .pnpm-store/
 artifacts/
+.specify/extensions/.cache/
 
 # OS/editor noise
 .DS_Store

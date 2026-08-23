@@ -1,0 +1,86 @@
+{
+  "generated_at": "2026-08-23T15:56:43.404Z",
+  "mode": "seeded-synthetic PostgreSQL + PostGIS forced RLS; 100 concurrent sessions; 100 PostGIS spatial matches; 100 worker contact deliveries",
+  "samples": {
+    "sessions": 100,
+    "facilities": 6,
+    "sos_incidents": 100,
+    "worker_claims": 100
+  },
+  "thresholds_ms": {
+    "read_p95": 400,
+    "mutation_p95": 800,
+    "sos_matching_p95": 2000,
+    "worker_claim_p95": 800
+  },
+  "measured_ms": {
+    "read_p95": 224.59,
+    "mutation_p95": 595.91,
+    "sos_matching_p95": 595.91,
+    "worker_claim_p95": 48.61
+  },
+  "gist_index_scan": "PASS",
+  "gist_plan": {
+    "QUERY PLAN": [
+      {
+        "Plan": {
+          "Node Type": "Index Scan",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Scan Direction": "Forward",
+          "Index Name": "facilities_location_gist",
+          "Relation Name": "facilities",
+          "Alias": "f",
+          "Startup Cost": 0.25,
+          "Total Cost": 20.77,
+          "Plan Rows": 1,
+          "Plan Width": 16,
+          "Actual Startup Time": 9.396,
+          "Actual Total Time": 9.408,
+          "Actual Rows": 6,
+          "Actual Loops": 1,
+          "Index Cond": "(location && _st_expand('0101000020E610000017D9CEF753333F407D3F355EBA193E40'::geography, '25000'::double precision))",
+          "Rows Removed by Index Recheck": 0,
+          "Filter": "st_dwithin(location, '0101000020E610000017D9CEF753333F407D3F355EBA193E40'::geography, '25000'::double precision, true)",
+          "Rows Removed by Filter": 0,
+          "Shared Hit Blocks": 307,
+          "Shared Read Blocks": 1,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning": {
+          "Shared Hit Blocks": 65,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        },
+        "Planning Time": 8.695,
+        "Triggers": [],
+        "Execution Time": 9.457
+      }
+    ]
+  },
+  "prohibited_sentinel_scan": "PASS",
+  "browser_metrics": {
+    "observed_at": "2026-08-23",
+    "patient_home_lcp_ms": 376,
+    "input_to_next_paint_proxy_p95_ms": 3.5,
+    "formal_inp_ms": null,
+    "formal_inp_status": "UNOBSERVABLE_IN_AUTOMATION_UNTRUSTED_EVENTS; proxy is laboratory evidence, not a field-INP claim",
+    "trusted_event_samples": 0,
+    "status": "PASS_WITH_DECLARED_FORMAL_INP_LIMITATION"
+  },
+  "result": "PASS"
+}
