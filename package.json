@@ -54,7 +54,7 @@
     "dev:admin:web": "pwsh -NoProfile -File tools/start-admin-web.ps1",
     "architecture:check": "node tools/verify-architecture.mjs",
     "contracts:check": "node tools/verify-contracts.mjs && pnpm --filter @shifaa/contracts test && pnpm --filter @shifaa/api-client test",
-    "dependencies:check": "pnpm peers check && pnpm audit --audit-level high --ignore-unfixable && pnpm --filter @shifaa/patient exec expo install --check",
+    "dependencies:check": "pnpm peers check && pnpm audit --audit-level high --ignore-unfixable && node tools/verify-expo-dependencies.mjs",
     "secrets:check": "node tools/verify-secrets.mjs",
     "test:performance": "node tools/run-performance.mjs",
     "sbom:generate": "node -e \"require('node:fs').mkdirSync('artifacts',{recursive:true})\" && pnpm sbom --sbom-format cyclonedx --out artifacts/sbom.cdx.json"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T13:08:25.015Z",
+  "generated_at": "2026-08-24T13:16:57.984Z",
   "mode": "seeded-synthetic PostgreSQL + PostGIS forced RLS; 100 concurrent sessions; 100 PostGIS spatial matches; 100 worker contact deliveries",
   "samples": {
     "sessions": 100,
@@ -24,10 +24,10 @@
     "worker_claim_p95": 800
   },
   "measured_ms": {
-    "read_p95": 194.54,
-    "mutation_p95": 300.65,
-    "sos_matching_p95": 300.65,
-    "worker_claim_p95": 44.88
+    "read_p95": 188.83,
+    "mutation_p95": 295.96,
+    "sos_matching_p95": 295.96,
+    "worker_claim_p95": 42.34
   },
   "gist_index_scan": "PASS",
   "gist_plan": {
@@ -45,8 +45,8 @@
           "Total Cost": 20.77,
           "Plan Rows": 1,
           "Plan Width": 16,
-          "Actual Startup Time": 10.464,
-          "Actual Total Time": 10.473,
+          "Actual Startup Time": 11.004,
+          "Actual Total Time": 11.013,
           "Actual Rows": 6,
           "Actual Loops": 1,
           "Index Cond": "(location && _st_expand('0101000020E610000017D9CEF753333F407D3F355EBA193E40'::geography, '25000'::double precision))",
@@ -76,9 +76,9 @@
           "Temp Read Blocks": 0,
           "Temp Written Blocks": 0
         },
-        "Planning Time": 7.825,
+        "Planning Time": 7.984,
         "Triggers": [],
-        "Execution Time": 10.518
+        "Execution Time": 11.06
       }
     ]
   },
