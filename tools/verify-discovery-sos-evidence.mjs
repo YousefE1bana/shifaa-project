@@ -116,6 +116,7 @@ for (const required of [
   'final-analysis.md',
   'verification.md',
   'performance.json',
+  'performance-reproducibility.md',
   join('security', 'final-security.md'),
   join('security', 'postgis-runtime.md'),
   join('security', 'postgis-scout.sarif'),
@@ -137,6 +138,15 @@ try {
 try {
   const performance = JSON.parse(text(join(evidence, 'performance.json')));
   if (performance.result !== 'PASS') failures.push('006 performance result is not PASS.');
+  if (
+    performance.measurement_profile?.semantics !==
+      'steady-state regional API latency; process and connection cold start excluded' ||
+    performance.measurement_profile?.api_pool_connections !== 20 ||
+    performance.measurement_profile?.read_only_warmup_requests !== 20 ||
+    performance.measurement_profile?.observed_api_connections !== 20 ||
+    performance.measurement_profile?.warmup_excluded_from_samples !== true
+  )
+    failures.push('006 performance evidence lacks the deterministic 20-connection warmup profile.');
   for (const key of ['read_p95', 'mutation_p95', 'sos_matching_p95', 'worker_claim_p95']) {
     if (!Number.isFinite(performance.measured_ms?.[key]))
       failures.push(`${key} is not a finite numeric measurement.`);
