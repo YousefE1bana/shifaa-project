@@ -10,6 +10,8 @@ import { PostgresDiscoverySosProcessor } from '../services/worker/src/discovery-
 import postgres from 'postgres';
 
 const samples = 100;
+const apiPoolConnections = 20;
+const warmupRoute = '/v1/discovery/facilities?type=hospital&near=30.1005,31.2005&radius=25000';
 const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
 const apiUrl = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa';
 const workerUrl = 'postgresql://shifaa_worker:synthetic_worker_only@127.0.0.1:5432/shifaa';
@@ -98,6 +100,25 @@ async function main() {
   });
 
   try {
+    // NFR-PERF-002 measures steady-state regional API latency, not process or
+    // connection cold start. Establish the full configured API pool with
+    // read-only requests before starting the timed 100-session sample.
+    const warmupResponses = await Promise.all(
+      Array.from({ length: apiPoolConnections }, (_, index) =>
+        harness.app.inject({
+          method: 'GET',
+          url: warmupRoute,
+          remoteAddress: `10.254.0.${index + 1}`,
+        }),
+      ),
+    );
+    warmupResponses.forEach((response) => assert.equal(response.statusCode, 200, response.body));
+    const [pool] = await owner<{ connections: number }[]>`
+      select count(*)::integer connections
+      from pg_stat_activity
+      where datname=current_database() and usename='shifaa_api'`;
+    assert.equal(pool?.connections, apiPoolConnections, 'API connection pool did not fully warm');
+
     // 1. Measure GiST Query Plan for facility search
     const [plan] = await owner.begin(async (sql) => {
       await sql`set local enable_seqscan=off`;
@@ -246,6 +267,16 @@ async function main() {
         facilities: 6,
         sos_incidents: samples,
         worker_claims: samples,
+      },
+      measurement_profile: {
+        semantics: 'steady-state regional API latency; process and connection cold start excluded',
+        api_pool_connections: apiPoolConnections,
+        read_only_warmup_requests: warmupResponses.length,
+        observed_api_connections: pool.connections,
+        warmup_excluded_from_samples: true,
+        node: process.version,
+        platform: process.platform,
+        architecture: process.arch,
       },
       thresholds_ms: {
         read_p95: 400,
