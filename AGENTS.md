@@ -18,6 +18,15 @@ Every spec 003+ must complete this sequence in order:
    Issue or Issues.
 8. Only then clean up the feature worktree and branch.
 
+## Remaining feature authority
+
+For every feature after 006, read
+`docs/governance/SHIFAA-Remaining-Specs-Roadmap.md` first and use the assigned
+row as the feature boundary. Do not re-derive the project-wide roadmap. Inspect
+only the canonical material relevant to that feature and its listed
+dependencies; any boundary conflict requires a governance reconciliation before
+the feature's SpecKit lifecycle begins.
+
 ## Shared agent skills
 
 Project-scoped skills shared by Codex and Kimi Code CLI live in
@@ -41,8 +50,8 @@ agent owns diff review, verification, commit, push, and the PR lifecycle.
 
 <!-- SPECKIT START -->
 
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
-at specs/006-discovery-sos-foundation/plan.md
+For the approved post-006 order, ownership, dependencies, and exclusions, read
+docs/governance/SHIFAA-Remaining-Specs-Roadmap.md before opening the assigned
+feature plan.
 
 <!-- SPECKIT END -->
