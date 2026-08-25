@@ -28,8 +28,15 @@ beforeAll(async () => {
 });
 afterAll(() => server.close());
 
-async function token(overrides: { audience?: string; expires?: string } = {}) {
-  return new SignJWT({ aal: 'aal1' })
+async function token(
+  overrides: { audience?: string; expires?: string; claims?: Record<string, unknown> } = {},
+) {
+  return new SignJWT({
+    aal: 'aal1',
+    session_id: '00000000-0000-4000-8000-000000000011',
+    amr: [{ method: 'password', timestamp: 1_777_000_000 }],
+    ...overrides.claims,
+  })
     .setProtectedHeader({ alg: 'ES256', kid: 'test-key' })
     .setSubject('00000000-0000-4000-8000-000000000010')
     .setIssuer('http://local.test/auth/v1')
@@ -47,5 +54,33 @@ describe('Supabase JWT verifier', () => {
     expect(await verifier.verify(await token({ audience: 'wrong' }))).toBeUndefined();
     expect(await verifier.verify(await token({ expires: '-1s' }))).toBeUndefined();
     expect(await verifier.verify('forged.header.payload')).toBeUndefined();
+  });
+
+  it.each([
+    { session_id: undefined },
+    { session_id: 'not-a-uuid' },
+    { aal: 'aal3' },
+    { amr: undefined },
+    { amr: [{ method: 'totp', timestamp: 'recent' }] },
+  ])('rejects malformed continuity claims %#', async (claims) => {
+    expect(await verifier.verify(await token({ claims }))).toBeUndefined();
+  });
+
+  it('projects timestamped AMR without trusting user metadata for authorization', async () => {
+    const verified = await verifier.verify(
+      await token({
+        claims: {
+          aal: 'aal2',
+          amr: [{ method: 'totp', timestamp: 1_777_000_100 }],
+          user_metadata: { role: 'ADM-SUPER', purpose: 'guardianship_review' },
+        },
+      }),
+    );
+    expect(verified).toMatchObject({
+      aal: 2,
+      sessionId: '00000000-0000-4000-8000-000000000011',
+      amr: [{ method: 'totp', timestamp: 1_777_000_100 }],
+    });
+    expect(verified).not.toHaveProperty('role');
   });
 });

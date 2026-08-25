@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 
-import { SupabaseJwtVerifier } from '@shifaa/auth';
+import {
+  SupabaseJwtVerifier,
+  type ContinuityAuthPort,
+  type NativeFactorSummary,
+  type NativeSessionProjection,
+  type NativeTotpEnrollment,
+} from '@shifaa/auth';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 import { ApiPolicyError } from '../modules/identity-onboarding/errors.js';
@@ -16,7 +22,7 @@ export interface SupabaseAuthOptions {
   audience: string;
 }
 
-export class SupabaseAuthIssuer implements AuthIssuer {
+export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
   private readonly client: SupabaseClient;
   private readonly verifier: SupabaseJwtVerifier;
   private readonly challenges = new Map<string, ChallengePayload>();
@@ -108,6 +114,112 @@ export class SupabaseAuthIssuer implements AuthIssuer {
   public async resolveSession(accessToken: string): Promise<AuthSession | undefined> {
     const verified = await this.verifier.verify(accessToken);
     return verified ? { subjectId: verified.subjectId, accessToken, aal: verified.aal } : undefined;
+  }
+
+  public async refresh(refreshToken: string): Promise<NativeSessionProjection> {
+    const client = this.createUserClient();
+    const { data, error } = await client.auth.refreshSession({ refresh_token: refreshToken });
+    const session = data.session;
+    if (error || !session?.access_token || !session.refresh_token || !session.expires_at)
+      throw new ApiPolicyError('session-expired', 401, 'The session cannot be refreshed.');
+    const verified = await this.verifier.verify(session.access_token);
+    if (!verified) throw new ApiPolicyError('session-revoked', 401, 'The session is not current.');
+    return {
+      accessToken: session.access_token,
+      refreshToken: session.refresh_token,
+      sessionId: verified.sessionId,
+      assurance: verified.aal === 2 ? 'aal2' : 'aal1',
+      expiresAt: new Date(session.expires_at * 1_000).toISOString(),
+    };
+  }
+
+  public async logout(accessToken: string, scope: 'local' | 'global'): Promise<void> {
+    const response = await fetch(`${this.options.url}/auth/v1/logout?scope=${scope}`, {
+      method: 'POST',
+      headers: { apikey: this.options.anonKey, authorization: `Bearer ${accessToken}` },
+      signal: AbortSignal.timeout(5_000),
+    });
+    if (!response.ok)
+      throw new ApiPolicyError('vendor-unavailable', 503, 'Native session revocation failed.');
+  }
+
+  public async listFactors(accessToken: string): Promise<readonly NativeFactorSummary[]> {
+    const { data, error } = await this.createUserClient(accessToken).auth.mfa.listFactors();
+    if (error)
+      throw new ApiPolicyError('vendor-unavailable', 503, 'Native factors are unavailable.');
+    return data.totp
+      .filter((factor) => factor.status === 'verified')
+      .map((factor) => ({
+        id: factor.id,
+        type: 'totp' as const,
+        status: 'verified' as const,
+        friendlyName: factor.friendly_name ?? null,
+        createdAt: factor.created_at,
+      }));
+  }
+
+  public async enrollTotp(
+    accessToken: string,
+    friendlyName?: string,
+  ): Promise<NativeTotpEnrollment> {
+    const { data, error } = await this.createUserClient(accessToken).auth.mfa.enroll({
+      factorType: 'totp',
+      ...(friendlyName ? { friendlyName } : {}),
+    });
+    if (error || data.type !== 'totp')
+      throw new ApiPolicyError('vendor-unavailable', 503, 'Native TOTP enrollment failed.');
+    return { enrollmentId: data.id, secret: data.totp.secret, qrUri: data.totp.uri };
+  }
+
+  public async verifyTotp(
+    accessToken: string,
+    enrollmentId: string,
+    code: string,
+  ): Promise<NativeFactorSummary> {
+    const client = this.createUserClient(accessToken);
+    const challenge = await client.auth.mfa.challenge({ factorId: enrollmentId });
+    if (challenge.error || !challenge.data.id)
+      throw new ApiPolicyError('factor-code-invalid', 422, 'The factor code is invalid.');
+    const verified = await client.auth.mfa.verify({
+      factorId: enrollmentId,
+      challengeId: challenge.data.id,
+      code,
+    });
+    if (verified.error)
+      throw new ApiPolicyError('factor-code-invalid', 422, 'The factor code is invalid.');
+    const factors = await this.listFactors(accessToken);
+    const factor = factors.find((entry) => entry.id === enrollmentId);
+    if (!factor)
+      throw new ApiPolicyError('vendor-unavailable', 503, 'Verified factor is unavailable.');
+    return factor;
+  }
+
+  public async unenrollFactor(accessToken: string, factorId: string): Promise<void> {
+    const { error } = await this.createUserClient(accessToken).auth.mfa.unenroll({ factorId });
+    if (error) throw new ApiPolicyError('vendor-unavailable', 503, 'Native factor removal failed.');
+  }
+
+  public async startRecovery(handle: string): Promise<void> {
+    const { error } = await this.createUserClient().auth.resetPasswordForEmail(handle);
+    if (error) throw new ApiPolicyError('vendor-unavailable', 503, 'Recovery delivery failed.');
+  }
+
+  public async updateRecoveredCredential(
+    accessToken: string,
+    newCredential: string,
+  ): Promise<void> {
+    const { error } = await this.createUserClient(accessToken).auth.updateUser({
+      password: newCredential,
+    });
+    if (error)
+      throw new ApiPolicyError('vendor-unavailable', 503, 'Credential replacement failed.');
+  }
+
+  private createUserClient(accessToken?: string): SupabaseClient {
+    return createClient(this.options.url, this.options.anonKey, {
+      auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+      ...(accessToken ? { global: { headers: { Authorization: `Bearer ${accessToken}` } } } : {}),
+    });
   }
 
   private createChallenge(payload: ChallengePayload): string {

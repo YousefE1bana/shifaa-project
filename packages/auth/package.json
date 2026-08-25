@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Session-client boundary placeholder; domain authorization remains in API/core/RLS.",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./identity-continuity": "./src/identity-continuity.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

@@ -1,8 +1,14 @@
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
 
+import { parseContinuityClaims, type AuthMethodReference } from './identity-continuity.js';
+
+export * from './identity-continuity.js';
+
 export interface VerifiedSupabaseSession {
   subjectId: string;
+  sessionId: string;
   aal: 1 | 2;
+  amr: readonly AuthMethodReference[];
   payload: JWTPayload;
 }
 
@@ -24,9 +30,9 @@ export class SupabaseJwtVerifier {
         audience: this.audience,
         algorithms: ['ES256'],
       });
-      if (!payload.sub || protectedHeader.alg !== 'ES256') return undefined;
-      const aal = payload['aal'] === 'aal2' ? 2 : 1;
-      return { subjectId: payload.sub, aal, payload };
+      if (protectedHeader.alg !== 'ES256') return undefined;
+      const claims = parseContinuityClaims(payload);
+      return claims ? { ...claims, payload } : undefined;
     } catch {
       return undefined;
     }
