@@ -32,24 +32,25 @@
 
 ## Readiness result
 
-| Gate             | Result   | Evidence and required closure                                                                                                                                                                                                                                                    |
-| ---------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPEN-TEAM-001`  | **OPEN** | Only Yousef Osama's Product Owner authority is established. GitHub access does not establish team specialties or acknowledgement. Approve and acknowledge the proposed RACI, identify the supervisor/TA, confirm GitHub identities, and name primary/secondary on-call contacts. |
-| `OPEN-SEC-001`   | **OPEN** | The parent recommendation and deterministic test contract are prepared and adversarially reviewed. A named Security Lead and Architecture Lead must approve exact values and the threat model with artifact digests.                                                             |
-| `OPEN-LEGAL-006` | **OPEN** | No written Egyptian-law analysis, registered-DPO decision, approved state/event matrix, or signed test vectors exist. Legal counsel, registered DPO, and Product Owner must provide the named artifacts.                                                                         |
+| Gate             | Result                                   | Evidence and required closure                                                                                                                                                                                                                                                                         |
+| ---------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPEN-TEAM-001`  | **OPEN**                                 | Only Yousef Osama's Product Owner authority is established. GitHub access does not establish team specialties or acknowledgement. Approve and acknowledge the proposed RACI, identify the supervisor/TA, confirm GitHub identities, and name primary/secondary on-call contacts.                      |
+| `OPEN-SEC-001`   | **OPEN**                                 | The parent recommendation and deterministic test contract are prepared and adversarially reviewed. A named Security Lead and Architecture Lead must approve exact values and the threat model with artifact digests.                                                                                  |
+| `OPEN-LEGAL-006` | **CLOSED for specification/development** | The Product Owner approved the anonymous `External Egyptian legal counsel analysis — Product Owner approved` basis. Baseline amendment v2.1.1 freezes the seven legal rules, logical state/event matrix, and `TV-FAM-CAPACITY-TRANSITION-001..020`; production legal, DPO, and PHI gates remain open. |
 
-Because all three roadmap gates block `SPEC_APPROVED`, no `spec.md`, clarification baseline, plan,
+Because the remaining two roadmap gates block `SPEC_APPROVED`, no `spec.md`, clarification baseline, plan,
 task list, analysis baseline, Issues, or implementation authorization has been generated.
 
 ## AGY review evidence
 
-Both reviews used `gemini-3.7-flash-high`, `--effort high`, and `--read-only` through the reviewed
-relay. Both completed with exit `0` and `readOnlyViolation: false`.
+All reviews used `gemini-3.7-flash-high`, `--effort high`, and `--read-only` through the reviewed
+relay. All completed with exit `0` and `readOnlyViolation: false`.
 
-| Review               | Project                                | Conversation                           | Parent disposition                                                                                              |
-| -------------------- | -------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Session/MFA/recovery | `1953f666-a0e2-4de0-a4fa-14ef642027c1` | `55c62721-8f0e-4f9a-9d81-09d6c13b7317` | Concrete security gaps accepted; scope expansion, fingerprint trust, and unproven passkey claims rejected.      |
-| Dependent transition | `73599f73-1d8e-415d-b61d-1e9d350a6135` | `b95a6cac-7bc2-43af-81b6-b7c8a39642be` | Structural/data questions accepted; asserted legal thresholds, new operations/types, and pre-gate DDL rejected. |
+| Review                       | Project                                | Conversation                           | Parent disposition                                                                                                                                                                                                      |
+| ---------------------------- | -------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session/MFA/recovery         | `1953f666-a0e2-4de0-a4fa-14ef642027c1` | `55c62721-8f0e-4f9a-9d81-09d6c13b7317` | Concrete security gaps accepted; scope expansion, fingerprint trust, and unproven passkey claims rejected.                                                                                                              |
+| Dependent transition         | `73599f73-1d8e-415d-b61d-1e9d350a6135` | `b95a6cac-7bc2-43af-81b6-b7c8a39642be` | Structural/data questions accepted; asserted legal thresholds, new operations/types, and pre-gate DDL rejected.                                                                                                         |
+| Legal closure reconciliation | `b74e5dcd-5850-459f-9013-a857c04b3de8` | `424177e9-0389-4c3f-86d1-6350fed77485` | Development/production separation and passive age-21 evaluation accepted; new relationship behavior, payloads, schema, status codes, and CI scope rejected or deferred where repository authority did not support them. |
 
 See `open-sec-001-decision-memo.md`, `open-legal-006-decision-request.md`, and
 `open-team-001-decision-request.md` for the finding-by-finding disposition and exact approvals needed.
@@ -57,7 +58,6 @@ See `open-sec-001-decision-memo.md`, `open-legal-006-decision-request.md`, and
 ## Next permitted action
 
 Yousef Osama may approve/correct the proposed named RACI and provide the missing supervisor/TA and
-acknowledgements; the nominated Security and Architecture leads may sign the security decision; and
-licensed Egyptian counsel plus the registered DPO may return the legal/privacy decision package.
-Only after all three closure artifacts are valid may the normal `specify -> clarify -> plan -> tasks ->
+acknowledgements, and the nominated Security and Architecture leads may sign the security decision.
+Only after both remaining closure artifacts are valid may the normal `specify -> clarify -> plan -> tasks ->
 analyze -> taskstoissues` sequence begin. Implementation remains unauthorized.

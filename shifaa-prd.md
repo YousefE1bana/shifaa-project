@@ -1,14 +1,23 @@
 # SHIFAA (شفاء) — Product Requirements Document
 
-> **Document ID:** SHIFAA-PRD  
-> **Version:** 2.1.0  
-> **Status:** Approved implementation baseline; production authorization blockers remain open  
-> **Owner:** Product Owner  
-> **Approved by:** Yousef Osama  
-> **Approved on:** 9-Aug-2026  
-> **Approval version:** v2.1.0  
-> **Approval record:** [`docs/governance/SHIFAA-Baseline-Approval-v2.1.0.md`](./docs/governance/SHIFAA-Baseline-Approval-v2.1.0.md)  
-> **Last verified:** 2026-08-09 (Africa/Cairo)  
+> **Document ID:** SHIFAA-PRD
+>
+> **Version:** 2.1.1
+>
+> **Status:** Approved implementation baseline; production authorization blockers remain open
+>
+> **Owner:** Product Owner
+>
+> **Approved by:** Yousef Osama
+>
+> **Approved on:** 25-Aug-2026
+>
+> **Approval version:** v2.1.1
+>
+> **Approval record:** [`docs/governance/SHIFAA-Baseline-Amendment-v2.1.1-OPEN-LEGAL-006.md`](./docs/governance/SHIFAA-Baseline-Amendment-v2.1.1-OPEN-LEGAL-006.md)
+>
+> **Last verified:** 2026-08-25 (Africa/Cairo)
+>
 > **Delivery target:** 2027-05-31
 
 ## 1. Purpose and authority
@@ -325,6 +334,7 @@ The closed decisions and remaining-open table are mirrored verbatim in Master Se
 |---|---|---|---|---|
 | OPEN-PRODUCT-002 | 2026-08-09 by Product Owner directive | **AI Triage stays in mandatory graduation-MVP scope** as the isolated one-to-two-person ADR-014 track. `FR-AI-001..005` count toward MVP completion. | It is a high-value differentiator that can be built independently without weakening the core path. The graduation build is non-public and access-controlled, uses seeded synthetic personas, accepts allow-listed structured inputs that reject identifiers/free text, runs deterministic red flags first, is advisory/no-diagnosis, cannot mutate clinical state without a licensed-human confirmation, does not train on inputs, and has a kill switch; therefore no additional production legal opinion is required for the graduation demonstration. | Real-PHI or public-production enablement requires the applicable legal/privacy basis, processor terms, clinical approval, production evaluation, monitoring, and rollback evidence; this does not reopen the MVP scope decision. |
 | OPEN-LEGAL-004 | 2026-08-09 by Product Owner directive | **Donations/Four-Eyes donation workflow moves to post-MVP and is not implemented for graduation.** `FR-FIN-001..003` are reserved, excluded IDs. Generic four-eyes governance under `FR-ADMIN-004` remains in MVP. | Donation collection creates a separate fundraising, custody, AML/KYC, receipt, reconciliation, and disbursement product that does not advance the four core care touchpoints. The 2026-07-03 verbal legal review is recorded as historical input but is unnecessary for—and does not authorize—an out-of-scope production flow. | Re-entry requires an executed operating agreement with a licensed Egyptian fundraising/care-finance partner and CBE-licensed PSP. The partner must own collection, KYC/AML, custody, receipts, and disbursement; SHIFAA may provide workflow/integration only, must not hold funds, and must approve a new dated scope ADR before implementation. |
+| OPEN-LEGAL-006 | 2026-08-25 by Product Owner approval | **CLOSED for Feature-007 specification/development:** 18 is not an automatic SHIFAA account-transfer trigger; 21 is a passive eligibility predicate that starts on-demand identity proofing and reviewed confirmation, never silent transfer; an active interdiction, controlling court order, or dispute requires human review; approval preserves the same patient/clinical record, ends prior guardian acting authority, and requires any later guardian/delegate access to use a separately lawful relationship or grant. Source: `External Egyptian legal counsel analysis — Product Owner approved`. | The approved state/event matrix and deterministic vectors in the v2.1.1 amendment close only the legal ambiguity that blocked `FR-FAM-003`; the repository neither requests nor stores external counsel identity and selects no new endpoint, relationship type, table, column, or auth/session state. | Development uses synthetic fixtures only. Live identity-document intake, production evidence processing/retention, article-level compliance claims, processors, and production PHI/release remain blocked by `OPEN-LEGAL-001`, `OPEN-LEGAL-002`, `OPEN-LEGAL-007`, applicable vendor gates, and every other unchanged production gate. |
 
 ### 10.2 Remaining open items
 
@@ -334,7 +344,6 @@ The closed decisions and remaining-open table are mirrored verbatim in Master Se
 | OPEN-LEGAL-002 | Egyptian retention periods for each medical, prescription, lab, identity, consent, audit, and finance class | Legal counsel + DPO + Medical Director | Produce signed retention schedule citing controlling instruments | Production retention/deletion automation | RELEASE_APPROVED |
 | OPEN-LEGAL-003 | Controlled-drug/e-prescription workflow and whether any digital record substitutes for original statutory books/forms | EDA/MoHP liaison + Legal + Chief Pharmacist | Obtain written authority interpretation and current schedules/process rules | Controlled-drug production flow | RELEASE_APPROVED for controlled paths |
 | OPEN-LEGAL-005 | Official disability-card verification interface and exact public/private facility benefits | MOSS liaison + Legal | Obtain interface/verification instructions and benefit applicability in writing | Automated entitlement decision | RELEASE_APPROVED for automated entitlement |
-| OPEN-LEGAL-006 | Guardianship age/capacity transition trigger, evidence, approver, and treatment of adults lacking capacity | Legal counsel + DPO + Product Owner | Obtain written Egyptian-law analysis; approve a state/event matrix and test vectors | Automatic guardianship/dependent transition | SPEC_APPROVED for FR-FAM-003 |
 | OPEN-LEGAL-007 | Official/certified Arabic Gazette copies and counsel-verified article mapping for Law 151/2020 and Executive Regulations Decision 816/2025 | Legal counsel + registered DPO | Archive controlling Arabic texts; map each compliance proposition to exact article; sign legal-validation memo | Treating article-level PDPL interpretations as production evidence | RELEASE_APPROVED for production PHI |
 | OPEN-PRIV-001 | Minimum-cell-size threshold and dimensions for admin aggregate disclosure | Registered DPO + Security Lead + Data Lead | Perform documented re-identification-risk assessment; approve threshold/config/test set | FR-ADMIN-003 dashboard aggregates | SPEC_APPROVED for FR-ADMIN-003 |
 | OPEN-VENDOR-001 | Valify commercial terms, DPA, SLA, Egypt processing location, production credentials, and fallback | Procurement + Security + DPO | Complete vendor assessment and signed contract | Automated National ID verification | RELEASE_APPROVED for automated proofing |
@@ -358,5 +367,6 @@ The closed decisions and remaining-open table are mirrored verbatim in Master Se
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-25 | 2.1.1 | Closed `OPEN-LEGAL-006` for Feature-007 specification/development from `External Egyptian legal counsel analysis — Product Owner approved`; froze the seven transition rules, state/event matrix, and test vectors while preserving all production legal/DPO/PHI gates. Approved by Product Owner Yousef Osama on 25-Aug-2026. |
 | 2026-08-09 | 2.1.0 | Closed the two scope decisions: AI Triage is mandatory graduation-MVP scope in an isolated one-to-two-person synthetic-data track; Donations/Four-Eyes donation flow is deferred to a licensed-partner-only post-graduation re-entry. Formally approved by Product Owner Yousef Osama on 9-Aug-2026. |
 | 2026-08-09 | 2.0.0 | Rebuilt the PRD around immutable traceable requirements; corrected Egyptian compliance claims; reconciled clinical override and emergency privacy; assigned IDs to every proposed/conditional feature; synchronized sequencing, worklists, and open items. |

@@ -61,10 +61,10 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 
 - **FR/NFR:** closure owner for `FR-AUTH-002`, `FR-AUTH-005`, `FR-FAM-003`, and `FR-ADMIN-002`; PATIENT plus `NFR-PRIV-003`.
 - **API operation IDs:** `refreshSession`, `logout`, `beginMfaEnrollment`, `verifyMfaEnrollment`, `removeMfaFactor`, `startRecovery`, `completeRecovery`, `transitionDependent`.
-- **Data/RLS:** Supabase Auth/session/factor primitives; `identity.care_relationships` transition evidence; shared idempotency, audit, and outbox. Do not invent shadow credential/session tables. The API promises a transition case/result but the Data/RLS contract has no explicit transition-case model; `OPEN-LEGAL-006` and `OPEN-TECH-002` must reconcile that state/evidence shape before DDL.
+- **Data/RLS:** Supabase Auth/session/factor primitives; `identity.care_relationships` transition evidence; shared idempotency, audit, and outbox. Do not invent shadow credential/session tables. The approved `OPEN-LEGAL-006` development matrix fixes the legal behavior without selecting persistence; the API promises a transition case/result while the Data/RLS contract has no explicit transition-case model, so `OPEN-TECH-002` must reconcile the physical state/evidence shape before DDL.
 - **UI/apps/services:** patient `/recovery`, `/mfa`, and governed `/relationships` transition states; workforce/admin step-up states in existing shells; `apps/patient`, staff apps, `packages/auth`, Core API.
 - **Dependencies/exclusions:** consumes 001-006 identity/RBAC/relationship/audit foundations. Excludes production Valify/SMS enablement, age/capacity trigger guessing, and any weakening of MFA during recovery.
-- **OPEN gates:** `OPEN-SEC-001`, `OPEN-LEGAL-006`, and the program-wide `OPEN-TEAM-001` block `SPEC_APPROVED`; `OPEN-VENDOR-002`, `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, and `OPEN-TECH-002/003` retain their canonical effects.
+- **OPEN gates:** `OPEN-SEC-001` and the program-wide `OPEN-TEAM-001` block `SPEC_APPROVED`. `OPEN-LEGAL-006` is closed for Feature-007 specification/development by the Product Owner-approved v2.1.1 amendment; `OPEN-VENDOR-002`, `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, and `OPEN-TECH-002/003` retain their canonical effects.
 - **Evidence:** refresh-family rotation/reuse/expiry and concurrent replay; recovery factor/re-proofing negatives; AAL1-to-AAL2 step-up and factor removal; cross-device logout; relationship transition preserves patient record and denies automatic transfer; forced-RLS, CSRF/cookie/mobile-storage, Arabic/English keyboard/screen-reader/reduced-motion evidence; read/mutation p95; full `pnpm verify`.
 
 ### 008 — Audit, Admin Aggregates, and Observability
@@ -292,7 +292,7 @@ This graph has 21 nodes including completed predecessor 006, 20 forward edges, n
 | Gate                                                 | Earliest affected remaining feature(s) | Frozen effect                                                                 |
 | ---------------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------- |
 | OPEN-SEC-001                                         | 007                                    | Blocks session/recovery `SPEC_APPROVED`                                       |
-| OPEN-LEGAL-006                                       | 007                                    | Blocks FR-FAM-003 `SPEC_APPROVED`                                             |
+| OPEN-LEGAL-006                                       | 007                                    | CLOSED for FR-FAM-003 specification/development by the Product Owner-approved v2.1.1 amendment; production legal/DPO/PHI gates remain open |
 | OPEN-PRIV-001                                        | 008                                    | Blocks FR-ADMIN-003 `SPEC_APPROVED`; may affect later aggregates              |
 | OPEN-PHARM-001                                       | 014                                    | Blocks FR-PHARM-006 `SPEC_APPROVED`                                           |
 | OPEN-LEGAL-003                                       | 012-014, 019                           | Blocks controlled/e-prescription production release                           |

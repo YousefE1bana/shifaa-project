@@ -19,7 +19,9 @@ Repository and live GitHub evidence as of 2026-08-25 establish only the followin
 - No repository document names Mostafa Ali, Diaa Eldin Assem, Ibrahim Saeid, Amira Saad, or Ziad
   Wael in a specialty or reviewer role. The candidate collaborator-to-person matches also require
   confirmation; no collaborator identity for Ziad was established.
-- No named academic supervisor/TA, registered DPO, or Egyptian legal counsel was found.
+- No named academic supervisor/TA or registered DPO was found. The identity of external Egyptian
+  legal counsel is deliberately neither requested nor stored; the approved development-stage source
+  is recorded only as `External Egyptian legal counsel analysis — Product Owner approved`.
 - No pull-request review or acknowledgement from the non-Yousef roster members was found.
 
 Commands used included `git shortlog -sne --all`, exact-name repository searches, and live GitHub
@@ -40,8 +42,10 @@ the supplied roster once each so Yousef can approve or replace names in one deci
 | Integration/UI/accessibility reviewer; secondary engineering on-call                 | Ziad Wael        | R                           | Confirm competence, contact/rotation, availability, and GitHub identity.                                             |
 | Academic supervisor/TA                                                               | **Unassigned**   | A/R as institution requires | Yousef must supply the name, role, contact, and acknowledgement; do not assume the Team Lead fills an academic role. |
 
-Registered DPO and Egyptian legal counsel are not silently assigned from the engineering roster. They
-must be named with their professional capacity in the OPEN-LEGAL-006 closure package.
+The registered-DPO and production legal responsibilities are not silently assigned from the
+engineering roster. They remain governed by the production/release `OPEN-LEGAL-001`,
+`OPEN-LEGAL-002`, and `OPEN-LEGAL-007` gates. External counsel identity is not part of
+`OPEN-TEAM-001` or the development-stage `OPEN-LEGAL-006` record.
 
 ## Exact approval requested from Yousef
 
@@ -51,8 +55,9 @@ Return a dated decision that:
 2. confirms each person's GitHub identity and whether they acknowledged the assignment;
 3. names the academic supervisor/TA and records acknowledgement;
 4. identifies primary and secondary security/on-call contact methods and the coverage/rotation rule;
-5. names the registered DPO and Egyptian legal counsel for regulated gates, without treating an
-   engineering role as professional registration; and
+5. preserves separate assignment and approval of regulated production/DPO responsibilities under
+   their applicable production/release gates, without treating an engineering role as professional
+   registration or recording external counsel identity; and
 6. records the approved artifact version/digest and any required reviewer independence.
 
 Until that attributable decision and acknowledgement exist, `OPEN-TEAM-001` remains open and Feature
