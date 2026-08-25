@@ -1,8 +1,9 @@
 # OPEN-SEC-001 — session, MFA, and recovery decision memo
 
-> **Status:** RECOMMENDATION READY; approval OPEN
+> **Status:** CLOSED for Feature-007 specification/development
 >
-> **Required approvers:** named Security Lead and Architecture Lead
+> **Approved by:** Yousef Osama, current Architecture Lead and pre-implementation engineering/security
+> decision authority
 >
 > **Boundary:** Feature 007 only; no production enablement or implementation authorization
 
@@ -36,8 +37,9 @@
 2. Use the single Supabase project-wide session policy for every actor: configure **23 hours 45
    minutes absolute timebox** and **45 minutes inactivity timeout**. Supabase documents that effective
    enforcement may add one access-token lifetime, so these settings bound the effective maximums to
-   **24 hours absolute** and **60 minutes idle**. Clients refresh before expiry only while active and
-   foregrounded; background refresh must not defeat idle expiry.
+   **24 hours absolute** and **60 minutes idle**. Refresh requires foreground user engagement; a
+   hidden, backgrounded, blurred, or otherwise unattended client suspends proactive refresh, and no
+   client timer may defeat idle expiry.
 3. Keep refresh-token rotation enabled and the documented **10-second** Supabase reuse interval. A
    reuse outside the two documented benign exceptions revokes the entire affected session/token
    family. No IP, User-Agent, or probabilistic device fingerprint becomes an authorization factor.
@@ -53,8 +55,10 @@
 
 6. Patient routine access may operate at AAL1. Every workforce/admin data access and action requires
    AAL2. High-risk operations require a qualifying AAL2 factor event in signed `amr` no older than
-   **5 minutes**; JWT `iat` or token-refresh timestamps never reset freshness. Missing/malformed
-   `session_id`, `aal`, or qualifying `amr` fails closed.
+   **5 minutes**; the signed qualifying factor-event timestamp is authoritative, exactly 300 seconds
+   old remains valid, and 301 seconds old is stale. JWT `iat`, password `auth_time`, or token-refresh
+   timestamps never reset freshness. Missing/malformed `session_id`, `aal`, or qualifying `amr` fails
+   closed.
 7. The existing `login` plus `verifyOtp` challenge flow is the only permitted step-up reuse candidate
    within the frozen catalog. `verifyMfaEnrollment` verifies a newly enrolled factor and must not be
    misused as a general step-up endpoint. The later specification must prove the exact existing
@@ -81,9 +85,11 @@
     single-use, short-lived, and absent from URLs/logs/analytics/audit payloads.
 12. AAL2 recovery requires a still-bound factor plus an independent recovery method, or repeated
     identity proofing. A lost-factor recovery yields a signed, narrowly scoped enrollment-only session;
-    all ordinary profile/PHI/admin routes deny it until a replacement factor is verified. Completion
-    revokes all old sessions before new access is usable and notifies every verified notification
-    address through currently permitted adapters; production SMS remains gated.
+    all ordinary profile/PHI/admin routes deny it until a replacement factor is verified. Server-side
+    authorization allowlists only `refreshSession`, `logout`, `beginMfaEnrollment`, and
+    `verifyMfaEnrollment` for that restricted session; every other registered operation denies.
+    Completion revokes all old sessions before new access is usable and notifies every verified
+    notification address through currently permitted adapters; production SMS remains gated.
 13. Web refresh tokens use the existing canonical `HttpOnly; Secure; SameSite=Strict` cookie contract,
     a narrow refresh path, and Origin/CSRF/Fetch-Metadata validation. Native refresh tokens use OS
     secure storage; access tokens remain memory-only where practical. No raw token, OTP, TOTP secret,
@@ -92,17 +98,25 @@
 ## Required deterministic approval tests
 
 - JWT `exp-1s` allow and `exp+1s` deny; timeout effective boundaries at 23h45m/24h and 45m/60m.
-- Foreground refresh vs background/idle behavior; Auth outage and missing-session fail closed.
+- Foreground user-engaged refresh vs hidden/background/blurred/unattended behavior; after 46 minutes
+  without foreground activity the next refresh returns `401 session-expired`; Auth outage and
+  missing-session state fail closed.
 - Same-token benign concurrent refresh inside 10 seconds; hostile ancestor replay outside 10 seconds
   revokes the whole family; concurrent child use after revocation fails.
 - Current-session, all-session, cross-device, recovery, password-change, and factor-reset revocation.
-- Required `session_id`, `aal`, and qualifying `amr`; token refresh cannot make stale MFA fresh.
-- AAL1 denial for every workforce/admin operation; fresh AAL2 at 4m59s allow and 5m01s deny.
+- Required `session_id`, `aal`, and qualifying timestamped factor `amr`; a refresh ten minutes after
+  MFA remains stale for a high-risk operation.
+- AAL1 denial for every workforce/admin operation; qualifying AAL2 at 299s and 300s allows, 301s
+  denies; JWT `iat`, password `auth_time`, and refresh time never substitute.
 - Enrollment pending quota/expiry, wrong/replayed OTP, factor verification, factor-removal serialization,
   last-factor protection, and immediate post-removal AAL refresh/downgrade.
-- Uniform recovery response/timing class, factor/re-proofing negatives, restricted-session route matrix,
+- Uniform recovery response/timing class, factor/re-proofing negatives, exhaustive registered-operation
+  restricted-session deny matrix outside the four-operation allowlist,
   notification fan-out, recovery replay/race, and all-old-session revocation.
 - CSRF/Origin/Fetch-Metadata, cookie attributes, native secure-storage, redaction, and secret-sentinel tests.
+- All time-boundary tests use injected/fake clocks or database test-clock parameters; sleep-based
+  timing tests are forbidden. Passkey configuration remains disabled and passkey enrollment fails
+  without creating a factor until its separate compatibility evidence exists.
 
 ## AGY findings: parent disposition
 
@@ -117,8 +131,31 @@
 | Unverified-factor quota exhaustion                | **Accepted**                                     | One pending factor/type, ten-minute expiry, rate limit, supported cleanup.                                             |
 | Missing `session_id` extraction                   | **Accepted**                                     | Required for current/all-session revocation and attributable, secret-free correlation.                                 |
 
-## Approval block
+### Final AGY review disposition
 
-The gate remains open until the named Security Lead and Architecture Lead each record signer identity,
-role, decision, timestamp, memo digest, accepted residual risks, and the frozen deterministic test set.
-AGY review and parent recommendation are evidence inputs, not approval.
+The final review used `gemini-3.7-flash-high`, HIGH reasoning, read-only, project
+`57e12fe0-99bb-44ac-8b66-5c403b3465f4`, conversation
+`d011053d-ddf6-49b3-9280-fde2ec7921e2`, exit `0`, and `readOnlyViolation: false`.
+
+| Final finding                                       | Parent decision                                         | Repository-evidence rationale                                                                                                                                                      |
+| --------------------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unattended refresh could defeat idle expiry         | **Accepted**                                            | Foreground user engagement is mandatory and the 46-minute idle vector is frozen; no background timer may keep a session alive.                                                     |
+| Refresh could be mistaken for fresh MFA             | **Accepted with stricter boundary**                     | Qualifying signed factor-event `amr` is authoritative; 300s allows and 301s denies. AGY's proposed five-second tolerance is rejected.                                              |
+| Freeze an exact `SECURITY DEFINER` SQL body         | **Accepted in principle; implementation rejected here** | Boolean-only, fixed-search-path, least-privilege, zero-direct-Auth-row access is policy; exact Supabase schema/function SQL remains `OPEN-TECH-002` evidence.                      |
+| Recovery restriction must be server-side            | **Accepted with corrected allowlist**                   | Every registered operation denies except refresh, logout, begin enrollment, and verify enrollment. AGY's three-operation list omitted refresh and could deadlock a 15-minute flow. |
+| Real-time sleeps make expiry tests flaky            | **Accepted**                                            | Injected/fake clocks or database test-clock parameters are mandatory; sleeps are forbidden.                                                                                        |
+| Verify passkeys remain disabled                     | **Accepted in part**                                    | Disabled configuration and no factor creation are frozen; the exact problem code is specified in the feature contract, not invented by this gate.                                  |
+| Mostafa must co-approve the pre-implementation gate | **Rejected**                                            | The approved operating model assigns Yousef current decision authority; Mostafa becomes Security Lead when implementation/security review activates.                               |
+
+## Approval record
+
+Yousef Osama approved this exact development-stage policy on 2026-08-25 as Product Owner,
+Architecture Lead, and current pre-implementation engineering/security decision authority. The
+approved v2.1.2 governance amendment records the memo digest and closes `OPEN-SEC-001` for Feature-007
+specification/development. Mostafa Ali remains the named Security Lead for implementation/security
+review when team work activates.
+
+This approval freezes policy and deterministic tests; it does not authorize implementation or
+production deployment. Exact Supabase compatibility, DDL/RLS, generated contracts, ASVS/API abuse
+evidence, live security verification, production secrets/KMS, and release approval remain governed by
+`OPEN-TECH-002`, `OPEN-TECH-003`, `NFR-SEC-007`, and every unchanged production/release gate.

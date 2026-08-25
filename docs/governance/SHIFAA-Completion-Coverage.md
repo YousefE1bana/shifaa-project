@@ -20,15 +20,15 @@ The status vocabulary is deliberately narrower than SpecKit lifecycle status:
 
 “Owner” below means requirement-closure owner. Supporting or predecessor features may implement a prerequisite without becoming a second closure owner. Every one of the 95 PRD FR IDs and 24 NFR IDs appears exactly once in the ledgers below.
 
-`OPEN-TEAM-001` is a program-wide lifecycle overlay, not a duplicate blocker on every requirement row. It must close before each remaining feature reaches `SPEC_APPROVED`, including feature 007, while the requirement ledger continues to distinguish the four requirement-specific `SPEC_APPROVED` blockers.
+`OPEN-TEAM-001` was a program-wide lifecycle overlay, not a duplicate blocker on every requirement row. The Product Owner-approved v2.1.2 operating model closes it globally: Yousef owns SpecKit/governance decisions, while named team members implement assigned work later without independent artifact approval.
 
 ## 2. Accounting result
 
 | Requirement set             |   DONE | PARTIAL | PLANNED | BLOCKED | DEFERRED_POST_MVP |   Total |
 | --------------------------- | -----: | ------: | ------: | ------: | ----------------: | ------: |
-| Functional requirements     |     25 |       4 |      59 |       4 |                 3 |      95 |
+| Functional requirements     |     25 |       4 |      60 |       3 |                 3 |      95 |
 | Non-functional requirements |      2 |      19 |       1 |       2 |                 0 |      24 |
-| **Combined**                | **27** |  **23** |  **60** |   **6** |             **3** | **119** |
+| **Combined**                | **27** |  **23** |  **61** |   **5** |             **3** | **119** |
 
 The active graduation inventory is **92 FR + 24 NFR = 116 active requirements**. The three `FR-FIN-*` rows are outside that active total. All 116 active requirements have a completed owner, a single future closure owner, or an explicit blocker.
 
@@ -39,16 +39,16 @@ The active graduation inventory is **92 FR + 24 NFR = 116 active requirements**.
 | Requirement  | Status  | Completed owner                                           | Remaining closure owner or blocker                                                   |
 | ------------ | ------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | FR-AUTH-001  | DONE    | 001 identity; 002 runtime                                 | None                                                                                 |
-| FR-AUTH-002  | PARTIAL | 001/002 patient password and OTP; 003-006 AAL enforcement | 007 session, MFA, and recovery closure; `OPEN-SEC-001` constrains the session policy |
+| FR-AUTH-002  | PARTIAL | 001/002 patient password and OTP; 003-006 AAL enforcement | 007 session, MFA, and recovery implementation under the closed v2.1.2 security policy |
 | FR-AUTH-003  | DONE    | 001 identity; 002 runtime                                 | Production Valify remains disabled by `OPEN-VENDOR-001`                              |
 | FR-AUTH-004  | DONE    | 001 identity; 002 runtime                                 | None                                                                                 |
-| FR-AUTH-005  | BLOCKED | None                                                      | 007; blocked at `SPEC_APPROVED` by `OPEN-SEC-001`                                    |
+| FR-AUTH-005  | PLANNED | None                                                      | 007; development policy approved, implementation not started                         |
 | FR-AUTH-006  | DONE    | 001 identity; 002 runtime                                 | None                                                                                 |
 | FR-AUTH-007  | DONE    | 001 notice/consent; 005 DSR lifecycle                     | Production deletion/PHI gates remain separate                                        |
 | FR-AUTH-008  | DONE    | 001 inventory gate; 005 DSR/notification extensions       | Each future feature must extend the inventory before collecting new fields           |
 | FR-FAM-001   | DONE    | 004                                                       | None                                                                                 |
 | FR-FAM-002   | DONE    | 004                                                       | None                                                                                 |
-| FR-FAM-003   | PLANNED | None; explicitly excluded from 004                        | 007; `OPEN-LEGAL-006` is closed for specification/development, while remaining Feature-007 gates still apply |
+| FR-FAM-003   | PLANNED | None; explicitly excluded from 004                        | 007; legal/security/team readiness gates are closed for specification/development    |
 | FR-FAM-004   | DONE    | 004                                                       | None                                                                                 |
 | FR-FAM-005   | DONE    | 004                                                       | None                                                                                 |
 | FR-FAM-006   | DONE    | 004 consent boundary; 006 qualifying-SOS delivery         | None                                                                                 |
@@ -150,7 +150,7 @@ The active graduation inventory is **92 FR + 24 NFR = 116 active requirements**.
 | --------------- | ------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | NFR-SEC-001     | PARTIAL | Forced RLS/default-deny evidence for 001-006                                                                               | 026 cross-domain closure                                                                 |
 | NFR-SEC-002     | PARTIAL | Identity envelope encryption and private local storage foundations                                                         | 026 KMS/backup/restore evidence                                                          |
-| NFR-SEC-003     | PARTIAL | Synthetic session projections and protected response handling exist; token lifetime/refresh rotation/reuse/recovery do not | 007; exact policy is constrained by `OPEN-SEC-001`                                       |
+| NFR-SEC-003     | PARTIAL | Synthetic session projections and protected response handling exist; token lifetime/refresh rotation/reuse/recovery do not | 007 implements the exact Product Owner-approved v2.1.2 policy                            |
 | NFR-SEC-004     | PARTIAL | AAL2 authorization gates exist for completed privileged operations                                                         | 007 supplies MFA enrollment/step-up; 026 confirms all privileged operations              |
 | NFR-SEC-005     | PARTIAL | Idempotency foundation and completed mutations are verified                                                                | 026 active-operation closure                                                             |
 | NFR-SEC-006     | PARTIAL | Append-only attributable audit writes exist                                                                                | 008 audit read/export/hash-chain closure                                                 |

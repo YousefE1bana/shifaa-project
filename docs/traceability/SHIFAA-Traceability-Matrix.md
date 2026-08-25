@@ -144,7 +144,7 @@
 
 ## 4. Feature 003 evidence overlay
 
-> Seeded-synthetic engineering evidence only. `OPEN-SEC-001`, the legal/retention open items, and formal reviewer gates remain open; this overlay makes no production or Egyptian licensing-approval claim.
+> Seeded-synthetic engineering evidence only. Feature-007 closure of `OPEN-SEC-001` does not retroactively change Feature-003 evidence; legal/retention and formal production-review gates remain open, and this overlay makes no production or Egyptian licensing-approval claim.
 
 | Requirement  | Concrete 003 implementation and evidence                                                                                                                                         |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

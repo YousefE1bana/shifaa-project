@@ -1,64 +1,50 @@
-# OPEN-TEAM-001 — named RACI decision request
+# OPEN-TEAM-001 — approved SHIFAA operating model
 
-> **Status:** OPEN; proposal only
+> **Status:** CLOSED
 >
-> **Gate owner:** Yousef Osama, Product Owner and Team Lead
+> **Approved by:** Yousef Osama, Product Owner and Team Lead
 >
-> **Required closure:** named owners, reviewers, supervisor/TA, and on-call/security contacts, each
-> acknowledged; this document is not an acknowledgement
+> **Approval date:** 2026-08-25
+>
+> **Effect:** named accountability for specification, implementation assignment, academic review, and
+> security escalation; no independent team-member approval of SpecKit artifacts
 
-## Evidence inspected
+## Approved ownership model
 
-Repository and live GitHub evidence as of 2026-08-25 establish only the following:
+| Person              | Approved responsibility                                                                                                                       | Lifecycle authority                                                                                                                                                                      |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Yousef Osama        | Product Owner, Team Lead, Architecture Lead, SpecKit/Governance Owner, and current pre-implementation engineering/security decision authority | Sole owner of `specify -> clarify -> plan -> tasks -> analyze -> taskstoissues`; approves the development-stage governance/specification baseline and assigns later implementation work. |
+| Mostafa Ali         | Security Lead when team implementation activates                                                                                              | Owns implementation-stage security review and security findings under Yousef's approved specs/tasks; does not separately approve pre-implementation SpecKit artifacts.                   |
+| Diaa Eldin Assem    | Backend/Core API implementation                                                                                                               | Implements assigned API/domain work later; does not own requirements or lifecycle approval.                                                                                              |
+| Ibrahim Saeid       | Data/PostgreSQL/RLS implementation                                                                                                            | Implements assigned migrations, constraints, and forced-RLS work later; does not own requirements or lifecycle approval.                                                                 |
+| Amira Saad          | QA/testing/evidence                                                                                                                           | Executes assigned automated/live evidence work later; does not own requirements or lifecycle approval.                                                                                   |
+| Ziad Wael           | Frontend/UI/A11y/integration                                                                                                                  | Implements assigned UI, bilingual accessibility, and integration work later; does not own requirements or lifecycle approval.                                                            |
+| Dr Asmaa Hekal      | Academic Supervisor                                                                                                                           | Academic supervision; not a substitute for Product, legal/DPO, clinical, security, or release approval.                                                                                  |
+| TA Mahmoud Ghalwash | Academic Reviewer/TA                                                                                                                          | Academic review; not a substitute for Product, legal/DPO, clinical, security, or release approval.                                                                                       |
 
-- The approved Master/PRD baseline and baseline-approval record name Yousef Osama as Product Owner.
-- Git history, Issues, and pull requests attribute the delivered repository work to Yousef's account.
-- The live collaborator API shows repository access for `YousefE1bana`, `Diaa-AI`, `AmiraSaad747`,
-  `ibrahimsaeed2626`, and `most-aly85`. Access level is not evidence of Architecture, Security, QA,
-  privacy, legal, or on-call competence.
-- No repository document names Mostafa Ali, Diaa Eldin Assem, Ibrahim Saeid, Amira Saad, or Ziad
-  Wael in a specialty or reviewer role. The candidate collaborator-to-person matches also require
-  confirmation; no collaborator identity for Ziad was established.
-- No named academic supervisor/TA or registered DPO was found. The identity of external Egyptian
-  legal counsel is deliberately neither requested nor stored; the approved development-stage source
-  is recorded only as `External Egyptian legal counsel analysis — Product Owner approved`.
-- No pull-request review or acknowledgement from the non-Yousef roster members was found.
+## RACI and activation boundary
 
-Commands used included `git shortlog -sne --all`, exact-name repository searches, and live GitHub
-collaborator/contributor/Issue/PR-review API queries. No specialty is inferred from a username.
+- Yousef is accountable and responsible for Feature-007 scope, architecture, pre-implementation
+  security decisions, SpecKit artifact decisions, task publication, and escalation before
+  implementation authorization.
+- Named team members are responsible for their assigned implementation/evidence lanes only after
+  Yousef authorizes implementation from an approved task baseline.
+- Individual team-member acknowledgement, contact method, and rotation activation are operational
+  implementation-start records. They are not independent approvals and do not block
+  `SPEC_APPROVED` under this operating model.
+- Before implementation begins, Yousef records assignment by task/Issue. Mostafa is the primary
+  implementation security escalation; Yousef remains accountable and is the pre-implementation
+  escalation point.
+- Academic supervisor/TA review does not close professional legal, DPO, clinical, security-testing,
+  vendor, or production-release gates.
 
-## Smallest proposed Feature-007 mapping
+## Preserved governance boundaries
 
-The allocation below is deliberately a **nomination**, not a statement of existing specialty. It uses
-the supplied roster once each so Yousef can approve or replace names in one decision.
+This closure assigns no unproven specialty beyond the Product Owner-approved model, creates no sixth
+admin role, and grants no repository/runtime permission. External counsel identity remains unrecorded.
+`OPEN-LEGAL-001`, `OPEN-LEGAL-002`, `OPEN-LEGAL-007`, clinical gates, vendor gates, UX gates,
+technology/reproducibility gates, and production-PHI authorization retain their canonical effects.
 
-| Function                                                                             | Proposed person  | RACI                        | Required acknowledgement                                                                                             |
-| ------------------------------------------------------------------------------------ | ---------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Product scope, final gate decision, team leadership, incident escalation             | Yousef Osama     | A                           | Confirm Product Owner/Team Lead and escalation authority.                                                            |
-| Owning engineer; backend/data delivery coordinator                                   | Mostafa Ali      | R                           | Confirm competence, availability, and GitHub identity.                                                               |
-| Architecture Lead; API/data/RLS design reviewer; OPEN-SEC co-approver                | Diaa Eldin Assem | A/R for architecture        | Confirm competence, independence for review, availability, and GitHub identity.                                      |
-| Security Lead; threat-model reviewer; primary security on-call; OPEN-SEC co-approver | Ibrahim Saeid    | A/R for security            | Confirm competence, contact/rotation, availability, and GitHub identity.                                             |
-| QA/evidence owner; deterministic-test and bilingual acceptance reviewer              | Amira Saad       | R                           | Confirm competence, independence for acceptance, availability, and GitHub identity.                                  |
-| Integration/UI/accessibility reviewer; secondary engineering on-call                 | Ziad Wael        | R                           | Confirm competence, contact/rotation, availability, and GitHub identity.                                             |
-| Academic supervisor/TA                                                               | **Unassigned**   | A/R as institution requires | Yousef must supply the name, role, contact, and acknowledgement; do not assume the Team Lead fills an academic role. |
-
-The registered-DPO and production legal responsibilities are not silently assigned from the
-engineering roster. They remain governed by the production/release `OPEN-LEGAL-001`,
-`OPEN-LEGAL-002`, and `OPEN-LEGAL-007` gates. External counsel identity is not part of
-`OPEN-TEAM-001` or the development-stage `OPEN-LEGAL-006` record.
-
-## Exact approval requested from Yousef
-
-Return a dated decision that:
-
-1. approves the table or supplies replacements;
-2. confirms each person's GitHub identity and whether they acknowledged the assignment;
-3. names the academic supervisor/TA and records acknowledgement;
-4. identifies primary and secondary security/on-call contact methods and the coverage/rotation rule;
-5. preserves separate assignment and approval of regulated production/DPO responsibilities under
-   their applicable production/release gates, without treating an engineering role as professional
-   registration or recording external counsel identity; and
-6. records the approved artifact version/digest and any required reviewer independence.
-
-Until that attributable decision and acknowledgement exist, `OPEN-TEAM-001` remains open and Feature
-007 cannot reach `SPEC_APPROVED`.
+The v2.1.2 governance amendment records the attributable Product Owner decision and artifact digest.
+`OPEN-TEAM-001` no longer blocks Feature 007 or later features at `SPEC_APPROVED`; implementation
+still requires Yousef's explicit authorization under approved specs/tasks.

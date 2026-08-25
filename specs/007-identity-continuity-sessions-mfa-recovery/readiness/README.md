@@ -4,11 +4,11 @@
 >
 > **Baseline:** `origin/main@ccd76c4875821beb246fa3b0abf32f225c54f6ae`
 >
-> **Lifecycle state:** pre-SpecKit readiness, `BLOCKED` before `SPEC_APPROVED`
+> **Lifecycle state:** readiness `PASS`; normal SpecKit lifecycle authorized through `taskstoissues`
 >
 > **Recorded:** 2026-08-25
 >
-> **Authority:** the approved roadmap and canonical OPEN register; this record does not approve a gate
+> **Authority:** Product Owner-approved baseline amendments v2.1.1 and v2.1.2 plus the canonical roadmap
 
 ## Frozen boundary
 
@@ -32,32 +32,32 @@
 
 ## Readiness result
 
-| Gate             | Result                                   | Evidence and required closure                                                                                                                                                                                                                                                                         |
-| ---------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPEN-TEAM-001`  | **OPEN**                                 | Only Yousef Osama's Product Owner authority is established. GitHub access does not establish team specialties or acknowledgement. Approve and acknowledge the proposed RACI, identify the supervisor/TA, confirm GitHub identities, and name primary/secondary on-call contacts.                      |
-| `OPEN-SEC-001`   | **OPEN**                                 | The parent recommendation and deterministic test contract are prepared and adversarially reviewed. A named Security Lead and Architecture Lead must approve exact values and the threat model with artifact digests.                                                                                  |
-| `OPEN-LEGAL-006` | **CLOSED for specification/development** | The Product Owner approved the anonymous `External Egyptian legal counsel analysis — Product Owner approved` basis. Baseline amendment v2.1.1 freezes the seven legal rules, logical state/event matrix, and `TV-FAM-CAPACITY-TRANSITION-001..020`; production legal, DPO, and PHI gates remain open. |
+| Gate             | Result                                   | Evidence and required closure                                                                                                                                                                                                                                                                                                                           |
+| ---------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPEN-TEAM-001`  | **CLOSED**                               | Product Owner-approved v2.1.2 operating model names Yousef as sole SpecKit/governance and current pre-implementation engineering/security authority, names all implementation owners plus Academic Supervisor/TA, and records that team assignment acknowledgement activates with implementation rather than becoming an independent artifact approval. |
+| `OPEN-SEC-001`   | **CLOSED for specification/development** | Yousef approved the exact v2.1.2 session/MFA/recovery policy as Architecture Lead and current pre-implementation security decision authority. Mostafa is the implementation Security Lead. Exact values, residual risk, negative/race tests, and production boundaries are frozen in the approved memo/amendment.                                       |
+| `OPEN-LEGAL-006` | **CLOSED for specification/development** | The Product Owner approved the anonymous `External Egyptian legal counsel analysis — Product Owner approved` basis. Baseline amendment v2.1.1 freezes the seven legal rules, logical state/event matrix, and `TV-FAM-CAPACITY-TRANSITION-001..020`; production legal, DPO, and PHI gates remain open.                                                   |
 
-Because the remaining two roadmap gates block `SPEC_APPROVED`, no `spec.md`, clarification baseline, plan,
-task list, analysis baseline, Issues, or implementation authorization has been generated.
+All three Feature-007 pre-`SPEC_APPROVED` gates are closed. The normal `specify -> clarify -> plan ->
+tasks -> analyze -> taskstoissues` lifecycle may proceed. Implementation remains unauthorized until
+Yousef explicitly authorizes it from the frozen task/Issue baseline.
 
 ## AGY review evidence
 
 All reviews used `gemini-3.7-flash-high`, `--effort high`, and `--read-only` through the reviewed
 relay. All completed with exit `0` and `readOnlyViolation: false`.
 
-| Review                       | Project                                | Conversation                           | Parent disposition                                                                                                                                                                                                      |
-| ---------------------------- | -------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Session/MFA/recovery         | `1953f666-a0e2-4de0-a4fa-14ef642027c1` | `55c62721-8f0e-4f9a-9d81-09d6c13b7317` | Concrete security gaps accepted; scope expansion, fingerprint trust, and unproven passkey claims rejected.                                                                                                              |
-| Dependent transition         | `73599f73-1d8e-415d-b61d-1e9d350a6135` | `b95a6cac-7bc2-43af-81b6-b7c8a39642be` | Structural/data questions accepted; asserted legal thresholds, new operations/types, and pre-gate DDL rejected.                                                                                                         |
-| Legal closure reconciliation | `b74e5dcd-5850-459f-9013-a857c04b3de8` | `424177e9-0389-4c3f-86d1-6350fed77485` | Development/production separation and passive age-21 evaluation accepted; new relationship behavior, payloads, schema, status codes, and CI scope rejected or deferred where repository authority did not support them. |
+| Review                        | Project                                | Conversation                           | Parent disposition                                                                                                                                                                                                      |
+| ----------------------------- | -------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session/MFA/recovery          | `1953f666-a0e2-4de0-a4fa-14ef642027c1` | `55c62721-8f0e-4f9a-9d81-09d6c13b7317` | Concrete security gaps accepted; scope expansion, fingerprint trust, and unproven passkey claims rejected.                                                                                                              |
+| Dependent transition          | `73599f73-1d8e-415d-b61d-1e9d350a6135` | `b95a6cac-7bc2-43af-81b6-b7c8a39642be` | Structural/data questions accepted; asserted legal thresholds, new operations/types, and pre-gate DDL rejected.                                                                                                         |
+| Legal closure reconciliation  | `b74e5dcd-5850-459f-9013-a857c04b3de8` | `424177e9-0389-4c3f-86d1-6350fed77485` | Development/production separation and passive age-21 evaluation accepted; new relationship behavior, payloads, schema, status codes, and CI scope rejected or deferred where repository authority did not support them. |
+| Final security closure review | `57e12fe0-99bb-44ac-8b66-5c403b3465f4` | `d011053d-ddf6-49b3-9280-fde2ec7921e2` | No contradiction found. Idle/AMR/restricted-session/fake-clock controls accepted; exact SQL, clock-skew relaxation, fixed route counts, and pre-activation co-approval were rejected or narrowed.                       |
 
-See `open-sec-001-decision-memo.md`, `open-legal-006-decision-request.md`, and
-`open-team-001-decision-request.md` for the finding-by-finding disposition and exact approvals needed.
+See `open-sec-001-decision-memo.md`, `open-legal-006-decision-request.md`,
+`open-team-001-decision-request.md`, and the v2.1.2 amendment for the attributable closure evidence.
 
 ## Next permitted action
 
-Yousef Osama may approve/correct the proposed named RACI and provide the missing supervisor/TA and
-acknowledgements, and the nominated Security and Architecture leads may sign the security decision.
-Only after both remaining closure artifacts are valid may the normal `specify -> clarify -> plan -> tasks ->
-analyze -> taskstoissues` sequence begin. Implementation remains unauthorized.
+Execute the normal `specify -> clarify -> plan -> tasks -> analyze -> taskstoissues` sequence under
+Yousef's ownership. Do not implement, start Feature 008, or merge without explicit authorization.

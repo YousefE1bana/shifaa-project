@@ -64,7 +64,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** Supabase Auth/session/factor primitives; `identity.care_relationships` transition evidence; shared idempotency, audit, and outbox. Do not invent shadow credential/session tables. The approved `OPEN-LEGAL-006` development matrix fixes the legal behavior without selecting persistence; the API promises a transition case/result while the Data/RLS contract has no explicit transition-case model, so `OPEN-TECH-002` must reconcile the physical state/evidence shape before DDL.
 - **UI/apps/services:** patient `/recovery`, `/mfa`, and governed `/relationships` transition states; workforce/admin step-up states in existing shells; `apps/patient`, staff apps, `packages/auth`, Core API.
 - **Dependencies/exclusions:** consumes 001-006 identity/RBAC/relationship/audit foundations. Excludes production Valify/SMS enablement, age/capacity trigger guessing, and any weakening of MFA during recovery.
-- **OPEN gates:** `OPEN-SEC-001` and the program-wide `OPEN-TEAM-001` block `SPEC_APPROVED`. `OPEN-LEGAL-006` is closed for Feature-007 specification/development by the Product Owner-approved v2.1.1 amendment; `OPEN-VENDOR-002`, `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, and `OPEN-TECH-002/003` retain their canonical effects.
+- **OPEN gates:** no valid requirement-specific or program-wide blocker remains before Feature-007 `SPEC_APPROVED`: `OPEN-LEGAL-006` is closed by v2.1.1, and `OPEN-SEC-001` plus `OPEN-TEAM-001` are closed by the Product Owner-approved v2.1.2 amendment. `OPEN-VENDOR-002`, `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, and `OPEN-TECH-002/003` retain their canonical implementation, verification, or production effects.
 - **Evidence:** refresh-family rotation/reuse/expiry and concurrent replay; recovery factor/re-proofing negatives; AAL1-to-AAL2 step-up and factor removal; cross-device logout; relationship transition preserves patient record and denies automatic transfer; forced-RLS, CSRF/cookie/mobile-storage, Arabic/English keyboard/screen-reader/reduced-motion evidence; read/mutation p95; full `pnpm verify`.
 
 ### 008 — Audit, Admin Aggregates, and Observability
@@ -74,7 +74,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `audit.events`, `audit.signature_evidence`, `audit.export_batches`, feature-flag/health projections; append-only/hash-chain/export proofs; `super_admin` AAL2+purpose redacted reads; DPO has no general audit grant.
 - **UI/apps/services:** admin `/dashboard` and `/audit`; `apps/admin`, Core API, worker/export adapter, `packages/observability`.
 - **Dependencies/exclusions:** requires 007 real MFA/session step-up. Excludes patient-level admin analytics, raw PHI logs, guessed minimum-cell threshold, production WORM claims without evidence, and general DPO audit access.
-- **OPEN gates:** `OPEN-PRIV-001` blocks `SPEC_APPROVED`; `OPEN-LEGAL-001/002/007`, `OPEN-TEAM-001`, `OPEN-TECH-001/002/003`, `OPEN-UX-001/002`, `OPEN-PRODUCT-001` retain canonical effects.
+- **OPEN gates:** `OPEN-PRIV-001` blocks `SPEC_APPROVED`; `OPEN-LEGAL-001/002/007`, `OPEN-TECH-001/002/003`, `OPEN-UX-001/002`, `OPEN-PRODUCT-001` retain canonical effects.
 - **Evidence:** minimum-cell suppression/re-identification negatives; self/grant/purpose/AAL denial matrix; hash-chain tamper detection; write-once export digest/tabletop; redaction sentinel scan; low-cardinality metrics; health degraded/readiness behavior; restore prerequisites; admin AR/EN accessibility; performance and full verification.
 
 ### 009 — Clinic Scheduling, Appointments, and Queue
@@ -84,7 +84,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `clinical.schedules`, `schedule_exceptions`, `appointments`, `queue_entries`; exclusion/concurrency constraints, facility/doctor/date scope, queue reasons, versioning, audit/outbox.
 - **UI/apps/services:** patient `/discover`, `/doctors/:id`, `/appointments/new`, `/appointments/:id`; clinic `/today`, `/queue`, `/schedule`, `/appointments/:id`; patient/clinic apps, API, worker.
 - **Dependencies/exclusions:** verified facilities/licenses/RBAC, notification foundation, session step-up. Cash-on-arrival only; excludes digital PSP, encounters, prescriptions, general chat, and shadow stock/review discovery.
-- **OPEN gates:** `OPEN-UX-001/002`, `OPEN-PRODUCT-001`, `OPEN-TEAM-001`, `OPEN-TECH-002/003`; production delay SMS also `OPEN-VENDOR-002`.
+- **OPEN gates:** `OPEN-UX-001/002`, `OPEN-PRODUCT-001`, `OPEN-TECH-002/003`; production delay SMS also `OPEN-VENDOR-002`.
 - **Evidence:** double-book race; idempotent retry/body mismatch; schedule overlap/date exception; queue reorder reason/authorization; reconnect/reconcile/stale UI; absence-to-reschedule and scoped notification; cross-facility/RLS negatives; AR/EN patient and clinic live evidence; p95 thresholds and full verification.
 
 ### 010 — Encounters, Referrals, and Contextual Chat
@@ -94,7 +94,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `clinical.encounters`, `encounter_participants`, `clinical_notes`, `conditions`, `referrals`, `trust.messages`; encrypted/versioned notes, explicit visibility, authorized referral field set, context/expiry-bound messages.
 - **UI/apps/services:** patient `/records`, `/encounters/:id`; clinic `/patients/:id/summary`, `/encounters/:id`, `/referrals`, `/messages`; patient/clinic apps, API, realtime/outbox worker.
 - **Dependencies/exclusions:** 009 appointment/queue context. Excludes open-ended consultation chat, safety/prescription logic, unauthorized private-note sharing, and offline clinical writes. Chat attachments remain body-only/disabled until governance resolves the missing upload-intent operation; the patient chat composition is also a UI-contract reconciliation item.
-- **OPEN gates:** `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, `OPEN-PRODUCT-001`, `OPEN-TEAM-001`, `OPEN-TECH-002/003`.
+- **OPEN gates:** `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, `OPEN-PRODUCT-001`, `OPEN-TECH-002/003`.
 - **Evidence:** participant/care-purpose/RLS matrix; note visibility and immutable supersession; referral minimum-field consent and linked appointment; context expiry/participant removal; reconnect/stale chat; prohibited telemetry scan; AR/EN accessibility; read/mutation/realtime performance and full verification.
 
 ### 011 — Allergies and Clinical-Content Governance
@@ -104,7 +104,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `clinical.allergies`, `clinical.content_releases`, `audit.signature_evidence`; append-versioned provenance, draft/published state, physician/pharmacist independent signatures.
 - **UI/apps/services:** patient `/records`; clinic `/patients/:id/summary`, `/clinical-content/status`; admin `/clinical-content`; patient/clinic/admin apps, API.
 - **Dependencies/exclusions:** encounter/patient context from 010. Excludes prescription evaluation/override, unsigned rule activation, fabricated medical content, lab/vaccine policy ownership, and self-approval.
-- **OPEN gates:** `OPEN-CLIN-001` gates safety content release; `OPEN-TEAM-001`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`, legal production gates.
+- **OPEN gates:** `OPEN-CLIN-001` gates safety content release; `OPEN-TECH-002/003`, `OPEN-UX-001/002`, legal production gates.
 - **Evidence:** allergy provenance/state correction; cross-patient/RLS negatives; unpublished/unsigned content cannot affect decisions; dual-signature/self-approval matrix; digest/version rollback; AR/EN clinical/admin accessibility; performance and full verification.
 
 ### 012 — Prescription Safety and Governed Overrides
@@ -114,7 +114,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `clinical.prescriptions`, `prescription_items`, `detected_issues`, `issue_acknowledgements`, `override_requests`, `override_signatures`, `medication_statements`; signed immutability, independent decisions, expiry, FHIR-aligned provenance.
 - **UI/apps/services:** patient `/records`, `/prescriptions/:id`; clinic `/prescriptions/:id`; patient/clinic apps, API.
 - **Dependencies/exclusions:** 010 encounter and 011 approved allergy/content versions. Excludes dispense, final substitution, refill UI, autonomous safety claims, or controlled-drug electronic-substitute claims.
-- **OPEN gates:** `OPEN-CLIN-001`, `OPEN-CLIN-002`, `OPEN-LEGAL-003`, plus `OPEN-TEAM-001`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
+- **OPEN gates:** `OPEN-CLIN-001`, `OPEN-CLIN-002`, `OPEN-LEGAL-003`, plus `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
 - **Evidence:** canonical contraindicated journey; unknown input produces `not_fully_checked`; warning justification/monitoring; normal hard stop; pharmacist two-person override; emergency two-physician window/expiry; no self-approval; immutable signed/corrected history; RLS/AAL2/idempotency/race tests; AR/EN safety UI; safety-set metrics, p95, and full verification.
 
 ### 013 — Pharmacy Receiving, Product Catalog, and EPTTS
@@ -124,7 +124,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `identity.pharmacy_directorships`, `pharmacy.catalog_versions`, `products`, `receipts`, `receipt_items`, first physical ownership of `inventory_packs`/`inventory_movements`, `eptts_exchange_batches`; global serial uniqueness, aggregation truth, append-only receipt movements.
 - **UI/apps/services:** pharmacy `/receipts`, `/receipts/:id/scan`, `/eptts`, product search/worklist; pharmacy app, API, import/EPTTS worker. Pharmacy-director and product-catalog staff routes remain `BASELINE RECONCILIATION REQUIRED` rather than invented.
 - **Dependencies/exclusions:** signed prescription/product safety contracts from 012. Excludes fulfilment, patient stock projection, live EDA API, scraping presented as integration, and false EPTTS verification.
-- **OPEN gates:** `OPEN-LEGAL-003` where statutory/e-prescription evidence intersects; `OPEN-TEAM-001`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`; canonical regulator/vendor evidence remains required.
+- **OPEN gates:** `OPEN-LEGAL-003` where statutory/e-prescription evidence intersects; `OPEN-TECH-002/003`, `OPEN-UX-001/002`; canonical regulator/vendor evidence remains required.
 - **Evidence:** GS1 AI parsing; duplicate serial race; aggregation/disaggregation and no fabricated units; damaged-code evidence/quarantine; append-only receive movement; provenance/reviewer/digest; EPTTS file/manual import/export and receipt/error states; director partial-unique/external-evidence boundary; RLS, AR/EN scanner/accessibility, performance, and full verification.
 
 ### 014 — Pharmacy Inventory, Fulfilment, and Substitution
@@ -134,7 +134,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** consumes 013 packs/movements; owns `fulfilments`, `dispense_lines`, `substitutions`, `controlled_dispense_register_entries`, `stock_projections`; exact-pack/units atomicity and append-only corrections.
 - **UI/apps/services:** patient `/discover`, `/prescriptions/:id`; pharmacy `/worklist`, `/inventory`, `/inventory/packs/:id`, `/fulfilments/:id`, `/substitutions/:id`; patient/pharmacy apps, API, projection worker.
 - **Dependencies/exclusions:** 012 signed prescriptions and 013 catalog/serialized receipt. Excludes exact public stock, stale-as-confirmed, automatic refill authorization, pharmacy trading/logistics, and paper-register replacement claims.
-- **OPEN gates:** `OPEN-PHARM-001` blocks `FR-PHARM-006` at `SPEC_APPROVED`; `OPEN-CLIN-002`, `OPEN-LEGAL-003`, `OPEN-TEAM-001`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
+- **OPEN gates:** `OPEN-PHARM-001` blocks `FR-PHARM-006` at `SPEC_APPROVED`; `OPEN-CLIN-002`, `OPEN-LEGAL-003`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
 - **Evidence:** exact-pack atomic dispense; partial pack balance; concurrent reserve/dispense; recall/expiry/quarantine/destroy/return/correction history; substitution authority matrix; controlled register; freshness boundary to `unknown`; cross-pharmacy/RLS negatives; AR/EN scan/worklist; performance and full verification.
 
 ### 015 — Hospital Triage, Beds, and Admission/Transfer/Discharge
@@ -144,7 +144,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `hospital.arrivals`, `triage_assessments`, `wards`, `beds`, `bed_holds`, `admissions`, `bed_assignments`, `transfers`, `discharge_versions`; consumes 006 capacity/pre-arrival without exposing patient/ward detail publicly.
 - **UI/apps/services:** hospital `/arrivals`, `/arrivals/:id/triage`, `/wards/:id`, `/beds`, `/admissions/:id`, `/admissions/:id/transfer`, `/admissions/:id/discharge`, existing `/capacity` and `/sos-prearrivals`; hospital/patient apps, API. The subject-readable patient admission composition is `BASELINE RECONCILIATION REQUIRED`.
 - **Dependencies/exclusions:** 006 SOS, 012 medication/signed prescription, 014 medication fulfilment/reconciliation projections. AI suggestion is nullable and cannot affect workflow before 024 human-confirmation integration. Excludes guaranteed reservation and autonomous triage.
-- **OPEN gates:** legal/retention, `OPEN-TEAM-001`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`, `OPEN-PRODUCT-001`.
+- **OPEN gates:** legal/retention, `OPEN-TECH-002/003`, `OPEN-UX-001/002`, `OPEN-PRODUCT-001`.
 - **Evidence:** canonical bed race/hold expiry; state-transition denial; stale version; atomic intra-facility transfer/no partial release; transfer-out; discharge checklist/sign/amendment; cross-facility RLS; realtime disconnect/reconcile/stale UI; AR/EN safety/accessibility; load p95 and full verification.
 
 ### 016 — Lab Catalog, Orders, and Specimens
@@ -154,7 +154,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `lab.test_catalog_versions`, `test_definitions`, `orders`, `order_items`, `specimens`; aggregate/child transition consistency, chain of custody, recollection, versioned signed catalog.
 - **UI/apps/services:** patient `/lab-orders/:id`; lab `/orders`, `/orders/:id`, `/specimens/:id`, `/catalog`; clinic encounter order action; patient/clinic/lab apps, API.
 - **Dependencies/exclusions:** 010 encounter context and 011 four-eyes content pattern. Excludes results, patient pre-release visibility, critical notification, and invented test/reference content.
-- **OPEN gates:** relevant `OPEN-CLIN-003`, legal/retention, `OPEN-TEAM-001`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
+- **OPEN gates:** relevant `OPEN-CLIN-003`, legal/retention, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
 - **Evidence:** coded minimum order; role-projected worklists; item/order state consistency; accession uniqueness; collection/receipt/rejection/recollection chain; catalog independent publish; RLS/cross-lab negatives; AR/EN lab/patient accessibility; p95 and full verification.
 
 ### 017 — Lab Results and Critical-Result Loop
@@ -164,7 +164,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `lab.result_versions`, `critical_policies`, `critical_events`, `critical_acknowledgements`; immutable correction chain, recipient-specific notification/ack/escalation.
 - **UI/apps/services:** patient `/lab-results/:id`; lab `/results/:id`, `/critical-results`, `/critical-policies`; patient/clinic/lab apps, API, worker. The ordering-clinician critical-result worklist/acknowledgement composition is `BASELINE RECONCILIATION REQUIRED`.
 - **Dependencies/exclusions:** 016 orders/specimens and 005 notification foundation. Excludes Emergency Contact notification, unapproved thresholds, overwrite correction, and patient visibility before release.
-- **OPEN gates:** `OPEN-CLIN-003`, legal/retention, `OPEN-VENDOR-002` for production SMS, `OPEN-TEAM-001`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
+- **OPEN gates:** `OPEN-CLIN-003`, legal/retention, `OPEN-VENDOR-002` for production SMS, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
 - **Evidence:** authorized verify/release; original-preserving correction; critical policy version/digest; clinician+patient delivery with no Emergency Contact; acknowledgement/escalation race/SLA; worker retry/dedup/dead-letter; RLS; AR/EN critical UI; p95 and full verification.
 
 ### 018 — Vaccinations and Chronic Observations
@@ -174,7 +174,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `clinical.observations`, `vaccine_schedule_versions`, `vaccine_rules`, `vaccinations`; typed values/units/source, self-reported labels, approved schedule/catch-up rules.
 - **UI/apps/services:** patient `/observations`, `/vaccinations`; clinic `/patients/:id/summary`; patient/clinic apps, API.
 - **Dependencies/exclusions:** 011 content governance and 017 lab/clinical context where relevant. Excludes diagnosis, unapproved alarms, mandatory/optional conflation, and fabricated catch-up advice.
-- **OPEN gates:** `OPEN-CLIN-003`, legal/retention, `OPEN-TEAM-001`, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
+- **OPEN gates:** `OPEN-CLIN-003`, legal/retention, `OPEN-TECH-002/003`, `OPEN-UX-001/002`.
 - **Evidence:** unit/type constraints; source/time/provenance; self-reported vs verified; trend-only/no diagnosis; schedule version and `clinical_review_required`; RLS; AR/EN charts/bidi/accessibility; p95 and full verification.
 
 ### 019 — Medication Adherence and Refills
@@ -244,7 +244,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** no product schema or migration. Committed service topology/config schema under `tools/shifaa-control`; developer-local ownership/UI state under an ignored `.shifaa/` boundary; no secrets.
 - **UI/apps/services:** Windows `SHIFAA-CONTROL.bat`, pre-Node PowerShell bootstrap, independent Control Core, headless CLI, keyboard-first TUI; coordinates all six apps, API, worker, AI, Supabase/PostgreSQL, logs, Doctor, verify, database, setup, and repository status.
 - **Dependencies/exclusions:** all runnable services through 024. Excludes replacing pnpm/Turbo/Docker/Supabase/Git, role-specific dependency profiles, unsafe port-based killing, automatic destructive repair, product functionality, direct-main bypass, and agent/AI integration as a bootstrap prerequisite.
-- **OPEN gates:** `OPEN-TECH-001/003`, `OPEN-TEAM-001`; tooling dependencies require fresh provenance/supply-chain review. Product legal/clinical gates remain visible but Control cannot close them.
+- **OPEN gates:** `OPEN-TECH-001/003`; tooling dependencies require fresh provenance/supply-chain review. Product legal/clinical gates remain visible but Control cannot close them.
 - **Evidence:** clean supported-Windows bootstrap; side-by-side repository Node activation; missing/wrong/broken/auth-required detector states; explicit machine-change consent; owned process-tree graceful/forced stop, orphan/PID-reuse/crash recovery, unowned-process survival and port release; dependency graph/ref-counted shared services; truthful health/degraded states; measured bootstrap, profile-start, graceful-stop, health-poll convergence, and TUI input/render latency on a reproducible machine profile, with pass thresholds approved in the feature plan rather than invented here; redacted logs; destructive confirmations; manual-command fallback; all app/service profiles; keyboard TUI; full `pnpm verify`.
 
 ### 026 — Integrated Graduation Release
@@ -291,7 +291,7 @@ This graph has 21 nodes including completed predecessor 006, 20 forward edges, n
 
 | Gate                                                 | Earliest affected remaining feature(s) | Frozen effect                                                                 |
 | ---------------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------- |
-| OPEN-SEC-001                                         | 007                                    | Blocks session/recovery `SPEC_APPROVED`                                       |
+| OPEN-SEC-001                                         | 007                                    | CLOSED for Feature-007 specification/development by the Product Owner/Architecture-approved v2.1.2 policy; implementation/security/release evidence remains required |
 | OPEN-LEGAL-006                                       | 007                                    | CLOSED for FR-FAM-003 specification/development by the Product Owner-approved v2.1.1 amendment; production legal/DPO/PHI gates remain open |
 | OPEN-PRIV-001                                        | 008                                    | Blocks FR-ADMIN-003 `SPEC_APPROVED`; may affect later aggregates              |
 | OPEN-PHARM-001                                       | 014                                    | Blocks FR-PHARM-006 `SPEC_APPROVED`                                           |
@@ -307,7 +307,7 @@ This graph has 21 nodes including completed predecessor 006, 20 forward edges, n
 | `OPEN-LEGAL-001`, `OPEN-LEGAL-002`, `OPEN-LEGAL-007` | all PHI features / 026                 | Production PHI, retention automation, and article-level claims remain blocked |
 | `OPEN-UX-001`, `OPEN-UX-002`                         | every UI feature / 026                 | Pixel-identical/formal visual claims remain blocked                           |
 | OPEN-PRODUCT-001                                     | journey features / 026                 | UAT baseline remains blocked                                                  |
-| OPEN-TEAM-001                                        | every feature                          | Blocks `SPEC_APPROVED` until the named RACI and acknowledgements exist        |
+| OPEN-TEAM-001                                        | every feature                          | CLOSED by the Product Owner-approved v2.1.2 operating model; implementation assignments activate under approved specs/tasks and do not create independent lifecycle approvers |
 | OPEN-TECH-001                                        | 025-026 and reproducibility claims     | Byte-reproducible tool/runtime claim remains blocked                          |
 | OPEN-TECH-002                                        | every affected feature / 026           | Full active API/DDL/client parity closes incrementally                        |
 | OPEN-TECH-003                                        | every performance/UI feature / 026     | Formal device/network/accessibility performance acceptance remains blocked    |
