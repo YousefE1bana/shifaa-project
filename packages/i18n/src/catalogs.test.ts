@@ -25,3 +25,15 @@ test('family care catalog has authored parity and explicit safety consequences',
   assert.match(arEG['family.problem.offline'], /لم نضع/);
   assert.match(enEG['family.problem.offline'], /not queued/i);
 });
+
+test('identity continuity copy preserves security and legal boundaries', () => {
+  const keys = Object.keys(arEG).filter((key) =>
+    /^(security|mfa|recovery|transition)\./.test(key),
+  ) as (keyof typeof arEG)[];
+  assert.ok(keys.length >= 35);
+  assert.ok(keys.every((key) => arEG[key] && enEG[key]));
+  assert.match(enEG['transition.notEligible'], /does not transfer/i);
+  assert.match(arEG['transition.notEligible'], /لا يوجد انتقال/);
+  assert.match(enEG['recovery.accepted'], /same safe next-step response/i);
+  assert.match(enEG['mfa.unsupported'], /not enabled/i);
+});
