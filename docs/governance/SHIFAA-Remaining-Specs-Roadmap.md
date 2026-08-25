@@ -64,7 +64,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** Supabase Auth/session/factor primitives; `identity.care_relationships` transition evidence; shared idempotency, audit, and outbox. Do not invent shadow credential/session tables. The API promises a transition case/result but the Data/RLS contract has no explicit transition-case model; `OPEN-LEGAL-006` and `OPEN-TECH-002` must reconcile that state/evidence shape before DDL.
 - **UI/apps/services:** patient `/recovery`, `/mfa`, and governed `/relationships` transition states; workforce/admin step-up states in existing shells; `apps/patient`, staff apps, `packages/auth`, Core API.
 - **Dependencies/exclusions:** consumes 001-006 identity/RBAC/relationship/audit foundations. Excludes production Valify/SMS enablement, age/capacity trigger guessing, and any weakening of MFA during recovery.
-- **OPEN gates:** `OPEN-SEC-001` and `OPEN-LEGAL-006` block `SPEC_APPROVED`; `OPEN-VENDOR-002`, `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, `OPEN-TEAM-001`, `OPEN-TECH-002/003` retain their canonical effects.
+- **OPEN gates:** `OPEN-SEC-001`, `OPEN-LEGAL-006`, and the program-wide `OPEN-TEAM-001` block `SPEC_APPROVED`; `OPEN-VENDOR-002`, `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, and `OPEN-TECH-002/003` retain their canonical effects.
 - **Evidence:** refresh-family rotation/reuse/expiry and concurrent replay; recovery factor/re-proofing negatives; AAL1-to-AAL2 step-up and factor removal; cross-device logout; relationship transition preserves patient record and denies automatic transfer; forced-RLS, CSRF/cookie/mobile-storage, Arabic/English keyboard/screen-reader/reduced-motion evidence; read/mutation p95; full `pnpm verify`.
 
 ### 008 — Audit, Admin Aggregates, and Observability
@@ -307,7 +307,7 @@ This graph has 21 nodes including completed predecessor 006, 20 forward edges, n
 | `OPEN-LEGAL-001`, `OPEN-LEGAL-002`, `OPEN-LEGAL-007` | all PHI features / 026                 | Production PHI, retention automation, and article-level claims remain blocked |
 | `OPEN-UX-001`, `OPEN-UX-002`                         | every UI feature / 026                 | Pixel-identical/formal visual claims remain blocked                           |
 | OPEN-PRODUCT-001                                     | journey features / 026                 | UAT baseline remains blocked                                                  |
-| OPEN-TEAM-001                                        | every feature                          | Named approvals/release governance remain blocked                             |
+| OPEN-TEAM-001                                        | every feature                          | Blocks `SPEC_APPROVED` until the named RACI and acknowledgements exist        |
 | OPEN-TECH-001                                        | 025-026 and reproducibility claims     | Byte-reproducible tool/runtime claim remains blocked                          |
 | OPEN-TECH-002                                        | every affected feature / 026           | Full active API/DDL/client parity closes incrementally                        |
 | OPEN-TECH-003                                        | every performance/UI feature / 026     | Formal device/network/accessibility performance acceptance remains blocked    |

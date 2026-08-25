@@ -14,11 +14,13 @@ The status vocabulary is deliberately narrower than SpecKit lifecycle status:
 
 - **DONE**: the requirement's graduation engineering scope is fully realized by merged 001-006 evidence. This does not close a production-only `OPEN-*` gate or mean `RELEASED`.
 - **PARTIAL**: a verified slice exists, but a named remainder still needs one closure owner.
-- **PLANNED**: no completed requirement slice exists; a remaining roadmap row owns it and no `SPEC_APPROVED` blocker prevents the next feature from being specified.
-- **BLOCKED**: the next required feature cannot reach `SPEC_APPROVED`, or the requirement itself cannot be completed, until the named canonical gate closes.
+- **PLANNED**: no completed requirement slice exists and a remaining roadmap row owns it. Cross-cutting lifecycle gates are tracked independently and do not convert every owned requirement into `BLOCKED`.
+- **BLOCKED**: a named requirement-specific canonical gate prevents the owner feature from reaching `SPEC_APPROVED` for that requirement, or prevents the requirement itself from being completed.
 - **DEFERRED_POST_MVP**: immutable reserved history that is forbidden from graduation specifications, APIs, UI, migrations, tasks, or release acceptance.
 
 “Owner” below means requirement-closure owner. Supporting or predecessor features may implement a prerequisite without becoming a second closure owner. Every one of the 95 PRD FR IDs and 24 NFR IDs appears exactly once in the ledgers below.
+
+`OPEN-TEAM-001` is a program-wide lifecycle overlay, not a duplicate blocker on every requirement row. It must close before each remaining feature reaches `SPEC_APPROVED`, including feature 007, while the requirement ledger continues to distinguish the four requirement-specific `SPEC_APPROVED` blockers.
 
 ## 2. Accounting result
 
