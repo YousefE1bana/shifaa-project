@@ -208,10 +208,17 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
     accessToken: string,
     newCredential: string,
   ): Promise<void> {
-    const { error } = await this.createUserClient(accessToken).auth.updateUser({
-      password: newCredential,
+    const response = await fetch(`${this.options.url}/auth/v1/user`, {
+      method: 'PUT',
+      headers: {
+        apikey: this.options.anonKey,
+        authorization: `Bearer ${accessToken}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ password: newCredential }),
+      signal: AbortSignal.timeout(5_000),
     });
-    if (error)
+    if (!response.ok)
       throw new ApiPolicyError('vendor-unavailable', 503, 'Credential replacement failed.');
   }
 

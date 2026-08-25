@@ -6,7 +6,7 @@ const requireFromApi = createRequire(workspace);
 const { createClient } = requireFromApi('@supabase/supabase-js');
 const postgres = requireFromApi('postgres');
 
-function runPnpm(args, capture = false) {
+function runPnpm(args, capture = false, extraEnv = {}) {
   const command = process.platform === 'win32' ? 'cmd.exe' : 'corepack';
   const commandArgs =
     process.platform === 'win32'
@@ -16,8 +16,11 @@ function runPnpm(args, capture = false) {
     cwd: new URL('..', import.meta.url),
     encoding: capture ? 'utf8' : undefined,
     stdio: capture ? ['ignore', 'pipe', 'ignore'] : 'inherit',
+    env: { ...process.env, ...extraEnv },
   });
 }
+
+const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 runPnpm(['exec', 'supabase', 'db', 'reset', '--local']);
 const status = JSON.parse(runPnpm(['exec', 'supabase', 'status', '-o', 'json'], true));
@@ -32,17 +35,21 @@ let nativeSession = signup.data.session;
 if (!nativeSession) {
   let code;
   for (let attempt = 0; attempt < 20 && !code; attempt += 1) {
-    const mailbox = await fetch(`${status.INBUCKET_URL}/api/v1/messages`).then((response) =>
+    const mailbox = await fetch(`${status.MAILPIT_URL}/api/v1/messages`).then((response) =>
       response.json(),
     );
     const message = mailbox.messages?.find((entry) =>
       entry.To?.some((recipient) => recipient.Address === email),
     );
-    if (!message) continue;
-    const detail = await fetch(`${status.INBUCKET_URL}/api/v1/message/${message.ID}`).then(
+    if (!message) {
+      await wait(250);
+      continue;
+    }
+    const detail = await fetch(`${status.MAILPIT_URL}/api/v1/message/${message.ID}`).then(
       (response) => response.json(),
     );
     code = /\*(\d{6})\*/.exec(detail.Text ?? '')?.[1];
+    if (!code) await wait(250);
   }
   if (!code) throw new Error('Local confirmation message did not contain a verification code.');
   const confirmed = await client.auth.verifyOtp({ email, token: code, type: 'signup' });
@@ -74,5 +81,19 @@ try {
 } finally {
   await sql.end({ timeout: 5 });
 }
+
+runPnpm(
+  [
+    '--filter',
+    '@shifaa/api',
+    'exec',
+    'vitest',
+    'run',
+    'test/identity-continuity-auth.integration.test.ts',
+    '--testTimeout=30000',
+  ],
+  false,
+  { SHIFAA_RUN_IDENTITY_CONTINUITY_AUTH: 'true' },
+);
 
 console.log('Identity continuity native Auth/PostgreSQL compatibility passed.');

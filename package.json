@@ -40,6 +40,7 @@
     "test:privacy:performance": "tsx tools/privacy-performance.ts",
     "test:privacy:security": "pnpm db:rls-test && pnpm secrets:check && pnpm architecture:check && pnpm --filter @shifaa/observability test",
     "test:privacy:tabletop": "node tools/verify-privacy-evidence.mjs",
+    "test:identity-continuity:auth": "node tools/run-identity-continuity-supabase-test.mjs",
     "db:reset": "docker compose down -v && docker compose up -d --wait postgres && pnpm db:migrate",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
