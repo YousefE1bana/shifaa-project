@@ -45,7 +45,9 @@ Yousef explicitly authorizes it from the frozen task/Issue baseline.
 ## AGY review evidence
 
 All reviews used `gemini-3.7-flash-high`, `--effort high`, and `--read-only` through the reviewed
-relay. All completed with exit `0` and `readOnlyViolation: false`.
+relay. Final clean reviews completed with exit `0` and `readOnlyViolation: false`. The first plan
+review's fingerprint was contaminated by a concurrent parent edit, was recorded as
+`readOnlyViolation: true`, and was superseded by a clean zero-finding review.
 
 | Review                        | Project                                | Conversation                           | Parent disposition                                                                                                                                                                                                      |
 | ----------------------------- | -------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -59,5 +61,5 @@ See `open-sec-001-decision-memo.md`, `open-legal-006-decision-request.md`,
 
 ## Next permitted action
 
-Execute the normal `specify -> clarify -> plan -> tasks -> analyze -> taskstoissues` sequence under
-Yousef's ownership. Do not implement, start Feature 008, or merge without explicit authorization.
+Publish the reviewed immutable task baseline through `taskstoissues`, then stop. Do not implement,
+start Feature 008, or merge without explicit authorization.

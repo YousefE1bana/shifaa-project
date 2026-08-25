@@ -6,7 +6,7 @@
 >
 > **Conversation:** `f8fd37f4-e11c-4c83-9fb1-df9deb0a7194`
 >
-> **Result:** exit `0`, `readOnlyViolation: false`; AGY did not approve the plan
+> **Result:** exit `0`, `readOnlyViolation: true` because a parent edit occurred during the run; AGY did not approve the plan
 
 ## Parent dispositions
 
