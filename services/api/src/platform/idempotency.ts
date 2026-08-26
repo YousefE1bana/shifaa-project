@@ -11,6 +11,7 @@ export interface StoredHttpResult<T = unknown> {
 interface IdempotencyRecord<T> {
   requestHash: string;
   result: Promise<StoredHttpResult<T>>;
+  expiresAt: number;
 }
 
 function stableJson(value: unknown): string {
@@ -38,6 +39,7 @@ export interface IdempotencyStore {
     route: string;
     key: string;
     body: unknown;
+    retentionMs?: number;
     prepare?: () => Promise<P>;
     work: (prepared: P) => Promise<StoredHttpResult<T>>;
   }): Promise<StoredHttpResult<T>>;
@@ -46,12 +48,15 @@ export interface IdempotencyStore {
 export class InMemoryIdempotencyStore implements IdempotencyStore {
   private readonly records = new Map<string, IdempotencyRecord<unknown>>();
 
+  public constructor(private readonly now: () => number = Date.now) {}
+
   public async execute<T, P = undefined>(input: {
     principal: string;
     method: string;
     route: string;
     key: string;
     body: unknown;
+    retentionMs?: number;
     prepare?: () => Promise<P>;
     work: (prepared: P) => Promise<StoredHttpResult<T>>;
   }): Promise<StoredHttpResult<T>> {
@@ -66,6 +71,9 @@ export class InMemoryIdempotencyStore implements IdempotencyStore {
       '\u0000',
     );
     const requestHash = hashRequest(input.body);
+    const timestamp = this.now();
+    const retained = this.records.get(composite) as IdempotencyRecord<T> | undefined;
+    if (retained && retained.expiresAt <= timestamp) this.records.delete(composite);
     const existing = this.records.get(composite) as IdempotencyRecord<T> | undefined;
     if (existing) {
       if (existing.requestHash !== requestHash) {
@@ -80,7 +88,11 @@ export class InMemoryIdempotencyStore implements IdempotencyStore {
 
     const prepared = input.prepare ? await input.prepare() : (undefined as P);
     const result = input.work(prepared);
-    this.records.set(composite, { requestHash, result });
+    this.records.set(composite, {
+      requestHash,
+      result,
+      expiresAt: timestamp + (input.retentionMs ?? 24 * 60 * 60_000),
+    });
     try {
       return await result;
     } catch (error) {

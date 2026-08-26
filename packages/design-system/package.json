@@ -8,7 +8,8 @@
     "./tokens": "./src/tokens.ts",
     "./emergency-foundation": "./src/EmergencyFoundation.tsx",
     "./staff-facility": "./src/StaffFacilityWorkspace.tsx",
-    "./family-context": "./src/FamilyContextBanner.tsx"
+    "./family-context": "./src/FamilyContextBanner.tsx",
+    "./security/session-status": "./src/security/SessionStatus.tsx"
   },
   "scripts": {
     "test": "node --test src/*.test.ts",

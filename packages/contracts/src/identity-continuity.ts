@@ -1,4 +1,14 @@
-import { Type, type Static, type TSchema } from '@sinclair/typebox';
+import { FormatRegistry, Type, type Static, type TSchema } from '@sinclair/typebox';
+import { Value } from '@sinclair/typebox/value';
+
+if (!FormatRegistry.Has('uuid')) {
+  FormatRegistry.Set('uuid', (value) =>
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value),
+  );
+}
+if (!FormatRegistry.Has('date-time')) {
+  FormatRegistry.Set('date-time', (value) => Number.isFinite(Date.parse(value)));
+}
 
 export const IDENTITY_CONTINUITY_FEATURE_ID =
   '007-identity-continuity-sessions-mfa-recovery' as const;
@@ -51,7 +61,7 @@ export const WebRefreshRequestSchema = closedObject({
 export const NativeRefreshRequestSchema = closedObject({
   client: Type.Literal('native'),
   foregroundEngaged: Type.Literal(true),
-  refreshToken: Type.String({ minLength: 32, maxLength: 4096 }),
+  refreshToken: Type.String({ minLength: 1, maxLength: 4096, writeOnly: true }),
 });
 export const RefreshRequestSchema = Type.Union([
   WebRefreshRequestSchema,
@@ -59,7 +69,7 @@ export const RefreshRequestSchema = Type.Union([
 ]);
 export const SessionResultSchema = closedObject({
   accessToken: Type.String({ minLength: 32 }),
-  refreshToken: Type.Optional(Type.String({ minLength: 32 })),
+  refreshToken: Type.Optional(Type.String({ minLength: 1, maxLength: 4096, writeOnly: true })),
   sessionId: Uuid,
   assurance: Assurance,
   expiresAt: DateTime,
@@ -188,6 +198,13 @@ export const identityContinuityResponseSchemas = {
   completeRecovery: RecoveryResultSchema,
   transitionDependent: TransitionResultSchema,
 } as const satisfies Record<IdentityContinuityOperationId, TSchema>;
+
+export function validatesIdentityContinuityRequest(
+  operationId: IdentityContinuityOperationId,
+  value: unknown,
+): boolean {
+  return Value.Check(identityContinuityRequestSchemas[operationId], value);
+}
 
 export const identityContinuitySensitiveFields = [
   'accessToken',

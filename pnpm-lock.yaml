@@ -192,6 +192,9 @@ importers:
       '@shifaa/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@shifaa/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@shifaa/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts

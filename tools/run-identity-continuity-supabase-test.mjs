@@ -62,6 +62,26 @@ const sessionId = JSON.parse(
 ).session_id;
 if (typeof sessionId !== 'string') throw new Error('Native access token has no session_id.');
 
+const hostileClient = createClient(status.API_URL, status.ANON_KEY, {
+  auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+});
+const hostileLogin = await hostileClient.auth.signInWithPassword({ email, password });
+if (hostileLogin.error || !hostileLogin.data.session)
+  throw hostileLogin.error ?? new Error('Hostile-reuse test session is missing.');
+const hostileAncestorToken = hostileLogin.data.session.refresh_token;
+const hostileChild = await hostileClient.auth.refreshSession({
+  refresh_token: hostileAncestorToken,
+});
+if (hostileChild.error || !hostileChild.data.session)
+  throw hostileChild.error ?? new Error('Hostile-reuse child session is missing.');
+const hostileGrandchild = await hostileClient.auth.refreshSession({
+  refresh_token: hostileChild.data.session.refresh_token,
+});
+if (hostileGrandchild.error || !hostileGrandchild.data.session)
+  throw hostileGrandchild.error ?? new Error('Hostile-reuse grandchild session is missing.');
+const hostileGrandchildToken = hostileGrandchild.data.session.refresh_token;
+const hostileChainStartedAt = Date.now();
+
 const sql = postgres(status.DB_URL, { max: 1 });
 try {
   const before =
@@ -96,4 +116,54 @@ runPnpm(
   { SHIFAA_RUN_IDENTITY_CONTINUITY_AUTH: 'true' },
 );
 
-console.log('Identity continuity native Auth/PostgreSQL compatibility passed.');
+runPnpm(
+  [
+    'exec',
+    'vitest',
+    'run',
+    'services/api/test/identity-continuity-sessions.integration.test.ts',
+    'services/api/test/identity-continuity-postgres.integration.test.ts',
+    '--testTimeout=60000',
+  ],
+  false,
+  { SHIFAA_RUN_IDENTITY_CONTINUITY_SESSIONS: 'true' },
+);
+
+runPnpm(['exec', 'tsx', '--test', 'tests/e2e/identity-continuity-sessions.spec.ts'], false, {
+  SHIFAA_RUN_IDENTITY_CONTINUITY_SESSIONS: 'true',
+});
+
+if (Date.now() - hostileChainStartedAt <= 10_000)
+  throw new Error('The useful real-stack suites did not cross the configured reuse interval.');
+const hostileReplayClient = createClient(status.API_URL, status.ANON_KEY, {
+  auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+});
+const hostileReplay = await hostileReplayClient.auth.refreshSession({
+  refresh_token: hostileAncestorToken,
+});
+if (!hostileReplay.error)
+  throw new Error('Ancestor replay outside the configured interval did not revoke the session.');
+if (hostileReplay.error.code !== 'refresh_token_already_used')
+  throw new Error('Ancestor replay failed for an unexpected native Auth reason.');
+
+// Native Auth updates the revoked child's timestamp when it revokes the family. That child remains
+// eligible for the configured benign-reuse interval, so cross the second interval with useful
+// verification work before proving child denial. Do not sleep or emulate provider-owned rotation.
+const familyRevokedAt = Date.now();
+runPnpm(['--filter', '@shifaa/api', 'test']);
+runPnpm(['--filter', '@shifaa/auth', 'test']);
+runPnpm(['--filter', '@shifaa/contracts', 'test']);
+runPnpm(['--filter', '@shifaa/core', 'test']);
+if (Date.now() - familyRevokedAt <= 10_000)
+  throw new Error('The useful post-revocation suites did not cross the configured reuse interval.');
+
+const revokedChildClient = createClient(status.API_URL, status.ANON_KEY, {
+  auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+});
+const revokedGrandchild = await revokedChildClient.auth.refreshSession({
+  refresh_token: hostileGrandchildToken,
+});
+if (!revokedGrandchild.error)
+  throw new Error('A child refresh token remained valid after family revocation and reuse expiry.');
+
+console.log('Identity continuity native Auth/PostgreSQL/session checkpoints passed.');

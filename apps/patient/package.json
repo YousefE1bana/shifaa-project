@@ -16,6 +16,7 @@
     "@expo-google-fonts/ibm-plex-sans-arabic": "0.4.2",
     "@expo-google-fonts/inter": "0.4.2",
     "@shifaa/api-client": "workspace:*",
+    "@shifaa/auth": "workspace:*",
     "@shifaa/contracts": "workspace:*",
     "@shifaa/design-system": "workspace:*",
     "@shifaa/i18n": "workspace:*",

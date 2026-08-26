@@ -1,6 +1,6 @@
 # Feature 007 validation quickstart
 
-> This is the staged validation guide. Tasks T001-T015 are implemented; later checkpoints remain planned.
+> This is the staged validation guide. Tasks T001-T022 are implemented; later checkpoints remain planned.
 
 ## Prerequisites
 

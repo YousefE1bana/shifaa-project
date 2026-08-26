@@ -7,7 +7,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   BeginEnrollmentRequestSchema,
+  NativeRefreshRequestSchema,
   RefreshRequestSchema,
+  SessionResultSchema,
   identityContinuityOperationIds,
   identityContinuityOperations,
   identityContinuityRequestSchemas,
@@ -84,17 +86,68 @@ describe('identity continuity contracts', () => {
       Value.Check(RefreshRequestSchema, {
         client: 'native',
         foregroundEngaged: true,
-        refreshToken: 'x'.repeat(32),
+        refreshToken: 'opaque-token',
       }),
     ).toBe(true);
     expect(
       Value.Check(RefreshRequestSchema, {
         client: 'web',
         foregroundEngaged: true,
-        refreshToken: 'x'.repeat(32),
+        refreshToken: 'opaque-token',
       }),
     ).toBe(false);
     expect(Value.Check(RefreshRequestSchema, { client: 'native', foregroundEngaged: true })).toBe(
+      false,
+    );
+  });
+
+  it('accepts opaque provider refresh tokens while rejecting empty values', () => {
+    expect(
+      Value.Check(NativeRefreshRequestSchema, {
+        client: 'native',
+        foregroundEngaged: true,
+        refreshToken: '123456789012',
+      }),
+    ).toBe(true);
+    expect(
+      Value.Check(NativeRefreshRequestSchema, {
+        client: 'native',
+        foregroundEngaged: true,
+        refreshToken: '',
+      }),
+    ).toBe(false);
+    expect(
+      Value.Check(NativeRefreshRequestSchema, {
+        client: 'native',
+        foregroundEngaged: true,
+        refreshToken: 'x'.repeat(4096),
+      }),
+    ).toBe(true);
+    expect(
+      Value.Check(NativeRefreshRequestSchema, {
+        client: 'native',
+        foregroundEngaged: true,
+        refreshToken: 'x'.repeat(4097),
+      }),
+    ).toBe(false);
+    const session = {
+      accessToken: 'x'.repeat(32),
+      sessionId: '71000000-0000-4000-8000-000000000001',
+      assurance: 'aal1',
+      expiresAt: '2026-08-26T00:15:00.000Z',
+      restriction: null,
+    } as const;
+    expect(Value.Check(SessionResultSchema, { ...session, refreshToken: '123456789012' })).toBe(
+      true,
+    );
+    expect(Value.Check(SessionResultSchema, { ...session, refreshToken: '' })).toBe(false);
+    expect(Value.Check(SessionResultSchema, { ...session, refreshToken: 'x'.repeat(4096) })).toBe(
+      true,
+    );
+    expect(Value.Check(SessionResultSchema, { ...session, refreshToken: 'x'.repeat(4097) })).toBe(
+      false,
+    );
+    expect(Value.Check(SessionResultSchema, { ...session, accessToken: 'x'.repeat(31) })).toBe(
       false,
     );
   });

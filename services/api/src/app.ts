@@ -14,6 +14,7 @@ import {
   PostgresFamilyCareService,
   PostgresPrivacyDsrNotificationService,
   PostgresDiscoverySosService,
+  PostgresIdentityContinuityService,
   SupabaseAuthIssuer,
   SupabaseQuarantineUploadStore,
 } from './adapters/index.js';
@@ -40,6 +41,12 @@ import {
   type DiscoverySosServicePort,
 } from './modules/discovery-sos/index.js';
 import { registerDiscoverySosRoutes } from './routes/discovery-sos.js';
+import {
+  FailClosedIdentityContinuityService,
+  IdentityContinuityService,
+  type IdentityContinuityServicePort,
+} from './modules/identity-continuity/index.js';
+import { registerIdentityContinuityRoutes } from './routes/identity-continuity.js';
 
 export interface AppHarness {
   app: ReturnType<typeof Fastify>;
@@ -50,6 +57,7 @@ export interface AppHarness {
   familyService: FamilyCareServicePort;
   privacyService: PrivacyDsrNotificationService | PostgresPrivacyDsrNotificationService;
   discoverySosService: DiscoverySosServicePort;
+  identityContinuityService: IdentityContinuityServicePort;
 }
 
 export async function buildApp(
@@ -57,6 +65,7 @@ export async function buildApp(
     config?: ApiConfig;
     proofing?: LocalProofingProvider;
     clock?: { now(): Date };
+    identityContinuityService?: IdentityContinuityServicePort;
   } = {},
 ): Promise<AppHarness> {
   const config = options.config ?? loadConfig({ NODE_ENV: 'test' });
@@ -140,9 +149,19 @@ export async function buildApp(
           options.clock ? () => options.clock!.now() : undefined,
           config.discoverySosPublicAppUrl,
         );
+  const identityContinuityService =
+    options.identityContinuityService ??
+    (auth instanceof SupabaseAuthIssuer && repository instanceof PostgresIdentityRepository
+      ? new IdentityContinuityService({
+          auth,
+          repository: new PostgresIdentityContinuityService(repository),
+          allowedWebOrigins: new Set(config.corsOrigins),
+          now: () => options.clock?.now() ?? new Date(),
+        })
+      : new FailClosedIdentityContinuityService());
   await app.register(cors, {
     origin: config.corsOrigins,
-    methods: ['GET', 'HEAD', 'POST', 'PATCH', 'OPTIONS'],
+    methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
       'Accept',
       'Accept-Language',
@@ -151,11 +170,14 @@ export async function buildApp(
       'Content-Type',
       'Idempotency-Key',
       'If-Match',
+      'Origin',
+      'Sec-Fetch-Site',
       'Pragma',
       'X-AAL',
       'X-Provider-Signature',
       'X-Provider-Timestamp',
       'X-Purpose',
+      'X-CSRF-Token',
       'X-SHIFAA-Patient-Context',
     ],
     exposedHeaders: [
@@ -217,6 +239,17 @@ export async function buildApp(
           : new InMemoryIdempotencyStore(),
     });
   }
+  if (config.identityContinuityEnabled) {
+    await registerIdentityContinuityRoutes(app, {
+      service: identityContinuityService,
+      idempotency:
+        repository instanceof PostgresIdentityRepository
+          ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)
+          : new InMemoryIdempotencyStore(),
+      hmacKey: config.preauthHmacKey,
+      ...(options.clock ? { now: () => options.clock!.now().getTime() } : {}),
+    });
+  }
   if (repository instanceof PostgresIdentityRepository) {
     app.addHook('onClose', () => repository.close());
   }
@@ -229,5 +262,6 @@ export async function buildApp(
     familyService,
     privacyService,
     discoverySosService,
+    identityContinuityService,
   };
 }

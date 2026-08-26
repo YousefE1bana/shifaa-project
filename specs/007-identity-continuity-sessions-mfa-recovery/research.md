@@ -21,6 +21,12 @@ AAL behavior.
 **Alternatives rejected:** application session/factor tables; direct Auth SQL mutation; browser domain
 mutation; online `service_role`; device fingerprint authorization.
 
+**2026-08-26 contract reconciliation:** Refresh tokens are provider-owned opaque rotation
+credentials. Their SHIFAA request/response schemas validate only non-empty bounded strings
+(`1..4096`) and never infer entropy, strength, or authority from length. The attributable Product
+Owner decision and pinned-runtime evidence are recorded in
+`evidence/security/refresh-token-contract-reconciliation.md`.
+
 ## R-02 — Exact local Auth configuration
 
 **Decision:** `supabase/config.toml` sets `jwt_expiry = 900`, keeps refresh rotation enabled and

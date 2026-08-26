@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
   title: SHIFAA Feature 007 Identity Continuity API
-  version: 1.0.0
+  version: 1.0.1
   description: >-
     Exact Feature-007 contract. Production providers/PHI/passkeys are disabled; no operation outside
     the eight canonical IDs is introduced.
@@ -341,14 +341,14 @@ components:
       properties:
         client: { type: string, const: native }
         foregroundEngaged: { type: boolean, const: true }
-        refreshToken: { type: string, minLength: 32, maxLength: 4096, writeOnly: true }
+        refreshToken: { type: string, minLength: 1, maxLength: 4096, writeOnly: true }
       required: [client, foregroundEngaged, refreshToken]
     SessionResult:
       type: object
       additionalProperties: false
       properties:
         accessToken: { type: string, minLength: 32, writeOnly: true }
-        refreshToken: { type: string, minLength: 32, writeOnly: true }
+        refreshToken: { type: string, minLength: 1, maxLength: 4096, writeOnly: true }
         sessionId: { $ref: '#/components/schemas/Uuid' }
         assurance: { $ref: '#/components/schemas/Assurance' }
         expiresAt: { type: string, format: date-time }

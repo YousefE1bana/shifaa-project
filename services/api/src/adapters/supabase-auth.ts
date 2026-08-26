@@ -6,6 +6,7 @@ import {
   type NativeFactorSummary,
   type NativeSessionProjection,
   type NativeTotpEnrollment,
+  type VerifiedContinuitySession,
 } from '@shifaa/auth';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
@@ -114,6 +115,21 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
   public async resolveSession(accessToken: string): Promise<AuthSession | undefined> {
     const verified = await this.verifier.verify(accessToken);
     return verified ? { subjectId: verified.subjectId, accessToken, aal: verified.aal } : undefined;
+  }
+
+  public async verifyAccessToken(
+    accessToken: string,
+  ): Promise<VerifiedContinuitySession | undefined> {
+    const verified = await this.verifier.verify(accessToken);
+    const expiresAt = verified?.payload.exp;
+    if (!verified || typeof expiresAt !== 'number') return undefined;
+    return {
+      subjectId: verified.subjectId,
+      sessionId: verified.sessionId,
+      aal: verified.aal,
+      amr: verified.amr,
+      expiresAt,
+    };
   }
 
   public async refresh(refreshToken: string): Promise<NativeSessionProjection> {
