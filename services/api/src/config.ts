@@ -53,6 +53,38 @@ function readKey(name: string, value: string | undefined): Uint8Array {
   return decoded;
 }
 
+// The documented seeded-synthetic test constants from .env.example,
+// .env.supabase.example, and tools/start-*.ps1. They are valid only for
+// local/CI synthetic profiles; production startup rejects them by content.
+const SYNTHETIC_TEST_KEY_CONSTANTS: readonly (readonly [string, Buffer])[] = [
+  ['zero-filled', Buffer.alloc(32)],
+  ['0x01-filled', Buffer.alloc(32, 1)],
+  ['0x02-filled', Buffer.alloc(32, 2)],
+];
+
+function syntheticKeyMaterial(name: string, value: string | undefined): void {
+  const decoded = Buffer.from(value ?? '', 'base64');
+  for (const [label, constant] of SYNTHETIC_TEST_KEY_CONSTANTS) {
+    if (decoded.equals(constant)) {
+      throw new ConfigurationError(
+        `Production startup denied: ${name} matches the documented ${label} seeded-synthetic test key.`,
+      );
+    }
+  }
+}
+
+function assertDistinctKeys(keys: ReadonlyArray<[string, Uint8Array]>): void {
+  for (let left = 0; left < keys.length; left++) {
+    for (let right = left + 1; right < keys.length; right++) {
+      if (Buffer.from(keys[left]![1]).equals(Buffer.from(keys[right]![1]))) {
+        throw new ConfigurationError(
+          `${keys[left]![0]} and ${keys[right]![0]} must be distinct key material.`,
+        );
+      }
+    }
+  }
+}
+
 function readBoundedInteger(
   name: string,
   value: string | undefined,
@@ -138,6 +170,19 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     if (!env['CORS_ALLOWED_ORIGINS']) {
       throw new ConfigurationError('Production startup denied: CORS_ALLOWED_ORIGINS is required.');
     }
+    const productionKeyNames = [
+      'IDENTITY_ENCRYPTION_KEY_BASE64',
+      'IDENTITY_BLIND_INDEX_KEY_BASE64',
+      'PREAUTH_HMAC_KEY_BASE64',
+    ] as const;
+    for (const keyName of productionKeyNames) {
+      if (!env[keyName]) {
+        throw new ConfigurationError(
+          `Production startup denied: ${keyName} is required; fallback test keys are not permitted.`,
+        );
+      }
+      syntheticKeyMaterial(keyName, env[keyName]);
+    }
   }
 
   if (!['local', 'supabase'].includes(authAdapter))
@@ -169,6 +214,26 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
         throw new ConfigurationError(`${required} is required for the Supabase runtime.`);
     }
   }
+
+  // Local/CI synthetic profiles fall back to the documented test constants;
+  // production has already rejected absent or placeholder values above.
+  const identityEncryptionKey = readKey(
+    'IDENTITY_ENCRYPTION_KEY_BASE64',
+    env['IDENTITY_ENCRYPTION_KEY_BASE64'] ?? Buffer.alloc(32).toString('base64'),
+  );
+  const identityBlindIndexKey = readKey(
+    'IDENTITY_BLIND_INDEX_KEY_BASE64',
+    env['IDENTITY_BLIND_INDEX_KEY_BASE64'] ?? Buffer.alloc(32, 1).toString('base64'),
+  );
+  const preauthHmacKey = readKey(
+    'PREAUTH_HMAC_KEY_BASE64',
+    env['PREAUTH_HMAC_KEY_BASE64'] ?? Buffer.alloc(32, 2).toString('base64'),
+  );
+  assertDistinctKeys([
+    ['IDENTITY_ENCRYPTION_KEY_BASE64', identityEncryptionKey],
+    ['IDENTITY_BLIND_INDEX_KEY_BASE64', identityBlindIndexKey],
+    ['PREAUTH_HMAC_KEY_BASE64', preauthHmacKey],
+  ]);
 
   return {
     environment,
@@ -213,18 +278,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     repositoryAdapter,
     proofingAdapter,
     uploadAdapter,
-    identityEncryptionKey: readKey(
-      'IDENTITY_ENCRYPTION_KEY_BASE64',
-      env['IDENTITY_ENCRYPTION_KEY_BASE64'] ?? Buffer.alloc(32).toString('base64'),
-    ),
-    identityBlindIndexKey: readKey(
-      'IDENTITY_BLIND_INDEX_KEY_BASE64',
-      env['IDENTITY_BLIND_INDEX_KEY_BASE64'] ?? Buffer.alloc(32, 1).toString('base64'),
-    ),
-    preauthHmacKey: readKey(
-      'PREAUTH_HMAC_KEY_BASE64',
-      env['PREAUTH_HMAC_KEY_BASE64'] ?? Buffer.alloc(32, 2).toString('base64'),
-    ),
+    identityEncryptionKey: identityEncryptionKey,
+    identityBlindIndexKey: identityBlindIndexKey,
+    preauthHmacKey: preauthHmacKey,
     ...(env['SUPABASE_URL'] ? { supabaseUrl: env['SUPABASE_URL'] } : {}),
     ...(env['SUPABASE_ANON_KEY'] ? { supabaseAnonKey: env['SUPABASE_ANON_KEY'] } : {}),
     ...(env['SUPABASE_SERVICE_ROLE_KEY']

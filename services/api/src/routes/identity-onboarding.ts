@@ -37,6 +37,7 @@ const noStoreHeaders = {
   'cache-control': 'private, no-store',
   pragma: 'no-cache',
 };
+const syntheticModes = new WeakMap<FastifyInstance, boolean>();
 
 function problemTitle(code: string, locale: string): string {
   const arabic = locale.toLowerCase().startsWith('ar');
@@ -78,6 +79,16 @@ async function actorFor(
   }
   const token = authorization.slice('Bearer '.length);
   if (token.startsWith('synthetic-reviewer:')) {
+    // Fail closed like the sibling modules: the privileged synthetic reviewer is a
+    // seeded-synthetic test fixture, never real authentication evidence. Outside
+    // seeded-synthetic mode it grants nothing regardless of supplied AAL/purpose.
+    if (!syntheticModes.get(request.server)) {
+      throw new ApiPolicyError(
+        'open-sec-001',
+        503,
+        'Identity review sessions remain disabled outside seeded-synthetic mode.',
+      );
+    }
     return {
       kind: 'ADM-FACILITY',
       personId: '00000000-0000-4000-8000-000000000002',
@@ -138,6 +149,7 @@ export async function registerIdentityOnboardingRoutes(
   app: FastifyInstance,
   deps: IdentityRouteDependencies,
 ): Promise<void> {
+  syntheticModes.set(app, deps.config.syntheticMode);
   app.addHook('onRequest', async (_request, reply) => {
     void reply.headers(noStoreHeaders);
   });

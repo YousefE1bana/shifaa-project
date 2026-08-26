@@ -342,3 +342,142 @@ describe('identity onboarding API acceptance', () => {
     await harness.app.close();
   });
 });
+
+describe('SEC-001 privileged synthetic reviewer gating', () => {
+  const reviewerHeaders = {
+    authorization: 'Bearer synthetic-reviewer:unauthenticated-forgery',
+    'x-aal': '2',
+    'x-purpose': 'identity.review',
+  };
+
+  it('fails closed with open-sec-001 for privileged reviewer routes when syntheticMode=false', async () => {
+    const base = loadConfig({ NODE_ENV: 'test' });
+    const harness = await buildApp({ config: { ...base, syntheticMode: false } });
+    const worklist = await harness.app.inject({
+      method: 'GET',
+      url: '/v1/admin/identity-verifications',
+      headers: reviewerHeaders,
+    });
+    expect(worklist.statusCode).toBe(503);
+    expect(worklist.json()).toMatchObject({ code: 'open-sec-001' });
+    const decision = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/admin/identity-verifications/00000000-0000-4000-8000-0000000000ff/decision',
+      headers: { ...reviewerHeaders, 'if-match': '"1"', 'idempotency-key': 'sec001-denied-01' },
+      payload: { decision: 'approve', reason: 'Forged synthetic session.' },
+    });
+    expect(decision.statusCode).toBe(503);
+    expect(decision.json()).toMatchObject({ code: 'open-sec-001' });
+    const singleCase = await harness.app.inject({
+      method: 'GET',
+      url: '/v1/identity-verifications/00000000-0000-4000-8000-0000000000ff',
+      headers: reviewerHeaders,
+    });
+    expect(singleCase.statusCode).toBe(503);
+    await harness.app.close();
+  });
+
+  it('still authenticates real patient sessions while privileged synthetic sessions are disabled', async () => {
+    const base = loadConfig({ NODE_ENV: 'test' });
+    const harness = await buildApp({ config: { ...base, syntheticMode: false } });
+    const { token, profile } = await registerAndVerify(
+      harness.app,
+      'gated.patient@synthetic.shifaa.test',
+      'gated',
+    );
+    expect(profile['id']).toBeTruthy();
+    const unauthenticatedWorklist = await harness.app.inject({
+      method: 'GET',
+      url: '/v1/admin/identity-verifications',
+    });
+    expect(unauthenticatedWorklist.statusCode).toBe(401);
+    const unauthenticatedDecision = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/admin/identity-verifications/00000000-0000-4000-8000-0000000000ff/decision',
+      headers: { 'if-match': '"1"', 'idempotency-key': 'sec001-noauth-decision' },
+      payload: { decision: 'approve', reason: 'No credentials supplied.' },
+    });
+    expect(unauthenticatedDecision.statusCode).toBe(401);
+    await harness.app.close();
+  });
+
+  it('keeps assurance, purpose, and assignment constraints enforced inside seeded-synthetic mode', async () => {
+    const fixtures = new Map([
+      ['SYNTHETIC-MANUAL', 'manual_review'],
+      ['SYNTHETIC-TIMEOUT', 'timeout'],
+    ] as const);
+    const harness = await buildApp({ proofing: new LocalProofingProvider(fixtures) });
+    const { token } = await registerAndVerify(
+      harness.app,
+      'assignment.patient@synthetic.shifaa.test',
+      'assign',
+    );
+    const created: string[] = [];
+    for (const [index, value] of [...fixtures.keys()].entries()) {
+      const response = await harness.app.inject({
+        method: 'POST',
+        url: '/v1/people/me/identities',
+        headers: {
+          authorization: `Bearer ${token}`,
+          'idempotency-key': `sec001-case-${index}-0001`,
+        },
+        payload: { identity_type: 'passport', value, issuing_country: 'EG' },
+      });
+      expect(response.statusCode).toBe(201);
+      created.push((response.json().verification_case as Record<string, unknown>)['id'] as string);
+    }
+    const [manualCaseId, pendingCaseId] = created;
+
+    // Assignment constraint: the reviewer fixture is bound to one fixed person and
+    // only cases assigned to that person are visible or decidable. The timeout
+    // case stays pending and unassigned, so it must never appear or decide.
+    const worklist = await harness.app.inject({
+      method: 'GET',
+      url: '/v1/admin/identity-verifications',
+      headers: reviewerHeaders,
+    });
+    expect(worklist.statusCode).toBe(200);
+    const listedIds = (worklist.json().data as Array<{ id: string }>).map((item) => item.id);
+    expect(listedIds).toContain(manualCaseId);
+    expect(listedIds).not.toContain(pendingCaseId);
+
+    const insufficientAssurance = await harness.app.inject({
+      method: 'POST',
+      url: `/v1/admin/identity-verifications/${manualCaseId}/decision`,
+      headers: {
+        ...reviewerHeaders,
+        'x-aal': '1',
+        'if-match': '"1"',
+        'idempotency-key': 'sec001-aal1-deny',
+      },
+      payload: { decision: 'approve', reason: 'Below AAL2.' },
+    });
+    expect(insufficientAssurance.statusCode).toBe(403);
+
+    const missingPurpose = await harness.app.inject({
+      method: 'POST',
+      url: `/v1/admin/identity-verifications/${manualCaseId}/decision`,
+      headers: {
+        authorization: reviewerHeaders.authorization,
+        'x-aal': '2',
+        'if-match': '"1"',
+        'idempotency-key': 'sec001-nopurpose-deny',
+      },
+      payload: { decision: 'approve', reason: 'No purpose supplied.' },
+    });
+    expect(missingPurpose.statusCode).toBe(403);
+
+    const unassignedDecision = await harness.app.inject({
+      method: 'POST',
+      url: `/v1/admin/identity-verifications/${pendingCaseId}/decision`,
+      headers: {
+        ...reviewerHeaders,
+        'if-match': '"1"',
+        'idempotency-key': 'sec001-unassigned-deny',
+      },
+      payload: { decision: 'approve', reason: 'Unassigned case.' },
+    });
+    expect(unassignedDecision.statusCode).toBe(403);
+    await harness.app.close();
+  });
+});

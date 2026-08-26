@@ -79,4 +79,50 @@ describe('identity onboarding use-case module', () => {
     expect(repository.outbox.at(-1)).toMatchObject({ eventType: 'consent.changed' });
     expect(repository.audits.at(-1)).toMatchObject({ action: 'consent.decision.recorded' });
   });
+
+  it('SEC-001 denies self-review even when assignment, AAL2, and purpose all match', async () => {
+    const { service, repository } = serviceHarness();
+    const challenge = await service.register({
+      handle: 'reviewer.self@synthetic.shifaa.test',
+      password: 'Synthetic-Only-2026!',
+      locale: 'ar-EG',
+      requestId: randomUUID(),
+    });
+    const session = await service.verifyOtp({
+      challengeId: challenge.challenge_id,
+      code: LocalAuthIssuer.developmentOtp,
+      requestId: randomUUID(),
+    });
+    const actor = await service.actorFromAccessToken(session.access_token);
+    if (!actor || actor.kind !== 'PAT') throw new Error('Synthetic session missing.');
+    const identity = await service.createIdentity(
+      actor,
+      { identity_type: 'passport', value: 'SYNTHETIC-SELF-REVIEW', issuing_country: 'EG' },
+      randomUUID(),
+    );
+    const crafted = await repository.createVerificationCase({
+      identityId: identity.id,
+      identityType: identity.identity_type,
+      maskedValue: identity.masked_value,
+      ownerPersonId: actor.personId,
+      provider: 'local',
+      status: 'manual_review',
+      assignedReviewerPersonId: actor.personId,
+    });
+    await expect(
+      service.reviewCase(
+        {
+          kind: 'ADM-FACILITY',
+          personId: actor.personId,
+          principal: 'synthetic-reviewer:self',
+          aal: 2,
+          purposes: ['identity.review'],
+        },
+        crafted.id,
+        1,
+        { decision: 'approve', reason: 'Self approval attempt.' },
+        randomUUID(),
+      ),
+    ).rejects.toMatchObject({ code: 'separation-of-duties' });
+  });
 });
