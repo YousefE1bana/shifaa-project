@@ -9,10 +9,12 @@
     "./emergency-foundation": "./src/EmergencyFoundation.tsx",
     "./staff-facility": "./src/StaffFacilityWorkspace.tsx",
     "./family-context": "./src/FamilyContextBanner.tsx",
-    "./security/session-status": "./src/security/SessionStatus.tsx"
+    "./security/session-status": "./src/security/SessionStatus.tsx",
+    "./security/privileged-step-up": "./src/security/PrivilegedStepUp.tsx",
+    "./security/privileged-access-policy": "./src/security/privileged-access-policy.ts"
   },
   "scripts": {
-    "test": "node --test src/*.test.ts",
+    "test": "node --test src/*.test.ts src/security/*.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },

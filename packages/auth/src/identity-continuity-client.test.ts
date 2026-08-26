@@ -2,9 +2,55 @@ import { describe, expect, it } from 'vitest';
 
 import {
   MemoryAccessTokenStore,
+  NativeFactorSummaryReader,
   SessionContinuationController,
   permitsForegroundRefresh,
 } from './identity-continuity.js';
+
+describe('native factor summary reader', () => {
+  it('projects verified TOTP summaries without native secrets or unsupported factors', async () => {
+    const reader = new NativeFactorSummaryReader({
+      listFactors: async () => ({
+        factors: [
+          {
+            id: '71000000-0000-4000-8000-000000000001',
+            factor_type: 'totp',
+            status: 'verified',
+            friendly_name: 'Primary authenticator',
+            created_at: '2026-08-26T00:00:00.000Z',
+            secret: 'PROHIBITED',
+          },
+          {
+            id: '71000000-0000-4000-8000-000000000002',
+            factor_type: 'totp',
+            status: 'unverified',
+            friendly_name: 'Pending authenticator',
+            created_at: '2026-08-26T00:00:00.000Z',
+          },
+          {
+            id: '71000000-0000-4000-8000-000000000003',
+            factor_type: 'phone',
+            status: 'verified',
+            friendly_name: null,
+            created_at: '2026-08-26T00:00:00.000Z',
+          },
+        ],
+      }),
+    });
+
+    const factors = await reader.list('synthetic-access-token');
+    expect(factors).toEqual([
+      {
+        id: '71000000-0000-4000-8000-000000000001',
+        type: 'totp',
+        status: 'verified',
+        friendlyName: 'Primary authenticator',
+        createdAt: '2026-08-26T00:00:00.000Z',
+      },
+    ]);
+    expect(JSON.stringify(factors)).not.toContain('PROHIBITED');
+  });
+});
 
 describe('identity continuity session client policy', () => {
   it.each([

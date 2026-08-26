@@ -170,7 +170,7 @@ BEGIN
   IF to_regclass('auth.sessions') IS NOT NULL THEN
     SELECT array_agg(required.column_name ORDER BY required.column_name)
       INTO missing_columns
-    FROM (VALUES ('id'),('user_id'),('not_after')) AS required(column_name)
+    FROM (VALUES ('id'),('user_id'),('aal'),('not_after')) AS required(column_name)
     WHERE NOT EXISTS (
       SELECT 1 FROM information_schema.columns c
       WHERE c.table_schema='auth' AND c.table_name='sessions' AND c.column_name=required.column_name
@@ -186,6 +186,10 @@ BEGIN
           SELECT 1 FROM auth.sessions s
           WHERE s.id=p_session_id AND s.user_id=p_auth_user_id
             AND (s.not_after IS NULL OR s.not_after>clock_timestamp())
+            AND (
+              nullif(current_setting('shifaa.claimed_aal',true),'') IS NULL
+              OR s.aal::text=current_setting('shifaa.claimed_aal',true)
+            )
         )
       $function$
     $ddl$;
@@ -194,6 +198,31 @@ BEGIN
   END IF;
 END
 $block$;
+
+CREATE OR REPLACE FUNCTION platform.person_requires_mandatory_mfa(p_person_id uuid)
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path=pg_catalog,identity,platform
+AS $$
+  SELECT p_person_id=platform.context_person_id()
+    AND (
+      EXISTS(
+        SELECT 1
+        FROM identity.facility_memberships m
+        WHERE m.person_id=p_person_id
+          AND m.membership_status IN ('invited','active','suspended')
+      )
+      OR EXISTS(
+        SELECT 1
+        FROM identity.admin_role_grants g
+        WHERE g.person_id=p_person_id AND g.status='active'
+      )
+    )
+$$;
+REVOKE ALL ON FUNCTION platform.person_requires_mandatory_mfa(uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION platform.person_requires_mandatory_mfa(uuid) TO shifaa_api;
 
 CREATE OR REPLACE FUNCTION identity.guard_continuity_case() RETURNS trigger
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,identity,platform AS $$

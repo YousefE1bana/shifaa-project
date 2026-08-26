@@ -184,7 +184,7 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
     });
     if (error || data.type !== 'totp')
       throw new ApiPolicyError('vendor-unavailable', 503, 'Native TOTP enrollment failed.');
-    return { enrollmentId: data.id, secret: data.totp.secret, qrUri: data.totp.uri };
+    return { enrollmentId: data.id, secret: data.totp.secret, qrUri: data.totp.qr_code };
   }
 
   public async verifyTotp(
@@ -212,7 +212,11 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
 
   public async unenrollFactor(accessToken: string, factorId: string): Promise<void> {
     const { error } = await this.createUserClient(accessToken).auth.mfa.unenroll({ factorId });
-    if (error) throw new ApiPolicyError('vendor-unavailable', 503, 'Native factor removal failed.');
+    if (error) {
+      if (error.status === 404)
+        throw new ApiPolicyError('not-found', 404, 'The factor is no longer present.');
+      throw new ApiPolicyError('vendor-unavailable', 503, 'Native factor removal failed.');
+    }
   }
 
   public async startRecovery(handle: string): Promise<void> {

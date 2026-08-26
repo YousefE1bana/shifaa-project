@@ -96,7 +96,10 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
   apiUrl.password = 'synthetic_api_only';
   const repository = new PostgresIdentityRepository(apiUrl.toString());
   await repository.ready();
-  const continuityRepository = new PostgresIdentityContinuityService(repository);
+  const continuityRepository = new PostgresIdentityContinuityService(
+    repository,
+    Buffer.alloc(32, 10),
+  );
   const auth = new SupabaseAuthIssuer({
     url: runtime.API_URL,
     anonKey: runtime.ANON_KEY,
@@ -109,6 +112,7 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
     auth,
     repository: continuityRepository,
     allowedWebOrigins: new Set(['https://patient.synthetic.test']),
+    hmacKey: Buffer.alloc(32, 9),
     now: () => new Date(),
   });
   const app = Fastify({ logger: false, genReqId: () => randomUUID() });

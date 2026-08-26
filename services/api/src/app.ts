@@ -154,8 +154,12 @@ export async function buildApp(
     (auth instanceof SupabaseAuthIssuer && repository instanceof PostgresIdentityRepository
       ? new IdentityContinuityService({
           auth,
-          repository: new PostgresIdentityContinuityService(repository),
+          repository: new PostgresIdentityContinuityService(
+            repository,
+            config.identityEncryptionKey,
+          ),
           allowedWebOrigins: new Set(config.corsOrigins),
+          hmacKey: config.preauthHmacKey,
           now: () => options.clock?.now() ?? new Date(),
         })
       : new FailClosedIdentityContinuityService());

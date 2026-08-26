@@ -3,6 +3,7 @@ export class ApiPolicyError extends Error {
     public readonly code: string,
     public readonly status: number,
     message: string,
+    public readonly headers: Readonly<Record<string, string>> = {},
   ) {
     super(message);
     this.name = 'ApiPolicyError';

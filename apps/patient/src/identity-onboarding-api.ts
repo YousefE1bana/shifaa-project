@@ -129,6 +129,10 @@ export class PatientOnboardingApi {
     this.notice = undefined;
   }
 
+  public readAccessToken(): string | undefined {
+    return this.accessToken;
+  }
+
   private client(): IdentityOnboardingClient {
     return new IdentityOnboardingClient({
       baseUrl: this.baseUrl,

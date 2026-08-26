@@ -26,6 +26,45 @@ export interface NativeFactorSummary {
   createdAt: string;
 }
 
+export interface NativeFactorSummaryTransport {
+  listFactors(accessToken: string): Promise<unknown>;
+}
+
+export class NativeFactorSummaryReader {
+  public constructor(private readonly transport: NativeFactorSummaryTransport) {}
+
+  public async list(accessToken: string): Promise<readonly NativeFactorSummary[]> {
+    const response = await this.transport.listFactors(accessToken);
+    if (!response || typeof response !== 'object')
+      throw new Error('native-factor-response-invalid');
+    const rawFactors = (response as { factors?: unknown }).factors;
+    if (!Array.isArray(rawFactors)) throw new Error('native-factor-response-invalid');
+    return rawFactors.flatMap((value): NativeFactorSummary[] => {
+      if (!value || typeof value !== 'object') return [];
+      const factor = value as Record<string, unknown>;
+      if (
+        typeof factor['id'] !== 'string' ||
+        !UUID.test(factor['id']) ||
+        factor['factor_type'] !== 'totp' ||
+        factor['status'] !== 'verified' ||
+        (factor['friendly_name'] !== null && typeof factor['friendly_name'] !== 'string') ||
+        typeof factor['created_at'] !== 'string'
+      ) {
+        return [];
+      }
+      return [
+        {
+          id: factor['id'],
+          type: 'totp',
+          status: 'verified',
+          friendlyName: factor['friendly_name'] as string | null,
+          createdAt: factor['created_at'],
+        },
+      ];
+    });
+  }
+}
+
 export interface NativeTotpEnrollment {
   enrollmentId: string;
   secret: string;
@@ -180,6 +219,18 @@ export function parseContinuityClaims(
 export function latestQualifyingFactorAt(amr: readonly AuthMethodReference[]): number | undefined {
   const timestamps = amr
     .filter((entry) => entry.method === 'totp')
+    .map((entry) => entry.timestamp)
+    .filter((value) => Number.isInteger(value) && value >= 0);
+  return timestamps.length ? Math.max(...timestamps) : undefined;
+}
+
+const PRIMARY_AUTH_METHODS = new Set(['password', 'otp', 'magic_link']);
+
+export function latestPrimaryAuthenticationAt(
+  amr: readonly AuthMethodReference[],
+): number | undefined {
+  const timestamps = amr
+    .filter((entry) => PRIMARY_AUTH_METHODS.has(entry.method))
     .map((entry) => entry.timestamp)
     .filter((value) => Number.isInteger(value) && value >= 0);
   return timestamps.length ? Math.max(...timestamps) : undefined;

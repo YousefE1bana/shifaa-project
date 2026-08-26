@@ -22,6 +22,7 @@
     "@shifaa/i18n": "workspace:*",
     "expo": "57.0.15",
     "expo-font": "57.0.1",
+    "expo-image": "57.0.3",
     "expo-router": "57.0.15",
     "react": "19.2.3",
     "react-dom": "19.2.3",

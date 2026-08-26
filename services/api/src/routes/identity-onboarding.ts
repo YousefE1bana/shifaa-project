@@ -348,6 +348,16 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
         ? String((error as { code?: unknown }).code ?? '')
         : '';
     const databaseMessage = error instanceof Error ? error.message : '';
+    const clientStatus =
+      typeof error === 'object' &&
+      error !== null &&
+      'statusCode' in error &&
+      typeof (error as { statusCode?: unknown }).statusCode === 'number'
+        ? (error as { statusCode: number }).statusCode >= 400 &&
+          (error as { statusCode: number }).statusCode < 500
+          ? (error as { statusCode: number }).statusCode
+          : undefined
+        : undefined;
     const mappedDatabase =
       databaseCode === '22023'
         ? { code: 'validation-failed', status: 400 }
@@ -370,8 +380,12 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
       ? 'validation-failed'
       : policy
         ? error.code
-        : (mappedDatabase?.code ?? 'internal-error');
-    const status = validation ? 400 : policy ? error.status : (mappedDatabase?.status ?? 500);
+        : (mappedDatabase?.code ?? (clientStatus ? 'validation-failed' : 'internal-error'));
+    const status = validation
+      ? 400
+      : policy
+        ? error.status
+        : (mappedDatabase?.status ?? clientStatus ?? 500);
     const locale = request.headers['accept-language'] ?? 'ar-EG';
     const shareRequest = request.url.startsWith('/v1/sos/share/');
     const safeInstance = shareRequest
@@ -388,6 +402,7 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
       .headers({
         ...noStoreHeaders,
         ...(shareRequest ? { pragma: 'no-cache', 'referrer-policy': 'no-referrer' } : {}),
+        ...(policy ? error.headers : {}),
       })
       .send({
         type: `https://shifaa.test/problems/${code}`,
