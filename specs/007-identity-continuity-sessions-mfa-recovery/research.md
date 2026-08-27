@@ -73,9 +73,11 @@ proof state; overloading it would couple three state machines and break 001. Mut
 versioned decision evidence. Separate recovery and transition tables duplicate assignment, expiry,
 event, idempotency, and RLS behavior.
 
-**Shape boundary:** Recovery cases may use a null subject for decoy/nonexistent-account responses;
-transition cases always bind the existing person, patient, and guardianship. No credential, token,
-factor secret, legal document, or session-validity copy is stored.
+**Shape boundary:** Anonymous recovery intake cases may use a null subject whether the supplied
+handle belongs to an account or not. Only server-side Supabase recovery-OTP verification whose returned
+subject and normalized-handle digest match the intake binds the existing person. Transition cases always
+bind the existing person, patient, and guardianship. No credential, token, factor secret, legal document,
+or session-validity copy is stored.
 
 ## R-05 — Restricted recovery is native authentication plus a deny-only binding
 
@@ -136,10 +138,13 @@ interdiction/order/dispute.
 performs challenge+verify and invalidates other sessions as the provider specifies. Removal re-reads
 verified factors and performs an immediate session refresh/current-state reauthorization.
 
-Recovery uses supported public/user-context Auth flows plus existing local-synthetic proofing and
-notification adapters. Repeated identity proofing does not permit server-side password/session changes
-through `service_role`; if the pinned public/user-context Auth primitive cannot satisfy a vector, the
-implementation task stops for canonical reconciliation. Production provider activation remains off.
+Recovery start uses the supported public flow without account lookup. Completion remains anonymous but
+redeems the provider-owned recovery OTP with Supabase `verifyOtp({ email, token, type: 'recovery' })`.
+The returned native user-context session supplies the subject and current verified handle; its HMAC must
+match the unbound intake before binding. Credential replacement uses that returned user context; global
+revocation is followed by ordinary public sign-in with the verified handle and replacement credential.
+Repeated identity proofing never permits server-side password/session changes through `service_role`.
+Production provider activation remains off.
 
 ## R-09 — Exact abuse limits and expiries
 

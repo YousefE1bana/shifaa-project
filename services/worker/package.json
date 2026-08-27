@@ -9,7 +9,8 @@
     "./facility-onboarding": "./src/facility-onboarding.ts",
     "./family-care": "./src/family-care.ts",
     "./discovery-sos": "./src/discovery-sos.ts",
-    "./privacy-dsr-notifications": "./src/privacy-dsr-notifications.ts"
+    "./privacy-dsr-notifications": "./src/privacy-dsr-notifications.ts",
+    "./identity-continuity": "./src/identity-continuity.ts"
   },
   "scripts": {
     "dev:discovery-sos": "tsx src/discovery-sos-runner.ts",

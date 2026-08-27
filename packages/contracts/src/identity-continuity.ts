@@ -126,14 +126,16 @@ export const RecoveryAcceptedSchema = closedObject({
   messageCode: Type.Literal('recovery.accepted'),
 });
 export const CompleteRecoveryRequestSchema = closedObject({
-  caseToken: Type.String({ minLength: 32, maxLength: 512 }),
+  caseToken: Type.String({ minLength: 32, maxLength: 512, writeOnly: true }),
+  handle: Type.String({ minLength: 3, maxLength: 320, writeOnly: true }),
+  recoveryOtp: Type.String({ minLength: 6, maxLength: 12, writeOnly: true }),
   proofMethod: Type.Union([
     Type.Literal('bound_factor_independent_method'),
     Type.Literal('repeated_identity_proof'),
   ]),
   factorEvidence: Type.Optional(Type.Union([Type.String({ maxLength: 512 }), Type.Null()])),
   verificationCaseId: Type.Optional(NullableUuid),
-  newCredential: Type.String({ minLength: 12, maxLength: 256 }),
+  newCredential: Type.String({ minLength: 12, maxLength: 256, writeOnly: true }),
 });
 export const RecoveryResultSchema = closedObject({
   caseId: Uuid,
@@ -214,6 +216,7 @@ export const identityContinuitySensitiveFields = [
   'code',
   'handle',
   'caseToken',
+  'recoveryOtp',
   'factorEvidence',
   'newCredential',
 ] as const;

@@ -97,6 +97,15 @@ function accessToken(request: FastifyRequest): string | undefined {
   return authorization?.startsWith('Bearer ') ? authorization.slice(7) : undefined;
 }
 
+async function requireAnonymousRecovery(request: FastifyRequest): Promise<void> {
+  if (request.headers.authorization)
+    throw new ApiPolicyError(
+      'recovery-mfa-enrollment-required',
+      403,
+      'A restricted session cannot invoke an anonymous recovery operation.',
+    );
+}
+
 function expectedVersion(request: FastifyRequest): number {
   const value = request.headers['if-match'];
   if (typeof value !== 'string' || !/^"[1-9][0-9]*"$/.test(value)) {
@@ -333,14 +342,16 @@ export async function registerIdentityContinuityRoutes(
       schema: {
         response: { 202: identityContinuityResponseSchemas.startRecovery },
       },
-      preValidation: validateBody('startRecovery'),
+      preValidation: [validateBody('startRecovery'), requireAnonymousRecovery],
     },
     async (request, reply) => {
       const context = requestContext(request);
       const body = request.body as StartRecoveryRequest;
-      rateLimit(limiter, reply, 'startRecovery', body.handle, 5, 15 * 60_000);
+      const recoveryHandle = body.handle.trim().toLowerCase();
+      rateLimit(limiter, reply, 'startRecovery', recoveryHandle, 5, 15 * 60_000);
+      rateLimit(limiter, reply, 'startRecovery-ip', request.ip, 20, 15 * 60_000);
       const stored = await dependencies.idempotency.execute({
-        principal: scopedPrincipal('startRecovery', body.handle, dependencies.hmacKey),
+        principal: scopedPrincipal('startRecovery', recoveryHandle, dependencies.hmacKey),
         method: request.method,
         route: request.routeOptions.url ?? request.url,
         key: idempotencyKey(request),
@@ -350,6 +361,7 @@ export async function registerIdentityContinuityRoutes(
           headers: responseHeaders(request),
           body: await dependencies.service.startRecovery(context, body),
         }),
+        retentionMs: 15 * 60_000,
       });
       return reply.status(202).headers(stored.headers).send(stored.body);
     },
@@ -362,24 +374,33 @@ export async function registerIdentityContinuityRoutes(
         params: pathIdSchema('caseId'),
         response: { 200: identityContinuityResponseSchemas.completeRecovery },
       },
-      preValidation: validateBody('completeRecovery'),
+      preValidation: [validateBody('completeRecovery'), requireAnonymousRecovery],
     },
-    (request, reply) => {
+    async (request, reply) => {
       const context = requestContext(request);
       const body = request.body as CompleteRecoveryRequest;
       rateLimit(limiter, reply, 'completeRecovery', body.caseToken, 5, 15 * 60_000);
-      return idempotentMutation(
-        request,
-        reply,
-        dependencies,
-        scopedPrincipal('completeRecovery', body.caseToken, dependencies.hmacKey),
-        () =>
-          dependencies.service.completeRecovery(
+      rateLimit(limiter, reply, 'completeRecovery-ip', request.ip, 20, 15 * 60_000);
+      const stored = await dependencies.idempotency.execute({
+        principal: scopedPrincipal('completeRecovery', body.caseToken, dependencies.hmacKey),
+        method: request.method,
+        route: request.routeOptions.url ?? request.url,
+        key: idempotencyKey(request),
+        body: request.body,
+        retentionMs: 15 * 60_000,
+        prepare: () =>
+          dependencies.service.prepareRecoveryCompletion(
             context,
             (request.params as { caseId: string }).caseId,
             body,
           ),
-      );
+        work: async (prepared) => ({
+          status: 200,
+          headers: responseHeaders(request),
+          body: await dependencies.service.commitRecoveryCompletion(prepared),
+        }),
+      });
+      return reply.status(200).headers(stored.headers).send(stored.body);
     },
   );
 

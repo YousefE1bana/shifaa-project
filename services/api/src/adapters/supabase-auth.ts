@@ -4,6 +4,7 @@ import {
   SupabaseJwtVerifier,
   type ContinuityAuthPort,
   type NativeFactorSummary,
+  type NativeRecoveryOtpSession,
   type NativeSessionProjection,
   type NativeTotpEnrollment,
   type VerifiedContinuitySession,
@@ -224,6 +225,48 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
     if (error) throw new ApiPolicyError('vendor-unavailable', 503, 'Recovery delivery failed.');
   }
 
+  public async redeemRecoveryOtp(
+    handle: string,
+    recoveryOtp: string,
+  ): Promise<NativeRecoveryOtpSession> {
+    const { data, error } = await this.createUserClient().auth.verifyOtp({
+      email: handle,
+      token: recoveryOtp,
+      type: 'recovery',
+    });
+    if (
+      !data.session?.access_token ||
+      !data.session.refresh_token ||
+      !data.session.expires_at ||
+      error
+    )
+      throw new ApiPolicyError(
+        'recovery-challenge-invalid',
+        401,
+        'The recovery code is invalid or expired.',
+      );
+    const verified = await this.verifier.verify(data.session.access_token);
+    const user = data.user;
+    const verifiedHandle = user?.email?.trim().toLowerCase();
+    if (!verified || !user || !verifiedHandle || user.id !== verified.subjectId)
+      throw new ApiPolicyError(
+        'recovery-challenge-invalid',
+        401,
+        'The recovery code is invalid or expired.',
+      );
+    return {
+      subjectId: verified.subjectId,
+      handle: verifiedHandle,
+      session: {
+        accessToken: data.session.access_token,
+        refreshToken: data.session.refresh_token,
+        sessionId: verified.sessionId,
+        assurance: verified.aal === 2 ? 'aal2' : 'aal1',
+        expiresAt: new Date(data.session.expires_at * 1_000).toISOString(),
+      },
+    };
+  }
+
   public async updateRecoveredCredential(
     accessToken: string,
     newCredential: string,
@@ -240,6 +283,33 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
     });
     if (!response.ok)
       throw new ApiPolicyError('vendor-unavailable', 503, 'Credential replacement failed.');
+  }
+
+  public async signInWithPassword(
+    handle: string,
+    credential: string,
+  ): Promise<NativeSessionProjection> {
+    const { data, error } = await this.createUserClient().auth.signInWithPassword({
+      email: handle,
+      password: credential,
+    });
+    if (
+      !data.session?.access_token ||
+      !data.session.refresh_token ||
+      !data.session.expires_at ||
+      error
+    )
+      throw new ApiPolicyError('vendor-unavailable', 503, 'Fresh native session issuance failed.');
+    const verified = await this.verifier.verify(data.session.access_token);
+    if (!verified)
+      throw new ApiPolicyError('vendor-unavailable', 503, 'Fresh native session issuance failed.');
+    return {
+      accessToken: data.session.access_token,
+      refreshToken: data.session.refresh_token,
+      sessionId: verified.sessionId,
+      assurance: verified.aal === 2 ? 'aal2' : 'aal1',
+      expiresAt: new Date(data.session.expires_at * 1_000).toISOString(),
+    };
   }
 
   private createUserClient(accessToken?: string): SupabaseClient {

@@ -25,6 +25,7 @@ CREATE TABLE identity.continuity_cases (
     'restricted_enrollment','approved','rejected','expired','completed'
   )),
   public_token_digest bytea UNIQUE,
+  recovery_handle_digest bytea,
   token_key_version integer,
   restriction_scope text CHECK (restriction_scope IS NULL OR restriction_scope='mfa_enrollment_only'),
   bound_native_session_id uuid,
@@ -43,6 +44,7 @@ CREATE TABLE identity.continuity_cases (
   updated_at timestamptz NOT NULL DEFAULT now(),
   version integer NOT NULL DEFAULT 1 CHECK (version>0),
   CHECK (public_token_digest IS NULL OR octet_length(public_token_digest)=32),
+  CHECK (recovery_handle_digest IS NULL OR octet_length(recovery_handle_digest)=32),
   CHECK ((public_token_digest IS NULL AND token_key_version IS NULL) OR
          (public_token_digest IS NOT NULL AND token_key_version>0)),
   CHECK (expires_at IS NULL OR expires_at>created_at),
@@ -51,12 +53,14 @@ CREATE TABLE identity.continuity_cases (
       AND status IN ('requested','proof_required','restricted_enrollment','rejected','expired','completed')
       AND subject_patient_id IS NULL AND relationship_id IS NULL
       AND review_required_reason_code IS NULL
-      AND public_token_digest IS NOT NULL AND token_key_version IS NOT NULL AND expires_at IS NOT NULL)
+      AND public_token_digest IS NOT NULL AND recovery_handle_digest IS NOT NULL
+      AND token_key_version IS NOT NULL AND expires_at IS NOT NULL)
     OR
     (case_type='dependent_transition'
       AND status IN ('proof_required','review_required','human_review_required','approved','rejected')
       AND subject_person_id IS NOT NULL AND subject_patient_id IS NOT NULL AND relationship_id IS NOT NULL
-      AND public_token_digest IS NULL AND token_key_version IS NULL AND expires_at IS NULL
+      AND public_token_digest IS NULL AND recovery_handle_digest IS NULL
+      AND token_key_version IS NULL AND expires_at IS NULL
       AND restriction_scope IS NULL AND bound_native_session_id IS NULL)
   ),
   CHECK (
@@ -110,7 +114,7 @@ CREATE INDEX continuity_assigned_reviewer_fk_idx ON identity.continuity_cases(as
 CREATE INDEX continuity_reviewer_fk_idx ON identity.continuity_cases(reviewer_person_id);
 
 COMMENT ON TABLE identity.continuity_cases IS
-  'retention_class=IDENTITY_PROOF or SECURITY_AUDIT; duration/action remains OPEN-LEGAL-002; decoy-only null-subject recovery may purge 24h after expiry';
+  'retention_class=IDENTITY_PROOF or SECURITY_AUDIT; duration/action remains OPEN-LEGAL-002; null-subject anonymous recovery intake or decoy may purge only when expired for 24h';
 COMMENT ON COLUMN identity.continuity_cases.bound_native_session_id IS
   'deny-only binding to native Auth; never authenticates or proves session validity';
 
@@ -234,10 +238,18 @@ BEGIN
     RETURN NEW;
   END IF;
   IF NEW.id<>OLD.id OR NEW.case_type<>OLD.case_type
-     OR NEW.subject_person_id IS DISTINCT FROM OLD.subject_person_id
+     OR (
+       NEW.subject_person_id IS DISTINCT FROM OLD.subject_person_id
+       AND NOT (
+         OLD.case_type='account_recovery' AND OLD.status='requested'
+         AND OLD.subject_person_id IS NULL AND NEW.status='proof_required'
+         AND NEW.subject_person_id IS NOT NULL AND platform.context_action()='completeRecovery'
+       )
+     )
      OR NEW.subject_patient_id IS DISTINCT FROM OLD.subject_patient_id
      OR NEW.relationship_id IS DISTINCT FROM OLD.relationship_id
      OR NEW.public_token_digest IS DISTINCT FROM OLD.public_token_digest
+     OR NEW.recovery_handle_digest IS DISTINCT FROM OLD.recovery_handle_digest
      OR NEW.token_key_version IS DISTINCT FROM OLD.token_key_version
      OR NEW.created_at<>OLD.created_at THEN
     RAISE EXCEPTION 'continuity case identity/evidence is immutable' USING ERRCODE='23514';
@@ -444,5 +456,99 @@ SELECT set_config('shifaa.actor_role','',true);
 SELECT set_config('shifaa.aal','',true);
 SELECT set_config('shifaa.purposes','',true);
 ALTER TABLE platform.notification_template_releases FORCE ROW LEVEL SECURITY;
+
+-- Identity notification claims resolve the current active address at claim time.
+-- The worker receives only its local-synthetic digest alias, never the address,
+-- Auth data, Emergency Contact, handle, OTP, credential, factor, or proof data.
+CREATE OR REPLACE FUNCTION platform.identity_notification_address_alias(p_address text)
+RETURNS text LANGUAGE plpgsql STABLE STRICT SECURITY INVOKER SET search_path=pg_catalog AS $$
+DECLARE extension_schema name; address_digest text;
+BEGIN
+  SELECT namespace.nspname INTO extension_schema
+  FROM pg_catalog.pg_extension extension
+  JOIN pg_catalog.pg_namespace namespace ON namespace.oid=extension.extnamespace
+  WHERE extension.extname='pgcrypto';
+  IF extension_schema IS NULL THEN
+    RAISE EXCEPTION 'pgcrypto extension is unavailable' USING ERRCODE='55000';
+  END IF;
+  EXECUTE format(
+    'select encode(%I.digest($1,''sha256''),''hex'')',extension_schema
+  ) INTO address_digest USING p_address;
+  RETURN 'SYNTHETIC-'||address_digest;
+END $$;
+
+CREATE OR REPLACE FUNCTION platform.claim_next_identity_notification_event(
+  p_worker_id text,p_lease_seconds integer DEFAULT 30
+)
+RETURNS TABLE(
+  event_id uuid,event_type text,payload jsonb,attempt_count integer,
+  recipient_person_id uuid,locale text,destination_alias text
+)
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform,identity AS $$
+BEGIN
+  RETURN QUERY
+  WITH candidate AS MATERIALIZED (
+    SELECT e.id,
+      CASE
+        WHEN e.event_type='identity.factor.changed'
+          AND jsonb_typeof(e.payload->'recipientPersonId')='string'
+          AND (e.payload->>'recipientPersonId') ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          THEN (e.payload->>'recipientPersonId')::uuid
+        WHEN e.event_type='identity.recovery.completed' THEN recovery_case.subject_person_id
+        ELSE NULL
+      END recipient_person_id
+    FROM platform.outbox_events e
+    LEFT JOIN identity.continuity_cases recovery_case
+      ON e.event_type='identity.recovery.completed' AND recovery_case.id=e.aggregate_id
+      AND recovery_case.case_type='account_recovery' AND recovery_case.status='completed'
+    WHERE e.event_type IN ('identity.factor.changed','identity.recovery.completed')
+      AND (e.state='pending' OR (e.state='processing' AND e.lease_expires_at<statement_timestamp()))
+      AND e.available_at<=statement_timestamp()
+    ORDER BY e.available_at,e.created_at,e.id
+    FOR UPDATE OF e SKIP LOCKED
+    LIMIT 1
+  ), claimed AS (
+    UPDATE platform.outbox_events e
+    SET state='processing',attempt_count=e.attempt_count+1,lease_owner=p_worker_id,
+      lease_expires_at=statement_timestamp()+make_interval(secs=>p_lease_seconds),updated_at=statement_timestamp()
+    FROM candidate c WHERE e.id=c.id
+    RETURNING e.id,e.event_type,e.payload,e.attempt_count
+  )
+  SELECT claimed.id,claimed.event_type,claimed.payload,claimed.attempt_count,
+    candidate.recipient_person_id,person.preferred_locale,
+    CASE WHEN person.id IS NOT NULL
+      THEN platform.identity_notification_address_alias(person.email_normalized)
+      ELSE NULL
+    END
+  FROM claimed
+  JOIN candidate ON candidate.id=claimed.id
+  LEFT JOIN identity.people person ON person.id=candidate.recipient_person_id
+    AND person.profile_status='active' AND person.email_normalized IS NOT NULL;
+END $$;
+
+CREATE OR REPLACE FUNCTION platform.complete_identity_notification_event(
+  p_event_id uuid,p_worker_id text,p_outcome text,p_safe_error_code text DEFAULT NULL,p_retry_at timestamptz DEFAULT NULL
+)
+RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform AS $$
+DECLARE changed integer; next_state text;
+BEGIN
+  IF p_outcome NOT IN ('delivered','retry','dead_letter') THEN RAISE EXCEPTION 'invalid identity notification outcome' USING ERRCODE='22023'; END IF;
+  next_state:=CASE p_outcome WHEN 'delivered' THEN 'delivered' WHEN 'retry' THEN 'pending' ELSE 'dead_letter' END;
+  UPDATE platform.outbox_events
+  SET state=next_state,available_at=COALESCE(p_retry_at,available_at),last_error_code=p_safe_error_code,
+    lease_owner=NULL,lease_expires_at=NULL,updated_at=statement_timestamp()
+  WHERE id=p_event_id AND event_type IN ('identity.factor.changed','identity.recovery.completed') AND state='processing'
+    AND lease_owner=p_worker_id AND lease_expires_at>statement_timestamp();
+  GET DIAGNOSTICS changed=ROW_COUNT;
+  IF changed=1 AND p_outcome IN ('delivered','dead_letter') THEN
+    INSERT INTO platform.event_receipts(event_id,consumer,result_code)
+    VALUES(p_event_id,'identity-continuity-notification',p_outcome)
+    ON CONFLICT(event_id,consumer) DO NOTHING;
+  END IF;
+  RETURN changed=1;
+END $$;
+
+REVOKE ALL ON FUNCTION platform.identity_notification_address_alias(text),platform.claim_next_identity_notification_event(text,integer),platform.complete_identity_notification_event(uuid,text,text,text,timestamptz) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION platform.claim_next_identity_notification_event(text,integer),platform.complete_identity_notification_event(uuid,text,text,text,timestamptz) TO shifaa_worker;
 
 COMMIT;

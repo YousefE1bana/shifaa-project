@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   BeginEnrollmentRequestSchema,
+  CompleteRecoveryRequestSchema,
   NativeRefreshRequestSchema,
   RefreshRequestSchema,
   SessionResultSchema,
@@ -37,6 +38,7 @@ describe('identity continuity contracts', () => {
           {
             operationId: string;
             'x-shifaa-requirements': string[];
+            security: unknown;
             responses: Record<string, unknown>;
           }
         >
@@ -48,6 +50,7 @@ describe('identity continuity contracts', () => {
         method: method.toUpperCase(),
         path,
         requirements: operation['x-shifaa-requirements'],
+        security: operation.security,
         responses: operation.responses,
       })),
     );
@@ -64,6 +67,12 @@ describe('identity continuity contracts', () => {
       for (const requirement of expected[2]) expect(operation.requirements).toContain(requirement);
       expect(operation.responses).toHaveProperty('400');
     }
+    expect(actual.find((operation) => operation.operationId === 'startRecovery')?.security).toEqual(
+      [],
+    );
+    expect(
+      actual.find((operation) => operation.operationId === 'completeRecovery')?.security,
+    ).toEqual([]);
     for (const operationId of [
       'beginMfaEnrollment',
       'removeMfaFactor',
@@ -155,5 +164,21 @@ describe('identity continuity contracts', () => {
   it('recognizes passkey input for a deterministic semantic rejection without enabling it', () => {
     expect(Value.Check(BeginEnrollmentRequestSchema, { factorType: 'passkey' })).toBe(true);
     expect(Value.Check(BeginEnrollmentRequestSchema, { factorType: 'phone' })).toBe(false);
+  });
+
+  it('requires write-only provider recovery ownership inputs for anonymous completion', () => {
+    const recovery = {
+      caseToken: 'synthetic-case-token-00000000000000000000',
+      handle: 'patient@synthetic.shifaa.test',
+      recoveryOtp: '123456',
+      proofMethod: 'repeated_identity_proof',
+      verificationCaseId: '71000000-0000-4000-8000-000000000007',
+      newCredential: 'Synthetic-Recovery-Credential!',
+    } as const;
+    expect(Value.Check(CompleteRecoveryRequestSchema, recovery)).toBe(true);
+    expect(Value.Check(CompleteRecoveryRequestSchema, { ...recovery, recoveryOtp: '' })).toBe(
+      false,
+    );
+    expect(Value.Check(CompleteRecoveryRequestSchema, { ...recovery, handle: '' })).toBe(false);
   });
 });

@@ -37,10 +37,10 @@ END
 $$;
 
 INSERT INTO identity.continuity_cases(
-  id,case_type,status,public_token_digest,token_key_version,expires_at,created_at
+  id,case_type,status,public_token_digest,recovery_handle_digest,token_key_version,expires_at,created_at
 ) VALUES
- ('75000000-0000-4000-8000-000000000001','account_recovery','requested',decode(repeat('11',32),'hex'),1,'2026-08-25T10:15:00Z','2026-08-25T10:00:00Z'),
- ('75000000-0000-4000-8000-000000000002','account_recovery','expired',decode(repeat('22',32),'hex'),1,'2026-08-23T09:00:00Z','2026-08-23T08:45:00Z');
+ ('75000000-0000-4000-8000-000000000001','account_recovery','requested',decode(repeat('11',32),'hex'),decode(repeat('12',32),'hex'),1,'2026-08-25T10:15:00Z','2026-08-25T10:00:00Z'),
+ ('75000000-0000-4000-8000-000000000002','account_recovery','expired',decode(repeat('22',32),'hex'),decode(repeat('23',32),'hex'),1,'2026-08-23T09:00:00Z','2026-08-23T08:45:00Z');
 
 INSERT INTO identity.continuity_cases(
   id,case_type,subject_person_id,subject_patient_id,relationship_id,status,assigned_reviewer_person_id,created_at
@@ -55,8 +55,8 @@ DO $$
 BEGIN
   BEGIN
     INSERT INTO identity.continuity_cases(
-      case_type,status,public_token_digest,token_key_version,expires_at,subject_patient_id
-    ) VALUES ('account_recovery','requested',decode(repeat('33',32),'hex'),1,now()+interval '15 minutes','51000000-0000-4000-8000-000000000001');
+      case_type,status,public_token_digest,recovery_handle_digest,token_key_version,expires_at,subject_patient_id
+    ) VALUES ('account_recovery','requested',decode(repeat('33',32),'hex'),decode(repeat('34',32),'hex'),1,now()+interval '15 minutes','51000000-0000-4000-8000-000000000001');
     RAISE EXCEPTION 'invalid recovery shape accepted';
   EXCEPTION WHEN check_violation THEN NULL; END;
   BEGIN
@@ -71,13 +71,13 @@ BEGIN
   EXCEPTION WHEN check_violation THEN NULL; END;
   BEGIN
     INSERT INTO identity.continuity_cases(
-      case_type,subject_person_id,status,public_token_digest,token_key_version,expires_at
+      case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,token_key_version,expires_at
     ) VALUES (
       'account_recovery','50000000-0000-4000-8000-000000000001','requested',
-      decode(repeat('55',32),'hex'),1,now()+interval '15 minutes'
+      decode(repeat('55',32),'hex'),decode(repeat('56',32),'hex'),1,now()+interval '15 minutes'
     ),(
       'account_recovery','50000000-0000-4000-8000-000000000001','proof_required',
-      decode(repeat('66',32),'hex'),1,now()+interval '15 minutes'
+      decode(repeat('66',32),'hex'),decode(repeat('67',32),'hex'),1,now()+interval '15 minutes'
     );
     RAISE EXCEPTION 'duplicate live recovery accepted';
   EXCEPTION WHEN unique_violation THEN NULL; END;
@@ -127,6 +127,18 @@ BEGIN
   IF (SELECT count(*) FROM platform.notification_template_releases
       WHERE template_code LIKE 'IDENTITY_%' AND status='published')<>4 THEN
     RAISE EXCEPTION 'four paired identity templates required';
+  END IF;
+  IF to_regprocedure('platform.claim_next_identity_notification_event(text,integer)') IS NULL OR
+     to_regprocedure('platform.complete_identity_notification_event(uuid,text,text,text,timestamp with time zone)') IS NULL OR
+     to_regprocedure('platform.identity_notification_address_alias(text)') IS NULL THEN
+    RAISE EXCEPTION 'identity notification claim/completion boundary missing';
+  END IF;
+  IF EXISTS(
+    SELECT 1 FROM information_schema.routine_privileges
+    WHERE specific_schema='platform' AND routine_name='claim_next_identity_notification_event'
+      AND grantee='PUBLIC' AND privilege_type='EXECUTE'
+  ) THEN
+    RAISE EXCEPTION 'identity notification claim boundary leaked to PUBLIC';
   END IF;
 END
 $$;

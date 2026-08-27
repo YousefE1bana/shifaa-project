@@ -125,6 +125,7 @@ export function currentTotp(secret: string, atMs = Date.now()): string {
 export interface MfaHarness {
   app: FastifyInstance;
   authAdapter: SupabaseAuthIssuer;
+  service: IdentityContinuityService;
   setClockOffsetMs(offset: number): void;
   clockOffsetMs(): number;
   seedPerson(userId: string, email: string): Promise<string>;
@@ -174,6 +175,7 @@ export async function buildMfaHarness(runtime: SupabaseStatus): Promise<MfaHarne
   const harness: MfaHarness = {
     app,
     authAdapter,
+    service,
     setClockOffsetMs: (value) => {
       offsetMs = value;
     },

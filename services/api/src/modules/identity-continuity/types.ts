@@ -49,9 +49,29 @@ export interface ContinuityOutboxInput {
   payload: Readonly<Record<string, string>>;
 }
 
+export interface FactorChangedEvidence {
+  audit: ContinuityAuditInput;
+  event: Omit<ContinuityOutboxInput, 'eventType' | 'payload'> & {
+    eventType: 'identity.factor.changed';
+    payload: {
+      recipientPersonId: string;
+      support_action: 'verified' | 'removed';
+      action_time: string;
+    };
+  };
+}
+
 export interface PreparedLogout {
   result: LogoutResult;
   audit: ContinuityAuditInput;
+}
+
+export interface PreparedRecoveryCompletion {
+  caseId: string;
+  personId: string;
+  requestId: string;
+  restricted: boolean;
+  session: SessionResult;
 }
 
 export interface PendingEnrollmentMarker {
@@ -64,6 +84,7 @@ export interface ContinuityRepository {
   restrictionForSession(sessionId: string, subjectId: string): Promise<ContinuityRestriction>;
   withSerializedFactorState<T>(subjectId: string, work: () => Promise<T>): Promise<T>;
   appendAudit(input: ContinuityAuditInput): Promise<void>;
+  appendFactorChangedEvidence(input: FactorChangedEvidence): Promise<void>;
   resolveSubjectPerson(subjectId: string): Promise<string | undefined>;
   accountClassForPerson(
     personId: string,
@@ -85,6 +106,30 @@ export interface ContinuityRepository {
     occurredAt: string;
   }): Promise<void>;
   appendOutboxEvent(input: ContinuityOutboxInput): Promise<void>;
+  createRecoveryIntake(input: {
+    caseId: string;
+    handleDigest: Uint8Array;
+    caseTokenDigest: Uint8Array;
+    expiresAt: string;
+  }): Promise<void>;
+  bindRecoveryIntake(input: {
+    caseId: string;
+    subjectId: string;
+    handleDigest: Uint8Array;
+    caseTokenDigest: Uint8Array;
+  }): Promise<{ personId: string }>;
+  recoveryProofIsApproved(input: {
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<boolean>;
+  finalizeRecovery(input: {
+    caseId: string;
+    personId: string;
+    sessionId: string;
+    restricted: boolean;
+    requestId: string;
+    occurredAt: string;
+  }): Promise<void>;
 }
 
 export interface IdentityContinuityServicePort {
@@ -114,6 +159,12 @@ export interface IdentityContinuityServicePort {
     caseId: string,
     body: CompleteRecoveryRequest,
   ): Promise<RecoveryResult>;
+  prepareRecoveryCompletion(
+    context: ContinuityRequestContext,
+    caseId: string,
+    body: CompleteRecoveryRequest,
+  ): Promise<PreparedRecoveryCompletion>;
+  commitRecoveryCompletion(prepared: PreparedRecoveryCompletion): Promise<RecoveryResult>;
   transitionDependent(
     context: ContinuityRequestContext,
     relationshipId: string,

@@ -1,7 +1,8 @@
-import { createHash } from 'node:crypto';
+import { createHash, timingSafeEqual } from 'node:crypto';
 
 import type {
   ContinuityAuditInput,
+  FactorChangedEvidence,
   ContinuityOutboxInput,
   ContinuityRepository,
   ContinuityRestriction,
@@ -94,6 +95,36 @@ export class PostgresIdentityContinuityService implements ContinuityRepository {
         ) values(
           ${digest},${input.action},'native-session',${input.outcome},${input.requestId}::uuid,
           ${input.occurredAt}::timestamptz,${sql.json(input.metadata ?? {})}
+        )`;
+    });
+  }
+
+  public async appendFactorChangedEvidence(input: FactorChangedEvidence): Promise<void> {
+    const prohibited = /secret|token|handle|code|password|proof|otp|credential|email|phone/i;
+    const payloadKeys = Object.keys(input.event.payload).toSorted();
+    if (
+      payloadKeys.join(',') !== 'action_time,recipientPersonId,support_action' ||
+      payloadKeys.some((key) => prohibited.test(key)) ||
+      !/^[0-9a-f-]{36}$/i.test(input.event.payload.recipientPersonId) ||
+      !Number.isFinite(Date.parse(input.event.payload.action_time))
+    )
+      throw new ApiPolicyError('event-payload-prohibited', 500, 'Prohibited event payload field.');
+    await this.repository.withRawTransaction(async (sql) => {
+      const digest = createHash('sha256').update(JSON.stringify(input.audit)).digest('hex');
+      await sql`
+        insert into audit.events(
+          event_hash,action,resource_type,outcome,request_id,occurred_at,metadata
+        ) values(
+          ${digest},${input.audit.action},'native-session',${input.audit.outcome},
+          ${input.audit.requestId}::uuid,${input.audit.occurredAt}::timestamptz,
+          ${sql.json(input.audit.metadata ?? {})}
+        )`;
+      await sql`
+        insert into platform.outbox_events(
+          aggregate_type,aggregate_id,event_type,payload,aggregate_version
+        ) values(
+          'identity-continuity',${input.event.aggregateId}::uuid,${input.event.eventType},
+          ${sql.json(input.event.payload)},${input.event.aggregateVersion}
         )`;
     });
   }
@@ -245,7 +276,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository {
         where status='restricted_enrollment'
           and bound_native_session_id=${input.sessionId}::uuid
           and case_type='account_recovery'
-        returning id`;
+        returning id,version`;
       if (completed.length !== 1)
         throw new ApiPolicyError(
           'state-transition-invalid',
@@ -266,6 +297,12 @@ export class PostgresIdentityContinuityService implements ContinuityRepository {
           ${digest},${audit.action},'continuity-case',${completed[0]?.['id']}::uuid,${audit.outcome},
           ${input.requestId}::uuid,${input.occurredAt}::timestamptz,${sql.json({})}
         )`;
+      await sql`
+        insert into platform.outbox_events(aggregate_type,aggregate_id,event_type,payload,aggregate_version)
+        values(
+          'identity-continuity',${completed[0]?.['id']}::uuid,'identity.recovery.completed',
+          ${sql.json({ support_action: 'completed', action_time: input.occurredAt })},${completed[0]?.['version']}
+        )`;
     });
   }
 
@@ -280,6 +317,172 @@ export class PostgresIdentityContinuityService implements ContinuityRepository {
           'identity-continuity',${input.aggregateId}::uuid,${input.eventType},
           ${sql.json(input.payload)},${input.aggregateVersion}
         )`;
+    });
+  }
+
+  public async createRecoveryIntake(input: {
+    caseId: string;
+    handleDigest: Uint8Array;
+    caseTokenDigest: Uint8Array;
+    expiresAt: string;
+  }): Promise<void> {
+    await this.repository.withRawTransaction(async (sql) => {
+      await sql`select set_config('shifaa.action','startRecovery',true)`;
+      await sql`
+        insert into identity.continuity_cases(
+          id,case_type,status,public_token_digest,recovery_handle_digest,token_key_version,expires_at
+        ) values(
+          ${input.caseId}::uuid,'account_recovery','requested',${Buffer.from(input.caseTokenDigest)},
+          ${Buffer.from(input.handleDigest)},1,${input.expiresAt}::timestamptz
+        )`;
+    });
+  }
+
+  public async bindRecoveryIntake(input: {
+    caseId: string;
+    subjectId: string;
+    handleDigest: Uint8Array;
+    caseTokenDigest: Uint8Array;
+  }): Promise<{ personId: string }> {
+    return this.repository.withRawTransaction(async (sql) => {
+      await sql`
+        select set_config('shifaa.action','completeRecovery',true),
+               set_config('shifaa.case_id',${input.caseId},true)`;
+      const [recoveryCase] = await sql<
+        {
+          id: string;
+          status: string;
+          expires_at: string;
+          public_token_digest: Uint8Array;
+          recovery_handle_digest: Uint8Array;
+        }[]
+      >`
+        select id,status,expires_at,public_token_digest,recovery_handle_digest
+        from identity.continuity_cases where id=${input.caseId}::uuid for update`;
+      if (
+        !recoveryCase ||
+        recoveryCase.status !== 'requested' ||
+        new Date(recoveryCase.expires_at) <= new Date()
+      )
+        throw new ApiPolicyError(
+          'recovery-challenge-invalid',
+          401,
+          'The recovery case is invalid or expired.',
+        );
+      const tokenMatches = timingSafeEqual(
+        Buffer.from(recoveryCase.public_token_digest),
+        Buffer.from(input.caseTokenDigest),
+      );
+      const handleMatches = timingSafeEqual(
+        Buffer.from(recoveryCase.recovery_handle_digest),
+        Buffer.from(input.handleDigest),
+      );
+      if (!tokenMatches || !handleMatches)
+        throw new ApiPolicyError(
+          'recovery-challenge-invalid',
+          401,
+          'The recovery case is invalid or expired.',
+        );
+      const [mapping] = await sql<{ person_id: string | null }[]>`
+        select platform.resolve_person_id(${input.subjectId}::uuid)::text person_id`;
+      if (!mapping?.person_id)
+        throw new ApiPolicyError(
+          'recovery-challenge-invalid',
+          401,
+          'The recovery case is invalid or expired.',
+        );
+      const updated = await sql`
+        update identity.continuity_cases
+        set subject_person_id=${mapping.person_id}::uuid,status='proof_required',version=version+1,updated_at=now()
+        where id=${input.caseId}::uuid and status='requested'
+        returning id`;
+      if (updated.length !== 1)
+        throw new ApiPolicyError(
+          'state-transition-invalid',
+          409,
+          'The recovery case is unavailable.',
+        );
+      return { personId: mapping.person_id };
+    });
+  }
+
+  public async recoveryProofIsApproved(input: {
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<boolean> {
+    return this.repository.withRawTransaction(async (sql) => {
+      await sql`
+        select set_config('shifaa.person_id',${input.personId},true),
+               set_config('shifaa.actor_role','PAT',true),
+               set_config('shifaa.aal','1',true),
+               set_config('shifaa.purposes','',true),
+               set_config('shifaa.action','completeRecovery',true)`;
+      const [proof] = await sql<{ approved: boolean }[]>`
+        select exists(
+          select 1 from identity.verification_cases c
+          join identity.identities i on i.id=c.identity_id
+          where c.id=${input.verificationCaseId}::uuid
+            and i.person_id=${input.personId}::uuid and c.state='verified'
+        ) approved`;
+      return proof?.approved === true;
+    });
+  }
+
+  public async finalizeRecovery(input: {
+    caseId: string;
+    personId: string;
+    sessionId: string;
+    restricted: boolean;
+    requestId: string;
+    occurredAt: string;
+  }): Promise<void> {
+    await this.repository.withRawTransaction(async (sql) => {
+      await sql`
+        select set_config('shifaa.person_id',${input.personId},true),
+               set_config('shifaa.actor_role','PAT',true),
+               set_config('shifaa.aal','1',true),
+               set_config('shifaa.purposes','',true),
+               set_config('shifaa.action','completeRecovery',true),
+               set_config('shifaa.case_id',${input.caseId},true)`;
+      const completed = await sql`
+        update identity.continuity_cases
+        set status=${input.restricted ? 'restricted_enrollment' : 'completed'},
+            restriction_scope=${input.restricted ? 'mfa_enrollment_only' : null},
+            bound_native_session_id=${input.restricted ? input.sessionId : null}::uuid,
+            completed_at=${input.restricted ? null : input.occurredAt}::timestamptz,
+            version=version+1,updated_at=now()
+        where id=${input.caseId}::uuid and subject_person_id=${input.personId}::uuid
+          and status='proof_required'
+        returning id,version`;
+      if (completed.length !== 1)
+        throw new ApiPolicyError(
+          'state-transition-invalid',
+          409,
+          'The recovery case is unavailable.',
+        );
+      const audit = {
+        requestId: input.requestId,
+        action: 'identity.recovery.completed',
+        outcome: 'succeeded',
+        occurredAt: input.occurredAt,
+      };
+      const digest = createHash('sha256').update(JSON.stringify(audit)).digest('hex');
+      await sql`
+        insert into audit.events(
+          event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,occurred_at,metadata
+        ) values(
+          ${digest},${input.personId}::uuid,${audit.action},'continuity-case',${input.caseId}::uuid,
+          ${audit.outcome},${input.requestId}::uuid,${input.occurredAt}::timestamptz,
+          ${sql.json({ restricted: input.restricted })}
+        )`;
+      if (!input.restricted) {
+        await sql`
+          insert into platform.outbox_events(aggregate_type,aggregate_id,event_type,payload,aggregate_version)
+          values(
+            'identity-continuity',${input.caseId}::uuid,'identity.recovery.completed',
+            ${sql.json({ support_action: 'completed', action_time: input.occurredAt })},${completed[0]!['version']}
+          )`;
+      }
     });
   }
 

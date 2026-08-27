@@ -65,6 +65,10 @@ export function scopedPrincipal(namespace: string, secret: string, key: Uint8Arr
   return createHmac('sha256', key).update(`${namespace}\u0000${secret}`).digest('base64url');
 }
 
+export function hmacDigest(secret: string, key: Uint8Array): Uint8Array {
+  return createHmac('sha256', key).update(secret).digest();
+}
+
 export function constantTimeMatch(left: string | undefined, right: string | undefined): boolean {
   if (!left || !right) return false;
   const leftDigest = createHmac('sha256', 'shifaa-csrf-compare').update(left).digest();

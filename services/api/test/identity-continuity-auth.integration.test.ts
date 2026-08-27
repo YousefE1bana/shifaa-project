@@ -258,17 +258,21 @@ describe.skipIf(!enabled).sequential('007 native Supabase Auth adapter', () => {
     ).resolves.toBeUndefined();
 
     const recovery = await readMailpitMessage(native.email, existingMessageIds);
-    expect(recovery.message.Text).toContain('/auth/v1/verify');
-    expect(recovery.message.Text).toContain('type=recovery');
+    const recoveryOtp = /\b\d{6}\b/.exec(recovery.message.Text ?? '')?.[0];
+    expect(recoveryOtp).toBeTruthy();
+    expect(recovery.message.Text).not.toContain('/auth/v1/verify');
+    const recoverySession = await adapter.redeemRecoveryOtp(native.email, recoveryOtp!);
+    expect(recoverySession.subjectId).toBe(native.session.user.id);
+    expect(recoverySession.handle).toBe(native.email);
+    await expect(adapter.redeemRecoveryOtp(native.email, recoveryOtp!)).rejects.toMatchObject({
+      code: 'recovery-challenge-invalid',
+      status: 401,
+    });
 
     const replacement = 'Synthetic-007-Recovered-Auth!';
-    await adapter.updateRecoveredCredential(native.session.access_token, replacement);
+    await adapter.updateRecoveredCredential(recoverySession.session.accessToken, replacement);
 
-    const login = await authClient().auth.signInWithPassword({
-      email: native.email,
-      password: replacement,
-    });
-    expect(login.error).toBeNull();
-    expect(login.data.user?.id).toBe(native.session.user.id);
+    const fresh = await adapter.signInWithPassword(native.email, replacement);
+    expect(fresh.accessToken).not.toBe(recoverySession.session.accessToken);
   });
 });

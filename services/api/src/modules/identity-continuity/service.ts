@@ -4,10 +4,12 @@ import type {
   LogoutRequest,
   RefreshRequest,
   RemoveFactorRequest,
+  RecoveryResult,
   StartRecoveryRequest,
   TransitionRequest,
   VerifyEnrollmentRequest,
 } from '@shifaa/contracts/identity-continuity';
+import { randomBytes, randomUUID } from 'node:crypto';
 import {
   latestPrimaryAuthenticationAt,
   latestQualifyingFactorAt,
@@ -17,11 +19,12 @@ import {
 import { evaluateFactorRemoval, evaluateMfaEnrollment, hasFreshQualifyingMfa } from '@shifaa/core';
 
 import { ApiPolicyError } from '../identity-onboarding/errors.js';
-import { constantTimeMatch, HmacRateLimiter, scopedPrincipal } from './security.js';
+import { constantTimeMatch, hmacDigest, HmacRateLimiter, scopedPrincipal } from './security.js';
 import type {
   ContinuityRepository,
   ContinuityRequestContext,
   IdentityContinuityServicePort,
+  PreparedRecoveryCompletion,
   PreparedLogout,
 } from './types.js';
 
@@ -34,6 +37,13 @@ const pendingStory = (): never => {
 };
 
 const ENROLLMENT_TTL_MS = 10 * 60_000;
+const RECOVERY_TTL_MS = 15 * 60_000;
+export const restrictedRecoveryOperationIds = [
+  'refreshSession',
+  'logout',
+  'beginMfaEnrollment',
+  'verifyMfaEnrollment',
+] as const;
 const FRESH_PROOF_SECONDS = 300;
 
 export class FailClosedIdentityContinuityService implements IdentityContinuityServicePort {
@@ -69,6 +79,12 @@ export class FailClosedIdentityContinuityService implements IdentityContinuitySe
     return this.unavailable();
   }
   public async completeRecovery(): Promise<never> {
+    return this.unavailable();
+  }
+  public async prepareRecoveryCompletion(): Promise<never> {
+    return this.unavailable();
+  }
+  public async commitRecoveryCompletion(): Promise<never> {
     return this.unavailable();
   }
   public async transitionDependent(): Promise<never> {
@@ -245,19 +261,22 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       markerKey: this.pendingMarkerKey(claims.subjectId),
     });
     await this.completeRestrictedEnrollmentWhenBound(context, claims);
+    const recipientPersonId = await this.requirePersonForActor(claims);
     const occurredAt = this.dependencies.now().toISOString();
-    await this.dependencies.repository.appendOutboxEvent({
-      aggregateId: factor.id,
-      aggregateVersion: 1,
-      eventType: 'identity.factor.changed',
-      payload: { support_action: 'verified', action_time: occurredAt },
-    });
-    await this.dependencies.repository.appendAudit({
-      requestId: context.requestId,
-      action: 'identity.factor.verified',
-      outcome: 'succeeded',
-      occurredAt,
-      metadata: { aal: 'aal2' },
+    await this.dependencies.repository.appendFactorChangedEvidence({
+      event: {
+        aggregateId: factor.id,
+        aggregateVersion: 1,
+        eventType: 'identity.factor.changed',
+        payload: { recipientPersonId, support_action: 'verified', action_time: occurredAt },
+      },
+      audit: {
+        requestId: context.requestId,
+        action: 'identity.factor.verified',
+        outcome: 'succeeded',
+        occurredAt,
+        metadata: { aal: 'aal2' },
+      },
     });
     return { factor, assurance: 'aal2' as const };
   }
@@ -295,45 +314,126 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       const assurance =
         nativeAalStillMatches && claims.aal === 2 ? ('aal2' as const) : ('aal1' as const);
       const occurredAt = this.dependencies.now().toISOString();
-      await this.dependencies.repository.appendOutboxEvent({
-        aggregateId: factorId,
-        aggregateVersion: 2,
-        eventType: 'identity.factor.changed',
-        payload: { support_action: 'removed', action_time: occurredAt },
-      });
-      await this.dependencies.repository.appendAudit({
-        requestId: context.requestId,
-        action: 'identity.factor.removed',
-        outcome: 'succeeded',
-        occurredAt,
-        metadata: {
-          assuranceRecomputedFrom: 'live-native-factors',
-          postRemovalAssurance: assurance,
-          remainingVerifiedFactors: remaining.length,
+      await this.dependencies.repository.appendFactorChangedEvidence({
+        event: {
+          aggregateId: factorId,
+          aggregateVersion: 2,
+          eventType: 'identity.factor.changed',
+          payload: {
+            recipientPersonId: personId,
+            support_action: 'removed',
+            action_time: occurredAt,
+          },
+        },
+        audit: {
+          requestId: context.requestId,
+          action: 'identity.factor.removed',
+          outcome: 'succeeded',
+          occurredAt,
+          metadata: {
+            assuranceRecomputedFrom: 'live-native-factors',
+            postRemovalAssurance: assurance,
+            remainingVerifiedFactors: remaining.length,
+          },
         },
       });
       return { removedFactorId: factorId, assurance, removedAt: occurredAt };
     });
   }
 
-  public async startRecovery(_context: ContinuityRequestContext, _body: StartRecoveryRequest) {
-    return pendingStory();
+  public async startRecovery(_context: ContinuityRequestContext, body: StartRecoveryRequest) {
+    const handle = normalizeRecoveryHandle(body.handle);
+    const caseId = randomUUID();
+    const caseToken = randomBytes(32).toString('base64url');
+    const expiresAt = new Date(this.dependencies.now().getTime() + RECOVERY_TTL_MS).toISOString();
+    await this.dependencies.auth.startRecovery(handle);
+    await this.dependencies.repository.createRecoveryIntake({
+      caseId,
+      handleDigest: hmacDigest(handle, this.dependencies.hmacKey),
+      caseTokenDigest: hmacDigest(caseToken, this.dependencies.hmacKey),
+      expiresAt,
+    });
+    return {
+      caseId,
+      caseToken,
+      status: 'accepted' as const,
+      messageCode: 'recovery.accepted' as const,
+    };
   }
 
   public async completeRecovery(
-    _context: ContinuityRequestContext,
-    _caseId: string,
-    _body: CompleteRecoveryRequest,
+    context: ContinuityRequestContext,
+    caseId: string,
+    body: CompleteRecoveryRequest,
   ) {
-    return pendingStory();
+    return this.commitRecoveryCompletion(
+      await this.prepareRecoveryCompletion(context, caseId, body),
+    );
+  }
+
+  public async prepareRecoveryCompletion(
+    context: ContinuityRequestContext,
+    caseId: string,
+    body: CompleteRecoveryRequest,
+  ): Promise<PreparedRecoveryCompletion> {
+    const handle = normalizeRecoveryHandle(body.handle);
+    this.assertRecoveryProofShape(body);
+    const recovery = await this.dependencies.auth.redeemRecoveryOtp(handle, body.recoveryOtp);
+    const binding = await this.dependencies.repository.bindRecoveryIntake({
+      caseId,
+      subjectId: recovery.subjectId,
+      handleDigest: hmacDigest(normalizeRecoveryHandle(recovery.handle), this.dependencies.hmacKey),
+      caseTokenDigest: hmacDigest(body.caseToken, this.dependencies.hmacKey),
+    });
+    const restricted = await this.recoveryRequiresEnrollment(
+      body,
+      recovery.session.accessToken,
+      binding.personId,
+    );
+    await this.dependencies.auth.updateRecoveredCredential(
+      recovery.session.accessToken,
+      body.newCredential,
+    );
+    await this.dependencies.auth.logout(recovery.session.accessToken, 'global');
+    const freshSession = await this.dependencies.auth.signInWithPassword(
+      handle,
+      body.newCredential,
+    );
+    return {
+      caseId,
+      personId: binding.personId,
+      requestId: context.requestId,
+      restricted,
+      session: { ...freshSession, restriction: restricted ? 'mfa_enrollment_only' : null },
+    };
+  }
+
+  public async commitRecoveryCompletion(
+    prepared: PreparedRecoveryCompletion,
+  ): Promise<RecoveryResult> {
+    const occurredAt = this.dependencies.now().toISOString();
+    await this.dependencies.repository.finalizeRecovery({
+      caseId: prepared.caseId,
+      personId: prepared.personId,
+      sessionId: prepared.session.sessionId,
+      restricted: prepared.restricted,
+      requestId: prepared.requestId,
+      occurredAt,
+    });
+    return {
+      caseId: prepared.caseId,
+      status: prepared.restricted ? ('restricted_enrollment' as const) : ('completed' as const),
+      session: prepared.session,
+    };
   }
 
   public async transitionDependent(
-    _context: ContinuityRequestContext,
+    context: ContinuityRequestContext,
     _relationshipId: string,
     _body: TransitionRequest,
     _expectedVersion: number,
   ) {
+    await this.currentActor(context, 'transitionDependent');
     return pendingStory();
   }
 
@@ -353,6 +453,55 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
         nowSeconds - primaryAt >= 0 &&
         nowSeconds - primaryAt <= FRESH_PROOF_SECONDS,
     };
+  }
+
+  private async recoveryRequiresEnrollment(
+    body: CompleteRecoveryRequest,
+    accessToken: string,
+    personId: string,
+  ): Promise<boolean> {
+    if (body.proofMethod === 'repeated_identity_proof') {
+      if (!body.verificationCaseId)
+        throw new ApiPolicyError(
+          'identity-proof-required',
+          403,
+          'A repeated identity proof is required.',
+        );
+      const approved = await this.dependencies.repository.recoveryProofIsApproved({
+        personId,
+        verificationCaseId: body.verificationCaseId,
+      });
+      if (!approved)
+        throw new ApiPolicyError(
+          'identity-proof-required',
+          403,
+          'A repeated identity proof is required.',
+        );
+      return true;
+    }
+    if (!body.factorEvidence)
+      throw new ApiPolicyError('identity-proof-required', 403, 'A bound factor is required.');
+    const factors = await this.dependencies.auth.listFactors(accessToken);
+    for (const factor of factors) {
+      try {
+        await this.dependencies.auth.verifyTotp(accessToken, factor.id, body.factorEvidence);
+        return false;
+      } catch (error) {
+        if (!(error instanceof ApiPolicyError) || error.code !== 'factor-code-invalid') throw error;
+      }
+    }
+    throw new ApiPolicyError('identity-proof-required', 403, 'A bound factor is required.');
+  }
+
+  private assertRecoveryProofShape(body: CompleteRecoveryRequest): void {
+    if (body.proofMethod === 'repeated_identity_proof' && !body.verificationCaseId)
+      throw new ApiPolicyError(
+        'identity-proof-required',
+        403,
+        'A repeated identity proof is required.',
+      );
+    if (body.proofMethod === 'bound_factor_independent_method' && !body.factorEvidence)
+      throw new ApiPolicyError('identity-proof-required', 403, 'A bound factor is required.');
   }
 
   private enforceMfaRate(
@@ -487,7 +636,9 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     );
     if (
       restriction &&
-      !['refreshSession', 'logout', 'beginMfaEnrollment', 'verifyMfaEnrollment'].includes(operation)
+      !restrictedRecoveryOperationIds.includes(
+        operation as (typeof restrictedRecoveryOperationIds)[number],
+      )
     ) {
       throw new ApiPolicyError(
         'recovery-mfa-enrollment-required',
@@ -497,4 +648,8 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     }
     return { accessToken, claims };
   }
+}
+
+function normalizeRecoveryHandle(value: string): string {
+  return value.trim().toLowerCase();
 }

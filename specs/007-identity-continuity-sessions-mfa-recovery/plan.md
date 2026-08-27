@@ -5,14 +5,14 @@
 
 ## 1. Approved inputs
 
-| Input               | Version/digest                                                              | Approval/gate                                               |
-| ------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `spec.md`           | v1.0.0 / `47fc4226eb2d89271f14e70a09a1296ceb3744b4e9bcc2dc6ccb82009675af0c` | Product/Architecture `SPEC_APPROVED` 2026-08-25             |
-| Active scope        | PRD/Master v2.1.2; Roadmap 007                                              | four ACTIVE FRs; eight exact operations                     |
-| Constitution        | v2.1.0 / `25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a` | all articles checked below                                  |
-| Legal transition    | v2.1.1 amendment                                                            | `OPEN-LEGAL-006` closed for specification/development       |
-| Team/security       | v2.1.2 amendment + approved security memo                                   | `OPEN-TEAM-001` and development-stage `OPEN-SEC-001` closed |
-| AGY specify/clarify | project `a6ba7a48-887a-455f-af36-283481d34f26`                              | no CRITICAL/HIGH; bounded findings accepted                 |
+| Input               | Version/digest                                                              | Approval/gate                                                       |
+| ------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `spec.md`           | v1.0.0 / `b90d84aacd6c66a8772081e3712a7cdb5498ae467babf17f7a1b04b63117cbed` | `SPEC_APPROVED` plus PO recovery/T030 reconciliations 2026-08-26/27 |
+| Active scope        | PRD/Master v2.1.2; Roadmap 007                                              | four ACTIVE FRs; eight exact operations                             |
+| Constitution        | v2.1.0 / `25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a` | all articles checked below                                          |
+| Legal transition    | v2.1.1 amendment                                                            | `OPEN-LEGAL-006` closed for specification/development               |
+| Team/security       | v2.1.2 amendment + approved security memo                                   | `OPEN-TEAM-001` and development-stage `OPEN-SEC-001` closed         |
+| AGY specify/clarify | project `a6ba7a48-887a-455f-af36-283481d34f26`                              | no CRITICAL/HIGH; bounded findings accepted                         |
 
 ## 2. Constitution check
 

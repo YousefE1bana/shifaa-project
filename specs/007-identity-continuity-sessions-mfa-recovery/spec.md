@@ -51,7 +51,7 @@ shadow credentials, duplicate records, or automatic access transfer.
 
 | Actor                          | Facility/patient relationship                                                             | Permitted outcome                                                                              | Explicitly prohibited                                                   |
 | ------------------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Unauthenticated subject        | Own normalized recovery handle/challenge                                                  | Start and complete a non-oracular recovery flow                                                | Account/factor enumeration, PHI access, arbitrary session creation      |
+| Unauthenticated subject        | Own normalized recovery handle, provider-owned recovery OTP, and case token               | Start and complete a non-oracular recovery flow                                                | Account/factor enumeration, PHI access, arbitrary session creation      |
 | PAT self-managed patient       | Own active person/patient/session                                                         | Refresh/logout; enroll/verify/remove optional TOTP; submit eligible dependent-transition proof | Cross-person factors/sessions, silent age transition, reviewer decision |
 | Eligible dependent subject     | Existing person/patient under active guardianship                                         | On/after 21, request proofing and reviewed transition                                          | Automatic transfer at 18/21, new patient/clinical record                |
 | GUA/DEL                        | Current lawful relationship only                                                          | Existing permissions until a controlling approved transition changes authority                 | Deciding transition; inherited access after approval                    |
@@ -155,8 +155,10 @@ overlays remain `OPEN-LEGAL-001/002/007`, `OPEN-VENDOR-001/002`, `OPEN-UX-001/00
 ### Journey J-03 — Recover without bypassing MFA
 
 1. Given an existing or nonexistent normalized recovery handle.
-2. When recovery starts, the response is uniformly `202`; an existing subject must prove a bound
-   factor plus an independent method or complete repeated identity proofing.
+2. Recovery start creates an unbound intake with a uniform `202`; completion redeems a provider-owned
+   recovery OTP through Supabase and binds a subject only when the returned subject and normalized-handle
+   digest match that intake. The bound subject must then prove a factor plus an independent method or
+   complete repeated identity proofing.
 3. Lost-factor proof yields only a restricted enrollment session; after replacement verification,
    all old sessions are revoked before ordinary access is issued.
 4. Audit/notification: one terminal effect, no oracle/secret leakage, notification to every verified
@@ -267,6 +269,8 @@ care-relationship enums by implication; the plan must define a physical represen
 
 - Native Supabase sessions/factors are authoritative; SHIFAA stores no refresh/access token, password,
   OTP/TOTP/QR secret, factor secret, or duplicate session-validity ledger.
+- Anonymous recovery intake holds only a normalized-handle HMAC digest and is unbound until the server
+  redeems a provider-owned recovery OTP and matches that digest; no Auth/admin lookup occurs at start.
 - One pending TOTP enrollment per user/type; verified factor before use; pending expiry is ten minutes.
 - Session/factor/recovery/transition effects, audit, outbox, canonical response, and completed
   idempotency record commit atomically where application state changes.

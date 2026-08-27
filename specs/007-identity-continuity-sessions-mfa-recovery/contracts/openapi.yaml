@@ -44,7 +44,7 @@ paths:
     post:
       operationId: logout
       x-shifaa-requirements: [FR-AUTH-005, NFR-SEC-003, NFR-SEC-005]
-      security: [{ bearerAuth: [] }]
+      security: []
       parameters:
         - $ref: '#/components/parameters/RequestId'
         - $ref: '#/components/parameters/IdempotencyKey'
@@ -444,12 +444,14 @@ components:
       additionalProperties: false
       properties:
         caseToken: { type: string, minLength: 32, maxLength: 512, writeOnly: true }
+        handle: { type: string, minLength: 3, maxLength: 320, writeOnly: true }
+        recoveryOtp: { type: string, minLength: 6, maxLength: 12, writeOnly: true }
         proofMethod:
           { type: string, enum: [bound_factor_independent_method, repeated_identity_proof] }
         factorEvidence: { type: [string, 'null'], maxLength: 512, writeOnly: true }
         verificationCaseId: { type: [string, 'null'], format: uuid }
         newCredential: { type: string, minLength: 12, maxLength: 256, writeOnly: true }
-      required: [caseToken, proofMethod, newCredential]
+      required: [caseToken, handle, recoveryOtp, proofMethod, newCredential]
     RecoveryResult:
       type: object
       additionalProperties: false

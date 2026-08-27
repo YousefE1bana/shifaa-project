@@ -18,6 +18,12 @@ export interface NativeSessionProjection {
   expiresAt: string;
 }
 
+export interface NativeRecoveryOtpSession {
+  subjectId: string;
+  handle: string;
+  session: NativeSessionProjection;
+}
+
 export interface NativeFactorSummary {
   id: string;
   type: 'totp';
@@ -84,7 +90,9 @@ export interface ContinuityAuthPort {
   verifyTotp(accessToken: string, enrollmentId: string, code: string): Promise<NativeFactorSummary>;
   unenrollFactor(accessToken: string, factorId: string): Promise<void>;
   startRecovery(handle: string): Promise<void>;
+  redeemRecoveryOtp(handle: string, recoveryOtp: string): Promise<NativeRecoveryOtpSession>;
   updateRecoveredCredential(accessToken: string, newCredential: string): Promise<void>;
+  signInWithPassword(handle: string, credential: string): Promise<NativeSessionProjection>;
 }
 
 export interface SessionActivitySnapshot {

@@ -21,12 +21,13 @@ returns boolean only, fixes `search_path`, is revoked from public roles, and is 
 | ----------------------------- | ---------------------- | ----------------------------------------------------------------------------------- |
 | `id`                          | `uuid not null`        | primary key, generated UUID                                                         |
 | `case_type`                   | `text not null`        | `account_recovery` or `dependent_transition`                                        |
-| `subject_person_id`           | `uuid null`            | FK `identity.people`; null only for decoy/nonexistent recovery                      |
+| `subject_person_id`           | `uuid null`            | FK `identity.people`; null for anonymous unbound intake or nonexistent recovery     |
 | `subject_patient_id`          | `uuid null`            | FK `identity.patients`; required only for transition                                |
 | `relationship_id`             | `uuid null`            | FK `identity.care_relationships`; required transition guardianship                  |
 | `verification_case_id`        | `uuid null`            | FK existing `identity.verification_cases`; released/verified proof reference        |
 | `status`                      | `text not null`        | closed workflow set below                                                           |
 | `public_token_digest`         | `bytea null`           | 32-byte HMAC digest; required recovery, forbidden transition                        |
+| `recovery_handle_digest`      | `bytea null`           | 32-byte normalized-handle HMAC; required recovery, forbidden transition             |
 | `token_key_version`           | `integer null`         | positive; present iff digest exists                                                 |
 | `restriction_scope`           | `text null`            | only `mfa_enrollment_only`; only recovery `restricted_enrollment`                   |
 | `bound_native_session_id`     | `uuid null`            | deny-only binding to a native session; never proves validity                        |
@@ -48,7 +49,9 @@ returns boolean only, fixes `search_path`, is revoked from public roles, and is 
 ### Shape checks
 
 - `account_recovery`: patient/relationship/review-reason are null; digest/key/expiry exist; subject may
-  be null; `restricted_enrollment` requires subject, scope, and bound native session.
+  be null while anonymous intake is unbound. Only server-side Supabase recovery-OTP verification whose
+  returned user handle digest matches the intake may bind it; `restricted_enrollment` requires subject,
+  scope, and bound native session.
 - `dependent_transition`: subject/person/patient/relationship exist; relationship is guardianship;
   digest/key/restriction/session binding are null; reviewer assignment exists in review states.
 - `approved` is transition-only with reviewer/decision/decided time.
@@ -77,15 +80,15 @@ returns boolean only, fixes `search_path`, is revoked from public roles, and is 
 
 ### Recovery
 
-| From                         | To                      | Actor/guard                                                                        | Effects                                                         |
-| ---------------------------- | ----------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| none                         | `requested`             | preauth HMAC scope/rate; known or decoy                                            | digest+15m expiry; uniform response                             |
-| `requested`                  | `proof_required`        | valid token, known subject                                                         | no account/factor projection                                    |
-| `requested`/`proof_required` | `expired`               | request-time clock > expiry                                                        | terminal; no Auth mutation                                      |
-| `proof_required`             | `restricted_enrollment` | repeated proofing accepted, factor lost, native session valid                      | bind deny-only native session scope                             |
-| `proof_required`             | `completed`             | bound factor + independent method; native credential/session operations reconciled | all old sessions revoked; new ordinary access only after commit |
-| `restricted_enrollment`      | `completed`             | replacement TOTP verified; native revocation reconciled                            | restriction removed; notification event                         |
-| any nonterminal              | `rejected`              | invalid terminal proof/attempt policy                                              | no new ordinary access                                          |
+| From                         | To                      | Actor/guard                                                                | Effects                                                    |
+| ---------------------------- | ----------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| none                         | `requested`             | preauth HMAC scope/rate; anonymous intake                                  | digest+15m expiry; uniform response                        |
+| `requested`                  | `proof_required`        | case token plus matching Supabase recovery OTP                             | bind only after returned subject/handle-digest match       |
+| `requested`/`proof_required` | `expired`               | request-time clock > expiry                                                | terminal; no Auth mutation                                 |
+| `proof_required`             | `restricted_enrollment` | repeated proofing accepted, factor lost, native session valid              | bind deny-only native session scope                        |
+| `proof_required`             | `completed`             | bound factor + independent method; recovery user-context credential update | global old-session revoke then public fresh native sign-in |
+| `restricted_enrollment`      | `completed`             | replacement TOTP verified; native revocation reconciled                    | restriction removed; notification event                    |
+| any nonterminal              | `rejected`              | invalid terminal proof/attempt policy                                      | no new ordinary access                                     |
 
 ### Dependent transition
 
@@ -136,6 +139,10 @@ to transaction context.
 - Extend `platform.outbox_events.event_type` with minimum events:
   `identity.factor.changed`, `identity.recovery.completed`, `identity.transition.submitted`, and
   `identity.transition.decided`.
+- `identity.factor.changed` payload is exactly `recipientPersonId`, `support_action`, and `action_time`.
+  The recipient is derived from the verified server-side subject/person context and committed with the
+  audit row; the factor ID remains only `aggregate_id`. The worker resolves the current active address
+  at claim time and receives only a local-synthetic address digest alias.
 - Scope the existing aggregate-version uniqueness index to these event families without colliding with
   prior unrelated event version 1 rows.
 - Drop/recreate the explicit `outbox_worker_select` and lease/update worker policies so

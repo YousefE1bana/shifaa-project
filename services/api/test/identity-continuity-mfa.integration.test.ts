@@ -267,10 +267,11 @@ describe.skipIf(!enabled).sequential('007 real native TOTP enrollment and remova
         select metadata::text metadata from audit.events
         where action like 'identity.factor.%' order by occurred_at desc limit 10`;
       const outbox = await sql`
-        select payload::text payload from platform.outbox_events
+        select aggregate_id::text aggregate_id,payload from platform.outbox_events
         where event_type='identity.factor.changed'`;
       return {
         rows: rows as Array<{ response_body: { encoding?: unknown } }>,
+        outbox,
         durableText: `${JSON.stringify(rows)}${JSON.stringify(audits)}${JSON.stringify(outbox)}`,
       };
     });
@@ -280,6 +281,18 @@ describe.skipIf(!enabled).sequential('007 real native TOTP enrollment and remova
       sawEncryptedEnvelope = true;
     }
     expect(sawEncryptedEnvelope).toBe(true);
+    for (const row of durable.outbox as Array<{
+      aggregate_id: string;
+      payload: Record<string, unknown>;
+    }>) {
+      expect(Object.keys(row.payload).toSorted()).toEqual([
+        'action_time',
+        'recipientPersonId',
+        'support_action',
+      ]);
+      expect(row.payload).not.toHaveProperty('factorId');
+      expect(row.aggregate_id).toMatch(/^[0-9a-f-]{36}$/);
+    }
     expect(durable.durableText).not.toContain(secret);
   });
 

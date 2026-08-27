@@ -1,17 +1,18 @@
 BEGIN;
 
 INSERT INTO identity.continuity_cases(
- id,case_type,status,subject_person_id,public_token_digest,token_key_version,expires_at,created_at
+ id,case_type,status,subject_person_id,public_token_digest,recovery_handle_digest,token_key_version,expires_at,created_at
 ) VALUES (
  '77000000-0000-4000-8000-000000000001','account_recovery','proof_required',
- '50000000-0000-4000-8000-000000000001',decode(repeat('71',32),'hex'),1,
+ '50000000-0000-4000-8000-000000000001',decode(repeat('71',32),'hex'),decode(repeat('72',32),'hex'),1,
  '2026-08-25T10:15:00Z','2026-08-25T10:00:00Z'
 );
 
 INSERT INTO platform.outbox_events(id,aggregate_type,aggregate_id,event_type,payload,aggregate_version)
 VALUES
  ('77000000-0000-4000-8000-000000000011','identity','77000000-0000-4000-8000-000000000001','identity.verification.changed','{}',1),
- ('77000000-0000-4000-8000-000000000012','identity','77000000-0000-4000-8000-000000000001','identity.factor.changed','{}',2);
+ ('77000000-0000-4000-8000-000000000012','identity','77000000-0000-4000-8000-000000000001','identity.factor.changed',
+  '{"recipientPersonId":"50000000-0000-4000-8000-000000000001","support_action":"verified","action_time":"2026-08-25T10:00:00Z"}',2);
 INSERT INTO identity.continuity_cases(
  id,case_type,subject_person_id,subject_patient_id,relationship_id,status,assigned_reviewer_person_id,created_at
 ) VALUES (
@@ -67,6 +68,19 @@ DO $$ BEGIN
 END $$;
 
 RESET ROLE;
+DO $$
+BEGIN
+  IF EXISTS(
+    SELECT 1 FROM information_schema.role_table_grants
+    WHERE grantee='shifaa_worker' AND table_schema='auth' AND table_name='users'
+      AND privilege_type='SELECT'
+  ) THEN RAISE EXCEPTION 'worker must not read Supabase Auth recipients'; END IF;
+  IF EXISTS(
+    SELECT 1 FROM information_schema.role_table_grants
+    WHERE grantee='shifaa_worker' AND table_schema='identity'
+      AND table_name='emergency_contacts' AND privilege_type='SELECT'
+  ) THEN RAISE EXCEPTION 'worker must not read Emergency Contact recipients'; END IF;
+END $$;
 SET LOCAL ROLE shifaa_worker;
 DO $$
 BEGIN

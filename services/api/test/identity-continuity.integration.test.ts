@@ -1,9 +1,12 @@
+import { randomUUID } from 'node:crypto';
+
 import Fastify from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import type {
-  ContinuityRequestContext,
-  IdentityContinuityServicePort,
+import {
+  restrictedRecoveryOperationIds,
+  type ContinuityRequestContext,
+  type IdentityContinuityServicePort,
 } from '../src/modules/identity-continuity/index.js';
 import { ApiPolicyError } from '../src/modules/identity-onboarding/errors.js';
 import { InMemoryIdempotencyStore } from '../src/platform/idempotency.js';
@@ -115,6 +118,31 @@ class RouteService implements IdentityContinuityServicePort {
       },
     });
   }
+  public prepareRecoveryCompletion(context: ContinuityRequestContext) {
+    return this.invoked({
+      caseId: ids.case,
+      personId: ids.person,
+      requestId: context.requestId,
+      restricted: true,
+      session: {
+        accessToken,
+        refreshToken,
+        sessionId: ids.session,
+        assurance: 'aal1' as const,
+        expiresAt: '2026-08-26T00:15:00.000Z',
+        restriction: 'mfa_enrollment_only' as const,
+      },
+    });
+  }
+  public commitRecoveryCompletion(
+    prepared: Awaited<ReturnType<RouteService['prepareRecoveryCompletion']>>,
+  ) {
+    return Promise.resolve({
+      caseId: prepared.caseId,
+      status: prepared.restricted ? ('restricted_enrollment' as const) : ('completed' as const),
+      session: prepared.session,
+    });
+  }
   public transitionDependent() {
     return this.invoked({
       caseId: ids.case,
@@ -162,7 +190,45 @@ describe('identity continuity exact route contract', () => {
       ]),
     );
     expect(app.printRoutes()).not.toContain('admin/summary');
+    expect(restrictedRecoveryOperationIds).toEqual([
+      'refreshSession',
+      'logout',
+      'beginMfaEnrollment',
+      'verifyMfaEnrollment',
+    ]);
   });
+
+  it.each([
+    ['start', '/v1/auth/recovery', { handle: 'subject@synthetic.test', locale: 'en-EG' }],
+    [
+      'complete',
+      `/v1/auth/recovery/${ids.case}/complete`,
+      {
+        caseToken: 'synthetic-case-token-00000000000000000000',
+        handle: 'subject@synthetic.test',
+        recoveryOtp: '123456',
+        proofMethod: 'bound_factor_independent_method',
+        factorEvidence: '123456',
+        verificationCaseId: null,
+        newCredential: 'Synthetic-Recovery-Replacement-123!',
+      },
+    ],
+  ])(
+    'denies bearer use of anonymous recovery %s under the restricted-session registry',
+    async (_name, url, payload) => {
+      const response = await app.inject({
+        method: 'POST',
+        url,
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          'idempotency-key': randomUUID(),
+        },
+        payload,
+      });
+      expect(response.statusCode).toBe(403);
+      expect(response.json()).toMatchObject({ code: 'recovery-mfa-enrollment-required' });
+    },
+  );
 
   it.each([
     [
@@ -213,6 +279,8 @@ describe('identity continuity exact route contract', () => {
       `/v1/auth/recovery/${ids.case}/complete`,
       {
         caseToken: 'synthetic-case-token-00000000000000000000',
+        handle: 'subject@synthetic.test',
+        recoveryOtp: '123456',
         proofMethod: 'repeated_identity_proof',
         verificationCaseId: ids.proof,
         newCredential: 'Synthetic-New-Credential!',

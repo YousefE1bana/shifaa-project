@@ -9,10 +9,14 @@ import {
 } from '@shifaa/auth/identity-continuity';
 import type {
   BeginEnrollmentRequest,
+  CompleteRecoveryRequest,
   EnrollmentSecretResult,
   FactorRemovalResult,
   FactorResult,
   RemoveFactorRequest,
+  RecoveryAccepted,
+  RecoveryResult,
+  StartRecoveryRequest,
   VerifyEnrollmentRequest,
 } from '@shifaa/contracts/identity-continuity';
 
@@ -71,6 +75,52 @@ export function createPatientSessionClient(options: PatientSessionClientOptions)
 
 export function assertIdentityContinuityOnline(): void {
   if (typeof navigator !== 'undefined' && !navigator.onLine) throw new Error('offline-no-queue');
+}
+
+export interface PatientRecoveryApiPort {
+  startRecovery(body: StartRecoveryRequest): Promise<RecoveryAccepted>;
+  completeRecovery(caseId: string, body: CompleteRecoveryRequest): Promise<RecoveryResult>;
+}
+
+export class PatientRecoveryApi implements PatientRecoveryApiPort {
+  public constructor(
+    private readonly options: {
+      locale: 'ar-EG' | 'en-EG';
+      fetch?: typeof globalThis.fetch;
+      apiBaseUrl?: string;
+    },
+  ) {}
+
+  public async startRecovery(body: StartRecoveryRequest): Promise<RecoveryAccepted> {
+    assertIdentityContinuityOnline();
+    return (await this.client().startRecovery(
+      body,
+      mutationKey('recovery-start'),
+    )) as RecoveryAccepted;
+  }
+
+  public async completeRecovery(
+    caseId: string,
+    body: CompleteRecoveryRequest,
+  ): Promise<RecoveryResult> {
+    assertIdentityContinuityOnline();
+    return (await this.client().completeRecovery(
+      caseId,
+      body,
+      mutationKey('recovery-complete'),
+    )) as RecoveryResult;
+  }
+
+  private client(): IdentityContinuityClient {
+    return new IdentityContinuityClient({
+      baseUrl:
+        this.options.apiBaseUrl ??
+        process.env['EXPO_PUBLIC_API_BASE_URL'] ??
+        'http://127.0.0.1:3000',
+      acceptLanguage: this.options.locale,
+      ...(this.options.fetch ? { fetch: this.options.fetch } : {}),
+    });
+  }
 }
 
 export interface PatientMfaApiPort {
