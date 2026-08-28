@@ -99,6 +99,7 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
   const continuityRepository = new PostgresIdentityContinuityService(
     repository,
     Buffer.alloc(32, 10),
+    'ci',
   );
   const auth = new SupabaseAuthIssuer({
     url: runtime.API_URL,

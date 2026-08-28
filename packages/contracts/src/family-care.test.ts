@@ -6,6 +6,9 @@ import {
   CreateEmergencyContactSchema,
   CreateGuardianshipSchema,
   RespondEmergencyContactSchema,
+  FamilyPageQuerySchema,
+  DependentTransitionWorklistItemSchema,
+  PatientDependentTransitionSummarySchema,
   FAMILY_CARE_FEATURE_ID,
   familyCareOperationIds,
   familyCareRequirementIds,
@@ -67,5 +70,40 @@ describe('family care contracts', () => {
       Value.Check(RespondEmergencyContactSchema, { token: 'x'.repeat(32), decision: 'confirmed' }),
     ).toBe(true);
     expect(Value.Check(RespondEmergencyContactSchema, { decision: 'confirmed' })).toBe(false);
+  });
+
+  it('widens existing reads with closed optional transition projections without adding operations', () => {
+    expect(Value.Check(FamilyPageQuerySchema, { mode: 'dependent_transition', limit: 25 })).toBe(
+      true,
+    );
+    expect(Value.Check(FamilyPageQuerySchema, { includeDependentTransition: true })).toBe(true);
+    expect(Value.Check(FamilyPageQuerySchema, { mode: 'unknown' })).toBe(false);
+    expect(
+      Value.Check(DependentTransitionWorklistItemSchema, {
+        relationshipId: '56000000-0000-4000-8000-000000000003',
+        transitionCaseId: '77000000-0000-4000-8000-000000000002',
+        caseType: 'dependent_transition',
+        status: 'human_review_required',
+        continuityCaseVersion: 3,
+        proofState: 'verified',
+        reviewState: 'human_review_required',
+        blockerState: 'dispute',
+        createdAt: '2026-08-25T10:00:00.000Z',
+        updatedAt: '2026-08-25T10:05:00.000Z',
+        decidedAt: null,
+      }),
+    ).toBe(true);
+    expect(
+      Value.Check(PatientDependentTransitionSummarySchema, {
+        relationshipId: '56000000-0000-4000-8000-000000000003',
+        transitionCaseId: '77000000-0000-4000-8000-000000000002',
+        status: 'approved',
+        continuityCaseVersion: 4,
+        updatedAt: '2026-08-25T10:05:00.000Z',
+        recordConsequence: 'same_patient_record_preserved',
+        priorAuthorityConsequence: 'ended_after_approval',
+      }),
+    ).toBe(true);
+    expect(familyCareOperationIds).toHaveLength(12);
   });
 });

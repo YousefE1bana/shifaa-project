@@ -8,6 +8,8 @@ import type {
   RespondEmergencyContactInput,
   RevokeRelationshipInput,
   UpdateDelegationInput,
+  DependentTransitionWorklistPage,
+  RelationshipsPageWithTransition,
 } from '@shifaa/contracts';
 
 export const generatedFamilyCareOperationIds = [
@@ -35,6 +37,8 @@ export interface FamilyPageQuery {
   cursor?: string;
   limit?: number;
   status?: string;
+  mode?: 'guardianship_review' | 'dependent_transition';
+  includeDependentTransition?: boolean;
 }
 export class FamilyCareApiError extends Error {
   constructor(
@@ -51,12 +55,21 @@ export class FamilyCareClient {
   public constructor(private readonly options: FamilyCareClientOptions) {
     this.fetcher = (options.fetch ?? globalThis.fetch).bind(globalThis);
   }
+  listRelationships(
+    patientId: string,
+    query: FamilyPageQuery & { includeDependentTransition: true },
+  ): Promise<RelationshipsPageWithTransition>;
+  listRelationships(patientId: string, query?: FamilyPageQuery): Promise<unknown>;
   listRelationships(patientId: string, query: FamilyPageQuery = {}) {
     return this.request('GET', this.page(`/patients/${patientId}/relationships`, query));
   }
   createGuardianship(patientId: string, body: CreateGuardianshipInput, key: string) {
     return this.request('POST', `/patients/${patientId}/guardianships`, { body, key, patientId });
   }
+  listGuardianshipCases(
+    query: FamilyPageQuery & { mode: 'dependent_transition' },
+  ): Promise<DependentTransitionWorklistPage>;
+  listGuardianshipCases(query?: FamilyPageQuery): Promise<unknown>;
   listGuardianshipCases(query: FamilyPageQuery = {}) {
     return this.request('GET', this.page('/admin/guardianships', query));
   }
@@ -127,6 +140,9 @@ export class FamilyCareClient {
     if (query.cursor) values.set('cursor', query.cursor);
     if (query.limit !== undefined) values.set('limit', String(query.limit));
     if (query.status) values.set('status', query.status);
+    if (query.mode) values.set('mode', query.mode);
+    if (query.includeDependentTransition !== undefined)
+      values.set('includeDependentTransition', String(query.includeDependentTransition));
     return values.size ? `${path}?${values}` : path;
   }
   private async request(

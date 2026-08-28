@@ -7,12 +7,16 @@ import type {
   ContinuityRepository,
   ContinuityRestriction,
   PendingEnrollmentMarker,
+  TransitionMutationInput,
 } from '../../modules/identity-continuity/index.js';
+import type { TransitionResult } from '@shifaa/contracts/identity-continuity';
 import { TransientReplayCipher } from '../../modules/identity-continuity/security.js';
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
 import { PostgresIdentityRepository } from './identity-repository.js';
 
 const PENDING_MARKER_ROUTE = '/v1/auth/mfa/enroll#pending-marker';
+const TRANSITION_ROUTE = '/v1/guardianships/:relationshipId/transition';
+const TRANSITION_RETENTION_MS = 24 * 60 * 60_000;
 
 type StoredSealedMarker = {
   encoding: string;
@@ -28,6 +32,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository {
   public constructor(
     private readonly repository: PostgresIdentityRepository,
     transientKey: Uint8Array,
+    private readonly environment: 'local' | 'ci' | 'production',
   ) {
     this.cipher = new TransientReplayCipher(transientKey);
   }
@@ -486,60 +491,192 @@ export class PostgresIdentityContinuityService implements ContinuityRepository {
     });
   }
 
-  public async commitTransitionDecision(input: {
-    caseId: string;
-    expectedVersion: number;
-    actorPersonId: string;
-    reasonCode: string;
-    requestId: string;
-    occurredAt: string;
-  }): Promise<{ caseId: string; relationshipId: string; version: number }> {
-    return this.repository.withRawTransaction(async (sql) => {
-      await sql`
-        select set_config('shifaa.person_id',${input.actorPersonId},true),
-               set_config('shifaa.actor_role','ADM-SUPPORT',true),
-               set_config('shifaa.aal','2',true),
-               set_config('shifaa.purposes','guardianship_review',true),
-               set_config('shifaa.action','transitionDependent',true),
-               set_config('shifaa.test_now',${input.occurredAt},true)`;
-      const [transition] = await sql<
-        { id: string; relationship_id: string; version: number }[]
-      >`select id,relationship_id,version from platform.approve_dependent_transition(
-          ${input.caseId}::uuid,${input.expectedVersion},${input.reasonCode}
-        )`;
-      if (!transition)
-        throw new ApiPolicyError('state-transition-invalid', 409, 'The transition is unavailable.');
-      const audit = {
-        requestId: input.requestId,
-        action: 'identity.transition.decided',
-        outcome: 'succeeded',
-        occurredAt: input.occurredAt,
-        caseId: transition.id,
-        version: transition.version,
-      };
-      const digest = createHash('sha256').update(JSON.stringify(audit)).digest('hex');
-      await sql`
-        insert into audit.events(
-          event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,
-          occurred_at,metadata
-        ) values(
-          ${digest},${input.actorPersonId}::uuid,'identity.transition.decided','continuity-case',
-          ${transition.id}::uuid,'succeeded',${input.requestId}::uuid,
-          ${input.occurredAt}::timestamptz,${sql.json({ version: transition.version })}
-        )`;
-      await sql`
-        insert into platform.outbox_events(
-          aggregate_type,aggregate_id,event_type,payload,aggregate_version
-        ) values(
-          'identity-continuity',${transition.id}::uuid,'identity.transition.decided',
-          ${sql.json({ case_status: 'approved', action_time: input.occurredAt })},
-          ${transition.version}
-        )`;
-      return {
-        caseId: transition.id,
-        relationshipId: transition.relationship_id,
-        version: transition.version,
-      };
-    });
+  public async submitTransitionProof(
+    input: TransitionMutationInput & { verificationCaseId: string },
+  ): Promise<TransitionResult> {
+    return this.transitionTransaction(input, 'submit_proof');
   }
+
+  public async decideTransition(
+    input: TransitionMutationInput & {
+      decision: 'approve' | 'reject' | 'defer';
+      reasonCode: string;
+    },
+  ): Promise<TransitionResult> {
+    return this.transitionTransaction(input, 'decide');
+  }
+
+  private async transitionTransaction(
+    input: TransitionMutationInput,
+    action: 'submit_proof' | 'decide',
+  ): Promise<TransitionResult> {
+    try {
+      return await this.repository.withRawTransaction(async (sql) => {
+        const role = action === 'decide' ? 'ADM-SUPPORT' : 'PAT';
+        const requestHash = createHash('sha256')
+          .update(
+            JSON.stringify({
+              action,
+              relationshipId: input.relationshipId,
+              expectedVersion: input.expectedVersion,
+              verificationCaseId: input.verificationCaseId ?? null,
+              decision: input.decision ?? null,
+              reasonCode: input.reasonCode ?? null,
+              reviewRequiredReason: input.reviewRequiredReason ?? null,
+            }),
+          )
+          .digest('hex');
+        const expiresAt = new Date(
+          Date.parse(input.occurredAt) + TRANSITION_RETENTION_MS,
+        ).toISOString();
+        await sql`
+          select set_config('shifaa.person_id',${input.actorPersonId},true),
+                 set_config('shifaa.environment',${this.environment},true),
+                 set_config('shifaa.actor_role',${role},true),
+                 set_config('shifaa.aal',${String(input.aal ?? 1)},true),
+                 set_config('shifaa.purposes',${input.purpose ?? ''},true),
+                 set_config('shifaa.action','transitionDependent',true),
+                 set_config('shifaa.factor_amr_at',${input.factorAmrAt ?? ''},true),
+                 set_config('shifaa.test_now',${input.occurredAt},true),
+                 set_config('shifaa.principal',${input.idempotencyPrincipal},true)`;
+        await sql`
+          insert into platform.idempotency_records(
+            principal,method,route,idempotency_key,request_hash,state,expires_at
+          ) values(
+            ${input.idempotencyPrincipal},'POST',${TRANSITION_ROUTE},${input.idempotencyKey},
+            ${requestHash},'processing',${expiresAt}::timestamptz
+          ) on conflict(principal,method,route,idempotency_key) do nothing`;
+        const [idempotency] = await sql<TransitionIdempotencyRow[]>`
+          select id,request_hash,state,response_body from platform.idempotency_records
+          where principal=${input.idempotencyPrincipal} and method='POST' and route=${TRANSITION_ROUTE}
+            and idempotency_key=${input.idempotencyKey} for update`;
+        if (!idempotency) throw new Error('Transition idempotency record could not be locked.');
+        if (idempotency.request_hash !== requestHash)
+          throw new ApiPolicyError(
+            'idempotency-key-reused',
+            409,
+            'Use a new Idempotency-Key when the transition request changes.',
+          );
+        if (idempotency.state === 'completed')
+          return this.cipher.open(
+            idempotency.response_body as Parameters<TransientReplayCipher['open']>[0],
+            new Date(input.occurredAt),
+          ) as TransitionResult;
+        const rows =
+          action === 'submit_proof'
+            ? await sql<TransitionRow[]>`
+              select id,relationship_id,subject_patient_id,subject_person_id,status,version,updated_at
+              from platform.submit_dependent_transition(
+                ${input.relationshipId}::uuid,${input.verificationCaseId!}::uuid,${input.expectedVersion}
+              )`
+            : await sql<TransitionRow[]>`
+              select id,relationship_id,subject_patient_id,subject_person_id,status,version,updated_at
+              from platform.decide_dependent_transition(
+                ${input.relationshipId}::uuid,${input.expectedVersion},${input.decision!},
+                ${input.reasonCode!},${input.reviewRequiredReason ?? null}
+              )`;
+        const transition = rows[0];
+        if (!transition)
+          throw new ApiPolicyError(
+            'state-transition-invalid',
+            409,
+            'The transition is unavailable.',
+          );
+        const eventType =
+          action === 'submit_proof'
+            ? 'identity.transition.submitted'
+            : 'identity.transition.decided';
+        const audit = {
+          requestId: input.requestId,
+          action: eventType,
+          outcome: 'succeeded',
+          occurredAt: input.occurredAt,
+          caseId: transition.id,
+          version: transition.version,
+        };
+        const digest = createHash('sha256').update(JSON.stringify(audit)).digest('hex');
+        await sql`
+          insert into audit.events(
+            event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,
+            occurred_at,metadata
+          ) values(
+            ${digest},${input.actorPersonId}::uuid,${eventType},'continuity-case',
+            ${transition.id}::uuid,'succeeded',${input.requestId}::uuid,
+            ${input.occurredAt}::timestamptz,${sql.json({ version: transition.version })}
+          )`;
+        await sql`
+          insert into platform.outbox_events(
+            aggregate_type,aggregate_id,event_type,payload,aggregate_version
+          ) values(
+            'identity-continuity',${transition.id}::uuid,${eventType},
+            ${sql.json({ case_status: transition.status, action_time: input.occurredAt })},
+            ${transition.version}
+          )`;
+        const result: TransitionResult = {
+          caseId: transition.id,
+          relationshipId: transition.relationship_id,
+          patientId: transition.subject_patient_id,
+          personId: transition.subject_person_id,
+          status: transition.status,
+          version: transition.version,
+          updatedAt: new Date(transition.updated_at).toISOString(),
+        };
+        const protectedResult = this.cipher.seal(result, new Date(expiresAt)) as unknown as Record<
+          string,
+          string
+        >;
+        await sql`
+          update platform.idempotency_records set state='completed',response_status=200,
+            response_headers=${sql.json({ 'cache-control': 'private, no-store' })},
+            response_body=${sql.json(protectedResult)},updated_at=now()
+          where id=${idempotency.id}::uuid`;
+        return result;
+      });
+    } catch (error) {
+      if (error instanceof ApiPolicyError) throw error;
+      const code = postgresErrorCode(error);
+      if (code === '40001')
+        throw new ApiPolicyError(
+          'version-conflict',
+          409,
+          'Refresh the transition before deciding.',
+        );
+      if (code === '42501')
+        throw new ApiPolicyError(
+          'forbidden',
+          403,
+          'The transition actor or evidence is not authorized.',
+        );
+      if (code === '23514' || code === 'P0002')
+        throw new ApiPolicyError(
+          'state-transition-invalid',
+          409,
+          'The transition state is unavailable.',
+        );
+      throw error;
+    }
+  }
+}
+
+type TransitionRow = {
+  id: string;
+  relationship_id: string;
+  subject_patient_id: string;
+  subject_person_id: string;
+  status: TransitionResult['status'];
+  version: number;
+  updated_at: string | Date;
+};
+
+type TransitionIdempotencyRow = {
+  id: string;
+  request_hash: string;
+  state: 'processing' | 'completed';
+  response_body: unknown;
+};
+
+function postgresErrorCode(error: unknown): string | undefined {
+  return typeof error === 'object' && error !== null && 'code' in error
+    ? String((error as { code?: unknown }).code)
+    : undefined;
 }

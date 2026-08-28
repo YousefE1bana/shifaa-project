@@ -28,6 +28,24 @@ export interface ContinuityRequestContext {
   csrfHeader?: string;
   origin?: string;
   fetchSite?: string;
+  purpose?: string;
+}
+
+export interface TransitionMutationInput {
+  relationshipId: string;
+  expectedVersion: number;
+  actorPersonId: string;
+  idempotencyKey: string;
+  idempotencyPrincipal: string;
+  aal?: 1 | 2;
+  purpose?: string;
+  factorAmrAt?: string;
+  verificationCaseId?: string;
+  decision?: 'approve' | 'reject' | 'defer';
+  reasonCode?: string;
+  reviewRequiredReason?: 'interdiction' | 'court_order' | 'dispute' | null;
+  requestId: string;
+  occurredAt: string;
 }
 
 export interface ContinuityAuditInput {
@@ -130,6 +148,15 @@ export interface ContinuityRepository {
     requestId: string;
     occurredAt: string;
   }): Promise<void>;
+  submitTransitionProof(
+    input: TransitionMutationInput & { verificationCaseId: string },
+  ): Promise<TransitionResult>;
+  decideTransition(
+    input: TransitionMutationInput & {
+      decision: 'approve' | 'reject' | 'defer';
+      reasonCode: string;
+    },
+  ): Promise<TransitionResult>;
 }
 
 export interface IdentityContinuityServicePort {

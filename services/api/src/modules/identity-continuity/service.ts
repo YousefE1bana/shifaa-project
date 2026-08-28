@@ -28,14 +28,6 @@ import type {
   PreparedLogout,
 } from './types.js';
 
-const pendingStory = (): never => {
-  throw new ApiPolicyError(
-    'vendor-unavailable',
-    503,
-    'This continuity operation is not enabled in the current implementation checkpoint.',
-  );
-};
-
 const ENROLLMENT_TTL_MS = 10 * 60_000;
 const RECOVERY_TTL_MS = 15 * 60_000;
 export const restrictedRecoveryOperationIds = [
@@ -429,12 +421,76 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
 
   public async transitionDependent(
     context: ContinuityRequestContext,
-    _relationshipId: string,
-    _body: TransitionRequest,
-    _expectedVersion: number,
+    relationshipId: string,
+    body: TransitionRequest,
+    expectedVersion: number,
   ) {
-    await this.currentActor(context, 'transitionDependent');
-    return pendingStory();
+    const { claims } = await this.currentActor(context, 'transitionDependent');
+    const actorPersonId = await this.requirePersonForActor(claims);
+    const occurredAt = this.dependencies.now().toISOString();
+    if (body.action === 'submit_proof') {
+      return this.dependencies.repository.submitTransitionProof({
+        relationshipId,
+        verificationCaseId: body.verificationCaseId,
+        expectedVersion,
+        actorPersonId,
+        idempotencyKey: context.idempotencyKey,
+        idempotencyPrincipal: scopedPrincipal(
+          'transitionDependent',
+          context.accessToken!,
+          this.dependencies.hmacKey,
+        ),
+        requestId: context.requestId,
+        occurredAt,
+      });
+    }
+    const factorAt = latestQualifyingFactorAt(claims.amr);
+    const factorAgeSeconds =
+      factorAt === undefined
+        ? Number.POSITIVE_INFINITY
+        : Math.floor(this.dependencies.now().getTime() / 1_000) - factorAt;
+    if (!hasFreshQualifyingMfa(factorAgeSeconds, claims.aal === 2 ? 'aal2' : 'aal1'))
+      throw this.transitionProblem('mfa-step-up-required');
+    if (context.purpose !== 'guardianship_review') throw this.transitionProblem('purpose-required');
+    if (!/^human_review\.[a-z0-9_.-]{2,49}$/.test(body.reasonCode))
+      throw this.transitionProblem('reason-required');
+    if (body.decision === 'defer' && !body.reviewRequiredReason)
+      throw this.transitionProblem('human-review-required');
+    return this.dependencies.repository.decideTransition({
+      relationshipId,
+      expectedVersion,
+      actorPersonId,
+      idempotencyKey: context.idempotencyKey,
+      idempotencyPrincipal: scopedPrincipal(
+        'transitionDependent',
+        context.accessToken!,
+        this.dependencies.hmacKey,
+      ),
+      decision: body.decision,
+      reasonCode: body.reasonCode,
+      reviewRequiredReason: body.reviewRequiredReason ?? null,
+      aal: claims.aal,
+      purpose: context.purpose,
+      ...(factorAt === undefined ? {} : { factorAmrAt: new Date(factorAt * 1_000).toISOString() }),
+      requestId: context.requestId,
+      occurredAt,
+    });
+  }
+
+  private transitionProblem(reason: string): ApiPolicyError {
+    if (reason === 'mfa-step-up-required')
+      return new ApiPolicyError(
+        reason,
+        403,
+        'Confirm a recent verification-factor challenge first.',
+      );
+    if (reason === 'purpose-required')
+      return new ApiPolicyError(reason, 403, 'The guardianship review purpose is required.');
+    if (reason === 'reason-required')
+      return new ApiPolicyError(reason, 422, 'A stable review reason is required.');
+    if (reason === 'human-review-required')
+      return new ApiPolicyError(reason, 409, 'The controlling evidence requires human review.');
+    return new ApiPolicyError('validation-failed', 422, 'The transition decision is invalid.');
   }
 
   private freshProofs(claims: VerifiedContinuitySession): {

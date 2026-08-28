@@ -159,6 +159,16 @@ class FakeRepository implements ContinuityRepository {
     sessionId: string;
     restricted: boolean;
   }> = [];
+  public readonly transitionActions: Array<{
+    action: 'submit_proof' | 'decide';
+    relationshipId: string;
+    expectedVersion: number;
+    actorPersonId: string;
+    verificationCaseId?: string;
+    decision?: 'approve' | 'reject' | 'defer';
+    purpose?: string;
+    factorAmrAt?: string;
+  }> = [];
   public markers = new Map<
     string,
     { enrollmentId: string; expiresAtMs: number; savedAt: number }
@@ -272,6 +282,45 @@ class FakeRepository implements ContinuityRepository {
     this.recoveryFinalizations.push(input);
     return Promise.resolve();
   }
+  public submitTransitionProof(
+    input: Parameters<ContinuityRepository['submitTransitionProof']>[0],
+  ) {
+    this.transitionActions.push({ action: 'submit_proof', ...input });
+    return Promise.resolve(transitionResult('review_required', 2));
+  }
+  public decideTransition(input: Parameters<ContinuityRepository['decideTransition']>[0]) {
+    this.transitionActions.push({ action: 'decide', ...input });
+    const status =
+      input.decision === 'approve'
+        ? 'approved'
+        : input.decision === 'reject'
+          ? 'rejected'
+          : 'human_review_required';
+    return Promise.resolve(transitionResult(status, input.expectedVersion + 1));
+  }
+}
+
+function transitionResult(
+  status: 'review_required' | 'human_review_required' | 'approved' | 'rejected',
+  version: number,
+) {
+  return {
+    caseId: '71000000-0000-4000-8000-000000000050',
+    relationshipId: '71000000-0000-4000-8000-000000000051',
+    patientId: '71000000-0000-4000-8000-000000000052',
+    personId: '71000000-0000-4000-8000-000000000004',
+    status,
+    version,
+    updatedAt: now.toISOString(),
+  };
+}
+
+function transitionContext(label: string) {
+  return {
+    requestId: `71000000-0000-4000-8000-${label.padStart(12, '0').slice(-12)}`,
+    idempotencyKey: `synthetic-${label.padEnd(20, '0')}`,
+    accessToken,
+  };
 }
 
 function service() {
@@ -604,6 +653,92 @@ describe('totp enrollment, verification, and removal service policy', () => {
       }),
     ).rejects.toMatchObject({ code: 'mfa-step-up-required', status: 403 });
     expect(harness.auth.unenrolledIds).toEqual([]);
+  });
+});
+
+describe('dependent transition service policy', () => {
+  it('submits verified proof and forwards a fresh purpose-bound decision to PostgreSQL', async () => {
+    const harness = service();
+    const relationshipId = '71000000-0000-4000-8000-000000000051';
+    const verificationCaseId = '71000000-0000-4000-8000-000000000053';
+    const submitted = await harness.service.transitionDependent(
+      transitionContext('101'),
+      relationshipId,
+      { action: 'submit_proof', verificationCaseId },
+      1,
+    );
+    expect(submitted).toMatchObject({ status: 'review_required', version: 2 });
+    const factorAt = Math.floor(now.getTime() / 1_000) - 300;
+    harness.auth.aal = 2;
+    harness.auth.amr = [{ method: 'totp', timestamp: factorAt }];
+    const decided = await harness.service.transitionDependent(
+      { ...transitionContext('102'), purpose: 'guardianship_review' },
+      relationshipId,
+      { action: 'decide', decision: 'approve', reasonCode: 'human_review.approved' },
+      2,
+    );
+    expect(decided).toMatchObject({ status: 'approved', version: 3 });
+    expect(harness.repository.transitionActions).toMatchObject([
+      { action: 'submit_proof', relationshipId, verificationCaseId, expectedVersion: 1 },
+      {
+        action: 'decide',
+        relationshipId,
+        decision: 'approve',
+        expectedVersion: 2,
+        purpose: 'guardianship_review',
+        factorAmrAt: new Date(factorAt * 1_000).toISOString(),
+      },
+    ]);
+  });
+
+  it.each([299, 300])('allows a qualifying factor at %s seconds', async (ageSeconds) => {
+    const harness = service();
+    harness.auth.aal = 2;
+    harness.auth.amr = [
+      { method: 'totp', timestamp: Math.floor(now.getTime() / 1_000) - ageSeconds },
+    ];
+    await expect(
+      harness.service.transitionDependent(
+        { ...transitionContext(String(ageSeconds)), purpose: 'guardianship_review' },
+        '71000000-0000-4000-8000-000000000051',
+        { action: 'decide', decision: 'reject', reasonCode: 'human_review.rejected' },
+        2,
+      ),
+    ).resolves.toMatchObject({ status: 'rejected' });
+  });
+
+  it('denies stale MFA, missing purpose, and defer without a controlling blocker before PostgreSQL', async () => {
+    const relationshipId = '71000000-0000-4000-8000-000000000051';
+    const stale = service();
+    stale.auth.aal = 2;
+    stale.auth.amr = [{ method: 'totp', timestamp: Math.floor(now.getTime() / 1_000) - 301 }];
+    await expect(
+      stale.service.transitionDependent(
+        { ...transitionContext('301'), purpose: 'guardianship_review' },
+        relationshipId,
+        { action: 'decide', decision: 'approve', reasonCode: 'human_review.approved' },
+        2,
+      ),
+    ).rejects.toMatchObject({ code: 'mfa-step-up-required', status: 403 });
+    const missingPurpose = service();
+    missingPurpose.auth.aal = 2;
+    missingPurpose.auth.amr = [{ method: 'totp', timestamp: Math.floor(now.getTime() / 1_000) }];
+    await expect(
+      missingPurpose.service.transitionDependent(
+        transitionContext('302'),
+        relationshipId,
+        { action: 'decide', decision: 'approve', reasonCode: 'human_review.approved' },
+        2,
+      ),
+    ).rejects.toMatchObject({ code: 'purpose-required', status: 403 });
+    await expect(
+      missingPurpose.service.transitionDependent(
+        { ...transitionContext('303'), purpose: 'guardianship_review' },
+        relationshipId,
+        { action: 'decide', decision: 'defer', reasonCode: 'human_review.deferred' },
+        2,
+      ),
+    ).rejects.toMatchObject({ code: 'human-review-required', status: 409 });
   });
 });
 

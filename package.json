@@ -43,6 +43,7 @@
     "test:identity-continuity:auth": "node tools/run-identity-continuity-supabase-test.mjs",
     "test:identity-continuity:sessions": "node tools/run-identity-continuity-supabase-test.mjs",
     "test:identity-continuity:mfa": "node tools/run-identity-continuity-mfa-test.mjs",
+    "test:identity-continuity:transition": "node tools/run-identity-continuity-transition-test.mjs",
     "db:reset": "docker compose down -v && docker compose up -d --wait postgres && pnpm db:migrate",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",

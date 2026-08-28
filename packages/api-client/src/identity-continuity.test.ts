@@ -61,4 +61,36 @@ describe('identity continuity generated client', () => {
       foregroundEngaged: true,
     });
   });
+
+  it('forwards server-validated purpose on the existing transition operation', async () => {
+    let headers = new Headers();
+    const client = new IdentityContinuityClient({
+      baseUrl: 'https://synthetic.invalid',
+      accessToken: () => 'synthetic-transition-reviewer-token',
+      defaultHeaders: { 'X-Purpose': 'guardianship_review' },
+      fetch: async (_input, init) => {
+        headers = new Headers(init?.headers);
+        return new Response(
+          JSON.stringify({
+            caseId: '77000000-0000-4000-8000-000000000001',
+            relationshipId: '56000000-0000-4000-8000-000000000003',
+            patientId: '51000000-0000-4000-8000-000000000001',
+            personId: '50000000-0000-4000-8000-000000000001',
+            status: 'approved',
+            version: 3,
+            updatedAt: '2026-08-25T10:00:00.000Z',
+          }),
+          { status: 200 },
+        );
+      },
+    });
+    await client.transitionDependent(
+      '56000000-0000-4000-8000-000000000003',
+      { action: 'decide', decision: 'approve', reasonCode: 'human_review.approved' },
+      2,
+      'synthetic-transition-decision-0001',
+    );
+    expect(headers.get('x-purpose')).toBe('guardianship_review');
+    expect(generatedIdentityContinuityOperationIds).toHaveLength(8);
+  });
 });

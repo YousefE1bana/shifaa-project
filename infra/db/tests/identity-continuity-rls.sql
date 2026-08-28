@@ -22,6 +22,42 @@ INSERT INTO identity.continuity_cases(
  '40000000-0000-4000-8000-000000000006','2026-08-25T10:00:00Z'
 );
 
+SELECT set_config('shifaa.person_id','50000000-0000-4000-8000-000000000008',true);
+INSERT INTO identity.admin_role_grants(
+  id,person_id,role_code,status,valid_from,valid_until,proposed_by
+) VALUES (
+  '77000000-0000-4000-8000-000000000020','40000000-0000-4000-8000-000000000006',
+  'support_admin','pending','2026-01-01T00:00:00Z','2027-01-01T00:00:00Z',
+  '50000000-0000-4000-8000-000000000008'
+);
+SELECT set_config('shifaa.person_id','50000000-0000-4000-8000-000000000009',true);
+UPDATE identity.admin_role_grants SET status='active',
+  decided_by='50000000-0000-4000-8000-000000000009',decision_reason='synthetic.transition.assignment'
+WHERE id='77000000-0000-4000-8000-000000000020';
+SELECT set_config('shifaa.person_id','50000000-0000-4000-8000-000000000001',true);
+INSERT INTO identity.care_relationships(
+  id,subject_patient_id,actor_person_id,relationship_type,status,valid_from,created_by_person_id,
+  purpose_code,invite_token_digest,invite_key_version,invite_expires_at
+) VALUES (
+  '77000000-0000-4000-8000-000000000021','51000000-0000-4000-8000-000000000001',
+  '50000000-0000-4000-8000-000000000003','delegation','pending','2026-08-25T09:00:00Z',
+  '50000000-0000-4000-8000-000000000001','family_support',decode(repeat('7a',32),'hex'),1,
+  '2099-08-26T10:00:00Z'
+);
+INSERT INTO identity.care_relationship_permissions(relationship_id,permission_code,created_by_person_id)
+VALUES ('77000000-0000-4000-8000-000000000021','record.view','50000000-0000-4000-8000-000000000001');
+SELECT set_config('shifaa.person_id','50000000-0000-4000-8000-000000000003',true);
+UPDATE identity.care_relationships SET status='active',invite_token_digest=NULL,invite_expires_at=NULL,
+  invite_consumed_at='2026-08-25T09:05:00Z'
+WHERE id='77000000-0000-4000-8000-000000000021';
+
+CREATE TEMP TABLE transition_record_before AS
+SELECT
+  (SELECT md5(row(p.*)::text) FROM identity.people p WHERE p.id='50000000-0000-4000-8000-000000000001') person_hash,
+  (SELECT md5(row(p.*)::text) FROM identity.patients p WHERE p.id='51000000-0000-4000-8000-000000000001') patient_hash,
+  (SELECT p.medical_record_number FROM identity.patients p WHERE p.id='51000000-0000-4000-8000-000000000001') mrn,
+  (SELECT md5(row(r.*)::text) FROM identity.care_relationships r WHERE r.id='56000000-0000-4000-8000-000000000001') self_hash;
+
 SET LOCAL ROLE shifaa_api;
 SELECT set_config('shifaa.environment','ci',true);
 SELECT set_config('shifaa.test_now','2026-08-25T10:00:00Z',true);
@@ -50,6 +86,66 @@ SELECT set_config('shifaa.factor_amr_at','2026-08-25T09:55:00Z',true);
 DO $$ BEGIN
  IF (SELECT count(*) FROM identity.continuity_cases)<>1 THEN RAISE EXCEPTION 'assigned reviewer projection failed'; END IF;
 END $$;
+
+SELECT set_config('shifaa.person_id','40000000-0000-4000-8000-000000000007',true);
+DO $$ BEGIN
+ PERFORM platform.decide_dependent_transition(
+   '56000000-0000-4000-8000-000000000003',1,'defer','human_review.dispute','dispute'
+ );
+ RAISE EXCEPTION 'unassigned reviewer deferred transition';
+EXCEPTION WHEN insufficient_privilege THEN NULL; END $$;
+SELECT set_config('shifaa.person_id','40000000-0000-4000-8000-000000000006',true);
+
+CREATE TEMP TABLE transition_approved AS
+SELECT * FROM platform.decide_dependent_transition(
+  '56000000-0000-4000-8000-000000000003',1,'approve','human_review.approved',NULL
+);
+RESET ROLE;
+DO $$
+DECLARE approved identity.continuity_cases;
+DECLARE before_record transition_record_before%ROWTYPE;
+BEGIN
+ SELECT * INTO approved FROM transition_approved;
+ SELECT * INTO before_record FROM transition_record_before;
+ IF approved.status<>'approved' OR approved.version<>2 THEN RAISE EXCEPTION 'transition approval failed'; END IF;
+ IF before_record.person_hash<>(SELECT md5(row(p.*)::text) FROM identity.people p WHERE p.id=approved.subject_person_id)
+   OR before_record.patient_hash<>(SELECT md5(row(p.*)::text) FROM identity.patients p WHERE p.id=approved.subject_patient_id)
+   OR before_record.mrn<>(SELECT p.medical_record_number FROM identity.patients p WHERE p.id=approved.subject_patient_id)
+   OR before_record.self_hash<>(SELECT md5(row(r.*)::text) FROM identity.care_relationships r WHERE r.id='56000000-0000-4000-8000-000000000001')
+ THEN RAISE EXCEPTION 'same-record continuity failed'; END IF;
+ PERFORM set_config('shifaa.purposes','privacy_dsr',true);
+ IF platform.person_has_family_relationship(
+   approved.subject_patient_id,'50000000-0000-4000-8000-000000000002','consent.manage'
+ ) THEN RAISE EXCEPTION 'former guardian retained authority'; END IF;
+ PERFORM set_config('shifaa.purposes','family_support',true);
+ IF NOT platform.person_has_family_relationship(
+   approved.subject_patient_id,'50000000-0000-4000-8000-000000000003','record.view'
+ ) OR platform.person_has_family_relationship(
+   approved.subject_patient_id,'50000000-0000-4000-8000-000000000003','medication.manage'
+ ) THEN RAISE EXCEPTION 'later lawful grant scope failed'; END IF;
+ IF platform.person_has_family_relationship(
+   approved.subject_patient_id,'50000000-0000-4000-8000-000000000007','record.view'
+ ) THEN RAISE EXCEPTION 'later access without a separate grant was allowed'; END IF;
+END $$;
+
+DO $$ BEGIN
+ IF EXISTS(
+   SELECT 1 FROM pg_roles r
+   WHERE r.rolname IN ('anon','authenticated') AND (
+     has_function_privilege(r.rolname,'platform.decide_dependent_transition(uuid,integer,text,text,text)','EXECUTE')
+     OR has_table_privilege(r.rolname,'identity.continuity_cases','SELECT')
+   )
+ )
+ THEN RAISE EXCEPTION 'direct public transition access detected'; END IF;
+END $$;
+
+SET LOCAL ROLE shifaa_api;
+SELECT set_config('shifaa.person_id','40000000-0000-4000-8000-000000000006',true);
+SELECT set_config('shifaa.actor_role','ADM-SUPPORT',true);
+SELECT set_config('shifaa.aal','2',true);
+SELECT set_config('shifaa.purposes','guardianship_review',true);
+SELECT set_config('shifaa.action','transitionDependent',true);
+SELECT set_config('shifaa.factor_amr_at','2026-08-25T09:55:00Z',true);
 
 SELECT set_config('shifaa.aal','1',true);
 DO $$ BEGIN

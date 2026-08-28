@@ -157,6 +157,11 @@ export async function buildApp(
           repository: new PostgresIdentityContinuityService(
             repository,
             config.identityEncryptionKey,
+            config.environment === 'test'
+              ? 'ci'
+              : config.environment === 'production'
+                ? 'production'
+                : 'local',
           ),
           allowedWebOrigins: new Set(config.corsOrigins),
           hmacKey: config.preauthHmacKey,

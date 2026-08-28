@@ -136,6 +136,9 @@ function requestContext(request: FastifyRequest): ContinuityRequestContext {
     ...(typeof request.headers['sec-fetch-site'] === 'string'
       ? { fetchSite: request.headers['sec-fetch-site'] }
       : {}),
+    ...(typeof request.headers['x-purpose'] === 'string'
+      ? { purpose: request.headers['x-purpose'] }
+      : {}),
   };
 }
 
@@ -269,7 +272,7 @@ export async function registerIdentityContinuityRoutes(
       },
       preValidation: validateBody('beginMfaEnrollment'),
     },
-    (request, reply) => {
+    async (request, reply) => {
       const context = requestContext(request);
       const token = context.accessToken ?? 'missing-access-token';
       rateLimit(limiter, reply, 'beginMfaEnrollment', token, 3, 60 * 60_000);
@@ -413,7 +416,7 @@ export async function registerIdentityContinuityRoutes(
       },
       preValidation: validateBody('transitionDependent'),
     },
-    (request, reply) => {
+    async (request, reply) => {
       const context = requestContext(request);
       const token = context.accessToken ?? 'missing-access-token';
       const body = request.body as TransitionRequest;
@@ -425,19 +428,15 @@ export async function registerIdentityContinuityRoutes(
         body.action === 'decide' ? 30 : 3,
         body.action === 'decide' ? 60 * 60_000 : 24 * 60 * 60_000,
       );
-      return idempotentMutation(
-        request,
-        reply,
-        dependencies,
-        scopedPrincipal('transitionDependent', token, dependencies.hmacKey),
-        () =>
-          dependencies.service.transitionDependent(
-            context,
-            (request.params as { relationshipId: string }).relationshipId,
-            body,
-            expectedVersion(request),
-          ),
+      const transition = await dependencies.service.transitionDependent(
+        context,
+        (request.params as { relationshipId: string }).relationshipId,
+        body,
+        expectedVersion(request),
       );
+      return reply
+        .headers({ ...responseHeaders(request), etag: `"${transition.version}"` })
+        .send(transition);
     },
   );
 }

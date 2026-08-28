@@ -292,30 +292,126 @@ $$;
 CREATE TRIGGER continuity_case_guard BEFORE UPDATE ON identity.continuity_cases
 FOR EACH ROW EXECUTE FUNCTION identity.guard_continuity_case();
 
-CREATE OR REPLACE FUNCTION platform.approve_dependent_transition(
-  p_case_id uuid,p_expected_version integer,p_reason_code text
+CREATE OR REPLACE FUNCTION platform.submit_dependent_transition(
+  p_relationship_id uuid,p_verification_case_id uuid,p_expected_version integer
+) RETURNS identity.continuity_cases
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,identity,platform AS $$
+DECLARE case_row identity.continuity_cases%ROWTYPE;
+DECLARE relationship_row identity.care_relationships%ROWTYPE;
+DECLARE patient_row identity.patients%ROWTYPE;
+DECLARE subject_row identity.people%ROWTYPE;
+DECLARE proof_reviewer_id uuid;
+BEGIN
+  IF platform.context_action()<>'transitionDependent' OR platform.context_role()<>'PAT' THEN
+    RAISE EXCEPTION 'subject transition context required' USING ERRCODE='42501';
+  END IF;
+  SELECT * INTO relationship_row FROM identity.care_relationships WHERE id=p_relationship_id FOR UPDATE;
+  IF NOT FOUND OR relationship_row.relationship_type<>'guardianship' OR relationship_row.status<>'active'
+     THEN RAISE EXCEPTION 'active guardianship required' USING ERRCODE='42501'; END IF;
+  SELECT * INTO patient_row FROM identity.patients WHERE id=relationship_row.subject_patient_id FOR UPDATE;
+  SELECT * INTO subject_row FROM identity.people WHERE id=patient_row.person_id FOR UPDATE;
+  IF subject_row.id IS DISTINCT FROM platform.context_person_id()
+     OR NOT identity.transition_eligible_on(subject_row.birth_date,(platform.context_now() AT TIME ZONE 'Africa/Cairo')::date)
+     THEN RAISE EXCEPTION 'transition not eligible' USING ERRCODE='42501'; END IF;
+  SELECT coalesce(vc.assigned_reviewer_person_id,vc.reviewer_person_id) INTO proof_reviewer_id
+  FROM identity.verification_cases vc
+  JOIN identity.identities i ON i.id=vc.identity_id
+  WHERE vc.id=p_verification_case_id AND vc.state='verified' AND vc.decided_at IS NOT NULL
+    AND i.person_id=subject_row.id AND i.verification_status='verified'
+    AND (i.expires_on IS NULL OR i.expires_on>=(platform.context_now() AT TIME ZONE 'Africa/Cairo')::date)
+  FOR SHARE OF vc,i;
+  IF proof_reviewer_id IS NULL OR proof_reviewer_id IN (subject_row.id,relationship_row.actor_person_id)
+     OR NOT EXISTS(
+       SELECT 1 FROM identity.admin_role_grants g
+       WHERE g.person_id=proof_reviewer_id AND g.role_code='support_admin' AND g.status='active'
+         AND g.valid_from<=platform.context_now()
+         AND (g.valid_until IS NULL OR g.valid_until>platform.context_now())
+     ) THEN RAISE EXCEPTION 'released proof and independent support assignment required' USING ERRCODE='42501'; END IF;
+  SELECT * INTO case_row FROM identity.continuity_cases
+  WHERE relationship_id=p_relationship_id AND case_type='dependent_transition'
+    AND status IN ('proof_required','review_required','human_review_required') FOR UPDATE;
+  IF NOT FOUND THEN
+    IF p_expected_version<>1 THEN RAISE EXCEPTION 'version conflict' USING ERRCODE='40001'; END IF;
+    INSERT INTO identity.continuity_cases(
+      case_type,subject_person_id,subject_patient_id,relationship_id,status
+    ) VALUES (
+      'dependent_transition',subject_row.id,patient_row.id,relationship_row.id,'proof_required'
+    ) RETURNING * INTO case_row;
+  ELSIF case_row.version<>p_expected_version OR case_row.status<>'proof_required' THEN
+    RAISE EXCEPTION 'version conflict' USING ERRCODE='40001';
+  END IF;
+  UPDATE identity.continuity_cases SET verification_case_id=p_verification_case_id,
+    assigned_reviewer_person_id=proof_reviewer_id,status='review_required'
+  WHERE id=case_row.id RETURNING * INTO case_row;
+  RETURN case_row;
+END
+$$;
+
+CREATE OR REPLACE FUNCTION platform.decide_dependent_transition(
+  p_relationship_id uuid,p_expected_version integer,p_decision text,p_reason_code text,
+  p_review_required_reason text
 ) RETURNS identity.continuity_cases
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,identity,platform AS $$
 DECLARE case_row identity.continuity_cases%ROWTYPE;
 DECLARE relationship_row identity.care_relationships%ROWTYPE;
 DECLARE patient_person_id uuid;
 BEGIN
-  SELECT * INTO case_row FROM identity.continuity_cases WHERE id=p_case_id FOR UPDATE;
-  IF NOT FOUND OR case_row.case_type<>'dependent_transition' THEN RAISE EXCEPTION 'transition case unavailable' USING ERRCODE='P0002'; END IF;
+  IF platform.context_action()<>'transitionDependent' THEN
+    RAISE EXCEPTION 'transition decision context required' USING ERRCODE='42501';
+  END IF;
+  SELECT * INTO case_row FROM identity.continuity_cases
+  WHERE relationship_id=p_relationship_id AND case_type='dependent_transition' FOR UPDATE;
+  IF NOT FOUND THEN RAISE EXCEPTION 'transition case unavailable' USING ERRCODE='P0002'; END IF;
   IF case_row.version<>p_expected_version THEN RAISE EXCEPTION 'version conflict' USING ERRCODE='40001'; END IF;
-  IF case_row.status NOT IN ('review_required','human_review_required') THEN RAISE EXCEPTION 'state transition invalid' USING ERRCODE='23514'; END IF;
-  IF case_row.status='human_review_required' AND case_row.review_required_reason_code IS NOT NULL THEN RAISE EXCEPTION 'human review blocker unresolved' USING ERRCODE='23514'; END IF;
+  IF case_row.status NOT IN ('review_required','human_review_required') THEN
+    RAISE EXCEPTION 'state transition invalid' USING ERRCODE='23514';
+  END IF;
+  IF NOT EXISTS(
+    SELECT 1 FROM identity.admin_role_grants g
+    WHERE g.person_id=platform.context_person_id() AND g.role_code='support_admin' AND g.status='active'
+      AND g.valid_from<=platform.context_now()
+      AND (g.valid_until IS NULL OR g.valid_until>platform.context_now())
+  ) THEN RAISE EXCEPTION 'active support assignment required' USING ERRCODE='42501'; END IF;
   SELECT * INTO relationship_row FROM identity.care_relationships WHERE id=case_row.relationship_id FOR UPDATE;
-  IF NOT FOUND OR relationship_row.relationship_type<>'guardianship' OR relationship_row.status<>'active'
-     OR relationship_row.subject_patient_id<>case_row.subject_patient_id THEN RAISE EXCEPTION 'active guardianship required' USING ERRCODE='42501'; END IF;
+  IF platform.context_role()<>'ADM-SUPPORT' OR platform.context_aal()<2
+     OR 'guardianship_review'<>ALL(platform.context_purposes())
+     OR case_row.assigned_reviewer_person_id IS DISTINCT FROM platform.context_person_id()
+     OR platform.context_person_id() IN (case_row.subject_person_id,relationship_row.actor_person_id)
+     OR platform.context_factor_amr_at() IS NULL
+     OR platform.context_now()-platform.context_factor_amr_at()>interval '300 seconds'
+     OR platform.context_factor_amr_at()>platform.context_now() THEN
+    RAISE EXCEPTION 'assigned independent fresh AAL2 reviewer required' USING ERRCODE='42501';
+  END IF;
   SELECT p.person_id INTO patient_person_id FROM identity.patients p WHERE p.id=case_row.subject_patient_id FOR UPDATE;
   PERFORM 1 FROM identity.people p WHERE p.id=case_row.subject_person_id FOR UPDATE;
-  IF patient_person_id IS DISTINCT FROM case_row.subject_person_id THEN RAISE EXCEPTION 'same patient/person record required' USING ERRCODE='23514'; END IF;
-  UPDATE identity.continuity_cases SET status='approved',reviewer_person_id=platform.context_person_id(),
+  IF patient_person_id IS DISTINCT FROM case_row.subject_person_id THEN
+    RAISE EXCEPTION 'same patient/person record required' USING ERRCODE='23514';
+  END IF;
+  IF p_decision='defer' THEN
+    IF p_review_required_reason NOT IN ('interdiction','court_order','dispute') THEN
+      RAISE EXCEPTION 'controlling blocker required' USING ERRCODE='23514';
+    END IF;
+    UPDATE identity.continuity_cases SET status='human_review_required',
+      review_required_reason_code=p_review_required_reason
+    WHERE id=case_row.id RETURNING * INTO case_row;
+    RETURN case_row;
+  END IF;
+  IF p_decision NOT IN ('approve','reject') THEN
+    RAISE EXCEPTION 'decision invalid' USING ERRCODE='23514';
+  END IF;
+  UPDATE identity.continuity_cases SET status=CASE p_decision WHEN 'approve' THEN 'approved' ELSE 'rejected' END,
+    review_required_reason_code=NULL,reviewer_person_id=platform.context_person_id(),
     decision_reason_code=p_reason_code,decided_at=platform.context_now()
-    WHERE id=p_case_id RETURNING * INTO case_row;
-  UPDATE identity.care_relationships SET status='revoked',revoked_by_person_id=platform.context_person_id(),
-    revoked_at=platform.context_now(),decision_reason_code=p_reason_code WHERE id=relationship_row.id;
+  WHERE id=case_row.id RETURNING * INTO case_row;
+  IF p_decision='approve' THEN
+    IF relationship_row.relationship_type<>'guardianship' OR relationship_row.status<>'active'
+       OR relationship_row.subject_patient_id<>case_row.subject_patient_id THEN
+      RAISE EXCEPTION 'active guardianship required' USING ERRCODE='42501';
+    END IF;
+    UPDATE identity.care_relationships SET status='revoked',
+      revoked_by_person_id=platform.context_person_id(),revoked_at=platform.context_now(),
+      decision_reason_code=p_reason_code WHERE id=relationship_row.id;
+  END IF;
   RETURN case_row;
 END
 $$;
@@ -323,11 +419,13 @@ $$;
 REVOKE ALL ON FUNCTION platform.context_action(),platform.context_case_id(),platform.context_session_id(),
   platform.context_factor_amr_at(),platform.context_now(),identity.transition_eligible_on(date,date),
   platform.purge_expired_continuity_decoys(timestamptz),platform.person_matches_auth_user(uuid,uuid),
-  platform.approve_dependent_transition(uuid,integer,text)
+  platform.submit_dependent_transition(uuid,uuid,integer),
+  platform.decide_dependent_transition(uuid,integer,text,text,text)
 FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION platform.context_action(),platform.context_case_id(),platform.context_session_id(),
   platform.context_factor_amr_at(),platform.context_now(),identity.transition_eligible_on(date,date),
-  platform.person_matches_auth_user(uuid,uuid),platform.approve_dependent_transition(uuid,integer,text)
+  platform.person_matches_auth_user(uuid,uuid),platform.submit_dependent_transition(uuid,uuid,integer),
+  platform.decide_dependent_transition(uuid,integer,text,text,text)
 TO shifaa_api;
 GRANT EXECUTE ON FUNCTION platform.purge_expired_continuity_decoys(timestamptz) TO shifaa_worker;
 

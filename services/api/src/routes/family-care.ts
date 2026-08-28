@@ -49,6 +49,8 @@ const pageQuery = {
     cursor: { type: 'string', minLength: 1 },
     limit: { type: 'integer', minimum: 1, maximum: 100 },
     status: { type: 'string' },
+    mode: { type: 'string', enum: ['guardianship_review', 'dependent_transition'] },
+    includeDependentTransition: { type: 'boolean' },
   },
 } as const;
 

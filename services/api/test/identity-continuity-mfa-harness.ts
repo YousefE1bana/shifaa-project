@@ -145,6 +145,7 @@ export async function buildMfaHarness(runtime: SupabaseStatus): Promise<MfaHarne
   const continuityRepository = new PostgresIdentityContinuityService(
     repository,
     Buffer.alloc(32, 10),
+    'ci',
   );
   const authAdapter = new SupabaseAuthIssuer({
     url: runtime.API_URL,

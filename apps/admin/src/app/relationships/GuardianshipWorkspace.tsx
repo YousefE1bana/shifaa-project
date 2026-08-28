@@ -1,9 +1,17 @@
 'use client';
 
 import { FamilyCareApiError, FamilyCareClient } from '@shifaa/api-client/family-care';
-import type { PermissionCode } from '@shifaa/contracts/family-care';
+import { IdentityContinuityApiError } from '@shifaa/api-client/identity-continuity';
+import type {
+  DependentTransitionWorklistItem,
+  PermissionCode,
+} from '@shifaa/contracts/family-care';
+import { color, radius, spacing } from '@shifaa/design-system/tokens';
+import { privilegedAccessState } from '@shifaa/design-system/security/privileged-access-policy';
 import { translate } from '@shifaa/i18n';
 import React, { useEffect, useMemo, useState } from 'react';
+
+import { AdminTransitionApi } from '../../identity-continuity-api';
 
 type Locale = 'ar-EG' | 'en-EG';
 type CaseProjection = {
@@ -35,6 +43,11 @@ export function GuardianshipWorkspace() {
   const [selectedId, setSelectedId] = useState('');
   const [reason, setReason] = useState('');
   const [state, setState] = useState<UiState>('loading');
+  const [transitions, setTransitions] = useState<DependentTransitionWorklistItem[]>([]);
+  const [selectedTransitionId, setSelectedTransitionId] = useState('');
+  const [transitionState, setTransitionState] = useState('review_required');
+  const [amrAgeSeconds, setAmrAgeSeconds] = useState(300);
+  const accessToken = 'synthetic-admin:support_admin:40000000-0000-4000-8000-000000000006';
   useEffect(() => {
     document.documentElement.lang = locale;
     document.documentElement.dir = locale === 'ar-EG' ? 'rtl' : 'ltr';
@@ -43,9 +56,17 @@ export function GuardianshipWorkspace() {
     () =>
       new FamilyCareClient({
         baseUrl: process.env['NEXT_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000',
-        accessToken: 'synthetic-admin:support_admin:40000000-0000-4000-8000-000000000006',
+        accessToken,
         acceptLanguage: locale,
         defaultHeaders: { 'X-AAL': '2', 'X-Purpose': 'guardianship_review' },
+      }),
+    [locale],
+  );
+  const transitionClient = useMemo(
+    () =>
+      new AdminTransitionApi({
+        locale,
+        accessToken: () => accessToken,
       }),
     [locale],
   );
@@ -66,6 +87,22 @@ export function GuardianshipWorkspace() {
   useEffect(() => {
     void load();
   }, [client]);
+  const loadTransitions = async () => {
+    try {
+      const value = await transitionClient.listAssignedTransitions();
+      setTransitions([...value.items]);
+      setSelectedTransitionId(value.items[0]?.transitionCaseId ?? '');
+      setTransitionState(value.items[0]?.status ?? 'review_required');
+    } catch (error: unknown) {
+      const status = error instanceof FamilyCareApiError ? error.status : 0;
+      setTransitionState(
+        status === 401 ? 'aal-required' : status === 403 ? 'purpose-required' : 'error',
+      );
+    }
+  };
+  useEffect(() => {
+    void loadTransitions();
+  }, [transitionClient]);
   const selected = cases.find((item) => item.id === selectedId);
   const decide = async (decision: 'approved' | 'rejected') => {
     if (!selected || reason.trim().length < 3) return;
@@ -89,6 +126,35 @@ export function GuardianshipWorkspace() {
     } catch (error: unknown) {
       const status = error instanceof FamilyCareApiError ? error.status : 0;
       setState(status === 409 ? 'conflict' : status === 403 ? 'self-denied' : 'error');
+    }
+  };
+  const selectedTransition = transitions.find(
+    (item) => item.transitionCaseId === selectedTransitionId,
+  );
+  const stepUpState = privilegedAccessState({
+    authAvailable: true,
+    aal: 'aal2',
+    amrAgeSeconds,
+    purpose: 'guardianship_review',
+    reason,
+  });
+  const decideTransition = async (decision: 'approve' | 'reject' | 'defer') => {
+    if (!selectedTransition || stepUpState !== 'allowed') return;
+    try {
+      const result = await transitionClient.decideTransition(
+        selectedTransition.relationshipId,
+        { action: 'decide', decision, reasonCode: reason.trim() },
+        selectedTransition.continuityCaseVersion,
+      );
+      setTransitionState(result.status);
+      await loadTransitions();
+    } catch (error: unknown) {
+      if (error instanceof IdentityContinuityApiError && error.status === 409) {
+        setTransitionState('version-conflict');
+        await loadTransitions();
+      } else {
+        setTransitionState('error');
+      }
     }
   };
   const stateText: Record<UiState, string> = {
@@ -187,6 +253,100 @@ export function GuardianshipWorkspace() {
           </p>
         </section>
       </div>
+      <section
+        aria-labelledby="dependent-transition-review"
+        style={{ ...styles.card, marginBlockStart: spacing.lg }}
+      >
+        <h2 id="dependent-transition-review">
+          {locale === 'ar-EG'
+            ? 'مراجعة انتقال التابع المعيّنة'
+            : 'Assigned dependent transition review'}
+        </h2>
+        <p>
+          {locale === 'ar-EG'
+            ? 'تعرض هذه القائمة الحالات المعيّنة لك فقط. القرار لا يقرر الأهلية القانونية.'
+            : 'This worklist shows only cases assigned to you. It presents review state, not a legal conclusion.'}
+        </p>
+        <label htmlFor="amr-age">
+          {locale === 'ar-EG' ? 'عمر تحقق AMR بالثواني' : 'AMR age in seconds'}
+        </label>
+        <input
+          id="amr-age"
+          type="number"
+          min={0}
+          value={amrAgeSeconds}
+          onChange={(event) => setAmrAgeSeconds(Number(event.target.value))}
+          style={styles.control}
+        />
+        <div style={styles.grid}>
+          <div
+            role="list"
+            aria-label={
+              locale === 'ar-EG' ? 'حالات الانتقال المعيّنة' : 'Assigned transition cases'
+            }
+          >
+            {transitions.map((item) => (
+              <button
+                key={item.transitionCaseId}
+                role="listitem"
+                aria-pressed={selectedTransitionId === item.transitionCaseId}
+                onClick={() => setSelectedTransitionId(item.transitionCaseId)}
+                style={styles.caseButton}
+              >
+                <b>{item.status}</b>
+                <span>
+                  {item.proofState} · {item.reviewState}
+                </span>
+                <span>
+                  {item.blockerState} · v{item.continuityCaseVersion}
+                </span>
+              </button>
+            ))}
+          </div>
+          <div>
+            <p>
+              {selectedTransition?.status === 'human_review_required'
+                ? locale === 'ar-EG'
+                  ? 'مراجعة بشرية مطلوبة'
+                  : 'Human review required'
+                : locale === 'ar-EG'
+                  ? 'مراجعة مستقلة مطلوبة'
+                  : 'Independent review required'}
+            </p>
+            <p>
+              {locale === 'ar-EG'
+                ? 'حالات القرار: approved / rejected'
+                : 'Decision states: approved / rejected'}
+            </p>
+            <div style={{ display: 'flex', gap: spacing.sm, flexWrap: 'wrap' }}>
+              <button
+                disabled={stepUpState !== 'allowed'}
+                onClick={() => void decideTransition('approve')}
+                style={styles.button}
+              >
+                {translate(locale, 'admin.approve')}
+              </button>
+              <button
+                disabled={stepUpState !== 'allowed'}
+                onClick={() => void decideTransition('reject')}
+                style={styles.danger}
+              >
+                {translate(locale, 'admin.reject')}
+              </button>
+              <button
+                disabled={stepUpState !== 'allowed'}
+                onClick={() => void decideTransition('defer')}
+                style={styles.button}
+              >
+                {locale === 'ar-EG' ? 'إحالة للمراجعة البشرية' : 'Defer to human review'}
+              </button>
+            </div>
+            <p role="status" aria-live="polite">
+              {transitionState} · {stepUpState}
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
@@ -195,9 +355,12 @@ const styles: Record<string, React.CSSProperties> = {
   main: {
     minHeight: '100vh',
     padding: 'clamp(16px,4vw,56px)',
-    background: '#f4f9fc',
-    color: '#102a43',
-    fontFamily: "Cairo, 'Noto Sans Arabic', system-ui",
+    background: color.canvas,
+    color: color.ink,
+    fontFamily: "'IBM Plex Sans Arabic', Inter, system-ui, sans-serif",
+    fontSize: 16,
+    lineHeight: '24px',
+    fontWeight: 400,
   },
   grid: {
     display: 'grid',
@@ -205,8 +368,13 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 24,
     marginBlockStart: 24,
   },
-  card: { border: '1px solid #bcccdc', borderRadius: 18, background: '#fff', padding: 24 },
-  control: { minHeight: 44, marginInlineStart: 8 },
+  card: {
+    border: `1px solid ${color.border}`,
+    borderRadius: radius.card,
+    background: color.surface,
+    padding: spacing.lg,
+  },
+  control: { minHeight: 44, marginInlineStart: spacing.sm },
   caseButton: {
     display: 'grid',
     width: '100%',
@@ -214,9 +382,9 @@ const styles: Record<string, React.CSSProperties> = {
     minHeight: 72,
     textAlign: 'start',
     padding: 14,
-    background: '#edf6fa',
-    border: '2px solid #075985',
-    borderRadius: 10,
+    background: color.surfaceSubtle,
+    border: `2px solid ${color.brand}`,
+    borderRadius: radius.control,
   },
   textarea: { width: '100%', minHeight: 120, marginBlock: 10, font: 'inherit' },
   button: {
@@ -224,8 +392,8 @@ const styles: Record<string, React.CSSProperties> = {
     paddingInline: 18,
     borderRadius: 10,
     border: 0,
-    background: '#075985',
-    color: '#fff',
+    background: color.brand,
+    color: color.inverse,
     font: 'inherit',
     fontWeight: 700,
   },
@@ -233,9 +401,9 @@ const styles: Record<string, React.CSSProperties> = {
     minHeight: 48,
     paddingInline: 18,
     borderRadius: 10,
-    border: '2px solid #b42318',
-    background: '#fff',
-    color: '#b42318',
+    border: `2px solid ${color.danger}`,
+    background: color.surface,
+    color: color.danger,
     font: 'inherit',
     fontWeight: 700,
   },

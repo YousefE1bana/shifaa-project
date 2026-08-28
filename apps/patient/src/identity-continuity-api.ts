@@ -1,4 +1,5 @@
 import { IdentityContinuityClient } from '@shifaa/api-client/identity-continuity';
+import { FamilyCareClient } from '@shifaa/api-client/family-care';
 import {
   MemoryAccessTokenStore,
   NativeFactorSummaryReader,
@@ -18,7 +19,9 @@ import type {
   RecoveryResult,
   StartRecoveryRequest,
   VerifyEnrollmentRequest,
+  TransitionResult,
 } from '@shifaa/contracts/identity-continuity';
+import type { RelationshipsPageWithTransition } from '@shifaa/contracts/family-care';
 
 import { patientOnboardingApi } from './identity-onboarding-api';
 
@@ -217,6 +220,66 @@ export class PatientMfaApi implements PatientMfaApiPort {
     if (!response.ok)
       throw new Error(response.status === 401 ? 'authentication-required' : 'auth-degraded');
     return response.json();
+  }
+}
+
+export class PatientTransitionApi {
+  public constructor(
+    private readonly options: {
+      locale: 'ar-EG' | 'en-EG';
+      accessToken?: () => string | undefined;
+      fetch?: typeof globalThis.fetch;
+      apiBaseUrl?: string;
+    },
+  ) {}
+
+  public async read(patientId: string): Promise<RelationshipsPageWithTransition> {
+    assertIdentityContinuityOnline();
+    return this.familyClient().listRelationships(patientId, { includeDependentTransition: true });
+  }
+
+  public async submitProof(
+    relationshipId: string,
+    verificationCaseId: string,
+    continuityCaseVersion: number,
+  ): Promise<TransitionResult> {
+    assertIdentityContinuityOnline();
+    return (await this.identityClient().transitionDependent(
+      relationshipId,
+      { action: 'submit_proof', verificationCaseId },
+      continuityCaseVersion,
+      mutationKey('transition-proof'),
+    )) as TransitionResult;
+  }
+
+  private familyClient(): FamilyCareClient {
+    return new FamilyCareClient({
+      baseUrl: this.baseUrl(),
+      accessToken: this.requireAccessToken(),
+      acceptLanguage: this.options.locale,
+      ...(this.options.fetch ? { fetch: this.options.fetch } : {}),
+    });
+  }
+
+  private identityClient(): IdentityContinuityClient {
+    return new IdentityContinuityClient({
+      baseUrl: this.baseUrl(),
+      accessToken: () => this.requireAccessToken(),
+      acceptLanguage: this.options.locale,
+      ...(this.options.fetch ? { fetch: this.options.fetch } : {}),
+    });
+  }
+
+  private baseUrl(): string {
+    return (
+      this.options.apiBaseUrl ?? process.env['EXPO_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000'
+    );
+  }
+
+  private requireAccessToken(): string {
+    const accessToken = this.options.accessToken?.() ?? patientOnboardingApi.readAccessToken();
+    if (!accessToken) throw new Error('authentication-required');
+    return accessToken;
   }
 }
 

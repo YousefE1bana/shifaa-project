@@ -28,6 +28,7 @@ export interface IdentityContinuityClientOptions {
   acceptLanguage?: 'ar-EG' | 'en-EG';
   csrfToken?: () => string | undefined;
   origin?: string;
+  defaultHeaders?: Readonly<Record<string, string>>;
 }
 
 export class IdentityContinuityApiError extends Error {
@@ -107,6 +108,7 @@ export class IdentityContinuityClient {
       'Accept-Language': this.options.acceptLanguage ?? 'ar-EG',
       'Content-Type': 'application/json',
       'Idempotency-Key': key,
+      ...(this.options.defaultHeaders ?? {}),
     });
     if (!controls.anonymous) {
       const accessToken = this.options.accessToken?.();
