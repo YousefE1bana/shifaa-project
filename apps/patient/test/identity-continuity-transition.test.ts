@@ -4,6 +4,10 @@ import test from 'node:test';
 
 const screen = fs.readFileSync(new URL('../app/relationships.tsx', import.meta.url), 'utf8');
 const api = fs.readFileSync(new URL('../src/identity-continuity-api.ts', import.meta.url), 'utf8');
+const shared = fs.readFileSync(
+  new URL('../../../packages/design-system/src/security/SecurityExperience.tsx', import.meta.url),
+  'utf8',
+);
 
 test('patient relationships opts into the existing transition summary and generated mutation', () => {
   for (const token of [
@@ -37,7 +41,8 @@ test('patient transition renders every frozen bilingual UI state without age cou
     'minimumTargetSize',
     'patientPrimaryTargetSize',
   ]) {
-    assert.match(screen, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    assert.match(`${screen}\n${shared}`, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }
+  assert.match(screen, /SecurityStatusBanner/);
   assert.doesNotMatch(screen, /countdown|automatic transfer|legal capacity|الأهلية القانونية/i);
 });

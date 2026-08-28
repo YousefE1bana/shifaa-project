@@ -4,6 +4,10 @@ import test from 'node:test';
 
 const screen = fs.readFileSync(new URL('../app/mfa.tsx', import.meta.url), 'utf8');
 const api = fs.readFileSync(new URL('../src/identity-continuity-api.ts', import.meta.url), 'utf8');
+const shared = fs.readFileSync(
+  new URL('../../../packages/design-system/src/security/SecurityExperience.tsx', import.meta.url),
+  'utf8',
+);
 
 test('patient MFA uses generated mutations and a minimum read-only native factor port', () => {
   for (const token of [
@@ -37,7 +41,7 @@ test('patient MFA keeps one-time enrollment material in component memory and exp
     'confirmOptionalLastFactor',
     'mfa.pendingExpired',
     'mfa.pendingExisting',
-    'problemStatus(error) === 410',
+    'problem.status === 410',
     'mfa.lastRequired',
     'mfa.rate',
     'mfa.offline',
@@ -45,8 +49,11 @@ test('patient MFA keeps one-time enrollment material in component memory and exp
     'minimumTargetSize',
     'patientPrimaryTargetSize',
   ]) {
-    assert.match(screen, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    assert.match(`${screen}\n${shared}`, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }
+  assert.match(screen, /SecurityStatusBanner/);
+  assert.match(screen, /SecurityDestructiveConfirmation/);
+  assert.match(screen, /BidiSafeText/);
   assert.doesNotMatch(screen, /router\.(push|replace).*secret|searchParams.*secret|href=.*secret/i);
   assert.doesNotMatch(screen, /https?:\/\/.*qr|qrcode|qrserver/i);
 });

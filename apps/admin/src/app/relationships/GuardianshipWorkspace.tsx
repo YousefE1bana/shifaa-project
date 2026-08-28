@@ -8,6 +8,10 @@ import type {
 } from '@shifaa/contracts/family-care';
 import { color, radius, spacing } from '@shifaa/design-system/tokens';
 import { privilegedAccessState } from '@shifaa/design-system/security/privileged-access-policy';
+import {
+  securityMutationAllowed,
+  useSecurityConnection,
+} from '@shifaa/design-system/security/reconciliation';
 import { translate } from '@shifaa/i18n';
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -47,6 +51,7 @@ export function GuardianshipWorkspace() {
   const [selectedTransitionId, setSelectedTransitionId] = useState('');
   const [transitionState, setTransitionState] = useState('review_required');
   const [amrAgeSeconds, setAmrAgeSeconds] = useState(300);
+  const connection = useSecurityConnection();
   const accessToken = 'synthetic-admin:support_admin:40000000-0000-4000-8000-000000000006';
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -93,6 +98,7 @@ export function GuardianshipWorkspace() {
       setTransitions([...value.items]);
       setSelectedTransitionId(value.items[0]?.transitionCaseId ?? '');
       setTransitionState(value.items[0]?.status ?? 'review_required');
+      connection.markReconciled();
     } catch (error: unknown) {
       const status = error instanceof FamilyCareApiError ? error.status : 0;
       setTransitionState(
@@ -102,7 +108,7 @@ export function GuardianshipWorkspace() {
   };
   useEffect(() => {
     void loadTransitions();
-  }, [transitionClient]);
+  }, [transitionClient, connection.reconnectVersion]);
   const selected = cases.find((item) => item.id === selectedId);
   const decide = async (decision: 'approved' | 'rejected') => {
     if (!selected || reason.trim().length < 3) return;
@@ -139,7 +145,19 @@ export function GuardianshipWorkspace() {
     reason,
   });
   const decideTransition = async (decision: 'approve' | 'reject' | 'defer') => {
-    if (!selectedTransition || stepUpState !== 'allowed') return;
+    if (
+      !selectedTransition ||
+      stepUpState !== 'allowed' ||
+      !securityMutationAllowed({
+        online: connection.online,
+        reconciliationRequired: connection.reconciliationRequired,
+        sessionCurrent: stepUpState === 'allowed',
+        authorityCurrent: transitions.some(
+          (transition) => transition.transitionCaseId === selectedTransition.transitionCaseId,
+        ),
+      })
+    )
+      return;
     try {
       const result = await transitionClient.decideTransition(
         selectedTransition.relationshipId,

@@ -40,6 +40,8 @@ const allowedMetricLabels = new Set([
   'status_class',
   'outcome',
   'actor_type',
+  'surface',
+  'state',
 ]);
 export const metricLabels = (labels: Record<string, string>) =>
   Object.fromEntries(
@@ -52,3 +54,26 @@ export const findSentinels = (value: unknown, sentinels: readonly string[]) => {
   const encoded = JSON.stringify(value);
   return sentinels.filter((sentinel) => encoded.includes(sentinel));
 };
+
+export type IdentityContinuityTelemetry = Readonly<{
+  requestId: string;
+  traceId: string;
+  surface: 'session' | 'mfa' | 'recovery' | 'transition' | 'step_up' | 'worker';
+  state: 'current' | 'offline' | 'reconciling' | 'denied' | 'completed' | 'failed';
+  outcome: 'allowed' | 'blocked' | 'retry' | 'dead_letter' | 'delivered';
+}>;
+
+export function identityContinuityTelemetry(input: IdentityContinuityTelemetry) {
+  return {
+    event: 'identity.continuity.state',
+    requestId: input.requestId,
+    traceId: input.traceId,
+    surface: input.surface,
+    state: input.state,
+    outcome: input.outcome,
+  };
+}
+
+export function identityContinuityMetricLabels(input: IdentityContinuityTelemetry) {
+  return metricLabels({ surface: input.surface, state: input.state, outcome: input.outcome });
+}

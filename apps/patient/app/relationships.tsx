@@ -2,10 +2,14 @@ import type { DelegablePermissionCode } from '@shifaa/contracts/family-care';
 import type { PatientDependentTransitionSummary } from '@shifaa/contracts/family-care';
 import {
   color,
+  mapSecurityProblem,
   minimumTargetSize,
   patientPrimaryTargetSize,
+  SecurityStatusBanner,
+  securityMutationAllowed,
   semanticStyles,
   spacing,
+  useSecurityConnection,
 } from '@shifaa/design-system';
 import { directionFor, translate } from '@shifaa/i18n';
 import { useLocalSearchParams } from 'expo-router';
@@ -55,6 +59,7 @@ export default function RelationshipsScreen() {
   useEffect(() => setInvitation(consumeInvitationFragment()), []);
   const patientId = params.patientId ?? syntheticFamilyIds.selfPatient;
   const client = useMemo(() => createPatientFamilyClient(locale), [locale]);
+  const connection = useSecurityConnection();
   const [state, setState] = useState<UiState>('idle');
   const [delegatePersonId, setDelegatePersonId] = useState<string>(
     syntheticFamilyIds.delegatePerson,
@@ -83,15 +88,25 @@ export default function RelationshipsScreen() {
       const page = await transitionClient.read(patientId);
       setTransition(page.dependentTransition);
       setTransitionUiState(page.dependentTransition.status);
+      connection.markReconciled();
     } catch {
       setTransitionUiState('error');
     }
   };
   useEffect(() => {
     void refreshTransition();
-  }, [transitionClient, patientId]);
+  }, [transitionClient, patientId, connection.reconnectVersion]);
   const run = async (work: () => Promise<unknown>) => {
     try {
+      if (
+        !securityMutationAllowed({
+          online: connection.online,
+          reconciliationRequired: connection.reconciliationRequired,
+          sessionCurrent: !connection.reconciliationRequired,
+          authorityCurrent: transitionUiState !== 'error',
+        })
+      )
+        throw new Error('offline-no-queue');
       assertOnline();
       setState('loading');
       const value = await work();
@@ -127,6 +142,7 @@ export default function RelationshipsScreen() {
       !verificationCaseId.trim()
     )
       return;
+    if (connection.reconciliationRequired) return setTransitionUiState('error');
     try {
       assertIdentityContinuityOnline();
       const value = await transitionClient.submitProof(
@@ -139,9 +155,7 @@ export default function RelationshipsScreen() {
       );
       await refreshTransition();
     } catch (error: unknown) {
-      const status =
-        typeof error === 'object' && error && 'status' in error ? Number(error.status) : 0;
-      setTransitionUiState(status === 409 ? 'conflict' : 'error');
+      setTransitionUiState(mapSecurityProblem(error).state === 'conflict' ? 'conflict' : 'error');
     }
   };
   const transitionText = {
@@ -207,9 +221,18 @@ export default function RelationshipsScreen() {
         <Text style={{ fontSize: 22, fontWeight: '700', color: color.ink }}>
           {locale === 'ar-EG' ? 'انتقال صلاحية التابع' : 'Dependent authority transition'}
         </Text>
-        <Text accessibilityRole="alert" accessibilityLiveRegion="polite">
-          {transitionText}
-        </Text>
+        <SecurityStatusBanner
+          tone={
+            transitionUiState === 'approved'
+              ? 'success'
+              : transitionUiState === 'conflict' || transitionUiState === 'error'
+                ? 'danger'
+                : 'information'
+          }
+          title={transitionText}
+          direction={directionFor(locale)}
+          focusKey={transitionUiState}
+        />
         <Text>
           {locale === 'ar-EG'
             ? 'لا يغيّر بلوغ عمر معيّن الوصول بذاته. يلزم إثبات الهوية ومراجعة بشرية موثقة.'

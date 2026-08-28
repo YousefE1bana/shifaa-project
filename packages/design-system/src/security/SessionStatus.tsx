@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RouteStatePanel } from '../EmergencyFoundation.tsx';
+import { SecurityStatusBanner } from './SecurityExperience.tsx';
 
 export type SessionStatusState = 'expired' | 'degraded' | 'offline';
 
@@ -20,13 +20,14 @@ export function SessionStatus({
   direction: 'rtl' | 'ltr';
 }) {
   return (
-    <RouteStatePanel
+    <SecurityStatusBanner
+      tone={state === 'offline' ? 'offline' : 'danger'}
       title={title}
       detail={detail}
-      assertive={state !== 'offline'}
       actionLabel={actionLabel}
       onAction={onAction}
       direction={direction}
+      focusKey={state}
     />
   );
 }

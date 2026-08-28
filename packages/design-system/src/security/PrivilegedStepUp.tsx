@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View } from 'react-native';
 
-import { RouteStatePanel } from '../EmergencyFoundation.tsx';
+import { SecurityStatusBanner } from './SecurityExperience.tsx';
 import {
   privilegedAccessState,
   type PrivilegedAccessContext,
@@ -47,12 +47,13 @@ export function PrivilegedStepUpBoundary({
 
   if (state !== 'allowed') {
     return (
-      <RouteStatePanel
+      <SecurityStatusBanner
+        tone="danger"
         title={messages[state]}
-        assertive
         actionLabel={messages.action}
         onAction={onLoginOrVerifyOtp}
         direction={direction}
+        focusKey={state}
       />
     );
   }

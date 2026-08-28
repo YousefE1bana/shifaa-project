@@ -593,13 +593,35 @@ BEGIN
           AND (e.payload->>'recipientPersonId') ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
           THEN (e.payload->>'recipientPersonId')::uuid
         WHEN e.event_type='identity.recovery.completed' THEN recovery_case.subject_person_id
+        WHEN e.event_type IN ('identity.transition.submitted','identity.transition.decided')
+          THEN transition_case.subject_person_id
         ELSE NULL
       END recipient_person_id
     FROM platform.outbox_events e
     LEFT JOIN identity.continuity_cases recovery_case
       ON e.event_type='identity.recovery.completed' AND recovery_case.id=e.aggregate_id
       AND recovery_case.case_type='account_recovery' AND recovery_case.status='completed'
-    WHERE e.event_type IN ('identity.factor.changed','identity.recovery.completed')
+    LEFT JOIN identity.continuity_cases transition_case
+      ON e.event_type IN ('identity.transition.submitted','identity.transition.decided')
+      AND transition_case.id=e.aggregate_id AND transition_case.case_type='dependent_transition'
+    WHERE e.event_type IN (
+      'identity.factor.changed','identity.recovery.completed',
+      'identity.transition.submitted','identity.transition.decided'
+    )
+      AND EXISTS(
+        SELECT 1 FROM consent.processing_inventory inventory
+        WHERE inventory.process_code='identity-continuity-synthetic' AND inventory.status='active'
+      )
+      AND NOT EXISTS(
+        SELECT 1 FROM platform.outbox_events earlier
+        WHERE earlier.aggregate_type=e.aggregate_type AND earlier.aggregate_id=e.aggregate_id
+          AND earlier.event_type IN (
+            'identity.factor.changed','identity.recovery.completed',
+            'identity.transition.submitted','identity.transition.decided'
+          )
+          AND earlier.aggregate_version<e.aggregate_version
+          AND earlier.state NOT IN ('delivered','dead_letter')
+      )
       AND (e.state='pending' OR (e.state='processing' AND e.lease_expires_at<statement_timestamp()))
       AND e.available_at<=statement_timestamp()
     ORDER BY e.available_at,e.created_at,e.id
@@ -635,7 +657,10 @@ BEGIN
   UPDATE platform.outbox_events
   SET state=next_state,available_at=COALESCE(p_retry_at,available_at),last_error_code=p_safe_error_code,
     lease_owner=NULL,lease_expires_at=NULL,updated_at=statement_timestamp()
-  WHERE id=p_event_id AND event_type IN ('identity.factor.changed','identity.recovery.completed') AND state='processing'
+  WHERE id=p_event_id AND event_type IN (
+      'identity.factor.changed','identity.recovery.completed',
+      'identity.transition.submitted','identity.transition.decided'
+    ) AND state='processing'
     AND lease_owner=p_worker_id AND lease_expires_at>statement_timestamp();
   GET DIAGNOSTICS changed=ROW_COUNT;
   IF changed=1 AND p_outcome IN ('delivered','dead_letter') THEN

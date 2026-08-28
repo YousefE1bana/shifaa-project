@@ -1,10 +1,16 @@
 import {
   color,
+  BidiSafeText,
   localizedType,
+  mapSecurityProblem,
   minimumTargetSize,
   patientPrimaryTargetSize,
+  SecurityDestructiveConfirmation,
+  SecurityStatusBanner,
+  securityMutationAllowed,
   semanticStyles,
   spacing,
+  useSecurityConnection,
 } from '@shifaa/design-system';
 import { directionFor, isolateLtr, translate, type Locale } from '@shifaa/i18n';
 import { Image } from 'expo-image';
@@ -37,47 +43,23 @@ type MfaUiState =
   | 'auth-degraded'
   | 'error';
 
-function problemCode(error: unknown): string {
-  if (error instanceof Error && error.message === 'offline-no-queue') return 'offline-no-queue';
-  if (
-    error instanceof Error &&
-    ['auth-degraded', 'authentication-required'].includes(error.message)
-  )
-    return error.message;
-  if (error && typeof error === 'object' && 'problem' in error) {
-    const problem = (error as { problem?: unknown }).problem;
-    if (problem && typeof problem === 'object' && 'code' in problem) {
-      return String((problem as { code?: unknown }).code ?? '');
-    }
-  }
-  return '';
-}
-
-function problemStatus(error: unknown): number | undefined {
-  if (error && typeof error === 'object' && 'status' in error) {
-    const status = (error as { status?: unknown }).status;
-    return typeof status === 'number' ? status : undefined;
-  }
-  return undefined;
-}
-
 function stateForProblem(error: unknown): MfaUiState {
-  switch (problemCode(error)) {
-    case 'offline-no-queue':
+  const problem = mapSecurityProblem(error);
+  switch (problem.code) {
+    case 'factor-enrollment-pending':
+      return problem.status === 410 ? 'expired' : 'pending-existing';
+    case 'last-factor-removal-denied':
+      return 'last-required';
+  }
+  switch (problem.state) {
+    case 'offline':
       return 'offline';
     case 'rate-limited':
       return 'rate';
-    case 'factor-enrollment-pending':
-      return problemStatus(error) === 410 ? 'expired' : 'pending-existing';
-    case 'last-factor-removal-denied':
-      return 'last-required';
-    case 'mfa-step-up-required':
-    case 'identity-proof-required':
+    case 'step-up-required':
       return 'step-up';
-    case 'authentication-required':
-    case 'session-revoked':
+    case 'session-expired':
       return 'session-expired';
-    case 'vendor-unavailable':
     case 'auth-degraded':
       return 'auth-degraded';
     default:
@@ -128,7 +110,8 @@ export default function MfaRoute({
   api?: PatientMfaApiPort;
 }) {
   const locale = usePatientLocale(localeOverride);
-  const online = onlineOverride ?? (typeof navigator === 'undefined' ? true : navigator.onLine);
+  const connection = useSecurityConnection(onlineOverride);
+  const { online } = connection;
   const api = useMemo(() => apiOverride ?? new PatientMfaApi({ locale }), [apiOverride, locale]);
   const [factors, setFactors] = useState<readonly NativeFactorSummary[]>([]);
   const [enrollment, setEnrollment] = useState<EnrollmentSecretResult>();
@@ -138,7 +121,6 @@ export default function MfaRoute({
   const [confirmingFactorId, setConfirmingFactorId] = useState<string>();
   const [state, setState] = useState<MfaUiState>('loading');
   const [nowMs, setNowMs] = useState(Date.now());
-  const statusRef = useRef<{ focus?: () => void } | null>(null);
   const removalActionRef = useRef<{ focus?: () => void } | null>(null);
   const busy = state === 'loading';
 
@@ -150,6 +132,7 @@ export default function MfaRoute({
     try {
       assertIdentityContinuityOnline();
       setFactors(await api.listFactors());
+      connection.markReconciled();
       setState(nextState);
     } catch (error) {
       setState(stateForProblem(error));
@@ -158,17 +141,13 @@ export default function MfaRoute({
 
   useEffect(() => {
     void loadFactors();
-  }, [api, online]);
+  }, [api, online, connection.reconnectVersion]);
 
   useEffect(() => {
     if (!enrollment) return undefined;
     const timer = setInterval(() => setNowMs(Date.now()), 1_000);
     return () => clearInterval(timer);
   }, [enrollment]);
-
-  useEffect(() => {
-    if (!['ready', 'pending'].includes(state)) statusRef.current?.focus?.();
-  }, [state]);
 
   const expiresInSeconds = enrollment
     ? Math.max(0, Math.ceil((Date.parse(enrollment.expiresAt) - nowMs) / 1_000))
@@ -184,6 +163,17 @@ export default function MfaRoute({
   }, [enrollment, expiresInSeconds]);
 
   const beginEnrollment = async () => {
+    if (
+      !securityMutationAllowed({
+        online,
+        reconciliationRequired: connection.reconciliationRequired,
+        sessionCurrent: state !== 'session-expired' && state !== 'auth-degraded',
+        authorityCurrent: true,
+      })
+    ) {
+      setState(online ? 'auth-degraded' : 'offline');
+      return;
+    }
     if (!online) {
       setState('offline');
       return;
@@ -206,6 +196,7 @@ export default function MfaRoute({
   };
 
   const verifyEnrollment = async () => {
+    if (connection.reconciliationRequired) return setState('auth-degraded');
     if (!enrollment || expiresInSeconds === 0) {
       setState('expired');
       return;
@@ -227,6 +218,7 @@ export default function MfaRoute({
   };
 
   const removeFactor = async (factorId: string) => {
+    if (connection.reconciliationRequired) return setState('auth-degraded');
     try {
       assertIdentityContinuityOnline();
       setState('loading');
@@ -251,32 +243,23 @@ export default function MfaRoute({
   return (
     <PatientScreen locale={locale} title="mfa.title" current={0} critical>
       {message ? (
-        <View
-          accessibilityRole="alert"
-          accessibilityLiveRegion={state === 'offline' ? 'polite' : 'assertive'}
-          aria-live={state === 'offline' ? 'polite' : 'assertive'}
-          style={{ ...semanticStyles.card, gap: spacing.sm }}
-        >
-          <Text
-            ref={statusRef as never}
-            accessible
-            accessibilityRole="header"
-            style={{ ...bodyType, color: color.ink, direction }}
-          >
-            {message}
-          </Text>
-          {state !== 'loading' && state !== 'success' ? (
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => void loadFactors()}
-              style={{ ...semanticStyles.primaryAction, minHeight: patientPrimaryTargetSize }}
-            >
-              <Text style={{ ...labelType, color: color.inverse, textAlign: 'center' }}>
-                {translate(locale, 'state.retry')}
-              </Text>
-            </Pressable>
-          ) : null}
-        </View>
+        <SecurityStatusBanner
+          tone={
+            state === 'success'
+              ? 'success'
+              : state === 'offline'
+                ? 'offline'
+                : state === 'loading'
+                  ? 'information'
+                  : 'danger'
+          }
+          title={message}
+          direction={direction}
+          focusKey={state}
+          {...(state !== 'loading' && state !== 'success'
+            ? { actionLabel: translate(locale, 'state.retry'), onAction: () => void loadFactors() }
+            : {})}
+        />
       ) : null}
 
       <View style={{ ...semanticStyles.card, gap: spacing.md, direction }}>
@@ -319,46 +302,20 @@ export default function MfaRoute({
                     </Text>
                   </Pressable>
                 ) : (
-                  <View
-                    accessibilityRole="alert"
-                    accessibilityLiveRegion="polite"
-                    style={{ gap: spacing.sm }}
-                  >
-                    <Text style={{ ...bodyType, color: color.danger }}>
-                      {translate(locale, 'mfa.removeConfirm')} {factorName}
-                    </Text>
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-                      <Pressable
-                        accessibilityRole="button"
-                        disabled={busy || !online}
-                        onPress={() => void removeFactor(factor.id)}
-                        style={{ ...semanticStyles.destructiveAction, flexGrow: 1 }}
-                      >
-                        <Text style={{ ...labelType, color: color.inverse, textAlign: 'center' }}>
-                          {translate(locale, 'mfa.removeConfirmAction')}
-                        </Text>
-                      </Pressable>
-                      <Pressable
-                        accessibilityRole="button"
-                        onPress={() => {
-                          setConfirmingFactorId(undefined);
-                          removalActionRef.current?.focus?.();
-                        }}
-                        style={{
-                          minHeight: minimumTargetSize,
-                          borderWidth: 1,
-                          borderColor: color.border,
-                          paddingInline: spacing.lg,
-                          justifyContent: 'center',
-                          flexGrow: 1,
-                        }}
-                      >
-                        <Text style={{ ...labelType, color: color.ink, textAlign: 'center' }}>
-                          {translate(locale, 'mfa.cancel')}
-                        </Text>
-                      </Pressable>
-                    </View>
-                  </View>
+                  <SecurityDestructiveConfirmation
+                    title={translate(locale, 'mfa.remove')}
+                    resourceLabel={factorName}
+                    consequence={translate(locale, 'mfa.removeConfirm')}
+                    confirmLabel={translate(locale, 'mfa.removeConfirmAction')}
+                    cancelLabel={translate(locale, 'mfa.cancel')}
+                    direction={direction}
+                    disabled={busy || !online}
+                    onConfirm={() => void removeFactor(factor.id)}
+                    onCancel={() => {
+                      setConfirmingFactorId(undefined);
+                      removalActionRef.current?.focus?.();
+                    }}
+                  />
                 )}
               </View>
             );
@@ -432,13 +389,7 @@ export default function MfaRoute({
           <Text style={{ ...labelType, color: color.ink }}>
             {translate(locale, 'mfa.manualSecret')}
           </Text>
-          <Text
-            selectable
-            accessibilityLabel={translate(locale, 'mfa.manualSecret')}
-            style={{ ...bodyType, color: color.ink, direction: 'ltr', textAlign: 'left' }}
-          >
-            {isolateLtr(enrollment.secret)}
-          </Text>
+          <BidiSafeText text={isolateLtr(enrollment.secret)} direction={direction} />
           <Text
             accessibilityLiveRegion="polite"
             aria-live="polite"

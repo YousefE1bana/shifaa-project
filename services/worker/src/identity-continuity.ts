@@ -7,9 +7,13 @@ import type { MessagingAdapter, MessagingResult } from './privacy-dsr-notificati
 
 export const FACTOR_CHANGED_TEMPLATE_CODE = 'IDENTITY_FACTOR_CHANGED';
 export const RECOVERY_COMPLETED_TEMPLATE_CODE = 'IDENTITY_RECOVERY_COMPLETED';
-const notificationFields = ['action_time', 'support_action'] as const;
+export const TRANSITION_SUBMITTED_TEMPLATE_CODE = 'IDENTITY_TRANSITION_SUBMITTED';
+export const TRANSITION_DECIDED_TEMPLATE_CODE = 'IDENTITY_TRANSITION_DECIDED';
+const securityFields = ['action_time', 'support_action'] as const;
+const transitionFields = ['action_time', 'case_status'] as const;
 const factorPayloadFields = ['action_time', 'recipientPersonId', 'support_action'] as const;
 const recoveryPayloadFields = ['action_time', 'support_action'] as const;
+const transitionPayloadFields = ['action_time', 'case_status'] as const;
 const prohibited = /(?:otp|token|password|credential|proof|factor|handle|email|phone|diagnos|phi)/i;
 const placeholder = /\{\{([a-z][a-z0-9_]*)\}\}/g;
 const syntheticAddressAlias = /^SYNTHETIC-[0-9a-f]{64}$/;
@@ -17,7 +21,11 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 
 type IdentityEvent = {
   event_id: string;
-  event_type: 'identity.factor.changed' | 'identity.recovery.completed';
+  event_type:
+    | 'identity.factor.changed'
+    | 'identity.recovery.completed'
+    | 'identity.transition.submitted'
+    | 'identity.transition.decided';
   payload: Record<string, unknown>;
   attempt_count: number;
   recipient_person_id: string | null;
@@ -58,10 +66,15 @@ export function projectIdentityNotification(input: {
 }) {
   assertIdentityPayload(input.event);
   assertIdentityTemplate(input.event.event_type, input.template);
-  const fields = {
-    action_time: String(input.event.payload.action_time),
-    support_action: String(input.event.payload.support_action),
-  };
+  const fields = input.event.event_type.startsWith('identity.transition.')
+    ? {
+        action_time: String(input.event.payload.action_time),
+        case_status: String(input.event.payload.case_status),
+      }
+    : {
+        action_time: String(input.event.payload.action_time),
+        support_action: String(input.event.payload.support_action),
+      };
   const renderedBody = (
     input.event.locale === 'ar-EG' ? input.template.arabic_body : input.template.english_body
   ).replace(placeholder, (_whole, field: string) => fields[field as keyof typeof fields] ?? '');
@@ -221,9 +234,16 @@ export class PostgresIdentityNotificationProcessor {
 }
 
 function templateCodeFor(eventType: IdentityEvent['event_type']): string {
-  return eventType === 'identity.factor.changed'
-    ? FACTOR_CHANGED_TEMPLATE_CODE
-    : RECOVERY_COMPLETED_TEMPLATE_CODE;
+  switch (eventType) {
+    case 'identity.factor.changed':
+      return FACTOR_CHANGED_TEMPLATE_CODE;
+    case 'identity.recovery.completed':
+      return RECOVERY_COMPLETED_TEMPLATE_CODE;
+    case 'identity.transition.submitted':
+      return TRANSITION_SUBMITTED_TEMPLATE_CODE;
+    case 'identity.transition.decided':
+      return TRANSITION_DECIDED_TEMPLATE_CODE;
+  }
 }
 
 function notificationOutcome(
@@ -247,7 +267,11 @@ function assertIdentityPayload(
   >,
 ): void {
   const expected =
-    event.event_type === 'identity.factor.changed' ? factorPayloadFields : recoveryPayloadFields;
+    event.event_type === 'identity.factor.changed'
+      ? factorPayloadFields
+      : event.event_type === 'identity.recovery.completed'
+        ? recoveryPayloadFields
+        : transitionPayloadFields;
   if (Object.keys(event.payload).toSorted().join(',') !== [...expected].toSorted().join(','))
     throw new Error('identity-notification-payload-denied');
   if (
@@ -284,18 +308,21 @@ function assertIdentityTemplate(
     template.allowed_recipient_types[0] !== 'patient'
   )
     throw new Error('identity-notification-template-governance-invalid');
+  const expectedFields = eventType.startsWith('identity.transition.')
+    ? transitionFields
+    : securityFields;
   const fields = Object.keys(template.allowed_field_schema.properties).toSorted();
   const required = [...template.allowed_field_schema.required].toSorted();
   if (
-    JSON.stringify(fields) !== JSON.stringify([...notificationFields].toSorted()) ||
-    JSON.stringify(required) !== JSON.stringify([...notificationFields].toSorted()) ||
+    JSON.stringify(fields) !== JSON.stringify([...expectedFields].toSorted()) ||
+    JSON.stringify(required) !== JSON.stringify([...expectedFields].toSorted()) ||
     fields.some((field) => template.allowed_field_schema.properties[field]?.type !== 'string') ||
     prohibited.test(`${template.arabic_body}\n${template.english_body}`)
   )
     throw new Error('identity-notification-template-governance-invalid');
   for (const body of [template.arabic_body, template.english_body]) {
     const fieldsInBody = [...body.matchAll(placeholder)].map((match) => match[1]!).toSorted();
-    if (JSON.stringify(fieldsInBody) !== JSON.stringify([...notificationFields].toSorted()))
+    if (JSON.stringify(fieldsInBody) !== JSON.stringify([...expectedFields].toSorted()))
       throw new Error('identity-notification-template-governance-invalid');
   }
 }

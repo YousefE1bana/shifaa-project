@@ -1,10 +1,18 @@
-import { color, semanticStyles, spacing, type } from '@shifaa/design-system';
+import {
+  color,
+  mapSecurityProblem,
+  SecurityStatusBanner,
+  semanticStyles,
+  spacing,
+  type,
+  useSecurityConnection,
+} from '@shifaa/design-system';
 import { directionFor, translate, type Locale } from '@shifaa/i18n';
 import { Link } from 'expo-router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 
-import { FieldLabel, PatientScreen, StatusMessage } from '../src/PatientScreen';
+import { FieldLabel, PatientScreen } from '../src/PatientScreen';
 import {
   assertIdentityContinuityOnline,
   PatientRecoveryApi,
@@ -50,14 +58,10 @@ function stateMessage(locale: Locale, state: RecoveryState): string | undefined 
 }
 
 function stateForError(error: unknown): RecoveryState {
-  const code =
-    error && typeof error === 'object' && 'problem' in error
-      ? (error as { problem?: { code?: unknown } }).problem?.code
-      : undefined;
-  if (error instanceof Error && error.message === 'offline-no-queue') return 'offline';
-  if (code === 'rate-limited') return 'rate';
-  if (code === 'recovery-challenge-invalid' || code === 'idempotency-replay-expired')
-    return 'expired';
+  const problem = mapSecurityProblem(error);
+  if (problem.state === 'offline') return 'offline';
+  if (problem.state === 'rate-limited') return 'rate';
+  if (problem.state === 'expired') return 'expired';
   return 'failed';
 }
 
@@ -71,7 +75,8 @@ export default function RecoveryRoute({
   api?: PatientRecoveryApiPort;
 }) {
   const locale = usePatientLocale(localeOverride);
-  const online = onlineOverride ?? (typeof navigator === 'undefined' ? true : navigator.onLine);
+  const connection = useSecurityConnection(onlineOverride);
+  const { online } = connection;
   const api = useMemo(
     () => apiOverride ?? new PatientRecoveryApi({ locale }),
     [apiOverride, locale],
@@ -86,7 +91,10 @@ export default function RecoveryRoute({
 
   useEffect(() => {
     if (online || state === 'completed') {
-      if (online && state === 'offline') setState('request');
+      if (online && state === 'offline') {
+        connection.markReconciled();
+        setState('request');
+      }
       return;
     }
     caseRef.current = undefined;
@@ -95,7 +103,7 @@ export default function RecoveryRoute({
     setVerificationCaseId('');
     setNewCredential('');
     setState('offline');
-  }, [online, state]);
+  }, [online, state, connection.reconnectVersion]);
 
   const start = async () => {
     if (!online) return setState('offline');
@@ -142,7 +150,22 @@ export default function RecoveryRoute({
 
   return (
     <PatientScreen locale={locale} title="recovery.title" current={0} critical>
-      {message ? <StatusMessage text={message} /> : null}
+      {message ? (
+        <SecurityStatusBanner
+          tone={
+            state === 'completed'
+              ? 'success'
+              : state === 'offline'
+                ? 'offline'
+                : state === 'accepted' || state === 'pending'
+                  ? 'information'
+                  : 'warning'
+          }
+          title={message}
+          direction={direction}
+          focusKey={state}
+        />
+      ) : null}
       <View style={{ ...semanticStyles.card, gap: spacing.md, direction }}>
         <FieldLabel>{translate(locale, 'recovery.handle')}</FieldLabel>
         <TextInput
