@@ -8,7 +8,13 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp, type AppHarness } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
 
-type Status = { API_URL: string; ANON_KEY: string; SERVICE_ROLE_KEY: string; MAILPIT_URL: string };
+type Status = {
+  API_URL: string;
+  ANON_KEY: string;
+  SERVICE_ROLE_KEY: string;
+  MAILPIT_URL: string;
+  DB_URL: string;
+};
 let status: Status;
 let first: AppHarness;
 let second: AppHarness;
@@ -92,10 +98,45 @@ describe.sequential('002 Supabase runtime', () => {
     const verification = await first.app.inject({
       method: 'POST',
       url: '/v1/auth/otp/verify',
-      headers: mutationHeaders('runtime-verify-00001'),
+      headers: {
+        ...mutationHeaders('runtime-verify-00001'),
+        origin: 'http://127.0.0.1:8081',
+        'sec-fetch-site': 'same-origin',
+      },
       payload: { challenge_id: registration.json().challenge_id, code: await otpFor(email) },
     });
     expect(verification.statusCode).toBe(200);
+    expect(verification.headers['set-cookie']).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('shifaa_refresh='),
+        expect.stringContaining('shifaa_csrf='),
+      ]),
+    );
+    const verificationReplay = await first.app.inject({
+      method: 'POST',
+      url: '/v1/auth/otp/verify',
+      headers: {
+        ...mutationHeaders('runtime-verify-00001'),
+        origin: 'http://127.0.0.1:8081',
+        'sec-fetch-site': 'same-origin',
+      },
+      payload: { challenge_id: registration.json().challenge_id, code: await otpFor(email) },
+    });
+    expect(verificationReplay.headers['set-cookie']).toEqual(verification.headers['set-cookie']);
+    const idempotencySql = postgres(status.DB_URL, { max: 1 });
+    try {
+      const [stored] = await idempotencySql<{ response_headers: string }[]>`
+        select response_headers::text from platform.idempotency_records
+        where idempotency_key='runtime-verify-00001' and route='/v1/auth/otp/verify'`;
+      expect(stored?.response_headers).toContain('aes-256-gcm-v1');
+      expect(stored?.response_headers).not.toContain('shifaa_refresh');
+      expect(stored?.response_headers).not.toContain('shifaa_csrf');
+      for (const cookie of verification.headers['set-cookie'] as string[]) {
+        expect(stored?.response_headers).not.toContain(cookie.split(';', 1)[0]);
+      }
+    } finally {
+      await idempotencySql.end({ timeout: 5 });
+    }
     token = verification.json().access_token;
     const profile = await first.app.inject({
       method: 'GET',

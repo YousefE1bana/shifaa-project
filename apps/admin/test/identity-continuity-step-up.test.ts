@@ -8,6 +8,7 @@ const shell = fs.readFileSync(
   new URL('../src/app/SecurityStepUpShell.tsx', import.meta.url),
   'utf8',
 );
+const layout = fs.readFileSync(new URL('../src/app/layout.tsx', import.meta.url), 'utf8');
 
 test('admin shell denies incomplete privileged context and resumes through existing auth flow', () => {
   const base = {
@@ -25,4 +26,5 @@ test('admin shell denies incomplete privileged context and resumes through exist
   assert.match(shell, /onLoginOrVerifyOtp/);
   assert.match(shell, /onResumeIntendedAction/);
   assert.doesNotMatch(shell, /fetch\(|new IdentityContinuityClient|stepUpMfa|\/auth\/mfa\/step/);
+  assert.match(layout, /SecurityStepUpShell/);
 });

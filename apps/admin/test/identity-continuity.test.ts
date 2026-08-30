@@ -17,6 +17,6 @@ test('admin security surfaces require current assigned authority after reconnect
   assert.match(relationships, /markReconciled/);
   assert.match(relationships, /securityMutationAllowed/);
   assert.match(relationships, /transitionCaseId === selectedTransition.transitionCaseId/);
-  assert.match(shell, /PrivilegedStepUpBoundary/);
+  assert.match(shell, /PrivilegedStepUpWebBoundary/);
   assert.doesNotMatch(`${relationships}\n${shell}`, /queueMutation|backgroundSync|localStorage/);
 });

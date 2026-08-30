@@ -11,6 +11,7 @@
     "./family-context": "./src/FamilyContextBanner.tsx",
     "./security/session-status": "./src/security/SessionStatus.tsx",
     "./security/privileged-step-up": "./src/security/PrivilegedStepUp.tsx",
+    "./security/privileged-step-up-web": "./src/security/PrivilegedStepUpWeb.tsx",
     "./security/privileged-access-policy": "./src/security/privileged-access-policy.ts",
     "./security/experience": "./src/security/SecurityExperience.tsx",
     "./security/problem-mapping": "./src/security/problem-mapping.ts",

@@ -1,6 +1,6 @@
 {
   "feature": "007-identity-continuity-sessions-mfa-recovery",
-  "generated_at": "2026-08-30T05:53:12+03:00",
+  "generated_at": "2026-08-30T18:12:05+03:00",
   "lifecycle": "IMPLEMENTED_VERIFIED_PENDING_PR_CHECKS_AND_OWNER_MERGE",
   "task_state": {
     "complete": "T001-T048",
@@ -74,7 +74,7 @@
     "performance": ["evidence/performance.json"],
     "ui_accessibility": ["evidence/live-qa.md", "evidence/live/", "evidence/t037-ui/"],
     "operations": ["../../../infra/runbooks/identity-continuity.md"],
-    "final_analysis": ["evidence/final-analysis.md"],
+    "final_analysis": ["evidence/final-analysis.md", "evidence/pr236-review-remediation.md"],
     "final_verification": ["evidence/verification.md"]
   },
   "production_open_gates": [

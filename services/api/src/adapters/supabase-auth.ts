@@ -109,6 +109,7 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
     return {
       subjectId: verified.subjectId,
       accessToken: data.session.access_token,
+      refreshToken: data.session.refresh_token,
       aal: verified.aal,
       sessionId: verified.sessionId,
     };
@@ -196,11 +197,7 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
     return { enrollmentId: data.id, secret: data.totp.secret, qrUri: data.totp.qr_code };
   }
 
-  public async verifyTotp(
-    accessToken: string,
-    enrollmentId: string,
-    code: string,
-  ): Promise<NativeFactorSummary> {
+  public async verifyTotp(accessToken: string, enrollmentId: string, code: string) {
     const client = this.createUserClient(accessToken);
     const challenge = await client.auth.mfa.challenge({ factorId: enrollmentId });
     if (challenge.error || !challenge.data.id)
@@ -210,13 +207,29 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
       challengeId: challenge.data.id,
       code,
     });
-    if (verified.error)
+    if (verified.error || !verified.data)
       throw new ApiPolicyError('factor-code-invalid', 422, 'The factor code is invalid.');
-    const factors = await this.listFactors(accessToken);
+    const elevated = await this.verifier.verify(verified.data.access_token);
+    if (!elevated)
+      throw new ApiPolicyError(
+        'vendor-unavailable',
+        503,
+        'Elevated native session is unavailable.',
+      );
+    const factors = await this.listFactors(verified.data.access_token);
     const factor = factors.find((entry) => entry.id === enrollmentId);
     if (!factor)
       throw new ApiPolicyError('vendor-unavailable', 503, 'Verified factor is unavailable.');
-    return factor;
+    return {
+      factor,
+      session: {
+        accessToken: verified.data.access_token,
+        refreshToken: verified.data.refresh_token,
+        sessionId: elevated.sessionId,
+        assurance: elevated.aal === 2 ? ('aal2' as const) : ('aal1' as const),
+        expiresAt: new Date(Date.now() + verified.data.expires_in * 1_000).toISOString(),
+      },
+    };
   }
 
   public async unenrollFactor(accessToken: string, factorId: string): Promise<void> {

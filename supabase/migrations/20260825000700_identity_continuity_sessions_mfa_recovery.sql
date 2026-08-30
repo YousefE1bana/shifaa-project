@@ -159,6 +159,10 @@ CREATE OR REPLACE FUNCTION platform.purge_expired_continuity_decoys(p_now timest
 RETURNS integer LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,identity AS $$
 DECLARE removed integer;
 BEGIN
+  UPDATE identity.continuity_cases
+  SET status='expired',updated_at=p_now
+  WHERE case_type='account_recovery' AND subject_person_id IS NULL AND status='requested'
+    AND expires_at<=p_now;
   DELETE FROM identity.continuity_cases
   WHERE case_type='account_recovery' AND subject_person_id IS NULL AND status='expired'
     AND expires_at<=p_now-interval '24 hours';

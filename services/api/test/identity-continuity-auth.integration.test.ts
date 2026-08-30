@@ -151,20 +151,20 @@ async function createVerifiedTotpSession(prefix: string) {
     native.session.access_token,
     'Synthetic authenticator',
   );
-  const factor = await adapter.verifyTotp(
+  const verification = await adapter.verifyTotp(
     native.session.access_token,
     enrollment.enrollmentId,
     currentTotp(enrollment.secret),
   );
-  const challenge = await native.client.auth.mfa.challenge({ factorId: enrollment.enrollmentId });
-  if (challenge.error) throw challenge.error;
-  const verified = await native.client.auth.mfa.verify({
-    factorId: enrollment.enrollmentId,
-    challengeId: challenge.data.id,
-    code: currentTotp(enrollment.secret),
-  });
-  if (verified.error) throw verified.error;
-  return { native, enrollment, factor, verified: verified.data };
+  return {
+    native,
+    enrollment,
+    factor: verification.factor,
+    verified: {
+      access_token: verification.session.accessToken,
+      refresh_token: verification.session.refreshToken!,
+    },
+  };
 }
 
 beforeAll(async () => {

@@ -87,6 +87,14 @@ class RouteService implements IdentityContinuityServicePort {
         createdAt: '2026-08-26T00:00:00.000Z',
       },
       assurance: 'aal2' as const,
+      session: {
+        accessToken,
+        refreshToken,
+        sessionId: ids.session,
+        assurance: 'aal2' as const,
+        expiresAt: '2026-08-26T00:15:00.000Z',
+        restriction: null,
+      },
     });
   }
   public removeMfaFactor() {
@@ -366,9 +374,83 @@ describe('identity continuity exact route contract', () => {
     expect(first.statusCode).toBe(200);
     expect(replay.statusCode).toBe(200);
     expect(service.calls).toBe(1);
-    const changed = await request(`${refreshToken}-changed`);
-    expect(changed.statusCode).toBe(409);
-    expect(changed.json()).toMatchObject({ code: 'idempotency-key-reused' });
+    const changedCredential = await request(`${refreshToken}-changed`);
+    expect(changedCredential.statusCode).toBe(200);
+    expect(service.calls).toBe(2);
+  });
+
+  it('never replays a browser refresh across distinct refresh credentials sharing one key', async () => {
+    const request = (cookieToken: string) =>
+      app.inject({
+        method: 'POST',
+        url: '/v1/auth/session/refresh',
+        headers: {
+          'idempotency-key': key,
+          cookie: `shifaa_refresh=${cookieToken}; shifaa_csrf=synthetic-csrf-token`,
+          'x-csrf-token': 'synthetic-csrf-token',
+          origin: 'http://127.0.0.1:8081',
+          'sec-fetch-site': 'same-origin',
+        },
+        payload: { client: 'web', foregroundEngaged: true },
+      });
+    const first = await request('browser-refresh-credential-a');
+    const second = await request('browser-refresh-credential-b');
+    expect(first.statusCode).toBe(200);
+    expect(second.statusCode).toBe(200);
+    expect(service.calls).toBe(2);
+  });
+
+  it('rotates the browser refresh cookie with the elevated MFA session', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/v1/auth/mfa/enroll/verify',
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        'idempotency-key': key,
+        cookie: `shifaa_refresh=${refreshToken}; shifaa_csrf=synthetic-csrf-token`,
+        'x-csrf-token': 'synthetic-csrf-token',
+        origin: 'http://127.0.0.1:8081',
+        'sec-fetch-site': 'same-origin',
+      },
+      payload: { enrollmentId: ids.factor, code: '123456' },
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.headers['set-cookie']).toContain(`shifaa_refresh=${refreshToken}`);
+    expect(response.json().session).not.toHaveProperty('refreshToken');
+    expect(response.json().session).toMatchObject({ accessToken, assurance: 'aal2' });
+  });
+
+  it('bootstraps browser cookies from the fresh restricted recovery session', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: `/v1/auth/recovery/${ids.case}/complete`,
+      headers: {
+        'idempotency-key': key,
+        origin: 'http://127.0.0.1:8081',
+        'sec-fetch-site': 'same-origin',
+      },
+      payload: {
+        caseToken: 'synthetic-case-token-00000000000000000000',
+        handle: 'subject@synthetic.test',
+        recoveryOtp: '123456',
+        proofMethod: 'bound_factor_independent_method',
+        factorEvidence: '123456',
+        verificationCaseId: null,
+        newCredential: 'Synthetic-Recovery-Replacement-123!',
+      },
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.headers['set-cookie']).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining(`shifaa_refresh=${refreshToken}`),
+        expect.stringContaining('shifaa_csrf='),
+      ]),
+    );
+    expect(response.json().session).not.toHaveProperty('refreshToken');
+    expect(response.json().session).toMatchObject({
+      accessToken,
+      restriction: 'mfa_enrollment_only',
+    });
   });
 
   it.each([

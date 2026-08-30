@@ -134,6 +134,7 @@ export default function RecoveryRoute({
         ...(verificationCaseId ? { verificationCaseId } : { factorEvidence }),
         newCredential,
       });
+      await api.installSession(result.session);
       setState(result.status === 'restricted_enrollment' ? 'restricted' : 'completed');
       setRecoveryOtp('');
       setFactorEvidence('');

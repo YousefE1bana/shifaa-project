@@ -83,6 +83,7 @@ export function assertIdentityContinuityOnline(): void {
 export interface PatientRecoveryApiPort {
   startRecovery(body: StartRecoveryRequest): Promise<RecoveryAccepted>;
   completeRecovery(caseId: string, body: CompleteRecoveryRequest): Promise<RecoveryResult>;
+  installSession(session: RecoveryResult['session']): Promise<void>;
 }
 
 export class PatientRecoveryApi implements PatientRecoveryApiPort {
@@ -91,6 +92,7 @@ export class PatientRecoveryApi implements PatientRecoveryApiPort {
       locale: 'ar-EG' | 'en-EG';
       fetch?: typeof globalThis.fetch;
       apiBaseUrl?: string;
+      nativeRefreshTokens?: NativeSecureRefreshStorage;
     },
   ) {}
 
@@ -114,6 +116,12 @@ export class PatientRecoveryApi implements PatientRecoveryApiPort {
     )) as RecoveryResult;
   }
 
+  public async installSession(session: RecoveryResult['session']): Promise<void> {
+    patientOnboardingApi.installAccessToken(session.accessToken);
+    if (session.refreshToken && this.options.nativeRefreshTokens)
+      await this.options.nativeRefreshTokens.write(session.refreshToken);
+  }
+
   private client(): IdentityContinuityClient {
     return new IdentityContinuityClient({
       baseUrl:
@@ -131,6 +139,7 @@ export interface PatientMfaApiPort {
   beginEnrollment(body: BeginEnrollmentRequest): Promise<EnrollmentSecretResult>;
   verifyEnrollment(body: VerifyEnrollmentRequest): Promise<FactorResult>;
   removeFactor(factorId: string, body: RemoveFactorRequest): Promise<FactorRemovalResult>;
+  installSession(session: FactorResult['session']): Promise<void>;
 }
 
 export class PatientMfaApi implements PatientMfaApiPort {
@@ -144,6 +153,7 @@ export class PatientMfaApi implements PatientMfaApiPort {
       apiBaseUrl?: string;
       authBaseUrl?: string;
       publishableKey?: string;
+      nativeRefreshTokens?: NativeSecureRefreshStorage;
     },
   ) {
     this.factorReader = new NativeFactorSummaryReader({
@@ -170,6 +180,12 @@ export class PatientMfaApi implements PatientMfaApiPort {
       body,
       mutationKey('mfa-verify'),
     )) as FactorResult;
+  }
+
+  public async installSession(session: FactorResult['session']): Promise<void> {
+    patientOnboardingApi.installAccessToken(session.accessToken);
+    if (session.refreshToken && this.options.nativeRefreshTokens)
+      await this.options.nativeRefreshTokens.write(session.refreshToken);
   }
 
   public async removeFactor(

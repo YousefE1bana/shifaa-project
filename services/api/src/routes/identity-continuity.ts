@@ -21,6 +21,11 @@ import {
 } from '../modules/identity-continuity/index.js';
 import { ApiPolicyError } from '../modules/identity-onboarding/errors.js';
 import type { IdempotencyStore } from '../platform/idempotency.js';
+import {
+  clearRefreshCookie,
+  setInitialBrowserSessionCookies,
+  setRefreshCookie,
+} from './auth-session-cookies.js';
 
 export const registeredIdentityContinuityOperationIds = [
   'refreshSession',
@@ -150,20 +155,6 @@ function responseHeaders(request: FastifyRequest) {
   };
 }
 
-function setRefreshCookie(reply: FastifyReply, refreshToken: string): void {
-  reply.header(
-    'set-cookie',
-    `${refreshCookieName}=${encodeURIComponent(refreshToken)}; Path=/v1/auth; Max-Age=85500; HttpOnly; Secure; SameSite=Strict`,
-  );
-}
-
-function clearRefreshCookie(reply: FastifyReply): void {
-  reply.header(
-    'set-cookie',
-    `${refreshCookieName}=; Path=/v1/auth; Max-Age=0; HttpOnly; Secure; SameSite=Strict`,
-  );
-}
-
 function rateLimit(
   limiter: HmacRateLimiter,
   reply: FastifyReply,
@@ -227,7 +218,7 @@ export async function registerIdentityContinuityRoutes(
       const stored = await dependencies.idempotency.execute({
         principal: scopedPrincipal(
           'refreshSession-idempotency',
-          context.idempotencyKey,
+          refreshSubject,
           dependencies.hmacKey,
         ),
         method: request.method,
@@ -271,7 +262,7 @@ export async function registerIdentityContinuityRoutes(
         body: request.body,
         prepare: () => dependencies.service.prepareLogout(context, request.body as LogoutRequest),
         work: async (prepared) => ({
-          status: 200,
+          status: 200 as const,
           headers: responseHeaders(request),
           body: await dependencies.service.commitLogout(prepared),
         }),
@@ -312,18 +303,29 @@ export async function registerIdentityContinuityRoutes(
       },
       preValidation: validateBody('verifyMfaEnrollment'),
     },
-    (request, reply) => {
+    async (request, reply) => {
       const context = requestContext(request);
       const body = request.body as VerifyEnrollmentRequest;
       const token = context.accessToken ?? 'missing-access-token';
       rateLimit(limiter, reply, 'verifyMfaEnrollment', body.enrollmentId, 5, 10 * 60_000);
-      return idempotentMutation(
-        request,
-        reply,
-        dependencies,
-        scopedPrincipal('verifyMfaEnrollment', token, dependencies.hmacKey),
-        () => dependencies.service.verifyMfaEnrollment(context, body),
-      );
+      const stored = await dependencies.idempotency.execute({
+        principal: scopedPrincipal('verifyMfaEnrollment', token, dependencies.hmacKey),
+        method: request.method,
+        route: request.routeOptions.url ?? request.url,
+        key: idempotencyKey(request),
+        body: request.body,
+        work: async () => ({
+          status: 200,
+          headers: responseHeaders(request),
+          body: await dependencies.service.verifyMfaEnrollment(context, body),
+        }),
+      });
+      const response = { ...stored.body, session: { ...stored.body.session } };
+      if (context.refreshCookie && response.session.refreshToken) {
+        setRefreshCookie(reply, response.session.refreshToken);
+        delete response.session.refreshToken;
+      }
+      return reply.status(200).headers(stored.headers).send(response);
     },
   );
 
@@ -419,7 +421,12 @@ export async function registerIdentityContinuityRoutes(
           body: await dependencies.service.commitRecoveryCompletion(prepared),
         }),
       });
-      return reply.status(200).headers(stored.headers).send(stored.body);
+      const response = { ...stored.body, session: { ...stored.body.session } };
+      if (context.origin && context.fetchSite === 'same-origin' && response.session.refreshToken) {
+        setInitialBrowserSessionCookies(reply, response.session.refreshToken);
+        delete response.session.refreshToken;
+      }
+      return reply.status(200).headers(stored.headers).send(response);
     },
   );
 

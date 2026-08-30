@@ -40,7 +40,8 @@ INSERT INTO identity.continuity_cases(
   id,case_type,status,public_token_digest,recovery_handle_digest,token_key_version,expires_at,created_at
 ) VALUES
  ('75000000-0000-4000-8000-000000000001','account_recovery','requested',decode(repeat('11',32),'hex'),decode(repeat('12',32),'hex'),1,'2026-08-25T10:15:00Z','2026-08-25T10:00:00Z'),
- ('75000000-0000-4000-8000-000000000002','account_recovery','expired',decode(repeat('22',32),'hex'),decode(repeat('23',32),'hex'),1,'2026-08-23T09:00:00Z','2026-08-23T08:45:00Z');
+ ('75000000-0000-4000-8000-000000000002','account_recovery','requested',decode(repeat('22',32),'hex'),decode(repeat('23',32),'hex'),1,'2026-08-23T09:00:00Z','2026-08-23T08:45:00Z'),
+ ('75000000-0000-4000-8000-000000000004','account_recovery','requested',decode(repeat('24',32),'hex'),decode(repeat('25',32),'hex'),1,'2026-08-25T09:59:00Z','2026-08-25T09:44:00Z');
 
 INSERT INTO identity.continuity_cases(
   id,case_type,subject_person_id,subject_patient_id,relationship_id,status,assigned_reviewer_person_id,created_at
@@ -101,6 +102,9 @@ BEGIN
   IF removed<>1 THEN RAISE EXCEPTION 'expected one old decoy purge, got %',removed; END IF;
   IF NOT EXISTS(SELECT 1 FROM identity.continuity_cases WHERE id='75000000-0000-4000-8000-000000000001') THEN
     RAISE EXCEPTION 'live decoy was purged';
+  END IF;
+  IF (SELECT status FROM identity.continuity_cases WHERE id='75000000-0000-4000-8000-000000000004')<>'expired' THEN
+    RAISE EXCEPTION 'elapsed unbound request was not atomically expired';
   END IF;
 END
 $$;

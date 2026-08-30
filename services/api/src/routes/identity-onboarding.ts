@@ -22,6 +22,7 @@ import {
   type RequestActor,
 } from '../modules/identity-onboarding/index.js';
 import { preauthPrincipal, type IdempotencyStore } from '../platform/idempotency.js';
+import { initialBrowserSessionCookies } from './auth-session-cookies.js';
 
 export const registeredIdentityOnboardingOperationIds = routeCatalog.map(
   ({ operationId }) => operationId,
@@ -181,15 +182,30 @@ export async function registerIdentityOnboardingRoutes(
     { schema: { body: requestSchemas.verifyOtp } },
     async (request, reply) => {
       const body = request.body as OtpVerificationInput;
-      return executePreparedMutation(
-        request,
-        reply,
-        deps,
-        body.challenge_id,
-        200,
-        () => deps.service.prepareOtpVerification(body.challenge_id, body.code),
-        (session) => deps.service.completeOtpVerification(session, request.id),
-      );
+      const result = await deps.idempotency.execute({
+        principal: body.challenge_id,
+        method: request.method,
+        route: request.routeOptions.url ?? request.url,
+        key: idempotencyKey(request),
+        body: request.body,
+        prepare: () => deps.service.prepareOtpVerification(body.challenge_id, body.code),
+        work: async (session) => {
+          const browser =
+            typeof request.headers.origin === 'string' &&
+            request.headers['sec-fetch-site'] === 'same-origin';
+          return {
+            status: 200,
+            headers: {
+              ...noStoreHeaders,
+              ...(browser && session.refreshToken
+                ? { 'set-cookie': initialBrowserSessionCookies(session.refreshToken) }
+                : {}),
+            },
+            body: await deps.service.completeOtpVerification(session, request.id),
+          };
+        },
+      });
+      return reply.status(result.status).headers(result.headers).send(result.body);
     },
   );
 

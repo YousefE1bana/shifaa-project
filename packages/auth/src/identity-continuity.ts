@@ -77,6 +77,11 @@ export interface NativeTotpEnrollment {
   qrUri: string;
 }
 
+export interface NativeTotpVerification {
+  factor: NativeFactorSummary;
+  session: NativeSessionProjection;
+}
+
 export interface VerifiedContinuitySession extends ContinuityClaims {
   expiresAt: number;
 }
@@ -87,7 +92,11 @@ export interface ContinuityAuthPort {
   logout(accessToken: string, scope: 'local' | 'global'): Promise<void>;
   listFactors(accessToken: string): Promise<readonly NativeFactorSummary[]>;
   enrollTotp(accessToken: string, friendlyName?: string): Promise<NativeTotpEnrollment>;
-  verifyTotp(accessToken: string, enrollmentId: string, code: string): Promise<NativeFactorSummary>;
+  verifyTotp(
+    accessToken: string,
+    enrollmentId: string,
+    code: string,
+  ): Promise<NativeTotpVerification>;
   unenrollFactor(accessToken: string, factorId: string): Promise<void>;
   startRecovery(handle: string): Promise<void>;
   redeemRecoveryOtp(handle: string, recoveryOtp: string): Promise<NativeRecoveryOtpSession>;

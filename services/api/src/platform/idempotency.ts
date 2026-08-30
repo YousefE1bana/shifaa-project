@@ -4,7 +4,7 @@ import { ApiPolicyError } from '../modules/identity-onboarding/errors.js';
 
 export interface StoredHttpResult<T = unknown> {
   status: number;
-  headers: Readonly<Record<string, string>>;
+  headers: Readonly<Record<string, string | string[]>>;
   body: T;
 }
 

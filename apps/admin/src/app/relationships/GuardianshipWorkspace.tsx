@@ -51,6 +51,9 @@ export function GuardianshipWorkspace() {
   const [selectedTransitionId, setSelectedTransitionId] = useState('');
   const [transitionState, setTransitionState] = useState('review_required');
   const [amrAgeSeconds, setAmrAgeSeconds] = useState(300);
+  const [transitionBlockerReason, setTransitionBlockerReason] = useState<
+    'interdiction' | 'court_order' | 'dispute'
+  >('dispute');
   const connection = useSecurityConnection();
   const accessToken = 'synthetic-admin:support_admin:40000000-0000-4000-8000-000000000006';
   useEffect(() => {
@@ -161,7 +164,12 @@ export function GuardianshipWorkspace() {
     try {
       const result = await transitionClient.decideTransition(
         selectedTransition.relationshipId,
-        { action: 'decide', decision, reasonCode: reason.trim() },
+        {
+          action: 'decide',
+          decision,
+          reasonCode: reason.trim(),
+          ...(decision === 'defer' ? { reviewRequiredReason: transitionBlockerReason } : {}),
+        },
         selectedTransition.continuityCaseVersion,
       );
       setTransitionState(result.status);
@@ -336,6 +344,27 @@ export function GuardianshipWorkspace() {
                 ? 'حالات القرار: approved / rejected'
                 : 'Decision states: approved / rejected'}
             </p>
+            <label htmlFor="transition-blocker-reason">
+              {locale === 'ar-EG' ? 'سبب الإحالة للمراجعة البشرية' : 'Human-review blocker'}
+            </label>
+            <select
+              id="transition-blocker-reason"
+              value={transitionBlockerReason}
+              onChange={(event) =>
+                setTransitionBlockerReason(
+                  event.target.value as 'interdiction' | 'court_order' | 'dispute',
+                )
+              }
+              style={styles.control}
+            >
+              <option value="interdiction">
+                {locale === 'ar-EG' ? 'حجر قضائي' : 'Interdiction'}
+              </option>
+              <option value="court_order">
+                {locale === 'ar-EG' ? 'أمر محكمة' : 'Court order'}
+              </option>
+              <option value="dispute">{locale === 'ar-EG' ? 'نزاع' : 'Dispute'}</option>
+            </select>
             <div style={{ display: 'flex', gap: spacing.sm, flexWrap: 'wrap' }}>
               <button
                 disabled={stepUpState !== 'allowed'}

@@ -32,3 +32,13 @@ test('privileged boundary restores focus to a programmatically focusable content
   assert.match(source, /tabIndex=\{-1\}/);
   assert.match(source, /onResumeIntendedAction/);
 });
+
+test('web privileged boundary is Next-safe and preserves alert, focus, and target semantics', () => {
+  const source = fs.readFileSync(new URL('./PrivilegedStepUpWeb.tsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(source, /from ['"]react-native['"]/);
+  assert.match(source, /privilegedAccessState/);
+  assert.match(source, /role="alert"/);
+  assert.match(source, /contentRef\.current\?\.focus/);
+  assert.match(source, /minimumTargetSize/);
+  assert.match(source, /onLoginOrVerifyOtp/);
+});

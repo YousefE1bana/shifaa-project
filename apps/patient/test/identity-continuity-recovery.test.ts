@@ -27,6 +27,7 @@ test('patient recovery keeps provider OTP and case material in memory-only anony
     'accessibilityRole="button"',
     'accessibilityRole="link"',
     'href="/mfa"',
+    'installSession(result.session)',
     'autoComplete="one-time-code"',
   ]) {
     assert.match(`${screen}\n${api}`, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));

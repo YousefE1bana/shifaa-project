@@ -92,6 +92,14 @@ export interface PreparedRecoveryCompletion {
   session: SessionResult;
 }
 
+export interface RecoveryResumeMarker {
+  subjectId: string;
+  accessToken: string;
+  restricted: boolean | null;
+  credentialUpdated: boolean;
+  expiresAt: string;
+}
+
 export interface PendingEnrollmentMarker {
   enrollmentId: string;
   expiresAtMs: number;
@@ -136,6 +144,8 @@ export interface ContinuityRepository {
     handleDigest: Uint8Array;
     caseTokenDigest: Uint8Array;
   }): Promise<{ personId: string }>;
+  findRecoveryResumeMarker(caseId: string): Promise<RecoveryResumeMarker | undefined>;
+  saveRecoveryResumeMarker(caseId: string, marker: RecoveryResumeMarker): Promise<void>;
   recoveryProofIsApproved(input: {
     personId: string;
     verificationCaseId: string;

@@ -133,6 +133,11 @@ export class PatientOnboardingApi {
     return this.accessToken;
   }
 
+  public installAccessToken(accessToken: string): void {
+    this.accessToken = accessToken;
+    this.challengeId = undefined;
+  }
+
   private client(): IdentityOnboardingClient {
     return new IdentityOnboardingClient({
       baseUrl: this.baseUrl,

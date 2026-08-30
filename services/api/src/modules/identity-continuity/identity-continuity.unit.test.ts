@@ -8,7 +8,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { StagedNativeCommandCoordinator } from './coordinator.js';
 import { HmacRateLimiter, TransientReplayCipher, scopedPrincipal } from './security.js';
 import { IdentityContinuityService } from './service.js';
-import type { ContinuityAuditInput, ContinuityOutboxInput, ContinuityRepository } from './types.js';
+import type {
+  ContinuityAuditInput,
+  ContinuityOutboxInput,
+  ContinuityRepository,
+  RecoveryResumeMarker,
+} from './types.js';
 
 const subjectId = '71000000-0000-4000-8000-000000000001';
 const sessionId = '71000000-0000-4000-8000-000000000002';
@@ -18,6 +23,8 @@ const now = new Date('2026-08-26T00:00:00.000Z');
 
 class FakeAuth implements ContinuityAuthPort {
   public readonly logoutCalls: Array<'local' | 'global'> = [];
+  public recoveredCredentialCalls = 0;
+  public failRecoveredCredentialOnce = false;
   public aal: 1 | 2 = 1;
   public amr: ReadonlyArray<{ method: string; timestamp: number }> = [];
   public verifiedFactors: Array<{
@@ -33,6 +40,7 @@ class FakeAuth implements ContinuityAuthPort {
   public afterUnenroll: () => void = () => undefined;
   public updatedRecoveredCredentials: string[] = [];
   public recoveryOtpAttempts: Array<{ handle: string; recoveryOtp: string }> = [];
+  public recoveryOtpRedeemed = false;
   public restrictionWasStaged: () => boolean = () => true;
 
   private claims(): VerifiedContinuitySession {
@@ -88,7 +96,16 @@ class FakeAuth implements ContinuityAuthPort {
     };
     this.enrollSecrets.delete(enrollmentId);
     this.verifiedFactors = [...this.verifiedFactors, factor];
-    return factor;
+    return {
+      factor,
+      session: {
+        accessToken: 'synthetic-elevated-access-token',
+        refreshToken: 'synthetic-elevated-refresh-token',
+        sessionId,
+        assurance: 'aal2' as const,
+        expiresAt: '2026-08-26T00:15:00.000Z',
+      },
+    };
   }
   public async unenrollFactor(_token: string, factorId: string) {
     if (!this.verifiedFactors.some((factor) => factor.id === factorId))
@@ -101,16 +118,26 @@ class FakeAuth implements ContinuityAuthPort {
     return Promise.resolve();
   }
   public updateRecoveredCredential() {
+    this.recoveredCredentialCalls += 1;
+    if (this.failRecoveredCredentialOnce) {
+      this.failRecoveredCredentialOnce = false;
+      return Promise.reject(new Error('synthetic Auth credential update interruption'));
+    }
     if (!this.restrictionWasStaged())
       return Promise.reject(new Error('recovery restriction was not staged'));
     return Promise.resolve();
   }
   public redeemRecoveryOtp(handle: string, recoveryOtp: string) {
     this.recoveryOtpAttempts.push({ handle, recoveryOtp });
-    if (handle !== 'patient@synthetic.shifaa.test' || recoveryOtp !== '123456')
+    if (
+      this.recoveryOtpRedeemed ||
+      handle !== 'patient@synthetic.shifaa.test' ||
+      recoveryOtp !== '123456'
+    )
       return Promise.reject(
         Object.assign(new Error('invalid recovery OTP'), { code: 'recovery-challenge-invalid' }),
       );
+    this.recoveryOtpRedeemed = true;
     return Promise.resolve({
       subjectId,
       handle,
@@ -154,6 +181,7 @@ class FakeRepository implements ContinuityRepository {
     subjectId: string;
     handleDigest: Uint8Array;
   }> = [];
+  public readonly recoveryResumeMarkers = new Map<string, RecoveryResumeMarker>();
   public recoveryProofApproved = true;
   public failRecoveryFinalization = false;
   public readonly recoveryFinalizations: Array<{
@@ -168,6 +196,7 @@ class FakeRepository implements ContinuityRepository {
     relationshipId: string;
     expectedVersion: number;
     actorPersonId: string;
+    idempotencyPrincipal: string;
     verificationCaseId?: string;
     decision?: 'approve' | 'reject' | 'defer';
     purpose?: string;
@@ -273,6 +302,16 @@ class FakeRepository implements ContinuityRepository {
   public recoveryProofIsApproved(): Promise<boolean> {
     return Promise.resolve(this.recoveryProofApproved);
   }
+  public findRecoveryResumeMarker(caseId: string): Promise<RecoveryResumeMarker | undefined> {
+    const marker = this.recoveryResumeMarkers.get(caseId);
+    return Promise.resolve(
+      marker && Date.parse(marker.expiresAt) > now.getTime() ? marker : undefined,
+    );
+  }
+  public saveRecoveryResumeMarker(caseId: string, marker: RecoveryResumeMarker): Promise<void> {
+    this.recoveryResumeMarkers.set(caseId, marker);
+    return Promise.resolve();
+  }
   public stageRecoveryRestriction(input: { caseId: string; personId: string }): Promise<void> {
     this.recoveryRestrictionStages.push(input);
     return Promise.resolve();
@@ -288,6 +327,7 @@ class FakeRepository implements ContinuityRepository {
       return Promise.reject(new Error('synthetic recovery finalization interruption'));
     }
     this.recoveryFinalizations.push(input);
+    this.recoveryResumeMarkers.delete(input.caseId);
     return Promise.resolve();
   }
   public submitTransitionProof(
@@ -524,6 +564,10 @@ describe('totp enrollment, verification, and removal service policy', () => {
       code: '123456',
     });
     expect(verifiedFactor.assurance).toBe('aal2');
+    expect(verifiedFactor.session).toMatchObject({
+      accessToken: 'synthetic-elevated-access-token',
+      assurance: 'aal2',
+    });
     harness.auth.aal = 2;
     harness.auth.amr = [{ method: 'totp', timestamp: Math.floor(clockMs / 1_000) }];
     const second = await harness.service.beginMfaEnrollment(context('2'), { factorType: 'totp' });
@@ -758,6 +802,27 @@ describe('dependent transition service policy', () => {
       ),
     ).rejects.toMatchObject({ code: 'human-review-required', status: 409 });
   });
+
+  it('scopes transition replay to the stable actor rather than the rotating JWT', async () => {
+    const harness = service();
+    await harness.service.transitionDependent(
+      {
+        requestId: '71000000-0000-4000-8000-000000000090',
+        idempotencyKey: 'stable-transition-principal',
+        accessToken,
+      },
+      '71000000-0000-4000-8000-000000000016',
+      { action: 'submit_proof', verificationCaseId: '71000000-0000-4000-8000-000000000017' },
+      1,
+    );
+    expect(harness.repository.transitionActions[0]?.idempotencyPrincipal).toBe(
+      scopedPrincipal(
+        'transitionDependent',
+        '71000000-0000-4000-8000-000000000004',
+        Buffer.alloc(32, 6),
+      ),
+    );
+  });
 });
 
 describe('recovery service policy', () => {
@@ -907,6 +972,120 @@ describe('recovery service policy', () => {
     expect(harness.auth.recoveryOtpAttempts).toEqual([
       { handle: 'patient@synthetic.shifaa.test', recoveryOtp: 'wrong' },
     ]);
+  });
+
+  it('allows corrected proof to retry the same bound recovery case', async () => {
+    const harness = service();
+    const requestContext = {
+      requestId: '71000000-0000-4000-8000-000000000091',
+      idempotencyKey: 'synthetic-recovery-retry-proof',
+    };
+    const recoveryRequest = {
+      caseToken: 'synthetic-case-token-00000000000000000000',
+      handle: 'patient@synthetic.shifaa.test',
+      recoveryOtp: '123456',
+      proofMethod: 'repeated_identity_proof' as const,
+      verificationCaseId: '71000000-0000-4000-8000-000000000033',
+      newCredential: 'Synthetic-Recovery-Credential!',
+    };
+    harness.repository.recoveryProofApproved = false;
+    await expect(
+      harness.service.completeRecovery(
+        requestContext,
+        '71000000-0000-4000-8000-000000000032',
+        recoveryRequest,
+      ),
+    ).rejects.toMatchObject({ code: 'identity-proof-required' });
+    harness.repository.recoveryProofApproved = true;
+    await expect(
+      harness.service.completeRecovery(
+        requestContext,
+        '71000000-0000-4000-8000-000000000032',
+        recoveryRequest,
+      ),
+    ).resolves.toMatchObject({ status: 'restricted_enrollment' });
+    expect(harness.repository.recoveryBindings).toHaveLength(2);
+    expect(harness.repository.recoveryFinalizations).toHaveLength(1);
+    expect(harness.auth.recoveryOtpAttempts).toHaveLength(1);
+    expect(harness.repository.recoveryResumeMarkers).toHaveLength(0);
+  });
+
+  it('resumes a failed native credential update without consuming another recovery OTP', async () => {
+    const harness = service();
+    const recoveryRequest = {
+      caseToken: 'synthetic-case-token-00000000000000000000',
+      handle: 'patient@synthetic.shifaa.test',
+      recoveryOtp: '123456',
+      proofMethod: 'repeated_identity_proof' as const,
+      verificationCaseId: '71000000-0000-4000-8000-000000000033',
+      newCredential: 'Synthetic-Recovery-Credential!',
+    };
+    harness.auth.failRecoveredCredentialOnce = true;
+    await expect(
+      harness.service.completeRecovery(
+        {
+          requestId: '71000000-0000-4000-8000-000000000092',
+          idempotencyKey: 'synthetic-recovery-auth-failure',
+        },
+        '71000000-0000-4000-8000-000000000032',
+        recoveryRequest,
+      ),
+    ).rejects.toThrow('synthetic Auth credential update interruption');
+    await expect(
+      harness.service.completeRecovery(
+        {
+          requestId: '71000000-0000-4000-8000-000000000093',
+          idempotencyKey: 'synthetic-recovery-auth-retry',
+        },
+        '71000000-0000-4000-8000-000000000032',
+        recoveryRequest,
+      ),
+    ).resolves.toMatchObject({ status: 'restricted_enrollment' });
+    expect(harness.auth.recoveryOtpAttempts).toHaveLength(1);
+    expect(harness.auth.recoveredCredentialCalls).toBe(2);
+    expect(harness.repository.recoveryFinalizations).toHaveLength(1);
+  });
+
+  it('fails closed when the encrypted recovery-resume checkpoint has expired', async () => {
+    const harness = service();
+    const caseId = '71000000-0000-4000-8000-000000000032';
+    const recoveryRequest = {
+      caseToken: 'synthetic-case-token-00000000000000000000',
+      handle: 'patient@synthetic.shifaa.test',
+      recoveryOtp: '123456',
+      proofMethod: 'repeated_identity_proof' as const,
+      verificationCaseId: '71000000-0000-4000-8000-000000000033',
+      newCredential: 'Synthetic-Recovery-Credential!',
+    };
+    harness.repository.recoveryProofApproved = false;
+    await expect(
+      harness.service.completeRecovery(
+        {
+          requestId: '71000000-0000-4000-8000-000000000094',
+          idempotencyKey: 'synthetic-recovery-expiry-start',
+        },
+        caseId,
+        recoveryRequest,
+      ),
+    ).rejects.toMatchObject({ code: 'identity-proof-required' });
+    const marker = harness.repository.recoveryResumeMarkers.get(caseId)!;
+    harness.repository.recoveryResumeMarkers.set(caseId, {
+      ...marker,
+      expiresAt: now.toISOString(),
+    });
+    harness.repository.recoveryProofApproved = true;
+    await expect(
+      harness.service.completeRecovery(
+        {
+          requestId: '71000000-0000-4000-8000-000000000095',
+          idempotencyKey: 'synthetic-recovery-expiry-retry',
+        },
+        caseId,
+        recoveryRequest,
+      ),
+    ).rejects.toMatchObject({ code: 'recovery-challenge-invalid' });
+    expect(harness.auth.recoveryOtpAttempts).toHaveLength(2);
+    expect(harness.repository.recoveryFinalizations).toHaveLength(0);
   });
 
   it('resumes a staged recovery finalization without replaying the provider OTP or native credential work', async () => {

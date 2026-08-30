@@ -20,7 +20,7 @@ interface IdempotencyRow {
   request_hash: string;
   state: 'processing' | 'completed' | 'failed';
   response_status: number | null;
-  response_headers: Record<string, string> | null;
+  response_headers: unknown;
   response_body: unknown;
   resource_type: string | null;
 }
@@ -92,9 +92,17 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
     }
     return {
       status: record.response_status,
-      headers: record.response_headers ?? {},
+      headers: this.unprotectHeaders(record.response_headers),
       body: this.unprotect<T>(record.response_body),
     };
+  }
+
+  private unprotectHeaders(value: unknown): Readonly<Record<string, string | string[]>> {
+    if (!value) return {};
+    if (typeof value === 'object' && (value as Partial<ProtectedEnvelope>).encoding) {
+      return this.unprotect<Record<string, string | string[]>>(value);
+    }
+    return value as Record<string, string | string[]>;
   }
 
   public async execute<T, P = undefined>(input: {
@@ -156,7 +164,7 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
       const result = await input.work(undefined as P);
       await sql`
         update platform.idempotency_records set state='completed',response_status=${result.status},
-          response_headers=${sql.json(result.headers)},response_body=${sql.json(this.protect(result.body))},updated_at=now()
+          response_headers=${sql.json(this.protect(result.headers))},response_body=${sql.json(this.protect(result.body))},updated_at=now()
         where id=${record.id}::uuid`;
       return result;
     });
@@ -246,7 +254,12 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
       >`select * from platform.idempotency_records where principal=${input.principal} and method=${input.method.toUpperCase()} and route=${input.route} and idempotency_key=${input.key} and request_hash=${requestHash} for update`;
       if (!record) throw new Error('Prepared idempotency reservation was lost.');
       const result = await input.work(prepared);
-      await sql`update platform.idempotency_records set state='completed',resource_type=null,response_status=${result.status},response_headers=${sql.json(result.headers)},response_body=${sql.json(this.protect(result.body))},updated_at=now() where id=${record.id}::uuid`;
+      // The staged work may install a domain actor context on this shared transaction.
+      // Restore the idempotency principal before its forced-RLS completion write.
+      await sql`select set_config('shifaa.principal',${input.principal},true)`;
+      const completed =
+        await sql`update platform.idempotency_records set state='completed',resource_type=null,response_status=${result.status},response_headers=${sql.json(this.protect(result.headers))},response_body=${sql.json(this.protect(result.body))},updated_at=now() where id=${record.id}::uuid returning id`;
+      if (completed.length !== 1) throw new Error('Prepared idempotency reservation was lost.');
       return result;
     });
   }

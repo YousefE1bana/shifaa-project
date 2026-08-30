@@ -7,6 +7,7 @@ import type {
   ContinuityRepository,
   ContinuityRestriction,
   PendingEnrollmentMarker,
+  RecoveryResumeMarker,
   TransitionMutationInput,
 } from '../../modules/identity-continuity/index.js';
 import type { TransitionResult } from '@shifaa/contracts/identity-continuity';
@@ -16,6 +17,7 @@ import type { AuthSession, SessionAuthority } from '../../modules/identity-onboa
 import { PostgresIdentityRepository } from './identity-repository.js';
 
 const PENDING_MARKER_ROUTE = '/v1/auth/mfa/enroll#pending-marker';
+const RECOVERY_RESUME_ROUTE = '/v1/auth/recovery#resume-marker';
 const TRANSITION_ROUTE = '/v1/guardianships/:relationshipId/transition';
 const TRANSITION_RETENTION_MS = 24 * 60 * 60_000;
 
@@ -260,6 +262,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     personId: string,
   ): Promise<'patient_optional_mfa' | 'workforce_mandatory_mfa'> {
     return this.repository.withRawTransaction(async (sql) => {
+      await sql`select set_config('shifaa.person_id',${personId},true)`;
       const [row] = await sql<{ mandatory: boolean }[]>`
         select platform.person_requires_mandatory_mfa(${personId}::uuid) mandatory`;
       return row?.mandatory ? 'workforce_mandatory_mfa' : 'patient_optional_mfa';
@@ -373,13 +376,14 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           expires_at: string;
           public_token_digest: Uint8Array;
           recovery_handle_digest: Uint8Array;
+          subject_person_id: string | null;
         }[]
       >`
-        select id,status,expires_at,public_token_digest,recovery_handle_digest
+        select id,status,expires_at,public_token_digest,recovery_handle_digest,subject_person_id::text
         from identity.continuity_cases where id=${input.caseId}::uuid for update`;
       if (
         !recoveryCase ||
-        recoveryCase.status !== 'requested' ||
+        !['requested', 'proof_required'].includes(recoveryCase.status) ||
         new Date(recoveryCase.expires_at) <= new Date()
       )
         throw new ApiPolicyError(
@@ -409,6 +413,15 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           401,
           'The recovery case is invalid or expired.',
         );
+      if (recoveryCase.status === 'proof_required') {
+        if (recoveryCase.subject_person_id !== mapping.person_id)
+          throw new ApiPolicyError(
+            'recovery-challenge-invalid',
+            401,
+            'The recovery case is invalid or expired.',
+          );
+        return { personId: mapping.person_id };
+      }
       const updated = await sql`
         update identity.continuity_cases
         set subject_person_id=${mapping.person_id}::uuid,status='proof_required',version=version+1,updated_at=now()
@@ -421,6 +434,71 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           'The recovery case is unavailable.',
         );
       return { personId: mapping.person_id };
+    });
+  }
+
+  public async findRecoveryResumeMarker(caseId: string): Promise<RecoveryResumeMarker | undefined> {
+    return this.repository.withRawTransaction(async (sql) => {
+      const principal = `recovery-resume:${caseId}`;
+      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
+        { principal: string }[]
+      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
+      await sql`select set_config('shifaa.principal',${principal},true)`;
+      try {
+        const [row] = await sql<{ response_body: StoredSealedMarker; expires_at: string }[]>`
+          select response_body,expires_at from platform.idempotency_records
+          where principal=${principal} and route=${RECOVERY_RESUME_ROUTE}
+            and idempotency_key=${caseId} and state='completed' and expires_at>now()`;
+        if (!row?.response_body) return undefined;
+        return this.cipher.open<RecoveryResumeMarker>(
+          {
+            encoding: 'aes-256-gcm-v1',
+            nonce: String(row.response_body.nonce),
+            tag: String(row.response_body.tag),
+            ciphertext: String(row.response_body.ciphertext),
+            expiresAt: String(row.response_body.expiresAt ?? row.expires_at),
+          },
+          new Date(),
+        );
+      } catch (error) {
+        if (error instanceof ApiPolicyError && error.code === 'idempotency-replay-expired')
+          return undefined;
+        throw error;
+      } finally {
+        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+      }
+    });
+  }
+
+  public async saveRecoveryResumeMarker(
+    caseId: string,
+    marker: RecoveryResumeMarker,
+  ): Promise<void> {
+    await this.repository.withRawTransaction(async (sql) => {
+      const principal = `recovery-resume:${caseId}`;
+      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
+        { principal: string }[]
+      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
+      await sql`select set_config('shifaa.principal',${principal},true)`;
+      try {
+        const sealed = this.cipher.seal(marker, new Date(marker.expiresAt));
+        const sealedJson = sealed as unknown as Record<string, string>;
+        const requestHash = createHash('sha256').update(caseId).digest('hex');
+        await sql`
+          insert into platform.idempotency_records(
+            principal,method,route,idempotency_key,request_hash,state,response_status,
+            response_body,resource_type,expires_at
+          ) values(
+            ${principal},'POST',${RECOVERY_RESUME_ROUTE},${caseId},${requestHash},'completed',200,
+            ${sql.json(sealedJson)},'recovery-resume-marker',${marker.expiresAt}::timestamptz
+          )
+          on conflict(principal,method,route,idempotency_key) do update
+            set state='completed',response_status=200,response_body=${sql.json(sealedJson)},
+                resource_type='recovery-resume-marker',expires_at=${marker.expiresAt}::timestamptz,
+                updated_at=now()`;
+      } finally {
+        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+      }
     });
   }
 
@@ -530,6 +608,18 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
             'identity-continuity',${input.caseId}::uuid,'identity.recovery.completed',
             ${sql.json({ support_action: 'completed', action_time: input.occurredAt })},${completed[0]!['version']}
           )`;
+      }
+      const markerPrincipal = `recovery-resume:${input.caseId}`;
+      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
+        { principal: string }[]
+      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
+      await sql`select set_config('shifaa.principal',${markerPrincipal},true)`;
+      try {
+        await sql`delete from platform.idempotency_records
+          where principal=${markerPrincipal} and route=${RECOVERY_RESUME_ROUTE}
+            and idempotency_key=${input.caseId}`;
+      } finally {
+        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
       }
     });
   }

@@ -75,20 +75,25 @@ Lost-factor recovery persists a subject-wide `mfa_enrollment_only` deny checkpoi
 before changing a native credential, revoking sessions, or creating a new session.
 The normal prepared-command sequence is:
 
-1. create/bind the no-oracle recovery case;
-2. validate current independent proof;
-3. persist the subject-wide deny checkpoint;
-4. replace the native credential, revoke all native sessions, and create the
+1. create the no-oracle recovery case;
+2. redeem the provider OTP, bind the case, and persist the redeemed session only
+   in the encrypted, case-scoped, TTL-bound resume marker;
+3. validate current independent proof and advance that encrypted marker;
+4. persist the subject-wide deny checkpoint;
+5. replace the native credential, revoke all native sessions, and create the
    restricted session;
-5. persist the encrypted prepared result in the idempotency record;
-6. finalize the case and canonical response.
+6. persist the encrypted prepared result in the idempotency record;
+7. atomically finalize the case and delete its resume marker.
 
-For a client retry, use the exact original request body and `Idempotency-Key`.
-Changed-body reuse must remain `409`. If the encrypted prepared checkpoint exists,
-the service resumes database finalization without repeating native mutation. If a
-process died before that checkpoint, the subject-wide restriction remains active.
-Do not delete the processing record or clear the restriction to make the request
-pass.
+After a proof or native credential-update failure, retry the same case and case
+token with a new `Idempotency-Key`; the encrypted resume marker prevents reuse of
+the consumed provider OTP. An expired, missing, or unauthentic marker fails closed
+and never authorizes a replacement case. Marker rows must contain ciphertext only:
+no access token, credential, OTP, factor proof, handle, or case token may appear in
+plaintext. If the encrypted prepared idempotency checkpoint exists after all native
+work succeeded, an exact-body/key replay resumes database finalization without
+repeating native mutation. Changed-body reuse of that key remains `409`. Do not
+delete either checkpoint or clear the restriction to make a request pass.
 
 If the original request remains `idempotency-in-progress` after the process is
 confirmed dead, preserve the idempotency row, case row, Auth audit/log window, and

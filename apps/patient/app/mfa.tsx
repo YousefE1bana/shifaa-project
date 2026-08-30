@@ -204,10 +204,11 @@ export default function MfaRoute({
     try {
       assertIdentityContinuityOnline();
       setState('loading');
-      await api.verifyEnrollment({
+      const result = await api.verifyEnrollment({
         enrollmentId: enrollment.enrollmentId,
         code: verificationCode,
       });
+      await api.installSession(result.session);
       setEnrollment(undefined);
       setQrVisible(false);
       setVerificationCode('');

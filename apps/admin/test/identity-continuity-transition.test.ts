@@ -20,6 +20,8 @@ test('admin relationships uses the assigned transition read mode and continuity 
     'privilegedAccessState',
     'amrAgeSeconds',
     'version-conflict',
+    'reviewRequiredReason',
+    'transitionBlockerReason',
   ]) {
     assert.match(`${workspace}\n${api}`, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }

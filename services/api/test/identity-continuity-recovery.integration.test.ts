@@ -303,6 +303,79 @@ describe.skipIf(!enabled).sequential('007 recovery completion with native Supaba
     expect(response.json()).toMatchObject({ code: 'recovery-challenge-invalid' });
   });
 
+  it('reissues one bound live case after failed proof without creating a parallel case', async () => {
+    const email = `recovery-retry-${randomUUID()}@synthetic.shifaa.test`;
+    const account = await confirmedSignup(runtime, email, initialCredential);
+    await harness.seedPerson(account.userId, email);
+    const enrollment = await harness.authAdapter.enrollTotp(account.accessToken, 'Retry factor');
+    const elevated = await harness.authAdapter.verifyTotp(
+      account.accessToken,
+      enrollment.enrollmentId,
+      currentTotp(enrollment.secret),
+    );
+    const firstMessages = await mailboxIds(runtime, email);
+    const firstStart = await harness.inject({
+      method: 'POST',
+      url: '/v1/auth/recovery',
+      headers: { 'idempotency-key': `recovery-retry-start-a-${randomUUID()}` },
+      payload: { handle: email, locale: 'en-EG' },
+    });
+    const firstIntake = firstStart.json<{ caseId: string; caseToken: string }>();
+    const redeemedOtp = await recoveryOtp(runtime, email, firstMessages);
+    const failed = await harness.inject({
+      method: 'POST',
+      url: `/v1/auth/recovery/${firstIntake.caseId}/complete`,
+      headers: { 'idempotency-key': `recovery-retry-failed-${randomUUID()}` },
+      payload: {
+        caseToken: firstIntake.caseToken,
+        handle: email,
+        recoveryOtp: redeemedOtp,
+        proofMethod: 'bound_factor_independent_method',
+        factorEvidence: '000000',
+        newCredential: replacementCredential,
+      },
+    });
+    expect(failed.statusCode).toBe(403);
+    const [checkpoint] = await harness.ownerSql<Array<{ response_body: string }>>(
+      (sql) => sql`select response_body::text from platform.idempotency_records
+        where resource_type='recovery-resume-marker'
+          and idempotency_key=${firstIntake.caseId}`,
+    );
+    expect(checkpoint?.response_body).toContain('aes-256-gcm-v1');
+    for (const prohibited of [
+      email,
+      firstIntake.caseToken,
+      redeemedOtp,
+      '000000',
+      replacementCredential,
+    ]) {
+      expect(checkpoint?.response_body).not.toContain(prohibited);
+    }
+
+    const retry = await harness.inject({
+      method: 'POST',
+      url: `/v1/auth/recovery/${firstIntake.caseId}/complete`,
+      headers: { 'idempotency-key': `recovery-retry-success-${randomUUID()}` },
+      payload: {
+        caseToken: firstIntake.caseToken,
+        handle: email,
+        recoveryOtp: redeemedOtp,
+        proofMethod: 'bound_factor_independent_method',
+        factorEvidence: currentTotp(enrollment.secret),
+        newCredential: replacementCredential,
+      },
+    });
+    expect(retry.statusCode).toBe(200);
+    expect(retry.json()).toMatchObject({ caseId: firstIntake.caseId, status: 'completed' });
+    const [remaining] = await harness.ownerSql<Array<{ count: number }>>(
+      (sql) => sql`select count(*)::integer count from platform.idempotency_records
+        where resource_type='recovery-resume-marker'
+          and idempotency_key=${firstIntake.caseId}`,
+    );
+    expect(remaining?.count).toBe(0);
+    expect(elevated.session.assurance).toBe('aal2');
+  });
+
   it('allows exactly one concurrent completion winner for the provider OTP and case token', async () => {
     const email = `recovery-race-${randomUUID()}@synthetic.shifaa.test`;
     const account = await confirmedSignup(runtime, email, initialCredential);

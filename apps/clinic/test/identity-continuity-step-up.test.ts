@@ -8,6 +8,7 @@ const shell = fs.readFileSync(
   new URL('../src/app/SecurityStepUpShell.tsx', import.meta.url),
   'utf8',
 );
+const layout = fs.readFileSync(new URL('../src/app/layout.tsx', import.meta.url), 'utf8');
 
 test('clinic shell denies AAL1 and stale or incomplete privileged context', () => {
   const base = {
@@ -23,4 +24,5 @@ test('clinic shell denies AAL1 and stale or incomplete privileged context', () =
   assert.equal(privilegedAccessState({ ...base, reason: null }), 'reason-required');
   assert.match(shell, /onLoginOrVerifyOtp/);
   assert.match(shell, /onResumeIntendedAction/);
+  assert.match(layout, /SecurityStepUpShell/);
 });

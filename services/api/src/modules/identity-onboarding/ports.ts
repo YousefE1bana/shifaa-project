@@ -18,6 +18,7 @@ export interface AuthSession {
   accessToken: string;
   aal: 1 | 2;
   sessionId?: string;
+  refreshToken?: string;
 }
 
 export interface SessionAuthority {

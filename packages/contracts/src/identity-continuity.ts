@@ -105,6 +105,7 @@ export const FactorSummarySchema = closedObject({
 export const FactorResultSchema = closedObject({
   factor: FactorSummarySchema,
   assurance: Type.Literal('aal2'),
+  session: SessionResultSchema,
 });
 export const RemoveFactorRequestSchema = closedObject({
   proofCaseId: Type.Optional(NullableUuid),

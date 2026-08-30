@@ -26,6 +26,7 @@ import type {
   IdentityContinuityServicePort,
   PreparedRecoveryCompletion,
   PreparedLogout,
+  RecoveryResumeMarker,
 } from './types.js';
 
 const ENROLLMENT_TTL_MS = 10 * 60_000;
@@ -244,7 +245,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
         410,
         'The setup window expired. Start a new setup.',
       );
-    const factor = await this.dependencies.auth.verifyTotp(
+    const verification = await this.dependencies.auth.verifyTotp(
       accessToken,
       body.enrollmentId,
       body.code,
@@ -257,7 +258,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     const occurredAt = this.dependencies.now().toISOString();
     await this.dependencies.repository.appendFactorChangedEvidence({
       event: {
-        aggregateId: factor.id,
+        aggregateId: verification.factor.id,
         aggregateVersion: 1,
         eventType: 'identity.factor.changed',
         payload: { recipientPersonId, support_action: 'verified', action_time: occurredAt },
@@ -270,7 +271,11 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
         metadata: { aal: 'aal2' },
       },
     });
-    return { factor, assurance: 'aal2' as const };
+    return {
+      factor: verification.factor,
+      assurance: 'aal2' as const,
+      session: { ...verification.session, restriction: null },
+    };
   }
 
   public async removeMfaFactor(
@@ -370,27 +375,54 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
   ): Promise<PreparedRecoveryCompletion> {
     const handle = normalizeRecoveryHandle(body.handle);
     this.assertRecoveryProofShape(body);
-    const recovery = await this.dependencies.auth.redeemRecoveryOtp(handle, body.recoveryOtp);
+    let marker = await this.dependencies.repository.findRecoveryResumeMarker(caseId);
+    let bindingHandle = handle;
+    if (!marker) {
+      const recovery = await this.dependencies.auth.redeemRecoveryOtp(handle, body.recoveryOtp);
+      bindingHandle = normalizeRecoveryHandle(recovery.handle);
+      marker = {
+        subjectId: recovery.subjectId,
+        accessToken: recovery.session.accessToken,
+        restricted: null,
+        credentialUpdated: false,
+        expiresAt: new Date(this.dependencies.now().getTime() + RECOVERY_TTL_MS).toISOString(),
+      };
+    }
     const binding = await this.dependencies.repository.bindRecoveryIntake({
       caseId,
-      subjectId: recovery.subjectId,
-      handleDigest: hmacDigest(normalizeRecoveryHandle(recovery.handle), this.dependencies.hmacKey),
+      subjectId: marker.subjectId,
+      handleDigest: hmacDigest(bindingHandle, this.dependencies.hmacKey),
       caseTokenDigest: hmacDigest(body.caseToken, this.dependencies.hmacKey),
     });
-    const restricted = await this.recoveryRequiresEnrollment(
-      body,
-      recovery.session.accessToken,
-      binding.personId,
-    );
+    await this.dependencies.repository.saveRecoveryResumeMarker(caseId, marker);
+    if (marker.restricted === null) {
+      const proof = await this.recoveryProofSession(body, marker.accessToken, binding.personId);
+      marker = { ...marker, accessToken: proof.accessToken, restricted: proof.restricted };
+      await this.dependencies.repository.saveRecoveryResumeMarker(caseId, marker);
+    }
+    const restricted = marker.restricted;
+    if (restricted === null) throw new Error('Recovery proof checkpoint was not established.');
     await this.dependencies.repository.stageRecoveryRestriction({
       caseId,
       personId: binding.personId,
     });
-    await this.dependencies.auth.updateRecoveredCredential(
-      recovery.session.accessToken,
-      body.newCredential,
-    );
-    await this.dependencies.auth.logout(recovery.session.accessToken, 'global');
+    if (!marker.credentialUpdated) {
+      await this.dependencies.auth.updateRecoveredCredential(
+        marker.accessToken,
+        body.newCredential,
+      );
+      marker = { ...marker, credentialUpdated: true } satisfies RecoveryResumeMarker;
+      await this.dependencies.repository.saveRecoveryResumeMarker(caseId, marker);
+    }
+    try {
+      await this.dependencies.auth.logout(marker.accessToken, 'global');
+    } catch {
+      const checkpointSession = await this.dependencies.auth.signInWithPassword(
+        handle,
+        body.newCredential,
+      );
+      await this.dependencies.auth.logout(checkpointSession.accessToken, 'global');
+    }
     const freshSession = await this.dependencies.auth.signInWithPassword(
       handle,
       body.newCredential,
@@ -400,7 +432,10 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       personId: binding.personId,
       requestId: context.requestId,
       restricted,
-      session: { ...freshSession, restriction: restricted ? 'mfa_enrollment_only' : null },
+      session: {
+        ...freshSession,
+        restriction: restricted ? 'mfa_enrollment_only' : null,
+      },
     };
   }
 
@@ -441,7 +476,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
         idempotencyKey: context.idempotencyKey,
         idempotencyPrincipal: scopedPrincipal(
           'transitionDependent',
-          context.accessToken!,
+          actorPersonId,
           this.dependencies.hmacKey,
         ),
         requestId: context.requestId,
@@ -467,7 +502,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       idempotencyKey: context.idempotencyKey,
       idempotencyPrincipal: scopedPrincipal(
         'transitionDependent',
-        context.accessToken!,
+        actorPersonId,
         this.dependencies.hmacKey,
       ),
       decision: body.decision,
@@ -515,11 +550,11 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     };
   }
 
-  private async recoveryRequiresEnrollment(
+  private async recoveryProofSession(
     body: CompleteRecoveryRequest,
     accessToken: string,
     personId: string,
-  ): Promise<boolean> {
+  ): Promise<{ restricted: boolean; accessToken: string }> {
     if (body.proofMethod === 'repeated_identity_proof') {
       if (!body.verificationCaseId)
         throw new ApiPolicyError(
@@ -537,15 +572,19 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
           403,
           'A repeated identity proof is required.',
         );
-      return true;
+      return { restricted: true, accessToken };
     }
     if (!body.factorEvidence)
       throw new ApiPolicyError('identity-proof-required', 403, 'A bound factor is required.');
     const factors = await this.dependencies.auth.listFactors(accessToken);
     for (const factor of factors) {
       try {
-        await this.dependencies.auth.verifyTotp(accessToken, factor.id, body.factorEvidence);
-        return false;
+        const verification = await this.dependencies.auth.verifyTotp(
+          accessToken,
+          factor.id,
+          body.factorEvidence,
+        );
+        return { restricted: false, accessToken: verification.session.accessToken };
       } catch (error) {
         if (!(error instanceof ApiPolicyError) || error.code !== 'factor-code-invalid') throw error;
       }

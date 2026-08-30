@@ -17,6 +17,7 @@ test('patient MFA uses generated mutations and a minimum read-only native factor
     'NativeFactorSummaryReader',
     '/auth/v1/user',
     'assertIdentityContinuityOnline',
+    'installSession(result.session)',
   ]) {
     assert.match(`${screen}\n${api}`, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }
