@@ -11,7 +11,9 @@ import {
 import { IdentityOnboardingService, defaultPortUtilities } from './service.js';
 import { InMemoryIdentityRepository } from './in-memory-repository.js';
 
-function serviceHarness() {
+function serviceHarness(sessionAuthority?: {
+  authorize(session: { subjectId: string }): Promise<'allowed' | 'revoked' | 'restricted'>;
+}) {
   const repository = new InMemoryIdentityRepository();
   const utilities = defaultPortUtilities();
   const service = new IdentityOnboardingService({
@@ -20,6 +22,7 @@ function serviceHarness() {
     proofing: new LocalProofingProvider(),
     uploads: new LocalQuarantineUploadStore(),
     repository,
+    ...(sessionAuthority ? { sessionAuthority } : {}),
     ...utilities,
   });
   return { service, repository };
@@ -78,5 +81,29 @@ describe('identity onboarding use-case module', () => {
     expect(result.decision).toBe('granted');
     expect(repository.outbox.at(-1)).toMatchObject({ eventType: 'consent.changed' });
     expect(repository.audits.at(-1)).toMatchObject({ action: 'consent.decision.recorded' });
+  });
+
+  it('denies a restricted native session before protected onboarding access', async () => {
+    let decision: 'allowed' | 'restricted' = 'allowed';
+    const { service } = serviceHarness({
+      authorize: () => Promise.resolve(decision),
+    });
+    const challenge = await service.register({
+      handle: 'patient.restricted@synthetic.shifaa.test',
+      password: 'Synthetic-Only-2026!',
+      locale: 'en-EG',
+      requestId: randomUUID(),
+    });
+    const session = await service.verifyOtp({
+      challengeId: challenge.challenge_id,
+      code: LocalAuthIssuer.developmentOtp,
+      requestId: randomUUID(),
+    });
+    decision = 'restricted';
+
+    await expect(service.actorFromAccessToken(session.access_token)).rejects.toMatchObject({
+      code: 'recovery-mfa-enrollment-required',
+      status: 403,
+    });
   });
 });

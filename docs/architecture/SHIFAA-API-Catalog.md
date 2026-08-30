@@ -1,6 +1,6 @@
 # SHIFAA Graduation-MVP REST API Catalog
 
-> **Version:** 1.1.0 · **Status:** Complete active-MVP inventory plus an explicitly non-MVP reserved appendix · **Last verified:** 2026-08-09  
+> **Version:** 1.2.0 · **Status:** Complete active-MVP inventory plus an explicitly non-MVP reserved appendix · **Last verified:** 2026-08-30
 > REST/OpenAPI 3.1.1 is canonical. **gRPC operations: none in MVP.**
 
 ## 1. Global contract
@@ -361,3 +361,7 @@ Feature 005 implements the existing seven DSR and five notification operations w
 ### 12.2 Feature 006 realization note
 
 Feature 006 implements exactly the existing `searchFacilities`, `getFacilityCapacity`, `createSosIncident`, `getSosIncident`, `listSosPrearrivals`, `acceptSosPrearrival`, `closeSosIncident`, `createEmergencyShare`, `revokeEmergencyShare`, and `viewEmergencyShare` operations. The generated contracts, client, and registered routes are checked as one exact ten-operation set. This is the facility/capacity stage of `FR-DISC-001`; doctor, pharmacy-stock, review, arrival, triage, bed, admission, and capacity-write operations remain outside 006. Share responses are one-use/no-store, hospital authority is current-fact/AAL2/purpose/facility scoped, and SOS responses never claim ambulance dispatch or bed reservation. Production capacity, maps, emergency dispatch, and messaging remain disabled by the applicable `OPEN-*` gates.
+
+### 12.3 Feature 007 realization note
+
+Feature 007 implements exactly the existing `refreshSession`, `logout`, `beginMfaEnrollment`, `verifyMfaEnrollment`, `removeMfaFactor`, `startRecovery`, `completeRecovery`, and `transitionDependent` operations. Generated OpenAPI, contracts, client methods, and registered routes are checked as one exact eight-operation set. The canonical active inventory remains **242** operations; Feature 007 raises the realized subset from 72 to 80 without adding, renaming, or removing a catalog operation. Native Supabase Auth remains authoritative for sessions, refresh families, factors, AAL, and AMR. Feature 008 audit read/export operations, production identity/messaging adapters, passkeys, and any ninth Feature-007 operation remain outside this realization.

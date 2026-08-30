@@ -1,7 +1,7 @@
 # SHIFAA UI and Interaction Contract
 
-> **Version:** 0.9.1 · **Status:** Deterministic provisional foundation; composition/tolerance approval remains `OPEN-UX-001/002`  
-> **Last verified:** 2026-08-09 · **Locales:** `ar-EG` primary, `en-EG` parity
+> **Version:** 0.9.2 · **Status:** Deterministic provisional foundation; composition/tolerance approval remains `OPEN-UX-001/002`
+> **Last verified:** 2026-08-30 · **Locales:** `ar-EG` primary, `en-EG` parity
 
 ## 1. Convergence rule
 
@@ -180,6 +180,8 @@ Routes are permission-filtered: `/dashboard`, `/identity-reviews`, `/facility-ap
 Feature 005 realizes `/privacy/requests`, `/privacy-requests`, and `/notification-templates` with Arabic RTL and English LTR parity. The patient surface exposes all four DSR types, due/history state, identity and retention gates, and a memory-only one-time export download. The DPO surface exposes minimum assigned fields plus reasoned approve/partial/refuse/fulfil actions. The template surface pairs both locales, shows the exact field schema, and separates author from AAL2 publisher. All three surfaces must retain loading, empty, offline, permission/AAL2/purpose, stale/conflict, failure, and success states at compact and desktop widths with keyboard focus, 200% reflow, high contrast, and reduced motion.
 
 Feature 006 realizes patient `/discover`, `/discover/map`, `/sos`, `/sos/:id`, `/sos/:id/share`, and the fragment-fed public `/sos/share` viewer, plus hospital `/capacity` and `/sos-prearrivals`. The engineering surfaces use Arabic-first RTL/English LTR copy, shared emergency/freshness primitives, semantic list fallback without external map traffic, no offline mutation queue, fragment scrubbing before share use, aggregate-only hospital capacity, and minimum pre-arrival rows. They preserve explicit `123` guidance and never claim dispatch or reservation. Evidence remains engineering-only and cannot claim pixel identity or formal design approval while `OPEN-UX-001/002` are open.
+
+Feature 007 realizes patient `/mfa` and `/recovery`, extends patient and admin `/relationships` with the frozen dependent-transition states, and integrates the existing workforce/admin authentication shells with shared AAL1, stale-AMR, missing-purpose/reason, and Auth-degraded step-up states. MFA one-time QR/manual material and recovery provider/case material remain component-memory only; security mutations are never queued offline. The shared security experience owns bilingual RTL/LTR expired/degraded/offline, restriction, conflict, destructive confirmation, focus restoration, assertive danger, and polite progress behavior. Live engineering evidence covers Arabic and English compact/medium patient views and wide admin step-up/transition views, including forced colors and reduced motion. `OPEN-UX-001/002` and `OPEN-TECH-003` still prevent pixel-identity, formal reference-device, or full accessibility-performance claims.
 
 ## 9. Safety and emergency copy rules
 

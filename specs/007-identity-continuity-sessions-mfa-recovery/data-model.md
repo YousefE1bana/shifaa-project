@@ -1,6 +1,6 @@
 # Feature 007 data model
 
-> **Boundary:** logical and planned physical contract; no migration has been implemented
+> **Boundary:** logical contract realized by the seeded-synthetic Feature-007 migration; final PR integration and production gates remain pending
 
 ## 1. Native Auth resources — authoritative, not migrated by SHIFAA
 

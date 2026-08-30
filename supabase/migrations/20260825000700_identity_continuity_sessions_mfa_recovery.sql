@@ -67,7 +67,13 @@ CREATE TABLE identity.continuity_cases (
     (status='restricted_enrollment' AND case_type='account_recovery' AND subject_person_id IS NOT NULL
       AND restriction_scope='mfa_enrollment_only' AND bound_native_session_id IS NOT NULL)
     OR
-    (status<>'restricted_enrollment' AND restriction_scope IS NULL AND bound_native_session_id IS NULL)
+    (status='proof_required' AND case_type='account_recovery' AND subject_person_id IS NOT NULL
+      AND restriction_scope='mfa_enrollment_only' AND bound_native_session_id IS NULL)
+    OR
+    (status NOT IN ('proof_required','restricted_enrollment')
+      AND restriction_scope IS NULL AND bound_native_session_id IS NULL)
+    OR
+    (status='proof_required' AND restriction_scope IS NULL AND bound_native_session_id IS NULL)
   ),
   CHECK (
     status NOT IN ('review_required','human_review_required') OR

@@ -93,8 +93,24 @@ export async function buildApp(
       : new LocalQuarantineUploadStore();
   if (auth instanceof SupabaseAuthIssuer) await auth.ready();
   if (uploads instanceof SupabaseQuarantineUploadStore) await uploads.ready();
+  const continuityRuntime =
+    auth instanceof SupabaseAuthIssuer && repository instanceof PostgresIdentityRepository
+      ? {
+          auth,
+          repository: new PostgresIdentityContinuityService(
+            repository,
+            config.identityEncryptionKey,
+            config.environment === 'test'
+              ? 'ci'
+              : config.environment === 'production'
+                ? 'production'
+                : 'local',
+          ),
+        }
+      : undefined;
   const service = new IdentityOnboardingService({
     auth,
+    ...(continuityRuntime ? { sessionAuthority: continuityRuntime.repository } : {}),
     cipher: new AesGcmIdentityCipher(config.identityEncryptionKey, config.identityBlindIndexKey, 1),
     proofing: options.proofing ?? new LocalProofingProvider(),
     uploads,
@@ -151,18 +167,10 @@ export async function buildApp(
         );
   const identityContinuityService =
     options.identityContinuityService ??
-    (auth instanceof SupabaseAuthIssuer && repository instanceof PostgresIdentityRepository
+    (continuityRuntime
       ? new IdentityContinuityService({
-          auth,
-          repository: new PostgresIdentityContinuityService(
-            repository,
-            config.identityEncryptionKey,
-            config.environment === 'test'
-              ? 'ci'
-              : config.environment === 'production'
-                ? 'production'
-                : 'local',
-          ),
+          auth: continuityRuntime.auth,
+          repository: continuityRuntime.repository,
           allowedWebOrigins: new Set(config.corsOrigins),
           hmacKey: config.preauthHmacKey,
           now: () => options.clock?.now() ?? new Date(),

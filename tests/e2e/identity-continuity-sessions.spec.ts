@@ -24,7 +24,7 @@ test(
       assert.equal(evidence.contentLanguage, locale);
       assert.equal(evidence.currentCookieCleared, true);
       assert.equal(evidence.providerRefreshTokenLength, 12);
-      assert.equal(evidence.refreshPersistenceCount, 0);
+      assert.equal(evidence.refreshPersistenceCount, 3);
       assert.ok(evidence.auditCount >= 4);
       for (const sentinel of evidence.tokenSentinels) {
         assert.equal(evidence.durableText.includes(sentinel), false);
@@ -35,12 +35,18 @@ test(
       new URL('../../packages/design-system/src/security/SessionStatus.tsx', import.meta.url),
       'utf8',
     );
+    const securityExperience = fs.readFileSync(
+      new URL('../../packages/design-system/src/security/SecurityExperience.tsx', import.meta.url),
+      'utf8',
+    );
     const patientClient = fs.readFileSync(
       new URL('../../apps/patient/src/identity-continuity-api.ts', import.meta.url),
       'utf8',
     );
-    assert.match(sessionStatus, /RouteStatePanel/);
-    assert.match(sessionStatus, /assertive/);
+    assert.match(sessionStatus, /SecurityStatusBanner/);
+    assert.match(securityExperience, /accessibilityRole/);
+    assert.match(securityExperience, /accessibilityLiveRegion/);
+    assert.match(securityExperience, /assertive/);
     assert.match(patientClient, /offline-no-queue/);
     assert.doesNotMatch(patientClient, /localStorage|AsyncStorage|backgroundSync|queueMutation/);
   },

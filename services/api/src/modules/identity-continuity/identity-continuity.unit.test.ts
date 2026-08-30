@@ -33,6 +33,7 @@ class FakeAuth implements ContinuityAuthPort {
   public afterUnenroll: () => void = () => undefined;
   public updatedRecoveredCredentials: string[] = [];
   public recoveryOtpAttempts: Array<{ handle: string; recoveryOtp: string }> = [];
+  public restrictionWasStaged: () => boolean = () => true;
 
   private claims(): VerifiedContinuitySession {
     return {
@@ -100,6 +101,8 @@ class FakeAuth implements ContinuityAuthPort {
     return Promise.resolve();
   }
   public updateRecoveredCredential() {
+    if (!this.restrictionWasStaged())
+      return Promise.reject(new Error('recovery restriction was not staged'));
     return Promise.resolve();
   }
   public redeemRecoveryOtp(handle: string, recoveryOtp: string) {
@@ -159,6 +162,7 @@ class FakeRepository implements ContinuityRepository {
     sessionId: string;
     restricted: boolean;
   }> = [];
+  public readonly recoveryRestrictionStages: Array<{ caseId: string; personId: string }> = [];
   public readonly transitionActions: Array<{
     action: 'submit_proof' | 'decide';
     relationshipId: string;
@@ -269,6 +273,10 @@ class FakeRepository implements ContinuityRepository {
   public recoveryProofIsApproved(): Promise<boolean> {
     return Promise.resolve(this.recoveryProofApproved);
   }
+  public stageRecoveryRestriction(input: { caseId: string; personId: string }): Promise<void> {
+    this.recoveryRestrictionStages.push(input);
+    return Promise.resolve();
+  }
   public finalizeRecovery(input: {
     caseId: string;
     personId: string;
@@ -362,6 +370,16 @@ describe('identity continuity transaction foundation', () => {
     expect(scopedPrincipal('refresh', sessionId, Buffer.alloc(32, 8))).not.toContain(sessionId);
     timestamp += 300_000;
     expect(limiter.consume('refresh', sessionId, 2, 300_000)).toBeNull();
+  });
+
+  it('bounds distinct live rate subjects and admits a new subject after expiry', () => {
+    let timestamp = now.getTime();
+    const limiter = new HmacRateLimiter(Buffer.alloc(32, 8), () => timestamp, 2);
+    expect(limiter.consume('refresh', 'subject-one', 2, 300_000)).toBeNull();
+    expect(limiter.consume('refresh', 'subject-two', 2, 300_000)).toBeNull();
+    expect(limiter.consume('refresh', 'subject-three', 2, 300_000)).toBe(300);
+    timestamp += 300_000;
+    expect(limiter.consume('refresh', 'subject-three', 2, 300_000)).toBeNull();
   });
 
   it('marks a native success with failed commit for denial and reconciliation', async () => {
@@ -824,6 +842,35 @@ describe('recovery service policy', () => {
     expect(JSON.stringify(harness.repository.audits)).not.toContain(
       'Synthetic-Recovery-Credential!',
     );
+  });
+
+  it('stages a subject-wide recovery restriction before changing native credentials', async () => {
+    const harness = service();
+    harness.auth.restrictionWasStaged = () =>
+      harness.repository.recoveryRestrictionStages.length === 1;
+
+    await harness.service.prepareRecoveryCompletion(
+      {
+        requestId: '71000000-0000-4000-8000-000000000038',
+        idempotencyKey: 'synthetic-recovery-key-0005',
+      },
+      '71000000-0000-4000-8000-000000000032',
+      {
+        caseToken: 'synthetic-case-token-00000000000000000000',
+        handle: 'patient@synthetic.shifaa.test',
+        recoveryOtp: '123456',
+        proofMethod: 'repeated_identity_proof',
+        verificationCaseId: '71000000-0000-4000-8000-000000000033',
+        newCredential: 'Synthetic-Recovery-Credential!',
+      },
+    );
+
+    expect(harness.repository.recoveryRestrictionStages).toEqual([
+      {
+        caseId: '71000000-0000-4000-8000-000000000032',
+        personId: '71000000-0000-4000-8000-000000000004',
+      },
+    ]);
   });
 
   it('rejects ordinary sessions, malformed proof combinations, and invalid OTPs before binding or revocation', async () => {

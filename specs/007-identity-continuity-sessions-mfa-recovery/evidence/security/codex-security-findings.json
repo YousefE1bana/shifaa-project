@@ -1,0 +1,354 @@
+{
+  "documentType": "codex-security.findings",
+  "findings": [
+    {
+      "confidence": {
+        "level": "high",
+        "rationale": "Direct route-to-provider trace shows the key was parsed but did not enter the idempotency store."
+      },
+      "findingId": "csf_33ff82f85bc744856bf72c1f",
+      "fingerprints": {
+        "algorithm": "codex-security/v1",
+        "primary": "codex-security/v1:sha256:991adcfcb8b0d1ba1b60b1a8505cdf367fc65069c8cbfd9ec0ab0df92fdaa35e"
+      },
+      "identity": {
+        "anchor": "refresh-rotation-bypasses-the-required-idempotency-store"
+      },
+      "locations": [
+        {
+          "endLine": 227,
+          "path": "services/api/src/routes/identity-continuity.ts",
+          "role": "root_control",
+          "startLine": 227
+        },
+        {
+          "endLine": 138,
+          "path": "services/api/src/adapters/supabase-auth.ts",
+          "role": "sink",
+          "startLine": 138
+        }
+      ],
+      "occurrenceId": "occ_70c64e09eaa548632222c4db",
+      "provenance": {
+        "candidateIds": [
+          "candidate-df43fba63b8aa3c0"
+        ],
+        "source": "local_plugin"
+      },
+      "remediation": "Wrap provider refresh rotation in the shared idempotency store with a key-scoped HMAC principal and reject changed-body reuse.",
+      "remediationTests": [
+        "Concurrent same-key refresh returns one canonical result and one provider call.",
+        "Same key with a changed body returns 409."
+      ],
+      "ruleId": "feature007.refresh-idempotency-bypass",
+      "severity": {
+        "level": "medium",
+        "score": 6.5,
+        "scoringSystem": "CVSS:3.1"
+      },
+      "summary": "Repeated or concurrent refresh requests can reach native provider token rotation without returning the first canonical result for the supplied Idempotency-Key.",
+      "taxonomy": {
+        "category": "race-condition",
+        "cwe": [
+          "CWE-362"
+        ]
+      },
+      "title": "Refresh rotation bypasses the required idempotency store"
+    },
+    {
+      "confidence": {
+        "level": "high",
+        "rationale": "Credential replacement, global logout, and sign-in visibly preceded any durable subject restriction."
+      },
+      "findingId": "csf_4f690515bec2e57007a8cb8d",
+      "fingerprints": {
+        "algorithm": "codex-security/v1",
+        "primary": "codex-security/v1:sha256:5ec9a5e3d37b4207ba1ed10537ca359442110e4ce505d4bf683ed0cbea4dfd27"
+      },
+      "identity": {
+        "anchor": "credential-replacement-occurs-before-a-durable-restriction-checkpoint"
+      },
+      "locations": [
+        {
+          "endLine": 390,
+          "path": "services/api/src/modules/identity-continuity/service.ts",
+          "role": "sink",
+          "startLine": 385
+        },
+        {
+          "endLine": 129,
+          "path": "services/api/src/adapters/postgres/idempotency-store.ts",
+          "role": "root_control",
+          "startLine": 128
+        }
+      ],
+      "occurrenceId": "occ_0a098a2f3d3f4555a8d6e2a9",
+      "provenance": {
+        "candidateIds": [
+          "candidate-2527d525ce673e60"
+        ],
+        "source": "local_plugin"
+      },
+      "remediation": "Persist a subject-wide deny-only recovery restriction before any native mutation, then make finalization resumable.",
+      "remediationTests": [
+        "Lost-factor recovery stages restriction before provider credential update.",
+        "A different session for the same subject remains restricted after staged failure."
+      ],
+      "ruleId": "feature007.recovery-precheckpoint-gap",
+      "severity": {
+        "level": "medium",
+        "score": 6.8,
+        "scoringSystem": "CVSS:3.1"
+      },
+      "summary": "A failure after native credential mutation but before durable recovery finalization can leave the recovered subject able to obtain ordinary access without the required replacement factor.",
+      "taxonomy": {
+        "category": "authorization",
+        "cwe": [
+          "CWE-367",
+          "CWE-863"
+        ]
+      },
+      "title": "Credential replacement occurs before a durable restriction checkpoint"
+    },
+    {
+      "confidence": {
+        "level": "high",
+        "rationale": "The shared Map allocation path and all eight concrete call sites were reviewed."
+      },
+      "findingId": "csf_56a3a1858f7b0aa087b1fa41",
+      "fingerprints": {
+        "algorithm": "codex-security/v1",
+        "primary": "codex-security/v1:sha256:3224cae1a4ae87550fa8fb49e5d50030c15eb07897b807e52bfb1a017029654e"
+      },
+      "identity": {
+        "anchor": "pre-authentication-rate-limiter-retains-unbounded-attacker-selected-buckets"
+      },
+      "locations": [
+        {
+          "endLine": 106,
+          "path": "services/api/src/modules/identity-continuity/security.ts",
+          "role": "root_control",
+          "startLine": 85
+        },
+        {
+          "endLine": 417,
+          "path": "services/api/src/routes/identity-continuity.ts",
+          "role": "entrypoint",
+          "startLine": 226
+        }
+      ],
+      "occurrenceId": "occ_d650fa475f42568e9b3dfaa8",
+      "provenance": {
+        "candidateIds": [
+          "candidate-12a8038fca258b50",
+          "candidate-0753a67992efc44f",
+          "candidate-cf31180eb213ee27",
+          "candidate-efdb156ed5e83345",
+          "candidate-3e2102f0f1ea4645",
+          "candidate-61ef2a89e3fcb1f8",
+          "candidate-9c4e15e5d1cbc015",
+          "candidate-50b16b1b22a240c7"
+        ],
+        "source": "local_plugin"
+      },
+      "remediation": "Bound the bucket map, purge expired buckets before allocating, and fail closed at capacity without adding another key.",
+      "remediationTests": [
+        "Expired buckets are evicted before capacity denial.",
+        "A new subject is denied at the live-bucket cap and map size does not grow."
+      ],
+      "ruleId": "feature007.rate-bucket-cardinality",
+      "severity": {
+        "level": "low",
+        "score": 3.7,
+        "scoringSystem": "CVSS:3.1"
+      },
+      "summary": "Eight Feature-007 route subjects can allocate unique HMAC rate-bucket entries without a global capacity limit or proactive expired-entry eviction.",
+      "taxonomy": {
+        "category": "resource-exhaustion",
+        "cwe": [
+          "CWE-400"
+        ]
+      },
+      "title": "Pre-authentication rate limiter retains unbounded attacker-selected buckets"
+    },
+    {
+      "confidence": {
+        "level": "high",
+        "rationale": "All nine endpoints share the same JWT-only actor wrapper and reach protected sinks without current-session authority."
+      },
+      "findingId": "csf_bf541eb00de8cce327daa95b",
+      "fingerprints": {
+        "algorithm": "codex-security/v1",
+        "primary": "codex-security/v1:sha256:c332bfdf4c72e7595498a9f8cf34182d51ff6e54164944b7e096f82e47ef90cc"
+      },
+      "identity": {
+        "anchor": "revoked-or-recovery-restricted-jwt-reaches-nine-legacy-identity-operations"
+      },
+      "locations": [
+        {
+          "endLine": 94,
+          "path": "services/api/src/routes/identity-onboarding.ts",
+          "role": "root_control",
+          "startLine": 71
+        },
+        {
+          "endLine": 150,
+          "path": "services/api/src/modules/identity-onboarding/service.ts",
+          "role": "sink",
+          "startLine": 139
+        },
+        {
+          "endLine": 118,
+          "path": "services/api/src/adapters/supabase-auth.ts",
+          "role": "concrete_implementation",
+          "startLine": 116
+        }
+      ],
+      "occurrenceId": "occ_8789461790ea4d55d3bc5695",
+      "provenance": {
+        "candidateIds": [
+          "candidate-38d12cabd8514d91",
+          "candidate-ec606245be413696",
+          "candidate-c6e3a6f8de9ecff4",
+          "candidate-0e34317f886e126f",
+          "candidate-53fd08c68245a3bc",
+          "candidate-d0cd541e9d9df868",
+          "candidate-744846c0fce59d87",
+          "candidate-679b3b6c1303a154",
+          "candidate-f8962b58c655067a"
+        ],
+        "source": "local_plugin"
+      },
+      "remediation": "Propagate native session_id and require authoritative current-session plus subject-restriction decisions before OTP session return and every protected identity-onboarding operation.",
+      "remediationTests": [
+        "A restricted session is denied before a protected onboarding sink.",
+        "A revoked session is denied while its JWT remains cryptographically valid."
+      ],
+      "ruleId": "feature007.legacy-session-authority-bypass",
+      "severity": {
+        "level": "high",
+        "score": 8.1,
+        "scoringSystem": "CVSS:3.1"
+      },
+      "summary": "Nine protected identity-onboarding reads and mutations verify JWT/profile ownership but omit authoritative auth.sessions current-state and subject-wide recovery-restriction enforcement.",
+      "taxonomy": {
+        "category": "authorization",
+        "cwe": [
+          "CWE-613",
+          "CWE-863"
+        ]
+      },
+      "title": "Revoked or recovery-restricted JWT reaches nine legacy identity operations"
+    },
+    {
+      "confidence": {
+        "level": "high",
+        "rationale": "The SQL predicate omitted identity verification_status and expires_on while a true result reached credential replacement."
+      },
+      "findingId": "csf_1bd0b08d3681b11bc005a73b",
+      "fingerprints": {
+        "algorithm": "codex-security/v1",
+        "primary": "codex-security/v1:sha256:588b29ecb8829283f573f8b23d82096b3dfbf04fbd7d8cfc8d60b5593b89c115"
+      },
+      "identity": {
+        "anchor": "expired-or-revoked-identity-evidence-can-satisfy-lost-factor-recovery"
+      },
+      "locations": [
+        {
+          "endLine": 432,
+          "path": "services/api/src/adapters/postgres/identity-continuity-service.ts",
+          "role": "root_control",
+          "startLine": 425
+        },
+        {
+          "endLine": 385,
+          "path": "services/api/src/modules/identity-continuity/service.ts",
+          "role": "sink",
+          "startLine": 385
+        }
+      ],
+      "occurrenceId": "occ_46f3daa9031e9371f6e23bcd",
+      "provenance": {
+        "candidateIds": [
+          "candidate-b00bc8917fa7be1c"
+        ],
+        "source": "local_plugin"
+      },
+      "remediation": "Require a decided verified case joined to a currently verified, non-expired identity, without inventing a non-canonical freshness duration.",
+      "remediationTests": [
+        "A verified case linked only to a revoked identity is rejected.",
+        "A verified case linked only to an expired identity is rejected."
+      ],
+      "ruleId": "feature007.stale-recovery-proof",
+      "severity": {
+        "level": "high",
+        "score": 8,
+        "scoringSystem": "CVSS:3.1"
+      },
+      "summary": "The repeated-proof predicate accepts a verified case without requiring a currently verified and unexpired linked identity.",
+      "taxonomy": {
+        "category": "authorization",
+        "cwe": [
+          "CWE-863"
+        ]
+      },
+      "title": "Expired or revoked identity evidence can satisfy lost-factor recovery"
+    },
+    {
+      "confidence": {
+        "level": "high",
+        "rationale": "The restriction lookup required bound_native_session_id while normal login could issue another session for the same subject."
+      },
+      "findingId": "csf_25aacc7a7a245ff422703cbb",
+      "fingerprints": {
+        "algorithm": "codex-security/v1",
+        "primary": "codex-security/v1:sha256:d0bbb859ae860af8ea0fbb3bd559f25098a1d97f7b93880305be60c7ca263685"
+      },
+      "identity": {
+        "anchor": "restricted-recovery-can-be-bypassed-by-issuing-a-new-ordinary-session"
+      },
+      "locations": [
+        {
+          "endLine": 83,
+          "path": "services/api/src/adapters/postgres/identity-continuity-service.ts",
+          "role": "root_control",
+          "startLine": 61
+        },
+        {
+          "endLine": 191,
+          "path": "services/api/src/routes/identity-onboarding.ts",
+          "role": "entrypoint",
+          "startLine": 166
+        }
+      ],
+      "occurrenceId": "occ_8b006e6d06ea57d5369df0fe",
+      "provenance": {
+        "candidateIds": [
+          "candidate-c331b374efd6784c"
+        ],
+        "source": "local_plugin"
+      },
+      "remediation": "Enforce the restriction by subject across every session and every protected Core API operation until replacement-factor completion.",
+      "remediationTests": [
+        "A second session for the restricted subject receives mfa_enrollment_only.",
+        "Legacy protected onboarding operations deny the subject-wide restricted session."
+      ],
+      "ruleId": "feature007.session-scoped-recovery-restriction",
+      "severity": {
+        "level": "high",
+        "score": 8.4,
+        "scoringSystem": "CVSS:3.1"
+      },
+      "summary": "Recovery restriction is keyed to one native session ID, so the recovered subject can obtain another session that is not restricted.",
+      "taxonomy": {
+        "category": "authorization",
+        "cwe": [
+          "CWE-863"
+        ]
+      },
+      "title": "Restricted recovery can be bypassed by issuing a new ordinary session"
+    }
+  ],
+  "scanId": "3ef18add-b9a5-4b93-baa7-c4c556bc3469",
+  "schemaVersion": "1.0"
+}

@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 
 import type { ContinuityAuthPort, VerifiedContinuitySession } from '@shifaa/auth';
 import Fastify from 'fastify';
@@ -47,6 +47,7 @@ describe.skipIf(!enabled).sequential('dependent transition real PostgreSQL/API c
   let fixture: Fixture;
   let app = Fastify({ logger: false, genReqId: () => randomUUID() });
   let familyService: PostgresFamilyCareService;
+  let transitionRepository: TransitionTestRepository;
 
   beforeAll(async () => {
     fixture = await seedTransitionFixture(owner);
@@ -58,7 +59,7 @@ describe.skipIf(!enabled).sequential('dependent transition real PostgreSQL/API c
     const auth = {
       verifyAccessToken: (token: string) => Promise.resolve(claims.get(token)),
     } as ContinuityAuthPort;
-    const transitionRepository = new TransitionTestRepository(
+    transitionRepository = new TransitionTestRepository(
       repository,
       new Map([
         [fixture.subjectAuthUserId, fixture.subjectPersonId],
@@ -178,6 +179,70 @@ describe.skipIf(!enabled).sequential('dependent transition real PostgreSQL/API c
       recordConsequence: 'unchanged_before_decision',
       priorAuthorityConsequence: 'current_until_decision',
     });
+  });
+
+  it('rejects recovery proof whose linked identity is no longer current', async () => {
+    await expect(
+      transitionRepository.recoveryProofIsApproved({
+        personId: fixture.subjectPersonId,
+        verificationCaseId: fixture.verificationCaseId,
+      }),
+    ).resolves.toBe(true);
+    await owner`update identity.identities set verification_status='revoked'
+      where id=(select identity_id from identity.verification_cases where id=${fixture.verificationCaseId}::uuid)`;
+    try {
+      await expect(
+        transitionRepository.recoveryProofIsApproved({
+          personId: fixture.subjectPersonId,
+          verificationCaseId: fixture.verificationCaseId,
+        }),
+      ).resolves.toBe(false);
+    } finally {
+      await owner`update identity.identities set verification_status='verified'
+        where id=(select identity_id from identity.verification_cases where id=${fixture.verificationCaseId}::uuid)`;
+    }
+  });
+
+  it('stages a recovery restriction across every native session for the subject', async () => {
+    const caseId = randomUUID();
+    const publicTokenDigest = randomBytes(32);
+    const recoveryHandleDigest = randomBytes(32);
+    const subjectAuthority = new PostgresIdentityContinuityService(
+      repository,
+      Buffer.alloc(32, 43),
+      'ci',
+    );
+    await owner`alter table identity.continuity_cases no force row level security`;
+    try {
+      await owner`insert into identity.continuity_cases(
+        id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
+        token_key_version,created_at,expires_at
+      ) values(
+        ${caseId}::uuid,'account_recovery',${fixture.subjectPersonId}::uuid,'proof_required',
+        ${publicTokenDigest},${recoveryHandleDigest},1,${now},${new Date(
+          now.getTime() + 15 * 60_000,
+        )}::timestamptz
+      )`;
+    } finally {
+      await owner`alter table identity.continuity_cases force row level security`;
+    }
+
+    try {
+      await subjectAuthority.stageRecoveryRestriction({
+        caseId,
+        personId: fixture.subjectPersonId,
+      });
+      await expect(
+        subjectAuthority.restrictionForSession(randomUUID(), fixture.subjectAuthUserId),
+      ).resolves.toBe('mfa_enrollment_only');
+    } finally {
+      await owner`alter table identity.continuity_cases no force row level security`;
+      try {
+        await owner`delete from identity.continuity_cases where id=${caseId}::uuid`;
+      } finally {
+        await owner`alter table identity.continuity_cases force row level security`;
+      }
+    }
   });
 
   it('requires human review for a blocker and gives one concurrent decision winner', async () => {

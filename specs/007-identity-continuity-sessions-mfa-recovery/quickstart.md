@@ -1,6 +1,6 @@
 # Feature 007 validation quickstart
 
-> This is the staged validation guide. Tasks T001-T022 are implemented; later checkpoints remain planned.
+> This is the staged validation guide. Tasks T001-T048 are implemented and verified on the current Feature-007 branch; PR checks and Product Owner merge authorization remain external lifecycle gates. Nothing here claims merge or production release.
 
 ## Prerequisites
 

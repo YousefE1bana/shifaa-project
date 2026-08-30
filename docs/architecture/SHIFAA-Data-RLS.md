@@ -1,7 +1,7 @@
 # SHIFAA Data and RLS Contract
 
-> **Version:** 1.2.0 · **Status:** Proposed normative logical baseline · **Last verified:** 2026-08-13
-> Seeded-synthetic physical DDL now exists for features 001–004. Production infrastructure and formal approval remain governed by the canonical open items, including `OPEN-TECH-002` and `OPEN-SEC-001`.
+> **Version:** 1.3.0 · **Status:** Proposed normative logical baseline · **Last verified:** 2026-08-30
+> Seeded-synthetic physical DDL now exists for features 001–007. Feature 007 remains pending final PR integration, and production infrastructure/formal release remain governed by the canonical open items.
 
 ## 1. Global conventions
 
@@ -217,3 +217,13 @@ Every row/object references one of: `IDENTITY_PROOF`, `CLINICAL_RECORD`, `PRESCR
 - ER-share availability reads canonical `identity.patients.blood_group` only. Allergies, medicines, chronic conditions, and emergency notes remain explicitly unavailable until their later canonical sources exist; 006 adds no shadow clinical table.
 - Hospital worklists expose only incidents matched to the actor's current facility membership and recheck purpose/AAL2. Subject actions independently recheck self/current relationship plus `sos.activate` or `sos.share`.
 - The dedicated non-`BYPASSRLS` worker can claim only SOS contact events, rechecks active incident/current confirmed contact and consented precision, and uses the local-synthetic adapter. Production messaging and statutory location deletion remain blocked by `OPEN-VENDOR-002` and `OPEN-LEGAL-002`.
+
+## 14. Feature 007 identity-continuity realization
+
+- `identity.continuity_cases` is the single workflow table for account-recovery and dependent-transition cases. Closed case types, states, restriction scope, Cairo-date eligibility, optimistic versioning, unconditional foreign-key indexes, partial active-case indexes, and constrained transitions prevent a shadow session/factor/legal-status store.
+- Native `auth.sessions` is introspected only on the Supabase stack. `platform.auth_session_is_current` returns a boolean current-state decision to `shifaa_api`; standalone Compose deliberately has no Auth schema. Application code cannot mutate Auth tables directly.
+- Recovery stores only keyed/digested public material, binds a real subject only after the provider callback, and persists a subject-wide `mfa_enrollment_only` deny checkpoint before native credential/session mutation. A verified recovery proof must remain linked to a current, unexpired verified identity.
+- Dependent transition uses fixed-search-path security-definer functions, exact current subject/patient/relationship matching, Cairo civil-date eligibility, released proof, independent assigned support authority, separation of duties, row locking, version checks, and the 20 frozen legal vectors. It changes the existing guardianship record; it does not create a new legal-status table.
+- `identity.continuity_cases` has ENABLE/FORCE RLS. Subject, assigned reviewer, pre-auth recovery, and restricted enrollment contexts are separate; `PUBLIC`, `anon`, and `authenticated` receive no table/function authority. `shifaa_api` and `shifaa_worker` remain non-owner and non-`BYPASSRLS`.
+- Factor, recovery, and transition events extend the existing outbox/template/receipt foundation. Worker claims preserve per-aggregate order and resolve only the current active governed address to a synthetic digest alias. Tokens, OTP/TOTP, factor material, credentials, proof, addresses, and PHI are absent from payloads, audit metadata, logs, and evidence.
+- Processing inventory, transient recovery-decoy classification, and the fixed worker-only 24-hour post-expiry decoy purge are realized without inventing a statutory subject-evidence retention period. Production identity and messaging adapters remain disabled by their canonical gates.

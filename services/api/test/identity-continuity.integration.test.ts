@@ -354,6 +354,23 @@ describe('identity continuity exact route contract', () => {
     expect(changed.json()).toMatchObject({ code: 'idempotency-key-reused' });
   });
 
+  it('deduplicates refresh rotation by idempotency key before the provider boundary', async () => {
+    const request = (token: string) =>
+      app.inject({
+        method: 'POST',
+        url: '/v1/auth/session/refresh',
+        headers: { 'idempotency-key': key },
+        payload: { client: 'native', foregroundEngaged: true, refreshToken: token },
+      });
+    const [first, replay] = await Promise.all([request(refreshToken), request(refreshToken)]);
+    expect(first.statusCode).toBe(200);
+    expect(replay.statusCode).toBe(200);
+    expect(service.calls).toBe(1);
+    const changed = await request(`${refreshToken}-changed`);
+    expect(changed.statusCode).toBe(409);
+    expect(changed.json()).toMatchObject({ code: 'idempotency-key-reused' });
+  });
+
   it.each([
     ['semantic failure', new ApiPolicyError('factor-type-unsupported', 422, 'TOTP only.'), 422],
     ['stale version', new ApiPolicyError('version-conflict', 409, 'Refresh first.'), 409],

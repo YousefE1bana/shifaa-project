@@ -12,6 +12,7 @@ import type {
 import type { TransitionResult } from '@shifaa/contracts/identity-continuity';
 import { TransientReplayCipher } from '../../modules/identity-continuity/security.js';
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
+import type { AuthSession, SessionAuthority } from '../../modules/identity-onboarding/ports.js';
 import { PostgresIdentityRepository } from './identity-repository.js';
 
 const PENDING_MARKER_ROUTE = '/v1/auth/mfa/enroll#pending-marker';
@@ -26,7 +27,7 @@ type StoredSealedMarker = {
   expiresAt?: unknown;
 };
 
-export class PostgresIdentityContinuityService implements ContinuityRepository {
+export class PostgresIdentityContinuityService implements ContinuityRepository, SessionAuthority {
   private readonly cipher: TransientReplayCipher;
 
   public constructor(
@@ -77,11 +78,23 @@ export class PostgresIdentityContinuityService implements ContinuityRepository {
         select restriction_scope
         from identity.continuity_cases
         where subject_person_id=${mapping.person_id}::uuid
-          and bound_native_session_id=${sessionId}::uuid
-          and status='restricted_enrollment'
+          and restriction_scope='mfa_enrollment_only'
+          and status in ('proof_required','restricted_enrollment')
         limit 1`;
       return row?.restriction_scope ?? null;
     });
+  }
+
+  public async authorize(session: AuthSession): Promise<'allowed' | 'revoked' | 'restricted'> {
+    if (!session.sessionId) return 'revoked';
+    const current = await this.isNativeSessionCurrent(
+      session.sessionId,
+      session.subjectId,
+      session.aal,
+    );
+    if (!current) return 'revoked';
+    const restriction = await this.restrictionForSession(session.sessionId, session.subjectId);
+    return restriction ? 'restricted' : 'allowed';
   }
 
   public async withSerializedFactorState<T>(subjectId: string, work: () => Promise<T>): Promise<T> {
@@ -427,9 +440,39 @@ export class PostgresIdentityContinuityService implements ContinuityRepository {
           select 1 from identity.verification_cases c
           join identity.identities i on i.id=c.identity_id
           where c.id=${input.verificationCaseId}::uuid
-            and i.person_id=${input.personId}::uuid and c.state='verified'
+            and i.person_id=${input.personId}::uuid
+            and c.state='verified' and c.decided_at is not null
+            and i.verification_status='verified'
+            and (i.expires_on is null or i.expires_on>=(platform.context_now() at time zone 'Africa/Cairo')::date)
         ) approved`;
       return proof?.approved === true;
+    });
+  }
+
+  public async stageRecoveryRestriction(input: {
+    caseId: string;
+    personId: string;
+  }): Promise<void> {
+    await this.repository.withRawTransaction(async (sql) => {
+      await sql`
+        select set_config('shifaa.person_id',${input.personId},true),
+               set_config('shifaa.actor_role','PAT',true),
+               set_config('shifaa.aal','1',true),
+               set_config('shifaa.purposes','',true),
+               set_config('shifaa.action','completeRecovery',true),
+               set_config('shifaa.case_id',${input.caseId},true)`;
+      const staged = await sql`
+        update identity.continuity_cases
+        set restriction_scope='mfa_enrollment_only',version=version+1,updated_at=now()
+        where id=${input.caseId}::uuid and subject_person_id=${input.personId}::uuid
+          and status='proof_required'
+        returning id`;
+      if (staged.length !== 1)
+        throw new ApiPolicyError(
+          'state-transition-invalid',
+          409,
+          'The recovery restriction could not be staged.',
+        );
     });
   }
 

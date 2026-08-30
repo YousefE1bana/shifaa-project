@@ -125,10 +125,14 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
   });
   await app.ready();
 
+  const nativeRefreshKey = `native-refresh-${randomUUID()}`;
+  const webRefreshKey = `web-refresh-${randomUUID()}`;
+  const secondRefreshKey = `second-refresh-${randomUUID()}`;
+  const journeyRefreshKeys = new Set([nativeRefreshKey, webRefreshKey, secondRefreshKey]);
   const nativeRefresh = await app.inject({
     method: 'POST',
     url: '/v1/auth/session/refresh',
-    headers: { 'idempotency-key': `native-refresh-${randomUUID()}`, 'accept-language': locale },
+    headers: { 'idempotency-key': nativeRefreshKey, 'accept-language': locale },
     payload: {
       client: 'native',
       foregroundEngaged: true,
@@ -147,7 +151,7 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
     method: 'POST',
     url: '/v1/auth/session/refresh',
     headers: {
-      'idempotency-key': `web-refresh-${randomUUID()}`,
+      'idempotency-key': webRefreshKey,
       'accept-language': locale,
       cookie: `shifaa_refresh=${encodeURIComponent(webLogin.data.session.refresh_token)}; shifaa_csrf=${encodeURIComponent(csrfToken)}`,
       'x-csrf-token': csrfToken,
@@ -179,7 +183,7 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
   const secondRefresh = await app.inject({
     method: 'POST',
     url: '/v1/auth/session/refresh',
-    headers: { 'idempotency-key': `second-refresh-${randomUUID()}`, 'accept-language': locale },
+    headers: { 'idempotency-key': secondRefreshKey, 'accept-language': locale },
     payload: {
       client: 'native',
       foregroundEngaged: true,
@@ -232,7 +236,7 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
     where action in ('identity.session.refreshed','identity.session.logged_out')
     order by occurred_at desc limit 4`;
   const idempotencyRows = await owner`
-    select route,response_body::text response_body
+    select route,idempotency_key,response_body::text response_body
     from platform.idempotency_records
     where route in ('/v1/auth/session/refresh','/v1/auth/logout')`;
   const outboxRows = await owner`
@@ -261,7 +265,8 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
     currentCookieCleared: String(currentLogout.headers['set-cookie']).includes('Max-Age=0'),
     providerRefreshTokenLength: first.session.refresh_token.length,
     refreshPersistenceCount: idempotencyRows.filter(
-      (row: { route: string }) => row.route === '/v1/auth/session/refresh',
+      (row: { route: string; idempotency_key: string }) =>
+        row.route === '/v1/auth/session/refresh' && journeyRefreshKeys.has(row.idempotency_key),
     ).length,
     auditCount: auditRows.length,
     durableText: JSON.stringify({ auditRows, idempotencyRows, outboxRows }),

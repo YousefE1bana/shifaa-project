@@ -382,6 +382,10 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       recovery.session.accessToken,
       binding.personId,
     );
+    await this.dependencies.repository.stageRecoveryRestriction({
+      caseId,
+      personId: binding.personId,
+    });
     await this.dependencies.auth.updateRecoveredCredential(
       recovery.session.accessToken,
       body.newCredential,

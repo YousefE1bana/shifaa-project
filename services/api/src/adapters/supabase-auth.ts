@@ -110,12 +110,20 @@ export class SupabaseAuthIssuer implements AuthIssuer, ContinuityAuthPort {
       subjectId: verified.subjectId,
       accessToken: data.session.access_token,
       aal: verified.aal,
+      sessionId: verified.sessionId,
     };
   }
 
   public async resolveSession(accessToken: string): Promise<AuthSession | undefined> {
     const verified = await this.verifier.verify(accessToken);
-    return verified ? { subjectId: verified.subjectId, accessToken, aal: verified.aal } : undefined;
+    return verified
+      ? {
+          subjectId: verified.subjectId,
+          accessToken,
+          aal: verified.aal,
+          sessionId: verified.sessionId,
+        }
+      : undefined;
   }
 
   public async verifyAccessToken(

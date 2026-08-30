@@ -12,3 +12,9 @@ apps/lab/next-env.d.ts
 .turbo/
 pnpm-lock.yaml
 ECU-Deliverables/*.pdf
+# Sealed/generated Feature-007 security artifacts; byte digests are evidence.
+specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/codex-security-coverage.json
+specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/codex-security-findings.json
+specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/codex-security-report.md
+specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/codex-security-scan-manifest.json
+specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/repository-sbom.cdx.json

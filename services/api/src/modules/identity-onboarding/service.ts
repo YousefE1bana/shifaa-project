@@ -124,6 +124,7 @@ export class IdentityOnboardingService {
   }
 
   public async completeOtpVerification(session: AuthSession, requestId: string) {
+    await this.assertSessionAuthority(session);
     const profile = await this.ports.repository.profileByAuthSubject(session.subjectId);
     if (!profile) throw new ApiPolicyError('profile-not-found', 404, 'Profile not found.');
     await this.ports.repository.appendAudit({
@@ -139,6 +140,7 @@ export class IdentityOnboardingService {
   public async actorFromAccessToken(accessToken: string): Promise<PatientActor | undefined> {
     const session = await this.ports.auth.resolveSession(accessToken);
     if (!session) return undefined;
+    await this.assertSessionAuthority(session);
     const profile = await this.ports.repository.profileByAuthSubject(session.subjectId);
     if (!profile) return undefined;
     return {
@@ -148,6 +150,18 @@ export class IdentityOnboardingService {
       principal: profile.id,
       aal: session.aal,
     };
+  }
+
+  private async assertSessionAuthority(session: AuthSession): Promise<void> {
+    const decision = await this.ports.sessionAuthority?.authorize(session);
+    if (!decision || decision === 'allowed') return;
+    if (decision === 'revoked')
+      throw new ApiPolicyError('session-revoked', 401, 'The session is not current.');
+    throw new ApiPolicyError(
+      'recovery-mfa-enrollment-required',
+      403,
+      'Complete replacement-factor enrollment before continuing.',
+    );
   }
 
   public async getProfile(actor: RequestActor) {

@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-08-30T02:52:39.209Z",
+  "result": "PASS",
+  "environment": {
+    "mode": "local Supabase native Auth + PostgreSQL forced RLS + synthetic local worker",
+    "node": "v24.18.0",
+    "platform": "win32",
+    "architecture": "x64",
+    "reference_device": "Developer Windows workstation; loopback network. Not formal field-device/network evidence.",
+    "limitation": "OPEN-TECH-003 remains open for reproducible device, browser, network, and accessibility performance acceptance."
+  },
+  "dataset": {
+    "concurrent_native_sessions": 100,
+    "people": 5000,
+    "patients": 5000,
+    "native_session_checks": 5000,
+    "recovery_intake_mutations": 1000,
+    "dependent_transition_mutations": 1000,
+    "transition_worker_deliveries": 1000
+  },
+  "pool_warmup": {
+    "configured_connections": 20,
+    "observed_connections": 20,
+    "warmup_requests": 20,
+    "excluded_from_samples": true
+  },
+  "thresholds_ms": {
+    "read_p95": 400,
+    "mutation_p95": 800,
+    "worker_mutation_p95": 800
+  },
+  "measured_ms": {
+    "native_session_check_read_p95": 42.68,
+    "recovery_intake_mutation_p95": 70.66,
+    "dependent_transition_mutation_p95": 175.1,
+    "combined_mutation_p95": 158.86,
+    "transition_worker_mutation_p95": 19.82
+  }
+}

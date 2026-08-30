@@ -140,6 +140,7 @@ export interface ContinuityRepository {
     personId: string;
     verificationCaseId: string;
   }): Promise<boolean>;
+  stageRecoveryRestriction(input: { caseId: string; personId: string }): Promise<void>;
   finalizeRecovery(input: {
     caseId: string;
     personId: string;

@@ -67,7 +67,7 @@ describe.skipIf(!enabled).sequential('007 real native session continuation and r
       contentLanguage: 'en-EG',
       currentCookieCleared: true,
       providerRefreshTokenLength: 12,
-      refreshPersistenceCount: 0,
+      refreshPersistenceCount: 3,
     });
     expect(evidence.auditCount).toBeGreaterThanOrEqual(4);
     for (const sentinel of evidence.tokenSentinels) {

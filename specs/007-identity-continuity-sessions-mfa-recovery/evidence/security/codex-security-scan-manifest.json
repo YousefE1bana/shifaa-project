@@ -1,0 +1,83 @@
+{
+  "documentType": "codex-security.scan-manifest",
+  "scan": {
+    "artifacts": [
+      {
+        "mediaType": "application/json",
+        "path": "findings.json",
+        "sha256": "df94010844d22b6eaa9eb1a3fe87669ddcc8891fe50255a6eced9aa0bf37b492"
+      },
+      {
+        "mediaType": "application/json",
+        "path": "coverage.json",
+        "sha256": "cd33655ec8a3cc36a69ded623fa1c7367736608cb817703c3845b31e98f2e385"
+      }
+    ],
+    "completedAt": "2026-08-29T09:17:34.935607Z",
+    "coverageRef": "coverage.json",
+    "findingsRef": "findings.json",
+    "id": "3ef18add-b9a5-4b93-baa7-c4c556bc3469",
+    "preservedSources": {
+      "checkpoints/374059e05499d9b3d9b511fe7efd7bf59c72fa94e5b4bc481800bacabde2f076.json": "374059e05499d9b3d9b511fe7efd7bf59c72fa94e5b4bc481800bacabde2f076",
+      "checkpoints/68dd2be61c70f7297cd5cfc809f50937ef4cca73622a779077a0f4973bf67600.json": "b87d5ec63da7cd606a60623d5def0d74a905fe6dd444b08b4da9855fd1c29bd5"
+    },
+    "producer": {
+      "name": "codex-security-plugin",
+      "version": "0.1.22"
+    },
+    "scope": {
+      "context": "Exactly eight Feature-007 operations; native Supabase Auth remains authoritative.",
+      "excludePaths": [],
+      "includePaths": [
+        "."
+      ],
+      "limitations": [
+        "The immutable scan target is pre-remediation HEAD e8fc415; closure evidence is in the current working tree and will be committed after T044-T048.",
+        "Local CodeQL is unavailable; the pinned GitHub CodeQL workflow remains a required PR check."
+      ],
+      "runtimeStatus": "All remediation gates pass in the current working tree.",
+      "summary": "Complete Feature-007 diff security review over 89 changed-source worklist items.",
+      "validationMode": "Static source/control/sink validation plus executable native Supabase, standalone PostgreSQL/RLS, recovery, transition and worker gates."
+    },
+    "sealedAt": "2026-08-29T09:17:34.935607Z",
+    "startedAt": "2026-08-29T03:31:34.976369Z",
+    "status": "completed",
+    "target": {
+      "baseRevision": "ccd76c4875821beb246fa3b0abf32f225c54f6ae",
+      "displayName": "Gradution-Project-007-identity-continuity-sessions-mfa-recovery",
+      "headRevision": "e8fc415c3408a3a2c74c677a851776fe5de8d3df",
+      "kind": "git_diff",
+      "snapshotDigest": "codex-security-snapshot/v1:sha256:6a1b80405e8aeb2a7cd994fb82a9189c14a06f571df239d66106623df57d80e2",
+      "targetId": "target_sha256_034d71263967be861dd1695d5ea8a06ad60d2eda5033ffc2b85f462c428e0c2d"
+    },
+    "threatModel": {
+      "assets": [
+        "native sessions and factors",
+        "recovery proof and restricted state",
+        "guardian/dependent authority",
+        "audit and notification metadata"
+      ],
+      "attackerCapabilities": [
+        "remote unauthenticated API requests",
+        "revoked but unexpired bearer possession",
+        "valid recovery OTP with stale proof",
+        "retry and concurrency control"
+      ],
+      "securityObjectives": [
+        "authoritative current-session enforcement",
+        "subject-wide restricted recovery",
+        "oracle resistance",
+        "default-deny RLS",
+        "deduplicated and redacted delivery"
+      ],
+      "summary": "Native Auth/session, recovery, factor and dependent-transition authority crossing public Core API, PostgreSQL forced-RLS and asynchronous worker trust boundaries.",
+      "trustBoundaries": [
+        "client to Core API",
+        "Core API to Supabase Auth",
+        "Core API to PostgreSQL",
+        "outbox to worker/provider"
+      ]
+    }
+  },
+  "schemaVersion": "1.0"
+}

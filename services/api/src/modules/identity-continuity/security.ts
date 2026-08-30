@@ -87,6 +87,7 @@ export class HmacRateLimiter {
   public constructor(
     private readonly key: Uint8Array,
     private readonly now: () => number,
+    private readonly maxBuckets = 10_000,
   ) {}
 
   public consume(
@@ -98,6 +99,15 @@ export class HmacRateLimiter {
     const digest = scopedPrincipal(namespace, subject, this.key);
     const timestamp = this.now();
     const current = this.buckets.get(digest);
+    if (!current && this.buckets.size >= this.maxBuckets) {
+      for (const [key, candidate] of this.buckets) {
+        if (candidate.resetAt <= timestamp) this.buckets.delete(key);
+      }
+      if (this.buckets.size >= this.maxBuckets) {
+        const nextReset = Math.min(...[...this.buckets.values()].map((entry) => entry.resetAt));
+        return Math.max(1, Math.ceil((nextReset - timestamp) / 1_000));
+      }
+    }
     const bucket =
       !current || current.resetAt <= timestamp
         ? { count: 0, resetAt: timestamp + windowMs }

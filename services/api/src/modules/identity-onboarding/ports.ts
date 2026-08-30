@@ -17,6 +17,11 @@ export interface AuthSession {
   subjectId: string;
   accessToken: string;
   aal: 1 | 2;
+  sessionId?: string;
+}
+
+export interface SessionAuthority {
+  authorize(session: AuthSession): Promise<'allowed' | 'revoked' | 'restricted'>;
 }
 
 export interface AuthIssuer {
@@ -183,6 +188,7 @@ export interface RepositoryContext {
 
 export type IdentityOnboardingPorts = {
   auth: AuthIssuer;
+  sessionAuthority?: SessionAuthority;
   cipher: IdentityCipher;
   proofing: ProofingProvider;
   uploads: UploadStore;

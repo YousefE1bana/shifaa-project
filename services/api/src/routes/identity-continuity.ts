@@ -224,13 +224,29 @@ export async function registerIdentityContinuityRoutes(
           ? body.refreshToken
           : (context.refreshCookie ?? 'missing-web-cookie');
       rateLimit(limiter, reply, 'refreshSession', refreshSubject, 12, 5 * 60_000);
-      const session = await dependencies.service.refreshSession(context, body);
+      const stored = await dependencies.idempotency.execute({
+        principal: scopedPrincipal(
+          'refreshSession-idempotency',
+          context.idempotencyKey,
+          dependencies.hmacKey,
+        ),
+        method: request.method,
+        route: request.routeOptions.url ?? request.url,
+        key: context.idempotencyKey,
+        body,
+        work: async () => ({
+          status: 200 as const,
+          headers: responseHeaders(request),
+          body: await dependencies.service.refreshSession(context, body),
+        }),
+      });
+      const session = stored.body;
       const response = { ...session };
       if (body.client === 'web' && session.refreshToken) {
         setRefreshCookie(reply, session.refreshToken);
         delete response.refreshToken;
       }
-      return reply.headers(responseHeaders(request)).send(response);
+      return reply.headers(stored.headers).send(response);
     },
   );
 
