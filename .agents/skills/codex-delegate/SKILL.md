@@ -11,7 +11,7 @@ description: >-
 license: MIT
 compatibility: Requires the `codex` CLI (OpenAI Codex) installed and authenticated, Node 18+, and git. The orchestrating agent must be able to run shell commands and read files. Shell examples assume bash/zsh (macOS/Linux, or Git Bash/WSL on Windows).
 metadata:
-  version: 0.4.2
+  version: 0.5.0
 ---
 
 # Codex Delegate
@@ -66,6 +66,7 @@ orchestrators use that same directory — if unsure where it landed, run
 ```bash
 node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
 # read-only (review/diagnosis, no edits):   add --read-only
+# isolated review (skip ambient MCP/user config): add --ignore-user-config
 # continue the exact Codex session:         add --session <threadId>  (from result.json; send only the delta brief)
 # fallback when no thread id is available:  add --resume-last
 # hard time limit (watchdog):               add --timeout 2h  (default: off; implementation runs routinely need 1-2h)
