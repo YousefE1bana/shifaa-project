@@ -125,6 +125,53 @@ describe('identity onboarding API acceptance', () => {
     });
     expect(otpReplay.json()).toEqual(otpFirst.json());
     expect(otpFirst.headers['cache-control']).toBe('private, no-store');
+    expect(otpFirst.json()).toMatchObject({
+      kind: 'session',
+      access_token: expect.any(String),
+      refresh_token: expect.any(String),
+    });
+    await harness.app.close();
+  });
+
+  it('projects the refresh credential to native OTP clients but keeps it out of browser JSON', async () => {
+    const harness = await buildApp();
+    const register = async (handle: string, key: string) => {
+      const response = await harness.app.inject({
+        method: 'POST',
+        url: '/v1/auth/register',
+        headers: { 'idempotency-key': `${key}-register` },
+        payload: { locale: 'en-EG', handle, password: 'Synthetic-Only-2026!' },
+      });
+      return response.json().challenge_id as string;
+    };
+    const nativeChallenge = await register('native-otp@synthetic.shifaa.test', 'native-otp');
+    const native = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/auth/otp/verify',
+      headers: { 'idempotency-key': 'native-otp-verify' },
+      payload: { challenge_id: nativeChallenge, code: LocalAuthIssuer.developmentOtp },
+    });
+    expect(native.json()).toMatchObject({ refresh_token: expect.any(String) });
+    expect(native.headers['set-cookie']).toBeUndefined();
+
+    const webChallenge = await register('browser-otp@synthetic.shifaa.test', 'browser-otp');
+    const browser = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/auth/otp/verify',
+      headers: {
+        'idempotency-key': 'browser-otp-verify',
+        origin: 'http://127.0.0.1:8081',
+        'sec-fetch-site': 'same-origin',
+      },
+      payload: { challenge_id: webChallenge, code: LocalAuthIssuer.developmentOtp },
+    });
+    expect(browser.json()).not.toHaveProperty('refresh_token');
+    expect(browser.headers['set-cookie']).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('shifaa_refresh='),
+        expect.stringContaining('shifaa_csrf='),
+      ]),
+    );
     await harness.app.close();
   });
 

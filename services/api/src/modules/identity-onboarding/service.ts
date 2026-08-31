@@ -134,7 +134,12 @@ export class IdentityOnboardingService {
       outcome: 'allowed',
       requestId,
     });
-    return { kind: 'session' as const, access_token: session.accessToken, aal: session.aal };
+    return {
+      kind: 'session' as const,
+      access_token: session.accessToken,
+      refresh_token: session.refreshToken,
+      aal: session.aal,
+    };
   }
 
   public async actorFromAccessToken(accessToken: string): Promise<PatientActor | undefined> {

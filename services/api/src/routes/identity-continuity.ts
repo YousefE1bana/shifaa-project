@@ -441,16 +441,7 @@ export async function registerIdentityContinuityRoutes(
     },
     async (request, reply) => {
       const context = requestContext(request);
-      const token = context.accessToken ?? 'missing-access-token';
       const body = request.body as TransitionRequest;
-      rateLimit(
-        limiter,
-        reply,
-        body.action === 'decide' ? 'transitionDecision' : 'transitionSubmission',
-        token,
-        body.action === 'decide' ? 30 : 3,
-        body.action === 'decide' ? 60 * 60_000 : 24 * 60 * 60_000,
-      );
       const transition = await dependencies.service.transitionDependent(
         context,
         (request.params as { relationshipId: string }).relationshipId,

@@ -1,4 +1,8 @@
 import { IdentityOnboardingClient, ShifaaApiError } from '@shifaa/api-client';
+import {
+  MemoryAccessTokenStore,
+  type NativeSecureRefreshStorage,
+} from '@shifaa/auth/identity-continuity';
 import type {
   ConsentInput,
   IdentityInput,
@@ -7,10 +11,18 @@ import type {
   ProfilePatchInput,
 } from '@shifaa/contracts';
 
+import { resolvePatientApiBaseUrl } from './patient-api-base-url.ts';
+import {
+  patientAccessTokens,
+  patientNativeRefreshTokens,
+  patientPlatform,
+} from './patient-auth-store.ts';
+
 type AuthResult = {
   kind: 'challenge' | 'session';
   challenge_id?: string | null;
   access_token?: string | null;
+  refresh_token?: string | null;
 };
 
 type PrivacyNotice = {
@@ -33,14 +45,27 @@ export class PatientOnboardingApi {
   private readonly baseUrl: string;
   private readonly fetcher: typeof globalThis.fetch;
   private locale: 'ar-EG' | 'en-EG' = 'ar-EG';
-  private accessToken?: string;
+  private readonly accessTokens: MemoryAccessTokenStore;
+  private readonly platform: 'web' | 'native';
+  private readonly nativeRefreshTokens?: NativeSecureRefreshStorage;
   private challengeId?: string;
   private profileVersion?: number;
   private notice?: PrivacyNotice;
 
-  public constructor(baseUrl: string, fetcher: typeof globalThis.fetch = globalThis.fetch) {
+  public constructor(
+    baseUrl: string,
+    fetcher: typeof globalThis.fetch = globalThis.fetch,
+    session: {
+      platform?: 'web' | 'native';
+      accessTokens?: MemoryAccessTokenStore;
+      nativeRefreshTokens?: NativeSecureRefreshStorage;
+    } = {},
+  ) {
     this.baseUrl = baseUrl;
     this.fetcher = fetcher;
+    this.platform = session.platform ?? 'web';
+    this.accessTokens = session.accessTokens ?? new MemoryAccessTokenStore();
+    this.nativeRefreshTokens = session.nativeRefreshTokens;
   }
 
   public hasPendingChallenge(): boolean {
@@ -71,7 +96,12 @@ export class PatientOnboardingApi {
       idempotencyKey('verify-otp'),
     )) as AuthResult;
     if (!result.access_token) throw new Error('The API did not return a session token.');
-    this.accessToken = result.access_token;
+    if (this.platform === 'native') {
+      if (!result.refresh_token || !this.nativeRefreshTokens)
+        throw new Error('The API did not return a native refresh credential.');
+      await this.nativeRefreshTokens.write(result.refresh_token);
+    }
+    this.accessTokens.write(result.access_token);
     this.challengeId = undefined;
   }
 
@@ -123,18 +153,18 @@ export class PatientOnboardingApi {
   }
 
   public clearSession(): void {
-    this.accessToken = undefined;
+    this.accessTokens.clear();
     this.challengeId = undefined;
     this.profileVersion = undefined;
     this.notice = undefined;
   }
 
   public readAccessToken(): string | undefined {
-    return this.accessToken;
+    return this.accessTokens.read();
   }
 
   public installAccessToken(accessToken: string): void {
-    this.accessToken = accessToken;
+    this.accessTokens.write(accessToken);
     this.challengeId = undefined;
   }
 
@@ -143,12 +173,13 @@ export class PatientOnboardingApi {
       baseUrl: this.baseUrl,
       fetch: this.fetcher,
       acceptLanguage: this.locale,
-      ...(this.accessToken ? { accessToken: this.accessToken } : {}),
+      ...(this.accessTokens.read() ? { accessToken: this.accessTokens.read() } : {}),
     });
   }
 
   private authenticatedClient(): IdentityOnboardingClient {
-    if (!this.accessToken) throw new ShifaaApiError(401, { code: 'authentication-required' });
+    if (!this.accessTokens.read())
+      throw new ShifaaApiError(401, { code: 'authentication-required' });
     return this.client();
   }
 
@@ -159,5 +190,17 @@ export class PatientOnboardingApi {
 }
 
 export const patientOnboardingApi = new PatientOnboardingApi(
-  process.env['EXPO_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000',
+  resolvePatientApiBaseUrl({
+    platform: patientPlatform,
+    configuredBaseUrl: process.env['EXPO_PUBLIC_API_BASE_URL'],
+    ...(typeof globalThis.location?.origin === 'string'
+      ? { webOrigin: globalThis.location.origin }
+      : {}),
+  }),
+  globalThis.fetch,
+  {
+    platform: patientPlatform,
+    accessTokens: patientAccessTokens,
+    ...(patientPlatform === 'native' ? { nativeRefreshTokens: patientNativeRefreshTokens } : {}),
+  },
 );

@@ -24,23 +24,34 @@ import type {
 import type { RelationshipsPageWithTransition } from '@shifaa/contracts/family-care';
 
 import { patientOnboardingApi } from './identity-onboarding-api';
+import { resolvePatientApiBaseUrl } from './patient-api-base-url';
+import { patientPlatform } from './patient-auth-store';
 
 export interface PatientSessionClientOptions {
   locale: 'ar-EG' | 'en-EG';
   platform: 'web' | 'native';
+  apiBaseUrl?: string;
+  accessTokens?: MemoryAccessTokenStore;
   csrfToken?: () => string | undefined;
   nativeRefreshTokens?: NativeSecureRefreshStorage;
   fetch?: typeof globalThis.fetch;
 }
 
 export function createPatientSessionClient(options: PatientSessionClientOptions) {
-  const accessTokens = new MemoryAccessTokenStore();
+  const accessTokens = options.accessTokens ?? new MemoryAccessTokenStore();
   const client = new IdentityContinuityClient({
-    baseUrl: process.env['EXPO_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000',
+    baseUrl: resolvePatientApiBaseUrl({
+      platform: options.platform,
+      configuredBaseUrl: options.apiBaseUrl ?? process.env['EXPO_PUBLIC_API_BASE_URL'],
+      ...(typeof globalThis.location?.origin === 'string'
+        ? { webOrigin: globalThis.location.origin }
+        : {}),
+    }),
     accessToken: () => accessTokens.read(),
     acceptLanguage: options.locale,
-    ...(options.csrfToken ? { csrfToken: options.csrfToken } : {}),
-    origin: process.env['EXPO_PUBLIC_PATIENT_ORIGIN'] ?? 'http://127.0.0.1:8081',
+    ...(options.platform === 'web'
+      ? { csrfToken: options.csrfToken ?? readBrowserCsrfCookie }
+      : {}),
     ...(options.fetch ? { fetch: options.fetch } : {}),
   });
   const transport = {
@@ -75,6 +86,17 @@ export function createPatientSessionClient(options: PatientSessionClientOptions)
     }),
   };
 }
+
+function readBrowserCsrfCookie(): string | undefined {
+  if (typeof document === 'undefined') return undefined;
+  for (const item of document.cookie.split(';')) {
+    const [rawName, ...rawValue] = item.trim().split('=');
+    if (rawName === 'shifaa_csrf') return decodeURIComponent(rawValue.join('='));
+  }
+  return undefined;
+}
+
+export { resolvePatientApiBaseUrl } from './patient-api-base-url';
 
 export function assertIdentityContinuityOnline(): void {
   if (typeof navigator !== 'undefined' && !navigator.onLine) throw new Error('offline-no-queue');
@@ -124,10 +146,7 @@ export class PatientRecoveryApi implements PatientRecoveryApiPort {
 
   private client(): IdentityContinuityClient {
     return new IdentityContinuityClient({
-      baseUrl:
-        this.options.apiBaseUrl ??
-        process.env['EXPO_PUBLIC_API_BASE_URL'] ??
-        'http://127.0.0.1:3000',
+      baseUrl: defaultPatientApiBaseUrl(this.options.apiBaseUrl),
       acceptLanguage: this.options.locale,
       ...(this.options.fetch ? { fetch: this.options.fetch } : {}),
     });
@@ -202,10 +221,7 @@ export class PatientMfaApi implements PatientMfaApiPort {
 
   private client(): IdentityContinuityClient {
     return new IdentityContinuityClient({
-      baseUrl:
-        this.options.apiBaseUrl ??
-        process.env['EXPO_PUBLIC_API_BASE_URL'] ??
-        'http://127.0.0.1:3000',
+      baseUrl: defaultPatientApiBaseUrl(this.options.apiBaseUrl),
       accessToken: () => this.requireAccessToken(),
       acceptLanguage: this.options.locale,
       ...(this.options.fetch ? { fetch: this.options.fetch } : {}),
@@ -287,9 +303,7 @@ export class PatientTransitionApi {
   }
 
   private baseUrl(): string {
-    return (
-      this.options.apiBaseUrl ?? process.env['EXPO_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000'
-    );
+    return defaultPatientApiBaseUrl(this.options.apiBaseUrl);
   }
 
   private requireAccessToken(): string {
@@ -297,6 +311,16 @@ export class PatientTransitionApi {
     if (!accessToken) throw new Error('authentication-required');
     return accessToken;
   }
+}
+
+function defaultPatientApiBaseUrl(configuredBaseUrl?: string): string {
+  return resolvePatientApiBaseUrl({
+    platform: patientPlatform,
+    configuredBaseUrl: configuredBaseUrl ?? process.env['EXPO_PUBLIC_API_BASE_URL'],
+    ...(typeof globalThis.location?.origin === 'string'
+      ? { webOrigin: globalThis.location.origin }
+      : {}),
+  });
 }
 
 function mutationKey(action: string): string {

@@ -20,24 +20,3 @@ export function SecurityStepUpShell(props: {
     />
   );
 }
-
-export function AppSecurityStepUpBoundary({ children }: { children: React.ReactNode }) {
-  const syntheticOnly = process.env['NODE_ENV'] !== 'production';
-  return (
-    <SecurityStepUpShell
-      locale="ar-EG"
-      context={{
-        authAvailable: syntheticOnly,
-        aal: syntheticOnly ? 'aal2' : 'aal1',
-        amrAgeSeconds: syntheticOnly ? 0 : null,
-        purpose: syntheticOnly ? 'seeded_synthetic_staff' : null,
-        reason: syntheticOnly ? 'seeded_synthetic_session' : null,
-      }}
-      onLoginOrVerifyOtp={() =>
-        globalThis.dispatchEvent(new Event('shifaa:login-or-verify-otp-requested'))
-      }
-    >
-      {children}
-    </SecurityStepUpShell>
-  );
-}

@@ -62,6 +62,7 @@ export const AuthResult = Type.Object({
   kind: Type.Union([Type.Literal('challenge'), Type.Literal('session')]),
   challenge_id: Type.Optional(Type.Union([Uuid, Type.Null()])),
   access_token: Type.Optional(NullableString),
+  refresh_token: Type.Optional(NullableString),
   aal: Type.Optional(Type.Union([Type.Literal(1), Type.Literal(2), Type.Null()])),
 });
 

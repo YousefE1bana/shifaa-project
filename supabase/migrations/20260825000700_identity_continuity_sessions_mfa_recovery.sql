@@ -152,7 +152,12 @@ $$;
 
 CREATE OR REPLACE FUNCTION identity.transition_eligible_on(p_birth_date date,p_cairo_date date)
 RETURNS boolean LANGUAGE sql IMMUTABLE SET search_path=pg_catalog AS $$
-  SELECT p_birth_date IS NOT NULL AND p_cairo_date >= (p_birth_date + interval '21 years')::date
+  SELECT p_birth_date IS NOT NULL AND p_cairo_date >= CASE
+    WHEN extract(month from p_birth_date)=2 AND extract(day from p_birth_date)=29
+      AND extract(day from (make_date(extract(year from p_birth_date)::integer+21,3,1)-1))=28
+      THEN make_date(extract(year from p_birth_date)::integer+21,3,1)
+    ELSE (p_birth_date + interval '21 years')::date
+  END
 $$;
 
 CREATE OR REPLACE FUNCTION platform.purge_expired_continuity_decoys(p_now timestamptz)

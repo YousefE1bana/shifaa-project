@@ -27,7 +27,6 @@ export interface IdentityContinuityClientOptions {
   fetch?: typeof globalThis.fetch;
   acceptLanguage?: 'ar-EG' | 'en-EG';
   csrfToken?: () => string | undefined;
-  origin?: string;
   defaultHeaders?: Readonly<Record<string, string>>;
 }
 
@@ -120,8 +119,6 @@ export class IdentityContinuityClient {
       const csrfToken = this.options.csrfToken?.();
       if (!csrfToken) throw new IdentityContinuityApiError(403, { code: 'forbidden' });
       headers.set('X-CSRF-Token', csrfToken);
-      if (this.options.origin) headers.set('Origin', this.options.origin);
-      headers.set('Sec-Fetch-Site', 'same-origin');
     }
     if (controls.version !== undefined) headers.set('If-Match', `"${controls.version}"`);
     const response = await this.fetcher(`${this.options.baseUrl.replace(/\/$/, '')}/v1${path}`, {

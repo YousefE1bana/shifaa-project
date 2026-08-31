@@ -230,6 +230,12 @@ export async function buildApp(
     await registerFamilyCareRoutes(app, {
       service: familyService,
       syntheticMode: config.syntheticMode,
+      resolveNativePatient: async (accessToken) => {
+        const actor = await service.actorFromAccessToken(accessToken);
+        return actor
+          ? { personId: actor.personId, principal: actor.principal, aal: actor.aal }
+          : undefined;
+      },
       idempotency:
         repository instanceof PostgresIdentityRepository
           ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)

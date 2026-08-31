@@ -191,29 +191,55 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       freshPrimaryReauthentication: proofs.freshPrimaryReauthentication,
     });
     if (!decision.allowed) throw this.policyProblem(decision.reason);
-    const enrollment = await this.dependencies.auth.enrollTotp(accessToken, body.friendlyName);
     const occurredAt = this.dependencies.now();
+    const expiresAt = new Date(occurredAt.getTime() + ENROLLMENT_TTL_MS).toISOString();
     await this.dependencies.repository.savePendingEnrollmentMarker({
       markerKey,
-      enrollmentId: enrollment.enrollmentId,
-      expiresAt: new Date(occurredAt.getTime() + ENROLLMENT_TTL_MS).toISOString(),
+      enrollmentId: `staged:${context.requestId}`,
+      expiresAt,
     });
-    await this.dependencies.repository.appendAudit({
-      requestId: context.requestId,
-      action: 'identity.factor.enrollment_started',
-      outcome: 'succeeded',
-      occurredAt: occurredAt.toISOString(),
-      metadata: {
-        aal: claims.aal === 2 ? 'aal2' : 'aal1',
-        existingVerifiedFactors: verified.length,
-      },
-    });
+    let enrollment: Awaited<ReturnType<ContinuityAuthPort['enrollTotp']>>;
+    try {
+      enrollment = await this.dependencies.auth.enrollTotp(accessToken, body.friendlyName);
+    } catch (error) {
+      await this.dependencies.repository.consumePendingEnrollmentMarker({ markerKey });
+      throw error;
+    }
+    try {
+      await this.dependencies.repository.savePendingEnrollmentMarker({
+        markerKey,
+        enrollmentId: enrollment.enrollmentId,
+        expiresAt,
+      });
+      await this.dependencies.repository.appendAudit({
+        requestId: context.requestId,
+        action: 'identity.factor.enrollment_started',
+        outcome: 'succeeded',
+        occurredAt: occurredAt.toISOString(),
+        metadata: {
+          aal: claims.aal === 2 ? 'aal2' : 'aal1',
+          existingVerifiedFactors: verified.length,
+        },
+      });
+    } catch (error) {
+      try {
+        await this.dependencies.auth.unenrollFactor(accessToken, enrollment.enrollmentId);
+        await this.dependencies.repository.consumePendingEnrollmentMarker({ markerKey });
+      } catch {
+        throw new ApiPolicyError(
+          'vendor-unavailable',
+          503,
+          'The undisclosed native factor could not be reconciled safely.',
+        );
+      }
+      throw error;
+    }
     return {
       enrollmentId: enrollment.enrollmentId,
       factorType: 'totp' as const,
       secret: enrollment.secret,
       qrUri: enrollment.qrUri,
-      expiresAt: new Date(occurredAt.getTime() + ENROLLMENT_TTL_MS).toISOString(),
+      expiresAt,
     };
   }
 
@@ -396,7 +422,12 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     });
     await this.dependencies.repository.saveRecoveryResumeMarker(caseId, marker);
     if (marker.restricted === null) {
-      const proof = await this.recoveryProofSession(body, marker.accessToken, binding.personId);
+      const proof = await this.recoveryProofSession(
+        caseId,
+        body,
+        marker.accessToken,
+        binding.personId,
+      );
       marker = { ...marker, accessToken: proof.accessToken, restricted: proof.restricted };
       await this.dependencies.repository.saveRecoveryResumeMarker(caseId, marker);
     }
@@ -466,6 +497,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
   ) {
     const { claims } = await this.currentActor(context, 'transitionDependent');
     const actorPersonId = await this.requirePersonForActor(claims);
+    this.enforceTransitionRate(actorPersonId, relationshipId, body.action);
     const occurredAt = this.dependencies.now().toISOString();
     if (body.action === 'submit_proof') {
       return this.dependencies.repository.submitTransitionProof({
@@ -551,6 +583,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
   }
 
   private async recoveryProofSession(
+    recoveryCaseId: string,
     body: CompleteRecoveryRequest,
     accessToken: string,
     personId: string,
@@ -563,6 +596,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
           'A repeated identity proof is required.',
         );
       const approved = await this.dependencies.repository.recoveryProofIsApproved({
+        recoveryCaseId,
         personId,
         verificationCaseId: body.verificationCaseId,
       });
@@ -612,6 +646,23 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     const retryAfter = this.mfaRateLimiter.consume(operation, subjectId, limit, windowMs);
     if (retryAfter === null) return;
     throw new ApiPolicyError('rate-limited', 429, 'The security request limit was reached.', {
+      'retry-after': String(retryAfter),
+    });
+  }
+
+  private enforceTransitionRate(
+    actorPersonId: string,
+    relationshipId: string,
+    action: 'submit_proof' | 'decide',
+  ): void {
+    const retryAfter = this.mfaRateLimiter.consume(
+      action === 'decide' ? 'transitionDecision' : 'transitionSubmission',
+      `${actorPersonId}:${relationshipId}`,
+      action === 'decide' ? 30 : 3,
+      action === 'decide' ? 60 * 60_000 : 24 * 60 * 60_000,
+    );
+    if (retryAfter === null) return;
+    throw new ApiPolicyError('rate-limited', 429, 'The transition request limit was reached.', {
       'retry-after': String(retryAfter),
     });
   }

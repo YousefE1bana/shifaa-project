@@ -95,3 +95,40 @@ test('patient gateway carries the API session through profile, identity, and con
       .every((call) => new Headers(call.init?.headers).has('idempotency-key')),
   );
 });
+
+test('native OTP bootstrap stores the provider refresh credential in the secure port', async () => {
+  let storedRefreshToken = '';
+  const fakeFetch: typeof fetch = async (input) => {
+    const url = String(input);
+    if (url.endsWith('/auth/login'))
+      return response({
+        kind: 'challenge',
+        challenge_id: '10000000-0000-4000-8000-000000000002',
+      });
+    if (url.endsWith('/auth/otp/verify'))
+      return response({
+        kind: 'session',
+        access_token: 'native-access-token',
+        refresh_token: 'native-refresh-token',
+      });
+    return response({ code: 'unexpected-request' }, 500);
+  };
+  const gateway = new PatientOnboardingApi('http://shifaa.test', fakeFetch, {
+    platform: 'native',
+    nativeRefreshTokens: {
+      read: async () => storedRefreshToken || undefined,
+      write: async (value) => {
+        storedRefreshToken = value;
+      },
+      clear: async () => {
+        storedRefreshToken = '';
+      },
+    },
+  });
+
+  await gateway.login('patient@synthetic.shifaa.test', 'Synthetic-Only-2026!');
+  await gateway.verifyOtp('246810');
+
+  assert.equal(gateway.readAccessToken(), 'native-access-token');
+  assert.equal(storedRefreshToken, 'native-refresh-token');
+});

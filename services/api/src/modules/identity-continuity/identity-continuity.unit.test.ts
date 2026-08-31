@@ -42,6 +42,7 @@ class FakeAuth implements ContinuityAuthPort {
   public recoveryOtpAttempts: Array<{ handle: string; recoveryOtp: string }> = [];
   public recoveryOtpRedeemed = false;
   public restrictionWasStaged: () => boolean = () => true;
+  public beforeEnroll: () => void = () => undefined;
 
   private claims(): VerifiedContinuitySession {
     return {
@@ -73,6 +74,7 @@ class FakeAuth implements ContinuityAuthPort {
     return Promise.resolve(this.verifiedFactors);
   }
   public enrollTotp(_token: string, _friendlyName?: string) {
+    this.beforeEnroll();
     const enrollmentId = `71000000-0000-4000-8000-${String(this.enrollSecrets.size + 10).padStart(12, '0')}`;
     this.enrollSecrets.set(enrollmentId, 'SYNTHETICONETIMESECRET');
     return Promise.resolve({
@@ -108,9 +110,13 @@ class FakeAuth implements ContinuityAuthPort {
     };
   }
   public async unenrollFactor(_token: string, factorId: string) {
-    if (!this.verifiedFactors.some((factor) => factor.id === factorId))
+    if (
+      !this.verifiedFactors.some((factor) => factor.id === factorId) &&
+      !this.enrollSecrets.has(factorId)
+    )
       throw Object.assign(new Error('missing factor'), { code: 'not-found', status: 404 });
     this.unenrolledIds.push(factorId);
+    this.enrollSecrets.delete(factorId);
     this.verifiedFactors = this.verifiedFactors.filter((factor) => factor.id !== factorId);
     this.afterUnenroll();
   }
@@ -183,6 +189,11 @@ class FakeRepository implements ContinuityRepository {
   }> = [];
   public readonly recoveryResumeMarkers = new Map<string, RecoveryResumeMarker>();
   public recoveryProofApproved = true;
+  public readonly recoveryProofChecks: Array<{
+    recoveryCaseId: string;
+    personId: string;
+    verificationCaseId: string;
+  }> = [];
   public failRecoveryFinalization = false;
   public readonly recoveryFinalizations: Array<{
     caseId: string;
@@ -206,6 +217,7 @@ class FakeRepository implements ContinuityRepository {
     string,
     { enrollmentId: string; expiresAtMs: number; savedAt: number }
   >();
+  public failAuditOnce = false;
   public isNativeSessionCurrent(
     _sessionId: string,
     _subjectId: string,
@@ -220,6 +232,10 @@ class FakeRepository implements ContinuityRepository {
     return work();
   }
   public appendAudit(input: ContinuityAuditInput): Promise<void> {
+    if (this.failAuditOnce) {
+      this.failAuditOnce = false;
+      return Promise.reject(new Error('synthetic audit interruption'));
+    }
     this.audits.push(input);
     return Promise.resolve();
   }
@@ -299,7 +315,12 @@ class FakeRepository implements ContinuityRepository {
     });
     return Promise.resolve({ personId: '71000000-0000-4000-8000-000000000004' });
   }
-  public recoveryProofIsApproved(): Promise<boolean> {
+  public recoveryProofIsApproved(input: {
+    recoveryCaseId: string;
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<boolean> {
+    this.recoveryProofChecks.push(input);
     return Promise.resolve(this.recoveryProofApproved);
   }
   public findRecoveryResumeMarker(caseId: string): Promise<RecoveryResumeMarker | undefined> {
@@ -552,6 +573,28 @@ describe('totp enrollment, verification, and removal service policy', () => {
     await expect(
       harness.service.beginMfaEnrollment(context('1'), { factorType: 'totp' }),
     ).rejects.toMatchObject({ code: 'factor-enrollment-pending', status: 409 });
+    expect(harness.auth.enrollSecrets.size).toBe(1);
+  });
+
+  it('stages before native enrollment and cleans an undisclosed factor so the same account can retry', async () => {
+    const harness = mfaService();
+    harness.auth.amr = [{ method: 'password', timestamp: Math.floor(clockMs / 1_000) }];
+    harness.auth.beforeEnroll = () => {
+      const marker = [...harness.repository.markers.values()][0];
+      expect(marker?.enrollmentId).toMatch(/^staged:/);
+    };
+    harness.repository.failAuditOnce = true;
+
+    await expect(
+      harness.service.beginMfaEnrollment(context('staged'), { factorType: 'totp' }),
+    ).rejects.toThrow('synthetic audit interruption');
+
+    expect(harness.auth.enrollSecrets.size).toBe(0);
+    expect(harness.auth.unenrolledIds).toHaveLength(1);
+    expect(harness.repository.markers.size).toBe(0);
+    await expect(
+      harness.service.beginMfaEnrollment(context('staged-retry'), { factorType: 'totp' }),
+    ).resolves.toMatchObject({ factorType: 'totp' });
     expect(harness.auth.enrollSecrets.size).toBe(1);
   });
 
@@ -823,6 +866,46 @@ describe('dependent transition service policy', () => {
       ),
     );
   });
+
+  it('rate limits submissions by stable actor and relationship after authentication', async () => {
+    const harness = service();
+    const relationshipId = '71000000-0000-4000-8000-000000000016';
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      await expect(
+        harness.service.transitionDependent(
+          transitionContext(`rate-${attempt}`),
+          relationshipId,
+          {
+            action: 'submit_proof',
+            verificationCaseId: `71000000-0000-4000-8000-${String(attempt + 17).padStart(12, '0')}`,
+          },
+          attempt + 1,
+        ),
+      ).resolves.toBeDefined();
+    }
+    await expect(
+      harness.service.transitionDependent(
+        transitionContext('rate-4'),
+        relationshipId,
+        {
+          action: 'submit_proof',
+          verificationCaseId: '71000000-0000-4000-8000-000000000020',
+        },
+        4,
+      ),
+    ).rejects.toMatchObject({ code: 'rate-limited', status: 429 });
+    await expect(
+      harness.service.transitionDependent(
+        transitionContext('rate-other'),
+        '71000000-0000-4000-8000-000000000021',
+        {
+          action: 'submit_proof',
+          verificationCaseId: '71000000-0000-4000-8000-000000000022',
+        },
+        1,
+      ),
+    ).resolves.toBeDefined();
+  });
 });
 
 describe('recovery service policy', () => {
@@ -895,6 +978,13 @@ describe('recovery service policy', () => {
       session: { sessionId: '71000000-0000-4000-8000-000000000034' },
     });
     expect(harness.repository.recoveryBindings).toHaveLength(1);
+    expect(harness.repository.recoveryProofChecks).toEqual([
+      {
+        recoveryCaseId: '71000000-0000-4000-8000-000000000032',
+        personId: '71000000-0000-4000-8000-000000000004',
+        verificationCaseId: '71000000-0000-4000-8000-000000000033',
+      },
+    ]);
     expect(harness.auth.logoutCalls).toEqual(['global']);
     expect(harness.repository.recoveryFinalizations).toMatchObject([
       {

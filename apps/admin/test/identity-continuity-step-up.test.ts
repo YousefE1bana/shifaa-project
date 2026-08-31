@@ -26,5 +26,13 @@ test('admin shell denies incomplete privileged context and resumes through exist
   assert.match(shell, /onLoginOrVerifyOtp/);
   assert.match(shell, /onResumeIntendedAction/);
   assert.doesNotMatch(shell, /fetch\(|new IdentityContinuityClient|stepUpMfa|\/auth\/mfa\/step/);
-  assert.match(layout, /SecurityStepUpShell/);
+  assert.doesNotMatch(shell, /NODE_ENV|seeded_synthetic_staff|dispatchEvent/);
+  const workspace = fs.readFileSync(
+    new URL('../src/app/relationships/GuardianshipWorkspace.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.match(workspace, /<SecurityStepUpShell/);
+  assert.match(workspace, /transitionAuthorized/);
+  assert.match(workspace, /onLoginOrVerifyOtp=\{\(\) => void loadTransitions\(\)\}/);
+  assert.doesNotMatch(layout, /AppSecurityStepUpBoundary/);
 });

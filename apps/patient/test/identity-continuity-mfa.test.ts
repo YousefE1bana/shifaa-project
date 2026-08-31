@@ -55,6 +55,10 @@ test('patient MFA keeps one-time enrollment material in component memory and exp
   assert.match(screen, /SecurityStatusBanner/);
   assert.match(screen, /SecurityDestructiveConfirmation/);
   assert.match(screen, /BidiSafeText/);
+  assert.match(screen, /<BidiSafeText text=\{isolateLtr\(enrollment\.secret\)\}/);
+  assert.match(shared, /export function BidiSafeText/);
+  assert.match(shared, /selectable/);
+  assert.match(shared, /direction: 'ltr'/);
   assert.doesNotMatch(screen, /router\.(push|replace).*secret|searchParams.*secret|href=.*secret/i);
   assert.doesNotMatch(screen, /https?:\/\/.*qr|qrcode|qrserver/i);
 });

@@ -25,6 +25,8 @@ test('patient relationships opts into the existing transition summary and genera
     `${screen}\n${api}`,
     /service_role|supabase\.from|queueMutation|backgroundSync/,
   );
+  assert.match(screen, /transition\.continuityCaseVersion \?\? 1/);
+  assert.doesNotMatch(screen, /!transition\.continuityCaseVersion/);
 });
 
 test('patient transition renders every frozen bilingual UI state without age countdown inference', () => {

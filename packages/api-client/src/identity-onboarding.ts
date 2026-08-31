@@ -167,6 +167,7 @@ export class IdentityOnboardingClient {
       method,
       headers,
       cache: 'no-store',
+      ...(path === '/auth/otp/verify' ? { credentials: 'include' as const } : {}),
       ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}),
     });
     const payload = response.status === 204 ? undefined : await response.json();

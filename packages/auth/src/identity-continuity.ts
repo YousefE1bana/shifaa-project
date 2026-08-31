@@ -37,7 +37,11 @@ export interface NativeFactorSummaryTransport {
 }
 
 export class NativeFactorSummaryReader {
-  public constructor(private readonly transport: NativeFactorSummaryTransport) {}
+  private readonly transport: NativeFactorSummaryTransport;
+
+  public constructor(transport: NativeFactorSummaryTransport) {
+    this.transport = transport;
+  }
 
   public async list(accessToken: string): Promise<readonly NativeFactorSummary[]> {
     const response = await this.transport.listFactors(accessToken);
@@ -153,14 +157,20 @@ export type SessionContinuationOutcome =
   | { status: 'suspended' };
 
 export class SessionContinuationController {
-  public constructor(
-    private readonly dependencies: {
-      platform: 'web' | 'native';
-      accessTokens: MemoryAccessTokenStore;
-      transport: SessionContinuationTransport;
-      nativeRefreshTokens?: NativeSecureRefreshStorage;
-    },
-  ) {
+  private readonly dependencies: {
+    platform: 'web' | 'native';
+    accessTokens: MemoryAccessTokenStore;
+    transport: SessionContinuationTransport;
+    nativeRefreshTokens?: NativeSecureRefreshStorage;
+  };
+
+  public constructor(dependencies: {
+    platform: 'web' | 'native';
+    accessTokens: MemoryAccessTokenStore;
+    transport: SessionContinuationTransport;
+    nativeRefreshTokens?: NativeSecureRefreshStorage;
+  }) {
+    this.dependencies = dependencies;
     if (dependencies.platform === 'native' && !dependencies.nativeRefreshTokens) {
       throw new Error('Native session continuation requires OS-secure refresh storage.');
     }

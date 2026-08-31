@@ -58,6 +58,7 @@
     "dev:supabase:api": "pwsh -NoProfile -File tools/start-supabase-api.ps1",
     "dev:discovery-sos:api": "pwsh -NoProfile -File tools/start-discovery-sos-api.ps1",
     "dev:discovery-sos:worker": "pwsh -NoProfile -File tools/start-discovery-sos-worker.ps1",
+    "dev:identity-continuity:worker": "pnpm --filter @shifaa/worker dev:identity-continuity",
     "db:seed:discovery-sos": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/fixtures/discovery-sos.sql",
     "dev:patient:web": "pwsh -NoProfile -File tools/start-patient-web.ps1",
     "dev:admin:web": "pwsh -NoProfile -File tools/start-admin-web.ps1",

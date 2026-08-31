@@ -182,17 +182,47 @@ describe.skipIf(!enabled).sequential('dependent transition real PostgreSQL/API c
   });
 
   it('rejects recovery proof whose linked identity is no longer current', async () => {
-    await expect(
-      transitionRepository.recoveryProofIsApproved({
-        personId: fixture.subjectPersonId,
-        verificationCaseId: fixture.verificationCaseId,
-      }),
-    ).resolves.toBe(true);
-    await owner`update identity.identities set verification_status='revoked'
-      where id=(select identity_id from identity.verification_cases where id=${fixture.verificationCaseId}::uuid)`;
+    const recoveryCaseId = randomUUID();
+    const laterRecoveryCaseId = randomUUID();
+    await owner`
+      insert into identity.continuity_cases(
+        id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
+        token_key_version,expires_at,created_at
+      ) select ${recoveryCaseId}::uuid,'account_recovery',${fixture.subjectPersonId}::uuid,
+        'proof_required',${randomBytes(32)},${randomBytes(32)},1,now()+interval '15 minutes',
+        c.created_at-interval '1 second'
+      from identity.verification_cases c where c.id=${fixture.verificationCaseId}::uuid`;
     try {
       await expect(
         transitionRepository.recoveryProofIsApproved({
+          recoveryCaseId,
+          personId: fixture.subjectPersonId,
+          verificationCaseId: fixture.verificationCaseId,
+        }),
+      ).resolves.toBe(true);
+      await owner`update identity.continuity_cases
+        set status='completed',completed_at=now(),version=version+1,updated_at=now()
+        where id=${recoveryCaseId}::uuid`;
+      await owner`
+        insert into identity.continuity_cases(
+          id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
+          token_key_version,expires_at,created_at
+        ) select ${laterRecoveryCaseId}::uuid,'account_recovery',${fixture.subjectPersonId}::uuid,
+          'proof_required',${randomBytes(32)},${randomBytes(32)},1,now()+interval '15 minutes',
+          c.created_at+interval '1 second'
+        from identity.verification_cases c where c.id=${fixture.verificationCaseId}::uuid`;
+      await expect(
+        transitionRepository.recoveryProofIsApproved({
+          recoveryCaseId: laterRecoveryCaseId,
+          personId: fixture.subjectPersonId,
+          verificationCaseId: fixture.verificationCaseId,
+        }),
+      ).resolves.toBe(false);
+      await owner`update identity.identities set verification_status='revoked'
+        where id=(select identity_id from identity.verification_cases where id=${fixture.verificationCaseId}::uuid)`;
+      await expect(
+        transitionRepository.recoveryProofIsApproved({
+          recoveryCaseId,
           personId: fixture.subjectPersonId,
           verificationCaseId: fixture.verificationCaseId,
         }),
@@ -200,6 +230,8 @@ describe.skipIf(!enabled).sequential('dependent transition real PostgreSQL/API c
     } finally {
       await owner`update identity.identities set verification_status='verified'
         where id=(select identity_id from identity.verification_cases where id=${fixture.verificationCaseId}::uuid)`;
+      await owner`delete from identity.continuity_cases
+        where id in (${recoveryCaseId}::uuid,${laterRecoveryCaseId}::uuid)`;
     }
   });
 

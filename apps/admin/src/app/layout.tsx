@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import React from 'react';
-import { AppSecurityStepUpBoundary as SecurityStepUpShell } from './SecurityStepUpShell';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -10,9 +9,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ar" dir="rtl">
-      <body style={{ margin: 0 }}>
-        <SecurityStepUpShell>{children}</SecurityStepUpShell>
-      </body>
+      <body style={{ margin: 0 }}>{children}</body>
     </html>
   );
 }

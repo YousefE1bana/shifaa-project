@@ -210,8 +210,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
       await sql`select set_config('shifaa.principal',${input.markerKey},true)`;
       try {
         await sql`delete from platform.idempotency_records
-          where principal=${input.markerKey} and route=${PENDING_MARKER_ROUTE}
-            and expires_at<=now()`;
+          where principal=${input.markerKey} and route=${PENDING_MARKER_ROUTE}`;
         const sealed = this.cipher.seal(
           { enrollmentId: input.enrollmentId },
           new Date(input.expiresAt),
@@ -503,6 +502,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
   }
 
   public async recoveryProofIsApproved(input: {
+    recoveryCaseId: string;
     personId: string;
     verificationCaseId: string;
   }): Promise<boolean> {
@@ -517,8 +517,11 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
         select exists(
           select 1 from identity.verification_cases c
           join identity.identities i on i.id=c.identity_id
+          join identity.continuity_cases r on r.id=${input.recoveryCaseId}::uuid
           where c.id=${input.verificationCaseId}::uuid
             and i.person_id=${input.personId}::uuid
+            and r.case_type='account_recovery' and r.subject_person_id=${input.personId}::uuid
+            and r.status='proof_required' and c.created_at>=r.created_at
             and c.state='verified' and c.decided_at is not null
             and i.verification_status='verified'
             and (i.expires_on is null or i.expires_on>=(platform.context_now() at time zone 'Africa/Cairo')::date)
@@ -672,6 +675,10 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
                  set_config('shifaa.factor_amr_at',${input.factorAmrAt ?? ''},true),
                  set_config('shifaa.test_now',${input.occurredAt},true),
                  set_config('shifaa.principal',${input.idempotencyPrincipal},true)`;
+        await sql`
+          delete from platform.idempotency_records
+          where principal=${input.idempotencyPrincipal} and method='POST'
+            and route=${TRANSITION_ROUTE} and expires_at<=${input.occurredAt}::timestamptz`;
         await sql`
           insert into platform.idempotency_records(
             principal,method,route,idempotency_key,request_hash,state,expires_at

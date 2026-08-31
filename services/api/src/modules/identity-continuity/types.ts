@@ -147,6 +147,7 @@ export interface ContinuityRepository {
   findRecoveryResumeMarker(caseId: string): Promise<RecoveryResumeMarker | undefined>;
   saveRecoveryResumeMarker(caseId: string, marker: RecoveryResumeMarker): Promise<void>;
   recoveryProofIsApproved(input: {
+    recoveryCaseId: string;
     personId: string;
     verificationCaseId: string;
   }): Promise<boolean>;

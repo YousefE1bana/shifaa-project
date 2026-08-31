@@ -6,6 +6,7 @@ import {
   redactFamilyRequestPath,
   registeredFamilyCareOperationIds,
 } from '../src/routes/family-care.js';
+import { LocalAuthIssuer } from '../src/adapters/local-auth.js';
 
 const ids = {
   self: '40000000-0000-4000-8000-000000000001',
@@ -40,6 +41,34 @@ describe('family care routes', () => {
     expect(redactFamilyRequestPath('/v1/emergency-contact-invites/raw-secret/response')).toBe(
       '/v1/emergency-contact-invites/[REDACTED]/response',
     );
+  });
+
+  it('accepts a current native patient session on the existing relationship read route', async () => {
+    const registration = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/auth/register',
+      headers: { 'idempotency-key': 'native-family-register-0001' },
+      payload: {
+        locale: 'en-EG',
+        handle: 'native-family@synthetic.shifaa.test',
+        password: 'Synthetic-Only-2026!',
+      },
+    });
+    const verified = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/auth/otp/verify',
+      headers: { 'idempotency-key': 'native-family-verify-00001' },
+      payload: {
+        challenge_id: registration.json().challenge_id,
+        code: LocalAuthIssuer.developmentOtp,
+      },
+    });
+    const response = await harness.app.inject({
+      method: 'GET',
+      url: `/v1/patients/${ids.selfPatient}/relationships?includeDependentTransition=true`,
+      headers: { authorization: `Bearer ${verified.json().access_token}` },
+    });
+    expect(response.statusCode).not.toBe(401);
   });
 
   it('creates, independently reviews, lists, and revokes guardianship', async () => {

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { describe, it } from 'node:test';
 
 import {
@@ -23,6 +24,24 @@ const template = (template_code: string) => ({
     properties: { action_time: { type: 'string' }, support_action: { type: 'string' } },
     required: ['action_time', 'support_action'],
   },
+});
+
+describe('identity notification runtime wiring', () => {
+  it('has a long-running local-only runner with graceful processor and adapter shutdown', () => {
+    const runner = fs.readFileSync(
+      new URL('./identity-continuity-runner.ts', import.meta.url),
+      'utf8',
+    );
+    const workerPackage = fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8');
+    assert.match(runner, /PostgresIdentityNotificationProcessor/);
+    assert.match(runner, /SHIFAA_SYNTHETIC_RUNTIME_ATTESTATION/);
+    assert.match(runner, /SIGINT/);
+    assert.match(runner, /SIGTERM/);
+    assert.match(runner, /processor\.processNext\(\)/);
+    assert.match(runner, /processor\.close\(\)/);
+    assert.match(runner, /adapter\.close\(\)/);
+    assert.match(workerPackage, /dev:identity-continuity/);
+  });
 });
 
 describe('identity factor and recovery notification projection', () => {

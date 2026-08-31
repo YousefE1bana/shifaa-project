@@ -14,6 +14,8 @@ describe('browser Auth session cookie bootstrap', () => {
     expect(cookies[0]).toContain('shifaa_refresh=synthetic-browser-refresh-token');
     expect(cookies[0]).toContain('HttpOnly; Secure; SameSite=Strict');
     expect(cookies[1]).toMatch(/^shifaa_csrf=[A-Za-z0-9_-]{43};/);
+    expect(cookies[0]).toContain('Path=/v1/auth');
+    expect(cookies[1]).toContain('Path=/;');
     expect(cookies[1]).not.toContain('HttpOnly');
   });
 });

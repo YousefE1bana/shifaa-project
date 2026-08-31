@@ -135,20 +135,14 @@ export default function RelationshipsScreen() {
         : [...current, permission],
     );
   const submitTransitionProof = async () => {
-    if (
-      !reviewConfirmed ||
-      !transition.relationshipId ||
-      !transition.continuityCaseVersion ||
-      !verificationCaseId.trim()
-    )
-      return;
+    if (!reviewConfirmed || !transition.relationshipId || !verificationCaseId.trim()) return;
     if (connection.reconciliationRequired) return setTransitionUiState('error');
     try {
       assertIdentityContinuityOnline();
       const value = await transitionClient.submitProof(
         transition.relationshipId,
         verificationCaseId.trim(),
-        transition.continuityCaseVersion,
+        transition.continuityCaseVersion ?? 1,
       );
       setTransitionUiState(
         value.status === 'proof_required' ? 'verification_required' : value.status,

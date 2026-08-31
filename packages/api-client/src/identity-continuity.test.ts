@@ -42,7 +42,6 @@ describe('identity continuity generated client', () => {
     const client = new IdentityContinuityClient({
       baseUrl: 'https://patient.synthetic.test',
       csrfToken: () => 'synthetic-csrf-token',
-      origin: 'https://patient.synthetic.test',
       fetch: async (_input, init) => {
         requestInit = init;
         return new Response(JSON.stringify({ sessionId: 'one' }), { status: 200 });
@@ -56,10 +55,33 @@ describe('identity continuity generated client', () => {
     expect(requestInit?.credentials).toBe('include');
     expect(headers.get('authorization')).toBeNull();
     expect(headers.get('x-csrf-token')).toBe('synthetic-csrf-token');
+    expect(headers.get('origin')).toBeNull();
+    expect(headers.get('sec-fetch-site')).toBeNull();
     expect(JSON.parse(String(requestInit?.body))).toEqual({
       client: 'web',
       foregroundEngaged: true,
     });
+  });
+
+  it('does not let application code forge browser-controlled origin metadata', async () => {
+    let requestInit: RequestInit | undefined;
+    const client = new IdentityContinuityClient({
+      baseUrl: 'https://patient.synthetic.test',
+      csrfToken: () => 'synthetic-csrf-token',
+      fetch: async (_input, init) => {
+        requestInit = init;
+        return new Response(JSON.stringify({ sessionId: 'one' }), { status: 200 });
+      },
+    });
+
+    await client.refreshSession(
+      { client: 'web', foregroundEngaged: true },
+      'synthetic-idempotency-key-0003',
+    );
+
+    const headers = new Headers(requestInit?.headers);
+    expect(headers.get('origin')).toBeNull();
+    expect(headers.get('sec-fetch-site')).toBeNull();
   });
 
   it('forwards server-validated purpose on the existing transition operation', async () => {

@@ -16,6 +16,7 @@ import { translate } from '@shifaa/i18n';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { AdminTransitionApi } from '../../identity-continuity-api';
+import { SecurityStepUpShell } from '../SecurityStepUpShell';
 
 type Locale = 'ar-EG' | 'en-EG';
 type CaseProjection = {
@@ -50,6 +51,7 @@ export function GuardianshipWorkspace() {
   const [transitions, setTransitions] = useState<DependentTransitionWorklistItem[]>([]);
   const [selectedTransitionId, setSelectedTransitionId] = useState('');
   const [transitionState, setTransitionState] = useState('review_required');
+  const [transitionAuthorized, setTransitionAuthorized] = useState(false);
   const [amrAgeSeconds, setAmrAgeSeconds] = useState(300);
   const [transitionBlockerReason, setTransitionBlockerReason] = useState<
     'interdiction' | 'court_order' | 'dispute'
@@ -101,8 +103,10 @@ export function GuardianshipWorkspace() {
       setTransitions([...value.items]);
       setSelectedTransitionId(value.items[0]?.transitionCaseId ?? '');
       setTransitionState(value.items[0]?.status ?? 'review_required');
+      setTransitionAuthorized(true);
       connection.markReconciled();
     } catch (error: unknown) {
+      setTransitionAuthorized(false);
       const status = error instanceof FamilyCareApiError ? error.status : 0;
       setTransitionState(
         status === 401 ? 'aal-required' : status === 403 ? 'purpose-required' : 'error',
@@ -141,10 +145,10 @@ export function GuardianshipWorkspace() {
     (item) => item.transitionCaseId === selectedTransitionId,
   );
   const stepUpState = privilegedAccessState({
-    authAvailable: true,
-    aal: 'aal2',
+    authAvailable: transitionAuthorized,
+    aal: transitionAuthorized ? 'aal2' : 'aal1',
     amrAgeSeconds,
-    purpose: 'guardianship_review',
+    purpose: transitionAuthorized ? 'guardianship_review' : null,
     reason,
   });
   const decideTransition = async (decision: 'approve' | 'reject' | 'defer') => {
@@ -167,7 +171,7 @@ export function GuardianshipWorkspace() {
         {
           action: 'decide',
           decision,
-          reasonCode: reason.trim(),
+          reasonCode: 'human_review.guardianship_transition',
           ...(decision === 'defer' ? { reviewRequiredReason: transitionBlockerReason } : {}),
         },
         selectedTransition.continuityCaseVersion,
@@ -279,121 +283,133 @@ export function GuardianshipWorkspace() {
           </p>
         </section>
       </div>
-      <section
-        aria-labelledby="dependent-transition-review"
-        style={{ ...styles.card, marginBlockStart: spacing.lg }}
+      <SecurityStepUpShell
+        locale={locale}
+        context={{
+          authAvailable: transitionAuthorized,
+          aal: transitionAuthorized ? 'aal2' : 'aal1',
+          amrAgeSeconds,
+          purpose: transitionAuthorized ? 'guardianship_review' : null,
+          reason: reason.trim() || null,
+        }}
+        onLoginOrVerifyOtp={() => void loadTransitions()}
       >
-        <h2 id="dependent-transition-review">
-          {locale === 'ar-EG'
-            ? 'مراجعة انتقال التابع المعيّنة'
-            : 'Assigned dependent transition review'}
-        </h2>
-        <p>
-          {locale === 'ar-EG'
-            ? 'تعرض هذه القائمة الحالات المعيّنة لك فقط. القرار لا يقرر الأهلية القانونية.'
-            : 'This worklist shows only cases assigned to you. It presents review state, not a legal conclusion.'}
-        </p>
-        <label htmlFor="amr-age">
-          {locale === 'ar-EG' ? 'عمر تحقق AMR بالثواني' : 'AMR age in seconds'}
-        </label>
-        <input
-          id="amr-age"
-          type="number"
-          min={0}
-          value={amrAgeSeconds}
-          onChange={(event) => setAmrAgeSeconds(Number(event.target.value))}
-          style={styles.control}
-        />
-        <div style={styles.grid}>
-          <div
-            role="list"
-            aria-label={
-              locale === 'ar-EG' ? 'حالات الانتقال المعيّنة' : 'Assigned transition cases'
-            }
-          >
-            {transitions.map((item) => (
-              <button
-                key={item.transitionCaseId}
-                role="listitem"
-                aria-pressed={selectedTransitionId === item.transitionCaseId}
-                onClick={() => setSelectedTransitionId(item.transitionCaseId)}
-                style={styles.caseButton}
-              >
-                <b>{item.status}</b>
-                <span>
-                  {item.proofState} · {item.reviewState}
-                </span>
-                <span>
-                  {item.blockerState} · v{item.continuityCaseVersion}
-                </span>
-              </button>
-            ))}
-          </div>
-          <div>
-            <p>
-              {selectedTransition?.status === 'human_review_required'
-                ? locale === 'ar-EG'
-                  ? 'مراجعة بشرية مطلوبة'
-                  : 'Human review required'
-                : locale === 'ar-EG'
-                  ? 'مراجعة مستقلة مطلوبة'
-                  : 'Independent review required'}
-            </p>
-            <p>
-              {locale === 'ar-EG'
-                ? 'حالات القرار: approved / rejected'
-                : 'Decision states: approved / rejected'}
-            </p>
-            <label htmlFor="transition-blocker-reason">
-              {locale === 'ar-EG' ? 'سبب الإحالة للمراجعة البشرية' : 'Human-review blocker'}
-            </label>
-            <select
-              id="transition-blocker-reason"
-              value={transitionBlockerReason}
-              onChange={(event) =>
-                setTransitionBlockerReason(
-                  event.target.value as 'interdiction' | 'court_order' | 'dispute',
-                )
+        <section
+          aria-labelledby="dependent-transition-review"
+          style={{ ...styles.card, marginBlockStart: spacing.lg }}
+        >
+          <h2 id="dependent-transition-review">
+            {locale === 'ar-EG'
+              ? 'مراجعة انتقال التابع المعيّنة'
+              : 'Assigned dependent transition review'}
+          </h2>
+          <p>
+            {locale === 'ar-EG'
+              ? 'تعرض هذه القائمة الحالات المعيّنة لك فقط. القرار لا يقرر الأهلية القانونية.'
+              : 'This worklist shows only cases assigned to you. It presents review state, not a legal conclusion.'}
+          </p>
+          <label htmlFor="amr-age">
+            {locale === 'ar-EG' ? 'عمر تحقق AMR بالثواني' : 'AMR age in seconds'}
+          </label>
+          <input
+            id="amr-age"
+            type="number"
+            min={0}
+            value={amrAgeSeconds}
+            onChange={(event) => setAmrAgeSeconds(Number(event.target.value))}
+            style={styles.control}
+          />
+          <div style={styles.grid}>
+            <div
+              role="list"
+              aria-label={
+                locale === 'ar-EG' ? 'حالات الانتقال المعيّنة' : 'Assigned transition cases'
               }
-              style={styles.control}
             >
-              <option value="interdiction">
-                {locale === 'ar-EG' ? 'حجر قضائي' : 'Interdiction'}
-              </option>
-              <option value="court_order">
-                {locale === 'ar-EG' ? 'أمر محكمة' : 'Court order'}
-              </option>
-              <option value="dispute">{locale === 'ar-EG' ? 'نزاع' : 'Dispute'}</option>
-            </select>
-            <div style={{ display: 'flex', gap: spacing.sm, flexWrap: 'wrap' }}>
-              <button
-                disabled={stepUpState !== 'allowed'}
-                onClick={() => void decideTransition('approve')}
-                style={styles.button}
-              >
-                {translate(locale, 'admin.approve')}
-              </button>
-              <button
-                disabled={stepUpState !== 'allowed'}
-                onClick={() => void decideTransition('reject')}
-                style={styles.danger}
-              >
-                {translate(locale, 'admin.reject')}
-              </button>
-              <button
-                disabled={stepUpState !== 'allowed'}
-                onClick={() => void decideTransition('defer')}
-                style={styles.button}
-              >
-                {locale === 'ar-EG' ? 'إحالة للمراجعة البشرية' : 'Defer to human review'}
-              </button>
+              {transitions.map((item) => (
+                <button
+                  key={item.transitionCaseId}
+                  role="listitem"
+                  aria-pressed={selectedTransitionId === item.transitionCaseId}
+                  onClick={() => setSelectedTransitionId(item.transitionCaseId)}
+                  style={styles.caseButton}
+                >
+                  <b>{item.status}</b>
+                  <span>
+                    {item.proofState} · {item.reviewState}
+                  </span>
+                  <span>
+                    {item.blockerState} · v{item.continuityCaseVersion}
+                  </span>
+                </button>
+              ))}
             </div>
-            <p role="status" aria-live="polite">
-              {transitionState} · {stepUpState}
-            </p>
+            <div>
+              <p>
+                {selectedTransition?.status === 'human_review_required'
+                  ? locale === 'ar-EG'
+                    ? 'مراجعة بشرية مطلوبة'
+                    : 'Human review required'
+                  : locale === 'ar-EG'
+                    ? 'مراجعة مستقلة مطلوبة'
+                    : 'Independent review required'}
+              </p>
+              <p>
+                {locale === 'ar-EG'
+                  ? 'حالات القرار: approved / rejected'
+                  : 'Decision states: approved / rejected'}
+              </p>
+              <label htmlFor="transition-blocker-reason">
+                {locale === 'ar-EG' ? 'سبب الإحالة للمراجعة البشرية' : 'Human-review blocker'}
+              </label>
+              <select
+                id="transition-blocker-reason"
+                value={transitionBlockerReason}
+                onChange={(event) =>
+                  setTransitionBlockerReason(
+                    event.target.value as 'interdiction' | 'court_order' | 'dispute',
+                  )
+                }
+                style={styles.control}
+              >
+                <option value="interdiction">
+                  {locale === 'ar-EG' ? 'حجر قضائي' : 'Interdiction'}
+                </option>
+                <option value="court_order">
+                  {locale === 'ar-EG' ? 'أمر محكمة' : 'Court order'}
+                </option>
+                <option value="dispute">{locale === 'ar-EG' ? 'نزاع' : 'Dispute'}</option>
+              </select>
+              <div style={{ display: 'flex', gap: spacing.sm, flexWrap: 'wrap' }}>
+                <button
+                  disabled={stepUpState !== 'allowed'}
+                  onClick={() => void decideTransition('approve')}
+                  style={styles.button}
+                >
+                  {translate(locale, 'admin.approve')}
+                </button>
+                <button
+                  disabled={stepUpState !== 'allowed'}
+                  onClick={() => void decideTransition('reject')}
+                  style={styles.danger}
+                >
+                  {translate(locale, 'admin.reject')}
+                </button>
+                <button
+                  disabled={stepUpState !== 'allowed'}
+                  onClick={() => void decideTransition('defer')}
+                  style={styles.button}
+                >
+                  {locale === 'ar-EG' ? 'إحالة للمراجعة البشرية' : 'Defer to human review'}
+                </button>
+              </div>
+              <p role="status" aria-live="polite">
+                {transitionState} · {stepUpState}
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </SecurityStepUpShell>
     </main>
   );
 }

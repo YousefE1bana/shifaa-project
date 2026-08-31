@@ -192,7 +192,12 @@ export async function registerIdentityOnboardingRoutes(
         work: async (session) => {
           const browser =
             typeof request.headers.origin === 'string' &&
+            deps.config.corsOrigins.includes(request.headers.origin) &&
             request.headers['sec-fetch-site'] === 'same-origin';
+          const completed = await deps.service.completeOtpVerification(session, request.id);
+          const body = browser
+            ? (({ refresh_token: _refreshToken, ...safe }) => safe)(completed)
+            : completed;
           return {
             status: 200,
             headers: {
@@ -201,7 +206,7 @@ export async function registerIdentityOnboardingRoutes(
                 ? { 'set-cookie': initialBrowserSessionCookies(session.refreshToken) }
                 : {}),
             },
-            body: await deps.service.completeOtpVerification(session, request.id),
+            body,
           };
         },
       });
