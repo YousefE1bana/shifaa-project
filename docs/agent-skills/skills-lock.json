@@ -6,7 +6,13 @@
     "nativeAuthority": ["shifaa-project-guardrails", "shifaa-ui-governor"],
     "projectLifecycle": "SpecKit",
     "externalSkillsAreAdvisory": true,
-    "globalInstallationAllowed": false,
+    "globalInstallationAllowed": true,
+    "genericThirdPartyScope": "global-user-only",
+    "projectTrackedScope": [
+      "SHIFAA-owned governance",
+      "intentionally SHIFAA-customized third-party skills",
+      "project-required SpecKit lifecycle integrations"
+    ],
     "symlinksUsed": false,
     "thirdPartyExecutablesAllowedByDefault": false,
     "reviewedExecutableExceptions": [
