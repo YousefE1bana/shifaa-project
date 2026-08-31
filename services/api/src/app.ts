@@ -25,6 +25,7 @@ import {
   defaultPortUtilities,
 } from './modules/identity-onboarding/index.js';
 import type { IdentityRepository } from './modules/identity-onboarding/ports.js';
+import type { RecoveryProofGrantAuthority } from './modules/identity-onboarding/ports.js';
 import { InMemoryIdempotencyStore } from './platform/idempotency.js';
 import {
   installIdentityErrorHandler,
@@ -66,6 +67,7 @@ export async function buildApp(
     proofing?: LocalProofingProvider;
     clock?: { now(): Date };
     identityContinuityService?: IdentityContinuityServicePort;
+    recoveryProofGrants?: RecoveryProofGrantAuthority;
   } = {},
 ): Promise<AppHarness> {
   const config = options.config ?? loadConfig({ NODE_ENV: 'test' });
@@ -108,9 +110,11 @@ export async function buildApp(
           ),
         }
       : undefined;
+  const recoveryProofGrants = options.recoveryProofGrants ?? continuityRuntime?.repository;
   const service = new IdentityOnboardingService({
     auth,
     ...(continuityRuntime ? { sessionAuthority: continuityRuntime.repository } : {}),
+    ...(recoveryProofGrants ? { recoveryProofGrants } : {}),
     cipher: new AesGcmIdentityCipher(config.identityEncryptionKey, config.identityBlindIndexKey, 1),
     proofing: options.proofing ?? new LocalProofingProvider(),
     uploads,
@@ -190,6 +194,7 @@ export async function buildApp(
       'Origin',
       'Sec-Fetch-Site',
       'Pragma',
+      'Recovery-Proof-Grant',
       'X-AAL',
       'X-Provider-Signature',
       'X-Provider-Timestamp',
@@ -215,6 +220,7 @@ export async function buildApp(
       repository instanceof PostgresIdentityRepository
         ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)
         : new InMemoryIdempotencyStore(),
+    ...(recoveryProofGrants ? { recoveryProofGrants } : {}),
   });
   if (config.facilityOnboardingEnabled) {
     await registerFacilityOnboardingRoutes(app, {

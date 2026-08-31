@@ -96,6 +96,8 @@ describe('identity factor and recovery notification projection', () => {
       template: template(RECOVERY_COMPLETED_TEMPLATE_CODE),
     });
     assert.deepEqual(Object.keys(projected.fields).toSorted(), ['action_time', 'support_action']);
+    assert.match(projected.renderedBody, /اكتملت الاستعادة/);
+    assert.doesNotMatch(projected.renderedBody, /completed|2026-08-27T10:00:00/);
   });
 
   it('rejects mismatched, unverified, secret-bearing, and template-drift inputs', () => {
@@ -178,6 +180,8 @@ describe('identity transition notification projection', () => {
         template: transitionTemplate(templateCode),
       });
       assert.deepEqual(Object.keys(projected.fields).toSorted(), ['action_time', 'case_status']);
+      assert.match(projected.renderedBody, /مطلوب مراجعة الحالة|تمت الموافقة/);
+      assert.doesNotMatch(projected.renderedBody, /review_required|approved|2026-08-27T10:00:00/);
       assert.doesNotMatch(JSON.stringify(projected), /token|proof|identity|patient|relationship/i);
     });
   }
@@ -200,6 +204,26 @@ describe('identity transition notification projection', () => {
           template: transitionTemplate(TRANSITION_DECIDED_TEMPLATE_CODE),
         }),
       /payload-denied/,
+    );
+  });
+
+  it('rejects unknown display codes instead of leaking or blanking them', () => {
+    assert.throws(
+      () =>
+        projectIdentityNotification({
+          event: {
+            event_type: 'identity.transition.submitted',
+            recipient_person_id: personId,
+            locale: 'ar-EG',
+            destination_alias: destinationAlias,
+            payload: {
+              action_time: '2026-08-27T10:00:00.000Z',
+              case_status: 'unknown_state',
+            },
+          },
+          template: transitionTemplate(TRANSITION_SUBMITTED_TEMPLATE_CODE),
+        }),
+      /identity-notification-display-code-invalid/,
     );
   });
 

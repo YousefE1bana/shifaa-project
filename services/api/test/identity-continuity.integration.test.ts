@@ -32,6 +32,7 @@ const key = 'synthetic-idempotency-key-0001';
 class RouteService implements IdentityContinuityServicePort {
   public calls = 0;
   public failure: ApiPolicyError | undefined;
+  public proofRequired = false;
 
   private invoked<T>(body: T): Promise<T> {
     this.calls += 1;
@@ -55,6 +56,7 @@ class RouteService implements IdentityContinuityServicePort {
         revokedAt: '2026-08-26T00:00:00.000Z',
       },
       audit: {
+        actorPersonId: ids.person,
         requestId: '71000000-0000-4000-8000-000000000099',
         action: 'identity.session.logged_out',
         outcome: 'succeeded' as const,
@@ -127,6 +129,13 @@ class RouteService implements IdentityContinuityServicePort {
     });
   }
   public prepareRecoveryCompletion(context: ContinuityRequestContext) {
+    if (this.proofRequired)
+      return this.invoked({
+        caseId: ids.case,
+        status: 'proof_required' as const,
+        recoveryProofGrant: 'g'.repeat(43),
+        expiresAt: '2026-08-26T00:10:00.000Z',
+      });
     return this.invoked({
       caseId: ids.case,
       personId: ids.person,
@@ -145,6 +154,7 @@ class RouteService implements IdentityContinuityServicePort {
   public commitRecoveryCompletion(
     prepared: Awaited<ReturnType<RouteService['prepareRecoveryCompletion']>>,
   ) {
+    if (!('session' in prepared)) return Promise.resolve(prepared);
     return Promise.resolve({
       caseId: prepared.caseId,
       status: prepared.restricted ? ('restricted_enrollment' as const) : ('completed' as const),
@@ -420,7 +430,33 @@ describe('identity continuity exact route contract', () => {
     expect(response.json().session).toMatchObject({ accessToken, assurance: 'aal2' });
   });
 
+  it('returns an opaque proof grant without exposing or installing a recovery session', async () => {
+    service.proofRequired = true;
+    const response = await app.inject({
+      method: 'POST',
+      url: `/v1/auth/recovery/${ids.case}/complete`,
+      headers: { 'idempotency-key': key },
+      payload: {
+        caseToken: 'synthetic-case-token-00000000000000000000',
+        handle: 'patient@synthetic.shifaa.test',
+        recoveryOtp: '123456',
+        proofMethod: 'repeated_identity_proof',
+        newCredential: 'Synthetic-Recovery-Credential!',
+      },
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual({
+      caseId: ids.case,
+      status: 'proof_required',
+      recoveryProofGrant: 'g'.repeat(43),
+      expiresAt: '2026-08-26T00:10:00.000Z',
+    });
+    expect(response.headers['set-cookie']).toBeUndefined();
+    expect(response.body).not.toMatch(/accessToken|refreshToken|sessionId/);
+  });
+
   it('bootstraps browser cookies from the fresh restricted recovery session', async () => {
+    service.proofRequired = false;
     const response = await app.inject({
       method: 'POST',
       url: `/v1/auth/recovery/${ids.case}/complete`,

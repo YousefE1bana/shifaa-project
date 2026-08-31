@@ -57,6 +57,51 @@ type DeliveryAttempt = {
 
 export type IdentityNotificationOutcome = 'delivered' | 'retry' | 'dead_letter';
 
+const displayCodes = {
+  'ar-EG': {
+    verified: 'تم التحقق',
+    removed: 'تمت الإزالة',
+    completed: 'اكتملت الاستعادة',
+    review_required: 'مطلوب مراجعة الحالة',
+    human_review_required: 'مطلوب مراجعة بشرية',
+    approved: 'تمت الموافقة',
+    rejected: 'تم الرفض',
+  },
+  'en-EG': {
+    verified: 'Verified',
+    removed: 'Removed',
+    completed: 'Recovery completed',
+    review_required: 'Case review required',
+    human_review_required: 'Human review required',
+    approved: 'Approved',
+    rejected: 'Rejected',
+  },
+} as const;
+
+function notificationDisplayFields(
+  locale: 'ar-EG' | 'en-EG',
+  fields: Record<string, string>,
+): Record<string, string> {
+  const codes = displayCodes[locale] as Record<string, string>;
+  const localizedCode = (value: string): string => {
+    const localized = codes[value];
+    if (!localized) throw new Error('identity-notification-display-code-invalid');
+    return localized;
+  };
+  return {
+    ...fields,
+    action_time: new Intl.DateTimeFormat(locale, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'Africa/Cairo',
+    }).format(new Date(fields['action_time']!)),
+    ...(fields['support_action']
+      ? { support_action: localizedCode(fields['support_action']) }
+      : {}),
+    ...(fields['case_status'] ? { case_status: localizedCode(fields['case_status']) } : {}),
+  };
+}
+
 export function projectIdentityNotification(input: {
   event: Pick<
     IdentityEvent,
@@ -66,7 +111,7 @@ export function projectIdentityNotification(input: {
 }) {
   assertIdentityPayload(input.event);
   assertIdentityTemplate(input.event.event_type, input.template);
-  const fields = input.event.event_type.startsWith('identity.transition.')
+  const fields: Record<string, string> = input.event.event_type.startsWith('identity.transition.')
     ? {
         action_time: String(input.event.payload.action_time),
         case_status: String(input.event.payload.case_status),
@@ -75,9 +120,10 @@ export function projectIdentityNotification(input: {
         action_time: String(input.event.payload.action_time),
         support_action: String(input.event.payload.support_action),
       };
+  const displayFields = notificationDisplayFields(input.event.locale!, fields);
   const renderedBody = (
     input.event.locale === 'ar-EG' ? input.template.arabic_body : input.template.english_body
-  ).replace(placeholder, (_whole, field: string) => fields[field as keyof typeof fields] ?? '');
+  ).replace(placeholder, (_whole, field: string) => displayFields[field] ?? '');
   return {
     fields,
     renderedBody,

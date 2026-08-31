@@ -26,6 +26,12 @@ CREATE TABLE identity.continuity_cases (
   )),
   public_token_digest bytea UNIQUE,
   recovery_handle_digest bytea,
+  recovery_proof_grant_digest bytea,
+  recovery_proof_grant_expires_at timestamptz,
+  recovery_proof_grant_consumed_at timestamptz,
+  recovery_proof_purpose_code text CHECK (
+    recovery_proof_purpose_code IS NULL OR recovery_proof_purpose_code='account_recovery_reproof'
+  ),
   token_key_version integer,
   restriction_scope text CHECK (restriction_scope IS NULL OR restriction_scope='mfa_enrollment_only'),
   bound_native_session_id uuid,
@@ -45,6 +51,11 @@ CREATE TABLE identity.continuity_cases (
   version integer NOT NULL DEFAULT 1 CHECK (version>0),
   CHECK (public_token_digest IS NULL OR octet_length(public_token_digest)=32),
   CHECK (recovery_handle_digest IS NULL OR octet_length(recovery_handle_digest)=32),
+  CHECK (recovery_proof_grant_digest IS NULL OR octet_length(recovery_proof_grant_digest)=32),
+  CHECK ((recovery_proof_grant_digest IS NULL AND recovery_proof_grant_expires_at IS NULL) OR
+         (recovery_proof_grant_digest IS NOT NULL AND recovery_proof_grant_expires_at IS NOT NULL
+          AND recovery_proof_purpose_code='account_recovery_reproof'
+          AND case_type='account_recovery' AND subject_person_id IS NOT NULL)),
   CHECK ((public_token_digest IS NULL AND token_key_version IS NULL) OR
          (public_token_digest IS NOT NULL AND token_key_version>0)),
   CHECK (expires_at IS NULL OR expires_at>created_at),
@@ -119,6 +130,9 @@ CREATE INDEX continuity_expiry_idx
 CREATE INDEX continuity_subject_patient_fk_idx ON identity.continuity_cases(subject_patient_id);
 CREATE INDEX continuity_relationship_fk_idx ON identity.continuity_cases(relationship_id);
 CREATE INDEX continuity_verification_case_fk_idx ON identity.continuity_cases(verification_case_id);
+CREATE UNIQUE INDEX continuity_recovery_proof_grant_uq
+  ON identity.continuity_cases(recovery_proof_grant_digest)
+  WHERE recovery_proof_grant_digest IS NOT NULL;
 CREATE INDEX continuity_assigned_reviewer_fk_idx ON identity.continuity_cases(assigned_reviewer_person_id);
 CREATE INDEX continuity_reviewer_fk_idx ON identity.continuity_cases(reviewer_person_id);
 
@@ -126,6 +140,8 @@ COMMENT ON TABLE identity.continuity_cases IS
   'retention_class=IDENTITY_PROOF or SECURITY_AUDIT; duration/action remains OPEN-LEGAL-002; null-subject anonymous recovery intake or decoy may purge only when expired for 24h';
 COMMENT ON COLUMN identity.continuity_cases.bound_native_session_id IS
   'deny-only binding to native Auth; never authenticates or proves session validity';
+COMMENT ON COLUMN identity.continuity_cases.recovery_proof_grant_digest IS
+  'HMAC digest of a short-lived single-purpose recovery re-proof capability; never a session credential';
 
 CREATE OR REPLACE FUNCTION platform.context_action() RETURNS text
 LANGUAGE sql STABLE SET search_path=pg_catalog AS $$
@@ -171,6 +187,9 @@ BEGIN
   SET status='expired',
       restriction_scope=CASE WHEN status='restricted_enrollment' THEN restriction_scope ELSE NULL END,
       bound_native_session_id=CASE WHEN status='restricted_enrollment' THEN bound_native_session_id ELSE NULL END,
+      recovery_proof_grant_digest=NULL,
+      recovery_proof_grant_expires_at=NULL,
+      recovery_proof_grant_consumed_at=NULL,
       updated_at=p_now
   WHERE case_type='account_recovery'
     AND status IN ('requested','proof_required','restricted_enrollment')
@@ -181,6 +200,20 @@ BEGIN
   GET DIAGNOSTICS removed=ROW_COUNT;
   RETURN removed;
 END
+$$;
+
+CREATE OR REPLACE FUNCTION platform.authorize_recovery_proof_grant(p_grant_digest bytea)
+RETURNS TABLE(recovery_case_id uuid,person_id uuid)
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path=pg_catalog,identity AS $$
+  SELECT c.id,c.subject_person_id
+  FROM identity.continuity_cases c
+  WHERE octet_length(p_grant_digest)=32
+    AND c.recovery_proof_grant_digest=p_grant_digest
+    AND c.case_type='account_recovery' AND c.status='proof_required'
+    AND c.subject_person_id IS NOT NULL AND c.verification_case_id IS NULL
+    AND c.recovery_proof_purpose_code='account_recovery_reproof'
+    AND c.recovery_proof_grant_consumed_at IS NULL
+    AND c.recovery_proof_grant_expires_at>now() AND c.expires_at>now()
 $$;
 
 CREATE OR REPLACE FUNCTION platform.person_matches_auth_user(p_person_id uuid,p_auth_user_id uuid)
@@ -440,7 +473,7 @@ $$;
 
 REVOKE ALL ON FUNCTION platform.context_action(),platform.context_case_id(),platform.context_session_id(),
   platform.context_factor_amr_at(),platform.context_now(),identity.transition_eligible_on(date,date),
-  platform.purge_expired_continuity_decoys(timestamptz),platform.person_matches_auth_user(uuid,uuid),
+  platform.purge_expired_continuity_decoys(timestamptz),platform.authorize_recovery_proof_grant(bytea),platform.person_matches_auth_user(uuid,uuid),
   platform.submit_dependent_transition(uuid,uuid,integer),
   platform.decide_dependent_transition(uuid,integer,text,text,text)
 FROM PUBLIC;
@@ -450,6 +483,7 @@ GRANT EXECUTE ON FUNCTION platform.context_action(),platform.context_case_id(),p
   platform.decide_dependent_transition(uuid,integer,text,text,text)
 TO shifaa_api;
 GRANT EXECUTE ON FUNCTION platform.purge_expired_continuity_decoys(timestamptz) TO shifaa_worker;
+GRANT EXECUTE ON FUNCTION platform.authorize_recovery_proof_grant(bytea) TO shifaa_api;
 
 GRANT SELECT,INSERT,UPDATE ON identity.continuity_cases TO shifaa_api;
 REVOKE ALL ON identity.continuity_cases FROM PUBLIC;

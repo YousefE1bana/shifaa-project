@@ -56,8 +56,10 @@ export function PatientSessionLifecycle() {
     const visibilityListener = () => {
       if (document.visibilityState === 'visible') void refresh();
     };
+    const onlineListener = () => void refresh();
     if (typeof document !== 'undefined')
       document.addEventListener('visibilitychange', visibilityListener);
+    if (typeof window !== 'undefined') window.addEventListener('online', onlineListener);
     void refresh();
     return () => {
       disposed = true;
@@ -65,6 +67,7 @@ export function PatientSessionLifecycle() {
       appStateSubscription.remove();
       if (typeof document !== 'undefined')
         document.removeEventListener('visibilitychange', visibilityListener);
+      if (typeof window !== 'undefined') window.removeEventListener('online', onlineListener);
     };
   }, []);
   return null;

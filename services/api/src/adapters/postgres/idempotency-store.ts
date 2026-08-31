@@ -253,6 +253,7 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
         IdempotencyRow[]
       >`select * from platform.idempotency_records where principal=${input.principal} and method=${input.method.toUpperCase()} and route=${input.route} and idempotency_key=${input.key} and request_hash=${requestHash} for update`;
       if (!record) throw new Error('Prepared idempotency reservation was lost.');
+      if (record.state === 'completed') return this.completedResult<T>(record);
       const result = await input.work(prepared);
       // The staged work may install a domain actor context on this shared transaction.
       // Restore the idempotency principal before its forced-RLS completion write.

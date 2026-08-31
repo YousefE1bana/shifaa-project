@@ -28,6 +28,11 @@ test('patient recovery keeps provider OTP and case material in memory-only anony
     'accessibilityRole="link"',
     'href="/mfa"',
     'installSession(result.session)',
+    "result.status === 'proof_required'",
+    'proofGrantRef',
+    'createRecoveryProof',
+    "'Recovery-Proof-Grant'",
+    'proof.verification_case.id',
     'autoComplete="one-time-code"',
   ]) {
     assert.match(`${screen}\n${api}`, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
@@ -36,6 +41,10 @@ test('patient recovery keeps provider OTP and case material in memory-only anony
     `${screen}\n${api}`,
     /localStorage|AsyncStorage|queueMutation|backgroundSync|analytics|searchParams|router\.(push|replace).*token/i,
   );
+  assert.doesNotMatch(screen, /onChangeText=\{setVerificationCaseId\}/);
+  assert.match(screen, /reconnectStateRef\.current/);
+  assert.match(screen, /state !== 'offline'/);
+  assert.match(screen, /proofGrantRef\.current \?/);
 });
 
 test('native recovery supplies the OS-secure refresh credential store', () => {

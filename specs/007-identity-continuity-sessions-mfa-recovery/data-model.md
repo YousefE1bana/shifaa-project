@@ -17,29 +17,33 @@ returns boolean only, fixes `search_path`, is revoked from public roles, and is 
 
 ## 2. `identity.continuity_cases`
 
-| Column                        | Type / nullability     | Constraint / meaning                                                                |
-| ----------------------------- | ---------------------- | ----------------------------------------------------------------------------------- |
-| `id`                          | `uuid not null`        | primary key, generated UUID                                                         |
-| `case_type`                   | `text not null`        | `account_recovery` or `dependent_transition`                                        |
-| `subject_person_id`           | `uuid null`            | FK `identity.people`; null for anonymous unbound intake or nonexistent recovery     |
-| `subject_patient_id`          | `uuid null`            | FK `identity.patients`; required only for transition                                |
-| `relationship_id`             | `uuid null`            | FK `identity.care_relationships`; required transition guardianship                  |
-| `verification_case_id`        | `uuid null`            | FK existing `identity.verification_cases`; released/verified proof reference        |
-| `status`                      | `text not null`        | closed workflow set below                                                           |
-| `public_token_digest`         | `bytea null`           | 32-byte HMAC digest; required recovery, forbidden transition                        |
-| `recovery_handle_digest`      | `bytea null`           | 32-byte normalized-handle HMAC; required recovery, forbidden transition             |
-| `token_key_version`           | `integer null`         | positive; present iff digest exists                                                 |
-| `restriction_scope`           | `text null`            | only `mfa_enrollment_only`; only recovery `restricted_enrollment`                   |
-| `bound_native_session_id`     | `uuid null`            | deny-only binding to a native session; never proves validity                        |
-| `assigned_reviewer_person_id` | `uuid null`            | FK people; required in transition review states                                     |
-| `reviewer_person_id`          | `uuid null`            | FK people; required for reviewed terminal transition decision                       |
-| `review_required_reason_code` | `text null`            | `interdiction`, `court_order`, or `dispute`; signals review only, not legal outcome |
-| `decision_reason_code`        | `text null`            | stable localized reason key; required reject/approve decisions                      |
-| `expires_at`                  | `timestamptz null`     | required for recovery; transition derives proof expiry                              |
-| `decided_at`                  | `timestamptz null`     | reviewed transition terminal timestamp                                              |
-| `completed_at`                | `timestamptz null`     | completed recovery timestamp                                                        |
-| `created_at`,`updated_at`     | `timestamptz not null` | UTC defaults                                                                        |
-| `version`                     | `integer not null`     | starts 1, positive, increments each state mutation                                  |
+| Column                             | Type / nullability     | Constraint / meaning                                                                |
+| ---------------------------------- | ---------------------- | ----------------------------------------------------------------------------------- |
+| `id`                               | `uuid not null`        | primary key, generated UUID                                                         |
+| `case_type`                        | `text not null`        | `account_recovery` or `dependent_transition`                                        |
+| `subject_person_id`                | `uuid null`            | FK `identity.people`; null for anonymous unbound intake or nonexistent recovery     |
+| `subject_patient_id`               | `uuid null`            | FK `identity.patients`; required only for transition                                |
+| `relationship_id`                  | `uuid null`            | FK `identity.care_relationships`; required transition guardianship                  |
+| `verification_case_id`             | `uuid null`            | FK existing `identity.verification_cases`; released/verified proof reference        |
+| `status`                           | `text not null`        | closed workflow set below                                                           |
+| `public_token_digest`              | `bytea null`           | 32-byte HMAC digest; required recovery, forbidden transition                        |
+| `recovery_handle_digest`           | `bytea null`           | 32-byte normalized-handle HMAC; required recovery, forbidden transition             |
+| `token_key_version`                | `integer null`         | positive; present iff digest exists                                                 |
+| `restriction_scope`                | `text null`            | only `mfa_enrollment_only`; only recovery `restricted_enrollment`                   |
+| `bound_native_session_id`          | `uuid null`            | deny-only binding to a native session; never proves validity                        |
+| `assigned_reviewer_person_id`      | `uuid null`            | FK people; required in transition review states                                     |
+| `reviewer_person_id`               | `uuid null`            | FK people; required for reviewed terminal transition decision                       |
+| `review_required_reason_code`      | `text null`            | `interdiction`, `court_order`, or `dispute`; signals review only, not legal outcome |
+| `decision_reason_code`             | `text null`            | stable localized reason key; required reject/approve decisions                      |
+| `recovery_proof_grant_digest`      | `bytea null`           | 32-byte HMAC digest only; unique while retained; never plaintext or a session       |
+| `recovery_proof_grant_expires_at`  | `timestamptz null`     | short-lived grant expiry bounded by recovery-case expiry                            |
+| `recovery_proof_grant_consumed_at` | `timestamptz null`     | single-use proof-case link checkpoint                                               |
+| `recovery_proof_purpose_code`      | `text null`            | exact closed value `account_recovery_reproof` for grant/link evidence               |
+| `expires_at`                       | `timestamptz null`     | required for recovery; transition derives proof expiry                              |
+| `decided_at`                       | `timestamptz null`     | reviewed transition terminal timestamp                                              |
+| `completed_at`                     | `timestamptz null`     | completed recovery timestamp                                                        |
+| `created_at`,`updated_at`          | `timestamptz not null` | UTC defaults                                                                        |
+| `version`                          | `integer not null`     | starts 1, positive, increments each state mutation                                  |
 
 ### Status closed set
 
@@ -69,6 +73,7 @@ returns boolean only, fixes `search_path`, is revoked from public roles, and is 
   `human_review_required`;
 - unique non-null `public_token_digest`;
 - unique non-null `bound_native_session_id` while restricted;
+- unique non-null recovery proof grant digest;
 - worklist `(assigned_reviewer_person_id,status,created_at,id)` partial review states;
 - subject history `(subject_person_id,created_at desc,id)`;
 - expiry `(status,expires_at)` partial nonterminal recovery;
@@ -80,15 +85,16 @@ returns boolean only, fixes `search_path`, is revoked from public roles, and is 
 
 ### Recovery
 
-| From                         | To                      | Actor/guard                                                                | Effects                                                    |
-| ---------------------------- | ----------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| none                         | `requested`             | preauth HMAC scope/rate; anonymous intake                                  | digest+15m expiry; uniform response                        |
-| `requested`                  | `proof_required`        | case token plus matching Supabase recovery OTP                             | bind only after returned subject/handle-digest match       |
-| `requested`/`proof_required` | `expired`               | request-time clock > expiry                                                | terminal; no Auth mutation                                 |
-| `proof_required`             | `restricted_enrollment` | repeated proofing accepted, factor lost, native session valid              | bind deny-only native session scope                        |
-| `proof_required`             | `completed`             | bound factor + independent method; recovery user-context credential update | global old-session revoke then public fresh native sign-in |
-| `restricted_enrollment`      | `completed`             | replacement TOTP verified; native revocation reconciled                    | restriction removed; notification event                    |
-| any nonterminal              | `rejected`              | invalid terminal proof/attempt policy                                      | no new ordinary access                                     |
+| From                         | To                      | Actor/guard                                                                    | Effects                                                                          |
+| ---------------------------- | ----------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| none                         | `requested`             | preauth HMAC scope/rate; anonymous intake                                      | digest+15m expiry; uniform response                                              |
+| `requested`                  | `proof_required`        | case token plus matching Supabase recovery OTP                                 | bind only after returned subject/handle-digest match                             |
+| `proof_required`             | `proof_required`        | no approved repeated proof case; issue/rotate a short-lived opaque proof grant | existing proof creation atomically links one post-intake case; grant digest only |
+| `requested`/`proof_required` | `expired`               | request-time clock > expiry                                                    | terminal; no Auth mutation                                                       |
+| `proof_required`             | `restricted_enrollment` | repeated proofing accepted, factor lost, native session valid                  | bind deny-only native session scope                                              |
+| `proof_required`             | `completed`             | bound factor + independent method; recovery user-context credential update     | global old-session revoke then public fresh native sign-in                       |
+| `restricted_enrollment`      | `completed`             | replacement TOTP verified; native revocation reconciled                        | restriction removed; notification event                                          |
+| any nonterminal              | `rejected`              | invalid terminal proof/attempt policy                                          | no new ordinary access                                                           |
 
 ### Dependent transition
 

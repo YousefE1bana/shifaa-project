@@ -1,12 +1,22 @@
 import { execFileSync } from 'node:child_process';
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 
 import postgres from 'postgres';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { AesGcmIdentityCipher } from '@shifaa/core';
 
 import { PostgresIdempotencyStore } from '../src/adapters/postgres/idempotency-store.js';
 import { PostgresIdentityContinuityService } from '../src/adapters/postgres/identity-continuity-service.js';
 import { PostgresIdentityRepository } from '../src/adapters/postgres/identity-repository.js';
+import {
+  LocalAuthIssuer,
+  LocalProofingProvider,
+  LocalQuarantineUploadStore,
+} from '../src/adapters/index.js';
+import {
+  IdentityOnboardingService,
+  defaultPortUtilities,
+} from '../src/modules/identity-onboarding/index.js';
 
 interface SupabaseStatus {
   DB_URL: string;
@@ -101,6 +111,7 @@ describe.skipIf(!standaloneEnabled)(
           marker: { ...stagedFactor, result },
           evidence: {
             audit: {
+              actorPersonId: stagedFactor.personId,
               requestId,
               action: 'identity.factor.removed',
               outcome: 'succeeded',
@@ -195,10 +206,17 @@ describe.skipIf(!enabled).sequential('007 PostgreSQL staged idempotency', () => 
     expect(commitCalls).toBe(1);
 
     failCommit = false;
-    await expect(store.execute(input)).resolves.toMatchObject({
-      status: 200,
-      body: { scope: 'all' },
-    });
+    const concurrentReplay = await Promise.all([store.execute(input), store.execute(input)]);
+    expect(concurrentReplay).toEqual([
+      expect.objectContaining({
+        status: 200,
+        body: { scope: 'all', revokedAt: '2026-08-26T00:00:00.000Z' },
+      }),
+      expect.objectContaining({
+        status: 200,
+        body: { scope: 'all', revokedAt: '2026-08-26T00:00:00.000Z' },
+      }),
+    ]);
     await expect(store.execute(input)).resolves.toMatchObject({
       status: 200,
       body: { scope: 'all' },
@@ -238,8 +256,8 @@ describe.skipIf(!enabled).sequential('007 PostgreSQL staged idempotency', () => 
           public_token_digest,recovery_handle_digest,token_key_version,expires_at
         ) values(
           ${caseId}::uuid,'account_recovery',${person!.id}::uuid,'restricted_enrollment',
-          'mfa_enrollment_only',${nativeSessionId}::uuid,decode(repeat('81',32),'hex'),
-          decode(repeat('82',32),'hex'),1,now()+interval '15 minutes'
+          'mfa_enrollment_only',${nativeSessionId}::uuid,${randomBytes(32)},
+          ${randomBytes(32)},1,now()+interval '15 minutes'
         )`;
       const continuity = new PostgresIdentityContinuityService(
         repository,
@@ -266,6 +284,118 @@ describe.skipIf(!enabled).sequential('007 PostgreSQL staged idempotency', () => 
         bound_native_session_id: null,
       });
     } finally {
+      await owner`delete from identity.continuity_cases where id=${caseId}::uuid`;
+      await owner.end({ timeout: 5 });
+    }
+  });
+
+  it('fails closed for expired, wrong-person, and replayed recovery proof grants', async () => {
+    const status = localStatus();
+    const owner = postgres(status.DB_URL, { max: 1 });
+    const personId = randomUUID();
+    const userId = randomUUID();
+    const caseId = randomUUID();
+    let identityId: string | undefined;
+    let verificationCaseId: string | undefined;
+    const continuity = new PostgresIdentityContinuityService(
+      repository,
+      Buffer.alloc(32, 21),
+      'ci',
+    );
+    const firstDigest = randomBytes(32);
+    const replacementDigest = randomBytes(32);
+    try {
+      await owner`
+        insert into identity.people(id,user_id,display_name,email_normalized,profile_status)
+        values(${personId}::uuid,${userId}::uuid,'Recovery proof subject',
+          ${`proof-${personId}@synthetic.shifaa.test`},'active')`;
+      await owner`
+        insert into identity.continuity_cases(
+          id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
+          token_key_version,expires_at
+        ) values(${caseId}::uuid,'account_recovery',${personId}::uuid,'proof_required',
+          ${randomBytes(32)},${randomBytes(32)},1,now()+interval '15 minutes')`;
+      await continuity.installRecoveryProofGrant({
+        recoveryCaseId: caseId,
+        personId,
+        grantDigest: firstDigest,
+        expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
+      });
+      await expect(
+        continuity.authorizeRecoveryProofGrant({ grantDigest: firstDigest }),
+      ).resolves.toMatchObject({
+        recoveryCaseId: caseId,
+        personId,
+      });
+      await expect(
+        continuity.lockRecoveryProofGrant({
+          grantDigest: firstDigest,
+          recoveryCaseId: caseId,
+          personId: randomUUID(),
+        }),
+      ).rejects.toMatchObject({ code: 'identity-proof-required', status: 403 });
+
+      await owner`update identity.continuity_cases
+        set recovery_proof_grant_expires_at=now()-interval '1 second' where id=${caseId}::uuid`;
+      await expect(
+        continuity.authorizeRecoveryProofGrant({ grantDigest: firstDigest }),
+      ).rejects.toMatchObject({ code: 'identity-proof-required', status: 403 });
+      await continuity.installRecoveryProofGrant({
+        recoveryCaseId: caseId,
+        personId,
+        grantDigest: replacementDigest,
+        expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
+      });
+      const authority = await continuity.authorizeRecoveryProofGrant({
+        grantDigest: replacementDigest,
+      });
+      const identityValue = `29801${Math.floor(Math.random() * 1_000_000_000)
+        .toString()
+        .padStart(9, '0')}`;
+      const onboarding = new IdentityOnboardingService({
+        auth: new LocalAuthIssuer(),
+        sessionAuthority: continuity,
+        recoveryProofGrants: continuity,
+        cipher: new AesGcmIdentityCipher(Buffer.alloc(32, 31), Buffer.alloc(32, 32), 1),
+        proofing: new LocalProofingProvider(new Map([[identityValue, 'verified']])),
+        uploads: new LocalQuarantineUploadStore(),
+        repository,
+        ...defaultPortUtilities(),
+      });
+      const proof = await onboarding.createIdentity(
+        {
+          kind: 'PAT',
+          subjectId: caseId,
+          personId,
+          principal: authority.principal,
+          aal: 1,
+        },
+        { identity_type: 'egyptian_national_id', value: identityValue, issuing_country: 'EG' },
+        randomUUID(),
+        { grantDigest: replacementDigest, recoveryCaseId: caseId },
+      );
+      identityId = proof.id;
+      verificationCaseId = proof.verification_case.id;
+      const [linked] = await owner<{ verification_case_id: string; consumed: boolean }[]>`
+        select verification_case_id,recovery_proof_grant_consumed_at is not null consumed
+        from identity.continuity_cases where id=${caseId}::uuid`;
+      expect(linked).toEqual({ verification_case_id: verificationCaseId, consumed: true });
+      await expect(
+        continuity.authorizeRecoveryProofGrant({ grantDigest: replacementDigest }),
+      ).rejects.toMatchObject({ code: 'identity-proof-required', status: 403 });
+      await expect(
+        continuity.lockRecoveryProofGrant({
+          grantDigest: replacementDigest,
+          recoveryCaseId: caseId,
+          personId,
+        }),
+      ).rejects.toMatchObject({ code: 'identity-proof-required', status: 403 });
+    } finally {
+      await owner`delete from identity.continuity_cases where id=${caseId}::uuid`;
+      if (verificationCaseId)
+        await owner`delete from identity.verification_cases where id=${verificationCaseId}::uuid`;
+      if (identityId) await owner`delete from identity.identities where id=${identityId}::uuid`;
+      await owner`delete from identity.people where id=${personId}::uuid`;
       await owner.end({ timeout: 5 });
     }
   });

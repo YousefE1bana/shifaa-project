@@ -1,4 +1,5 @@
 import { IdentityContinuityClient } from '@shifaa/api-client/identity-continuity';
+import { IdentityOnboardingClient } from '@shifaa/api-client';
 import { FamilyCareClient } from '@shifaa/api-client/family-care';
 import {
   MemoryAccessTokenStore,
@@ -11,6 +12,7 @@ import {
 import type {
   BeginEnrollmentRequest,
   CompleteRecoveryRequest,
+  CompleteRecoveryResult,
   EnrollmentSecretResult,
   FactorRemovalResult,
   FactorResult,
@@ -21,6 +23,7 @@ import type {
   VerifyEnrollmentRequest,
   TransitionResult,
 } from '@shifaa/contracts/identity-continuity';
+import type { IdentityInput, IdentitySummaryDto } from '@shifaa/contracts';
 import type { RelationshipsPageWithTransition } from '@shifaa/contracts/family-care';
 
 import { patientOnboardingApi } from './identity-onboarding-api';
@@ -104,7 +107,8 @@ export function assertIdentityContinuityOnline(): void {
 
 export interface PatientRecoveryApiPort {
   startRecovery(body: StartRecoveryRequest): Promise<RecoveryAccepted>;
-  completeRecovery(caseId: string, body: CompleteRecoveryRequest): Promise<RecoveryResult>;
+  completeRecovery(caseId: string, body: CompleteRecoveryRequest): Promise<CompleteRecoveryResult>;
+  createRecoveryProof(grant: string, body: IdentityInput): Promise<IdentitySummaryDto>;
   installSession(session: RecoveryResult['session']): Promise<void>;
 }
 
@@ -129,13 +133,30 @@ export class PatientRecoveryApi implements PatientRecoveryApiPort {
   public async completeRecovery(
     caseId: string,
     body: CompleteRecoveryRequest,
-  ): Promise<RecoveryResult> {
+  ): Promise<CompleteRecoveryResult> {
     assertIdentityContinuityOnline();
     return (await this.client().completeRecovery(
       caseId,
       body,
       mutationKey('recovery-complete'),
-    )) as RecoveryResult;
+    )) as CompleteRecoveryResult;
+  }
+
+  public async createRecoveryProof(
+    grant: string,
+    body: IdentityInput,
+  ): Promise<IdentitySummaryDto> {
+    assertIdentityContinuityOnline();
+    const client = new IdentityOnboardingClient({
+      baseUrl: defaultPatientApiBaseUrl(this.options.apiBaseUrl),
+      acceptLanguage: this.options.locale,
+      defaultHeaders: { 'Recovery-Proof-Grant': grant },
+      ...(this.options.fetch ? { fetch: this.options.fetch } : {}),
+    });
+    return (await client.createIdentityProof(
+      body,
+      mutationKey('recovery-reproof'),
+    )) as IdentitySummaryDto;
   }
 
   public async installSession(session: RecoveryResult['session']): Promise<void> {

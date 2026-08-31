@@ -220,6 +220,7 @@ export class IdentityOnboardingService {
       expires_on?: string | null;
     },
     requestId: string,
+    recoveryProof?: { grantDigest: Uint8Array; recoveryCaseId: string },
   ) {
     const patient = this.requirePatient(actor);
     if (!(await this.ports.repository.hasActiveInventory('identity_proofing'))) {
@@ -239,6 +240,18 @@ export class IdentityOnboardingService {
     const status = provider.outcome === 'timeout' ? 'pending' : provider.outcome;
 
     return this.ports.repository.transaction(async () => {
+      if (recoveryProof) {
+        if (!this.ports.recoveryProofGrants)
+          throw new ApiPolicyError(
+            'identity-proof-required',
+            403,
+            'A repeated identity proof is required.',
+          );
+        await this.ports.recoveryProofGrants.lockRecoveryProofGrant({
+          ...recoveryProof,
+          personId: patient.personId,
+        });
+      }
       const identity = await this.ports.repository.createIdentity({
         personId: patient.personId,
         identityType: input.identity_type,
@@ -260,6 +273,13 @@ export class IdentityOnboardingService {
           ? { assignedReviewerPersonId: '00000000-0000-4000-8000-000000000002' }
           : {}),
       });
+      if (recoveryProof) {
+        await this.ports.recoveryProofGrants!.consumeRecoveryProofGrant({
+          recoveryCaseId: recoveryProof.recoveryCaseId,
+          personId: patient.personId,
+          verificationCaseId: verificationCase.id,
+        });
+      }
       await this.ports.repository.appendAudit({
         actorPersonId: patient.personId,
         action: 'identity.proof.created',
@@ -267,7 +287,11 @@ export class IdentityOnboardingService {
         resourceId: verificationCase.id,
         outcome: 'allowed',
         requestId,
-        metadata: { identity_type: input.identity_type, status },
+        metadata: {
+          identity_type: input.identity_type,
+          status,
+          ...(recoveryProof ? { purpose_code: 'account_recovery_reproof' } : {}),
+        },
       });
       await this.ports.repository.appendOutbox({
         eventType:

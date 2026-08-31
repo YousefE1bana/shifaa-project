@@ -106,6 +106,7 @@ paths:
         }
     post:
       operationId: createIdentityProof
+      security: [{ bearerAuth: [] }, { recoveryProofGrant: [] }]
       x-shifaa-requirements: [FR-AUTH-003, FR-AUTH-004, FR-AUTH-006, FR-AUTH-008, NFR-SEC-005]
       parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
       requestBody:
@@ -336,6 +337,11 @@ paths:
 components:
   securitySchemes:
     bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+    recoveryProofGrant:
+      type: apiKey
+      in: header
+      name: Recovery-Proof-Grant
+      description: Short-lived single-purpose account-recovery re-proof capability; not an access JWT or session.
     providerSignature: { type: apiKey, in: header, name: X-Provider-Signature }
   parameters:
     IdempotencyKey:

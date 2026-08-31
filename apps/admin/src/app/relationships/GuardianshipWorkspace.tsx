@@ -44,6 +44,35 @@ type UiState =
 
 const noStaffAccessToken = () => undefined;
 
+const arabicDisplayCodes: Readonly<Record<string, string>> = {
+  loading: 'جارٍ التحميل',
+  ready: 'جاهز',
+  empty: 'لا توجد حالات',
+  'aal-required': 'يلزم تحقق إضافي',
+  'purpose-required': 'يلزم غرض مراجعة مصرح به',
+  'self-denied': 'المراجعة الذاتية غير مسموحة',
+  conflict: 'تعارض في النسخة',
+  error: 'تعذر إكمال الإجراء',
+  success: 'اكتمل الإجراء',
+  released: 'دليل مُتاح للمراجعة',
+  'guardianship-evidence': 'دليل وصاية',
+  proof_required: 'يلزم إثبات الهوية',
+  review_required: 'مطلوب مراجعة مستقلة',
+  human_review_required: 'مطلوب مراجعة بشرية',
+  approved: 'تمت الموافقة',
+  rejected: 'تم الرفض',
+  verified: 'تم التحقق',
+  pending: 'قيد الانتظار',
+  clear: 'لا يوجد مانع مسجل',
+  blocked: 'يوجد مانع للمراجعة',
+  allowed: 'مسموح بعد التحقق',
+};
+
+function displayCode(locale: Locale, code: string): string {
+  if (locale === 'ar-EG') return arabicDisplayCodes[code] ?? 'حالة غير متاحة';
+  return code.replaceAll('_', ' ').replaceAll('-', ' ');
+}
+
 export function GuardianshipWorkspace({
   accessToken = noStaffAccessToken,
 }: {
@@ -243,7 +272,9 @@ export function GuardianshipWorkspace({
             'success',
           ] as const
         ).map((value) => (
-          <option key={value}>{value}</option>
+          <option key={value} value={value}>
+            {displayCode(locale, value)}
+          </option>
         ))}
       </select>
       <div style={styles.grid}>
@@ -256,9 +287,9 @@ export function GuardianshipWorkspace({
               style={styles.caseButton}
               aria-pressed={selectedId === item.id}
             >
-              <b>{item.evidence_type}</b>
+              <b>{displayCode(locale, item.evidence_type)}</b>
               <span>
-                {item.evidence_status} · v{item.relationship.version}
+                {displayCode(locale, item.evidence_status)} · v{item.relationship.version}
               </span>
               <span>{item.relationship.permissions.join(' · ')}</span>
             </button>
@@ -347,12 +378,12 @@ export function GuardianshipWorkspace({
                   onClick={() => setSelectedTransitionId(item.transitionCaseId)}
                   style={styles.caseButton}
                 >
-                  <b>{item.status}</b>
+                  <b>{displayCode(locale, item.status)}</b>
                   <span>
-                    {item.proofState} · {item.reviewState}
+                    {displayCode(locale, item.proofState)} · {displayCode(locale, item.reviewState)}
                   </span>
                   <span>
-                    {item.blockerState} · v{item.continuityCaseVersion}
+                    {displayCode(locale, item.blockerState)} · v{item.continuityCaseVersion}
                   </span>
                 </button>
               ))}
@@ -369,7 +400,7 @@ export function GuardianshipWorkspace({
               </p>
               <p>
                 {locale === 'ar-EG'
-                  ? 'حالات القرار: approved / rejected'
+                  ? 'حالات القرار: تمت الموافقة / تم الرفض'
                   : 'Decision states: approved / rejected'}
               </p>
               <label htmlFor="transition-blocker-reason">
@@ -417,7 +448,7 @@ export function GuardianshipWorkspace({
                 </button>
               </div>
               <p role="status" aria-live="polite">
-                {transitionState} · {stepUpState}
+                {displayCode(locale, transitionState)} · {displayCode(locale, stepUpState)}
               </p>
             </div>
           </div>

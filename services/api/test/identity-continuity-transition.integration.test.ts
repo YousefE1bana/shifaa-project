@@ -186,10 +186,11 @@ describe.skipIf(!enabled).sequential('dependent transition real PostgreSQL/API c
     const laterRecoveryCaseId = randomUUID();
     await owner`
       insert into identity.continuity_cases(
-        id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
-        token_key_version,expires_at,created_at
+        id,case_type,subject_person_id,status,verification_case_id,recovery_proof_purpose_code,
+        public_token_digest,recovery_handle_digest,token_key_version,expires_at,created_at
       ) select ${recoveryCaseId}::uuid,'account_recovery',${fixture.subjectPersonId}::uuid,
-        'proof_required',${randomBytes(32)},${randomBytes(32)},1,now()+interval '15 minutes',
+        'proof_required',c.id,'account_recovery_reproof',${randomBytes(32)},${randomBytes(32)},
+        1,now()+interval '15 minutes',
         c.created_at-interval '1 second'
       from identity.verification_cases c where c.id=${fixture.verificationCaseId}::uuid`;
     try {
@@ -205,10 +206,11 @@ describe.skipIf(!enabled).sequential('dependent transition real PostgreSQL/API c
         where id=${recoveryCaseId}::uuid`;
       await owner`
         insert into identity.continuity_cases(
-          id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
-          token_key_version,expires_at,created_at
+          id,case_type,subject_person_id,status,verification_case_id,recovery_proof_purpose_code,
+          public_token_digest,recovery_handle_digest,token_key_version,expires_at,created_at
         ) select ${laterRecoveryCaseId}::uuid,'account_recovery',${fixture.subjectPersonId}::uuid,
-          'proof_required',${randomBytes(32)},${randomBytes(32)},1,now()+interval '15 minutes',
+          'proof_required',c.id,'account_recovery_reproof',${randomBytes(32)},${randomBytes(32)},
+          1,now()+interval '15 minutes',
           c.created_at+interval '1 second'
         from identity.verification_cases c where c.id=${fixture.verificationCaseId}::uuid`;
       await expect(

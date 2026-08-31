@@ -7,6 +7,8 @@ import type {
   LogoutResult,
   RecoveryAccepted,
   RecoveryResult,
+  CompleteRecoveryResult,
+  RecoveryProofRequiredResult,
   RefreshRequest,
   RemoveFactorRequest,
   SessionResult,
@@ -50,6 +52,7 @@ export interface TransitionMutationInput {
 }
 
 export interface ContinuityAuditInput {
+  actorPersonId: string;
   requestId: string;
   action: string;
   outcome: 'succeeded' | 'denied';
@@ -92,12 +95,15 @@ export interface PreparedRecoveryCompletion {
   restricted: boolean;
   session: SessionResult;
 }
+export type PreparedRecoveryOperation = PreparedRecoveryCompletion | RecoveryProofRequiredResult;
 
 export interface RecoveryResumeMarker {
   subjectId: string;
   accessToken: string;
   restricted: boolean | null;
   credentialUpdated: boolean;
+  proofGrant?: string;
+  proofGrantExpiresAt?: string;
   expiresAt: string;
 }
 
@@ -146,6 +152,10 @@ export interface ContinuityRepository {
   accountClassForPerson(
     personId: string,
   ): Promise<'patient_optional_mfa' | 'workforce_mandatory_mfa'>;
+  factorRemovalProofIsApproved(input: {
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<boolean>;
   findPendingEnrollmentMarker(input: {
     markerKey: string;
     liveOnly: boolean;
@@ -182,6 +192,25 @@ export interface ContinuityRepository {
     personId: string;
     verificationCaseId: string;
   }): Promise<boolean>;
+  installRecoveryProofGrant(input: {
+    recoveryCaseId: string;
+    personId: string;
+    grantDigest: Uint8Array;
+    expiresAt: string;
+  }): Promise<void>;
+  authorizeRecoveryProofGrant(input: {
+    grantDigest: Uint8Array;
+  }): Promise<{ recoveryCaseId: string; personId: string; principal: string }>;
+  lockRecoveryProofGrant(input: {
+    grantDigest: Uint8Array;
+    recoveryCaseId: string;
+    personId: string;
+  }): Promise<void>;
+  consumeRecoveryProofGrant(input: {
+    recoveryCaseId: string;
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<void>;
   stageRecoveryRestriction(input: { caseId: string; personId: string }): Promise<void>;
   finalizeRecovery(input: {
     caseId: string;
@@ -228,13 +257,13 @@ export interface IdentityContinuityServicePort {
     context: ContinuityRequestContext,
     caseId: string,
     body: CompleteRecoveryRequest,
-  ): Promise<RecoveryResult>;
+  ): Promise<CompleteRecoveryResult>;
   prepareRecoveryCompletion(
     context: ContinuityRequestContext,
     caseId: string,
     body: CompleteRecoveryRequest,
-  ): Promise<PreparedRecoveryCompletion>;
-  commitRecoveryCompletion(prepared: PreparedRecoveryCompletion): Promise<RecoveryResult>;
+  ): Promise<PreparedRecoveryOperation>;
+  commitRecoveryCompletion(prepared: PreparedRecoveryOperation): Promise<CompleteRecoveryResult>;
   transitionDependent(
     context: ContinuityRequestContext,
     relationshipId: string,

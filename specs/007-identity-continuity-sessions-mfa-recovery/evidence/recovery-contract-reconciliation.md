@@ -2,6 +2,9 @@
 
 **Authority:** Product Owner approval recorded in the 2026-08-26 Feature 007 recovery-resumption instruction.
 
+**Additional authority:** Product Owner Round-4 decision recorded on 2026-08-31 approves the narrow
+Recovery Proof Grant described below.
+
 ## Decision
 
 `startRecovery` remains anonymous and non-oracular. It creates an unbound recovery-intake case with
@@ -22,6 +25,15 @@ or direct Auth-table mutation is permitted.
 Lost-factor recovery binds that fresh native session only as the existing deny-only
 `mfa_enrollment_only` restriction. The frozen allowlist remains exactly `refreshSession`, `logout`,
 `beginMfaEnrollment`, and `verifyMfaEnrollment`.
+
+When repeated proof is required and no approved case exists, `completeRecovery` returns
+`proof_required` with an opaque short-lived Recovery Proof Grant instead of a session. Its HMAC digest
+and encrypted resume state bind the recovery case, subject person, `account_recovery_reproof` purpose,
+and expiry. Only the existing `createIdentityProof` operation accepts the grant; it locks and consumes
+the grant in the same transaction that creates and explicitly links one post-intake verification case.
+No profile read, other mutation, MFA/session operation, or Feature 007 operation accepts it. Expired,
+replayed, wrong-case, and wrong-person grants fail closed without an account oracle. Recovery then
+retries the same `completeRecovery` case with the approved linked ID and without OTP reuse.
 
 ## Boundary check
 

@@ -91,6 +91,18 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
     throw webLogin.error ?? new Error('Web session is missing.');
   }
 
+  // This harness signs up directly through native Auth. Production registration creates the
+  // governed person row before continuity operations, so reproduce that authority boundary here.
+  const fixtureOwner = postgres(runtime.DB_URL, { max: 1 });
+  try {
+    await fixtureOwner`
+      insert into identity.people(user_id,display_name,email_normalized,profile_status)
+      values(${first.session.user.id}::uuid,'Session continuity subject',${email},'active')
+      on conflict(user_id) do nothing`;
+  } finally {
+    await fixtureOwner.end({ timeout: 5 });
+  }
+
   const apiUrl = new URL(runtime.DB_URL);
   apiUrl.username = 'shifaa_api';
   apiUrl.password = 'synthetic_api_only';

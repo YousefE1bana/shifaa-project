@@ -192,9 +192,17 @@ class FakeRepository implements ContinuityRepository {
     handleDigest: Uint8Array;
   }> = [];
   public readonly recoveryResumeMarkers = new Map<string, RecoveryResumeMarker>();
+  public readonly recoveryProofGrants = new Map<
+    string,
+    { caseId: string; personId: string; digest: string; expiresAt: string; consumed: boolean }
+  >();
   public readonly refreshRotationMarkers = new Map<string, RefreshRotationMarker>();
   public readonly factorRemovalMarkers = new Map<string, FactorRemovalMarker>();
   public recoveryProofApproved = true;
+  public readonly factorRemovalProofChecks: Array<{
+    personId: string;
+    verificationCaseId: string;
+  }> = [];
   public readonly recoveryProofChecks: Array<{
     recoveryCaseId: string;
     personId: string;
@@ -317,6 +325,13 @@ class FakeRepository implements ContinuityRepository {
   public accountClassForPerson(): Promise<'patient_optional_mfa' | 'workforce_mandatory_mfa'> {
     return Promise.resolve('patient_optional_mfa');
   }
+  public factorRemovalProofIsApproved(input: {
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<boolean> {
+    this.factorRemovalProofChecks.push(input);
+    return Promise.resolve(this.recoveryProofApproved);
+  }
   public async findPendingEnrollmentMarker(input: {
     markerKey: string;
     liveOnly: boolean;
@@ -379,6 +394,64 @@ class FakeRepository implements ContinuityRepository {
   }): Promise<boolean> {
     this.recoveryProofChecks.push(input);
     return Promise.resolve(this.recoveryProofApproved);
+  }
+  public installRecoveryProofGrant(input: {
+    recoveryCaseId: string;
+    personId: string;
+    grantDigest: Uint8Array;
+    expiresAt: string;
+  }): Promise<void> {
+    this.recoveryProofGrants.set(input.recoveryCaseId, {
+      caseId: input.recoveryCaseId,
+      personId: input.personId,
+      digest: Buffer.from(input.grantDigest).toString('hex'),
+      expiresAt: input.expiresAt,
+      consumed: false,
+    });
+    return Promise.resolve();
+  }
+  public authorizeRecoveryProofGrant(input: { grantDigest: Uint8Array }): Promise<{
+    recoveryCaseId: string;
+    personId: string;
+    principal: string;
+  }> {
+    const digest = Buffer.from(input.grantDigest).toString('hex');
+    const grant = [...this.recoveryProofGrants.values()].find(
+      (value) =>
+        value.digest === digest && !value.consumed && Date.parse(value.expiresAt) > now.getTime(),
+    );
+    if (!grant) return Promise.reject(new Error('invalid recovery proof grant'));
+    return Promise.resolve({
+      recoveryCaseId: grant.caseId,
+      personId: grant.personId,
+      principal: `recovery-proof:${digest}`,
+    });
+  }
+  public lockRecoveryProofGrant(input: {
+    grantDigest: Uint8Array;
+    recoveryCaseId: string;
+    personId: string;
+  }): Promise<void> {
+    const grant = this.recoveryProofGrants.get(input.recoveryCaseId);
+    if (
+      !grant ||
+      grant.personId !== input.personId ||
+      grant.digest !== Buffer.from(input.grantDigest).toString('hex') ||
+      grant.consumed
+    )
+      return Promise.reject(new Error('invalid recovery proof grant'));
+    return Promise.resolve();
+  }
+  public consumeRecoveryProofGrant(input: {
+    recoveryCaseId: string;
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<void> {
+    const grant = this.recoveryProofGrants.get(input.recoveryCaseId);
+    if (!grant || grant.personId !== input.personId || grant.consumed)
+      return Promise.reject(new Error('invalid recovery proof grant'));
+    grant.consumed = true;
+    return Promise.resolve();
   }
   public findRecoveryResumeMarker(caseId: string): Promise<RecoveryResumeMarker | undefined> {
     const marker = this.recoveryResumeMarkers.get(caseId);
@@ -802,6 +875,10 @@ describe('totp enrollment, verification, and removal service policy', () => {
       },
     ]);
     expect(JSON.stringify(harness.repository.outbox)).not.toContain('SYNTHETIC');
+    expect(harness.repository.audits.at(-1)).toMatchObject({
+      actorPersonId: '71000000-0000-4000-8000-000000000004',
+      action: 'identity.factor.verified',
+    });
   });
 
   it('serializes removal races to one winner and applies last-factor rules per account class', async () => {
@@ -860,6 +937,37 @@ describe('totp enrollment, verification, and removal service policy', () => {
       }),
     ).rejects.toMatchObject({ code: 'mfa-step-up-required', status: 403 });
     expect(harness.auth.unenrolledIds).toEqual([]);
+  });
+
+  it('validates a supplied proof case for mandatory last-factor removal', async () => {
+    const factorId = '71000000-0000-4000-8000-000000000018';
+    const proofCaseId = '71000000-0000-4000-8000-000000000019';
+    const harness = mfaService();
+    harness.repository.accountClassForPerson = () =>
+      Promise.resolve('workforce_mandatory_mfa' as const);
+    harness.auth.aal = 2;
+    harness.auth.amr = [{ method: 'totp', timestamp: now.getTime() / 1_000 - 299 }];
+    harness.auth.verifiedFactors = [
+      { id: factorId, type: 'totp', status: 'verified', friendlyName: null, createdAt: '' },
+    ];
+    harness.repository.recoveryProofApproved = false;
+    await expect(
+      harness.service.removeMfaFactor(context('9'), factorId, {
+        proofCaseId,
+        confirmOptionalLastFactor: true,
+      }),
+    ).rejects.toMatchObject({ code: 'last-factor-removal-denied', status: 422 });
+    harness.repository.recoveryProofApproved = true;
+    await expect(
+      harness.service.removeMfaFactor(context('10'), factorId, {
+        proofCaseId,
+        confirmOptionalLastFactor: true,
+      }),
+    ).resolves.toMatchObject({ removedFactorId: factorId });
+    expect(harness.repository.factorRemovalProofChecks).toEqual([
+      { personId: '71000000-0000-4000-8000-000000000004', verificationCaseId: proofCaseId },
+      { personId: '71000000-0000-4000-8000-000000000004', verificationCaseId: proofCaseId },
+    ]);
   });
 
   it('resumes factor removal after native Auth succeeds but evidence persistence fails', async () => {
@@ -1125,6 +1233,49 @@ describe('recovery service policy', () => {
     );
   });
 
+  it('returns one opaque recovery proof grant and resumes without reusing the redeemed OTP', async () => {
+    const harness = service();
+    const context = {
+      requestId: '71000000-0000-4000-8000-000000000039',
+      idempotencyKey: 'synthetic-recovery-proof-grant',
+    };
+    const request = {
+      caseToken: 'synthetic-case-token-00000000000000000000',
+      handle: 'patient@synthetic.shifaa.test',
+      recoveryOtp: '123456',
+      proofMethod: 'repeated_identity_proof' as const,
+      newCredential: 'Synthetic-Recovery-Credential!',
+    };
+    const first = await harness.service.completeRecovery(
+      context,
+      '71000000-0000-4000-8000-000000000032',
+      request,
+    );
+    const replay = await harness.service.completeRecovery(
+      context,
+      '71000000-0000-4000-8000-000000000032',
+      request,
+    );
+
+    expect(first).toMatchObject({ status: 'proof_required' });
+    expect(replay).toEqual(first);
+    expect('recoveryProofGrant' in first ? first.recoveryProofGrant : '').toMatch(
+      /^[A-Za-z0-9_-]{43}$/,
+    );
+    expect(JSON.stringify(first)).not.toMatch(
+      /accessToken|refreshToken|sessionId|Synthetic-Recovery-Credential/,
+    );
+    expect(harness.auth.recoveryOtpAttempts).toHaveLength(1);
+    expect(harness.auth.logoutCalls).toHaveLength(0);
+    expect(harness.repository.recoveryFinalizations).toHaveLength(0);
+    expect(
+      harness.repository.recoveryProofGrants.get('71000000-0000-4000-8000-000000000032'),
+    ).toMatchObject({
+      personId: '71000000-0000-4000-8000-000000000004',
+      consumed: false,
+    });
+  });
+
   it('stages a subject-wide recovery restriction before changing native credentials', async () => {
     const harness = service();
     harness.auth.restrictionWasStaged = () =>
@@ -1177,7 +1328,7 @@ describe('recovery service policy', () => {
     await expect(
       harness.service.completeRecovery(context, '71000000-0000-4000-8000-000000000032', {
         ...base,
-        proofMethod: 'repeated_identity_proof',
+        proofMethod: 'bound_factor_independent_method',
         factorEvidence: null,
         recoveryOtp: '123456',
       }),

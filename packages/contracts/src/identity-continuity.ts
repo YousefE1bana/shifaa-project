@@ -143,6 +143,16 @@ export const RecoveryResultSchema = closedObject({
   status: Type.Union([Type.Literal('completed'), Type.Literal('restricted_enrollment')]),
   session: SessionResultSchema,
 });
+export const RecoveryProofRequiredResultSchema = closedObject({
+  caseId: Uuid,
+  status: Type.Literal('proof_required'),
+  recoveryProofGrant: Type.String({ minLength: 32, maxLength: 512, writeOnly: true }),
+  expiresAt: DateTime,
+});
+export const CompleteRecoveryResultSchema = Type.Union([
+  RecoveryResultSchema,
+  RecoveryProofRequiredResultSchema,
+]);
 export const TransitionSubmitRequestSchema = closedObject({
   action: Type.Literal('submit_proof'),
   verificationCaseId: Uuid,
@@ -198,7 +208,7 @@ export const identityContinuityResponseSchemas = {
   verifyMfaEnrollment: FactorResultSchema,
   removeMfaFactor: FactorRemovalResultSchema,
   startRecovery: RecoveryAcceptedSchema,
-  completeRecovery: RecoveryResultSchema,
+  completeRecovery: CompleteRecoveryResultSchema,
   transitionDependent: TransitionResultSchema,
 } as const satisfies Record<IdentityContinuityOperationId, TSchema>;
 
@@ -237,5 +247,7 @@ export type StartRecoveryRequest = Static<typeof StartRecoveryRequestSchema>;
 export type RecoveryAccepted = Static<typeof RecoveryAcceptedSchema>;
 export type CompleteRecoveryRequest = Static<typeof CompleteRecoveryRequestSchema>;
 export type RecoveryResult = Static<typeof RecoveryResultSchema>;
+export type RecoveryProofRequiredResult = Static<typeof RecoveryProofRequiredResultSchema>;
+export type CompleteRecoveryResult = Static<typeof CompleteRecoveryResultSchema>;
 export type TransitionRequest = Static<typeof TransitionRequestSchema>;
 export type TransitionResult = Static<typeof TransitionResultSchema>;

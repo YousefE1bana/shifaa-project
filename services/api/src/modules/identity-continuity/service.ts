@@ -4,7 +4,7 @@ import type {
   LogoutRequest,
   RefreshRequest,
   RemoveFactorRequest,
-  RecoveryResult,
+  CompleteRecoveryResult,
   StartRecoveryRequest,
   TransitionRequest,
   VerifyEnrollmentRequest,
@@ -24,7 +24,7 @@ import type {
   ContinuityRepository,
   ContinuityRequestContext,
   IdentityContinuityServicePort,
-  PreparedRecoveryCompletion,
+  PreparedRecoveryOperation,
   PreparedLogout,
   FactorRemovalMarker,
   RefreshRotationMarker,
@@ -33,6 +33,7 @@ import type {
 
 const ENROLLMENT_TTL_MS = 10 * 60_000;
 const RECOVERY_TTL_MS = 15 * 60_000;
+const RECOVERY_PROOF_GRANT_TTL_MS = 10 * 60_000;
 const MUTATION_RESUME_TTL_MS = 24 * 60 * 60_000;
 export const restrictedRecoveryOperationIds = [
   'refreshSession',
@@ -133,6 +134,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     }
     const session = marker.session;
     const subjectId = await this.subjectForAccessToken(session.accessToken);
+    const actorPersonId = await this.requireResolvedPerson(subjectId);
     const current = await this.dependencies.repository.isNativeSessionCurrent(
       session.sessionId,
       subjectId,
@@ -154,6 +156,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
         markerKey,
         marker: committedMarker,
         audit: {
+          actorPersonId,
           requestId: context.requestId,
           action: 'identity.session.refreshed',
           outcome: 'succeeded',
@@ -175,6 +178,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     body: LogoutRequest,
   ): Promise<PreparedLogout> {
     const { accessToken, claims } = await this.currentActor(context, 'logout');
+    const actorPersonId = await this.requirePersonForActor(claims);
     await this.dependencies.auth.logout(accessToken, body.allSessions ? 'global' : 'local');
     const revokedAt = this.dependencies.now().toISOString();
     const result = {
@@ -184,6 +188,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     return {
       result,
       audit: {
+        actorPersonId,
         requestId: context.requestId,
         action: 'identity.session.logged_out',
         outcome: 'succeeded',
@@ -213,6 +218,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     claims: VerifiedContinuitySession,
   ) {
     const markerKey = this.pendingMarkerKey(claims.subjectId);
+    const actorPersonId = await this.requirePersonForActor(claims);
     const [verified, liveMarker] = await Promise.all([
       this.dependencies.auth.listFactors(accessToken),
       this.dependencies.repository.findPendingEnrollmentMarker({ markerKey, liveOnly: true }),
@@ -249,6 +255,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
         expiresAt,
       });
       await this.dependencies.repository.appendAudit({
+        actorPersonId,
         requestId: context.requestId,
         action: 'identity.factor.enrollment_started',
         outcome: 'succeeded',
@@ -327,6 +334,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
         payload: { recipientPersonId, support_action: 'verified', action_time: occurredAt },
       },
       audit: {
+        actorPersonId: recipientPersonId,
         requestId: context.requestId,
         action: 'identity.factor.verified',
         outcome: 'succeeded',
@@ -382,13 +390,19 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
               'The named verification factor is not present.',
             );
           const accountClass = await this.dependencies.repository.accountClassForPerson(personId);
+          const completedReproof = body.proofCaseId
+            ? await this.dependencies.repository.factorRemovalProofIsApproved({
+                personId,
+                verificationCaseId: body.proofCaseId,
+              })
+            : false;
           const proofs = this.freshProofs(claims);
           const decision = evaluateFactorRemoval({
             accountClass,
             verifiedFactorCount: verified.length,
             freshMfa: proofs.freshMfa,
             optionalLastFactorConfirmed: body.confirmOptionalLastFactor,
-            completedReproof: false,
+            completedReproof,
             recoveryRestricted: false,
           });
           if (!decision.allowed) throw this.policyProblem(decision.reason);
@@ -436,6 +450,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
               },
             },
             audit: {
+              actorPersonId: marker.personId,
               requestId: context.requestId,
               action: 'identity.factor.removed',
               outcome: 'succeeded',
@@ -487,7 +502,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     context: ContinuityRequestContext,
     caseId: string,
     body: CompleteRecoveryRequest,
-  ): Promise<PreparedRecoveryCompletion> {
+  ): Promise<PreparedRecoveryOperation> {
     const handle = normalizeRecoveryHandle(body.handle);
     this.assertRecoveryProofShape(body);
     let marker = await this.dependencies.repository.findRecoveryResumeMarker(caseId);
@@ -510,6 +525,43 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       caseTokenDigest: hmacDigest(body.caseToken, this.dependencies.hmacKey),
     });
     await this.dependencies.repository.saveRecoveryResumeMarker(caseId, marker);
+    if (body.proofMethod === 'repeated_identity_proof' && !body.verificationCaseId) {
+      if (
+        !marker.proofGrant ||
+        !marker.proofGrantExpiresAt ||
+        Date.parse(marker.proofGrantExpiresAt) <= this.dependencies.now().getTime()
+      ) {
+        const proofGrant = randomBytes(32).toString('base64url');
+        const proofGrantExpiresAt = new Date(
+          Math.min(
+            Date.parse(marker.expiresAt),
+            this.dependencies.now().getTime() + RECOVERY_PROOF_GRANT_TTL_MS,
+          ),
+        ).toISOString();
+        marker = { ...marker, proofGrant, proofGrantExpiresAt };
+        await this.dependencies.repository.saveRecoveryResumeMarker(caseId, marker);
+      }
+      const proofGrant = marker.proofGrant;
+      const proofGrantExpiresAt = marker.proofGrantExpiresAt;
+      if (!proofGrant || !proofGrantExpiresAt)
+        throw new ApiPolicyError(
+          'identity-proof-required',
+          403,
+          'A repeated identity proof is required.',
+        );
+      await this.dependencies.repository.installRecoveryProofGrant({
+        recoveryCaseId: caseId,
+        personId: binding.personId,
+        grantDigest: hmacDigest(proofGrant, this.dependencies.hmacKey),
+        expiresAt: proofGrantExpiresAt,
+      });
+      return {
+        caseId,
+        status: 'proof_required',
+        recoveryProofGrant: proofGrant,
+        expiresAt: proofGrantExpiresAt,
+      };
+    }
     if (marker.restricted === null) {
       const proof = await this.recoveryProofSession(
         caseId,
@@ -560,8 +612,9 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
   }
 
   public async commitRecoveryCompletion(
-    prepared: PreparedRecoveryCompletion,
-  ): Promise<RecoveryResult> {
+    prepared: PreparedRecoveryOperation,
+  ): Promise<CompleteRecoveryResult> {
+    if (!('session' in prepared)) return prepared;
     const occurredAt = this.dependencies.now().toISOString();
     await this.dependencies.repository.finalizeRecovery({
       caseId: prepared.caseId,
@@ -716,14 +769,14 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
   }
 
   private assertRecoveryProofShape(body: CompleteRecoveryRequest): void {
-    if (body.proofMethod === 'repeated_identity_proof' && !body.verificationCaseId)
-      throw new ApiPolicyError(
-        'identity-proof-required',
-        403,
-        'A repeated identity proof is required.',
-      );
     if (body.proofMethod === 'bound_factor_independent_method' && !body.factorEvidence)
       throw new ApiPolicyError('identity-proof-required', 403, 'A bound factor is required.');
+  }
+
+  private async requireResolvedPerson(subjectId: string): Promise<string> {
+    const personId = await this.dependencies.repository.resolveSubjectPerson(subjectId);
+    if (!personId) throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
+    return personId;
   }
 
   private enforceMfaRate(

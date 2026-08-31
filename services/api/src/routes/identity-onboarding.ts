@@ -23,6 +23,7 @@ import {
 } from '../modules/identity-onboarding/index.js';
 import { preauthPrincipal, type IdempotencyStore } from '../platform/idempotency.js';
 import { initialBrowserSessionCookies } from './auth-session-cookies.js';
+import type { RecoveryProofGrantAuthority } from '../modules/identity-onboarding/ports.js';
 
 export const registeredIdentityOnboardingOperationIds = routeCatalog.map(
   ({ operationId }) => operationId,
@@ -32,6 +33,7 @@ export interface IdentityRouteDependencies {
   config: ApiConfig;
   service: IdentityOnboardingService;
   idempotency: IdempotencyStore;
+  recoveryProofGrants?: RecoveryProofGrantAuthority;
 }
 
 const noStoreHeaders = {
@@ -242,6 +244,33 @@ export async function registerIdentityOnboardingRoutes(
     '/v1/people/me/identities',
     { schema: { body: requestSchemas.createIdentityProof } },
     async (request, reply) => {
+      const grant = request.headers['recovery-proof-grant'];
+      if (typeof grant === 'string') {
+        if (!deps.recoveryProofGrants || grant.length < 32 || grant.length > 512)
+          throw new ApiPolicyError(
+            'identity-proof-required',
+            403,
+            'A repeated identity proof is required.',
+          );
+        const grantDigest = createHmac('sha256', deps.config.preauthHmacKey).update(grant).digest();
+        const principal = `recovery-proof:${grantDigest.toString('hex')}`;
+        return executeMutation(request, reply, deps, principal, 201, async () => {
+          const authority = await deps.recoveryProofGrants!.authorizeRecoveryProofGrant({
+            grantDigest,
+          });
+          const actor: RequestActor = {
+            kind: 'PAT',
+            subjectId: authority.recoveryCaseId,
+            personId: authority.personId,
+            principal: authority.principal,
+            aal: 1,
+          };
+          return deps.service.createIdentity(actor, request.body as IdentityInput, request.id, {
+            grantDigest,
+            recoveryCaseId: authority.recoveryCaseId,
+          });
+        });
+      }
       const actor = await actorFor(request, deps.service);
       return executeMutation(request, reply, deps, actor.principal, 201, () =>
         deps.service.createIdentity(actor, request.body as IdentityInput, request.id),

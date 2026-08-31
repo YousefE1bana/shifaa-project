@@ -127,9 +127,9 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
       const digest = createHash('sha256').update(JSON.stringify(input)).digest('hex');
       await sql`
         insert into audit.events(
-          event_hash,action,resource_type,outcome,request_id,occurred_at,metadata
+          event_hash,actor_person_id,action,resource_type,outcome,request_id,occurred_at,metadata
         ) values(
-          ${digest},${input.action},'native-session',${input.outcome},${input.requestId}::uuid,
+          ${digest},${input.actorPersonId}::uuid,${input.action},'native-session',${input.outcome},${input.requestId}::uuid,
           ${input.occurredAt}::timestamptz,${sql.json(input.metadata ?? {})}
         )`;
     });
@@ -149,9 +149,9 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
       const digest = createHash('sha256').update(JSON.stringify(input.audit)).digest('hex');
       await sql`
         insert into audit.events(
-          event_hash,action,resource_type,outcome,request_id,occurred_at,metadata
+          event_hash,actor_person_id,action,resource_type,outcome,request_id,occurred_at,metadata
         ) values(
-          ${digest},${input.audit.action},'native-session',${input.audit.outcome},
+          ${digest},${input.audit.actorPersonId}::uuid,${input.audit.action},'native-session',${input.audit.outcome},
           ${input.audit.requestId}::uuid,${input.audit.occurredAt}::timestamptz,
           ${sql.json(input.audit.metadata ?? {})}
         )`;
@@ -185,9 +185,9 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
       const digest = createHash('sha256').update(JSON.stringify(input.audit)).digest('hex');
       await sql`
         insert into audit.events(
-          event_hash,action,resource_type,outcome,request_id,occurred_at,metadata
+          event_hash,actor_person_id,action,resource_type,outcome,request_id,occurred_at,metadata
         ) values(
-          ${digest},${input.audit.action},'native-session',${input.audit.outcome},
+          ${digest},${input.audit.actorPersonId}::uuid,${input.audit.action},'native-session',${input.audit.outcome},
           ${input.audit.requestId}::uuid,${input.audit.occurredAt}::timestamptz,
           ${sql.json(input.audit.metadata ?? {})}
         )`;
@@ -223,9 +223,9 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
         .digest('hex');
       await sql`
         insert into audit.events(
-          event_hash,action,resource_type,outcome,request_id,occurred_at,metadata
+          event_hash,actor_person_id,action,resource_type,outcome,request_id,occurred_at,metadata
         ) values(
-          ${auditDigest},${input.evidence.audit.action},'native-factor',${input.evidence.audit.outcome},
+          ${auditDigest},${input.evidence.audit.actorPersonId}::uuid,${input.evidence.audit.action},'native-factor',${input.evidence.audit.outcome},
           ${input.evidence.audit.requestId}::uuid,${input.evidence.audit.occurredAt}::timestamptz,
           ${sql.json(input.evidence.audit.metadata ?? {})}
         )`;
@@ -365,6 +365,29 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     });
   }
 
+  public async factorRemovalProofIsApproved(input: {
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<boolean> {
+    return this.repository.withRawTransaction(async (sql) => {
+      await sql`select set_config('shifaa.person_id',${input.personId},true),
+                       set_config('shifaa.actor_role','PAT',true),
+                       set_config('shifaa.aal','2',true),
+                       set_config('shifaa.purposes','account_security',true),
+                       set_config('shifaa.action','removeMfaFactor',true)`;
+      const [row] = await sql<{ approved: boolean }[]>`
+        select exists(
+          select 1 from identity.verification_cases c
+          join identity.identities i on i.id=c.identity_id
+          where c.id=${input.verificationCaseId}::uuid and i.person_id=${input.personId}::uuid
+            and c.state='verified' and c.decided_at is not null
+            and i.verification_status='verified'
+            and (i.expires_on is null or i.expires_on>=(platform.context_now() at time zone 'Africa/Cairo')::date)
+        ) approved`;
+      return row?.approved === true;
+    });
+  }
+
   public async completeRestrictedEnrollmentCase(input: {
     sessionId: string;
     subjectId: string;
@@ -410,9 +433,9 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
       const digest = createHash('sha256').update(JSON.stringify(audit)).digest('hex');
       await sql`
         insert into audit.events(
-          event_hash,action,resource_type,resource_id,outcome,request_id,occurred_at,metadata
+          event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,occurred_at,metadata
         ) values(
-          ${digest},${audit.action},'continuity-case',${completed[0]?.['id']}::uuid,${audit.outcome},
+          ${digest},${mapping.person_id}::uuid,${audit.action},'continuity-case',${completed[0]?.['id']}::uuid,${audit.outcome},
           ${input.requestId}::uuid,${input.occurredAt}::timestamptz,${sql.json({})}
         )`;
       await sql`
@@ -619,13 +642,123 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           where c.id=${input.verificationCaseId}::uuid
             and i.person_id=${input.personId}::uuid
             and r.case_type='account_recovery' and r.subject_person_id=${input.personId}::uuid
-            and r.status='proof_required' and c.created_at>=r.created_at
+            and r.status='proof_required' and r.verification_case_id=c.id
+            and r.recovery_proof_purpose_code='account_recovery_reproof'
+            and c.created_at>=r.created_at
             and c.state='verified' and c.decided_at is not null
             and i.verification_status='verified'
             and (i.expires_on is null or i.expires_on>=(platform.context_now() at time zone 'Africa/Cairo')::date)
         ) approved`;
       return proof?.approved === true;
     });
+  }
+
+  public async installRecoveryProofGrant(input: {
+    recoveryCaseId: string;
+    personId: string;
+    grantDigest: Uint8Array;
+    expiresAt: string;
+  }): Promise<void> {
+    await this.repository.withRawTransaction(async (sql) => {
+      await sql`select set_config('shifaa.person_id',${input.personId},true),
+                       set_config('shifaa.actor_role','PAT',true),
+                       set_config('shifaa.aal','1',true),
+                       set_config('shifaa.purposes','account_recovery_reproof',true),
+                       set_config('shifaa.action','completeRecovery',true)`;
+      const rows = await sql`
+        update identity.continuity_cases
+        set recovery_proof_grant_digest=${Buffer.from(input.grantDigest)},
+            recovery_proof_grant_expires_at=${input.expiresAt}::timestamptz,
+            recovery_proof_grant_consumed_at=null,
+            recovery_proof_purpose_code='account_recovery_reproof',updated_at=now()
+        where id=${input.recoveryCaseId}::uuid and subject_person_id=${input.personId}::uuid
+          and case_type='account_recovery' and status='proof_required' and expires_at>now()
+          and verification_case_id is null and recovery_proof_grant_consumed_at is null
+          and (recovery_proof_grant_digest is null or recovery_proof_grant_expires_at<=now())
+        returning id`;
+      if (rows.length === 1) return;
+      const [existing] = await sql`
+        select id from identity.continuity_cases
+        where id=${input.recoveryCaseId}::uuid and subject_person_id=${input.personId}::uuid
+          and case_type='account_recovery' and status='proof_required' and expires_at>now()
+          and verification_case_id is null and recovery_proof_grant_consumed_at is null
+          and recovery_proof_grant_digest=${Buffer.from(input.grantDigest)}
+          and recovery_proof_purpose_code='account_recovery_reproof'
+          and recovery_proof_grant_expires_at=${input.expiresAt}::timestamptz`;
+      if (!existing) throw this.invalidRecoveryProofGrant();
+    });
+  }
+
+  public async authorizeRecoveryProofGrant(input: { grantDigest: Uint8Array }): Promise<{
+    recoveryCaseId: string;
+    personId: string;
+    principal: string;
+  }> {
+    return this.repository.withRawTransaction(async (sql) => {
+      const [row] = await sql<{ recovery_case_id: string; person_id: string }[]>`
+        select * from platform.authorize_recovery_proof_grant(${Buffer.from(input.grantDigest)})`;
+      if (!row) throw this.invalidRecoveryProofGrant();
+      return {
+        recoveryCaseId: row.recovery_case_id,
+        personId: row.person_id,
+        principal: `recovery-proof:${Buffer.from(input.grantDigest).toString('hex')}`,
+      };
+    });
+  }
+
+  public async lockRecoveryProofGrant(input: {
+    grantDigest: Uint8Array;
+    recoveryCaseId: string;
+    personId: string;
+  }): Promise<void> {
+    await this.repository.withRawTransaction(async (sql) => {
+      await sql`select set_config('shifaa.person_id',${input.personId},true),
+                       set_config('shifaa.actor_role','PAT',true),
+                       set_config('shifaa.aal','1',true),
+                       set_config('shifaa.purposes','account_recovery_reproof',true),
+                       set_config('shifaa.action','completeRecovery',true),
+                       set_config('shifaa.case_id',${input.recoveryCaseId},true)`;
+      const [row] = await sql<{ digest: Uint8Array }[]>`
+        select recovery_proof_grant_digest digest from identity.continuity_cases
+        where id=${input.recoveryCaseId}::uuid and subject_person_id=${input.personId}::uuid
+          and case_type='account_recovery' and status='proof_required'
+          and verification_case_id is null and recovery_proof_grant_consumed_at is null
+          and recovery_proof_grant_expires_at>now() and expires_at>now() for update`;
+      if (!row || !timingSafeEqual(Buffer.from(row.digest), Buffer.from(input.grantDigest)))
+        throw this.invalidRecoveryProofGrant();
+    });
+  }
+
+  public async consumeRecoveryProofGrant(input: {
+    recoveryCaseId: string;
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<void> {
+    await this.repository.withRawTransaction(async (sql) => {
+      await sql`select set_config('shifaa.person_id',${input.personId},true),
+                       set_config('shifaa.actor_role','PAT',true),
+                       set_config('shifaa.aal','1',true),
+                       set_config('shifaa.purposes','account_recovery_reproof',true),
+                       set_config('shifaa.action','completeRecovery',true),
+                       set_config('shifaa.case_id',${input.recoveryCaseId},true)`;
+      const rows = await sql`
+        update identity.continuity_cases
+        set verification_case_id=${input.verificationCaseId}::uuid,
+            recovery_proof_grant_consumed_at=now(),updated_at=now()
+        where id=${input.recoveryCaseId}::uuid and subject_person_id=${input.personId}::uuid
+          and case_type='account_recovery' and status='proof_required'
+          and verification_case_id is null and recovery_proof_grant_consumed_at is null
+        returning id`;
+      if (rows.length !== 1) throw this.invalidRecoveryProofGrant();
+    });
+  }
+
+  private invalidRecoveryProofGrant(): ApiPolicyError {
+    return new ApiPolicyError(
+      'identity-proof-required',
+      403,
+      'A repeated identity proof is required.',
+    );
   }
 
   public async stageRecoveryRestriction(input: {
@@ -677,6 +810,8 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
             restriction_scope=${input.restricted ? 'mfa_enrollment_only' : null},
             bound_native_session_id=${input.restricted ? input.sessionId : null}::uuid,
             completed_at=${input.restricted ? null : input.occurredAt}::timestamptz,
+            recovery_proof_grant_digest=null,recovery_proof_grant_expires_at=null,
+            recovery_proof_grant_consumed_at=null,
             version=version+1,updated_at=now()
         where id=${input.caseId}::uuid and subject_person_id=${input.personId}::uuid
           and status='proof_required'

@@ -7,6 +7,16 @@ const workspace = fs.readFileSync(
   'utf8',
 );
 const api = fs.readFileSync(new URL('../src/identity-continuity-api.ts', import.meta.url), 'utf8');
+const page = fs.readFileSync(new URL('../src/app/relationships/page.tsx', import.meta.url), 'utf8');
+
+test('the executable admin route installs a real OTP-authenticated staff JWT', () => {
+  assert.match(page, /IdentityOnboardingClient/);
+  assert.match(page, /client\.login/);
+  assert.match(page, /client\.verifyOtp/);
+  assert.match(page, /result\.access_token/);
+  assert.match(page, /<GuardianshipWorkspace accessToken=\{provideAccessToken\}/);
+  assert.doesNotMatch(page, /synthetic-admin|synthetic-reviewer|localStorage|sessionStorage/);
+});
 
 test('admin relationships uses the assigned transition read mode and continuity version', () => {
   for (const token of [

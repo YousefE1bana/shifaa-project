@@ -25,6 +25,7 @@ type RecoveryState =
   | 'request'
   | 'accepted'
   | 'proof'
+  | 'reproof'
   | 'pending'
   | 'failed'
   | 'restricted'
@@ -38,6 +39,7 @@ function stateMessage(locale: Locale, state: RecoveryState): string | undefined 
     case 'accepted':
       return translate(locale, 'recovery.accepted');
     case 'proof':
+    case 'reproof':
       return translate(locale, 'recovery.proofRequired');
     case 'pending':
       return translate(locale, 'recovery.pending');
@@ -94,23 +96,25 @@ export default function RecoveryRoute({
   const [recoveryOtp, setRecoveryOtp] = useState('');
   const [factorEvidence, setFactorEvidence] = useState('');
   const [verificationCaseId, setVerificationCaseId] = useState('');
+  const [identityValue, setIdentityValue] = useState('');
+  const [useRepeatedProof, setUseRepeatedProof] = useState(false);
   const [newCredential, setNewCredential] = useState('');
   const caseRef = useRef<{ id: string; token: string } | undefined>(undefined);
+  const proofGrantRef = useRef<string | undefined>(undefined);
+  const reconnectStateRef = useRef<RecoveryState>('request');
 
   useEffect(() => {
     if (online || state === 'completed') {
       if (online && state === 'offline') {
         connection.markReconciled();
-        setState('request');
+        setState(reconnectStateRef.current);
       }
       return;
     }
-    caseRef.current = undefined;
-    setRecoveryOtp('');
-    setFactorEvidence('');
-    setVerificationCaseId('');
-    setNewCredential('');
-    setState('offline');
+    if (state !== 'offline') {
+      reconnectStateRef.current = state;
+      setState('offline');
+    }
   }, [online, state, connection.reconnectVersion]);
 
   const start = async () => {
@@ -136,12 +140,21 @@ export default function RecoveryRoute({
         caseToken: intake.token,
         handle,
         recoveryOtp,
-        proofMethod: verificationCaseId
+        proofMethod: useRepeatedProof
           ? 'repeated_identity_proof'
           : 'bound_factor_independent_method',
-        ...(verificationCaseId ? { verificationCaseId } : { factorEvidence }),
+        ...(useRepeatedProof
+          ? verificationCaseId
+            ? { verificationCaseId }
+            : {}
+          : { factorEvidence }),
         newCredential,
       });
+      if (result.status === 'proof_required') {
+        proofGrantRef.current = result.recoveryProofGrant;
+        setState('reproof');
+        return;
+      }
       await api.installSession(result.session);
       setState(result.status === 'restricted_enrollment' ? 'restricted' : 'completed');
       setRecoveryOtp('');
@@ -152,10 +165,33 @@ export default function RecoveryRoute({
     }
   };
 
+  const createRepeatedProof = async () => {
+    const grant = proofGrantRef.current;
+    if (!grant || !identityValue || !online) return setState('failed');
+    try {
+      setState('pending');
+      const proof = await api.createRecoveryProof(grant, {
+        identity_type: 'egyptian_national_id',
+        value: identityValue,
+        issuing_country: 'EG',
+      });
+      proofGrantRef.current = undefined;
+      setVerificationCaseId(proof.verification_case.id);
+      setIdentityValue('');
+      setState('proof');
+    } catch (error) {
+      setState(stateForError(error));
+    }
+  };
+
   const message = stateMessage(locale, state);
   const direction = directionFor(locale);
   const proofVisible =
-    state === 'proof' || state === 'pending' || state === 'failed' || state === 'rate';
+    state === 'proof' ||
+    state === 'reproof' ||
+    state === 'pending' ||
+    state === 'failed' ||
+    state === 'rate';
 
   return (
     <PatientScreen locale={locale} title="recovery.title" current={0} critical>
@@ -205,6 +241,34 @@ export default function RecoveryRoute({
                 : translate(locale, 'recovery.start')}
             </Text>
           </Pressable>
+        ) : proofGrantRef.current ? (
+          <>
+            <FieldLabel>{translate(locale, 'recovery.identityValue')}</FieldLabel>
+            <TextInput
+              accessibilityLabel={translate(locale, 'recovery.identityValue')}
+              value={identityValue}
+              onChangeText={setIdentityValue}
+              inputMode="numeric"
+              secureTextEntry
+              style={{
+                minHeight: 48,
+                borderWidth: 1,
+                borderColor: color.border,
+                paddingInline: spacing.md,
+                ...type.body,
+              }}
+            />
+            <Pressable
+              accessibilityRole="button"
+              disabled={!identityValue || !online}
+              onPress={() => void createRepeatedProof()}
+              style={semanticStyles.primaryAction}
+            >
+              <Text style={{ ...type.label, color: color.inverse, textAlign: 'center' }}>
+                {translate(locale, 'recovery.createProof')}
+              </Text>
+            </Pressable>
+          </>
         ) : (
           <>
             <FieldLabel>{translate(locale, 'auth.otp')}</FieldLabel>
@@ -226,34 +290,41 @@ export default function RecoveryRoute({
               }}
             />
             <FieldLabel>{translate(locale, 'recovery.proofRequired')}</FieldLabel>
-            <TextInput
-              accessibilityLabel={translate(locale, 'recovery.proofRequired')}
-              value={factorEvidence}
-              onChangeText={setFactorEvidence}
-              secureTextEntry
-              style={{
-                minHeight: 48,
-                borderWidth: 1,
-                borderColor: color.border,
-                paddingInline: spacing.md,
-                ...type.body,
-              }}
-            />
-            <TextInput
-              accessibilityLabel={translate(locale, 'recovery.pending')}
-              value={verificationCaseId}
-              onChangeText={setVerificationCaseId}
-              autoCapitalize="none"
-              style={{
-                minHeight: 48,
-                borderWidth: 1,
-                borderColor: color.border,
-                paddingInline: spacing.md,
-                direction: 'ltr',
-                textAlign: 'left',
-                ...type.body,
-              }}
-            />
+            <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ selected: !useRepeatedProof }}
+                onPress={() => setUseRepeatedProof(false)}
+                style={semanticStyles.primaryAction}
+              >
+                <Text>{translate(locale, 'recovery.boundFactor')}</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ selected: useRepeatedProof }}
+                onPress={() => setUseRepeatedProof(true)}
+                style={semanticStyles.primaryAction}
+              >
+                <Text>{translate(locale, 'recovery.repeatedProof')}</Text>
+              </Pressable>
+            </View>
+            {!useRepeatedProof ? (
+              <TextInput
+                accessibilityLabel={translate(locale, 'recovery.boundFactor')}
+                value={factorEvidence}
+                onChangeText={setFactorEvidence}
+                secureTextEntry
+                style={{
+                  minHeight: 48,
+                  borderWidth: 1,
+                  borderColor: color.border,
+                  paddingInline: spacing.md,
+                  ...type.body,
+                }}
+              />
+            ) : verificationCaseId ? (
+              <Text>{translate(locale, 'recovery.proofCreated')}</Text>
+            ) : null}
             <FieldLabel>{translate(locale, 'auth.password')}</FieldLabel>
             <TextInput
               accessibilityLabel={translate(locale, 'auth.password')}
@@ -270,7 +341,13 @@ export default function RecoveryRoute({
             />
             <Pressable
               accessibilityRole="button"
-              disabled={!recoveryOtp || !newCredential || !online || state === 'pending'}
+              disabled={
+                !recoveryOtp ||
+                !newCredential ||
+                (!useRepeatedProof && !factorEvidence) ||
+                !online ||
+                state === 'pending'
+              }
               onPress={() => void complete()}
               style={semanticStyles.primaryAction}
             >

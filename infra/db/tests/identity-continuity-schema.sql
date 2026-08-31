@@ -13,7 +13,8 @@ BEGIN
     'continuity_subject_history_idx','continuity_subject_patient_fk_idx','continuity_relationship_fk_idx',
     'continuity_verification_case_fk_idx','continuity_assigned_reviewer_fk_idx','continuity_reviewer_fk_idx',
     'continuity_live_recovery_subject_uq','continuity_live_transition_relationship_uq',
-    'continuity_restricted_native_session_uq','continuity_reviewer_worklist_idx','continuity_expiry_idx'
+    'continuity_restricted_native_session_uq','continuity_reviewer_worklist_idx','continuity_expiry_idx',
+    'continuity_recovery_proof_grant_uq'
   ]) AS name
   WHERE to_regclass('identity.'||name) IS NULL;
   IF missing IS NOT NULL THEN RAISE EXCEPTION 'continuity indexes missing: %',missing; END IF;
@@ -45,14 +46,19 @@ INSERT INTO identity.continuity_cases(
 
 INSERT INTO identity.continuity_cases(
   id,case_type,subject_person_id,status,restriction_scope,bound_native_session_id,
-  public_token_digest,recovery_handle_digest,token_key_version,expires_at,created_at
+  public_token_digest,recovery_handle_digest,recovery_proof_grant_digest,
+  recovery_proof_grant_expires_at,recovery_proof_purpose_code,
+  token_key_version,expires_at,created_at
 ) VALUES
  ('75000000-0000-4000-8000-000000000005','account_recovery','50000000-0000-4000-8000-000000000001',
   'restricted_enrollment','mfa_enrollment_only','71000000-0000-4000-8000-000000000091',
-  decode(repeat('35',32),'hex'),decode(repeat('36',32),'hex'),1,'2026-08-25T09:59:00Z','2026-08-25T09:44:00Z'),
+  decode(repeat('35',32),'hex'),decode(repeat('36',32),'hex'),NULL,NULL,NULL,
+  1,'2026-08-25T09:59:00Z','2026-08-25T09:44:00Z'),
  ('75000000-0000-4000-8000-000000000006','account_recovery','50000000-0000-4000-8000-000000000002',
   'proof_required','mfa_enrollment_only',NULL,
-  decode(repeat('37',32),'hex'),decode(repeat('38',32),'hex'),1,'2026-08-25T09:59:00Z','2026-08-25T09:44:00Z');
+  decode(repeat('37',32),'hex'),decode(repeat('38',32),'hex'),decode(repeat('39',32),'hex'),
+  '2026-08-25T09:58:00Z','account_recovery_reproof',
+  1,'2026-08-25T09:59:00Z','2026-08-25T09:44:00Z');
 
 SELECT set_config('shifaa.person_id','40000000-0000-4000-8000-000000000001',true);
 INSERT INTO identity.admin_role_grants(
@@ -141,6 +147,7 @@ BEGIN
     SELECT 1 FROM identity.continuity_cases
     WHERE id='75000000-0000-4000-8000-000000000006' AND status='expired'
       AND restriction_scope IS NULL AND bound_native_session_id IS NULL
+      AND recovery_proof_grant_digest IS NULL AND recovery_proof_grant_expires_at IS NULL
   ) THEN RAISE EXCEPTION 'expired proof case did not clear its unbound restriction'; END IF;
   INSERT INTO identity.continuity_cases(
     id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
@@ -196,6 +203,14 @@ BEGIN
      to_regprocedure('platform.identity_notification_address_alias(text)') IS NULL THEN
     RAISE EXCEPTION 'identity notification claim/completion boundary missing';
   END IF;
+  IF to_regprocedure('platform.authorize_recovery_proof_grant(bytea)') IS NULL THEN
+    RAISE EXCEPTION 'narrow recovery proof grant authority missing';
+  END IF;
+  IF EXISTS(
+    SELECT 1 FROM information_schema.routine_privileges
+    WHERE specific_schema='platform' AND routine_name='authorize_recovery_proof_grant'
+      AND grantee='PUBLIC' AND privilege_type='EXECUTE'
+  ) THEN RAISE EXCEPTION 'recovery proof grant authority leaked to PUBLIC'; END IF;
   IF EXISTS(
     SELECT 1 FROM information_schema.routine_privileges
     WHERE specific_schema='platform' AND routine_name='claim_next_identity_notification_event'

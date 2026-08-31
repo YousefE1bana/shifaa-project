@@ -192,4 +192,19 @@ Emergency Contacts never receive session, MFA, recovery, or transition notificat
 
 All pre-plan unknowns are resolved. The approved design adds one application workflow table and no new
 operation, role, relationship type, credential store, session authority, production provider, or
-Feature-008 surface. Implementation remains unauthorized.
+Feature-008 surface. At the planning checkpoint this conclusion did not itself authorize implementation.
+
+## R-13 — Recovery re-proof reachability reconciliation
+
+**Decision:** when a bound recovery attempt requires repeated identity proof but has no approved
+verification case, `completeRecovery` may return an opaque ten-minute Recovery Proof Grant. The API
+stores only its HMAC digest and encrypted resume checkpoint, bound to the recovery case, resolved
+person, `account_recovery_reproof` purpose, and the earlier of grant/case expiry. Only the existing
+`createIdentityProof` operation accepts it, and only to create one verification case atomically linked
+to that recovery case. The grant is not a Supabase token or application session, cannot read profile or
+domain data, cannot invoke another mutation, and does not enter the restricted-session allowlist.
+Expiry, replay, wrong-person, and wrong-case inputs use the same fail-closed response. The redeemed OTP
+resume checkpoint remains encrypted and retryable until final recovery succeeds or the case expires.
+
+This Product Owner reconciliation preserves all four FRs, exactly eight Feature 007 operations, native
+Supabase Auth authority, and the Feature 008 exclusion.

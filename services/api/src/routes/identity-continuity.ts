@@ -421,6 +421,8 @@ export async function registerIdentityContinuityRoutes(
           body: await dependencies.service.commitRecoveryCompletion(prepared),
         }),
       });
+      if (!('session' in stored.body))
+        return reply.status(200).headers(stored.headers).send(stored.body);
       const response = { ...stored.body, session: { ...stored.body.session } };
       if (context.origin && context.fetchSite === 'same-origin' && response.session.refreshToken) {
         setInitialBrowserSessionCookies(reply, response.session.refreshToken);

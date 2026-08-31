@@ -74,7 +74,11 @@
     "performance": ["evidence/performance.json"],
     "ui_accessibility": ["evidence/live-qa.md", "evidence/live/", "evidence/t037-ui/"],
     "operations": ["../../../infra/runbooks/identity-continuity.md"],
-    "final_analysis": ["evidence/final-analysis.md", "evidence/pr236-review-remediation.md"],
+    "final_analysis": [
+      "evidence/final-analysis.md",
+      "evidence/pr236-review-remediation.md",
+      "evidence/round-4-composition-audit.md"
+    ],
     "final_verification": ["evidence/verification.md"]
   },
   "production_open_gates": [

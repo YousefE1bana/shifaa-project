@@ -7,6 +7,7 @@ import { FieldLabel, PatientScreen, StatusMessage } from '../src/PatientScreen';
 import { profileStateMessage, type ProfileState } from '../src/view-models';
 import { patientOnboardingApi } from '../src/identity-onboarding-api';
 import { usePatientLocale } from '../src/locale-context';
+import { patientSessionRuntime } from '../src/patient-session-runtime';
 
 export default function ProfileRoute({
   locale: localeOverride,
@@ -20,6 +21,17 @@ export default function ProfileRoute({
   const [displayName, setDisplayName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [nationality, setNationality] = useState('EG');
+  const logout = async (allSessions: boolean) => {
+    try {
+      await patientSessionRuntime.controller.logout(
+        allSessions,
+        typeof navigator === 'undefined' || navigator.onLine,
+      );
+      router.replace('/login');
+    } catch {
+      setState('error');
+    }
+  };
   useEffect(() => {
     if (initialState !== 'ready') return;
     setState('loading');
@@ -120,6 +132,24 @@ export default function ProfileRoute({
         >
           <Text style={{ ...type.label, color: color.careBlue }}>
             {translate(locale, 'nav.continue')}
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => void logout(false)}
+          style={{ minHeight: 44, justifyContent: 'center' }}
+        >
+          <Text style={{ ...type.label, color: color.careBlue, textAlign: 'center' }}>
+            {translate(locale, 'security.session.logoutCurrent')}
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => void logout(true)}
+          style={{ minHeight: 44, justifyContent: 'center' }}
+        >
+          <Text style={{ ...type.label, color: color.danger, textAlign: 'center' }}>
+            {translate(locale, 'security.session.logoutAll')}
           </Text>
         </Pressable>
       </View>

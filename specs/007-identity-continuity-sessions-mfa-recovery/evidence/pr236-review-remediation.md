@@ -43,8 +43,8 @@ refresh/CSRF cookies never appear in plaintext.
 - Transition: 33/33 API/service tests, 20/20 legal vectors, admin 12/12, patient
   27/27.
 - Staff UI: admin 12/12, clinic 2/2, hospital 3/3, lab 2/2, pharmacy 2/2.
-- Contracts: canonical 80 realized operations match generated clients/routes; the
-  canonical active catalog remains 242 and Feature 007 remains exactly eight.
+- Contracts: 80 realized operations after Feature 007 match generated clients/routes;
+  the canonical active API catalog remains 242 and Feature 007 remains exactly eight.
 - Clean standalone Compose reset, schema tests, and forced-RLS tests passed.
 
 Full `pnpm verify` passed with exit code 0 after the focused gates. Its fresh
@@ -159,3 +159,42 @@ relationship type, direct Auth-table/service-role path, or Feature-008 scope.
 - Evidence verification confirms T001-T048, all four FRs, 23 NFRs, 48 linked
   open Issues, exactly eight Feature-007 operations, canonical catalog total
   242, and no Feature-008 ownership.
+
+## Round 4 disposition and approved contract reconciliation
+
+The fresh review on PR head `e7049be51faf6f25ae7e371e600796e14848ac13` identified seven
+in-scope composition defects. The Product Owner approved a narrow Recovery Proof Grant to resolve
+the repeated-proof circular dependency. It remains part of `completeRecovery` and is accepted only
+by the existing Feature-001 identity-proof case creation path; it is not a session or ninth
+Feature-007 operation.
+
+|   # | Round 4 finding                                           | Closure evidence                                                                                                                                                                                                                                           |
+| --: | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   1 | Prepared replay could race completed idempotency          | The completion transaction rechecks state after locking and returns canonical stored success without rerunning fallible work.                                                                                                                              |
+|   2 | Admin transition caller did not wire real staff JWT       | The executable admin route completes the existing login/OTP flow in memory and supplies that bearer to `GuardianshipWorkspace`; synthetic mutation authority is absent.                                                                                    |
+|   3 | Online restoration did not immediately reconcile sessions | The shared foreground lifecycle listens for `online` and immediately runs the same fail-closed refresh/reconciliation path, with listener cleanup.                                                                                                         |
+|   4 | Repeated recovery proof was unreachable                   | `completeRecovery` can return an opaque, short-lived, digest-bound, single-purpose Recovery Proof Grant. The existing proof path consumes it once to create/link the same-person recovery re-proof case, after which completion resumes without OTP reuse. |
+|   5 | Last-factor `proofCaseId` was trusted as a boolean        | Core/PostgreSQL validate a current verified proof case owned by the authenticated person and feed only that result into frozen removal policy.                                                                                                             |
+|   6 | Continuity audits lacked resolved actor attribution       | Every authenticated session, MFA, recovery, and transition audit path now supplies the resolved `actor_person_id`; anonymous intake remains non-attributed by design.                                                                                      |
+|   7 | Arabic notifications rendered machine values              | Worker payloads retain stable codes, while AR/EN templates receive localized display values and Cairo-localized time. Unknown codes fail closed instead of leaking or rendering blank.                                                                     |
+
+The bounded composition audit is recorded in `round-4-composition-audit.md`. It additionally closed
+the missing real logout caller and terminal verification-case timestamp persistence defect, and
+reconciled only the affected real-stack fixtures with existing authority. No frozen constraint,
+RLS policy, native Auth boundary, legal vector, or test threshold was weakened.
+
+## Round 4 verification
+
+- The authorized isolated Feature-006 performance gate passed with read p95 213.65 ms,
+  mutation/matching p95 364.72 ms, and worker-claim p95 30.51 ms. The unchanged gate passed again
+  inside the final full verifier at 301.62 ms, 461.83 ms, and 46.28 ms respectively.
+- The one authorized final `pnpm verify` exited 0. Clean standalone schema/forced-RLS, native
+  Auth/session/MFA/recovery/transition, worker, contracts, architecture, secrets, dependencies,
+  accessibility, and evidence consistency gates passed.
+- Fresh Feature-007 performance measured read p95 42.45 ms, recovery mutation p95 61.62 ms,
+  transition mutation p95 185.73 ms, combined mutation p95 166.68 ms, and worker mutation p95
+  30.38 ms, with all 20 database connections warmed and the existing reference-environment
+  limitation retained.
+- Final evidence verification confirmed 80 realized operations after Feature 007, canonical API
+  catalog total 242, exactly eight Feature-007 operations, all 20 legal vectors, and no Feature-008
+  scope.
