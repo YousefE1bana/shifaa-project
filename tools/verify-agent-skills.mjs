@@ -6,7 +6,9 @@ const root = resolve(import.meta.dirname, '..');
 const sharedRoot = join(root, '.agents', 'skills');
 const kimiRoot = join(root, '.kimi-code', 'skills');
 const lockPath = join(root, 'docs', 'agent-skills', 'skills-lock.json');
+const cliLockPath = join(root, 'skills-lock.json');
 const lock = JSON.parse(readFileSync(lockPath, 'utf8'));
+const cliLock = JSON.parse(readFileSync(cliLockPath, 'utf8'));
 const errors = [];
 const names = new Map();
 const executableExtensions = new Set([
@@ -121,6 +123,63 @@ for (const skill of lock.vendoredSkills) {
   }
 }
 
+const managedNames = new Set();
+for (const skill of lock.managedSkills ?? []) {
+  if (managedNames.has(skill.name)) errors.push(`${skill.name}: duplicate managed lock name`);
+  managedNames.add(skill.name);
+  if (lockedNames.has(skill.name)) errors.push(`${skill.name}: both curated and managed`);
+
+  const metadata = cliLock.skills?.[skill.name];
+  if (!metadata) {
+    errors.push(`${skill.name}: managed skill is missing from root skills-lock.json`);
+    continue;
+  }
+  if (skill.source !== metadata.source || skill.sourceType !== metadata.sourceType)
+    errors.push(`${skill.name}: managed source differs from root skills-lock.json`);
+  if (`${skill.upstreamSkillPath}/SKILL.md` !== metadata.skillPath)
+    errors.push(`${skill.name}: managed upstream path differs from root skills-lock.json`);
+  if (skill.computedHash !== metadata.computedHash)
+    errors.push(`${skill.name}: managed update hash differs from root skills-lock.json`);
+  if (skill.classification !== 'product-owner-approved-shared-tooling')
+    errors.push(`${skill.name}: invalid managed skill classification`);
+
+  const directory = join(root, ...skill.installedPath.split('/'));
+  if (!existsSync(directory)) {
+    errors.push(`${skill.name}: managed path missing`);
+    continue;
+  }
+  if (!names.has(skill.name)) errors.push(`${skill.name}: managed skill is not discoverable`);
+  const files = filesUnder(directory);
+  const executableFiles = files
+    .map((file) => relative(directory, file).split(sep).join('/'))
+    .filter((path) => executableExtensions.has(extname(path).toLowerCase()));
+  const retainedExecutables = skill.retainedExecutableFiles ?? [];
+  if (JSON.stringify(executableFiles) !== JSON.stringify(retainedExecutables))
+    errors.push(`${skill.name}: retained executable inventory differs from governance lock`);
+  if (
+    executableFiles.length > 0 &&
+    skill.executablePolicy !== 'retained-for-integrity-but-not-an-approved-execution-exception'
+  )
+    errors.push(`${skill.name}: executable content is not fail-closed`);
+  if (executableFiles.length === 0 && skill.executablePolicy !== 'text-and-assets-only')
+    errors.push(`${skill.name}: executable policy does not match its tree`);
+
+  const lines = files.map((file) => {
+    const path = relative(directory, file).split(sep).join('/');
+    const content = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+    const hash = createHash('sha256').update(content, 'utf8').digest('hex');
+    return `${path}\t${hash}`;
+  });
+  const digest = createHash('sha256').update(lines.join('\n'), 'utf8').digest('hex');
+  if (digest !== skill.treeDigestSha256)
+    errors.push(`${skill.name}: managed tree digest differs from governance lock (${digest})`);
+}
+
+for (const name of Object.keys(cliLock.skills ?? {})) {
+  if (!lockedNames.has(name) && !managedNames.has(name))
+    errors.push(`${name}: root skills-lock.json entry is not governed`);
+}
+
 const executableExceptions = new Set(lock.policy.reviewedExecutableExceptions ?? []);
 if (lock.policy.thirdPartyExecutablesAllowedByDefault !== false)
   errors.push('policy: third-party executables must be prohibited by default');
@@ -145,5 +204,5 @@ if (errors.length) {
 }
 
 console.log(
-  `Validated ${names.size} unique shared skills, ${lock.vendoredSkills.length} locked external trees, and both SpecKit implementations.`,
+  `Validated ${names.size} unique shared skills, ${lock.vendoredSkills.length} curated trees, ${managedNames.size} CLI-managed trees, and both SpecKit implementations.`,
 );

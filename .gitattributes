@@ -11,3 +11,7 @@
 *.pdf binary
 *.woff binary
 *.woff2 binary
+
+# Third-party skills are mirrored byte-for-byte from their locked upstream trees.
+# Do not rewrite or reject upstream whitespace; project-authored files remain checked.
+.agents/skills/** -whitespace

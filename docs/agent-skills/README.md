@@ -1,8 +1,8 @@
 # SHIFAA shared agent skills
 
-`.agents/skills/` is the canonical checked-in root for SHIFAA-owned skills, intentionally SHIFAA-customized third-party skills, and project-required SpecKit lifecycle skills. `.kimi-code/skills/` remains reserved for the Kimi-specific SpecKit mirror. The checked-in layout uses ordinary files, not symlinks, so it is stable on Windows.
+`.agents/skills/` is the canonical checked-in root for SHIFAA-owned skills, intentionally SHIFAA-customized third-party skills, project-required SpecKit lifecycle skills, and the Product Owner-approved shared tooling pack. `.kimi-code/skills/` remains reserved for the Kimi-specific SpecKit mirror. The checked-in layout uses ordinary files, not symlinks, so it is stable on Windows.
 
-Unmodified generic third-party skills belong in user-global scope, such as `C:\Users\<user>\.codex\skills` or the agent's equivalent global directory. Installing or updating such a skill must not create a SHIFAA Git diff. A third-party skill remains project-tracked when it contains a SHIFAA policy overlay, a pinned local reference replacing network behavior, an intentionally reduced executable surface, or another reviewed project-specific change.
+Unmodified generic third-party skills still default to user-global scope. The checked-in shared tooling pack is the narrow exception explicitly approved on 2026-09-01 so the same reviewed skills are available to every SHIFAA agent. A third-party skill can otherwise remain project-tracked only when it contains a SHIFAA policy overlay, a pinned local reference replacing network behavior, an intentionally reduced executable surface, or another reviewed project-specific change.
 
 ## Authority and execution
 
@@ -43,6 +43,12 @@ The authority order remains Egyptian law/regulator instruction, Constitution, PR
 
 The exact reviewed commits, upstream paths, licenses, local tree digests, allowed surfaces, prohibitions, and local hardening changes are in `skills-lock.json`.
 
+## Product Owner-approved shared tooling pack
+
+The project update manifest at `/skills-lock.json` tracks 23 additional source-backed skills from `amElnagdy/delegate-skills`, `amElnagdy/review-skills`, `anthropics/skills`, `mattpocock/skills`, and `pbakaus/impeccable`. They cover review and delegation setup, office/PDF artifacts, MCP and skill authoring, design assets, implementation planning, and bounded PR babysitting. The governance lock records their exact update hashes, upstream paths, source HEADs, normalized tree digests, and retained executable inventories.
+
+Executable helpers in this shared pack are retained for byte-for-byte integrity and provenance, but they are **not** approved execution exceptions. The only approved project-side third-party executables remain the five reviewed delegate `relay.mjs` files. A new or changed executable in a managed skill causes the updater and integrity verifier to stop for inspection.
+
 ## Supply-chain audit outcome
 
 The 19 tracked external skills were reviewed at exact Git commits on 2026-08-13. Every one contains an intentional SHIFAA modification recorded in `skills-lock.json`; none is an unmodified generic vendored copy. Their `SKILL.md` files, referenced resources, executable content, network/package behavior, license declarations, and workflow assumptions were inspected before copying. Tracked skills install no packages and have no hooks.
@@ -51,7 +57,7 @@ Third-party executable skill content is prohibited by default. The five audited 
 
 The vendored copies include SHIFAA overlays. `frontend-design` and `ux-designer` are locally hardened at fixed contract decisions—including typography, tokens, target sizes, route states, notification/error behavior, offline critical writes, and motion—rather than relying on precedence text alone. The three guard skills distinguish objective defects from intentional SHIFAA choices and act as second-pass gates; they cannot redesign architecture or replace SpecKit. `web-design-guidelines` was changed from a moving network fetch to a pinned local snapshot of Vercel's reviewed rules. Expo feedback submission is explicitly prohibited without user authorization.
 
-`npx skills` 1.5.22 was reviewed. Its current `add` command defaults to project scope but can create agent-specific links unless scope and copy behavior are explicit, and the public service documents anonymous telemetry. It was not used to bulk-install this tracked pack. Future unmodified third-party skills must use global user scope; project copies require an intentional SHIFAA customization and a lock entry.
+`npx skills` 1.5.23 was reviewed. Project refreshes use the explicit non-interactive `skills update --project --yes` form only inside a temporary `.worktrees/` checkout. The updater reconciles simple SHIFAA overlays, preserves reviewed license notices, rejects distributed-customization conflicts, and fails closed on new executable inventory or unrelated file changes.
 
 ## Delegation boundary
 
@@ -78,12 +84,10 @@ Smoke runs used disposable Git repositories outside SHIFAA. `STATIC_VERIFIED` me
 - `design-taste-frontend` (`Leonxlnx/taste-skill`) is restricted. Current v2 is experimental and explicitly targets landing pages, portfolios, and redesigns—not dashboards, data tables, or multi-step product UI. It must not drive Clinic, Pharmacy, Hospital, Lab, or Admin workflows. It may be reconsidered only for a suitable non-safety surface under `shifaa-ui-governor`.
 - `transitions-dev` (`Jakubantalik/transitions.dev`) is restricted. Its broad auto-trigger and motion-token catalog conflict with SHIFAA's narrower timings and zero-motion safety surfaces. Reconsider only a named patient-facing micro-interaction after contract review, with reduced motion and no emergency, prescribing, critical-result, approval, or finance-decision use.
 - `app-store-screenshots` is `release/marketing optional`. Its complete Next.js editor template and dependencies do not belong in normal feature implementation.
-- Anthropic `canvas-design` is `creative asset optional`, not product-interface authority.
 - OpenAI Codex Security `security-diff-scan` is an optional agent-provided Codex capability. The official plugin is proprietary and relies on Codex-specific tools and sibling workflows, so it is not copied into this cross-agent project pack.
 
 ## Rejected from the default pack
 
-- Anthropic `web-artifacts-builder` scaffolds a separate React 18/Vite/Tailwind/shadcn artifact environment and runs dependency-installing shell scripts; it conflicts with SHIFAA's production Next.js/Expo architecture.
 - Superpowers `requesting-code-review` mandates a subagent-driven workflow and assumes its own task cadence. Repository PR review and SpecKit evidence remain authoritative.
 - Superpowers `using-superpowers`, `brainstorming`, `writing-plans`, `executing-plans`, and related lifecycle skills are excluded because SHIFAA already uses `specify -> clarify -> plan -> tasks -> implement -> analyze`.
 - Unrelated Expo skills are not preinstalled. A newer upstream pattern is not permission to migrate the pinned application architecture.
@@ -92,12 +96,14 @@ Smoke runs used disposable Git repositories outside SHIFAA. `STATIC_VERIFIED` me
 
 Treat every update as a dependency change:
 
-1. Classify the skill before updating it. Unmodified generic third-party skills update only in global user scope and produce no repository diff.
-2. For a tracked SHIFAA-customized skill, work on a tooling branch and inspect the latest upstream commit without running bundled scripts.
+1. Classify the skill before updating it. Generic third-party skills default to global scope unless they are already in the explicitly approved shared tooling manifest.
+2. For any tracked skill, work on a tooling branch and inspect the latest upstream commit without running bundled scripts.
 3. Re-review the skill, every copied reference or executable, hooks, network/data behavior, package changes, Git behavior, workflow conflicts, and license.
 4. Copy only the required files as ordinary project files; keep or strengthen the SHIFAA overlay and notices.
 5. Update the exact commit, paths, review date, conflicts, and local tree digest in `skills-lock.json`.
 6. Validate unique frontmatter names, confirm both SpecKit implementations still exist, review the diff, scan for secrets/PHI, and run `pnpm verify`.
 7. Integrate only through the PR sequence in `AGENTS.md`.
 
-Skill discovery is evaluated at agent startup. `npx skills` 1.5.22 resolved the checked-in folders for both Codex and Kimi, but the local Kimi 0.34.0 prompt could not start because no provider/default model is configured. Restart or reload Codex and Kimi after changing this directory; the newly vendored guards and delegates were reviewed directly in this session, not dynamically rediscovered.
+Windows users can double-click `UPDATE-SHIFAA-SKILLS.bat`. It launches `tools/update-shifaa-skills.ps1`, verifies GitHub authentication, updates only the project-scope manifest in an isolated `.worktrees/` checkout, runs integrity and repository verification, opens a PR, waits for required checks, and uses an exact-head squash-merge guard. A failed update preserves its branch and worktree for inspection. Run `powershell -NoProfile -File tools/update-shifaa-skills.ps1 -SelfTest` to exercise the safety logic without creating a real PR.
+
+Skill discovery is evaluated at agent startup. `npx skills` 1.5.23 resolves the checked-in folders for both Codex and Kimi. Restart or reload agents after changing this directory; the integrity check validates all 55 unique shared skills, both SpecKit implementations, the curated tree locks, and the managed update manifest.
