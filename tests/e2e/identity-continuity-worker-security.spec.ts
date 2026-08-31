@@ -13,7 +13,7 @@ const subjectPatientId = '51000000-0000-4000-8000-000000000001';
 const relationshipId = '56000000-0000-4000-8000-000000000003';
 const reviewerPersonId = '40000000-0000-4000-8000-000000000006';
 
-test('transition worker gates consent, resolves the current subject, orders, retries, and deduplicates', async () => {
+test('transition worker gates consent, fans out to subject and authorized reviewer, orders, retries, and deduplicates', async () => {
   const owner = postgres(ownerUrl, { max: 1 });
   const adapter = new LocalSyntheticMessagingAdapter([
     'transient_failure',
@@ -29,11 +29,30 @@ test('transition worker gates consent, resolves the current subject, orders, ret
   const submittedEventId = randomUUID();
   const decidedEventId = randomUUID();
   const currentAddress = `transition-current-${randomUUID()}@synthetic.shifaa.test`;
+  const reviewerAddress = `transition-reviewer-${randomUUID()}@synthetic.shifaa.test`;
+  const reviewerGrantId = randomUUID();
   try {
     await owner.begin(async (sql) => {
       await sql`
         update identity.people set email_normalized=${currentAddress},profile_status='active'
         where id=${subjectPersonId}::uuid`;
+      await sql`
+        update identity.people set email_normalized=${reviewerAddress},profile_status='active'
+        where id=${reviewerPersonId}::uuid`;
+      await sql`select set_config('shifaa.person_id','40000000-0000-4000-8000-000000000001',true)`;
+      await sql`
+        insert into identity.admin_role_grants(
+          id,person_id,role_code,status,valid_from,proposed_by
+        ) values(
+          ${reviewerGrantId}::uuid,${reviewerPersonId}::uuid,'support_admin','pending',
+          statement_timestamp()-interval '1 hour','40000000-0000-4000-8000-000000000001'
+        )`;
+      await sql`select set_config('shifaa.person_id','40000000-0000-4000-8000-000000000002',true)`;
+      await sql`
+        update identity.admin_role_grants set status='active',
+          decided_by='40000000-0000-4000-8000-000000000002',decision_reason='worker fanout fixture'
+        where id=${reviewerGrantId}::uuid`;
+      await sql`select set_config('shifaa.person_id','',true)`;
       await sql`
         insert into identity.continuity_cases(
           id,case_type,subject_person_id,subject_patient_id,relationship_id,status,
@@ -69,9 +88,10 @@ test('transition worker gates consent, resolves the current subject, orders, ret
     assert.equal(await worker.processNext(), 'delivered');
 
     const expectedAlias = `SYNTHETIC-${createHash('sha256').update(currentAddress).digest('hex')}`;
+    const expectedReviewerAlias = `SYNTHETIC-${createHash('sha256').update(reviewerAddress).digest('hex')}`;
     assert.deepEqual(
-      [...adapter.visibleMessages.values()].map((message) => message.destinationAlias),
-      [expectedAlias, expectedAlias],
+      [...adapter.visibleMessages.values()].map((message) => message.destinationAlias).toSorted(),
+      [expectedAlias, expectedAlias, expectedReviewerAlias, expectedReviewerAlias].toSorted(),
     );
     const rows = await owner<
       Array<{
@@ -87,9 +107,12 @@ test('transition worker gates consent, resolves the current subject, orders, ret
       order by created_at,id`;
     assert.deepEqual(
       rows.map((row) => row.source_event_id),
-      [submittedEventId, decidedEventId],
+      [submittedEventId, submittedEventId, decidedEventId, decidedEventId],
     );
-    assert.ok(rows.every((row) => row.recipient_person_id === subjectPersonId));
+    assert.deepEqual(
+      rows.map((row) => row.recipient_person_id).toSorted(),
+      [subjectPersonId, reviewerPersonId, subjectPersonId, reviewerPersonId].toSorted(),
+    );
     assert.ok(rows.every((row) => row.status === 'delivered'));
     assert.ok(
       rows.every(
@@ -105,8 +128,8 @@ test('transition worker gates consent, resolves the current subject, orders, ret
       update platform.outbox_events set state='pending',available_at=statement_timestamp()
       where id=${decidedEventId}::uuid`;
     assert.equal(await worker.processNext(), 'delivered');
-    assert.equal(adapter.visibleMessages.size, 2);
-    assert.equal(adapter.attempts.length, 3);
+    assert.equal(adapter.visibleMessages.size, 4);
+    assert.equal(adapter.attempts.length, 5);
   } finally {
     await worker.close();
     await owner.begin(async (sql) => {
@@ -128,8 +151,10 @@ test('transition worker gates consent, resolves the current subject, orders, ret
         delete from platform.outbox_events
         where id in (${submittedEventId}::uuid,${decidedEventId}::uuid)`;
       await sql`delete from identity.continuity_cases where id=${caseId}::uuid`;
+      await sql`delete from identity.admin_role_grants where id=${reviewerGrantId}::uuid`;
       await sql`
-        update identity.people set email_normalized=null where id=${subjectPersonId}::uuid`;
+        update identity.people set email_normalized=null
+        where id in (${subjectPersonId}::uuid,${reviewerPersonId}::uuid)`;
     });
     await owner.end({ timeout: 5 });
   }

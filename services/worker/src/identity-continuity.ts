@@ -110,18 +110,24 @@ export class PostgresIdentityNotificationProcessor {
   }
 
   public async processNext(): Promise<'idle' | IdentityNotificationOutcome> {
-    const [event] = await this.sql<IdentityEvent[]>`
+    const events = await this.sql<IdentityEvent[]>`
       select * from platform.claim_next_identity_notification_event(${this.workerId},30)`;
+    const [event] = events;
     if (!event) return 'idle';
-    let outcome: IdentityNotificationOutcome;
+    const outcomes: IdentityNotificationOutcome[] = [];
     let errorCode: string | null = null;
-    try {
-      outcome = await this.deliver(event);
-    } catch {
-      const decision = retryDecision('transient', event.attempt_count, 0);
-      outcome = decision.state === 'dead_letter' ? 'dead_letter' : 'retry';
-      errorCode = 'identity-notification-failed';
+    for (const recipientEvent of events) {
+      if (recipientEvent.event_id !== event.event_id)
+        throw new Error('identity-notification-claim-mixed-events');
+      try {
+        outcomes.push(await this.deliver(recipientEvent));
+      } catch {
+        const decision = retryDecision('transient', recipientEvent.attempt_count, 0);
+        outcomes.push(decision.state === 'dead_letter' ? 'dead_letter' : 'retry');
+        errorCode = 'identity-notification-failed';
+      }
     }
+    const outcome = aggregateIdentityNotificationOutcomes(outcomes);
     const retry = retryDecision('transient', event.attempt_count, 0);
     const retryAt =
       outcome === 'retry' && retry.state === 'retry'
@@ -231,6 +237,15 @@ export class PostgresIdentityNotificationProcessor {
         where id=${notification.id}::uuid`;
     });
   }
+}
+
+export function aggregateIdentityNotificationOutcomes(
+  outcomes: readonly IdentityNotificationOutcome[],
+): IdentityNotificationOutcome {
+  if (outcomes.length === 0) return 'retry';
+  if (outcomes.includes('retry')) return 'retry';
+  if (outcomes.includes('dead_letter')) return 'dead_letter';
+  return 'delivered';
 }
 
 function templateCodeFor(eventType: IdentityEvent['event_type']): string {

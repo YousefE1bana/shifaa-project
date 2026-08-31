@@ -7,6 +7,8 @@ import type {
   ContinuityRepository,
   ContinuityRestriction,
   PendingEnrollmentMarker,
+  FactorRemovalMarker,
+  RefreshRotationMarker,
   RecoveryResumeMarker,
   TransitionMutationInput,
 } from '../../modules/identity-continuity/index.js';
@@ -14,10 +16,13 @@ import type { TransitionResult } from '@shifaa/contracts/identity-continuity';
 import { TransientReplayCipher } from '../../modules/identity-continuity/security.js';
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
 import type { AuthSession, SessionAuthority } from '../../modules/identity-onboarding/ports.js';
+import type { TransactionSql } from 'postgres';
 import { PostgresIdentityRepository } from './identity-repository.js';
 
 const PENDING_MARKER_ROUTE = '/v1/auth/mfa/enroll#pending-marker';
 const RECOVERY_RESUME_ROUTE = '/v1/auth/recovery#resume-marker';
+const REFRESH_RESUME_ROUTE = '/v1/auth/session/refresh#rotation-marker';
+const FACTOR_REMOVAL_RESUME_ROUTE = '/v1/auth/mfa/factors/:factorId#removal-marker';
 const TRANSITION_ROUTE = '/v1/guardianships/:relationshipId/transition';
 const TRANSITION_RETENTION_MS = 24 * 60 * 60_000;
 
@@ -76,14 +81,18 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
                set_config('shifaa.purposes','',true),
                set_config('shifaa.session_id',${sessionId},true),
                set_config('shifaa.action','refreshSession',true)`;
-      const [row] = await sql<{ restriction_scope: ContinuityRestriction }[]>`
-        select restriction_scope
+      const [row] = await sql<{ restriction: ContinuityRestriction }[]>`
+        select case when status='expired' then 'recovery_expired' else restriction_scope end restriction
         from identity.continuity_cases
         where subject_person_id=${mapping.person_id}::uuid
           and restriction_scope='mfa_enrollment_only'
-          and status in ('proof_required','restricted_enrollment')
+          and (
+            (status='proof_required' and bound_native_session_id is null)
+            or (status='restricted_enrollment' and bound_native_session_id=${sessionId}::uuid)
+            or (status='expired' and bound_native_session_id=${sessionId}::uuid)
+          )
         limit 1`;
-      return row?.restriction_scope ?? null;
+      return row?.restriction ?? null;
     });
   }
 
@@ -104,6 +113,13 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
       await sql`select pg_advisory_xact_lock(hashtextextended(${'identity-factor:' + subjectId},0))`;
       return work();
     });
+  }
+
+  public async withDurableSerializedFactorState<T>(
+    subjectId: string,
+    work: () => Promise<T>,
+  ): Promise<T> {
+    return this.repository.withSessionAdvisoryLock(`identity-factor:${subjectId}`, work);
   }
 
   public async appendAudit(input: ContinuityAuditInput): Promise<void> {
@@ -146,6 +162,87 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           'identity-continuity',${input.event.aggregateId}::uuid,${input.event.eventType},
           ${sql.json(input.event.payload)},${input.event.aggregateVersion}
         )`;
+    });
+  }
+
+  public findRefreshRotationMarker(markerKey: string): Promise<RefreshRotationMarker | undefined> {
+    return this.findTransientMarker(REFRESH_RESUME_ROUTE, markerKey);
+  }
+
+  public saveRefreshRotationMarker(
+    markerKey: string,
+    marker: RefreshRotationMarker,
+  ): Promise<void> {
+    return this.saveTransientMarker(REFRESH_RESUME_ROUTE, markerKey, marker);
+  }
+
+  public async commitRefreshRotationEvidence(input: {
+    markerKey: string;
+    marker: RefreshRotationMarker;
+    audit: ContinuityAuditInput;
+  }): Promise<void> {
+    await this.repository.withRawTransaction(async (sql) => {
+      const digest = createHash('sha256').update(JSON.stringify(input.audit)).digest('hex');
+      await sql`
+        insert into audit.events(
+          event_hash,action,resource_type,outcome,request_id,occurred_at,metadata
+        ) values(
+          ${digest},${input.audit.action},'native-session',${input.audit.outcome},
+          ${input.audit.requestId}::uuid,${input.audit.occurredAt}::timestamptz,
+          ${sql.json(input.audit.metadata ?? {})}
+        )`;
+      await this.upsertTransientMarker(sql, REFRESH_RESUME_ROUTE, input.markerKey, input.marker);
+    });
+  }
+
+  public findFactorRemovalMarker(markerKey: string): Promise<FactorRemovalMarker | undefined> {
+    return this.findTransientMarker(FACTOR_REMOVAL_RESUME_ROUTE, markerKey);
+  }
+
+  public saveFactorRemovalMarker(markerKey: string, marker: FactorRemovalMarker): Promise<void> {
+    return this.saveTransientMarker(FACTOR_REMOVAL_RESUME_ROUTE, markerKey, marker);
+  }
+
+  public async commitFactorRemoval(input: {
+    markerKey: string;
+    marker: FactorRemovalMarker & { result: NonNullable<FactorRemovalMarker['result']> };
+    evidence: FactorChangedEvidence;
+  }): Promise<void> {
+    const prohibited = /secret|token|handle|code|password|proof|otp|credential|email|phone/i;
+    const payloadKeys = Object.keys(input.evidence.event.payload).toSorted();
+    if (
+      payloadKeys.join(',') !== 'action_time,recipientPersonId,support_action' ||
+      payloadKeys.some((key) => prohibited.test(key)) ||
+      !/^[0-9a-f-]{36}$/i.test(input.evidence.event.payload.recipientPersonId) ||
+      !Number.isFinite(Date.parse(input.evidence.event.payload.action_time))
+    )
+      throw new ApiPolicyError('event-payload-prohibited', 500, 'Prohibited event payload field.');
+    await this.repository.withRawTransaction(async (sql) => {
+      const auditDigest = createHash('sha256')
+        .update(JSON.stringify(input.evidence.audit))
+        .digest('hex');
+      await sql`
+        insert into audit.events(
+          event_hash,action,resource_type,outcome,request_id,occurred_at,metadata
+        ) values(
+          ${auditDigest},${input.evidence.audit.action},'native-factor',${input.evidence.audit.outcome},
+          ${input.evidence.audit.requestId}::uuid,${input.evidence.audit.occurredAt}::timestamptz,
+          ${sql.json(input.evidence.audit.metadata ?? {})}
+        )`;
+      await sql`
+        insert into platform.outbox_events(
+          aggregate_type,aggregate_id,event_type,payload,aggregate_version
+        ) values(
+          'identity-continuity',${input.evidence.event.aggregateId}::uuid,
+          ${input.evidence.event.eventType},${sql.json(input.evidence.event.payload)},
+          ${input.evidence.event.aggregateVersion}
+        )`;
+      await this.upsertTransientMarker(
+        sql,
+        FACTOR_REMOVAL_RESUME_ROUTE,
+        input.markerKey,
+        input.marker,
+      );
     });
   }
 
@@ -292,7 +389,8 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
                set_config('shifaa.action','verifyMfaEnrollment',true)`;
       const completed = await sql`
         update identity.continuity_cases
-        set status='completed',completed_at=${input.occurredAt}::timestamptz
+        set status='completed',restriction_scope=NULL,bound_native_session_id=NULL,
+            completed_at=${input.occurredAt}::timestamptz,updated_at=${input.occurredAt}::timestamptz
         where status='restricted_enrollment'
           and bound_native_session_id=${input.sessionId}::uuid
           and case_type='account_recovery'
@@ -794,6 +892,84 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           'The transition state is unavailable.',
         );
       throw error;
+    }
+  }
+
+  private async findTransientMarker<T extends { expiresAt: string }>(
+    route: string,
+    markerKey: string,
+  ): Promise<T | undefined> {
+    return this.repository.withRawTransaction(async (sql) => {
+      const principal = `continuity-resume:${markerKey}`;
+      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
+        { principal: string }[]
+      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
+      await sql`select set_config('shifaa.principal',${principal},true)`;
+      try {
+        const [row] = await sql<{ response_body: StoredSealedMarker; expires_at: string }[]>`
+          select response_body,expires_at from platform.idempotency_records
+          where principal=${principal} and route=${route} and idempotency_key=${markerKey}
+            and state='completed' and expires_at>now()`;
+        if (!row?.response_body) return undefined;
+        return this.cipher.open<T>(
+          {
+            encoding: 'aes-256-gcm-v1',
+            nonce: String(row.response_body.nonce),
+            tag: String(row.response_body.tag),
+            ciphertext: String(row.response_body.ciphertext),
+            expiresAt: String(row.response_body.expiresAt ?? row.expires_at),
+          },
+          new Date(),
+        );
+      } catch (error) {
+        if (error instanceof ApiPolicyError && error.code === 'idempotency-replay-expired')
+          return undefined;
+        throw error;
+      } finally {
+        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+      }
+    });
+  }
+
+  private async saveTransientMarker<T extends { expiresAt: string }>(
+    route: string,
+    markerKey: string,
+    marker: T,
+  ): Promise<void> {
+    await this.repository.withRawTransaction((sql) =>
+      this.upsertTransientMarker(sql, route, markerKey, marker),
+    );
+  }
+
+  private async upsertTransientMarker<T extends { expiresAt: string }>(
+    sql: TransactionSql,
+    route: string,
+    markerKey: string,
+    marker: T,
+  ): Promise<void> {
+    const principal = `continuity-resume:${markerKey}`;
+    const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
+      { principal: string }[]
+    >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
+    await sql`select set_config('shifaa.principal',${principal},true)`;
+    try {
+      const sealed = this.cipher.seal(marker, new Date(marker.expiresAt));
+      const requestHash = createHash('sha256').update(markerKey).digest('hex');
+      await sql`
+        insert into platform.idempotency_records(
+          principal,method,route,idempotency_key,request_hash,state,response_status,
+          response_body,resource_type,expires_at
+        ) values(
+          ${principal},'POST',${route},${markerKey},${requestHash},'completed',200,
+          ${sql.json(sealed as unknown as Record<string, string>)},'continuity-resume-marker',
+          ${marker.expiresAt}::timestamptz
+        )
+        on conflict(principal,method,route,idempotency_key) do update
+          set state='completed',response_status=200,response_body=excluded.response_body,
+              resource_type='continuity-resume-marker',expires_at=excluded.expires_at,
+              updated_at=now()`;
+    } finally {
+      await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
     }
   }
 }

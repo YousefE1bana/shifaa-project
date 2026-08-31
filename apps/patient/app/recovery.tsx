@@ -19,6 +19,7 @@ import {
   type PatientRecoveryApiPort,
 } from '../src/identity-continuity-api';
 import { usePatientLocale } from '../src/locale-context';
+import { patientNativeRefreshTokens, patientPlatform } from '../src/patient-auth-store';
 
 type RecoveryState =
   | 'request'
@@ -78,7 +79,14 @@ export default function RecoveryRoute({
   const connection = useSecurityConnection(onlineOverride);
   const { online } = connection;
   const api = useMemo(
-    () => apiOverride ?? new PatientRecoveryApi({ locale }),
+    () =>
+      apiOverride ??
+      new PatientRecoveryApi({
+        locale,
+        ...(patientPlatform === 'native'
+          ? { nativeRefreshTokens: patientNativeRefreshTokens }
+          : {}),
+      }),
     [apiOverride, locale],
   );
   const [state, setState] = useState<RecoveryState>(online ? 'request' : 'offline');

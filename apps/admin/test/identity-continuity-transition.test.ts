@@ -31,6 +31,8 @@ test('admin relationships uses the assigned transition read mode and continuity 
   );
   assert.match(workspace, /reasonCode: 'human_review\.guardianship_transition'/);
   assert.doesNotMatch(workspace, /reasonCode: reason\.trim\(\)/);
+  assert.match(workspace, /accessToken\?: \(\) => string \| undefined/);
+  assert.doesNotMatch(workspace, /synthetic-admin:support_admin:/);
 });
 
 test('admin transition states remain bilingual, assigned-only, and non-inferential', () => {

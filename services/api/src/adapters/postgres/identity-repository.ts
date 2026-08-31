@@ -64,6 +64,20 @@ export class PostgresIdentityRepository implements IdentityRepository {
     return this.sql.begin(async (tx) => this.scope.run({ sql: tx }, () => work(tx))) as Promise<T>;
   }
 
+  public async withSessionAdvisoryLock<T>(lockKey: string, work: () => Promise<T>): Promise<T> {
+    const sql = await this.sql.reserve();
+    try {
+      await sql`select pg_advisory_lock(hashtextextended(${lockKey},0))`;
+      return await work();
+    } finally {
+      try {
+        await sql`select pg_advisory_unlock(hashtextextended(${lockKey},0))`;
+      } finally {
+        await sql.release();
+      }
+    }
+  }
+
   public async createRegistration(
     authSubjectId: string,
     handle: string,

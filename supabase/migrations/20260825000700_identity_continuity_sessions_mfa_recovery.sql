@@ -70,6 +70,9 @@ CREATE TABLE identity.continuity_cases (
     (status='proof_required' AND case_type='account_recovery' AND subject_person_id IS NOT NULL
       AND restriction_scope='mfa_enrollment_only' AND bound_native_session_id IS NULL)
     OR
+    (status='expired' AND case_type='account_recovery' AND subject_person_id IS NOT NULL
+      AND restriction_scope='mfa_enrollment_only' AND bound_native_session_id IS NOT NULL)
+    OR
     (status NOT IN ('proof_required','restricted_enrollment')
       AND restriction_scope IS NULL AND bound_native_session_id IS NULL)
     OR
@@ -104,7 +107,7 @@ CREATE UNIQUE INDEX continuity_live_transition_relationship_uq
     AND status IN ('proof_required','review_required','human_review_required');
 CREATE UNIQUE INDEX continuity_restricted_native_session_uq
   ON identity.continuity_cases(bound_native_session_id)
-  WHERE bound_native_session_id IS NOT NULL AND status='restricted_enrollment';
+  WHERE bound_native_session_id IS NOT NULL AND status IN ('restricted_enrollment','expired');
 CREATE INDEX continuity_reviewer_worklist_idx
   ON identity.continuity_cases(assigned_reviewer_person_id,status,created_at,id)
   WHERE status IN ('review_required','human_review_required');
@@ -165,8 +168,12 @@ RETURNS integer LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,ide
 DECLARE removed integer;
 BEGIN
   UPDATE identity.continuity_cases
-  SET status='expired',updated_at=p_now
-  WHERE case_type='account_recovery' AND subject_person_id IS NULL AND status='requested'
+  SET status='expired',
+      restriction_scope=CASE WHEN status='restricted_enrollment' THEN restriction_scope ELSE NULL END,
+      bound_native_session_id=CASE WHEN status='restricted_enrollment' THEN bound_native_session_id ELSE NULL END,
+      updated_at=p_now
+  WHERE case_type='account_recovery'
+    AND status IN ('requested','proof_required','restricted_enrollment')
     AND expires_at<=p_now;
   DELETE FROM identity.continuity_cases
   WHERE case_type='account_recovery' AND subject_person_id IS NULL AND status='expired'
@@ -601,17 +608,10 @@ LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform,identity A
 BEGIN
   RETURN QUERY
   WITH candidate AS MATERIALIZED (
-    SELECT e.id,
-      CASE
-        WHEN e.event_type='identity.factor.changed'
-          AND jsonb_typeof(e.payload->'recipientPersonId')='string'
-          AND (e.payload->>'recipientPersonId') ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-          THEN (e.payload->>'recipientPersonId')::uuid
-        WHEN e.event_type='identity.recovery.completed' THEN recovery_case.subject_person_id
-        WHEN e.event_type IN ('identity.transition.submitted','identity.transition.decided')
-          THEN transition_case.subject_person_id
-        ELSE NULL
-      END recipient_person_id
+    SELECT e.id,e.event_type,e.payload,
+      recovery_case.subject_person_id recovery_subject_person_id,
+      transition_case.subject_person_id transition_subject_person_id,
+      transition_case.assigned_reviewer_person_id transition_reviewer_person_id
     FROM platform.outbox_events e
     LEFT JOIN identity.continuity_cases recovery_case
       ON e.event_type='identity.recovery.completed' AND recovery_case.id=e.aggregate_id
@@ -650,14 +650,41 @@ BEGIN
     RETURNING e.id,e.event_type,e.payload,e.attempt_count
   )
   SELECT claimed.id,claimed.event_type,claimed.payload,claimed.attempt_count,
-    candidate.recipient_person_id,person.preferred_locale,
+    recipient.recipient_person_id,person.preferred_locale,
     CASE WHEN person.id IS NOT NULL
       THEN platform.identity_notification_address_alias(person.email_normalized)
       ELSE NULL
     END
   FROM claimed
   JOIN candidate ON candidate.id=claimed.id
-  LEFT JOIN identity.people person ON person.id=candidate.recipient_person_id
+  JOIN LATERAL (
+    SELECT CASE
+      WHEN candidate.event_type='identity.factor.changed'
+        AND jsonb_typeof(candidate.payload->'recipientPersonId')='string'
+        AND (candidate.payload->>'recipientPersonId') ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+        THEN (candidate.payload->>'recipientPersonId')::uuid
+      ELSE NULL
+    END recipient_person_id
+    WHERE candidate.event_type='identity.factor.changed'
+    UNION ALL
+    SELECT candidate.recovery_subject_person_id
+    WHERE candidate.event_type='identity.recovery.completed'
+    UNION ALL
+    SELECT candidate.transition_subject_person_id
+    WHERE candidate.event_type IN ('identity.transition.submitted','identity.transition.decided')
+    UNION ALL
+    SELECT candidate.transition_reviewer_person_id
+    WHERE candidate.event_type IN ('identity.transition.submitted','identity.transition.decided')
+      AND candidate.transition_reviewer_person_id IS DISTINCT FROM candidate.transition_subject_person_id
+      AND EXISTS(
+        SELECT 1 FROM identity.admin_role_grants grant_row
+        WHERE grant_row.person_id=candidate.transition_reviewer_person_id
+          AND grant_row.role_code='support_admin' AND grant_row.status='active'
+          AND grant_row.valid_from<=statement_timestamp()
+          AND (grant_row.valid_until IS NULL OR grant_row.valid_until>statement_timestamp())
+      )
+  ) recipient ON true
+  LEFT JOIN identity.people person ON person.id=recipient.recipient_person_id
     AND person.profile_status='active' AND person.email_normalized IS NOT NULL;
 END $$;
 

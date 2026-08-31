@@ -16,8 +16,9 @@ import type {
   VerifyEnrollmentRequest,
   EnrollmentSecretResult,
 } from '@shifaa/contracts/identity-continuity';
+import type { NativeSessionProjection } from '@shifaa/auth';
 
-export type ContinuityRestriction = 'mfa_enrollment_only' | null;
+export type ContinuityRestriction = 'mfa_enrollment_only' | 'recovery_expired' | null;
 
 export interface ContinuityRequestContext {
   requestId: string;
@@ -100,6 +101,21 @@ export interface RecoveryResumeMarker {
   expiresAt: string;
 }
 
+export interface RefreshRotationMarker {
+  session: NativeSessionProjection;
+  evidenceCommitted: boolean;
+  expiresAt: string;
+}
+
+export interface FactorRemovalMarker {
+  subjectId: string;
+  sessionId: string;
+  factorId: string;
+  personId: string;
+  result?: FactorRemovalResult;
+  expiresAt: string;
+}
+
 export interface PendingEnrollmentMarker {
   enrollmentId: string;
   expiresAtMs: number;
@@ -109,8 +125,23 @@ export interface ContinuityRepository {
   isNativeSessionCurrent(sessionId: string, subjectId: string, claimedAal: 1 | 2): Promise<boolean>;
   restrictionForSession(sessionId: string, subjectId: string): Promise<ContinuityRestriction>;
   withSerializedFactorState<T>(subjectId: string, work: () => Promise<T>): Promise<T>;
+  withDurableSerializedFactorState<T>(subjectId: string, work: () => Promise<T>): Promise<T>;
   appendAudit(input: ContinuityAuditInput): Promise<void>;
   appendFactorChangedEvidence(input: FactorChangedEvidence): Promise<void>;
+  findRefreshRotationMarker(markerKey: string): Promise<RefreshRotationMarker | undefined>;
+  saveRefreshRotationMarker(markerKey: string, marker: RefreshRotationMarker): Promise<void>;
+  commitRefreshRotationEvidence(input: {
+    markerKey: string;
+    marker: RefreshRotationMarker;
+    audit: ContinuityAuditInput;
+  }): Promise<void>;
+  findFactorRemovalMarker(markerKey: string): Promise<FactorRemovalMarker | undefined>;
+  saveFactorRemovalMarker(markerKey: string, marker: FactorRemovalMarker): Promise<void>;
+  commitFactorRemoval(input: {
+    markerKey: string;
+    marker: FactorRemovalMarker & { result: FactorRemovalResult };
+    evidence: FactorChangedEvidence;
+  }): Promise<void>;
   resolveSubjectPerson(subjectId: string): Promise<string | undefined>;
   accountClassForPerson(
     personId: string,

@@ -26,11 +26,14 @@ import type {
   IdentityContinuityServicePort,
   PreparedRecoveryCompletion,
   PreparedLogout,
+  FactorRemovalMarker,
+  RefreshRotationMarker,
   RecoveryResumeMarker,
 } from './types.js';
 
 const ENROLLMENT_TTL_MS = 10 * 60_000;
 const RECOVERY_TTL_MS = 15 * 60_000;
+const MUTATION_RESUME_TTL_MS = 24 * 60 * 60_000;
 export const restrictedRecoveryOperationIds = [
   'refreshSession',
   'logout',
@@ -108,24 +111,58 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
 
   public async refreshSession(context: ContinuityRequestContext, body: RefreshRequest) {
     const refreshToken = this.refreshToken(context, body);
-    const session = await this.dependencies.auth.refresh(refreshToken);
+    const markerKey = scopedPrincipal(
+      'refresh-rotation-resume',
+      refreshToken,
+      this.dependencies.hmacKey,
+    );
+    let marker = await this.dependencies.repository.findRefreshRotationMarker(markerKey);
+    if (!marker) {
+      const session = await this.dependencies.auth.refresh(refreshToken);
+      marker = {
+        session,
+        evidenceCommitted: false,
+        expiresAt: new Date(
+          Math.min(
+            Date.parse(session.expiresAt),
+            this.dependencies.now().getTime() + RECOVERY_TTL_MS,
+          ),
+        ).toISOString(),
+      } satisfies RefreshRotationMarker;
+      await this.dependencies.repository.saveRefreshRotationMarker(markerKey, marker);
+    }
+    const session = marker.session;
+    const subjectId = await this.subjectForAccessToken(session.accessToken);
     const current = await this.dependencies.repository.isNativeSessionCurrent(
       session.sessionId,
-      await this.subjectForAccessToken(session.accessToken),
+      subjectId,
       session.assurance === 'aal2' ? 2 : 1,
     );
     if (!current) throw new ApiPolicyError('session-revoked', 401, 'The session is not current.');
     const restriction = await this.dependencies.repository.restrictionForSession(
       session.sessionId,
-      await this.subjectForAccessToken(session.accessToken),
+      subjectId,
     );
-    await this.dependencies.repository.appendAudit({
-      requestId: context.requestId,
-      action: 'identity.session.refreshed',
-      outcome: 'succeeded',
-      occurredAt: this.dependencies.now().toISOString(),
-      metadata: { client: body.client, restricted: restriction !== null },
-    });
+    if (restriction === 'recovery_expired')
+      throw new ApiPolicyError('session-revoked', 401, 'The recovery session expired.');
+    if (!marker.evidenceCommitted) {
+      const committedMarker = {
+        ...marker,
+        evidenceCommitted: true,
+      } satisfies RefreshRotationMarker;
+      await this.dependencies.repository.commitRefreshRotationEvidence({
+        markerKey,
+        marker: committedMarker,
+        audit: {
+          requestId: context.requestId,
+          action: 'identity.session.refreshed',
+          outcome: 'succeeded',
+          occurredAt: this.dependencies.now().toISOString(),
+          metadata: { client: body.client, restricted: restriction !== null },
+        },
+      });
+      marker = committedMarker;
+    }
     return { ...session, restriction };
   }
 
@@ -309,59 +346,111 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
     factorId: string,
     body: RemoveFactorRequest,
   ) {
-    const { accessToken, claims } = await this.currentActor(context, 'removeMfaFactor');
-    this.enforceMfaRate('removeMfaFactor', claims.subjectId, 3, 60 * 60_000);
-    return this.dependencies.repository.withSerializedFactorState(claims.subjectId, async () => {
-      const personId = await this.requirePersonForActor(claims);
-      const verified = await this.dependencies.auth.listFactors(accessToken);
-      if (!verified.some((factor) => factor.id === factorId))
-        throw new ApiPolicyError('not-found', 404, 'The named verification factor is not present.');
-      const accountClass = await this.dependencies.repository.accountClassForPerson(personId);
-      const proofs = this.freshProofs(claims);
-      const decision = evaluateFactorRemoval({
-        accountClass,
-        verifiedFactorCount: verified.length,
-        freshMfa: proofs.freshMfa,
-        optionalLastFactorConfirmed: body.confirmOptionalLastFactor,
-        completedReproof: false,
-        recoveryRestricted: false,
-      });
-      if (!decision.allowed) throw this.policyProblem(decision.reason);
-      await this.dependencies.auth.unenrollFactor(accessToken, factorId);
-      const remaining = await this.dependencies.auth.listFactors(accessToken);
-      const nativeAalStillMatches = await this.dependencies.repository.isNativeSessionCurrent(
-        claims.sessionId,
-        claims.subjectId,
-        claims.aal,
-      );
-      const assurance =
-        nativeAalStillMatches && claims.aal === 2 ? ('aal2' as const) : ('aal1' as const);
-      const occurredAt = this.dependencies.now().toISOString();
-      await this.dependencies.repository.appendFactorChangedEvidence({
-        event: {
-          aggregateId: factorId,
-          aggregateVersion: 2,
-          eventType: 'identity.factor.changed',
-          payload: {
-            recipientPersonId: personId,
-            support_action: 'removed',
-            action_time: occurredAt,
+    const accessToken = context.accessToken;
+    if (!accessToken)
+      throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
+    const presentedClaims = await this.dependencies.auth.verifyAccessToken(accessToken);
+    if (!presentedClaims)
+      throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
+    const markerKey = scopedPrincipal(
+      'factor-removal-resume',
+      `${presentedClaims.subjectId}:${factorId}:${context.idempotencyKey}`,
+      this.dependencies.hmacKey,
+    );
+    const claims = presentedClaims;
+    const presentedMarker = await this.dependencies.repository.findFactorRemovalMarker(markerKey);
+    if (!presentedMarker) await this.currentActor(context, 'removeMfaFactor');
+    return this.dependencies.repository.withDurableSerializedFactorState(
+      claims.subjectId,
+      async () => {
+        let marker = await this.dependencies.repository.findFactorRemovalMarker(markerKey);
+        if (marker?.result) return marker.result;
+        if (marker && (marker.subjectId !== claims.subjectId || marker.factorId !== factorId))
+          throw new ApiPolicyError(
+            'idempotency-conflict',
+            409,
+            'The staged mutation does not match.',
+          );
+        if (!marker) {
+          this.enforceMfaRate('removeMfaFactor', claims.subjectId, 3, 60 * 60_000);
+          const personId = await this.requirePersonForActor(claims);
+          const verified = await this.dependencies.auth.listFactors(accessToken);
+          if (!verified.some((factor) => factor.id === factorId))
+            throw new ApiPolicyError(
+              'not-found',
+              404,
+              'The named verification factor is not present.',
+            );
+          const accountClass = await this.dependencies.repository.accountClassForPerson(personId);
+          const proofs = this.freshProofs(claims);
+          const decision = evaluateFactorRemoval({
+            accountClass,
+            verifiedFactorCount: verified.length,
+            freshMfa: proofs.freshMfa,
+            optionalLastFactorConfirmed: body.confirmOptionalLastFactor,
+            completedReproof: false,
+            recoveryRestricted: false,
+          });
+          if (!decision.allowed) throw this.policyProblem(decision.reason);
+          marker = {
+            subjectId: claims.subjectId,
+            sessionId: claims.sessionId,
+            factorId,
+            personId,
+            expiresAt: new Date(
+              this.dependencies.now().getTime() + MUTATION_RESUME_TTL_MS,
+            ).toISOString(),
+          } satisfies FactorRemovalMarker;
+          await this.dependencies.repository.saveFactorRemovalMarker(markerKey, marker);
+        } else if (marker.sessionId !== claims.sessionId) {
+          await this.currentActor(context, 'removeMfaFactor');
+        }
+        const currentFactors = await this.dependencies.auth.listFactors(accessToken);
+        if (currentFactors.some((factor) => factor.id === factorId))
+          await this.dependencies.auth.unenrollFactor(accessToken, factorId);
+        const remaining = await this.dependencies.auth.listFactors(accessToken);
+        const nativeAalStillMatches = await this.dependencies.repository.isNativeSessionCurrent(
+          claims.sessionId,
+          claims.subjectId,
+          claims.aal,
+        );
+        const assurance =
+          nativeAalStillMatches && claims.aal === 2 ? ('aal2' as const) : ('aal1' as const);
+        const occurredAt = this.dependencies.now().toISOString();
+        const result = { removedFactorId: factorId, assurance, removedAt: occurredAt };
+        const completedMarker = { ...marker, result } satisfies FactorRemovalMarker & {
+          result: typeof result;
+        };
+        await this.dependencies.repository.commitFactorRemoval({
+          markerKey,
+          marker: completedMarker,
+          evidence: {
+            event: {
+              aggregateId: factorId,
+              aggregateVersion: 2,
+              eventType: 'identity.factor.changed',
+              payload: {
+                recipientPersonId: marker.personId,
+                support_action: 'removed',
+                action_time: occurredAt,
+              },
+            },
+            audit: {
+              requestId: context.requestId,
+              action: 'identity.factor.removed',
+              outcome: 'succeeded',
+              occurredAt,
+              metadata: {
+                assuranceRecomputedFrom: 'live-native-factors',
+                postRemovalAssurance: assurance,
+                remainingVerifiedFactors: remaining.length,
+              },
+            },
           },
-        },
-        audit: {
-          requestId: context.requestId,
-          action: 'identity.factor.removed',
-          outcome: 'succeeded',
-          occurredAt,
-          metadata: {
-            assuranceRecomputedFrom: 'live-native-factors',
-            postRemovalAssurance: assurance,
-            remainingVerifiedFactors: remaining.length,
-          },
-        },
-      });
-      return { removedFactorId: factorId, assurance, removedAt: occurredAt };
-    });
+        });
+        return result;
+      },
+    );
   }
 
   public async startRecovery(_context: ContinuityRequestContext, body: StartRecoveryRequest) {
@@ -784,6 +873,8 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       claims.sessionId,
       claims.subjectId,
     );
+    if (restriction === 'recovery_expired' && operation !== 'logout')
+      throw new ApiPolicyError('session-revoked', 401, 'The recovery session expired.');
     if (
       restriction &&
       !restrictedRecoveryOperationIds.includes(

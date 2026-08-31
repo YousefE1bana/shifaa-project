@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T01:29:13.245Z",
+  "generated_at": "2026-08-31T03:35:56.087Z",
   "result": "PASS",
   "environment": {
     "mode": "local Supabase native Auth + PostgreSQL forced RLS + synthetic local worker",
@@ -30,10 +30,10 @@
     "worker_mutation_p95": 800
   },
   "measured_ms": {
-    "native_session_check_read_p95": 43.74,
-    "recovery_intake_mutation_p95": 63.57,
-    "dependent_transition_mutation_p95": 160.86,
-    "combined_mutation_p95": 152.92,
-    "transition_worker_mutation_p95": 20.61
+    "native_session_check_read_p95": 40.91,
+    "recovery_intake_mutation_p95": 55.14,
+    "dependent_transition_mutation_p95": 161.96,
+    "combined_mutation_p95": 147.48,
+    "transition_worker_mutation_p95": 27.11
   }
 }

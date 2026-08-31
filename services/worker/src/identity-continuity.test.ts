@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { describe, it } from 'node:test';
 
 import {
+  aggregateIdentityNotificationOutcomes,
   FACTOR_CHANGED_TEMPLATE_CODE,
   PostgresIdentityNotificationProcessor,
   projectIdentityNotification,
@@ -41,6 +42,18 @@ describe('identity notification runtime wiring', () => {
     assert.match(runner, /processor\.close\(\)/);
     assert.match(runner, /adapter\.close\(\)/);
     assert.match(workerPackage, /dev:identity-continuity/);
+  });
+});
+
+describe('transition notification fan-out completion', () => {
+  it('waits for both recipients and preserves retry or DLQ outcomes', () => {
+    assert.equal(aggregateIdentityNotificationOutcomes(['delivered', 'delivered']), 'delivered');
+    assert.equal(aggregateIdentityNotificationOutcomes(['delivered', 'retry']), 'retry');
+    assert.equal(
+      aggregateIdentityNotificationOutcomes(['delivered', 'dead_letter']),
+      'dead_letter',
+    );
+    assert.equal(aggregateIdentityNotificationOutcomes(['dead_letter', 'retry']), 'retry');
   });
 });
 

@@ -119,3 +119,43 @@ operations and all 20 legal transition vectors remain accounted for.
 - `git diff --check`, clean-code guard, test guard, docs guard, focused SpecKit
   analysis, and an independent read-only Gemini 3.7 Flash High audit found no
   remaining blocking contradiction, test weakening, or scope expansion.
+
+## Round 3 disposition
+
+The fresh Codex review on PR head
+`e0c64f2bd5db429bebd3da25f77a8ce1f10dda33` produced eight new in-scope
+defects. All eight were reproduced and fixed without adding an operation, role,
+relationship type, direct Auth-table/service-role path, or Feature-008 scope.
+
+|   # | Round 3 finding                                     | Closure evidence                                                                                                                                              |
+| --: | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   1 | Restricted recovery completion was not atomic       | Replacement MFA enrollment now clears the recovery restriction and its bound session in the same durable completion transaction.                              |
+|   2 | Transition UI used synthetic staff mutation auth    | The assigned transition workspace now forwards the real authenticated staff bearer; synthetic-admin mutation authorization was removed.                       |
+|   3 | Recovery lacked native refresh-token storage        | The recovery route supplies the existing OS-secure refresh credential store and installs the returned restricted/fresh native session before continuation.    |
+|   4 | Foreground access expiry had no scheduled refresh   | The shared patient session runtime schedules a foreground refresh before the fifteen-minute access expiry and reconciles visibility changes fail-closed.      |
+|   5 | Native factor removal was not resumable             | Factor removal persists an encrypted, TTL-bound checkpoint before the native Auth mutation and resumes database/audit finalization without repeating removal. |
+|   6 | Bound recovery cases could remain live indefinitely | Expiry now covers abandoned bound cases and safely revokes/clears any associated restricted session while preserving immutable case evidence.                 |
+|   7 | Transition notification had only one recipient      | The worker completes the frozen two-recipient fan-out to the subject and authorized minimum reviewer with per-recipient retry, deduplication, order, and DLQ. |
+|   8 | Refresh rotation could be lost after native success | The encrypted rotated refresh result is checkpointed before fallible database, audit, and idempotency work, then resumed without replaying native rotation.   |
+
+## Round 3 verification
+
+- Focused API, patient, admin, worker, PostgreSQL adapter, schema, native Auth,
+  MFA, recovery, transition, and forced-RLS checkpoints passed. Transition
+  remains 20/20 frozen legal vectors; worker coverage is 27/27 unit tests plus
+  4/4 real-stack recovery, factor, DLQ, and transition delivery checks.
+- The first full verification attempt failed only the unchanged 50 ms recovery
+  oracle gate: existing-case p95 84.979 ms, nonexistent-case p95 31.885 ms,
+  delta 53.094 ms. No threshold, test, or Round-3 implementation was changed.
+- After explicit Product Owner authorization and confirmation of healthy native
+  Supabase Auth/PostgreSQL and standalone Compose/PostgreSQL paths, exactly one
+  clean rerun passed all recovery tests under the unchanged 50 ms gate and full
+  `pnpm verify` exited 0.
+- Fresh Feature-007 performance evidence measured read p95 40.91 ms, recovery
+  mutation p95 55.14 ms, transition mutation p95 161.96 ms, combined mutation
+  p95 147.48 ms, and worker mutation p95 27.11 ms against the unchanged 400/800
+  ms targets, with all 20 database connections warmed. `OPEN-TECH-003` and the
+  documented workstation/loopback limitation remain open and unchanged.
+- Evidence verification confirms T001-T048, all four FRs, 23 NFRs, 48 linked
+  open Issues, exactly eight Feature-007 operations, canonical catalog total
+  242, and no Feature-008 ownership.

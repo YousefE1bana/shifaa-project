@@ -59,6 +59,9 @@ test('the root layout mounts the shared foreground session lifecycle', () => {
   assert.match(runtime, /patientAccessTokens/);
   assert.match(runtime, /AppState\.addEventListener/);
   assert.match(runtime, /visibilitychange/);
+  assert.match(runtime, /ACCESS_TOKEN_REFRESH_INTERVAL_MS/);
+  assert.match(runtime, /setTimeout\(refresh, ACCESS_TOKEN_REFRESH_INTERVAL_MS\)/);
+  assert.match(runtime, /14 \* 60 \* 1_000/);
   const metro = fs.readFileSync(new URL('../metro.config.cjs', import.meta.url), 'utf8');
   assert.match(metro, /request\.url\?\.startsWith\('\/v1\/'\)/);
   assert.match(metro, /SHIFAA_API_PROXY_TARGET/);

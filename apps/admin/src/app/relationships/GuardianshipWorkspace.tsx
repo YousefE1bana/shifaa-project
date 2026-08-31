@@ -42,7 +42,13 @@ type UiState =
   | 'error'
   | 'success';
 
-export function GuardianshipWorkspace() {
+const noStaffAccessToken = () => undefined;
+
+export function GuardianshipWorkspace({
+  accessToken = noStaffAccessToken,
+}: {
+  accessToken?: () => string | undefined;
+}) {
   const [locale, setLocale] = useState<Locale>('ar-EG');
   const [cases, setCases] = useState<CaseProjection[]>([]);
   const [selectedId, setSelectedId] = useState('');
@@ -57,31 +63,34 @@ export function GuardianshipWorkspace() {
     'interdiction' | 'court_order' | 'dispute'
   >('dispute');
   const connection = useSecurityConnection();
-  const accessToken = 'synthetic-admin:support_admin:40000000-0000-4000-8000-000000000006';
+  const staffAccessToken = accessToken();
   useEffect(() => {
     document.documentElement.lang = locale;
     document.documentElement.dir = locale === 'ar-EG' ? 'rtl' : 'ltr';
   }, [locale]);
   const client = useMemo(
     () =>
-      new FamilyCareClient({
-        baseUrl: process.env['NEXT_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000',
-        accessToken,
-        acceptLanguage: locale,
-        defaultHeaders: { 'X-AAL': '2', 'X-Purpose': 'guardianship_review' },
-      }),
-    [locale],
+      staffAccessToken
+        ? new FamilyCareClient({
+            baseUrl: process.env['NEXT_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000',
+            accessToken: staffAccessToken,
+            acceptLanguage: locale,
+            defaultHeaders: { 'X-AAL': '2', 'X-Purpose': 'guardianship_review' },
+          })
+        : undefined,
+    [locale, staffAccessToken],
   );
   const transitionClient = useMemo(
     () =>
       new AdminTransitionApi({
         locale,
-        accessToken: () => accessToken,
+        accessToken,
       }),
-    [locale],
+    [accessToken, locale],
   );
   const load = async () => {
     setState('loading');
+    if (!client) return setState('aal-required');
     try {
       const value = (await client.listGuardianshipCases({ status: 'pending', limit: 25 })) as {
         items: CaseProjection[];
@@ -98,6 +107,10 @@ export function GuardianshipWorkspace() {
     void load();
   }, [client]);
   const loadTransitions = async () => {
+    if (!staffAccessToken) {
+      setTransitionAuthorized(false);
+      return setTransitionState('aal-required');
+    }
     try {
       const value = await transitionClient.listAssignedTransitions();
       setTransitions([...value.items]);
@@ -118,7 +131,7 @@ export function GuardianshipWorkspace() {
   }, [transitionClient, connection.reconnectVersion]);
   const selected = cases.find((item) => item.id === selectedId);
   const decide = async (decision: 'approved' | 'rejected') => {
-    if (!selected || reason.trim().length < 3) return;
+    if (!client || !selected || reason.trim().length < 3) return;
     try {
       await client.reviewGuardianship(
         selected.id,

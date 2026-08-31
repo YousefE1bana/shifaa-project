@@ -9,7 +9,7 @@ const source = fs.readFileSync(
 
 test('guardianship worklist is minimum, AAL2, purpose-bound, independent, and versioned', () => {
   for (const token of [
-    'synthetic-admin:support_admin:',
+    'accessToken?: () => string | undefined',
     'listGuardianshipCases',
     'reviewGuardianship',
     "'X-AAL': '2'",
@@ -31,6 +31,7 @@ test('guardianship worklist is minimum, AAL2, purpose-bound, independent, and ve
     'invitation_token',
   ])
     assert.doesNotMatch(source, new RegExp(forbidden, 'i'));
+  assert.doesNotMatch(source, /synthetic-admin:support_admin:/);
 });
 
 test('guardianship page has Arabic and English parity plus accessible live state and targets', () => {

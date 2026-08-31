@@ -12,6 +12,8 @@ import type {
   ContinuityAuditInput,
   ContinuityOutboxInput,
   ContinuityRepository,
+  FactorRemovalMarker,
+  RefreshRotationMarker,
   RecoveryResumeMarker,
 } from './types.js';
 
@@ -22,6 +24,7 @@ const refreshToken = 'synthetic-refresh-token-000000000000000000';
 const now = new Date('2026-08-26T00:00:00.000Z');
 
 class FakeAuth implements ContinuityAuthPort {
+  public refreshCalls = 0;
   public readonly logoutCalls: Array<'local' | 'global'> = [];
   public recoveredCredentialCalls = 0;
   public failRecoveredCredentialOnce = false;
@@ -57,6 +60,7 @@ class FakeAuth implements ContinuityAuthPort {
     return Promise.resolve(token === accessToken ? this.claims() : undefined);
   }
   public refresh(token: string): Promise<NativeSessionProjection> {
+    this.refreshCalls += 1;
     if (token !== refreshToken) return Promise.reject(new Error('unexpected refresh token'));
     return Promise.resolve({
       accessToken,
@@ -174,7 +178,7 @@ class FakeAuth implements ContinuityAuthPort {
 class FakeRepository implements ContinuityRepository {
   public current = true;
   public staleAalAfterFactorMutation = false;
-  public restriction: 'mfa_enrollment_only' | null = null;
+  public restriction: 'mfa_enrollment_only' | 'recovery_expired' | null = null;
   public readonly audits: ContinuityAuditInput[] = [];
   public readonly outbox: ContinuityOutboxInput[] = [];
   public readonly recoveryIntakes: Array<{
@@ -188,6 +192,8 @@ class FakeRepository implements ContinuityRepository {
     handleDigest: Uint8Array;
   }> = [];
   public readonly recoveryResumeMarkers = new Map<string, RecoveryResumeMarker>();
+  public readonly refreshRotationMarkers = new Map<string, RefreshRotationMarker>();
+  public readonly factorRemovalMarkers = new Map<string, FactorRemovalMarker>();
   public recoveryProofApproved = true;
   public readonly recoveryProofChecks: Array<{
     recoveryCaseId: string;
@@ -218,6 +224,7 @@ class FakeRepository implements ContinuityRepository {
     { enrollmentId: string; expiresAtMs: number; savedAt: number }
   >();
   public failAuditOnce = false;
+  public failFactorEvidenceOnce = false;
   public isNativeSessionCurrent(
     _sessionId: string,
     _subjectId: string,
@@ -229,6 +236,13 @@ class FakeRepository implements ContinuityRepository {
     return Promise.resolve(this.restriction);
   }
   public withSerializedFactorState<T>(_subjectId: string, work: () => Promise<T>): Promise<T> {
+    return work();
+  }
+
+  public withDurableSerializedFactorState<T>(
+    _subjectId: string,
+    work: () => Promise<T>,
+  ): Promise<T> {
     return work();
   }
   public appendAudit(input: ContinuityAuditInput): Promise<void> {
@@ -250,9 +264,52 @@ class FakeRepository implements ContinuityRepository {
       };
     };
   }): Promise<void> {
+    if (this.failFactorEvidenceOnce) {
+      this.failFactorEvidenceOnce = false;
+      return Promise.reject(new Error('synthetic factor evidence interruption'));
+    }
     this.audits.push(input.audit);
     this.outbox.push(input.event);
     return Promise.resolve();
+  }
+  public findRefreshRotationMarker(markerKey: string): Promise<RefreshRotationMarker | undefined> {
+    const marker = this.refreshRotationMarkers.get(markerKey);
+    return Promise.resolve(
+      marker && Date.parse(marker.expiresAt) > now.getTime() ? marker : undefined,
+    );
+  }
+  public saveRefreshRotationMarker(
+    markerKey: string,
+    marker: RefreshRotationMarker,
+  ): Promise<void> {
+    this.refreshRotationMarkers.set(markerKey, marker);
+    return Promise.resolve();
+  }
+  public async commitRefreshRotationEvidence(input: {
+    markerKey: string;
+    marker: RefreshRotationMarker;
+    audit: ContinuityAuditInput;
+  }): Promise<void> {
+    await this.appendAudit(input.audit);
+    this.refreshRotationMarkers.set(input.markerKey, input.marker);
+  }
+  public findFactorRemovalMarker(markerKey: string): Promise<FactorRemovalMarker | undefined> {
+    const marker = this.factorRemovalMarkers.get(markerKey);
+    return Promise.resolve(
+      marker && Date.parse(marker.expiresAt) > now.getTime() ? marker : undefined,
+    );
+  }
+  public saveFactorRemovalMarker(markerKey: string, marker: FactorRemovalMarker): Promise<void> {
+    this.factorRemovalMarkers.set(markerKey, marker);
+    return Promise.resolve();
+  }
+  public async commitFactorRemoval(input: {
+    markerKey: string;
+    marker: FactorRemovalMarker & { result: NonNullable<FactorRemovalMarker['result']> };
+    evidence: Parameters<ContinuityRepository['appendFactorChangedEvidence']>[0];
+  }): Promise<void> {
+    await this.appendFactorChangedEvidence(input.evidence);
+    this.factorRemovalMarkers.set(input.markerKey, input.marker);
   }
   public resolveSubjectPerson(): Promise<string | undefined> {
     return Promise.resolve('71000000-0000-4000-8000-000000000004');
@@ -504,6 +561,30 @@ describe('bounded session service', () => {
     ).rejects.toMatchObject({ code: 'forbidden', status: 403 });
   });
 
+  it('reuses a checkpointed refresh rotation after fallible audit work', async () => {
+    const harness = service();
+    const request = {
+      requestId: '71000000-0000-4000-8000-000000000073',
+      idempotencyKey: 'synthetic-key-refresh-resume',
+    };
+    harness.repository.failAuditOnce = true;
+    await expect(
+      harness.service.refreshSession(request, {
+        client: 'native',
+        foregroundEngaged: true,
+        refreshToken,
+      }),
+    ).rejects.toThrow('synthetic audit interruption');
+    await expect(
+      harness.service.refreshSession(request, {
+        client: 'native',
+        foregroundEngaged: true,
+        refreshToken,
+      }),
+    ).resolves.toMatchObject({ refreshToken: `${refreshToken}-rotated` });
+    expect(harness.auth.refreshCalls).toBe(1);
+  });
+
   it('revokes current and all scopes while preserving logout without step-up', async () => {
     const harness = service();
     const context = {
@@ -534,6 +615,27 @@ describe('bounded session service', () => {
       ),
     ).rejects.toMatchObject({ code: 'session-revoked', status: 401 });
     expect(harness.auth.logoutCalls).toEqual([]);
+  });
+
+  it('denies refresh for an expired bound recovery session while retaining logout cleanup', async () => {
+    const harness = service();
+    harness.repository.restriction = 'recovery_expired';
+    await expect(
+      harness.service.refreshSession(
+        { requestId: '71000000-0000-4000-8000-000000000074', idempotencyKey: 'expired-bound' },
+        { client: 'native', foregroundEngaged: true, refreshToken },
+      ),
+    ).rejects.toMatchObject({ code: 'session-revoked', status: 401 });
+    await expect(
+      harness.service.logout(
+        {
+          requestId: '71000000-0000-4000-8000-000000000075',
+          idempotencyKey: 'expired-bound-logout',
+          accessToken,
+        },
+        { allSessions: false },
+      ),
+    ).resolves.toMatchObject({ scope: 'current' });
   });
 });
 
@@ -758,6 +860,30 @@ describe('totp enrollment, verification, and removal service policy', () => {
       }),
     ).rejects.toMatchObject({ code: 'mfa-step-up-required', status: 403 });
     expect(harness.auth.unenrolledIds).toEqual([]);
+  });
+
+  it('resumes factor removal after native Auth succeeds but evidence persistence fails', async () => {
+    const factorId = '71000000-0000-4000-8000-000000000017';
+    const harness = mfaService();
+    harness.auth.aal = 2;
+    harness.auth.amr = [{ method: 'totp', timestamp: now.getTime() / 1_000 - 299 }];
+    harness.auth.verifiedFactors = [
+      { id: factorId, type: 'totp', status: 'verified', friendlyName: null, createdAt: '' },
+    ];
+    harness.repository.failFactorEvidenceOnce = true;
+    await expect(
+      harness.service.removeMfaFactor(context('8'), factorId, {
+        proofCaseId: null,
+        confirmOptionalLastFactor: true,
+      }),
+    ).rejects.toThrow('synthetic factor evidence interruption');
+    await expect(
+      harness.service.removeMfaFactor(context('8'), factorId, {
+        proofCaseId: null,
+        confirmOptionalLastFactor: true,
+      }),
+    ).resolves.toMatchObject({ removedFactorId: factorId, assurance: 'aal1' });
+    expect(harness.auth.unenrolledIds).toEqual([factorId]);
   });
 });
 

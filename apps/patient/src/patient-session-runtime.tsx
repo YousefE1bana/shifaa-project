@@ -8,6 +8,8 @@ import {
   patientPlatform,
 } from './patient-auth-store';
 
+export const ACCESS_TOKEN_REFRESH_INTERVAL_MS = 14 * 60 * 1_000;
+
 export const patientSessionRuntime = createPatientSessionClient({
   platform: patientPlatform,
   locale: 'ar-EG',
@@ -19,8 +21,15 @@ export function PatientSessionLifecycle() {
   useEffect(() => {
     let disposed = false;
     let refreshing = false;
-    const refresh = async () => {
+    let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+    let refresh: () => Promise<void>;
+    const scheduleRefresh = () => {
+      if (refreshTimer) clearTimeout(refreshTimer);
+      if (!disposed) refreshTimer = setTimeout(refresh, ACCESS_TOKEN_REFRESH_INTERVAL_MS);
+    };
+    refresh = async () => {
       if (disposed || refreshing) return;
+      if (refreshTimer) clearTimeout(refreshTimer);
       refreshing = true;
       try {
         await patientSessionRuntime.controller.refresh(
@@ -38,6 +47,7 @@ export function PatientSessionLifecycle() {
         patientSessionRuntime.controller.reconcile(undefined);
       } finally {
         refreshing = false;
+        scheduleRefresh();
       }
     };
     const appStateSubscription = AppState.addEventListener('change', (state) => {
@@ -51,6 +61,7 @@ export function PatientSessionLifecycle() {
     void refresh();
     return () => {
       disposed = true;
+      if (refreshTimer) clearTimeout(refreshTimer);
       appStateSubscription.remove();
       if (typeof document !== 'undefined')
         document.removeEventListener('visibilitychange', visibilityListener);

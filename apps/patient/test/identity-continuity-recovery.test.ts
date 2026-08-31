@@ -37,3 +37,9 @@ test('patient recovery keeps provider OTP and case material in memory-only anony
     /localStorage|AsyncStorage|queueMutation|backgroundSync|analytics|searchParams|router\.(push|replace).*token/i,
   );
 });
+
+test('native recovery supplies the OS-secure refresh credential store', () => {
+  assert.match(screen, /patientNativeRefreshTokens/);
+  assert.match(screen, /patientPlatform === 'native'/);
+  assert.match(screen, /nativeRefreshTokens: patientNativeRefreshTokens/);
+});

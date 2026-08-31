@@ -44,6 +44,31 @@ INSERT INTO identity.continuity_cases(
  ('75000000-0000-4000-8000-000000000004','account_recovery','requested',decode(repeat('24',32),'hex'),decode(repeat('25',32),'hex'),1,'2026-08-25T09:59:00Z','2026-08-25T09:44:00Z');
 
 INSERT INTO identity.continuity_cases(
+  id,case_type,subject_person_id,status,restriction_scope,bound_native_session_id,
+  public_token_digest,recovery_handle_digest,token_key_version,expires_at,created_at
+) VALUES
+ ('75000000-0000-4000-8000-000000000005','account_recovery','50000000-0000-4000-8000-000000000001',
+  'restricted_enrollment','mfa_enrollment_only','71000000-0000-4000-8000-000000000091',
+  decode(repeat('35',32),'hex'),decode(repeat('36',32),'hex'),1,'2026-08-25T09:59:00Z','2026-08-25T09:44:00Z'),
+ ('75000000-0000-4000-8000-000000000006','account_recovery','50000000-0000-4000-8000-000000000002',
+  'proof_required','mfa_enrollment_only',NULL,
+  decode(repeat('37',32),'hex'),decode(repeat('38',32),'hex'),1,'2026-08-25T09:59:00Z','2026-08-25T09:44:00Z');
+
+SELECT set_config('shifaa.person_id','40000000-0000-4000-8000-000000000001',true);
+INSERT INTO identity.admin_role_grants(
+  id,person_id,role_code,status,valid_from,proposed_by
+) VALUES(
+  '45000000-0000-4000-8000-000000000071','40000000-0000-4000-8000-000000000006',
+  'support_admin','pending','2026-08-25T09:00:00Z','40000000-0000-4000-8000-000000000001'
+);
+SELECT set_config('shifaa.person_id','40000000-0000-4000-8000-000000000002',true);
+UPDATE identity.admin_role_grants
+SET status='active',decided_by='40000000-0000-4000-8000-000000000002',
+    decision_reason='schema notification fanout fixture'
+WHERE id='45000000-0000-4000-8000-000000000071';
+SELECT set_config('shifaa.person_id','',true);
+
+INSERT INTO identity.continuity_cases(
   id,case_type,subject_person_id,subject_patient_id,relationship_id,status,assigned_reviewer_person_id,created_at
 ) VALUES (
  '75000000-0000-4000-8000-000000000003','dependent_transition',
@@ -106,6 +131,25 @@ BEGIN
   IF (SELECT status FROM identity.continuity_cases WHERE id='75000000-0000-4000-8000-000000000004')<>'expired' THEN
     RAISE EXCEPTION 'elapsed unbound request was not atomically expired';
   END IF;
+  IF NOT EXISTS(
+    SELECT 1 FROM identity.continuity_cases
+    WHERE id='75000000-0000-4000-8000-000000000005' AND status='expired'
+      AND restriction_scope='mfa_enrollment_only'
+      AND bound_native_session_id='71000000-0000-4000-8000-000000000091'
+  ) THEN RAISE EXCEPTION 'expired restricted session lost its deny-only tombstone'; END IF;
+  IF NOT EXISTS(
+    SELECT 1 FROM identity.continuity_cases
+    WHERE id='75000000-0000-4000-8000-000000000006' AND status='expired'
+      AND restriction_scope IS NULL AND bound_native_session_id IS NULL
+  ) THEN RAISE EXCEPTION 'expired proof case did not clear its unbound restriction'; END IF;
+  INSERT INTO identity.continuity_cases(
+    id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
+    token_key_version,expires_at,created_at
+  ) VALUES(
+    '75000000-0000-4000-8000-000000000007','account_recovery',
+    '50000000-0000-4000-8000-000000000001','requested',decode(repeat('39',32),'hex'),
+    decode(repeat('40',32),'hex'),1,'2026-08-25T10:15:00Z','2026-08-25T10:00:00Z'
+  );
 END
 $$;
 
@@ -114,6 +158,21 @@ INSERT INTO platform.outbox_events(
 ) VALUES
  ('76000000-0000-4000-8000-000000000001','identity','75000000-0000-4000-8000-000000000003','identity.verification.changed','{}',1),
  ('76000000-0000-4000-8000-000000000002','identity','75000000-0000-4000-8000-000000000003','identity.transition.submitted','{}',1);
+
+DO $$
+DECLARE recipient_count integer; recipients uuid[];
+BEGIN
+  SELECT count(*)::integer,array_agg(recipient_person_id ORDER BY recipient_person_id)
+  INTO recipient_count,recipients
+  FROM platform.claim_next_identity_notification_event('schema-fanout-worker',30);
+  IF recipient_count<>2 OR recipients<>ARRAY[
+    '40000000-0000-4000-8000-000000000006'::uuid,
+    '50000000-0000-4000-8000-000000000001'::uuid
+  ] THEN
+    RAISE EXCEPTION 'transition notification must fan out to subject and authorized reviewer: %',recipients;
+  END IF;
+END
+$$;
 
 DO $$
 BEGIN
