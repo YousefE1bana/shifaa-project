@@ -15,7 +15,10 @@
     "./privacy-dsr-notifications/types": "./src/privacy-dsr-notifications/types.ts",
     "./discovery-sos": "./src/discovery-sos/index.ts",
     "./discovery-sos/policy": "./src/discovery-sos/policy.ts",
-    "./discovery-sos/types": "./src/discovery-sos/types.ts"
+    "./discovery-sos/types": "./src/discovery-sos/types.ts",
+    "./identity-continuity": "./src/identity-continuity/index.ts",
+    "./identity-continuity/policy": "./src/identity-continuity/policy.ts",
+    "./identity-continuity/types": "./src/identity-continuity/types.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -24,6 +27,7 @@
     "test": "vitest run --exclude='dist/**'"
   },
   "devDependencies": {
+    "@shifaa/test-kit": "workspace:*",
     "@types/node": "24.10.1",
     "typescript": "7.0.2",
     "vitest": "4.1.0"

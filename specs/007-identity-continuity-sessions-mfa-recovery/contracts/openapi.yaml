@@ -1,0 +1,549 @@
+openapi: 3.1.1
+info:
+  title: SHIFAA Feature 007 Identity Continuity API
+  version: 1.0.1
+  description: >-
+    Exact Feature-007 contract. Production providers/PHI/passkeys are disabled; no operation outside
+    the eight canonical IDs is introduced.
+servers:
+  - url: /v1
+paths:
+  /auth/session/refresh:
+    post:
+      operationId: refreshSession
+      x-shifaa-requirements: [FR-AUTH-005, NFR-SEC-003, NFR-SEC-005]
+      security:
+        - refreshCookie: []
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/Origin'
+        - $ref: '#/components/parameters/CsrfToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RefreshRequest' }
+      responses:
+        '200':
+          description: Rotated current native session
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SessionResult' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+        '503': { $ref: '#/components/responses/Problem' }
+  /auth/logout:
+    post:
+      operationId: logout
+      x-shifaa-requirements: [FR-AUTH-005, NFR-SEC-003, NFR-SEC-005]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LogoutRequest' }
+      responses:
+        '200':
+          description: Requested native session scope revoked
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LogoutResult' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+        '503': { $ref: '#/components/responses/Problem' }
+  /auth/mfa/enroll:
+    post:
+      operationId: beginMfaEnrollment
+      x-shifaa-requirements: [FR-AUTH-002, FR-ADMIN-002, NFR-SEC-004, NFR-SEC-005]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BeginEnrollmentRequest' }
+      responses:
+        '200':
+          description: One-time TOTP enrollment projection
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnrollmentSecretResult' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '403': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+        '503': { $ref: '#/components/responses/Problem' }
+  /auth/mfa/enroll/verify:
+    post:
+      operationId: verifyMfaEnrollment
+      x-shifaa-requirements: [FR-AUTH-002, FR-ADMIN-002, NFR-SEC-004, NFR-SEC-005]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/VerifyEnrollmentRequest' }
+      responses:
+        '200':
+          description: Verified factor, current assurance, and elevated native session projection
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FactorResult' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '403': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+        '410': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+        '503': { $ref: '#/components/responses/Problem' }
+  /auth/mfa/factors/{factorId}:
+    delete:
+      operationId: removeMfaFactor
+      x-shifaa-requirements: [FR-AUTH-002, FR-AUTH-005, FR-ADMIN-002, NFR-SEC-004, NFR-SEC-005]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: factorId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Uuid' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RemoveFactorRequest' }
+      responses:
+        '200':
+          description: Factor removed and assurance recomputed
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FactorRemovalResult' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '403': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+        '503': { $ref: '#/components/responses/Problem' }
+  /auth/recovery:
+    post:
+      operationId: startRecovery
+      x-shifaa-requirements: [FR-AUTH-005, NFR-SEC-003, NFR-SEC-005]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/StartRecoveryRequest' }
+      responses:
+        '202':
+          description: Uniform recovery acceptance; never an account oracle
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RecoveryAccepted' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+        '503': { $ref: '#/components/responses/Problem' }
+  /auth/recovery/{caseId}/complete:
+    post:
+      operationId: completeRecovery
+      x-shifaa-recovery-proof-consumer:
+        operationId: createIdentityProof
+        path: /people/me/identities
+        purpose: account_recovery_reproof
+        note: Existing Feature 001 operation; this is not an additional Feature 007 operation.
+      x-shifaa-requirements: [FR-AUTH-005, FR-ADMIN-002, NFR-SEC-003, NFR-SEC-004, NFR-SEC-005]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: caseId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Uuid' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CompleteRecoveryRequest' }
+      responses:
+        '200':
+          description: Recovery terminal result or a short-lived single-purpose recovery proof grant
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - { $ref: '#/components/schemas/RecoveryResult' }
+                  - { $ref: '#/components/schemas/RecoveryProofRequiredResult' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '403': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+        '410': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+        '503': { $ref: '#/components/responses/Problem' }
+  /guardianships/{relationshipId}/transition:
+    post:
+      operationId: transitionDependent
+      x-shifaa-requirements: [FR-FAM-003, FR-ADMIN-002, NFR-SEC-004, NFR-SEC-005]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - name: relationshipId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Uuid' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/TransitionSubmitRequest'
+                - $ref: '#/components/schemas/TransitionDecisionRequest'
+              discriminator:
+                propertyName: action
+      responses:
+        '200':
+          description: Versioned transition case/result
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            ETag: { $ref: '#/components/headers/ETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TransitionResult' }
+        '400': { $ref: '#/components/responses/Problem' }
+        '401': { $ref: '#/components/responses/Problem' }
+        '403': { $ref: '#/components/responses/Problem' }
+        '404': { $ref: '#/components/responses/Problem' }
+        '409': { $ref: '#/components/responses/Problem' }
+        '422': { $ref: '#/components/responses/Problem' }
+        '429': { $ref: '#/components/responses/Problem' }
+        '503': { $ref: '#/components/responses/Problem' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    refreshCookie:
+      type: apiKey
+      in: cookie
+      name: shifaa_refresh
+  parameters:
+    RequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      schema: { type: string, minLength: 8, maxLength: 128 }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, minLength: 16, maxLength: 128 }
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema: { type: string, pattern: '^"[1-9][0-9]*"$' }
+    Origin:
+      name: Origin
+      in: header
+      required: false
+      schema: { type: string, format: uri }
+    CsrfToken:
+      name: X-CSRF-Token
+      in: header
+      required: false
+      schema: { type: string, minLength: 16, maxLength: 256 }
+  headers:
+    RequestId:
+      schema: { type: string }
+    PrivateNoStore:
+      schema: { type: string, const: 'private, no-store' }
+    ETag:
+      schema: { type: string, pattern: '^"[1-9][0-9]*"$' }
+  responses:
+    Problem:
+      description: Localized RFC 9457 problem
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+        Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+  schemas:
+    Uuid:
+      type: string
+      format: uuid
+    Locale:
+      type: string
+      enum: [ar-EG, en-EG]
+    Assurance:
+      type: string
+      enum: [aal1, aal2]
+    RefreshRequest:
+      oneOf:
+        - $ref: '#/components/schemas/WebRefreshRequest'
+        - $ref: '#/components/schemas/NativeRefreshRequest'
+      discriminator:
+        propertyName: client
+    WebRefreshRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        client: { type: string, const: web }
+        foregroundEngaged: { type: boolean, const: true }
+      required: [client, foregroundEngaged]
+    NativeRefreshRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        client: { type: string, const: native }
+        foregroundEngaged: { type: boolean, const: true }
+        refreshToken: { type: string, minLength: 1, maxLength: 4096, writeOnly: true }
+      required: [client, foregroundEngaged, refreshToken]
+    SessionResult:
+      type: object
+      additionalProperties: false
+      properties:
+        accessToken: { type: string, minLength: 32, writeOnly: true }
+        refreshToken: { type: string, minLength: 1, maxLength: 4096, writeOnly: true }
+        sessionId: { $ref: '#/components/schemas/Uuid' }
+        assurance: { $ref: '#/components/schemas/Assurance' }
+        expiresAt: { type: string, format: date-time }
+        restriction: { type: [string, 'null'], enum: [mfa_enrollment_only, null] }
+      required: [accessToken, sessionId, assurance, expiresAt, restriction]
+    LogoutRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        allSessions: { type: boolean }
+      required: [allSessions]
+    LogoutResult:
+      type: object
+      additionalProperties: false
+      properties:
+        scope: { type: string, enum: [current, all] }
+        revokedAt: { type: string, format: date-time }
+      required: [scope, revokedAt]
+    BeginEnrollmentRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        factorType: { type: string, enum: [totp, passkey] }
+        friendlyName: { type: string, minLength: 1, maxLength: 64 }
+      required: [factorType]
+    EnrollmentSecretResult:
+      type: object
+      additionalProperties: false
+      properties:
+        enrollmentId: { $ref: '#/components/schemas/Uuid' }
+        factorType: { type: string, const: totp }
+        secret: { type: string, minLength: 16, maxLength: 256, writeOnly: true }
+        qrUri: { type: string, minLength: 16, maxLength: 2048, writeOnly: true }
+        expiresAt: { type: string, format: date-time }
+      required: [enrollmentId, factorType, secret, qrUri, expiresAt]
+    VerifyEnrollmentRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        enrollmentId: { $ref: '#/components/schemas/Uuid' }
+        code: { type: string, pattern: '^[0-9]{6}$', writeOnly: true }
+      required: [enrollmentId, code]
+    FactorSummary:
+      type: object
+      additionalProperties: false
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        type: { type: string, const: totp }
+        status: { type: string, enum: [verified] }
+        friendlyName: { type: [string, 'null'], maxLength: 64 }
+        createdAt: { type: string, format: date-time }
+      required: [id, type, status, friendlyName, createdAt]
+    FactorResult:
+      type: object
+      additionalProperties: false
+      properties:
+        factor: { $ref: '#/components/schemas/FactorSummary' }
+        assurance: { type: string, const: aal2 }
+        session: { $ref: '#/components/schemas/SessionResult' }
+      required: [factor, assurance, session]
+    RemoveFactorRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        proofCaseId: { type: [string, 'null'], format: uuid }
+        confirmOptionalLastFactor: { type: boolean, default: false }
+      required: [confirmOptionalLastFactor]
+    FactorRemovalResult:
+      type: object
+      additionalProperties: false
+      properties:
+        removedFactorId: { $ref: '#/components/schemas/Uuid' }
+        assurance: { $ref: '#/components/schemas/Assurance' }
+        removedAt: { type: string, format: date-time }
+      required: [removedFactorId, assurance, removedAt]
+    StartRecoveryRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        handle: { type: string, minLength: 3, maxLength: 320, writeOnly: true }
+        locale: { $ref: '#/components/schemas/Locale' }
+      required: [handle, locale]
+    RecoveryAccepted:
+      type: object
+      additionalProperties: false
+      properties:
+        caseId: { $ref: '#/components/schemas/Uuid' }
+        caseToken: { type: string, minLength: 32, maxLength: 512, writeOnly: true }
+        status: { type: string, const: accepted }
+        messageCode: { type: string, const: recovery.accepted }
+      required: [caseId, caseToken, status, messageCode]
+    CompleteRecoveryRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        caseToken: { type: string, minLength: 32, maxLength: 512, writeOnly: true }
+        handle: { type: string, minLength: 3, maxLength: 320, writeOnly: true }
+        recoveryOtp: { type: string, minLength: 6, maxLength: 12, writeOnly: true }
+        proofMethod:
+          { type: string, enum: [bound_factor_independent_method, repeated_identity_proof] }
+        factorEvidence: { type: [string, 'null'], maxLength: 512, writeOnly: true }
+        verificationCaseId: { type: [string, 'null'], format: uuid }
+        newCredential: { type: string, minLength: 12, maxLength: 256, writeOnly: true }
+      required: [caseToken, handle, recoveryOtp, proofMethod, newCredential]
+    RecoveryResult:
+      type: object
+      additionalProperties: false
+      properties:
+        caseId: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, enum: [completed, restricted_enrollment] }
+        session: { $ref: '#/components/schemas/SessionResult' }
+      required: [caseId, status, session]
+    RecoveryProofRequiredResult:
+      type: object
+      additionalProperties: false
+      description: Opaque capability for creating one recovery-linked proof case; never an Auth session or access JWT.
+      properties:
+        caseId: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, const: proof_required }
+        recoveryProofGrant: { type: string, minLength: 32, maxLength: 512, writeOnly: true }
+        expiresAt: { type: string, format: date-time }
+      required: [caseId, status, recoveryProofGrant, expiresAt]
+    TransitionSubmitRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        action: { type: string, const: submit_proof }
+        verificationCaseId: { $ref: '#/components/schemas/Uuid' }
+      required: [action, verificationCaseId]
+    TransitionDecisionRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        action: { type: string, const: decide }
+        decision: { type: string, enum: [approve, reject, defer] }
+        reasonCode: { type: string, pattern: '^[a-z][a-z0-9_.-]{2,63}$' }
+        reviewRequiredReason:
+          { type: [string, 'null'], enum: [interdiction, court_order, dispute, null] }
+      required: [action, decision, reasonCode]
+    TransitionResult:
+      type: object
+      additionalProperties: false
+      properties:
+        caseId: { $ref: '#/components/schemas/Uuid' }
+        relationshipId: { $ref: '#/components/schemas/Uuid' }
+        patientId: { $ref: '#/components/schemas/Uuid' }
+        personId: { $ref: '#/components/schemas/Uuid' }
+        status:
+          type: string
+          enum: [proof_required, review_required, human_review_required, approved, rejected]
+        version: { type: integer, minimum: 1 }
+        updatedAt: { type: string, format: date-time }
+      required: [caseId, relationshipId, patientId, personId, status, version, updatedAt]
+    Problem:
+      type: object
+      additionalProperties: false
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer, minimum: 400, maximum: 599 }
+        code:
+          type: string
+          enum:
+            - authentication-required
+            - session-expired
+            - session-revoked
+            - mfa-required
+            - mfa-step-up-required
+            - recovery-mfa-enrollment-required
+            - factor-type-unsupported
+            - factor-enrollment-pending
+            - factor-code-invalid
+            - last-factor-removal-denied
+            - recovery-challenge-invalid
+            - identity-proof-required
+            - human-review-required
+            - forbidden
+            - purpose-required
+            - not-found
+            - validation-failed
+            - state-transition-invalid
+            - version-conflict
+            - idempotency-key-reused
+            - idempotency-in-progress
+            - rate-limited
+            - vendor-unavailable
+        detail: { type: string }
+        instance: { type: string, format: uri-reference }
+        requestId: { type: string }
+      required: [type, title, status, code, requestId]

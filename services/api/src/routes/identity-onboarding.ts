@@ -22,6 +22,8 @@ import {
   type RequestActor,
 } from '../modules/identity-onboarding/index.js';
 import { preauthPrincipal, type IdempotencyStore } from '../platform/idempotency.js';
+import { initialBrowserSessionCookies } from './auth-session-cookies.js';
+import type { RecoveryProofGrantAuthority } from '../modules/identity-onboarding/ports.js';
 
 export const registeredIdentityOnboardingOperationIds = routeCatalog.map(
   ({ operationId }) => operationId,
@@ -31,6 +33,7 @@ export interface IdentityRouteDependencies {
   config: ApiConfig;
   service: IdentityOnboardingService;
   idempotency: IdempotencyStore;
+  recoveryProofGrants?: RecoveryProofGrantAuthority;
 }
 
 const noStoreHeaders = {
@@ -181,15 +184,35 @@ export async function registerIdentityOnboardingRoutes(
     { schema: { body: requestSchemas.verifyOtp } },
     async (request, reply) => {
       const body = request.body as OtpVerificationInput;
-      return executePreparedMutation(
-        request,
-        reply,
-        deps,
-        body.challenge_id,
-        200,
-        () => deps.service.prepareOtpVerification(body.challenge_id, body.code),
-        (session) => deps.service.completeOtpVerification(session, request.id),
-      );
+      const result = await deps.idempotency.execute({
+        principal: body.challenge_id,
+        method: request.method,
+        route: request.routeOptions.url ?? request.url,
+        key: idempotencyKey(request),
+        body: request.body,
+        prepare: () => deps.service.prepareOtpVerification(body.challenge_id, body.code),
+        work: async (session) => {
+          const browser =
+            typeof request.headers.origin === 'string' &&
+            deps.config.corsOrigins.includes(request.headers.origin) &&
+            request.headers['sec-fetch-site'] === 'same-origin';
+          const completed = await deps.service.completeOtpVerification(session, request.id);
+          const body = browser
+            ? (({ refresh_token: _refreshToken, ...safe }) => safe)(completed)
+            : completed;
+          return {
+            status: 200,
+            headers: {
+              ...noStoreHeaders,
+              ...(browser && session.refreshToken
+                ? { 'set-cookie': initialBrowserSessionCookies(session.refreshToken) }
+                : {}),
+            },
+            body,
+          };
+        },
+      });
+      return reply.status(result.status).headers(result.headers).send(result.body);
     },
   );
 
@@ -221,6 +244,33 @@ export async function registerIdentityOnboardingRoutes(
     '/v1/people/me/identities',
     { schema: { body: requestSchemas.createIdentityProof } },
     async (request, reply) => {
+      const grant = request.headers['recovery-proof-grant'];
+      if (typeof grant === 'string') {
+        if (!deps.recoveryProofGrants || grant.length < 32 || grant.length > 512)
+          throw new ApiPolicyError(
+            'identity-proof-required',
+            403,
+            'A repeated identity proof is required.',
+          );
+        const grantDigest = createHmac('sha256', deps.config.preauthHmacKey).update(grant).digest();
+        const principal = `recovery-proof:${grantDigest.toString('hex')}`;
+        return executeMutation(request, reply, deps, principal, 201, async () => {
+          const authority = await deps.recoveryProofGrants!.authorizeRecoveryProofGrant({
+            grantDigest,
+          });
+          const actor: RequestActor = {
+            kind: 'PAT',
+            subjectId: authority.recoveryCaseId,
+            personId: authority.personId,
+            principal: authority.principal,
+            aal: 1,
+          };
+          return deps.service.createIdentity(actor, request.body as IdentityInput, request.id, {
+            grantDigest,
+            recoveryCaseId: authority.recoveryCaseId,
+          });
+        });
+      }
       const actor = await actorFor(request, deps.service);
       return executeMutation(request, reply, deps, actor.principal, 201, () =>
         deps.service.createIdentity(actor, request.body as IdentityInput, request.id),
@@ -348,6 +398,16 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
         ? String((error as { code?: unknown }).code ?? '')
         : '';
     const databaseMessage = error instanceof Error ? error.message : '';
+    const clientStatus =
+      typeof error === 'object' &&
+      error !== null &&
+      'statusCode' in error &&
+      typeof (error as { statusCode?: unknown }).statusCode === 'number'
+        ? (error as { statusCode: number }).statusCode >= 400 &&
+          (error as { statusCode: number }).statusCode < 500
+          ? (error as { statusCode: number }).statusCode
+          : undefined
+        : undefined;
     const mappedDatabase =
       databaseCode === '22023'
         ? { code: 'validation-failed', status: 400 }
@@ -370,8 +430,12 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
       ? 'validation-failed'
       : policy
         ? error.code
-        : (mappedDatabase?.code ?? 'internal-error');
-    const status = validation ? 400 : policy ? error.status : (mappedDatabase?.status ?? 500);
+        : (mappedDatabase?.code ?? (clientStatus ? 'validation-failed' : 'internal-error'));
+    const status = validation
+      ? 400
+      : policy
+        ? error.status
+        : (mappedDatabase?.status ?? clientStatus ?? 500);
     const locale = request.headers['accept-language'] ?? 'ar-EG';
     const shareRequest = request.url.startsWith('/v1/sos/share/');
     const safeInstance = shareRequest
@@ -388,6 +452,7 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
       .headers({
         ...noStoreHeaders,
         ...(shareRequest ? { pragma: 'no-cache', 'referrer-policy': 'no-referrer' } : {}),
+        ...(policy ? error.headers : {}),
       })
       .send({
         type: `https://shifaa.test/problems/${code}`,

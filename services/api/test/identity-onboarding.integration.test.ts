@@ -5,6 +5,7 @@ import type { FastifyInstance } from 'fastify';
 import { LocalAuthIssuer, LocalProofingProvider } from '../src/adapters/index.js';
 import { buildApp, type AppHarness } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
+import { ApiPolicyError } from '../src/modules/identity-onboarding/errors.js';
 
 async function registerAndVerify(
   app: FastifyInstance,
@@ -36,6 +37,67 @@ async function registerAndVerify(
 }
 
 describe('identity onboarding API acceptance', () => {
+  it('consumes a recovery proof grant once while same-key replay returns canonical success', async () => {
+    const personId = '71000000-0000-4000-8000-000000000071';
+    const recoveryCaseId = '71000000-0000-4000-8000-000000000072';
+    const grant = 'round-four-recovery-proof-grant-opaque-0000001';
+    let consumed = false;
+    let authorizeCalls = 0;
+    const harness = await buildApp({
+      proofing: new LocalProofingProvider(new Map([['29913991234567', 'verified']])),
+      recoveryProofGrants: {
+        authorizeRecoveryProofGrant: ({ grantDigest }) => {
+          authorizeCalls += 1;
+          if (consumed)
+            return Promise.reject(
+              new ApiPolicyError(
+                'identity-proof-required',
+                403,
+                'A repeated identity proof is required.',
+              ),
+            );
+          return Promise.resolve({
+            recoveryCaseId,
+            personId,
+            principal: `recovery-proof:${Buffer.from(grantDigest).toString('hex')}`,
+          });
+        },
+        lockRecoveryProofGrant: () =>
+          consumed ? Promise.reject(new Error('grant replay')) : Promise.resolve(),
+        consumeRecoveryProofGrant: () => {
+          if (consumed) return Promise.reject(new Error('grant replay'));
+          consumed = true;
+          return Promise.resolve();
+        },
+      },
+    });
+    const request = (key: string) =>
+      harness.app.inject({
+        method: 'POST',
+        url: '/v1/people/me/identities',
+        headers: { 'idempotency-key': key, 'recovery-proof-grant': grant },
+        payload: {
+          identity_type: 'egyptian_national_id',
+          value: '29913991234567',
+          issuing_country: 'EG',
+        },
+      });
+    const first = await request('recovery-proof-create-0001');
+    const replay = await request('recovery-proof-create-0001');
+    const wrongReplay = await request('recovery-proof-create-0002');
+    expect(first.statusCode, first.body).toBe(201);
+    expect(replay.statusCode).toBe(201);
+    expect(replay.json()).toEqual(first.json());
+    expect(wrongReplay.statusCode).toBe(403);
+    expect(wrongReplay.json()).toMatchObject({ code: 'identity-proof-required' });
+    expect(authorizeCalls).toBe(2);
+    expect(harness.repository.audits.at(-1)).toMatchObject({
+      actorPersonId: personId,
+      metadata: { purpose_code: 'account_recovery_reproof' },
+    });
+    await harness.app.close();
+  });
+
   it('allows the configured patient web origin to complete CORS preflight', async () => {
     const harness = await buildApp();
     const response = await harness.app.inject({
@@ -125,6 +187,53 @@ describe('identity onboarding API acceptance', () => {
     });
     expect(otpReplay.json()).toEqual(otpFirst.json());
     expect(otpFirst.headers['cache-control']).toBe('private, no-store');
+    expect(otpFirst.json()).toMatchObject({
+      kind: 'session',
+      access_token: expect.any(String),
+      refresh_token: expect.any(String),
+    });
+    await harness.app.close();
+  });
+
+  it('projects the refresh credential to native OTP clients but keeps it out of browser JSON', async () => {
+    const harness = await buildApp();
+    const register = async (handle: string, key: string) => {
+      const response = await harness.app.inject({
+        method: 'POST',
+        url: '/v1/auth/register',
+        headers: { 'idempotency-key': `${key}-register` },
+        payload: { locale: 'en-EG', handle, password: 'Synthetic-Only-2026!' },
+      });
+      return response.json().challenge_id as string;
+    };
+    const nativeChallenge = await register('native-otp@synthetic.shifaa.test', 'native-otp');
+    const native = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/auth/otp/verify',
+      headers: { 'idempotency-key': 'native-otp-verify' },
+      payload: { challenge_id: nativeChallenge, code: LocalAuthIssuer.developmentOtp },
+    });
+    expect(native.json()).toMatchObject({ refresh_token: expect.any(String) });
+    expect(native.headers['set-cookie']).toBeUndefined();
+
+    const webChallenge = await register('browser-otp@synthetic.shifaa.test', 'browser-otp');
+    const browser = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/auth/otp/verify',
+      headers: {
+        'idempotency-key': 'browser-otp-verify',
+        origin: 'http://127.0.0.1:8081',
+        'sec-fetch-site': 'same-origin',
+      },
+      payload: { challenge_id: webChallenge, code: LocalAuthIssuer.developmentOtp },
+    });
+    expect(browser.json()).not.toHaveProperty('refresh_token');
+    expect(browser.headers['set-cookie']).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('shifaa_refresh='),
+        expect.stringContaining('shifaa_csrf='),
+      ]),
+    );
     await harness.app.close();
   });
 

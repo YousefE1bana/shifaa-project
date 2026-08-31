@@ -67,6 +67,79 @@ export const LocationPrecisionSchema = Type.Union([
   Type.Literal('exact'),
 ]);
 
+export const FamilyPageQuerySchema = Type.Object(
+  {
+    cursor: Type.Optional(Type.String({ minLength: 1 })),
+    limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 100 })),
+    status: Type.Optional(Type.String({ minLength: 1 })),
+    mode: Type.Optional(
+      Type.Union([Type.Literal('guardianship_review'), Type.Literal('dependent_transition')]),
+    ),
+    includeDependentTransition: Type.Optional(Type.Boolean()),
+  },
+  { additionalProperties: false },
+);
+
+const TransitionWorkflowStatusSchema = Type.Union([
+  Type.Literal('proof_required'),
+  Type.Literal('review_required'),
+  Type.Literal('human_review_required'),
+  Type.Literal('approved'),
+  Type.Literal('rejected'),
+]);
+const TransitionBlockerStateSchema = Type.Union([
+  Type.Literal('none'),
+  Type.Literal('interdiction'),
+  Type.Literal('court_order'),
+  Type.Literal('dispute'),
+]);
+const NullableDateTime = Type.Union([Type.String({ format: 'date-time' }), Type.Null()]);
+
+export const DependentTransitionWorklistItemSchema = Type.Object(
+  {
+    relationshipId: Type.String({ format: 'uuid' }),
+    transitionCaseId: Type.String({ format: 'uuid' }),
+    caseType: Type.Literal('dependent_transition'),
+    status: TransitionWorkflowStatusSchema,
+    continuityCaseVersion: Type.Integer({ minimum: 1 }),
+    proofState: Type.Union([Type.Literal('required'), Type.Literal('verified')]),
+    reviewState: TransitionWorkflowStatusSchema,
+    blockerState: TransitionBlockerStateSchema,
+    createdAt: Type.String({ format: 'date-time' }),
+    updatedAt: Type.String({ format: 'date-time' }),
+    decidedAt: NullableDateTime,
+  },
+  { additionalProperties: false },
+);
+
+export const PatientDependentTransitionSummarySchema = Type.Object(
+  {
+    relationshipId: Type.Union([Type.String({ format: 'uuid' }), Type.Null()]),
+    transitionCaseId: Type.Union([Type.String({ format: 'uuid' }), Type.Null()]),
+    status: Type.Union([
+      Type.Literal('not_eligible'),
+      Type.Literal('verification_required'),
+      Type.Literal('review_required'),
+      Type.Literal('human_review_required'),
+      Type.Literal('approved'),
+      Type.Literal('rejected'),
+    ]),
+    continuityCaseVersion: Type.Union([Type.Integer({ minimum: 1 }), Type.Null()]),
+    updatedAt: NullableDateTime,
+    recordConsequence: Type.Union([
+      Type.Literal('unchanged_before_decision'),
+      Type.Literal('same_patient_record_preserved'),
+      Type.Literal('unchanged_after_rejection'),
+    ]),
+    priorAuthorityConsequence: Type.Union([
+      Type.Literal('current_until_decision'),
+      Type.Literal('ended_after_approval'),
+      Type.Literal('evaluated_independently_after_rejection'),
+    ]),
+  },
+  { additionalProperties: false },
+);
+
 export const CreateGuardianshipSchema = Type.Object(
   {
     evidence_object_id: Type.String({ format: 'uuid' }),
@@ -152,6 +225,20 @@ export type UpdateDelegationInput = Static<typeof UpdateDelegationSchema>;
 export type RevokeRelationshipInput = Static<typeof RevokeRelationshipSchema>;
 export type CreateEmergencyContactInput = Static<typeof CreateEmergencyContactSchema>;
 export type RespondEmergencyContactInput = Static<typeof RespondEmergencyContactSchema>;
+export type FamilyPageQuery = Static<typeof FamilyPageQuerySchema>;
+export type DependentTransitionWorklistItem = Static<typeof DependentTransitionWorklistItemSchema>;
+export type PatientDependentTransitionSummary = Static<
+  typeof PatientDependentTransitionSummarySchema
+>;
+export interface DependentTransitionWorklistPage {
+  items: DependentTransitionWorklistItem[];
+  next_cursor: string | null;
+}
+export interface RelationshipsPageWithTransition {
+  items: Readonly<Record<string, unknown>>[];
+  next_cursor: string | null;
+  dependentTransition: PatientDependentTransitionSummary;
+}
 
 export const familyCareRequestSchemas = {
   createGuardianship: CreateGuardianshipSchema,

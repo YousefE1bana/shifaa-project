@@ -17,6 +17,30 @@ export interface AuthSession {
   subjectId: string;
   accessToken: string;
   aal: 1 | 2;
+  sessionId?: string;
+  refreshToken?: string;
+}
+
+export interface SessionAuthority {
+  authorize(session: AuthSession): Promise<'allowed' | 'revoked' | 'restricted'>;
+}
+
+export interface RecoveryProofGrantAuthority {
+  authorizeRecoveryProofGrant(input: { grantDigest: Uint8Array }): Promise<{
+    recoveryCaseId: string;
+    personId: string;
+    principal: string;
+  }>;
+  lockRecoveryProofGrant(input: {
+    grantDigest: Uint8Array;
+    recoveryCaseId: string;
+    personId: string;
+  }): Promise<void>;
+  consumeRecoveryProofGrant(input: {
+    recoveryCaseId: string;
+    personId: string;
+    verificationCaseId: string;
+  }): Promise<void>;
 }
 
 export interface AuthIssuer {
@@ -183,6 +207,8 @@ export interface RepositoryContext {
 
 export type IdentityOnboardingPorts = {
   auth: AuthIssuer;
+  sessionAuthority?: SessionAuthority;
+  recoveryProofGrants?: RecoveryProofGrantAuthority;
   cipher: IdentityCipher;
   proofing: ProofingProvider;
   uploads: UploadStore;

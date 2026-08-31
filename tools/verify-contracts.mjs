@@ -52,6 +52,22 @@ const discoverySosContractModulePath = path.join(
 );
 const discoverySosClientPath = path.join(repoRoot, 'packages/api-client/src/discovery-sos.ts');
 const discoverySosRoutesPath = path.join(repoRoot, 'services/api/src/routes/discovery-sos.ts');
+const identityContinuityOpenApiPath = path.join(
+  repoRoot,
+  'specs/007-identity-continuity-sessions-mfa-recovery/contracts/openapi.yaml',
+);
+const identityContinuityContractModulePath = path.join(
+  repoRoot,
+  'packages/contracts/src/identity-continuity.ts',
+);
+const identityContinuityClientPath = path.join(
+  repoRoot,
+  'packages/api-client/src/identity-continuity.ts',
+);
+const identityContinuityRoutesPath = path.join(
+  repoRoot,
+  'services/api/src/routes/identity-continuity.ts',
+);
 const failures = [];
 
 function mustRead(file) {
@@ -344,6 +360,61 @@ for (const forbidden of [
   if (discoverySosOpenApi.has(forbidden))
     failures.push(`Forbidden later-phase operation is present in 006: ${forbidden}.`);
 
+const identityContinuityOpenApiText = mustRead(identityContinuityOpenApiPath);
+const identityContinuityContractModule = mustRead(identityContinuityContractModulePath);
+const identityContinuityClient = mustRead(identityContinuityClientPath);
+const identityContinuityRoutes = mustRead(identityContinuityRoutesPath);
+const identityContinuityOpenApi = parseOpenApi(identityContinuityOpenApiText);
+const identityContinuityOperations = new Set([
+  'refreshSession',
+  'logout',
+  'beginMfaEnrollment',
+  'verifyMfaEnrollment',
+  'removeMfaFactor',
+  'startRecovery',
+  'completeRecovery',
+  'transitionDependent',
+]);
+if (!/^openapi:\s*3\.1\.1\s*$/m.test(identityContinuityOpenApiText))
+  failures.push('Identity continuity contract must declare OpenAPI 3.1.1.');
+if (identityContinuityOpenApi.size !== identityContinuityOperations.size)
+  failures.push(
+    `Identity continuity OpenAPI must contain exactly 8 operations; found ${identityContinuityOpenApi.size}.`,
+  );
+for (const operationId of identityContinuityOperations)
+  if (!identityContinuityOpenApi.has(operationId))
+    failures.push(`Identity continuity operation is missing: ${operationId}.`);
+for (const [operationId, operation] of identityContinuityOpenApi) {
+  if (!identityContinuityOperations.has(operationId))
+    failures.push(`Feature 007 contains an unapproved ninth operation: ${operationId}.`);
+  const canonical = catalog.get(operationId);
+  if (!canonical) {
+    failures.push(`Identity continuity operation ${operationId} is absent from the API catalog.`);
+    continue;
+  }
+  if (canonical.method !== operation.method || canonical.path !== operation.path)
+    failures.push(
+      `${operationId} drift: identity continuity OpenAPI ${operation.method} ${operation.path}; catalog ${canonical.method} ${canonical.path}.`,
+    );
+  for (const requirement of canonical.requirements)
+    if (!operation.requirements.includes(requirement))
+      failures.push(
+        `${operationId} is missing catalog requirement ${requirement} in identity continuity x-shifaa-requirements.`,
+      );
+  for (const [label, source] of [
+    ['contract module', identityContinuityContractModule],
+    ['generated client', identityContinuityClient],
+    ['registered routes', identityContinuityRoutes],
+  ])
+    if (!new RegExp(`\\b${operationId}\\b`).test(source))
+      failures.push(`Identity continuity ${label} is missing ${operationId}.`);
+}
+if (!/@generated\b/i.test(identityContinuityClient))
+  failures.push('Identity continuity API client is missing an @generated marker.');
+for (const feature008Operation of ['listAuditEvents', 'getAuditEvent', 'createAuditExport'])
+  if (identityContinuityOpenApi.has(feature008Operation))
+    failures.push(`Feature 008 operation leaked into Feature 007: ${feature008Operation}.`);
+
 if (failures.length > 0) {
   console.error('Contract verification failed:');
   for (const failure of failures.sort()) console.error(`- ${failure}`);
@@ -351,5 +422,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  'Contract verification passed: 72 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
+  'Contract verification passed: 80 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
 );

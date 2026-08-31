@@ -65,6 +65,7 @@ export class PostgresPrivacyNotificationProcessor {
         where n.status in ('pending','failed') and n.next_attempt_at<=now()
           and n.recipient_type='patient'
           and t.status='published' and t.effective_at<=now()
+          and t.template_code in ('DSR_SUBMITTED','DSR_STATUS_CHANGED','DSR_EXPORT_READY','DSR_IDENTITY_REQUIRED')
         order by n.next_attempt_at,n.created_at,n.id
         for update of n skip locked limit 1`;
       if (!row) return 'idle';

@@ -1,9 +1,22 @@
 'use client';
 
 import { FamilyCareApiError, FamilyCareClient } from '@shifaa/api-client/family-care';
-import type { PermissionCode } from '@shifaa/contracts/family-care';
+import { IdentityContinuityApiError } from '@shifaa/api-client/identity-continuity';
+import type {
+  DependentTransitionWorklistItem,
+  PermissionCode,
+} from '@shifaa/contracts/family-care';
+import { color, radius, spacing } from '@shifaa/design-system/tokens';
+import { privilegedAccessState } from '@shifaa/design-system/security/privileged-access-policy';
+import {
+  securityMutationAllowed,
+  useSecurityConnection,
+} from '@shifaa/design-system/security/reconciliation';
 import { translate } from '@shifaa/i18n';
 import React, { useEffect, useMemo, useState } from 'react';
+
+import { AdminTransitionApi } from '../../identity-continuity-api';
+import { SecurityStepUpShell } from '../SecurityStepUpShell';
 
 type Locale = 'ar-EG' | 'en-EG';
 type CaseProjection = {
@@ -29,28 +42,84 @@ type UiState =
   | 'error'
   | 'success';
 
-export function GuardianshipWorkspace() {
+const noStaffAccessToken = () => undefined;
+
+const arabicDisplayCodes: Readonly<Record<string, string>> = {
+  loading: 'جارٍ التحميل',
+  ready: 'جاهز',
+  empty: 'لا توجد حالات',
+  'aal-required': 'يلزم تحقق إضافي',
+  'purpose-required': 'يلزم غرض مراجعة مصرح به',
+  'self-denied': 'المراجعة الذاتية غير مسموحة',
+  conflict: 'تعارض في النسخة',
+  error: 'تعذر إكمال الإجراء',
+  success: 'اكتمل الإجراء',
+  released: 'دليل مُتاح للمراجعة',
+  'guardianship-evidence': 'دليل وصاية',
+  proof_required: 'يلزم إثبات الهوية',
+  review_required: 'مطلوب مراجعة مستقلة',
+  human_review_required: 'مطلوب مراجعة بشرية',
+  approved: 'تمت الموافقة',
+  rejected: 'تم الرفض',
+  verified: 'تم التحقق',
+  pending: 'قيد الانتظار',
+  clear: 'لا يوجد مانع مسجل',
+  blocked: 'يوجد مانع للمراجعة',
+  allowed: 'مسموح بعد التحقق',
+};
+
+function displayCode(locale: Locale, code: string): string {
+  if (locale === 'ar-EG') return arabicDisplayCodes[code] ?? 'حالة غير متاحة';
+  return code.replaceAll('_', ' ').replaceAll('-', ' ');
+}
+
+export function GuardianshipWorkspace({
+  accessToken = noStaffAccessToken,
+}: {
+  accessToken?: () => string | undefined;
+}) {
   const [locale, setLocale] = useState<Locale>('ar-EG');
   const [cases, setCases] = useState<CaseProjection[]>([]);
   const [selectedId, setSelectedId] = useState('');
   const [reason, setReason] = useState('');
   const [state, setState] = useState<UiState>('loading');
+  const [transitions, setTransitions] = useState<DependentTransitionWorklistItem[]>([]);
+  const [selectedTransitionId, setSelectedTransitionId] = useState('');
+  const [transitionState, setTransitionState] = useState('review_required');
+  const [transitionAuthorized, setTransitionAuthorized] = useState(false);
+  const [amrAgeSeconds, setAmrAgeSeconds] = useState(300);
+  const [transitionBlockerReason, setTransitionBlockerReason] = useState<
+    'interdiction' | 'court_order' | 'dispute'
+  >('dispute');
+  const connection = useSecurityConnection();
+  const staffAccessToken = accessToken();
   useEffect(() => {
     document.documentElement.lang = locale;
     document.documentElement.dir = locale === 'ar-EG' ? 'rtl' : 'ltr';
   }, [locale]);
   const client = useMemo(
     () =>
-      new FamilyCareClient({
-        baseUrl: process.env['NEXT_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000',
-        accessToken: 'synthetic-admin:support_admin:40000000-0000-4000-8000-000000000006',
-        acceptLanguage: locale,
-        defaultHeaders: { 'X-AAL': '2', 'X-Purpose': 'guardianship_review' },
+      staffAccessToken
+        ? new FamilyCareClient({
+            baseUrl: process.env['NEXT_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000',
+            accessToken: staffAccessToken,
+            acceptLanguage: locale,
+            defaultHeaders: { 'X-AAL': '2', 'X-Purpose': 'guardianship_review' },
+          })
+        : undefined,
+    [locale, staffAccessToken],
+  );
+  const transitionClient = useMemo(
+    () =>
+      new AdminTransitionApi({
+        locale,
+        accessToken,
       }),
-    [locale],
+    [accessToken, locale],
   );
   const load = async () => {
     setState('loading');
+    if (!client) return setState('aal-required');
     try {
       const value = (await client.listGuardianshipCases({ status: 'pending', limit: 25 })) as {
         items: CaseProjection[];
@@ -66,9 +135,32 @@ export function GuardianshipWorkspace() {
   useEffect(() => {
     void load();
   }, [client]);
+  const loadTransitions = async () => {
+    if (!staffAccessToken) {
+      setTransitionAuthorized(false);
+      return setTransitionState('aal-required');
+    }
+    try {
+      const value = await transitionClient.listAssignedTransitions();
+      setTransitions([...value.items]);
+      setSelectedTransitionId(value.items[0]?.transitionCaseId ?? '');
+      setTransitionState(value.items[0]?.status ?? 'review_required');
+      setTransitionAuthorized(true);
+      connection.markReconciled();
+    } catch (error: unknown) {
+      setTransitionAuthorized(false);
+      const status = error instanceof FamilyCareApiError ? error.status : 0;
+      setTransitionState(
+        status === 401 ? 'aal-required' : status === 403 ? 'purpose-required' : 'error',
+      );
+    }
+  };
+  useEffect(() => {
+    void loadTransitions();
+  }, [transitionClient, connection.reconnectVersion]);
   const selected = cases.find((item) => item.id === selectedId);
   const decide = async (decision: 'approved' | 'rejected') => {
-    if (!selected || reason.trim().length < 3) return;
+    if (!client || !selected || reason.trim().length < 3) return;
     try {
       await client.reviewGuardianship(
         selected.id,
@@ -89,6 +181,52 @@ export function GuardianshipWorkspace() {
     } catch (error: unknown) {
       const status = error instanceof FamilyCareApiError ? error.status : 0;
       setState(status === 409 ? 'conflict' : status === 403 ? 'self-denied' : 'error');
+    }
+  };
+  const selectedTransition = transitions.find(
+    (item) => item.transitionCaseId === selectedTransitionId,
+  );
+  const stepUpState = privilegedAccessState({
+    authAvailable: transitionAuthorized,
+    aal: transitionAuthorized ? 'aal2' : 'aal1',
+    amrAgeSeconds,
+    purpose: transitionAuthorized ? 'guardianship_review' : null,
+    reason,
+  });
+  const decideTransition = async (decision: 'approve' | 'reject' | 'defer') => {
+    if (
+      !selectedTransition ||
+      stepUpState !== 'allowed' ||
+      !securityMutationAllowed({
+        online: connection.online,
+        reconciliationRequired: connection.reconciliationRequired,
+        sessionCurrent: stepUpState === 'allowed',
+        authorityCurrent: transitions.some(
+          (transition) => transition.transitionCaseId === selectedTransition.transitionCaseId,
+        ),
+      })
+    )
+      return;
+    try {
+      const result = await transitionClient.decideTransition(
+        selectedTransition.relationshipId,
+        {
+          action: 'decide',
+          decision,
+          reasonCode: 'human_review.guardianship_transition',
+          ...(decision === 'defer' ? { reviewRequiredReason: transitionBlockerReason } : {}),
+        },
+        selectedTransition.continuityCaseVersion,
+      );
+      setTransitionState(result.status);
+      await loadTransitions();
+    } catch (error: unknown) {
+      if (error instanceof IdentityContinuityApiError && error.status === 409) {
+        setTransitionState('version-conflict');
+        await loadTransitions();
+      } else {
+        setTransitionState('error');
+      }
     }
   };
   const stateText: Record<UiState, string> = {
@@ -134,7 +272,9 @@ export function GuardianshipWorkspace() {
             'success',
           ] as const
         ).map((value) => (
-          <option key={value}>{value}</option>
+          <option key={value} value={value}>
+            {displayCode(locale, value)}
+          </option>
         ))}
       </select>
       <div style={styles.grid}>
@@ -147,9 +287,9 @@ export function GuardianshipWorkspace() {
               style={styles.caseButton}
               aria-pressed={selectedId === item.id}
             >
-              <b>{item.evidence_type}</b>
+              <b>{displayCode(locale, item.evidence_type)}</b>
               <span>
-                {item.evidence_status} · v{item.relationship.version}
+                {displayCode(locale, item.evidence_status)} · v{item.relationship.version}
               </span>
               <span>{item.relationship.permissions.join(' · ')}</span>
             </button>
@@ -187,6 +327,133 @@ export function GuardianshipWorkspace() {
           </p>
         </section>
       </div>
+      <SecurityStepUpShell
+        locale={locale}
+        context={{
+          authAvailable: transitionAuthorized,
+          aal: transitionAuthorized ? 'aal2' : 'aal1',
+          amrAgeSeconds,
+          purpose: transitionAuthorized ? 'guardianship_review' : null,
+          reason: reason.trim() || null,
+        }}
+        onLoginOrVerifyOtp={() => void loadTransitions()}
+      >
+        <section
+          aria-labelledby="dependent-transition-review"
+          style={{ ...styles.card, marginBlockStart: spacing.lg }}
+        >
+          <h2 id="dependent-transition-review">
+            {locale === 'ar-EG'
+              ? 'مراجعة انتقال التابع المعيّنة'
+              : 'Assigned dependent transition review'}
+          </h2>
+          <p>
+            {locale === 'ar-EG'
+              ? 'تعرض هذه القائمة الحالات المعيّنة لك فقط. القرار لا يقرر الأهلية القانونية.'
+              : 'This worklist shows only cases assigned to you. It presents review state, not a legal conclusion.'}
+          </p>
+          <label htmlFor="amr-age">
+            {locale === 'ar-EG' ? 'عمر تحقق AMR بالثواني' : 'AMR age in seconds'}
+          </label>
+          <input
+            id="amr-age"
+            type="number"
+            min={0}
+            value={amrAgeSeconds}
+            onChange={(event) => setAmrAgeSeconds(Number(event.target.value))}
+            style={styles.control}
+          />
+          <div style={styles.grid}>
+            <div
+              role="list"
+              aria-label={
+                locale === 'ar-EG' ? 'حالات الانتقال المعيّنة' : 'Assigned transition cases'
+              }
+            >
+              {transitions.map((item) => (
+                <button
+                  key={item.transitionCaseId}
+                  role="listitem"
+                  aria-pressed={selectedTransitionId === item.transitionCaseId}
+                  onClick={() => setSelectedTransitionId(item.transitionCaseId)}
+                  style={styles.caseButton}
+                >
+                  <b>{displayCode(locale, item.status)}</b>
+                  <span>
+                    {displayCode(locale, item.proofState)} · {displayCode(locale, item.reviewState)}
+                  </span>
+                  <span>
+                    {displayCode(locale, item.blockerState)} · v{item.continuityCaseVersion}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <div>
+              <p>
+                {selectedTransition?.status === 'human_review_required'
+                  ? locale === 'ar-EG'
+                    ? 'مراجعة بشرية مطلوبة'
+                    : 'Human review required'
+                  : locale === 'ar-EG'
+                    ? 'مراجعة مستقلة مطلوبة'
+                    : 'Independent review required'}
+              </p>
+              <p>
+                {locale === 'ar-EG'
+                  ? 'حالات القرار: تمت الموافقة / تم الرفض'
+                  : 'Decision states: approved / rejected'}
+              </p>
+              <label htmlFor="transition-blocker-reason">
+                {locale === 'ar-EG' ? 'سبب الإحالة للمراجعة البشرية' : 'Human-review blocker'}
+              </label>
+              <select
+                id="transition-blocker-reason"
+                value={transitionBlockerReason}
+                onChange={(event) =>
+                  setTransitionBlockerReason(
+                    event.target.value as 'interdiction' | 'court_order' | 'dispute',
+                  )
+                }
+                style={styles.control}
+              >
+                <option value="interdiction">
+                  {locale === 'ar-EG' ? 'حجر قضائي' : 'Interdiction'}
+                </option>
+                <option value="court_order">
+                  {locale === 'ar-EG' ? 'أمر محكمة' : 'Court order'}
+                </option>
+                <option value="dispute">{locale === 'ar-EG' ? 'نزاع' : 'Dispute'}</option>
+              </select>
+              <div style={{ display: 'flex', gap: spacing.sm, flexWrap: 'wrap' }}>
+                <button
+                  disabled={stepUpState !== 'allowed'}
+                  onClick={() => void decideTransition('approve')}
+                  style={styles.button}
+                >
+                  {translate(locale, 'admin.approve')}
+                </button>
+                <button
+                  disabled={stepUpState !== 'allowed'}
+                  onClick={() => void decideTransition('reject')}
+                  style={styles.danger}
+                >
+                  {translate(locale, 'admin.reject')}
+                </button>
+                <button
+                  disabled={stepUpState !== 'allowed'}
+                  onClick={() => void decideTransition('defer')}
+                  style={styles.button}
+                >
+                  {locale === 'ar-EG' ? 'إحالة للمراجعة البشرية' : 'Defer to human review'}
+                </button>
+              </div>
+              <p role="status" aria-live="polite">
+                {displayCode(locale, transitionState)} · {displayCode(locale, stepUpState)}
+              </p>
+            </div>
+          </div>
+        </section>
+      </SecurityStepUpShell>
     </main>
   );
 }
@@ -195,9 +462,12 @@ const styles: Record<string, React.CSSProperties> = {
   main: {
     minHeight: '100vh',
     padding: 'clamp(16px,4vw,56px)',
-    background: '#f4f9fc',
-    color: '#102a43',
-    fontFamily: "Cairo, 'Noto Sans Arabic', system-ui",
+    background: color.canvas,
+    color: color.ink,
+    fontFamily: "'IBM Plex Sans Arabic', Inter, system-ui, sans-serif",
+    fontSize: 16,
+    lineHeight: '24px',
+    fontWeight: 400,
   },
   grid: {
     display: 'grid',
@@ -205,8 +475,13 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 24,
     marginBlockStart: 24,
   },
-  card: { border: '1px solid #bcccdc', borderRadius: 18, background: '#fff', padding: 24 },
-  control: { minHeight: 44, marginInlineStart: 8 },
+  card: {
+    border: `1px solid ${color.border}`,
+    borderRadius: radius.card,
+    background: color.surface,
+    padding: spacing.lg,
+  },
+  control: { minHeight: 44, marginInlineStart: spacing.sm },
   caseButton: {
     display: 'grid',
     width: '100%',
@@ -214,9 +489,9 @@ const styles: Record<string, React.CSSProperties> = {
     minHeight: 72,
     textAlign: 'start',
     padding: 14,
-    background: '#edf6fa',
-    border: '2px solid #075985',
-    borderRadius: 10,
+    background: color.surfaceSubtle,
+    border: `2px solid ${color.brand}`,
+    borderRadius: radius.control,
   },
   textarea: { width: '100%', minHeight: 120, marginBlock: 10, font: 'inherit' },
   button: {
@@ -224,8 +499,8 @@ const styles: Record<string, React.CSSProperties> = {
     paddingInline: 18,
     borderRadius: 10,
     border: 0,
-    background: '#075985',
-    color: '#fff',
+    background: color.brand,
+    color: color.inverse,
     font: 'inherit',
     fontWeight: 700,
   },
@@ -233,9 +508,9 @@ const styles: Record<string, React.CSSProperties> = {
     minHeight: 48,
     paddingInline: 18,
     borderRadius: 10,
-    border: '2px solid #b42318',
-    background: '#fff',
-    color: '#b42318',
+    border: `2px solid ${color.danger}`,
+    background: color.surface,
+    color: color.danger,
     font: 'inherit',
     fontWeight: 700,
   },

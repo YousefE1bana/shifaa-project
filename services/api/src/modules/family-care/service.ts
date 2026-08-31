@@ -4,6 +4,7 @@ import type {
   CreateEmergencyContactInput,
   CreateGuardianshipInput,
   GuardianshipDecisionInput,
+  FamilyPageQuery,
   RespondEmergencyContactInput,
   RevokeRelationshipInput,
   UpdateDelegationInput,
@@ -19,6 +20,8 @@ import {
 } from '@shifaa/core';
 import { ApiPolicyError } from '../identity-onboarding/errors.js';
 
+export type { FamilyPageQuery } from '@shifaa/contracts';
+
 export interface FamilyActor {
   personId: string;
   principal: string;
@@ -27,11 +30,6 @@ export interface FamilyActor {
   aal: 1 | 2;
   purpose?: string;
   selectedPatientId?: string;
-}
-export interface FamilyPageQuery {
-  cursor?: string;
-  limit?: number;
-  status?: string;
 }
 type Relationship = {
   id: string;
@@ -239,12 +237,26 @@ export class FamilyCareService {
 
   listRelationships(actor: FamilyActor, patientId: string, query: FamilyPageQuery = {}) {
     if (!this.purposeBoundAuthority(actor, patientId)) this.deny('permission-denied');
-    return this.page(
+    const page = this.page(
       [...this.relationships.values()]
         .filter((r) => r.managed_patient_id === patientId)
         .map((r) => this.projection(r)),
       query,
     );
+    return query.includeDependentTransition
+      ? {
+          ...page,
+          dependentTransition: {
+            relationshipId: null,
+            transitionCaseId: null,
+            status: 'not_eligible' as const,
+            continuityCaseVersion: null,
+            updatedAt: null,
+            recordConsequence: 'unchanged_before_decision' as const,
+            priorAuthorityConsequence: 'current_until_decision' as const,
+          },
+        }
+      : page;
   }
   createGuardianship(actor: FamilyActor, patientId: string, body: CreateGuardianshipInput) {
     this.ensureContext(actor, patientId);
@@ -281,6 +293,7 @@ export class FamilyCareService {
   }
   listGuardianshipCases(actor: FamilyActor, query: FamilyPageQuery = {}) {
     this.support(actor);
+    if (query.mode === 'dependent_transition') return this.page([], query);
     return this.page(
       [...this.relationships.values()]
         .filter(

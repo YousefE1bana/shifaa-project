@@ -64,6 +64,20 @@ export class PostgresIdentityRepository implements IdentityRepository {
     return this.sql.begin(async (tx) => this.scope.run({ sql: tx }, () => work(tx))) as Promise<T>;
   }
 
+  public async withSessionAdvisoryLock<T>(lockKey: string, work: () => Promise<T>): Promise<T> {
+    const sql = await this.sql.reserve();
+    try {
+      await sql`select pg_advisory_lock(hashtextextended(${lockKey},0))`;
+      return await work();
+    } finally {
+      try {
+        await sql`select pg_advisory_unlock(hashtextextended(${lockKey},0))`;
+      } finally {
+        await sql.release();
+      }
+    }
+  }
+
   public async createRegistration(
     authSubjectId: string,
     handle: string,
@@ -180,8 +194,15 @@ export class PostgresIdentityRepository implements IdentityRepository {
     input: Omit<StoredVerificationCase, 'id' | 'version'>,
   ): Promise<StoredVerificationCase> {
     const [row] = await this.current()<any[]>`
-      insert into identity.verification_cases(identity_id,provider,provider_transaction_id,state,assigned_reviewer_person_id,evidence)
-      values(${input.identityId}::uuid,${input.provider},${input.providerTransactionId ?? null},${input.status},${input.assignedReviewerPersonId ?? null}::uuid,'{}'::jsonb)
+      insert into identity.verification_cases(
+        identity_id,provider,provider_transaction_id,state,assigned_reviewer_person_id,
+        decided_at,evidence
+      )
+      values(
+        ${input.identityId}::uuid,${input.provider},${input.providerTransactionId ?? null},
+        ${input.status},${input.assignedReviewerPersonId ?? null}::uuid,
+        ${['verified', 'rejected'].includes(input.status) ? new Date() : null},'{}'::jsonb
+      )
       returning id,version`;
     if (!row) throw new Error('case insert returned no row');
     return { ...input, id: row.id, version: row.version };

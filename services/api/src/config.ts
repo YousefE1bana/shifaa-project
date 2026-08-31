@@ -11,6 +11,7 @@ export interface ApiConfig {
   familyCareEnabled: boolean;
   privacyDsrNotificationsEnabled: boolean;
   discoverySosEnabled: boolean;
+  identityContinuityEnabled: boolean;
   discoveryRadiusM: number;
   sosMatchRadiusM: number;
   capacitySourceCode: string;
@@ -113,6 +114,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
         'Production startup denied: Discovery and SOS remain seeded-synthetic only.',
       );
     }
+    if (readBoolean(env['IDENTITY_CONTINUITY_ENABLED'], false)) {
+      throw new ConfigurationError(
+        'Production startup denied: Identity continuity remains seeded-synthetic only.',
+      );
+    }
     const forbidden = [
       syntheticMode && 'SHIFAA_SYNTHETIC_MODE',
       syntheticProofingEnabled && 'SYNTHETIC_PROOFING_ENABLED',
@@ -191,6 +197,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
       environment !== 'production',
     ),
     discoverySosEnabled: readBoolean(env['DISCOVERY_SOS_ENABLED'], environment !== 'production'),
+    identityContinuityEnabled: readBoolean(
+      env['IDENTITY_CONTINUITY_ENABLED'],
+      environment !== 'production',
+    ),
     discoveryRadiusM: readBoundedInteger(
       'DISCOVERY_RADIUS_M',
       env['DISCOVERY_RADIUS_M'],

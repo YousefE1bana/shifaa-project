@@ -81,7 +81,12 @@ export class LocalAuthIssuer implements AuthIssuer {
       throw new ApiPolicyError('otp-invalid', 400, 'The verification code is invalid.');
     }
     const accessToken = `synthetic:${challenge.subjectId}:${randomUUID()}`;
-    const session: AuthSession = { subjectId: challenge.subjectId, accessToken, aal: 1 };
+    const session: AuthSession = {
+      subjectId: challenge.subjectId,
+      accessToken,
+      refreshToken: `synthetic-refresh:${randomUUID()}`,
+      aal: 1,
+    };
     challenge.consumedSession = session;
     this.sessions.set(accessToken, session);
     return session;

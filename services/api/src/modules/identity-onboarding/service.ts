@@ -124,6 +124,7 @@ export class IdentityOnboardingService {
   }
 
   public async completeOtpVerification(session: AuthSession, requestId: string) {
+    await this.assertSessionAuthority(session);
     const profile = await this.ports.repository.profileByAuthSubject(session.subjectId);
     if (!profile) throw new ApiPolicyError('profile-not-found', 404, 'Profile not found.');
     await this.ports.repository.appendAudit({
@@ -133,12 +134,18 @@ export class IdentityOnboardingService {
       outcome: 'allowed',
       requestId,
     });
-    return { kind: 'session' as const, access_token: session.accessToken, aal: session.aal };
+    return {
+      kind: 'session' as const,
+      access_token: session.accessToken,
+      refresh_token: session.refreshToken,
+      aal: session.aal,
+    };
   }
 
   public async actorFromAccessToken(accessToken: string): Promise<PatientActor | undefined> {
     const session = await this.ports.auth.resolveSession(accessToken);
     if (!session) return undefined;
+    await this.assertSessionAuthority(session);
     const profile = await this.ports.repository.profileByAuthSubject(session.subjectId);
     if (!profile) return undefined;
     return {
@@ -148,6 +155,18 @@ export class IdentityOnboardingService {
       principal: profile.id,
       aal: session.aal,
     };
+  }
+
+  private async assertSessionAuthority(session: AuthSession): Promise<void> {
+    const decision = await this.ports.sessionAuthority?.authorize(session);
+    if (!decision || decision === 'allowed') return;
+    if (decision === 'revoked')
+      throw new ApiPolicyError('session-revoked', 401, 'The session is not current.');
+    throw new ApiPolicyError(
+      'recovery-mfa-enrollment-required',
+      403,
+      'Complete replacement-factor enrollment before continuing.',
+    );
   }
 
   public async getProfile(actor: RequestActor) {
@@ -201,6 +220,7 @@ export class IdentityOnboardingService {
       expires_on?: string | null;
     },
     requestId: string,
+    recoveryProof?: { grantDigest: Uint8Array; recoveryCaseId: string },
   ) {
     const patient = this.requirePatient(actor);
     if (!(await this.ports.repository.hasActiveInventory('identity_proofing'))) {
@@ -220,6 +240,18 @@ export class IdentityOnboardingService {
     const status = provider.outcome === 'timeout' ? 'pending' : provider.outcome;
 
     return this.ports.repository.transaction(async () => {
+      if (recoveryProof) {
+        if (!this.ports.recoveryProofGrants)
+          throw new ApiPolicyError(
+            'identity-proof-required',
+            403,
+            'A repeated identity proof is required.',
+          );
+        await this.ports.recoveryProofGrants.lockRecoveryProofGrant({
+          ...recoveryProof,
+          personId: patient.personId,
+        });
+      }
       const identity = await this.ports.repository.createIdentity({
         personId: patient.personId,
         identityType: input.identity_type,
@@ -241,6 +273,13 @@ export class IdentityOnboardingService {
           ? { assignedReviewerPersonId: '00000000-0000-4000-8000-000000000002' }
           : {}),
       });
+      if (recoveryProof) {
+        await this.ports.recoveryProofGrants!.consumeRecoveryProofGrant({
+          recoveryCaseId: recoveryProof.recoveryCaseId,
+          personId: patient.personId,
+          verificationCaseId: verificationCase.id,
+        });
+      }
       await this.ports.repository.appendAudit({
         actorPersonId: patient.personId,
         action: 'identity.proof.created',
@@ -248,7 +287,11 @@ export class IdentityOnboardingService {
         resourceId: verificationCase.id,
         outcome: 'allowed',
         requestId,
-        metadata: { identity_type: input.identity_type, status },
+        metadata: {
+          identity_type: input.identity_type,
+          status,
+          ...(recoveryProof ? { purpose_code: 'account_recovery_reproof' } : {}),
+        },
       });
       await this.ports.repository.appendOutbox({
         eventType:

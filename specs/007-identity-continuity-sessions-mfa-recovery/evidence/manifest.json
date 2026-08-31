@@ -1,0 +1,97 @@
+{
+  "feature": "007-identity-continuity-sessions-mfa-recovery",
+  "generated_at": "2026-08-30T18:12:05+03:00",
+  "lifecycle": "IMPLEMENTED_VERIFIED_PENDING_PR_CHECKS_AND_OWNER_MERGE",
+  "task_state": {
+    "complete": "T001-T048",
+    "in_progress": null,
+    "pending": []
+  },
+  "requirements": {
+    "functional": ["FR-AUTH-002", "FR-AUTH-005", "FR-FAM-003", "FR-ADMIN-002"],
+    "non_functional": [
+      "NFR-SEC-001",
+      "NFR-SEC-002",
+      "NFR-SEC-003",
+      "NFR-SEC-004",
+      "NFR-SEC-005",
+      "NFR-SEC-006",
+      "NFR-SEC-007",
+      "NFR-PRIV-001",
+      "NFR-PRIV-002",
+      "NFR-PRIV-003",
+      "NFR-PRIV-004",
+      "NFR-I18N-001",
+      "NFR-A11Y-001",
+      "NFR-PERF-001",
+      "NFR-PERF-002",
+      "NFR-AVAIL-002",
+      "NFR-DATA-001",
+      "NFR-DATA-002",
+      "NFR-API-001",
+      "NFR-API-002",
+      "NFR-OBS-001",
+      "NFR-QUALITY-001",
+      "NFR-PORT-001"
+    ]
+  },
+  "operations": {
+    "count": 8,
+    "ids": [
+      "refreshSession",
+      "logout",
+      "beginMfaEnrollment",
+      "verifyMfaEnrollment",
+      "removeMfaFactor",
+      "startRecovery",
+      "completeRecovery",
+      "transitionDependent"
+    ],
+    "canonical_active_catalog_total": 242,
+    "realized_before_feature_007": 72,
+    "realized_through_feature_007": 80,
+    "feature_008_operations": 0
+  },
+  "issues": {
+    "repository": "YousefE1bana/shifaa-project",
+    "first": 188,
+    "last": 235,
+    "mapping": "Issue number = 187 + numeric task number",
+    "live_verified_on": "2026-08-30",
+    "count": 48,
+    "all_open": true,
+    "closed_by_this_feature_session": 0
+  },
+  "evidence": {
+    "security": [
+      "evidence/security/final-security.md",
+      "evidence/security/codex-security-scan-manifest.json",
+      "evidence/security/codex-security-coverage.json",
+      "evidence/security/codex-security-findings.json",
+      "evidence/security/codex-security-report.md",
+      "evidence/security/repository-sbom.cdx.json"
+    ],
+    "performance": ["evidence/performance.json"],
+    "ui_accessibility": ["evidence/live-qa.md", "evidence/live/", "evidence/t037-ui/"],
+    "operations": ["../../../infra/runbooks/identity-continuity.md"],
+    "final_analysis": [
+      "evidence/final-analysis.md",
+      "evidence/pr236-review-remediation.md",
+      "evidence/round-4-composition-audit.md"
+    ],
+    "final_verification": ["evidence/verification.md"]
+  },
+  "production_open_gates": [
+    "OPEN-TECH-002",
+    "OPEN-TECH-003",
+    "OPEN-LEGAL-001",
+    "OPEN-LEGAL-002",
+    "OPEN-LEGAL-007",
+    "OPEN-VENDOR-001",
+    "OPEN-VENDOR-002",
+    "OPEN-UX-001",
+    "OPEN-UX-002",
+    "OPEN-PRODUCT-001"
+  ],
+  "feature_008_scope_introduced": false
+}

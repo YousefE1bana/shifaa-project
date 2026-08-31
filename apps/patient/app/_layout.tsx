@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { PatientLocaleProvider } from '../src/locale-context';
+import { PatientSessionLifecycle } from '../src/patient-session-runtime';
 
 export default function PatientLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -22,6 +23,7 @@ export default function PatientLayout() {
   if (!fontsLoaded) return null;
   return (
     <PatientLocaleProvider>
+      <PatientSessionLifecycle />
       <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
     </PatientLocaleProvider>
   );

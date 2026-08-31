@@ -49,10 +49,16 @@ const pageQuery = {
     cursor: { type: 'string', minLength: 1 },
     limit: { type: 'integer', minimum: 1, maximum: 100 },
     status: { type: 'string' },
+    mode: { type: 'string', enum: ['guardianship_review', 'dependent_transition'] },
+    includeDependentTransition: { type: 'boolean' },
   },
 } as const;
 
-function actorFor(request: FastifyRequest, requireContext = false): FamilyActor {
+async function actorFor(
+  request: FastifyRequest,
+  deps: FamilyRouteDependencies,
+  requireContext = false,
+): Promise<FamilyActor> {
   if (!syntheticModes.get(request.server))
     throw new ApiPolicyError(
       'open-sec-001',
@@ -64,7 +70,8 @@ function actorFor(request: FastifyRequest, requireContext = false): FamilyActor 
     : '';
   const admin = /^synthetic-admin:support_admin:([0-9a-f-]{36})$/.exec(token);
   const person = /^synthetic-person:([0-9a-f-]{36})$/.exec(token);
-  if (!admin && !person)
+  const native = !admin && !person ? await deps.resolveNativePatient?.(token) : undefined;
+  if (!admin && !person && !native)
     throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
   const selectedPatientId =
     typeof request.headers['x-shifaa-patient-context'] === 'string'
@@ -77,11 +84,11 @@ function actorFor(request: FastifyRequest, requireContext = false): FamilyActor 
       'Choose and confirm the patient context.',
     );
   return {
-    personId: (admin ?? person)![1]!,
-    principal: token,
+    personId: (admin ?? person)?.[1] ?? native!.personId,
+    principal: (admin ?? person)?.[1] ?? native!.principal,
     requestId: request.id,
     ...(admin ? { role: 'support_admin' as const } : {}),
-    aal: request.headers['x-aal'] === '2' ? 2 : 1,
+    aal: admin || person ? (request.headers['x-aal'] === '2' ? 2 : 1) : native!.aal,
     ...(typeof request.headers['x-purpose'] === 'string'
       ? { purpose: request.headers['x-purpose'] }
       : {}),
@@ -108,7 +115,7 @@ async function mutate(
   work: (actor: FamilyActor) => unknown,
   requireContext = true,
 ) {
-  const actor = actorFor(request, requireContext);
+  const actor = await actorFor(request, deps, requireContext);
   const stored = await deps.idempotency.execute({
     principal: actor.principal,
     method: request.method,
@@ -123,6 +130,9 @@ interface FamilyRouteDependencies {
   service: FamilyCareServicePort;
   idempotency: IdempotencyStore;
   syntheticMode: boolean;
+  resolveNativePatient?: (
+    accessToken: string,
+  ) => Promise<{ personId: string; principal: string; aal: 1 | 2 } | undefined>;
 }
 
 export async function registerFamilyCareRoutes(
@@ -138,7 +148,7 @@ export async function registerFamilyCareRoutes(
         .headers(noStore)
         .send(
           await deps.service.listRelationships(
-            actorFor(r),
+            await actorFor(r, deps),
             (r.params as { managedPatientId: string }).managedPatientId,
             r.query as FamilyPageQuery,
           ),
@@ -164,7 +174,12 @@ export async function registerFamilyCareRoutes(
   app.get('/v1/admin/guardianships', { schema: { querystring: pageQuery } }, async (r, p) =>
     p
       .headers(noStore)
-      .send(await deps.service.listGuardianshipCases(actorFor(r), r.query as FamilyPageQuery)),
+      .send(
+        await deps.service.listGuardianshipCases(
+          await actorFor(r, deps),
+          r.query as FamilyPageQuery,
+        ),
+      ),
   );
   app.post(
     '/v1/admin/guardianships/:relationshipId/decision',
@@ -270,7 +285,7 @@ export async function registerFamilyCareRoutes(
         .headers(noStore)
         .send(
           await deps.service.listEmergencyContacts(
-            actorFor(r),
+            await actorFor(r, deps),
             (r.params as { managedPatientId: string }).managedPatientId,
             r.query as FamilyPageQuery,
           ),

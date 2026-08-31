@@ -1,0 +1,58 @@
+{
+  "completeness": "complete",
+  "deferred": [],
+  "documentType": "codex-security.coverage",
+  "excludePaths": [],
+  "explicitExclusions": [
+    {
+      "pattern": "standalone findings outside the Feature-007 ccd76c..e8fc415 diff",
+      "reason": "User and repository authority exclude unrelated audits unless this implementation introduced or reintroduced them."
+    }
+  ],
+  "includePaths": [
+    "."
+  ],
+  "inventoryStrategy": "diff",
+  "mode": "branch_diff",
+  "openQuestions": [],
+  "scanId": "3ef18add-b9a5-4b93-baa7-c4c556bc3469",
+  "schemaVersion": "1.0",
+  "surfaces": [
+    {
+      "disposition": "reported",
+      "id": "auth_sessions",
+      "label": "Auth and session semantics, boundaries, reuse and revocation",
+      "receiptRefs": []
+    },
+    {
+      "disposition": "reported",
+      "id": "mfa_recovery",
+      "label": "MFA, oracle-resistant recovery, proof authority and staged failure recovery",
+      "receiptRefs": []
+    },
+    {
+      "disposition": "no_issue_found",
+      "id": "transition_rls",
+      "label": "Dependent transition authority, forced RLS/default deny and search_path",
+      "receiptRefs": []
+    },
+    {
+      "disposition": "reported",
+      "id": "abuse_concurrency",
+      "label": "Rate limits, race/concurrency and idempotency",
+      "receiptRefs": []
+    },
+    {
+      "disposition": "no_issue_found",
+      "id": "worker",
+      "label": "Worker retry, deduplication, ordering and DLQ",
+      "receiptRefs": []
+    },
+    {
+      "disposition": "no_issue_found",
+      "id": "observability_supply_chain",
+      "label": "Audit/log redaction, ASVS/API abuse, secrets, dependencies and SBOM",
+      "receiptRefs": []
+    }
+  ]
+}

@@ -5,6 +5,10 @@ import type {
   CreateEmergencyContactInput,
   CreateGuardianshipInput,
   GuardianshipDecisionInput,
+  DependentTransitionWorklistItem,
+  PatientDependentTransitionSummary,
+  DependentTransitionWorklistPage,
+  RelationshipsPageWithTransition,
   RespondEmergencyContactInput,
   RevokeRelationshipInput,
   UpdateDelegationInput,
@@ -295,13 +299,26 @@ export class PostgresFamilyCareService {
     }
   }
 
+  public listRelationships(
+    a: FamilyActor,
+    id: string,
+    q: FamilyPageQuery & { includeDependentTransition: true },
+  ): Promise<RelationshipsPageWithTransition>;
+  public listRelationships(a: FamilyActor, id: string, q?: FamilyPageQuery): Promise<unknown>;
   public listRelationships(a: FamilyActor, id: string, q: FamilyPageQuery = {}) {
+    if (q.includeDependentTransition) return this.listRelationshipsWithTransition(a, id, q);
     return this.invoke('listRelationships', a, id, q);
   }
   public createGuardianship(a: FamilyActor, id: string, b: CreateGuardianshipInput) {
     return this.invoke('createGuardianship', a, id, b);
   }
+  public listGuardianshipCases(
+    a: FamilyActor,
+    q: FamilyPageQuery & { mode: 'dependent_transition' },
+  ): Promise<DependentTransitionWorklistPage>;
+  public listGuardianshipCases(a: FamilyActor, q?: FamilyPageQuery): Promise<unknown>;
   public listGuardianshipCases(a: FamilyActor, q: FamilyPageQuery = {}) {
+    if (q.mode === 'dependent_transition') return this.listTransitionWorklist(a, q);
     return this.invoke('listGuardianshipCases', a, q);
   }
   public reviewGuardianship(a: FamilyActor, id: string, b: GuardianshipDecisionInput, v: number) {
@@ -354,4 +371,162 @@ export class PostgresFamilyCareService {
   public revokeEmergencyContact(a: FamilyActor, id: string, b: RevokeRelationshipInput, v: number) {
     return this.invoke('revokeEmergencyContact', a, id, b, v);
   }
+
+  private async listTransitionWorklist(actor: FamilyActor, query: FamilyPageQuery) {
+    if (actor.role !== 'support_admin' || actor.aal < 2)
+      throw new ApiPolicyError('aal2-required', 403, 'AAL2 support review is required.');
+    if (actor.purpose !== 'guardianship_review')
+      throw new ApiPolicyError('purpose-required', 403, 'Guardianship review purpose is required.');
+    return this.repository.withRawTransaction(async (sql) => {
+      await this.context(sql, actor);
+      const rows = await sql<TransitionWorklistRow[]>`
+        select id,relationship_id,status,version,verification_case_id,
+          review_required_reason_code,created_at,updated_at,decided_at
+        from identity.continuity_cases
+        where case_type='dependent_transition'
+          and assigned_reviewer_person_id=${actor.personId}::uuid
+          and (${query.status ?? null}::text is null or status=${query.status ?? null})
+        order by id`;
+      return pageReadModels(
+        rows.map(transitionWorklistProjection),
+        query,
+        (row) => row.transitionCaseId,
+      );
+    });
+  }
+
+  private async listRelationshipsWithTransition(
+    actor: FamilyActor,
+    patientId: string,
+    query: FamilyPageQuery,
+  ) {
+    const relationships = await this.invoke<{
+      items: unknown[];
+      next_cursor: string | null;
+    }>('listRelationships', actor, patientId, { ...query, includeDependentTransition: false });
+    const dependentTransition = await this.repository.withRawTransaction(async (sql) => {
+      await this.context(sql, actor);
+      const [self] = await sql<{ allowed: boolean }[]>`
+        select platform.person_is_patient_self(${patientId}::uuid,${actor.personId}::uuid) allowed`;
+      if (!self?.allowed)
+        throw new ApiPolicyError(
+          'permission-denied',
+          403,
+          'Only the patient subject can read the transition summary.',
+        );
+      const [transition] = await sql<PatientTransitionRow[]>`
+        select id,relationship_id,status,version,updated_at
+        from identity.continuity_cases
+        where case_type='dependent_transition' and subject_patient_id=${patientId}::uuid
+          and subject_person_id=${actor.personId}::uuid
+        order by created_at desc,id desc limit 1`;
+      if (transition) return patientTransitionProjection(transition);
+      const [eligibility] = await sql<{ eligible: boolean; relationship_id: string | null }[]>`
+        select
+          identity.transition_eligible_on(
+            p.birth_date,(platform.context_now() at time zone 'Africa/Cairo')::date
+          ) and r.id is not null eligible,
+          r.id relationship_id
+        from identity.people p
+        join identity.patients patient on patient.person_id=p.id and patient.id=${patientId}::uuid
+        left join lateral(
+          select relationship.id from identity.care_relationships relationship
+          where relationship.subject_patient_id=patient.id
+            and relationship.relationship_type='guardianship' and relationship.status='active'
+          order by relationship.created_at desc,relationship.id desc limit 1
+        ) r on true
+        where p.id=${actor.personId}::uuid`;
+      return noCaseTransitionProjection(eligibility);
+    });
+    return { ...relationships, dependentTransition };
+  }
+}
+
+type TransitionWorklistRow = {
+  id: string;
+  relationship_id: string;
+  status: DependentTransitionWorklistItem['status'];
+  version: number;
+  verification_case_id: string | null;
+  review_required_reason_code: DependentTransitionWorklistItem['blockerState'] | null;
+  created_at: string | Date;
+  updated_at: string | Date;
+  decided_at: string | Date | null;
+};
+
+type PatientTransitionRow = {
+  id: string;
+  relationship_id: string;
+  status: 'proof_required' | 'review_required' | 'human_review_required' | 'approved' | 'rejected';
+  version: number;
+  updated_at: string | Date;
+};
+
+function transitionWorklistProjection(row: TransitionWorklistRow): DependentTransitionWorklistItem {
+  return {
+    relationshipId: row.relationship_id,
+    transitionCaseId: row.id,
+    caseType: 'dependent_transition',
+    status: row.status,
+    continuityCaseVersion: row.version,
+    proofState: row.verification_case_id ? 'verified' : 'required',
+    reviewState: row.status,
+    blockerState: row.review_required_reason_code ?? 'none',
+    createdAt: iso(row.created_at),
+    updatedAt: iso(row.updated_at),
+    decidedAt: row.decided_at ? iso(row.decided_at) : null,
+  };
+}
+
+function patientTransitionProjection(row: PatientTransitionRow): PatientDependentTransitionSummary {
+  const status = row.status === 'proof_required' ? 'verification_required' : row.status;
+  return {
+    relationshipId: row.relationship_id,
+    transitionCaseId: row.id,
+    status,
+    continuityCaseVersion: row.version,
+    updatedAt: iso(row.updated_at),
+    recordConsequence:
+      status === 'approved'
+        ? 'same_patient_record_preserved'
+        : status === 'rejected'
+          ? 'unchanged_after_rejection'
+          : 'unchanged_before_decision',
+    priorAuthorityConsequence:
+      status === 'approved'
+        ? 'ended_after_approval'
+        : status === 'rejected'
+          ? 'evaluated_independently_after_rejection'
+          : 'current_until_decision',
+  };
+}
+
+function noCaseTransitionProjection(
+  eligibility: { eligible: boolean; relationship_id: string | null } | undefined,
+): PatientDependentTransitionSummary {
+  return {
+    relationshipId: eligibility?.relationship_id ?? null,
+    transitionCaseId: null,
+    status: eligibility?.eligible ? 'verification_required' : 'not_eligible',
+    continuityCaseVersion: null,
+    updatedAt: null,
+    recordConsequence: 'unchanged_before_decision',
+    priorAuthorityConsequence: 'current_until_decision',
+  };
+}
+
+function pageReadModels<T>(
+  rows: T[],
+  query: FamilyPageQuery,
+  id: (row: T) => string,
+): { items: T[]; next_cursor: string | null } {
+  const after = query.cursor ? Buffer.from(query.cursor, 'base64url').toString('utf8') : '';
+  const eligible = rows.filter((row) => id(row) > after);
+  const limit = query.limit ?? 25;
+  const items = eligible.slice(0, limit);
+  return {
+    items,
+    next_cursor:
+      eligible.length > limit ? Buffer.from(id(items.at(-1)!)).toString('base64url') : null,
+  };
 }

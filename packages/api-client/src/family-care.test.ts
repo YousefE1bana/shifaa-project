@@ -60,4 +60,25 @@ describe('family care generated client', () => {
     expect(url).not.toContain(token);
     expect(JSON.parse(body)).toEqual({ decision: 'confirmed', token });
   });
+
+  it('serializes optional transition read modes on existing operations only', async () => {
+    const urls: string[] = [];
+    const client = new FamilyCareClient({
+      baseUrl: 'https://synthetic.invalid',
+      accessToken: 'synthetic-admin:support_admin:40000000-0000-4000-8000-000000000006',
+      fetch: async (input) => {
+        urls.push(String(input));
+        return new Response(JSON.stringify({ items: [], next_cursor: null }), { status: 200 });
+      },
+    });
+    await client.listGuardianshipCases({ mode: 'dependent_transition' });
+    await client.listRelationships('41000000-0000-4000-8000-000000000001', {
+      includeDependentTransition: true,
+    });
+    expect(urls).toEqual([
+      'https://synthetic.invalid/v1/admin/guardianships?mode=dependent_transition',
+      'https://synthetic.invalid/v1/patients/41000000-0000-4000-8000-000000000001/relationships?includeDependentTransition=true',
+    ]);
+    expect(generatedFamilyCareOperationIds).toHaveLength(12);
+  });
 });
