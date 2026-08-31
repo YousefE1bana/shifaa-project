@@ -3,6 +3,7 @@
 .remember/
 .claude/
 .playwright-mcp/
+.worktrees/
 .specify/.workflow-install.lock
 .specify/integrations/.cache/
 

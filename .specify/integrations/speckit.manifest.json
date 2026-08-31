@@ -1,10 +1,10 @@
 {
   "integration": "speckit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "installed_at": "2026-08-09T12:10:53.435154+00:00",
   "files": {
     ".specify/scripts/powershell/check-prerequisites.ps1": "38b118235fba10f1ec84691a488980e4716b46b665e75f01790edd985c2f4934",
-    ".specify/scripts/powershell/common.ps1": "bc6ce5456766ec7604de62cee20e34add15dd8e350e0975c3d37f238d12dfd22",
+    ".specify/scripts/powershell/common.ps1": "b7de830a085419f82d2469d0de3dde9157842006a95e1a2953b53e0d81b1afc8",
     ".specify/scripts/powershell/create-new-feature.ps1": "c6d5e64455635bc9d19e2ec902de2f72a7f834afd8b47a1a3d6323f7ed0cbb62",
     ".specify/scripts/powershell/setup-plan.ps1": "089362994a002bb91d9b93daea2dc21676119839d700d79e7b69f4a72e623ed1",
     ".specify/scripts/powershell/setup-tasks.ps1": "578c19c7fa196327c1c6791e3179accffab049fe62851961139d67bd699f336e",

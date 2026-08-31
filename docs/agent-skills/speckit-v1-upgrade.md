@@ -1,26 +1,29 @@
-# GitHub Spec Kit v1.0.1 upgrade record
+# GitHub Spec Kit v1.0.2 upgrade record
 
-**Date:** 2026-08-23  
-**Previous project metadata:** `0.16.2.dev0`  
-**Current CLI/project metadata:** `1.0.1`
+**Date:** 2026-08-31
+**Previous CLI/project metadata:** `1.0.1`
+**Current CLI/project metadata:** `1.0.2`
 
-The upgrade followed GitHub Spec Kit's manifest-aware major-version path:
+The upgrade used GitHub Spec Kit's manifest-aware integration flow and did not reinitialize the repository:
 
-1. `specify self check` confirmed the installed official CLI was already `1.0.1`.
-2. `specify integration status --json` identified the installed Codex/Kimi integrations and nine intentionally customized managed files.
-3. `specify integration upgrade codex --force --script ps --integration-options="--skills"` and the equivalent Kimi command refreshed the managed v1.0.1 integrations and shared scripts.
-4. `specify extension update` confirmed `agent-context` remained current at `1.0.0`.
-5. The committed SHIFAA specification, plan, task, checklist, and constitution templates were restored as the project-governed overrides. The SHIFAA Issue-scoped implementation resolver and immutable task-to-Issue publisher were reapplied to both Codex and Kimi skills.
-6. Manifest hashes were refreshed to cover the preserved SHIFAA overrides.
+1. `specify self check` identified the official `v1.0.2` release. The Windows self-replacement attempt was blocked by the running executable lock, so the CLI's printed `uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git@v1.0.2` fallback was run after the process exited.
+2. `specify integration status --json` established a clean v1.0.1 baseline with Codex as the sole registered/default integration.
+3. `specify integration upgrade codex --script ps --integration-options="--skills"` refreshed the registered Codex integration and shared v1.0.2 metadata.
+4. The unregistered Kimi mirror was generated through `specify integration install kimi --force --script ps --integration-options="--skills"`, then registration was returned to Codex-only because Kimi is not declared multi-install safe.
+5. The five SHIFAA-governed templates were preserved. The Issue-scoped implementation resolver and immutable task-to-Issue publisher were reapplied to both Codex and Kimi skills, and their manifest hashes were refreshed.
+6. The v1.0.2 UTF-8 handling fix in `common.ps1` and the remaining upstream SpecKit skill updates were retained.
+7. `specify extension update` confirmed `agent-context` remains current at `1.0.0`.
 
-Spec Kit v1.0.1 reports Kimi as unsafe for simultaneous registered multi-install. To keep the project health check exact, Codex is the sole registered/default v1.0.1 integration. The upgraded Kimi skill tree and v1.0.1 manifest remain preserved as the repository's Kimi-specific mirror, and `tools/verify-agent-skills.mjs` continues to validate both implementations. No spec, constitution, custom workflow, Issue payload, or project history was reinitialized.
+The project uses a hybrid skills model. SHIFAA-owned skills, intentionally SHIFAA-customized third-party skills, and SpecKit lifecycle integrations remain tracked. Unmodified generic third-party skills install and update only in user-global scope. All 19 currently tracked external skills contain intentional SHIFAA changes, so none was removed as generic.
 
-Verification:
+Verification requires:
 
-- `specify version`: `1.0.1`
-- `specify integration status --json`: `status=ok`, zero missing/modified/invalid/unchecked managed files
-- `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks`: resolves existing 006 and its tasks
-- `specify check`: ready
-- `pnpm agent-skills:check`: 32 shared skills, 19 locked external trees, both SpecKit implementations valid
+- `specify version`: `1.0.2`
+- `specify self check`: up to date
+- `specify integration status --json`: `status=ok`, with zero missing, modified, invalid, or unchecked managed files
+- all Codex, Kimi, and shared manifest hashes match their files
+- `specify extension list`: `agent-context` enabled at `1.0.0`
+- `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks`: resolves an existing completed feature without creating a new one
+- `pnpm agent-skills:check` and repository verification pass
 
-This migration does not change the SHIFAA lifecycle or authorize a new feature. SpecKit remains subordinate to the canonical SHIFAA Constitution, PRD, Master plan, contracts, and `AGENTS.md`.
+This tooling upgrade does not start Feature 008 or change application behavior. SpecKit remains subordinate to the canonical SHIFAA Constitution, PRD, Master Plan, contracts, and `AGENTS.md`.
