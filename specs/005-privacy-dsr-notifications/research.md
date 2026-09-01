@@ -114,7 +114,10 @@
 
 ## Provenance and supply-chain review
 
-- Project skills under `.agents/skills` are repository-controlled and were inspected before use.
+- The project skills used for this completed feature were inspected before use.
+  Current policy keeps third-party copies under the ignored local
+  `.agents/skills` runtime and tracks only SHIFAA-owned wrappers under
+  `.shifaa/skills`.
 - Supabase references above are official primary documentation; no package or external executable was added.
 - Expo/Vercel guidance is advisory beneath SHIFAA guardrails/UI Contract; no dependency or aesthetic baseline change is authorized.
 - No third-party design skill is needed because the repository governor and UI Contract fully define the target surfaces.

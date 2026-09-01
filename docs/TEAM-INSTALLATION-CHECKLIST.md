@@ -32,7 +32,7 @@ fnm default 24.18.0
 fnm use 24.18.0
 corepack enable
 corepack install --global pnpm@11.13.0
-uv tool install --force "git+https://github.com/github/spec-kit.git@684b3d8e05263a7c1948d3d0699ab1cb4f77c3d5"
+uv tool install --force "git+https://github.com/github/spec-kit.git@v1.0.2"
 $specifyPython = Join-Path (uv tool dir) 'specify-cli\Scripts\python.exe'
 if (-not (Test-Path -LiteralPath $specifyPython)) { throw 'SpecKit Python runtime was not installed' }
 [Environment]::SetEnvironmentVariable('SPECKIT_PYTHON', $specifyPython, 'User')
@@ -48,7 +48,7 @@ Open Docker Desktop and wait until the engine reports that it is running. Then v
 $ErrorActionPreference = 'Stop'
 if ((node --version) -ne 'v24.18.0') { throw 'Node must be v24.18.0' }
 if ((pnpm --version) -ne '11.13.0') { throw 'pnpm must be 11.13.0' }
-if ((specify --version) -ne 'specify 0.16.2.dev0') { throw 'SpecKit must be 0.16.2.dev0' }
+if ((specify --version) -ne 'specify 1.0.2') { throw 'SpecKit must be 1.0.2' }
 if (-not (Test-Path -LiteralPath $env:SPECKIT_PYTHON)) { throw 'SPECKIT_PYTHON must point to the SpecKit uv runtime' }
 if ((kimi --version) -ne '0.34.0') { throw 'Kimi Code must be 0.34.0' }
 git --version
@@ -79,9 +79,16 @@ git pull --ff-only
 fnm use 24.18.0
 corepack install --global pnpm@11.13.0
 pnpm install --frozen-lockfile
-if (-not (Test-Path '.kimi-code/skills/speckit-implement/SKILL.md')) { throw 'Kimi SpecKit integration is missing' }
-if (-not (Test-Path '.agents/skills/speckit-implement/SKILL.md')) { throw 'Codex SpecKit integration is missing' }
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools/sync-shifaa-owned-skills.ps1
+pnpm agent-skills:check
+if (-not (Test-Path '.agents/skills/shifaa-project-guardrails/SKILL.md')) { throw 'SHIFAA local skill sync failed' }
 ```
+
+`.agents/skills/`, `.kimi-code/skills/`, and root `skills-lock.json` are ignored
+machine-local runtime state. Install or upgrade official SpecKit integrations
+with the installed Spec Kit CLI's manifest-aware flow, and install third-party
+project skills locally as needed. Never add those runtime files to Git. Global
+skills are managed separately by each user.
 
 ## 4. Create the synthetic-only Supabase environment
 

@@ -4,6 +4,9 @@
 .claude/
 .playwright-mcp/
 .worktrees/
+.agents/skills/
+.kimi-code/skills/
+/skills-lock.json
 .specify/.workflow-install.lock
 .specify/integrations/.cache/
 
