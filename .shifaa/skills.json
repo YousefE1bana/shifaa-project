@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "sourceRoot": ".shifaa/skills",
+  "runtimeRoot": ".agents/skills",
+  "skills": [
+    "shifaa-project-guardrails",
+    "shifaa-speckit-overlay",
+    "shifaa-third-party-skill-overlay",
+    "shifaa-ui-governor"
+  ]
+}

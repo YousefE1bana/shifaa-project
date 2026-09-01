@@ -1,4 +1,0 @@
-interface:
-  display_name: "SHIFAA Project Guardrails"
-  short_description: "Enforce SHIFAA architecture and security contracts"
-  default_prompt: "Apply SHIFAA project guardrails to this implementation or review task."

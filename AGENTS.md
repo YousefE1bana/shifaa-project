@@ -29,24 +29,32 @@ the feature's SpecKit lifecycle begins.
 
 ## Shared agent skills
 
-Project-scoped skills shared by Codex and Kimi Code CLI live in
-`.agents/skills/`. Keep `.kimi-code/skills/` for existing or genuinely
-Kimi-specific integrations; do not duplicate generic skills there.
+Repository-owned SHIFAA skills and compact policy wrappers live in
+`.shifaa/skills/`. The runtime roots `.agents/skills/` and
+`.kimi-code/skills/` are machine-local, Git-ignored state. Never commit a
+third-party skill, its assets, or the local root `skills-lock.json`.
+
+Run `tools/sync-shifaa-owned-skills.ps1` after cloning or pulling to copy the
+repository-owned skills into `.agents/skills/` without deleting locally
+installed third-party skills. Third-party project-skill installs and updates
+are local-only; global skills are separate and manually managed by the user.
 
 For SHIFAA work, `shifaa-project-guardrails` outranks every external skill and
 `shifaa-ui-governor` must govern all UI/UX/frontend/mobile work. The approved
 SHIFAA baseline and current feature spec always override third-party advice.
-SpecKit remains the only project lifecycle. External design skills do not
+SpecKit remains the only project lifecycle. Use
+`shifaa-third-party-skill-overlay` with external skills and
+`shifaa-speckit-overlay` with local SpecKit skills. External design skills do not
 authorize changes to the UI Contract. Treat third-party skills as executable
 supply-chain dependencies: review provenance, license, instructions, scripts,
 network behavior, and conflicts before adding or updating them.
 
 Use `clean-code-guard`, `test-guard`, and `docs-guard` as second-pass quality
 reviews after their respective changes; they do not redesign architecture or
-replace SpecKit. Third-party executables remain prohibited by default. The five
-locked `*-delegate/scripts/relay.mjs` files are the reviewed exception: delegate
-briefs must be bounded, delegates perform no Git integration, and the parent
-agent owns diff review, verification, commit, push, and the PR lifecycle.
+replace SpecKit. Third-party executables remain prohibited by default unless
+the user has explicitly approved their local execution. Delegate briefs must
+be bounded, delegates perform no Git integration, and the parent agent owns
+diff review, verification, commit, push, and the PR lifecycle.
 
 <!-- SPECKIT START -->
 

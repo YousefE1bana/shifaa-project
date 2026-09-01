@@ -14,14 +14,18 @@ The upgrade used GitHub Spec Kit's manifest-aware integration flow and did not r
 6. The v1.0.2 UTF-8 handling fix in `common.ps1` and the remaining upstream SpecKit skill updates were retained.
 7. `specify extension update` confirmed `agent-context` remains current at `1.0.0`.
 
-The project uses a hybrid skills model. SHIFAA-owned skills, intentionally SHIFAA-customized third-party skills, and SpecKit lifecycle integrations remain tracked. Unmodified generic third-party skills install and update only in user-global scope. All 19 currently tracked external skills contain intentional SHIFAA changes, so none was removed as generic.
+This record describes the 2026-08-31 upgrade mechanics. The later repository
+policy supersedes its former hybrid-storage decision: generated SpecKit agent
+skills and every other third-party skill are now ignored local runtime state.
+Only compact SHIFAA-owned SpecKit constraints remain tracked in
+`.shifaa/skills/shifaa-speckit-overlay/`.
 
 Verification requires:
 
 - `specify version`: `1.0.2`
 - `specify self check`: up to date
 - `specify integration status --json`: `status=ok`, with zero missing, modified, invalid, or unchecked managed files
-- all Codex, Kimi, and shared manifest hashes match their files
+- generated Codex and Kimi runtime skills remain local and ignored
 - `specify extension list`: `agent-context` enabled at `1.0.0`
 - `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks`: resolves an existing completed feature without creating a new one
 - `pnpm agent-skills:check` and repository verification pass
