@@ -2,9 +2,9 @@
 
 > **Frozen merged baseline:** `origin/main@ccd76c4875821beb246fa3b0abf32f225c54f6ae`
 >
-> **Audit date:** 2026-08-30 (Africa/Cairo)
+> **Audit date:** 2026-09-02 (Africa/Cairo)
 >
-> **Scope:** graduation-MVP requirement coverage after merged features 001-006 plus the verified local Feature-007 implementation pending final PR integration; no Feature-008 or other future implementation is authorized by this document.
+> **Scope:** graduation-MVP requirement coverage after merged features 001-007 plus Feature-008 approved specification/planning baseline; no Feature-008 implementation is authorized by this document.
 
 ## 1. Authority and classification rules
 
@@ -63,7 +63,7 @@ The active graduation inventory is **92 FR + 24 NFR = 116 active requirements**.
 | FR-FAC-007   | DONE    | 003                                                                                                          | None                                                                                |
 | FR-ADMIN-001 | DONE    | 003                                                                                                          | None                                                                                |
 | FR-ADMIN-002 | PARTIAL | 001/003/004/005/006 purpose/AAL/audit enforcement; 007 native MFA/AMR step-up and assigned transition review | 008 retains audit read/export surfaces                                              |
-| FR-ADMIN-003 | BLOCKED | None                                                                                                         | 008; blocked at `SPEC_APPROVED` by `OPEN-PRIV-001`                                  |
+| FR-ADMIN-003 | PLANNED | OPEN-PRIV-001 package v1.0.0 closes the graduation-engineering policy gate; no metric is active              | 008 implementation; each metric/status mapping requires later approved config       |
 | FR-ADMIN-004 | PARTIAL | 003 role/facility decisions; 005 template publication                                                        | 011 closes clinical-content four-eyes publication; later governed releases reuse it |
 
 ### Clinic, safety, pharmacy, hospital, and laboratory

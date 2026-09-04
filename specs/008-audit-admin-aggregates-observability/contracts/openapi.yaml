@@ -1,0 +1,582 @@
+openapi: 3.1.1
+info:
+  title: SHIFAA Audit, Admin Aggregates, and Observability API
+  version: 0.1.0
+  description: >-
+    Synthetic graduation contract for the seven canonical Feature 008 operations.
+    It adds no patient selector, aggregate drill-down, export-status operation,
+    backup/job endpoint, public health diagnostic, or general DPO audit access.
+    OPEN-PRIV-001 is approved, while metrics: [] keeps aggregates inactive until
+    a later approved per-metric configuration exists.
+servers:
+  - url: /v1
+tags:
+  - name: Admin Aggregates
+  - name: Admin Audit
+  - name: Internal Audit
+  - name: Internal Health
+paths:
+  /admin/dashboard-summary:
+    get:
+      tags: [Admin Aggregates]
+      operationId: getAdminSummary
+      summary: Read role-projected minimum-cell-protected admin aggregate cells
+      security:
+        - bearerAuth: []
+      x-shifaa-requirements: [FR-ADMIN-003]
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestIdOptional'
+      responses:
+        '200':
+          description: Approved safe aggregate cells; unavailable while no metric is active
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Content-Language: { $ref: '#/components/headers/ContentLanguage' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminSummaryResponse' }
+        '401': { $ref: '#/components/responses/AuthenticationProblem' }
+        '403': { $ref: '#/components/responses/ForbiddenProblem' }
+        '429': { $ref: '#/components/responses/RateLimitProblem' }
+        '503': { $ref: '#/components/responses/LegalGateProblem' }
+  /admin/audit/events:
+    get:
+      tags: [Admin Audit]
+      operationId: listAuditEvents
+      summary: List cursor-bounded redacted audit evidence
+      security:
+        - bearerAuth: []
+      x-shifaa-requirements: [FR-ADMIN-002, NFR-SEC-006]
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestIdOptional'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/ActorIdQuery'
+        - $ref: '#/components/parameters/ActionQuery'
+        - $ref: '#/components/parameters/ResourceTypeQuery'
+        - $ref: '#/components/parameters/ResourceIdQuery'
+        - $ref: '#/components/parameters/OccurredFromQuery'
+        - $ref: '#/components/parameters/OccurredBeforeQuery'
+        - $ref: '#/components/parameters/OutcomeQuery'
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/CursorQuery'
+      responses:
+        '200':
+          description: Authorized redacted audit page
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Content-Language: { $ref: '#/components/headers/ContentLanguage' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuditEventListResponse' }
+        '400': { $ref: '#/components/responses/ValidationProblem' }
+        '401': { $ref: '#/components/responses/AuthenticationProblem' }
+        '403': { $ref: '#/components/responses/ForbiddenProblem' }
+        '428': { $ref: '#/components/responses/PurposeProblem' }
+        '429': { $ref: '#/components/responses/RateLimitProblem' }
+  /admin/audit/events/{eventId}:
+    get:
+      tags: [Admin Audit]
+      operationId: getAuditEvent
+      summary: Read one redacted audit event and its chain evidence
+      security:
+        - bearerAuth: []
+      x-shifaa-requirements: [FR-ADMIN-002, NFR-SEC-006]
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestIdOptional'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/EventIdPath'
+      responses:
+        '200':
+          description: Authorized redacted event and verification evidence
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Content-Language: { $ref: '#/components/headers/ContentLanguage' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuditEventDetailResponse' }
+        '401': { $ref: '#/components/responses/AuthenticationProblem' }
+        '403': { $ref: '#/components/responses/ForbiddenProblem' }
+        '404': { $ref: '#/components/responses/NotFoundProblem' }
+        '428': { $ref: '#/components/responses/PurposeProblem' }
+        '429': { $ref: '#/components/responses/RateLimitProblem' }
+  /admin/audit/exports:
+    post:
+      tags: [Admin Audit]
+      operationId: createAuditExport
+      summary: Queue an idempotent export of completed UTC audit partitions
+      security:
+        - bearerAuth: []
+      x-shifaa-requirements: [FR-ADMIN-002, NFR-SEC-005, NFR-SEC-006]
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestIdOptional'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateAuditExportRequest' }
+      responses:
+        '202':
+          description: Export batch accepted; proof is later visible through audit evidence
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Content-Language: { $ref: '#/components/headers/ContentLanguage' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuditExportAcceptedResponse' }
+        '400': { $ref: '#/components/responses/ValidationProblem' }
+        '401': { $ref: '#/components/responses/AuthenticationProblem' }
+        '403': { $ref: '#/components/responses/ForbiddenProblem' }
+        '409': { $ref: '#/components/responses/ConflictProblem' }
+        '428': { $ref: '#/components/responses/PurposeProblem' }
+        '429': { $ref: '#/components/responses/RateLimitProblem' }
+        '503': { $ref: '#/components/responses/UnavailableProblem' }
+  /internal/audit/exports:
+    post:
+      tags: [Internal Audit]
+      operationId: exportAuditPartition
+      summary: Materialize and prove one already-authorized audit export batch
+      security:
+        - serviceAuth: []
+      x-shifaa-private-network: true
+      x-shifaa-requirements: [NFR-SEC-005, NFR-SEC-006]
+      parameters:
+        - $ref: '#/components/parameters/RequestIdOptional'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExportAuditPartitionRequest' }
+      responses:
+        '200':
+          description: Existing or newly verified immutable object proof
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuditExportProofResponse' }
+        '400': { $ref: '#/components/responses/ValidationProblem' }
+        '401': { $ref: '#/components/responses/AuthenticationProblem' }
+        '403': { $ref: '#/components/responses/ForbiddenProblem' }
+        '409': { $ref: '#/components/responses/ConflictProblem' }
+        '429': { $ref: '#/components/responses/RateLimitProblem' }
+        '503': { $ref: '#/components/responses/UnavailableProblem' }
+  /internal/health/live:
+    get:
+      tags: [Internal Health]
+      operationId: healthLive
+      summary: Report process liveness without dependency detail
+      security:
+        - serviceAuth: []
+      x-shifaa-private-network: true
+      x-shifaa-requirements: [NFR-AVAIL-001]
+      parameters:
+        - $ref: '#/components/parameters/RequestIdOptional'
+      responses:
+        '200':
+          description: Process is live
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LivenessResponse' }
+        '401': { $ref: '#/components/responses/AuthenticationProblem' }
+        '403': { $ref: '#/components/responses/ForbiddenProblem' }
+        '503': { $ref: '#/components/responses/UnavailableProblem' }
+  /internal/health/ready:
+    get:
+      tags: [Internal Health]
+      operationId: healthReady
+      summary: Report bounded database and outbox readiness
+      security:
+        - serviceAuth: []
+      x-shifaa-private-network: true
+      x-shifaa-requirements: [NFR-AVAIL-001, NFR-OBS-001]
+      parameters:
+        - $ref: '#/components/parameters/RequestIdOptional'
+      responses:
+        '200':
+          description: Required dependencies are ready or degraded within approved bounds
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReadinessResponse' }
+        '401': { $ref: '#/components/responses/AuthenticationProblem' }
+        '403': { $ref: '#/components/responses/ForbiddenProblem' }
+        '503':
+          description: A required dependency or integrity check is not ready
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/RequestId' }
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReadinessResponse' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    serviceAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque-service-credential
+      description: Deployment-approved service authentication on the private network
+  headers:
+    RequestId:
+      description: Server-validated or generated request UUID
+      schema: { type: string, format: uuid }
+    ContentLanguage:
+      description: Selected response locale
+      schema: { type: string, enum: [ar-EG, en-EG] }
+    PrivateNoStore:
+      description: Sensitive response caching policy
+      schema: { type: string, const: 'private, no-store' }
+  parameters:
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      schema: { type: string, enum: [ar-EG, en-EG], default: ar-EG }
+    RequestIdOptional:
+      name: X-Request-Id
+      in: header
+      required: false
+      schema: { type: string, format: uuid }
+    Purpose:
+      name: X-Purpose
+      in: header
+      required: true
+      description: Server-authorized stable purpose code; never free text
+      schema: { type: string, minLength: 3, maxLength: 64, pattern: '^[a-z][a-z0-9._-]*$' }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, minLength: 16, maxLength: 128 }
+    EventIdPath:
+      name: eventId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    ActorIdQuery:
+      name: actor
+      in: query
+      schema: { type: string, format: uuid }
+    ActionQuery:
+      name: action
+      in: query
+      schema: { type: string, minLength: 1, maxLength: 96, pattern: '^[a-z][a-z0-9._-]*$' }
+    ResourceTypeQuery:
+      name: resource_type
+      in: query
+      schema: { type: string, minLength: 1, maxLength: 64, pattern: '^[a-z][a-z0-9._-]*$' }
+    ResourceIdQuery:
+      name: resource_id
+      in: query
+      schema: { type: string, format: uuid }
+    OccurredFromQuery:
+      name: occurred_from
+      in: query
+      schema: { type: string, format: date-time }
+    OccurredBeforeQuery:
+      name: occurred_before
+      in: query
+      schema: { type: string, format: date-time }
+    OutcomeQuery:
+      name: outcome
+      in: query
+      schema: { type: string, enum: [success, denied, failed] }
+    LimitQuery:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 100 }
+    CursorQuery:
+      name: cursor
+      in: query
+      schema: { type: string, minLength: 16, maxLength: 512 }
+  responses:
+    ValidationProblem:
+      description: Request validation failed
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    AuthenticationProblem:
+      description: Authentication or current session is required
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    ForbiddenProblem:
+      description: Current role, AAL, purpose, service context, or resource scope is denied
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    PurposeProblem:
+      description: Required purpose is absent or invalid
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    NotFoundProblem:
+      description: Event is absent or hidden by authorization
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    ConflictProblem:
+      description: Idempotency, range, integrity, state, or concurrency conflict
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    RateLimitProblem:
+      description: Risk-aware rate limit reached
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    LegalGateProblem:
+      description: No approved active per-metric configuration exists
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+        Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    UnavailableProblem:
+      description: Required internal capability is unavailable and failed closed
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/RequestId' }
+        Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+  schemas:
+    Problem:
+      type: object
+      additionalProperties: false
+      required: [type, title, status, detail, instance, code, request_id, errors]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string, minLength: 1 }
+        status: { type: integer, minimum: 400, maximum: 599 }
+        detail: { type: string, minLength: 1 }
+        instance: { type: string }
+        code:
+          type: string
+          enum:
+            - authentication-required
+            - mfa-required
+            - forbidden
+            - purpose-required
+            - validation-failed
+            - not-found
+            - legal-gate-disabled
+            - idempotency-key-reused
+            - idempotency-in-progress
+            - export-range-invalid
+            - export-state-conflict
+            - audit-integrity-failed
+            - retention-proof-failed
+            - rate-limited
+            - service-unavailable
+        request_id: { type: string, format: uuid }
+        retry_after_seconds: { type: integer, minimum: 1 }
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [code]
+            properties:
+              code: { type: string, minLength: 1, maxLength: 96 }
+              field: { type: string, maxLength: 96 }
+              message: { type: string, maxLength: 300 }
+    AdminSummaryCell:
+      type: object
+      additionalProperties: false
+      required: [metric_id, period, dimensions, disclosure, policy_version, snapshot_at]
+      properties:
+        metric_id: { type: string, minLength: 1, maxLength: 64, pattern: '^[a-z][a-z0-9._-]*$' }
+        period: { type: string, pattern: '^[0-9]{4}-(0[1-9]|1[0-2])$' }
+        dimensions:
+          type: object
+          maxProperties: 2
+          additionalProperties:
+            type: string
+            minLength: 1
+            maxLength: 64
+        disclosure: { type: string, enum: [released, suppressed] }
+        distinct_subject_count:
+          type: integer
+          minimum: 11
+          description: Present only when disclosure is released
+        suppression_reason:
+          type: string
+          enum: [small_cell, complementary, linked_release]
+          description: Present only when disclosure is suppressed
+        policy_version: { type: string, const: 1.0.0-approved }
+        snapshot_at: { type: string, format: date-time }
+    AdminSummaryResponse:
+      type: object
+      additionalProperties: false
+      required: [policy_id, policy_version, data, generated_at]
+      properties:
+        policy_id: { type: string, const: OPEN-PRIV-001 }
+        policy_version: { type: string, const: 1.0.0-approved }
+        data:
+          type: array
+          maxItems: 100
+          items: { $ref: '#/components/schemas/AdminSummaryCell' }
+        generated_at: { type: string, format: date-time }
+    AuditEventProjection:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          event_id,
+          occurred_at,
+          request_id,
+          trace_id,
+          authentication_aal,
+          action_code,
+          resource_type,
+          outcome,
+          chain,
+        ]
+      properties:
+        event_id: { type: string, format: uuid }
+        occurred_at: { type: string, format: date-time }
+        request_id: { type: string, format: uuid }
+        trace_id: { type: string, minLength: 16, maxLength: 64 }
+        actor_person_id: { type: [string, 'null'], format: uuid }
+        authentication_aal: { type: [integer, 'null'], minimum: 1, maximum: 2 }
+        facility_id: { type: [string, 'null'], format: uuid }
+        patient_id: { type: [string, 'null'], format: uuid }
+        purpose_code: { type: [string, 'null'], maxLength: 64 }
+        action_code: { type: string, minLength: 1, maxLength: 96 }
+        resource_type: { type: string, minLength: 1, maxLength: 64 }
+        resource_id: { type: [string, 'null'], format: uuid }
+        resource_version: { type: [integer, 'null'], minimum: 1 }
+        outcome: { type: string, enum: [success, denied, failed] }
+        reason_code: { type: [string, 'null'], maxLength: 96 }
+        source_ip_prefix: { type: [string, 'null'], maxLength: 64 }
+        user_agent_class: { type: [string, 'null'], maxLength: 32 }
+        chain: { $ref: '#/components/schemas/AuditChainEvidence' }
+    AuditChainEvidence:
+      type: object
+      additionalProperties: false
+      required: [version, partition, sequence, previous_hash, event_hash, verification]
+      properties:
+        version: { type: integer, const: 1 }
+        partition: { type: string, format: date }
+        sequence: { type: integer, minimum: 1 }
+        previous_hash: { type: string, pattern: '^[a-f0-9]{64}$' }
+        event_hash: { type: string, pattern: '^[a-f0-9]{64}$' }
+        verification: { type: string, enum: [verified, failed] }
+    PageMeta:
+      type: object
+      additionalProperties: false
+      required: [next_cursor]
+      properties:
+        next_cursor: { type: [string, 'null'], maxLength: 512 }
+    AuditEventListResponse:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          maxItems: 100
+          items: { $ref: '#/components/schemas/AuditEventProjection' }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    AuditEventDetailResponse:
+      type: object
+      additionalProperties: false
+      required: [event]
+      properties:
+        event: { $ref: '#/components/schemas/AuditEventProjection' }
+    CreateAuditExportRequest:
+      type: object
+      additionalProperties: false
+      required: [partition_start, partition_end_exclusive]
+      properties:
+        partition_start: { type: string, format: date }
+        partition_end_exclusive: { type: string, format: date }
+    AuditExportAcceptedResponse:
+      type: object
+      additionalProperties: false
+      required: [export_batch_id, status, partition_start, partition_end_exclusive, accepted_at]
+      properties:
+        export_batch_id: { type: string, format: uuid }
+        status: { type: string, const: queued }
+        partition_start: { type: string, format: date }
+        partition_end_exclusive: { type: string, format: date }
+        accepted_at: { type: string, format: date-time }
+    ExportAuditPartitionRequest:
+      type: object
+      additionalProperties: false
+      required: [export_batch_id]
+      properties:
+        export_batch_id: { type: string, format: uuid }
+    AuditExportProofResponse:
+      type: object
+      additionalProperties: false
+      required: [export_batch_id, status, object_digest, retention_proof_class, exported_at]
+      properties:
+        export_batch_id: { type: string, format: uuid }
+        status: { type: string, const: proven }
+        object_digest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        retention_proof_class:
+          { type: string, enum: [local_synthetic_write_once, provider_object_lock] }
+        exported_at: { type: string, format: date-time }
+    LivenessResponse:
+      type: object
+      additionalProperties: false
+      required: [status, observed_at]
+      properties:
+        status: { type: string, const: live }
+        observed_at: { type: string, format: date-time }
+    ReadinessResponse:
+      type: object
+      additionalProperties: false
+      required: [status, reasons, observed_at]
+      properties:
+        status: { type: string, enum: [ready, degraded, not_ready] }
+        reasons:
+          type: array
+          uniqueItems: true
+          maxItems: 8
+          items:
+            type: string
+            enum:
+              - database_unavailable
+              - outbox_backlog
+              - outbox_integrity_failed
+              - audit_integrity_failed
+              - export_proof_failed
+        observed_at: { type: string, format: date-time }
