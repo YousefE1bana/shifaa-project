@@ -34,15 +34,15 @@
 
 ## Phase 2 — Data, chain, export, and RLS foundation
 
-- [ ] T006 [FR-ADMIN-002, NFR-SEC-006, NFR-DATA-001, NFR-DATA-002, NFR-PRIV-004] Add the fail-closed empty-legacy preflight and UTC-month partitioned audit event v1 schema — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
+- [x] T006 [FR-ADMIN-002, NFR-SEC-006, NFR-DATA-001, NFR-DATA-002, NFR-PRIV-004] Add the fail-closed empty-legacy preflight and UTC-month partitioned audit event v1 schema — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
   - Depends on: `T003`, `T004`
   - Acceptance evidence: `corepack pnpm test:audit-admin:db -- schema` exits 0 on clean baseline and the legacy-row upgrade case aborts without row or hash changes
 
-- [ ] T007 [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-006, NFR-DATA-001, NFR-PRIV-004] Add append-only signature evidence and audit export batch tables, integrity checks, indexes, and retention classifications — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
+- [x] T007 [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-006, NFR-DATA-001, NFR-PRIV-004] Add append-only signature evidence and audit export batch tables, integrity checks, indexes, and retention classifications — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
   - Depends on: `T006`
   - Acceptance evidence: `corepack pnpm test:audit-admin:db -- schema` exits 0 with every digest, proof, range, state, index, encryption, and retention assertion passing
 
-- [ ] T008 [FR-ADMIN-002, NFR-SEC-001, NFR-SEC-006, NFR-DATA-001, NFR-DATA-002] Add fixed-search-path canonical append and chain-verification functions with per-partition transaction serialization — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
+- [x] T008 [FR-ADMIN-002, NFR-SEC-001, NFR-SEC-006, NFR-DATA-001, NFR-DATA-002] Add fixed-search-path canonical append and chain-verification functions with per-partition transaction serialization — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
   - Depends on: `T006`
   - Acceptance evidence: `corepack pnpm test:audit-admin:db -- chain` exits 0 with one contiguous sequence per partition and all injected tampering detected
 
