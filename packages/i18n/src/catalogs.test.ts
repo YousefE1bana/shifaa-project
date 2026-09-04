@@ -37,3 +37,19 @@ test('identity continuity copy preserves security and legal boundaries', () => {
   assert.match(enEG['recovery.accepted'], /same safe next-step response/i);
   assert.match(enEG['mfa.unsupported'], /not enabled/i);
 });
+
+test('audit admin copy is Arabic-first, parity-safe, and avoids raw-count disclosure', () => {
+  const keys = Object.keys(arEG).filter((key) =>
+    key.startsWith('auditAdmin.'),
+  ) as (keyof typeof arEG)[];
+  assert.ok(keys.length >= 30);
+  assert.ok(keys.every((key) => arEG[key] && enEG[key]));
+  assert.match(arEG['auditAdmin.summary.suppressed'], /الحد الأدنى/);
+  assert.match(enEG['auditAdmin.summary.suppressed'], /minimum privacy threshold/i);
+  assert.match(enEG['auditAdmin.summary.inactive'], /no approved metric/i);
+  assert.match(enEG['auditAdmin.audit.purposeHelp'], /approved purpose/i);
+  assert.match(enEG['auditAdmin.audit.integrityFailed'], /do not rely/i);
+  assert.match(enEG['auditAdmin.export.offline'], /not queued/i);
+  assert.match(enEG['auditAdmin.health.ready'], /ready/i);
+  assert.ok(keys.every((key) => !/raw count|exact suppressed count/i.test(enEG[key])));
+});

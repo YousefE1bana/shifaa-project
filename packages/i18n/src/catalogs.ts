@@ -1,4 +1,7 @@
+import { auditAdminArEG, auditAdminEnEG } from './audit-admin.ts';
+
 export const arEG = {
+  ...auditAdminArEG,
   'app.name': 'شفاء',
   'nav.back': 'رجوع',
   'nav.continue': 'متابعة',
@@ -347,6 +350,7 @@ export const arEG = {
 } as const;
 
 export const enEG: Record<keyof typeof arEG, string> = {
+  ...auditAdminEnEG,
   'app.name': 'SHIFAA',
   'nav.back': 'Back',
   'nav.continue': 'Continue',

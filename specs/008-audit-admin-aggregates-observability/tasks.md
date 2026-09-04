@@ -12,23 +12,23 @@
 
 ## Phase 1 — Gates and contract fixtures
 
-- [ ] T001 [FR-ADMIN-002, FR-ADMIN-003, NFR-PRIV-002, NFR-QUALITY-001] Add the Feature 008 scope verifier and planned test commands, revalidate synthetic-engineering gates, and pin the privacy digest without activating a metric — `tools/verify-feature-008-scope.mjs`, `package.json`, `specs/008-audit-admin-aggregates-observability/checklists/requirements.md`
+- [x] T001 [FR-ADMIN-002, FR-ADMIN-003, NFR-PRIV-002, NFR-QUALITY-001] Add the Feature 008 scope verifier and planned test commands, revalidate synthetic-engineering gates, and pin the privacy digest without activating a metric — `tools/verify-feature-008-scope.mjs`, `package.json`, `specs/008-audit-admin-aggregates-observability/checklists/requirements.md`
   - Depends on: `none`
   - Acceptance evidence: `node tools/verify-feature-008-scope.mjs` exits 0 with OPEN-PRIV-001 closed, metrics empty, seven operations, and production gates disabled
 
-- [ ] T002 [P] [FR-ADMIN-003, NFR-PRIV-002, NFR-QUALITY-001] Add deterministic OPEN-PRIV-001 configuration, boundary, complementary-suppression, linked-release, locale, retry, and attack fixtures for vectors 001 through 034 — `packages/test-kit/src/audit-admin-privacy-fixtures.ts`
+- [x] T002 [P] [FR-ADMIN-003, NFR-PRIV-002, NFR-QUALITY-001] Add deterministic OPEN-PRIV-001 configuration, boundary, complementary-suppression, linked-release, locale, retry, and attack fixtures for vectors 001 through 034 — `packages/test-kit/src/audit-admin-privacy-fixtures.ts`
   - Depends on: `T001`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/test-kit test -- audit-admin-privacy-fixtures` exits 0 and reports 34 uniquely named vectors
 
-- [ ] T003 [P] [FR-ADMIN-002, NFR-SEC-004, NFR-SEC-006, NFR-QUALITY-001] Add synthetic actor/AAL/purpose, audit cursor, chain, export, health, and sentinel fixtures plus the SHA-bound evidence verifier — `packages/test-kit/src/audit-admin-fixtures.ts`, `tools/verify-feature-008-evidence.mjs`
+- [x] T003 [P] [FR-ADMIN-002, NFR-SEC-004, NFR-SEC-006, NFR-QUALITY-001] Add synthetic actor/AAL/purpose, audit cursor, chain, export, health, and sentinel fixtures plus the SHA-bound evidence verifier — `packages/test-kit/src/audit-admin-fixtures.ts`, `tools/verify-feature-008-evidence.mjs`
   - Depends on: `T001`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/test-kit test -- audit-admin-fixtures` exits 0 and validates every required actor and failure class
 
-- [ ] T004 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001, NFR-API-002] Lock the seven-operation OpenAPI 3.1.1 schemas and add exact catalog/route verification for problems, cursors, idempotency, and service auth — `specs/008-audit-admin-aggregates-observability/contracts/openapi.yaml`, `tools/verify-feature-008-contract.mjs`
+- [x] T004 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001, NFR-API-002] Lock the seven-operation OpenAPI 3.1.1 schemas and add exact catalog/route verification for problems, cursors, idempotency, and service auth — `specs/008-audit-admin-aggregates-observability/contracts/openapi.yaml`, `tools/verify-feature-008-contract.mjs`
   - Depends on: `T001`
   - Acceptance evidence: `node tools/verify-feature-008-contract.mjs` exits 0 and prints operation_count=7 with exact catalog method and path parity
 
-- [ ] T005 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001] Add Arabic-first and English-parity keys for dashboard, audit, purpose, suppression, export, integrity, stale, offline, and health states — `packages/i18n/src/audit-admin.ts`
+- [x] T005 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001] Add Arabic-first and English-parity keys for dashboard, audit, purpose, suppression, export, integrity, stale, offline, and health states — `packages/i18n/src/audit-admin.ts`
   - Depends on: `T001`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/i18n test -- audit-admin` exits 0 with zero missing or asymmetric keys
 

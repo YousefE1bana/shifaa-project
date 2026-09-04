@@ -10,7 +10,9 @@
     "./family-care": "./src/family-care.ts",
     "./privacy-dsr-notifications": "./src/privacy-dsr-notifications.ts",
     "./discovery-sos": "./src/discovery-sos.ts",
-    "./identity-continuity": "./src/identity-continuity.ts"
+    "./identity-continuity": "./src/identity-continuity.ts",
+    "./audit-admin-privacy-fixtures": "./src/audit-admin-privacy-fixtures.ts",
+    "./audit-admin-fixtures": "./src/audit-admin-fixtures.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

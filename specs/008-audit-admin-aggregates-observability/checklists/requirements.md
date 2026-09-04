@@ -31,6 +31,10 @@
 
 ## Notes
 
+- Checkpoint C1 pins the approved privacy package SHA-256
+  `38855c7319b6bcd06b491bf4213a277303a6d6e2c1ebe7499b65fdfa4ae15039`, the
+  exact seven-operation boundary, inactive `metrics: []`, and unchanged production gates through
+  `tools/verify-feature-008-scope.mjs`.
 - `OPEN-PRIV-001` is closed for graduation engineering by approved package v1.0.0. `metrics: []`
   activates no aggregate but does not block planning; individual metrics and status mappings remain
   fail-closed until later approved configuration.
