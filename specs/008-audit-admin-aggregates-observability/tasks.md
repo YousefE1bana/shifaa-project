@@ -46,11 +46,11 @@
   - Depends on: `T006`
   - Acceptance evidence: `corepack pnpm test:audit-admin:db -- chain` exits 0 with one contiguous sequence per partition and all injected tampering detected
 
-- [ ] T009 [FR-ADMIN-002, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001] Add export state functions, feature flags, processing inventory, and minimum audit export outbox allow-list — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
+- [x] T009 [FR-ADMIN-002, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001] Add export state functions, feature flags, processing inventory, and minimum audit export outbox allow-list — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
   - Depends on: `T007`, `T008`
   - Acceptance evidence: `corepack pnpm test:audit-admin:db -- export` exits 0 with one atomic batch audit outbox and idempotency effect and metrics remaining inactive
 
-- [ ] T010 [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-001, NFR-SEC-004, NFR-PRIV-002] Add forced RLS, current-role/AAL/purpose and exact-worker helpers, minimum grants, and PUBLIC/direct-table denials — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
+- [x] T010 [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-001, NFR-SEC-004, NFR-PRIV-002] Add forced RLS, current-role/AAL/purpose and exact-worker helpers, minimum grants, and PUBLIC/direct-table denials — `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`
   - Depends on: `T007`, `T009`
   - Acceptance evidence: `corepack pnpm test:audit-admin:rls` exits 0 with only current super-admin AAL2 purpose and exact worker contexts authorized
 

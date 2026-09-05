@@ -667,6 +667,628 @@ BEGIN
 END
 $function$;
 
+-- T009: independently killable synthetic graduation gates. The approved
+-- aggregate policy is recorded, but its empty metric list activates nothing.
+INSERT INTO platform.feature_flags(
+  code,environment,enabled,constraints,approved_by_person_id
+)
+SELECT flag.code,environment.environment,flag.local_enabled,flag.constraints,NULL
+FROM (VALUES
+  (
+    'admin.aggregates',
+    false,
+    pg_catalog.jsonb_build_object(
+      'policyId','OPEN-PRIV-001',
+      'policyVersion','1.0.0-approved',
+      'packageSha256','38855c7319b6bcd06b491bf4213a277303a6d6e2c1ebe7499b65fdfa4ae15039',
+      'minimumDistinctSubjects',11,
+      'suppressedInclusive',pg_catalog.jsonb_build_array(0,10),
+      'metrics','[]'::jsonb,
+      'syntheticOnly',true
+    )
+  ),
+  (
+    'audit.read',
+    true,
+    '{"requiredRole":"super_admin","minimumAal":2,"requiredPurpose":"security.audit.review","syntheticOnly":true}'::jsonb
+  ),
+  (
+    'audit.export',
+    true,
+    '{"requiredRole":"super_admin","minimumAal":2,"requiredPurpose":"security.audit.review","eventType":"audit.export.requested","syntheticOnly":true}'::jsonb
+  ),
+  (
+    'health.exposure',
+    true,
+    '{"privateNetworkOnly":true,"serviceAuthRequired":true,"syntheticOnly":true}'::jsonb
+  )
+) AS flag(code,local_enabled,constraints)
+CROSS JOIN (VALUES ('local'),('ci'),('production')) AS environment(environment)
+ON CONFLICT(code,environment) DO UPDATE
+SET enabled = EXCLUDED.enabled,
+    constraints = EXCLUDED.constraints,
+    approved_by_person_id = EXCLUDED.approved_by_person_id,
+    version = platform.feature_flags.version + 1,
+    updated_at = pg_catalog.statement_timestamp();
+
+UPDATE platform.feature_flags
+SET enabled = false,
+    constraints = constraints || '{"productionGate":"disabled-pending-governance"}'::jsonb,
+    version = version + 1,
+    updated_at = pg_catalog.statement_timestamp()
+WHERE code IN ('admin.aggregates','audit.read','audit.export','health.exposure')
+  AND environment = 'production';
+
+INSERT INTO consent.processing_inventory(
+  process_code,owner_name,controller_name,processor_names,purposes,data_categories,
+  systems,recipients,countries,retention_class,lawful_basis,approval_digest,status
+) VALUES (
+  'audit-evidence-export-synthetic',
+  'SHIFAA Product Owner',
+  'SHIFAA synthetic environment',
+  ARRAY[]::text[],
+  ARRAY['security.audit.review'],
+  ARRAY['security_audit_metadata','export_integrity_evidence'],
+  ARRAY['local-api','local-worker','local-postgres','local-write-once-simulator'],
+  ARRAY['authorized-super-admin','internal-export-worker'],
+  ARRAY['EG'],
+  'SECURITY_AUDIT',
+  'synthetic-engineering-only',
+  '38855c7319b6bcd06b491bf4213a277303a6d6e2c1ebe7499b65fdfa4ae15039',
+  'active'
+)
+ON CONFLICT(process_code) DO UPDATE
+SET purposes = EXCLUDED.purposes,
+    data_categories = EXCLUDED.data_categories,
+    systems = EXCLUDED.systems,
+    recipients = EXCLUDED.recipients,
+    retention_class = EXCLUDED.retention_class,
+    lawful_basis = EXCLUDED.lawful_basis,
+    approval_digest = EXCLUDED.approval_digest,
+    status = EXCLUDED.status,
+    version = consent.processing_inventory.version + 1,
+    updated_at = pg_catalog.statement_timestamp();
+
+ALTER TABLE platform.outbox_events
+  DROP CONSTRAINT IF EXISTS outbox_events_event_type_check;
+ALTER TABLE platform.outbox_events
+  ADD CONSTRAINT outbox_events_event_type_check CHECK(event_type IN (
+    'identity.verification.changed','identity.manual_review.requested','consent.changed','facility.changed','professional_license.changed','membership.changed','admin_role.changed',
+    'relationship.guardianship.changed','relationship.guardianship.created','relationship.guardianship.active','relationship.guardianship.rejected','relationship.guardianship.revoked',
+    'relationship.delegation.changed','relationship.delegation.created','relationship.delegation.accepted','relationship.delegation.updated','relationship.delegation.revoked',
+    'emergency_contact.changed','emergency_contact.created','emergency_contact.confirmed','emergency_contact.declined','emergency_contact.revoked',
+    'sos.emergency_contact.requested','sos.emergency_contact.denied','sos.incident.created','sos.incident.accepted','sos.incident.closed','sos.share.created','sos.share.revoked','sos.share.viewed',
+    'privacy.dsr.submitted','privacy.dsr.status_changed','privacy.dsr.export_ready','privacy.dsr.export_consumed','privacy.dsr.identity_required',
+    'notification.template.drafted','notification.template.published','notification.delivery.requested','notification.delivery.receipt_recorded','notification.delivery.replay_requested',
+    'identity.factor.changed','identity.recovery.completed','identity.transition.submitted','identity.transition.decided',
+    'audit.export.requested'
+  ));
+
+DROP INDEX IF EXISTS platform.outbox_aggregate_version_uq;
+CREATE UNIQUE INDEX outbox_aggregate_version_uq
+  ON platform.outbox_events(aggregate_type,aggregate_id,aggregate_version)
+  WHERE event_type IN (
+    'privacy.dsr.submitted','privacy.dsr.status_changed','privacy.dsr.export_ready','privacy.dsr.export_consumed','privacy.dsr.identity_required',
+    'notification.template.drafted','notification.template.published','notification.delivery.requested','notification.delivery.receipt_recorded','notification.delivery.replay_requested',
+    'sos.incident.created','sos.incident.accepted','sos.incident.closed','sos.share.created','sos.share.revoked','sos.share.viewed','sos.emergency_contact.requested',
+    'identity.factor.changed','identity.recovery.completed','identity.transition.submitted','identity.transition.decided',
+    'audit.export.requested'
+  );
+
+INSERT INTO identity.role_permissions(
+  role_code,action_code,resource_code,min_aal,purpose_code
+) VALUES
+  ('super_admin','listAuditEvents','audit_event',2,'security.audit.review'),
+  ('super_admin','getAuditEvent','audit_event',2,'security.audit.review'),
+  ('super_admin','createAuditExport','audit_export',2,'security.audit.review')
+ON CONFLICT(role_code,action_code,resource_code) DO UPDATE
+SET min_aal = EXCLUDED.min_aal,
+    purpose_code = EXCLUDED.purpose_code;
+
+-- T010: current database facts, not a claimed JWT role or DPO designation,
+-- authorize general audit access.
+CREATE OR REPLACE FUNCTION audit.current_super_admin_context_v1(p_required_purpose text)
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  SELECT
+    session_user = 'shifaa_api'
+    AND p_required_purpose = 'security.audit.review'
+    AND platform.context_person_id() IS NOT NULL
+    AND platform.context_aal() >= 2
+    AND p_required_purpose = ANY(platform.context_purposes())
+    AND EXISTS (
+      SELECT 1
+      FROM identity.admin_role_grants AS grant_row
+      WHERE grant_row.person_id = platform.context_person_id()
+        AND grant_row.role_code = 'super_admin'
+        AND grant_row.status = 'active'
+        AND grant_row.valid_from <= pg_catalog.statement_timestamp()
+        AND (
+          grant_row.valid_until IS NULL
+          OR grant_row.valid_until > pg_catalog.statement_timestamp()
+        )
+    )
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.exact_export_worker_context_v1(p_worker_id text)
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY INVOKER
+SET search_path = pg_catalog
+AS $function$
+  SELECT
+    session_user = 'shifaa_worker'
+    AND p_worker_id IS NOT NULL
+    AND pg_catalog.octet_length(p_worker_id) BETWEEN 8 AND 64
+    AND p_worker_id ~ '^[a-z0-9][a-z0-9._-]*$'
+    AND p_worker_id = nullif(current_setting('shifaa.worker_id',true),'')
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.worker_claims_export_v1(p_export_batch_id uuid)
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  SELECT EXISTS (
+    SELECT 1
+    FROM audit.export_batches AS batch
+    WHERE batch.id = p_export_batch_id
+      AND batch.status = 'claimed'
+      AND batch.lease_expires_at > pg_catalog.statement_timestamp()
+      AND audit.exact_export_worker_context_v1(batch.lease_owner)
+  )
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.request_export_v1(
+  p_idempotency_key text,
+  p_request_hash text,
+  p_partition_start date,
+  p_partition_end_exclusive date,
+  p_request_id uuid,
+  p_trace_id text
+)
+RETURNS TABLE(
+  export_batch_id uuid,
+  status text,
+  partition_start date,
+  partition_end_exclusive date,
+  accepted_at timestamptz,
+  idempotency_state text
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+DECLARE
+  principal_value text := nullif(current_setting('shifaa.principal',true),'');
+  actor_person_id_value uuid := platform.context_person_id();
+  idempotency_row platform.idempotency_records%ROWTYPE;
+  inserted_idempotency_id uuid;
+  batch_row audit.export_batches%ROWTYPE;
+BEGIN
+  IF NOT audit.current_super_admin_context_v1('security.audit.review')
+     OR NOT platform.feature_enabled('audit.export',platform.context_environment()) THEN
+    RAISE EXCEPTION 'F008_AUDIT_EXPORT_DENIED' USING ERRCODE = '42501';
+  END IF;
+
+  IF principal_value IS NULL
+     OR p_idempotency_key IS NULL
+     OR pg_catalog.octet_length(p_idempotency_key) NOT BETWEEN 8 AND 255
+     OR p_request_hash IS NULL
+     OR p_request_hash !~ '^[a-f0-9]{64}$'
+     OR p_request_id IS NULL
+     OR p_trace_id IS NULL THEN
+    RAISE EXCEPTION 'F008_AUDIT_EXPORT_REQUEST_INVALID' USING ERRCODE = '22023';
+  END IF;
+
+  DELETE FROM platform.idempotency_records AS expired
+  WHERE expired.principal = principal_value
+    AND expired.method = 'POST'
+    AND expired.route = '/v1/admin/audit/exports'
+    AND expired.idempotency_key = p_idempotency_key
+    AND expired.expires_at <= pg_catalog.statement_timestamp();
+
+  INSERT INTO platform.idempotency_records(
+    principal,method,route,idempotency_key,request_hash,state,expires_at
+  ) VALUES (
+    principal_value,'POST','/v1/admin/audit/exports',p_idempotency_key,
+    p_request_hash,'processing',pg_catalog.statement_timestamp() + INTERVAL '24 hours'
+  )
+  ON CONFLICT(principal,method,route,idempotency_key) DO NOTHING
+  RETURNING id INTO inserted_idempotency_id;
+
+  SELECT record.*
+  INTO STRICT idempotency_row
+  FROM platform.idempotency_records AS record
+  WHERE record.principal = principal_value
+    AND record.method = 'POST'
+    AND record.route = '/v1/admin/audit/exports'
+    AND record.idempotency_key = p_idempotency_key
+  FOR UPDATE;
+
+  IF idempotency_row.request_hash <> p_request_hash THEN
+    RAISE EXCEPTION 'F008_IDEMPOTENCY_KEY_REUSED' USING ERRCODE = '23505';
+  END IF;
+
+  IF inserted_idempotency_id IS NULL THEN
+    IF idempotency_row.state = 'completed' THEN
+      RETURN QUERY SELECT
+        (idempotency_row.response_body->>'export_batch_id')::uuid,
+        idempotency_row.response_body->>'status',
+        (idempotency_row.response_body->>'partition_start')::date,
+        (idempotency_row.response_body->>'partition_end_exclusive')::date,
+        (idempotency_row.response_body->>'accepted_at')::timestamptz,
+        'replayed'::text;
+      RETURN;
+    END IF;
+    RAISE EXCEPTION 'F008_IDEMPOTENCY_IN_PROGRESS' USING ERRCODE = '55000';
+  END IF;
+
+  INSERT INTO audit.export_batches(
+    requested_by_person_id,purpose_code,partition_start,partition_end_exclusive,status
+  ) VALUES (
+    actor_person_id_value,'security.audit.review',p_partition_start,
+    p_partition_end_exclusive,'queued'
+  )
+  RETURNING * INTO batch_row;
+
+  PERFORM audit.append_event_v1(
+    p_request_id,p_trace_id,'audit.export.requested','audit_export','success',
+    NULL::uuid,actor_person_id_value,2::smallint,NULL::uuid,NULL::uuid,
+    'security.audit.review',batch_row.id,batch_row.version,
+    NULL::text,NULL::inet,'service'
+  );
+
+  INSERT INTO platform.outbox_events(
+    aggregate_type,aggregate_id,aggregate_version,event_type,payload
+  ) VALUES (
+    'audit-export',batch_row.id,batch_row.version,'audit.export.requested',
+    pg_catalog.jsonb_build_object('exportBatchId',batch_row.id)
+  );
+
+  UPDATE platform.idempotency_records AS record
+  SET state = 'completed',
+      response_status = 202,
+      response_headers = '{"cache-control":"private, no-store"}'::jsonb,
+      response_body = pg_catalog.jsonb_build_object(
+        'export_batch_id',batch_row.id,
+        'status',batch_row.status,
+        'partition_start',batch_row.partition_start,
+        'partition_end_exclusive',batch_row.partition_end_exclusive,
+        'accepted_at',batch_row.created_at
+      ),
+      resource_type = 'audit_export',
+      resource_id = batch_row.id,
+      updated_at = pg_catalog.statement_timestamp()
+  WHERE record.id = idempotency_row.id;
+
+  RETURN QUERY SELECT
+    batch_row.id,batch_row.status,batch_row.partition_start,
+    batch_row.partition_end_exclusive,batch_row.created_at,'created'::text;
+END
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.claim_export_v1(
+  p_worker_id text,
+  p_lease_seconds integer DEFAULT 30
+)
+RETURNS TABLE(
+  export_batch_id uuid,
+  partition_start date,
+  partition_end_exclusive date,
+  object_key text,
+  attempt_count integer,
+  lease_owner text,
+  lease_expires_at timestamptz
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+DECLARE
+  event_id_value uuid;
+  batch_id_value uuid;
+  batch_row audit.export_batches%ROWTYPE;
+BEGIN
+  IF NOT audit.exact_export_worker_context_v1(p_worker_id)
+     OR NOT platform.feature_enabled('audit.export',platform.context_environment()) THEN
+    RAISE EXCEPTION 'F008_EXPORT_WORKER_DENIED' USING ERRCODE = '42501';
+  END IF;
+  IF p_lease_seconds NOT BETWEEN 1 AND 300 THEN
+    RAISE EXCEPTION 'F008_EXPORT_LEASE_INVALID' USING ERRCODE = '22023';
+  END IF;
+
+  SELECT event.id,batch.id
+  INTO event_id_value,batch_id_value
+  FROM platform.outbox_events AS event
+  JOIN audit.export_batches AS batch
+    ON batch.id = event.aggregate_id
+   AND event.aggregate_type = 'audit-export'
+  WHERE event.event_type = 'audit.export.requested'
+    AND event.available_at <= pg_catalog.statement_timestamp()
+    AND (
+      (event.state = 'pending' AND batch.status IN ('queued','retryable'))
+      OR (
+        event.state = 'processing'
+        AND event.lease_expires_at <= pg_catalog.statement_timestamp()
+        AND batch.status = 'claimed'
+        AND batch.lease_expires_at <= pg_catalog.statement_timestamp()
+      )
+    )
+  ORDER BY event.available_at,event.created_at,event.id
+  FOR UPDATE OF event,batch SKIP LOCKED
+  LIMIT 1;
+
+  IF event_id_value IS NULL THEN
+    RETURN;
+  END IF;
+
+  UPDATE audit.export_batches AS batch
+  SET status = 'claimed',
+      object_key = coalesce(
+        batch.object_key,
+        'audit-exports/' || pg_catalog.encode(
+          audit.sha256_v1(pg_catalog.convert_to(batch.id::text,'UTF8')),'hex'
+        ) || '.jsonl'
+      ),
+      failure_code = NULL,
+      lease_owner = p_worker_id,
+      lease_expires_at = pg_catalog.statement_timestamp()
+        + pg_catalog.make_interval(secs => p_lease_seconds),
+      attempt_count = batch.attempt_count + 1,
+      updated_at = pg_catalog.statement_timestamp(),
+      version = batch.version + 1
+  WHERE batch.id = batch_id_value
+  RETURNING batch.* INTO batch_row;
+
+  UPDATE platform.outbox_events AS event
+  SET state = 'processing',
+      attempt_count = event.attempt_count + 1,
+      lease_owner = p_worker_id,
+      lease_expires_at = batch_row.lease_expires_at,
+      last_error_code = NULL,
+      updated_at = pg_catalog.statement_timestamp()
+  WHERE event.id = event_id_value;
+
+  RETURN QUERY SELECT
+    batch_row.id,batch_row.partition_start,batch_row.partition_end_exclusive,
+    batch_row.object_key,batch_row.attempt_count,batch_row.lease_owner,
+    batch_row.lease_expires_at;
+END
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.complete_export_v1(
+  p_export_batch_id uuid,
+  p_worker_id text,
+  p_outcome text,
+  p_object_digest bytea DEFAULT NULL,
+  p_retention_proof jsonb DEFAULT NULL,
+  p_failure_code text DEFAULT NULL,
+  p_retry_at timestamptz DEFAULT NULL
+)
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+DECLARE
+  event_id_value uuid;
+  changed_count integer;
+BEGIN
+  IF NOT audit.exact_export_worker_context_v1(p_worker_id) THEN
+    RAISE EXCEPTION 'F008_EXPORT_WORKER_DENIED' USING ERRCODE = '42501';
+  END IF;
+  IF p_outcome NOT IN ('proven','retryable','dead_letter') THEN
+    RAISE EXCEPTION 'F008_EXPORT_OUTCOME_INVALID' USING ERRCODE = '22023';
+  END IF;
+  IF p_outcome = 'proven' AND (
+    p_object_digest IS NULL OR pg_catalog.octet_length(p_object_digest) <> 32
+    OR p_retention_proof IS NULL OR p_failure_code IS NOT NULL OR p_retry_at IS NOT NULL
+  ) THEN
+    RAISE EXCEPTION 'F008_EXPORT_PROOF_INVALID' USING ERRCODE = '22023';
+  END IF;
+  IF p_outcome = 'retryable' AND (
+    p_failure_code IS NULL OR p_retry_at IS NULL
+    OR p_retry_at <= pg_catalog.statement_timestamp()
+    OR p_object_digest IS NOT NULL OR p_retention_proof IS NOT NULL
+  ) THEN
+    RAISE EXCEPTION 'F008_EXPORT_RETRY_INVALID' USING ERRCODE = '22023';
+  END IF;
+  IF p_outcome = 'dead_letter' AND (
+    p_failure_code IS NULL OR p_retry_at IS NOT NULL
+    OR p_object_digest IS NOT NULL OR p_retention_proof IS NOT NULL
+  ) THEN
+    RAISE EXCEPTION 'F008_EXPORT_DEAD_LETTER_INVALID' USING ERRCODE = '22023';
+  END IF;
+
+  SELECT event.id
+  INTO event_id_value
+  FROM platform.outbox_events AS event
+  JOIN audit.export_batches AS batch ON batch.id = event.aggregate_id
+  WHERE batch.id = p_export_batch_id
+    AND batch.status = 'claimed'
+    AND batch.lease_owner = p_worker_id
+    AND batch.lease_expires_at > pg_catalog.statement_timestamp()
+    AND event.event_type = 'audit.export.requested'
+    AND event.state = 'processing'
+    AND event.lease_owner = p_worker_id
+    AND event.lease_expires_at > pg_catalog.statement_timestamp()
+  FOR UPDATE OF event,batch;
+
+  IF event_id_value IS NULL THEN
+    RETURN false;
+  END IF;
+
+  UPDATE audit.export_batches AS batch
+  SET status = p_outcome,
+      object_digest = CASE WHEN p_outcome = 'proven' THEN p_object_digest ELSE NULL END,
+      retention_proof = CASE WHEN p_outcome = 'proven' THEN p_retention_proof ELSE NULL END,
+      exported_at = CASE WHEN p_outcome = 'proven' THEN pg_catalog.statement_timestamp() ELSE NULL END,
+      failure_code = CASE WHEN p_outcome = 'proven' THEN NULL ELSE p_failure_code END,
+      lease_owner = NULL,
+      lease_expires_at = NULL,
+      updated_at = pg_catalog.statement_timestamp(),
+      version = batch.version + 1
+  WHERE batch.id = p_export_batch_id;
+
+  UPDATE platform.outbox_events AS event
+  SET state = CASE
+        WHEN p_outcome = 'proven' THEN 'delivered'
+        WHEN p_outcome = 'retryable' THEN 'pending'
+        ELSE 'dead_letter'
+      END,
+      available_at = CASE WHEN p_outcome = 'retryable' THEN p_retry_at ELSE event.available_at END,
+      last_error_code = CASE WHEN p_outcome = 'proven' THEN NULL ELSE p_failure_code END,
+      lease_owner = NULL,
+      lease_expires_at = NULL,
+      updated_at = pg_catalog.statement_timestamp()
+  WHERE event.id = event_id_value;
+
+  GET DIAGNOSTICS changed_count = ROW_COUNT;
+  IF changed_count = 1 AND p_outcome IN ('proven','dead_letter') THEN
+    INSERT INTO platform.event_receipts(event_id,consumer,result_code)
+    VALUES(event_id_value,'audit-export-worker',p_outcome)
+    ON CONFLICT(event_id,consumer) DO NOTHING;
+  END IF;
+  RETURN changed_count = 1;
+END
+$function$;
+
+ALTER TABLE audit.events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit.events FORCE ROW LEVEL SECURITY;
+ALTER TABLE audit.signature_evidence ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit.signature_evidence FORCE ROW LEVEL SECURITY;
+ALTER TABLE audit.export_batches ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit.export_batches FORCE ROW LEVEL SECURITY;
+
+DO $audit_partition_rls$
+DECLARE
+  partition_name text;
+BEGIN
+  FOR partition_name IN
+    SELECT child.oid::regclass::text
+    FROM pg_catalog.pg_inherits AS inheritance
+    JOIN pg_catalog.pg_class AS child ON child.oid = inheritance.inhrelid
+    WHERE inheritance.inhparent = 'audit.events'::regclass
+  LOOP
+    EXECUTE pg_catalog.format('ALTER TABLE %s ENABLE ROW LEVEL SECURITY',partition_name);
+    EXECUTE pg_catalog.format('ALTER TABLE %s FORCE ROW LEVEL SECURITY',partition_name);
+  END LOOP;
+END
+$audit_partition_rls$;
+
+CREATE POLICY audit_events_super_admin_select_v1
+ON audit.events FOR SELECT TO shifaa_api
+USING (audit.current_super_admin_context_v1('security.audit.review'));
+CREATE POLICY audit_signature_super_admin_select_v1
+ON audit.signature_evidence FOR SELECT TO shifaa_api
+USING (audit.current_super_admin_context_v1('security.audit.review'));
+CREATE POLICY audit_export_super_admin_select_v1
+ON audit.export_batches FOR SELECT TO shifaa_api
+USING (
+  audit.current_super_admin_context_v1('security.audit.review')
+  AND requested_by_person_id = platform.context_person_id()
+);
+CREATE POLICY audit_export_super_admin_insert_v1
+ON audit.export_batches FOR INSERT TO shifaa_api
+WITH CHECK (
+  audit.current_super_admin_context_v1('security.audit.review')
+  AND requested_by_person_id = platform.context_person_id()
+  AND status = 'queued'
+);
+CREATE POLICY audit_export_exact_worker_select_v1
+ON audit.export_batches FOR SELECT TO shifaa_worker
+USING (
+  audit.exact_export_worker_context_v1(lease_owner)
+  AND id = nullif(current_setting('shifaa.export_batch_id',true),'')::uuid
+  AND status = 'claimed'
+);
+
+DROP POLICY IF EXISTS outbox_worker_select ON platform.outbox_events;
+CREATE POLICY outbox_worker_select
+ON platform.outbox_events FOR SELECT TO shifaa_worker
+USING (
+  event_type IN (
+    'privacy.dsr.status_changed','privacy.dsr.export_ready','notification.delivery.requested','notification.delivery.replay_requested',
+    'sos.emergency_contact.requested','identity.factor.changed','identity.recovery.completed',
+    'identity.transition.submitted','identity.transition.decided'
+  )
+  OR (
+    event_type = 'audit.export.requested'
+    AND aggregate_type = 'audit-export'
+    AND payload = pg_catalog.jsonb_build_object('exportBatchId',aggregate_id)
+    AND audit.worker_claims_export_v1(aggregate_id)
+  )
+);
+
+DROP POLICY IF EXISTS outbox_worker_lease_update ON platform.outbox_events;
+CREATE POLICY outbox_worker_lease_update
+ON platform.outbox_events FOR UPDATE TO shifaa_worker
+USING (
+  event_type IN (
+    'privacy.dsr.status_changed','privacy.dsr.export_ready','notification.delivery.requested','notification.delivery.replay_requested',
+    'sos.emergency_contact.requested','identity.factor.changed','identity.recovery.completed',
+    'identity.transition.submitted','identity.transition.decided'
+  )
+  OR (
+    event_type = 'audit.export.requested'
+    AND aggregate_type = 'audit-export'
+    AND audit.worker_claims_export_v1(aggregate_id)
+  )
+)
+WITH CHECK (
+  event_type IN (
+    'privacy.dsr.status_changed','privacy.dsr.export_ready','notification.delivery.requested','notification.delivery.replay_requested',
+    'sos.emergency_contact.requested','identity.factor.changed','identity.recovery.completed',
+    'identity.transition.submitted','identity.transition.decided'
+  )
+  OR (
+    event_type = 'audit.export.requested'
+    AND aggregate_type = 'audit-export'
+    AND payload = pg_catalog.jsonb_build_object('exportBatchId',aggregate_id)
+  )
+);
+
+REVOKE ALL ON SCHEMA audit FROM PUBLIC;
+GRANT USAGE ON SCHEMA audit TO shifaa_api,shifaa_worker;
+REVOKE ALL ON ALL TABLES IN SCHEMA audit FROM PUBLIC,shifaa_api,shifaa_worker;
+
+REVOKE ALL ON FUNCTION audit.current_super_admin_context_v1(text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.exact_export_worker_context_v1(text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.worker_claims_export_v1(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.request_export_v1(text,text,date,date,uuid,text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.claim_export_v1(text,integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION audit.current_super_admin_context_v1(text) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.exact_export_worker_context_v1(text) TO shifaa_worker;
+GRANT EXECUTE ON FUNCTION audit.worker_claims_export_v1(uuid) TO shifaa_worker;
+GRANT EXECUTE ON FUNCTION audit.request_export_v1(text,text,date,date,uuid,text) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.claim_export_v1(text,integer) TO shifaa_worker;
+GRANT EXECUTE ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz) TO shifaa_worker;
+
+DO $optional_roles$
+DECLARE
+  role_name text;
+BEGIN
+  FOREACH role_name IN ARRAY ARRAY['anon','authenticated','service_role']
+  LOOP
+    IF EXISTS (SELECT 1 FROM pg_catalog.pg_roles WHERE rolname = role_name) THEN
+      EXECUTE pg_catalog.format(
+        'REVOKE ALL ON audit.events,audit.signature_evidence,audit.export_batches FROM %I',
+        role_name
+      );
+    END IF;
+  END LOOP;
+END
+$optional_roles$;
+
 REVOKE ALL ON FUNCTION audit.reject_append_only_v1() FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.guard_export_batch_mutation_v1() FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.sha256_v1(bytea) FROM PUBLIC;

@@ -55,6 +55,7 @@
     "test:audit-admin:contract": "node tools/verify-feature-008-contract.mjs",
     "test:audit-admin:i18n": "pnpm --filter @shifaa/i18n test -- audit-admin",
     "test:audit-admin:db": "node tools/run-audit-admin-postgres-test.mjs",
+    "test:audit-admin:rls": "node tools/run-audit-admin-postgres-test.mjs rls",
     "test:audit-admin:stack": "pnpm test:audit-admin:db && pnpm --filter @shifaa/api test:integration -- audit-admin-observability && pnpm --filter @shifaa/worker test -- audit-export",
     "test:audit-admin:e2e": "tsx --test --test-concurrency=1 tests/e2e/audit-admin-summary.spec.ts tests/e2e/audit-admin-events.spec.ts tests/e2e/audit-export.spec.ts",
     "test:audit-admin:privacy": "pnpm --filter @shifaa/core test -- aggregate-policy && pnpm --filter @shifaa/observability test -- audit-admin && node tools/verify-feature-008-evidence.mjs --privacy",
