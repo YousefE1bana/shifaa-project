@@ -54,15 +54,15 @@
   - Depends on: `T007`, `T009`
   - Acceptance evidence: `corepack pnpm test:audit-admin:rls` exits 0 with only current super-admin AAL2 purpose and exact worker contexts authorized
 
-- [ ] T011 [P] [FR-ADMIN-002, NFR-SEC-006, NFR-DATA-001, NFR-DATA-002, NFR-QUALITY-001] Add fresh, upgrade-fail-closed, partition-boundary, append-only, chain, export-state, and concurrency database tests — `infra/db/tests/audit-admin-observability-schema.sql`
+- [x] T011 [P] [FR-ADMIN-002, NFR-SEC-006, NFR-DATA-001, NFR-DATA-002, NFR-QUALITY-001] Add fresh, upgrade-fail-closed, partition-boundary, append-only, chain, export-state, and concurrency database tests — `infra/db/tests/audit-admin-observability-schema.sql`
   - Depends on: `T006`, `T007`, `T008`, `T009`
   - Acceptance evidence: `corepack pnpm test:audit-admin:db` exits 0 twice from clean resets with identical chain and state results
 
-- [ ] T012 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-001, NFR-SEC-004, NFR-SEC-007, NFR-QUALITY-001] Add complete patient/workforce/admin/DPO/stale/AAL/purpose/service/direct-SQL forced-RLS negative matrix — `infra/db/tests/audit-admin-observability-rls.sql`
+- [x] T012 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-001, NFR-SEC-004, NFR-SEC-007, NFR-QUALITY-001] Add complete patient/workforce/admin/DPO/stale/AAL/purpose/service/direct-SQL forced-RLS negative matrix — `infra/db/tests/audit-admin-observability-rls.sql`
   - Depends on: `T010`
   - Acceptance evidence: `corepack pnpm test:audit-admin:rls` exits 0 with zero rows or effects for every unauthorized matrix cell
 
-- [ ] T013 [P] [NFR-SEC-002, NFR-AVAIL-001, NFR-DATA-001, NFR-PRIV-004] Add deterministic database/object/digest/retention-proof backup and restore fixtures without statutory duration claims — `infra/db/fixtures/audit-admin-restore.sql`
+- [x] T013 [P] [NFR-SEC-002, NFR-AVAIL-001, NFR-DATA-001, NFR-PRIV-004] Add deterministic database/object/digest/retention-proof backup and restore fixtures without statutory duration claims — `infra/db/fixtures/audit-admin-restore.sql`
   - Depends on: `T007`, `T008`
   - Acceptance evidence: `corepack pnpm test:audit-admin:restore -- fixture` exits 0 and verifies restored chains and object digests from synthetic data only
 

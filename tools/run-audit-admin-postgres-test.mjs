@@ -24,6 +24,8 @@ const baselineMigrations = [
 ];
 const featureMigration =
   'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql';
+const schemaFixture = 'infra/db/tests/audit-admin-observability-schema.sql';
+const rlsFixture = 'infra/db/tests/audit-admin-observability-rls.sql';
 const databaseNames = {
   schema: 'shifaa_f008_schema',
   legacy: 'shifaa_f008_legacy',
@@ -131,6 +133,7 @@ async function runSchemaMode() {
   try {
     applyBaseline(cleanDatabase);
     applyMigration(cleanDatabase, featureMigration, { quiet: true });
+    applyMigration(cleanDatabase, schemaFixture, { quiet: true });
     const sql = connect(cleanDatabase);
 
     try {
@@ -452,7 +455,7 @@ async function runSchemaMode() {
     }
 
     console.log(
-      `audit-admin schema: PASS partitions=${partitionCount} indexes=${requiredIndexCount} legacy_rows_unchanged=1`,
+      `audit-admin schema: PASS partitions=${partitionCount} indexes=${requiredIndexCount} legacy_rows_unchanged=1 boundary_vectors=3 export_states=3`,
     );
   } finally {
     dropDatabase(cleanDatabase);
@@ -588,7 +591,12 @@ async function seedAuditAdminActors(sql) {
       ('81000000-0000-4000-8000-000000000008','81000000-0000-4000-9000-000000000008','Synthetic DPO Only','EG','en-EG','active'),
       ('81000000-0000-4000-8000-000000000003','81000000-0000-4000-9000-000000000003','Synthetic Workforce','EG','en-EG','active'),
       ('81000000-0000-4000-8000-000000000016','81000000-0000-4000-9000-000000000016','Synthetic Audit Proposer','EG','en-EG','active'),
-      ('81000000-0000-4000-8000-000000000017','81000000-0000-4000-9000-000000000017','Synthetic Audit Decider','EG','en-EG','active')
+      ('81000000-0000-4000-8000-000000000017','81000000-0000-4000-9000-000000000017','Synthetic Audit Decider','EG','en-EG','active'),
+      ('81000000-0000-4000-8000-000000000018','81000000-0000-4000-9000-000000000018','Synthetic Support Admin','EG','en-EG','active'),
+      ('81000000-0000-4000-8000-000000000019','81000000-0000-4000-9000-000000000019','Synthetic Medical Reviewer','EG','en-EG','active'),
+      ('81000000-0000-4000-8000-000000000020','81000000-0000-4000-9000-000000000020','Synthetic Facility Approver','EG','en-EG','active'),
+      ('81000000-0000-4000-8000-000000000021','81000000-0000-4000-9000-000000000021','Synthetic Finance Reviewer','EG','en-EG','active'),
+      ('81000000-0000-4000-8000-000000000022','81000000-0000-4000-9000-000000000022','Synthetic Patient','EG','en-EG','active')
     ON CONFLICT(id) DO NOTHING
   `;
     await transaction`
@@ -597,9 +605,22 @@ async function seedAuditAdminActors(sql) {
     ) VALUES
       ('81100000-0000-4000-8000-000000000014','81000000-0000-4000-8000-000000000014','super_admin','active','2020-01-01T00:00:00Z','2099-01-01T00:00:00Z','81000000-0000-4000-8000-000000000016','81000000-0000-4000-8000-000000000017','synthetic_current'),
       ('81100000-0000-4000-8000-000000000009','81000000-0000-4000-8000-000000000009','super_admin','active','2020-01-01T00:00:00Z','2021-01-01T00:00:00Z','81000000-0000-4000-8000-000000000016','81000000-0000-4000-8000-000000000017','synthetic_stale'),
-      ('81100000-0000-4000-8000-000000000015','81000000-0000-4000-8000-000000000015','super_admin','revoked','2020-01-01T00:00:00Z',NULL,'81000000-0000-4000-8000-000000000016','81000000-0000-4000-8000-000000000017','synthetic_revoked')
+      ('81100000-0000-4000-8000-000000000015','81000000-0000-4000-8000-000000000015','super_admin','revoked','2020-01-01T00:00:00Z',NULL,'81000000-0000-4000-8000-000000000016','81000000-0000-4000-8000-000000000017','synthetic_revoked'),
+      ('81100000-0000-4000-8000-000000000018','81000000-0000-4000-8000-000000000018','support_admin','active','2020-01-01T00:00:00Z','2099-01-01T00:00:00Z','81000000-0000-4000-8000-000000000016','81000000-0000-4000-8000-000000000017','synthetic_support'),
+      ('81100000-0000-4000-8000-000000000019','81000000-0000-4000-8000-000000000019','medical_reviewer','active','2020-01-01T00:00:00Z','2099-01-01T00:00:00Z','81000000-0000-4000-8000-000000000016','81000000-0000-4000-8000-000000000017','synthetic_medical'),
+      ('81100000-0000-4000-8000-000000000020','81000000-0000-4000-8000-000000000020','facility_approver','active','2020-01-01T00:00:00Z','2099-01-01T00:00:00Z','81000000-0000-4000-8000-000000000016','81000000-0000-4000-8000-000000000017','synthetic_facility'),
+      ('81100000-0000-4000-8000-000000000021','81000000-0000-4000-8000-000000000021','finance_reviewer','active','2020-01-01T00:00:00Z','2099-01-01T00:00:00Z','81000000-0000-4000-8000-000000000016','81000000-0000-4000-8000-000000000017','synthetic_finance')
     ON CONFLICT(id) DO NOTHING
   `;
+    await transaction`
+      INSERT INTO identity.patients(id,person_id,medical_record_number,record_status)
+      VALUES(
+        '81000000-0000-4000-8000-000000000023',
+        '81000000-0000-4000-8000-000000000022',
+        'SYN-F008-C3A-PATIENT',
+        'active'
+      ) ON CONFLICT(id) DO NOTHING
+    `;
     await transaction`
     INSERT INTO identity.governance_designations(
       id,person_id,designation_code,status,evidence_reference,registration_digest,
@@ -736,6 +757,7 @@ async function runRlsMode() {
       const cases = [
         ['current', '81000000-0000-4000-8000-000000000014', 2, 'security.audit.review', true],
         ['unauthenticated', null, null, null, false],
+        ['patient', '81000000-0000-4000-8000-000000000022', 2, 'security.audit.review', false],
         ['aal1', '81000000-0000-4000-8000-000000000014', 1, 'security.audit.review', false],
         ['missing-purpose', '81000000-0000-4000-8000-000000000014', 2, null, false],
         ['wrong-purpose', '81000000-0000-4000-8000-000000000014', 2, 'unapproved.purpose', false],
@@ -743,6 +765,34 @@ async function runRlsMode() {
         ['revoked', '81000000-0000-4000-8000-000000000015', 2, 'security.audit.review', false],
         ['dpo-only', '81000000-0000-4000-8000-000000000008', 2, 'security.audit.review', false],
         ['workforce', '81000000-0000-4000-8000-000000000003', 2, 'security.audit.review', false],
+        [
+          'support-admin',
+          '81000000-0000-4000-8000-000000000018',
+          2,
+          'security.audit.review',
+          false,
+        ],
+        [
+          'medical-reviewer',
+          '81000000-0000-4000-8000-000000000019',
+          2,
+          'security.audit.review',
+          false,
+        ],
+        [
+          'facility-approver',
+          '81000000-0000-4000-8000-000000000020',
+          2,
+          'security.audit.review',
+          false,
+        ],
+        [
+          'finance-reviewer',
+          '81000000-0000-4000-8000-000000000021',
+          2,
+          'security.audit.review',
+          false,
+        ],
       ];
       let deniedEffects = 0;
 
@@ -756,12 +806,38 @@ async function runRlsMode() {
           requestId: `81400000-0000-4000-8000-${String(caseIndex + 1).padStart(12, '0')}`,
           traceId: `trace-008-rls-${name}`,
         };
+        const [before] = await owner`
+          SELECT
+            (SELECT count(*)::int FROM audit.export_batches) AS batches,
+            (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
+            (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
+            (SELECT count(*)::int FROM platform.idempotency_records
+              WHERE route='/v1/admin/audit/exports') AS idempotency
+        `;
         if (allowed) {
           const result = await requestAuditExport(database, input);
           assert.equal(result.length, 1);
         } else {
           await expectDatabaseError(() => requestAuditExport(database, input), '42501');
           deniedEffects += 1;
+        }
+        const [after] = await owner`
+          SELECT
+            (SELECT count(*)::int FROM audit.export_batches) AS batches,
+            (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
+            (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
+            (SELECT count(*)::int FROM platform.idempotency_records
+              WHERE route='/v1/admin/audit/exports') AS idempotency
+        `;
+        if (allowed) {
+          assert.deepEqual(after, {
+            batches: before.batches + 1,
+            events: before.events + 1,
+            outbox: before.outbox + 1,
+            idempotency: before.idempotency + 1,
+          });
+        } else {
+          assert.deepEqual(after, before, `${name} denial must have zero effects`);
         }
       }
 
@@ -771,6 +847,9 @@ async function runRlsMode() {
         await expectDatabaseError(() => api`SELECT * FROM audit.events`, '42501');
         await expectDatabaseError(() => api`SELECT * FROM audit.signature_evidence`, '42501');
         await expectDatabaseError(() => api`SELECT * FROM audit.export_batches`, '42501');
+        await expectDatabaseError(() => worker`SELECT * FROM audit.events`, '42501');
+        await expectDatabaseError(() => worker`SELECT * FROM audit.signature_evidence`, '42501');
+        await expectDatabaseError(() => worker`SELECT * FROM audit.export_batches`, '42501');
         await expectDatabaseError(
           () => api`SELECT * FROM audit.claim_export_v1('worker-008-alpha',30)`,
           '42501',
@@ -876,6 +955,8 @@ async function runRlsMode() {
       `;
       assert.equal(rls.length, 3);
       assert.ok(rls.every((relation) => relation.relrowsecurity && relation.relforcerowsecurity));
+
+      applyMigration(database, rlsFixture, { quiet: true });
 
       console.log(
         `audit-admin rls: PASS authorized=1 denied=${deniedEffects} worker_exact=1 direct_tables=denied force_rls=3 bypass_roles=0`,
