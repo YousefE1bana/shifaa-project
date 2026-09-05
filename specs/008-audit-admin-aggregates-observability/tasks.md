@@ -84,11 +84,11 @@
   - Depends on: `T016`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- audit-integrity` exits 0 with every tamper rejected and the valid chain accepted
 
-- [ ] T018 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-OBS-001, NFR-PORT-001] Extend default-deny structured redaction and request/trace correlation for API, worker, adapter, aggregate, and health contexts — `packages/observability/src/audit-admin.ts`
+- [x] T018 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-OBS-001, NFR-PORT-001] Extend default-deny structured redaction and request/trace correlation for API, worker, adapter, aggregate, and health contexts — `packages/observability/src/audit-admin.ts`
   - Depends on: `T003`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/observability test -- audit-admin` exits 0 with only allow-listed fields and bounded labels emitted
 
-- [ ] T019 [NFR-SEC-007, NFR-OBS-001, NFR-QUALITY-001] Add prohibited-value sentinel and high-cardinality label rejection tests for every Feature 008 telemetry surface — `packages/observability/src/audit-admin.test.ts`
+- [x] T019 [NFR-SEC-007, NFR-OBS-001, NFR-QUALITY-001] Add prohibited-value sentinel and high-cardinality label rejection tests for every Feature 008 telemetry surface — `packages/observability/src/audit-admin.test.ts`
   - Depends on: `T018`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/observability test -- audit-admin` exits 0 with zero prohibited sentinel or identifier labels
 

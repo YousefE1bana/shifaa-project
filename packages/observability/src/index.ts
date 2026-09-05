@@ -1,3 +1,5 @@
+export * from './audit-admin.ts';
+
 const sensitiveKeyPattern =
   /(?:^|_)(?:authorization|cookie|password|passcode|token|secret|otp|identity_value|national_id|passport|document|file|body|handle|email|phone)(?:_|$)/i;
 const sensitiveString =
