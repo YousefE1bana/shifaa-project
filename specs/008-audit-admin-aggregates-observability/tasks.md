@@ -68,19 +68,19 @@
 
 ## Phase 3 — Portable policy and observability packages
 
-- [ ] T014 [FR-ADMIN-003, NFR-PRIV-002, NFR-PORT-001] Implement the vendor-free approved aggregate configuration validator and fail-closed disclosure pipeline — `packages/core/src/audit-admin/aggregate-policy.ts`
+- [x] T014 [FR-ADMIN-003, NFR-PRIV-002, NFR-PORT-001] Implement the vendor-free approved aggregate configuration validator and fail-closed disclosure pipeline — `packages/core/src/audit-admin/aggregate-policy.ts`
   - Depends on: `T002`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- aggregate-policy` exits 0 and metrics empty or any unknown configuration returns no cells
 
-- [ ] T015 [FR-ADMIN-003, NFR-PRIV-002, NFR-QUALITY-001] Execute all 34 approved boundary/attack vectors against primary, complementary, linked-release, locale, and retry behavior — `packages/core/src/audit-admin/aggregate-policy.test.ts`
+- [x] T015 [FR-ADMIN-003, NFR-PRIV-002, NFR-QUALITY-001] Execute all 34 approved boundary/attack vectors against primary, complementary, linked-release, locale, and retry behavior — `packages/core/src/audit-admin/aggregate-policy.test.ts`
   - Depends on: `T014`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- aggregate-policy` exits 0 with 34 of 34 vectors passing and zero raw suppressed counts
 
-- [ ] T016 [P] [FR-ADMIN-002, NFR-SEC-006, NFR-DATA-002, NFR-PORT-001] Implement portable canonical event serialization, genesis/link calculation, and export-manifest verification — `packages/core/src/audit-admin/audit-integrity.ts`
+- [x] T016 [P] [FR-ADMIN-002, NFR-SEC-006, NFR-DATA-002, NFR-PORT-001] Implement portable canonical event serialization, genesis/link calculation, and export-manifest verification — `packages/core/src/audit-admin/audit-integrity.ts`
   - Depends on: `T003`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- audit-integrity` exits 0 with stable bytes and hashes across repeated UTC fixtures
 
-- [ ] T017 [FR-ADMIN-002, NFR-SEC-006, NFR-QUALITY-001] Add content, previous-hash, ordering, object-byte, recorded-digest, and ambiguous-manifest tamper tests — `packages/core/src/audit-admin/audit-integrity.test.ts`
+- [x] T017 [FR-ADMIN-002, NFR-SEC-006, NFR-QUALITY-001] Add content, previous-hash, ordering, object-byte, recorded-digest, and ambiguous-manifest tamper tests — `packages/core/src/audit-admin/audit-integrity.test.ts`
   - Depends on: `T016`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- audit-integrity` exits 0 with every tamper rejected and the valid chain accepted
 
