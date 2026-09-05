@@ -778,6 +778,11 @@ CREATE UNIQUE INDEX outbox_aggregate_version_uq
 INSERT INTO identity.role_permissions(
   role_code,action_code,resource_code,min_aal,purpose_code
 ) VALUES
+  ('super_admin','getAdminSummary','admin_summary',1,NULL),
+  ('support_admin','getAdminSummary','admin_summary',1,NULL),
+  ('medical_reviewer','getAdminSummary','admin_summary',1,NULL),
+  ('facility_approver','getAdminSummary','admin_summary',1,NULL),
+  ('finance_reviewer','getAdminSummary','admin_summary',1,NULL),
   ('super_admin','listAuditEvents','audit_event',2,'security.audit.review'),
   ('super_admin','getAuditEvent','audit_event',2,'security.audit.review'),
   ('super_admin','createAuditExport','audit_export',2,'security.audit.review')
@@ -812,6 +817,209 @@ AS $function$
           OR grant_row.valid_until > pg_catalog.statement_timestamp()
         )
     )
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.current_admin_summary_context_v1()
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  SELECT
+    session_user = 'shifaa_api'
+    AND platform.context_person_id() IS NOT NULL
+    AND EXISTS (
+      SELECT 1
+      FROM identity.admin_role_grants AS grant_row
+      JOIN identity.role_permissions AS permission
+        ON permission.role_code = grant_row.role_code
+       AND permission.action_code = 'getAdminSummary'
+       AND permission.resource_code = 'admin_summary'
+      WHERE grant_row.person_id = platform.context_person_id()
+        AND grant_row.status = 'active'
+        AND grant_row.valid_from <= pg_catalog.statement_timestamp()
+        AND (grant_row.valid_until IS NULL OR grant_row.valid_until > pg_catalog.statement_timestamp())
+        AND platform.context_aal() >= permission.min_aal
+    )
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.read_events_v1(
+  p_actor_person_id uuid,
+  p_action_code text,
+  p_resource_type text,
+  p_resource_id uuid,
+  p_time_from timestamptz,
+  p_time_to timestamptz,
+  p_outcome text,
+  p_after_occurred_at timestamptz,
+  p_after_event_id uuid,
+  p_limit integer
+)
+RETURNS TABLE(
+  event_id uuid,
+  occurred_at timestamptz,
+  request_id uuid,
+  trace_id text,
+  actor_person_id uuid,
+  auth_aal smallint,
+  facility_id uuid,
+  patient_id uuid,
+  purpose_code text,
+  action_code text,
+  resource_type text,
+  resource_id uuid,
+  resource_version integer,
+  outcome text,
+  reason_code text,
+  source_ip_prefix text,
+  user_agent_class text,
+  chain_version smallint,
+  partition_key date,
+  chain_sequence bigint,
+  previous_hash text,
+  event_hash text,
+  chain_verification text
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  WITH page AS MATERIALIZED (
+    SELECT event.*
+    FROM audit.events AS event
+    WHERE audit.current_super_admin_context_v1('security.audit.review')
+      AND platform.feature_enabled('audit.read',platform.context_environment())
+      AND (p_actor_person_id IS NULL OR event.actor_person_id = p_actor_person_id)
+      AND (p_action_code IS NULL OR event.action_code = p_action_code)
+      AND (p_resource_type IS NULL OR event.resource_type = p_resource_type)
+      AND (p_resource_id IS NULL OR event.resource_id = p_resource_id)
+      AND (p_time_from IS NULL OR event.occurred_at >= p_time_from)
+      AND (p_time_to IS NULL OR event.occurred_at < p_time_to)
+      AND (p_outcome IS NULL OR event.outcome = p_outcome)
+      AND (
+        p_after_occurred_at IS NULL
+        OR (event.occurred_at,event.id) < (p_after_occurred_at,p_after_event_id)
+      )
+    ORDER BY event.occurred_at DESC,event.id DESC
+    LIMIT least(greatest(coalesce(p_limit,1),1),101)
+  ), verifications AS MATERIALIZED (
+    SELECT partition.partition_key,verification.valid
+    FROM (SELECT DISTINCT page.partition_key FROM page) AS partition
+    CROSS JOIN LATERAL audit.verify_event_chain_v1(partition.partition_key) AS verification
+  )
+  SELECT
+    event.id,event.occurred_at,event.request_id,event.trace_id,event.actor_person_id,
+    event.authentication_aal,event.facility_id,event.patient_id,event.purpose_code,
+    event.action_code,event.resource_type,event.resource_id,event.resource_version,
+    event.outcome,event.reason_code,event.source_ip_prefix::text,event.user_agent_class,
+    event.chain_version,event.partition_key,event.chain_sequence,
+    pg_catalog.encode(event.previous_hash,'hex'),pg_catalog.encode(event.event_hash,'hex'),
+    CASE WHEN verification.valid THEN 'verified' ELSE 'failed' END
+  FROM page AS event
+  JOIN verifications AS verification USING(partition_key)
+  ORDER BY event.occurred_at DESC,event.id DESC
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.read_event_v1(p_event_id uuid)
+RETURNS TABLE(
+  event_id uuid,
+  occurred_at timestamptz,
+  request_id uuid,
+  trace_id text,
+  actor_person_id uuid,
+  auth_aal smallint,
+  facility_id uuid,
+  patient_id uuid,
+  purpose_code text,
+  action_code text,
+  resource_type text,
+  resource_id uuid,
+  resource_version integer,
+  outcome text,
+  reason_code text,
+  source_ip_prefix text,
+  user_agent_class text,
+  chain_version smallint,
+  partition_key date,
+  chain_sequence bigint,
+  previous_hash text,
+  event_hash text,
+  chain_verification text
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  SELECT
+    event.id,event.occurred_at,event.request_id,event.trace_id,event.actor_person_id,
+    event.authentication_aal,event.facility_id,event.patient_id,event.purpose_code,
+    event.action_code,event.resource_type,event.resource_id,event.resource_version,
+    event.outcome,event.reason_code,event.source_ip_prefix::text,event.user_agent_class,
+    event.chain_version,event.partition_key,event.chain_sequence,
+    pg_catalog.encode(event.previous_hash,'hex'),pg_catalog.encode(event.event_hash,'hex'),
+    CASE WHEN verification.valid THEN 'verified' ELSE 'failed' END
+  FROM audit.events AS event
+  CROSS JOIN LATERAL audit.verify_event_chain_v1(event.partition_key) AS verification
+  WHERE event.id = p_event_id
+    AND audit.current_super_admin_context_v1('security.audit.review')
+    AND platform.feature_enabled('audit.read',platform.context_environment())
+  ORDER BY event.occurred_at DESC
+  LIMIT 1
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.read_chain_verification_v1(p_partition_key date)
+RETURNS TABLE(valid boolean,checked_count bigint,first_invalid_sequence bigint,failure_code text)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  SELECT verification.*
+  FROM audit.verify_event_chain_v1(p_partition_key) AS verification
+  WHERE audit.current_super_admin_context_v1('security.audit.review')
+    AND platform.feature_enabled('audit.read',platform.context_environment())
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.read_export_batch_v1(p_export_batch_id uuid)
+RETURNS TABLE(
+  export_batch_id uuid,status text,partition_start date,partition_end_exclusive date,
+  object_digest text,exported_at timestamptz,failure_code text,version integer
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  SELECT batch.id,batch.status,batch.partition_start,batch.partition_end_exclusive,
+    CASE WHEN batch.object_digest IS NULL THEN NULL ELSE pg_catalog.encode(batch.object_digest,'hex') END,
+    batch.exported_at,batch.failure_code,batch.version
+  FROM audit.export_batches AS batch
+  WHERE batch.id = p_export_batch_id
+    AND audit.current_super_admin_context_v1('security.audit.review')
+    AND batch.requested_by_person_id = platform.context_person_id()
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.readiness_v1()
+RETURNS TABLE(database_status text,outbox_status text)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  SELECT
+    'ready'::text,
+    CASE
+      WHEN EXISTS (
+        SELECT 1 FROM platform.outbox_events AS event
+        WHERE event.event_type = 'audit.export.requested'
+          AND event.state = 'dead_letter'
+      ) THEN 'integrity_failed'
+      ELSE 'ready'
+    END
+  WHERE session_user = 'shifaa_api'
 $function$;
 
 CREATE OR REPLACE FUNCTION audit.exact_export_worker_context_v1(p_worker_id text)
@@ -1261,12 +1469,24 @@ GRANT USAGE ON SCHEMA audit TO shifaa_api,shifaa_worker;
 REVOKE ALL ON ALL TABLES IN SCHEMA audit FROM PUBLIC,shifaa_api,shifaa_worker;
 
 REVOKE ALL ON FUNCTION audit.current_super_admin_context_v1(text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.current_admin_summary_context_v1() FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.read_events_v1(uuid,text,text,uuid,timestamptz,timestamptz,text,timestamptz,uuid,integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.read_event_v1(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.read_chain_verification_v1(date) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.read_export_batch_v1(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.readiness_v1() FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.exact_export_worker_context_v1(text) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.worker_claims_export_v1(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.request_export_v1(text,text,date,date,uuid,text) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.claim_export_v1(text,integer) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION audit.current_super_admin_context_v1(text) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.current_admin_summary_context_v1() TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.read_events_v1(uuid,text,text,uuid,timestamptz,timestamptz,text,timestamptz,uuid,integer) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.read_event_v1(uuid) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.read_chain_verification_v1(date) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.read_export_batch_v1(uuid) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.readiness_v1() TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.exact_export_worker_context_v1(text) TO shifaa_worker;
 GRANT EXECUTE ON FUNCTION audit.worker_claims_export_v1(uuid) TO shifaa_worker;
 GRANT EXECUTE ON FUNCTION audit.request_export_v1(text,text,date,date,uuid,text) TO shifaa_api;

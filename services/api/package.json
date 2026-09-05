@@ -27,6 +27,7 @@
     "postgres": "3.4.9"
   },
   "devDependencies": {
+    "@shifaa/test-kit": "workspace:*",
     "@types/node": "24.10.1",
     "tsx": "4.21.0",
     "typescript": "7.0.2",

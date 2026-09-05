@@ -655,6 +655,26 @@ async function requestAuditExport(database, input) {
   }
 }
 
+async function readAuditEvents(database, input) {
+  const sql = connectAs(database, 'shifaa_api', 'synthetic_api_only');
+  try {
+    return await sql.begin(async (transaction) => {
+      await transaction`SELECT pg_catalog.set_config('shifaa.person_id',${input.personId ?? ''},true)`;
+      await transaction`SELECT pg_catalog.set_config('shifaa.principal',${input.personId ? `person:${input.personId}` : ''},true)`;
+      await transaction`SELECT pg_catalog.set_config('shifaa.aal',${String(input.aal ?? 0)},true)`;
+      await transaction`SELECT pg_catalog.set_config('shifaa.purposes',${input.purpose ?? ''},true)`;
+      await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
+      return transaction`
+        SELECT * FROM audit.read_events_v1(
+          NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,25
+        )
+      `;
+    });
+  } finally {
+    await sql.end({ timeout: 5 });
+  }
+}
+
 async function runExportMode() {
   const database = databaseNames.export;
   recreateDatabase(database);
@@ -838,6 +858,17 @@ async function runRlsMode() {
           });
         } else {
           assert.deepEqual(after, before, `${name} denial must have zero effects`);
+        }
+
+        const visibleAuditEvents = await readAuditEvents(database, input);
+        assert.equal(
+          visibleAuditEvents.length > 0,
+          allowed,
+          `${name} redacted audit visibility must match the authorization matrix`,
+        );
+        if (allowed) {
+          assert.equal(Object.hasOwn(visibleAuditEvents[0], 'metadata'), false);
+          assert.equal(Object.hasOwn(visibleAuditEvents[0], 'actor_user_id'), false);
         }
       }
 

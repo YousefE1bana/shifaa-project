@@ -94,19 +94,19 @@
 
 ## Phase 4 — Core API contracts, repositories, and routes
 
-- [ ] T020 [FR-ADMIN-002, FR-ADMIN-003, NFR-PORT-001] Define portable aggregate, audit, export, object-proof, clock, and readiness ports and fixed DTOs — `services/api/src/modules/audit-admin/types.ts`
+- [x] T020 [FR-ADMIN-002, FR-ADMIN-003, NFR-PORT-001] Define portable aggregate, audit, export, object-proof, clock, and readiness ports and fixed DTOs — `services/api/src/modules/audit-admin/types.ts`
   - Depends on: `T014`, `T016`, `T018`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api typecheck` exits 0 and module types import no framework or vendor package
 
-- [ ] T021 [FR-ADMIN-002, NFR-SEC-001, NFR-SEC-006, NFR-DATA-001, NFR-DATA-002] Implement the PostgreSQL redacted audit, chain, export batch, and readiness repository through non-owner transactions — `services/api/src/adapters/postgres/audit-admin-service.ts`
+- [x] T021 [FR-ADMIN-002, NFR-SEC-001, NFR-SEC-006, NFR-DATA-001, NFR-DATA-002] Implement the PostgreSQL redacted audit, chain, export batch, and readiness repository through non-owner transactions — `services/api/src/adapters/postgres/audit-admin-service.ts`
   - Depends on: `T008`, `T009`, `T010`, `T020`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test -- audit-admin-postgres` exits 0 with forced RLS and no raw metadata DTO
 
-- [ ] T022 [FR-ADMIN-003, NFR-SEC-001, NFR-PRIV-002, NFR-PERF-002] Implement `getAdminSummary` authorization, approved configuration lookup, server-side suppression, and inactive-gate behavior — `services/api/src/modules/audit-admin/service.ts`
+- [x] T022 [FR-ADMIN-003, NFR-SEC-001, NFR-PRIV-002, NFR-PERF-002] Implement `getAdminSummary` authorization, approved configuration lookup, server-side suppression, and inactive-gate behavior — `services/api/src/modules/audit-admin/service.ts`
   - Depends on: `T014`, `T015`, `T020`, `T021`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test -- audit-admin-summary` exits 0 with metrics empty returning legal-gate-disabled and approved fixtures never leaking suppressed counts
 
-- [ ] T023 [FR-ADMIN-002, NFR-SEC-001, NFR-SEC-004, NFR-SEC-006, NFR-API-002] Implement purpose-limited redacted list/detail use cases with current AAL2 and opaque bounded cursors — `services/api/src/modules/audit-admin/service.ts`
+- [x] T023 [FR-ADMIN-002, NFR-SEC-001, NFR-SEC-004, NFR-SEC-006, NFR-API-002] Implement purpose-limited redacted list/detail use cases with current AAL2 and opaque bounded cursors — `services/api/src/modules/audit-admin/service.ts`
   - Depends on: `T020`, `T021`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test -- audit-admin-events` exits 0 with only the authorized matrix case receiving bounded redacted evidence
 

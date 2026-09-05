@@ -404,6 +404,9 @@ importers:
         specifier: 3.4.9
         version: 3.4.9
     devDependencies:
+      '@shifaa/test-kit':
+        specifier: workspace:*
+        version: link:../../packages/test-kit
       '@types/node':
         specifier: 24.10.1
         version: 24.10.1

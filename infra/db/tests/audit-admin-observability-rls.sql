@@ -52,7 +52,9 @@ BEGIN
   WHERE namespace.nspname = 'audit'
     AND procedure.proname IN (
       'current_super_admin_context_v1','exact_export_worker_context_v1',
-      'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1'
+      'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1',
+      'current_admin_summary_context_v1','read_events_v1','read_event_v1',
+      'read_chain_verification_v1','read_export_batch_v1','readiness_v1'
     )
     AND acl.grantee = 0
     AND acl.privilege_type = 'EXECUTE';
@@ -79,12 +81,27 @@ BEGIN
     RAISE EXCEPTION 'shifaa_api lacks the one required export-request grant';
   END IF;
 
+  IF NOT pg_catalog.has_function_privilege('shifaa_api','audit.read_event_v1(uuid)','EXECUTE')
+     OR NOT pg_catalog.has_function_privilege(
+       'shifaa_api',
+       'audit.read_events_v1(uuid,text,text,uuid,timestamptz,timestamptz,text,timestamptz,uuid,integer)',
+       'EXECUTE'
+     ) THEN
+    RAISE EXCEPTION 'shifaa_api lacks the minimum redacted-read grants';
+  END IF;
+
   IF pg_catalog.has_function_privilege(
       'shifaa_api','audit.claim_export_v1(text,integer)','EXECUTE'
     ) OR pg_catalog.has_function_privilege(
       'shifaa_api','audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz)','EXECUTE'
     ) OR pg_catalog.has_function_privilege(
       'shifaa_worker','audit.request_export_v1(text,text,date,date,uuid,text)','EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker','audit.read_event_v1(uuid)','EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker',
+      'audit.read_events_v1(uuid,text,text,uuid,timestamptz,timestamptz,text,timestamptz,uuid,integer)',
+      'EXECUTE'
     ) THEN
     RAISE EXCEPTION 'API/worker function separation failed';
   END IF;
@@ -104,10 +121,12 @@ BEGIN
     WHERE namespace.nspname = 'audit'
       AND procedure.proname IN (
         'current_super_admin_context_v1','exact_export_worker_context_v1',
-        'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1'
+        'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1',
+        'current_admin_summary_context_v1','read_events_v1','read_event_v1',
+        'read_chain_verification_v1','read_export_batch_v1','readiness_v1'
       )
       AND procedure.proconfig @> ARRAY['search_path=pg_catalog']
-  ) <> 6 THEN
+  ) <> 12 THEN
     RAISE EXCEPTION 'authorization boundary search_path is not fixed';
   END IF;
 END
