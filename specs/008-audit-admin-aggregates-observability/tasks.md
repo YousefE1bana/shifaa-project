@@ -110,11 +110,11 @@
   - Depends on: `T020`, `T021`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test -- audit-admin-events` exits 0 with only the authorized matrix case receiving bounded redacted evidence
 
-- [ ] T024 [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PRIV-004] Implement transactional audit export acceptance with range validation, idempotency, audit, outbox, and stored response — `services/api/src/modules/audit-admin/service.ts`
+- [x] T024 [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PRIV-004] Implement transactional audit export acceptance with range validation, idempotency, audit, outbox, and stored response — `services/api/src/modules/audit-admin/service.ts`
   - Depends on: `T009`, `T020`, `T021`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test -- audit-export-request` exits 0 with one effect for concurrent identical requests and changed-body reuse returning 409
 
-- [ ] T025 [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PORT-001] Implement service-authenticated `exportAuditPartition` orchestration with deterministic object key, digest/proof verification, and fail-closed replay — `services/api/src/modules/audit-admin/export-service.ts`
+- [x] T025 [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PORT-001] Implement service-authenticated `exportAuditPartition` orchestration with deterministic object key, digest/proof verification, and fail-closed replay — `services/api/src/modules/audit-admin/export-service.ts`
   - Depends on: `T016`, `T017`, `T021`, `T024`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test -- audit-export-internal` exits 0 with identical replay accepted and byte, digest, proof, auth, or state mismatch denied
 

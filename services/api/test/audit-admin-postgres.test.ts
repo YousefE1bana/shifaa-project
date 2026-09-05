@@ -22,6 +22,11 @@ describe('Postgres audit admin repository', () => {
       actor(),
       '83000000-0000-4000-8000-000000000001',
     );
+    const accepted = await repository.requestAuditExport(actor(), {
+      input: { partition_start: '2026-05-01', partition_end_exclusive: '2026-08-01' },
+      idempotencyKey: 'synthetic-idempotency-key-0001',
+      requestHash: 'a'.repeat(64),
+    });
     const readiness = await repository.readiness();
 
     expect(events).toHaveLength(1);
@@ -38,12 +43,20 @@ describe('Postgres audit admin repository', () => {
       export_batch_id: '83000000-0000-4000-8000-000000000001',
       object_digest: null,
     });
+    expect(accepted).toEqual({
+      export_batch_id: '83000000-0000-4000-8000-000000000001',
+      status: 'queued',
+      partition_start: '2026-05-01',
+      partition_end_exclusive: '2026-08-01',
+      accepted_at: '2026-09-01T12:00:00.000Z',
+    });
     expect(readiness).toEqual({ status: 'ready', database: 'ready', outbox: 'ready' });
     expect(statements.join('\n')).toContain("set_config('shifaa.environment'");
     expect(statements.join('\n')).toContain('audit.read_events_v1');
     expect(statements.join('\n')).toContain('audit.read_event_v1');
     expect(statements.join('\n')).toContain('audit.read_chain_verification_v1');
     expect(statements.join('\n')).toContain('audit.read_export_batch_v1');
+    expect(statements.join('\n')).toContain('audit.request_export_v1');
     expect(statements.join('\n')).toContain('audit.readiness_v1');
     expect(statements.join('\n')).not.toMatch(
       /from\s+audit\.(events|export_batches|signature_evidence)\b/i,
@@ -79,6 +92,18 @@ function fakeSql(statements: string[]): TransactionSql {
           exported_at: null,
           failure_code: null,
           version: 1,
+        },
+      ]);
+    }
+    if (statement.includes('request_export_v1')) {
+      return Promise.resolve([
+        {
+          export_batch_id: '83000000-0000-4000-8000-000000000001',
+          status: 'queued',
+          partition_start: '2026-05-01',
+          partition_end_exclusive: '2026-08-01',
+          accepted_at: '2026-09-01T12:00:00.000Z',
+          idempotency_state: 'created',
         },
       ]);
     }

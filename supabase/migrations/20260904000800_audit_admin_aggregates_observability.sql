@@ -695,7 +695,7 @@ FROM (VALUES
   (
     'audit.export',
     true,
-    '{"requiredRole":"super_admin","minimumAal":2,"requiredPurpose":"security.audit.review","eventType":"audit.export.requested","syntheticOnly":true}'::jsonb
+    '{"requiredRole":"super_admin","minimumAal":2,"requiredPurpose":"security.audit.review","eventType":"audit.export.requested","maximumCompletedMonths":3,"syntheticOnly":true}'::jsonb
   ),
   (
     'health.exposure',
@@ -1080,6 +1080,7 @@ DECLARE
   idempotency_row platform.idempotency_records%ROWTYPE;
   inserted_idempotency_id uuid;
   batch_row audit.export_batches%ROWTYPE;
+  maximum_completed_months integer;
 BEGIN
   IF NOT audit.current_super_admin_context_v1('security.audit.review')
      OR NOT platform.feature_enabled('audit.export',platform.context_environment()) THEN
@@ -1088,12 +1089,38 @@ BEGIN
 
   IF principal_value IS NULL
      OR p_idempotency_key IS NULL
-     OR pg_catalog.octet_length(p_idempotency_key) NOT BETWEEN 8 AND 255
+     OR pg_catalog.octet_length(p_idempotency_key) NOT BETWEEN 16 AND 128
      OR p_request_hash IS NULL
      OR p_request_hash !~ '^[a-f0-9]{64}$'
      OR p_request_id IS NULL
      OR p_trace_id IS NULL THEN
     RAISE EXCEPTION 'F008_AUDIT_EXPORT_REQUEST_INVALID' USING ERRCODE = '22023';
+  END IF;
+
+  SELECT CASE
+      WHEN flag.constraints->>'maximumCompletedMonths' ~ '^[1-9][0-9]*$'
+      THEN (flag.constraints->>'maximumCompletedMonths')::integer
+      ELSE NULL
+    END
+  INTO maximum_completed_months
+  FROM platform.feature_flags AS flag
+  WHERE flag.code = 'audit.export'
+    AND flag.environment = platform.context_environment()
+    AND flag.enabled;
+
+  IF maximum_completed_months IS NULL
+     OR p_partition_start IS NULL
+     OR p_partition_end_exclusive IS NULL
+     OR p_partition_start <> pg_catalog.date_trunc('month',p_partition_start)::date
+     OR p_partition_end_exclusive <> pg_catalog.date_trunc('month',p_partition_end_exclusive)::date
+     OR p_partition_start >= p_partition_end_exclusive
+     OR p_partition_end_exclusive > pg_catalog.date_trunc(
+          'month',pg_catalog.statement_timestamp() AT TIME ZONE 'UTC'
+        )::date
+     OR p_partition_end_exclusive > (
+          p_partition_start + maximum_completed_months * INTERVAL '1 month'
+        )::date THEN
+    RAISE EXCEPTION 'F008_AUDIT_EXPORT_RANGE_INVALID' USING ERRCODE = '22023';
   END IF;
 
   DELETE FROM platform.idempotency_records AS expired

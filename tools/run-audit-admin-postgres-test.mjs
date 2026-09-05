@@ -645,7 +645,8 @@ async function requestAuditExport(database, input) {
       await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
       return transaction`
         SELECT * FROM audit.request_export_v1(
-          ${input.idempotencyKey},${input.requestHash},'2026-05-01','2026-08-01',
+          ${input.idempotencyKey},${input.requestHash},
+          ${input.partitionStart ?? '2026-05-01'},${input.partitionEndExclusive ?? '2026-08-01'},
           ${input.requestId},${input.traceId}
         )
       `;
@@ -752,8 +753,41 @@ async function runExportMode() {
         '23505',
       );
 
+      const [beforeInvalidRange] = await owner`
+        SELECT
+          (SELECT count(*)::int FROM audit.export_batches) AS batches,
+          (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
+          (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
+          (SELECT count(*)::int FROM platform.idempotency_records
+            WHERE route='/v1/admin/audit/exports') AS idempotency
+      `;
+      await expectDatabaseError(
+        () =>
+          requestAuditExport(database, {
+            personId,
+            aal: 2,
+            purpose: 'security.audit.review',
+            idempotencyKey: 'synthetic-008-audit-export-invalid-range',
+            requestHash: 'c'.repeat(64),
+            requestId: '81300000-0000-4000-8000-000000000098',
+            traceId: 'trace-008-export-invalid-range',
+            partitionStart: '2026-05-01',
+            partitionEndExclusive: '2026-09-01',
+          }),
+        '22023',
+      );
+      const [afterInvalidRange] = await owner`
+        SELECT
+          (SELECT count(*)::int FROM audit.export_batches) AS batches,
+          (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
+          (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
+          (SELECT count(*)::int FROM platform.idempotency_records
+            WHERE route='/v1/admin/audit/exports') AS idempotency
+      `;
+      assert.deepEqual(afterInvalidRange, beforeInvalidRange);
+
       console.log(
-        'audit-admin export: PASS concurrent_requests=25 batch=1 audit=1 outbox=1 idempotency=1 changed_body=denied metrics=inactive',
+        'audit-admin export: PASS concurrent_requests=25 batch=1 audit=1 outbox=1 idempotency=1 changed_body=denied invalid_range=zero_effects metrics=inactive',
       );
     } finally {
       await owner.end({ timeout: 5 });

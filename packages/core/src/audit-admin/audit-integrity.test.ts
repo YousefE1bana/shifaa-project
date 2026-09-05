@@ -75,6 +75,36 @@ describe('Feature 008 portable audit integrity', () => {
     }
   });
 
+  it('verifies independent monthly chains in strictly increasing export order', () => {
+    const monthlyChains = ['2026-05-01', '2026-06-01', '2026-07-01'].map((partitionKey) =>
+      linkAuditEvents([event({ occurredAt: `${partitionKey}T00:00:00.000Z`, partitionKey })]),
+    );
+    const orderedEvents = monthlyChains.flat();
+    const object = buildAuditExportObject({
+      exportBatchId: auditAdminIntegrityFixtures.export.batchId,
+      partitionStart: '2026-05-01',
+      partitionEndExclusive: '2026-08-01',
+      events: orderedEvents,
+    });
+    expect(
+      verifyAuditExportManifest({
+        objectBytes: object.bytes,
+        recordedObjectDigest: object.objectDigest,
+        expectedExportBatchId: auditAdminIntegrityFixtures.export.batchId,
+        expectedPartitionStart: '2026-05-01',
+        expectedPartitionEndExclusive: '2026-08-01',
+      }),
+    ).toMatchObject({ valid: true, events: orderedEvents });
+    expect(() =>
+      buildAuditExportObject({
+        exportBatchId: auditAdminIntegrityFixtures.export.batchId,
+        partitionStart: '2026-05-01',
+        partitionEndExclusive: '2026-08-01',
+        events: [...monthlyChains].reverse().flat(),
+      }),
+    ).toThrow('invalid or unordered audit partition chains');
+  });
+
   it('rejects content tampering even when a caller presents the original event hash', () => {
     const tampered = linked.map((item, index) =>
       index === 1 ? { ...item, actionCode: 'audit.export.changed' } : item,

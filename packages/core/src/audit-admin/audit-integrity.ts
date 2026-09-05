@@ -193,8 +193,9 @@ export function buildAuditExportObject(input: {
   partitionEndExclusive: string;
   events: readonly ChainedAuditEvent[];
 }): AuditExportObject {
-  const chain = verifyAuditChain(input.events);
-  if (!chain.valid) throw new Error(`Cannot export invalid audit chain: ${chain.failureCode}`);
+  if (!verifyExportEventOrder(input.events)) {
+    throw new Error('Cannot export invalid or unordered audit partition chains.');
+  }
   if (
     input.events.some(
       ({ partitionKey }) =>
@@ -285,11 +286,28 @@ function verifyManifestContent(
     return { valid: false, reason: 'content_digest_mismatch' };
   const parsed = parseExportedEvents(content, manifest.event_count);
   if (!parsed.valid) return parsed;
-  if (!verifyAuditChain(parsed.events).valid)
+  if (!verifyExportEventOrder(parsed.events))
     return { valid: false, reason: 'event_order_invalid' };
   if (!manifestAnchorsMatch(manifest, parsed.events))
     return { valid: false, reason: 'manifest_mismatch' };
   return { valid: true, manifest, events: parsed.events };
+}
+
+function verifyExportEventOrder(events: readonly ChainedAuditEvent[]): boolean {
+  let partitionStart = 0;
+  let previousPartition: string | undefined;
+  while (partitionStart < events.length) {
+    const partition = events[partitionStart]?.partitionKey;
+    if (!partition || (previousPartition !== undefined && partition <= previousPartition)) {
+      return false;
+    }
+    let partitionEnd = partitionStart + 1;
+    while (events[partitionEnd]?.partitionKey === partition) partitionEnd += 1;
+    if (!verifyAuditChain(events.slice(partitionStart, partitionEnd)).valid) return false;
+    previousPartition = partition;
+    partitionStart = partitionEnd;
+  }
+  return true;
 }
 
 function manifestAnchorsMatch(

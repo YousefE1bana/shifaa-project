@@ -2,6 +2,7 @@ import type {
   AggregateCellInput,
   AggregatePolicyConfiguration,
 } from '@shifaa/core/audit-admin/aggregate-policy';
+import type { ChainedAuditEvent } from '@shifaa/core/audit-admin/audit-integrity';
 
 export type AuditAdminActor = {
   personId: string | null;
@@ -125,6 +126,12 @@ export type AuditExportAccepted = {
   accepted_at: string;
 };
 
+export type AuditExportRequestCommand = {
+  input: CreateAuditExportInput;
+  idempotencyKey: string;
+  requestHash: string;
+};
+
 export type AuditExportProof = {
   export_batch_id: string;
   status: 'proven';
@@ -144,6 +151,36 @@ export type ObjectWriteReceipt = {
   digestSha256: string;
   retentionProof: RetentionProof;
 };
+
+export type AuditExportServiceActor = {
+  authenticated: boolean;
+  principal: string | null;
+  workerId: string | null;
+  requestId: string;
+  traceId: string;
+};
+
+export type ClaimedAuditExportWork = {
+  exportBatchId: string;
+  status: 'claimed';
+  partitionStart: string;
+  partitionEndExclusive: string;
+  objectKey: string;
+  events: readonly ChainedAuditEvent[];
+};
+
+export type ProvenAuditExportWork = {
+  exportBatchId: string;
+  status: 'proven';
+  partitionStart: string;
+  partitionEndExclusive: string;
+  objectKey: string;
+  objectDigest: string;
+  retentionProof: RetentionProof;
+  exportedAt: string;
+};
+
+export type AuditExportWork = ClaimedAuditExportWork | ProvenAuditExportWork;
 
 export type ReadinessSnapshot = {
   status: 'ready' | 'degraded' | 'not_ready';
@@ -205,6 +242,28 @@ export interface AuditExportBatchPort {
   ): Promise<AuditExportBatch | null>;
 }
 
+export interface AuditExportRequestPort {
+  requestAuditExport(
+    actor: AuditAdminActor,
+    command: AuditExportRequestCommand,
+  ): Promise<AuditExportAccepted>;
+}
+
+export interface AuditExportOrchestrationPort {
+  getAuditExportWork(
+    actor: AuditExportServiceActor,
+    exportBatchId: string,
+  ): Promise<AuditExportWork | null>;
+  recordProvenAuditExport(
+    actor: AuditExportServiceActor,
+    input: {
+      exportBatchId: string;
+      objectDigest: string;
+      retentionProof: RetentionProof;
+    },
+  ): Promise<ProvenAuditExportWork | null>;
+}
+
 export interface ObjectProofPort {
   createIfAbsent(objectKey: string, content: Uint8Array): Promise<ObjectWriteReceipt>;
   readForVerification(objectKey: string): Promise<Uint8Array>;
@@ -218,4 +277,5 @@ export type AuditAdminRepository = AuditAdminAuthorizationPort &
   AuditEventReadPort &
   AuditChainPort &
   AuditExportBatchPort &
+  AuditExportRequestPort &
   ReadinessPort;

@@ -7,6 +7,7 @@ import {
 } from '@shifaa/core/audit-admin/aggregate-policy';
 
 import { ApiPolicyError } from '../identity-onboarding/errors.js';
+import { hashRequest } from '../../platform/idempotency.js';
 import type {
   AdminSummary,
   AggregateDataPort,
@@ -17,7 +18,9 @@ import type {
   AuditEventCursor,
   AuditEventListQuery,
   AuditEventPage,
+  AuditExportAccepted,
   ClockPort,
+  CreateAuditExportInput,
 } from './types.js';
 
 const AUDIT_PURPOSE = 'security.audit.review';
@@ -25,7 +28,11 @@ const DEFAULT_LIMIT = 25;
 const MAX_LIMIT = 100;
 const MAX_CURSOR_BYTES = 512;
 const MAX_FACTOR_AGE_SECONDS = 300;
+const MAX_EXPORT_MONTHS = 3;
+const MIN_IDEMPOTENCY_KEY_LENGTH = 16;
+const MAX_IDEMPOTENCY_KEY_LENGTH = 128;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const MONTH_BOUNDARY = /^\d{4}-\d{2}-01$/;
 const SAFE_FILTER = /^[a-z0-9][a-z0-9._:-]{0,127}$/i;
 
 export type AuditAdminServiceDependencies = {
@@ -134,6 +141,20 @@ export class AuditAdminService {
     return { event };
   }
 
+  public async createAuditExport(
+    actor: AuditAdminActor,
+    input: CreateAuditExportInput,
+    idempotencyKey: string,
+  ): Promise<AuditExportAccepted> {
+    await this.requireAuditReader(actor);
+    this.validateExportRequest(input, idempotencyKey);
+    return this.dependencies.repository.requestAuditExport(actor, {
+      input,
+      idempotencyKey,
+      requestHash: hashRequest(input),
+    });
+  }
+
   private requireCurrentActor(actor: AuditAdminActor): void {
     if (!actor.personId || !actor.principal || !actor.sessionCurrent) {
       this.deny('authentication-required', 401);
@@ -184,6 +205,57 @@ export class AuditAdminService {
     ) {
       this.deny('validation-failed', 400);
     }
+  }
+
+  private validateExportRequest(input: CreateAuditExportInput, idempotencyKey: string): void {
+    this.validateExportRequestShape(input);
+    this.validateIdempotencyKey(idempotencyKey);
+    this.validateExportRange(input);
+  }
+
+  private validateExportRequestShape(input: CreateAuditExportInput): void {
+    if (
+      !input ||
+      typeof input !== 'object' ||
+      Object.keys(input).sort().join(',') !== 'partition_end_exclusive,partition_start' ||
+      typeof input.partition_start !== 'string' ||
+      typeof input.partition_end_exclusive !== 'string'
+    ) {
+      this.deny('validation-failed', 400);
+    }
+  }
+
+  private validateIdempotencyKey(idempotencyKey: string): void {
+    if (
+      typeof idempotencyKey !== 'string' ||
+      idempotencyKey.length < MIN_IDEMPOTENCY_KEY_LENGTH ||
+      idempotencyKey.length > MAX_IDEMPOTENCY_KEY_LENGTH
+    ) {
+      this.deny('validation-failed', 400);
+    }
+  }
+
+  private validateExportRange(input: CreateAuditExportInput): void {
+    const start = this.monthBoundary(input.partition_start);
+    const end = this.monthBoundary(input.partition_end_exclusive);
+    const now = this.dependencies.clock.now();
+    const currentMonth = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1);
+    const spanMonths =
+      (end.getUTCFullYear() - start.getUTCFullYear()) * 12 +
+      end.getUTCMonth() -
+      start.getUTCMonth();
+    if (spanMonths < 1 || spanMonths > MAX_EXPORT_MONTHS || end.getTime() > currentMonth) {
+      this.deny('export-range-invalid', 409);
+    }
+  }
+
+  private monthBoundary(value: string): Date {
+    if (!MONTH_BOUNDARY.test(value)) this.deny('export-range-invalid', 409);
+    const parsed = new Date(`${value}T00:00:00.000Z`);
+    if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) {
+      this.deny('export-range-invalid', 409);
+    }
+    return parsed;
   }
 
   private filters(query: AuditEventListQuery) {

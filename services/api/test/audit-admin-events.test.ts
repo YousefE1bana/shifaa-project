@@ -121,6 +121,7 @@ function repositoryStub(overrides: Partial<AuditAdminRepository> = {}): AuditAdm
     getRedactedAuditEvent: vi.fn().mockResolvedValue(null),
     verifyAuditChain: vi.fn(),
     getAuditExportBatch: vi.fn().mockResolvedValue(null),
+    requestAuditExport: vi.fn(),
     readiness: vi.fn(),
     ...overrides,
   };

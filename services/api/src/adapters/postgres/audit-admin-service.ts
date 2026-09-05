@@ -5,10 +5,13 @@ import type {
   AuditAdminRepository,
   AuditEventRepositoryQuery,
   AuditExportBatch,
+  AuditExportAccepted,
+  AuditExportRequestCommand,
   ChainVerification,
   ReadinessSnapshot,
   RedactedAuditEvent,
 } from '../../modules/audit-admin/types.js';
+import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
 import type { PostgresIdentityRepository } from './identity-repository.js';
 
 type RawTransactionRepository = Pick<PostgresIdentityRepository, 'withRawTransaction'>;
@@ -53,6 +56,16 @@ type ExportBatchRow = Omit<
   partition_start: Date | string;
   partition_end_exclusive: Date | string;
   exported_at: Date | string | null;
+};
+
+type ExportRequestRow = Omit<
+  AuditExportAccepted,
+  'partition_start' | 'partition_end_exclusive' | 'accepted_at'
+> & {
+  partition_start: Date | string;
+  partition_end_exclusive: Date | string;
+  accepted_at: Date | string;
+  idempotency_state: 'created' | 'replayed';
 };
 
 type ReadinessRow = {
@@ -164,6 +177,36 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
     });
   }
 
+  public async requestAuditExport(
+    actor: AuditAdminActor,
+    command: AuditExportRequestCommand,
+  ): Promise<AuditExportAccepted> {
+    try {
+      return await this.withActor(actor, async (sql) => {
+        const [row] = await sql<ExportRequestRow[]>`
+          select * from audit.request_export_v1(
+            ${command.idempotencyKey},
+            ${command.requestHash},
+            ${command.input.partition_start}::date,
+            ${command.input.partition_end_exclusive}::date,
+            ${actor.requestId}::uuid,
+            ${actor.traceId}
+          )
+        `;
+        if (!row) throw new Error('Audit export request returned no stored response.');
+        return {
+          export_batch_id: row.export_batch_id,
+          status: row.status,
+          partition_start: dateOnly(row.partition_start),
+          partition_end_exclusive: dateOnly(row.partition_end_exclusive),
+          accepted_at: iso(row.accepted_at),
+        };
+      });
+    } catch (error) {
+      throw mapExportRequestError(error);
+    }
+  }
+
   public async readiness(): Promise<ReadinessSnapshot> {
     return this.repository.withRawTransaction(async (sql) => {
       const [row] = await sql<ReadinessRow[]>`select * from audit.readiness_v1()`;
@@ -230,4 +273,29 @@ function iso(value: Date | string): string {
 
 function dateOnly(value: Date | string): string {
   return value instanceof Date ? value.toISOString().slice(0, 10) : String(value).slice(0, 10);
+}
+
+function mapExportRequestError(error: unknown): unknown {
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === 'object' && error !== null && 'message' in error
+        ? String(error.message)
+        : '';
+  if (message.includes('F008_IDEMPOTENCY_KEY_REUSED')) {
+    return new ApiPolicyError('idempotency-key-reused', 409, 'idempotency-key-reused');
+  }
+  if (message.includes('F008_IDEMPOTENCY_IN_PROGRESS')) {
+    return new ApiPolicyError('idempotency-in-progress', 409, 'idempotency-in-progress');
+  }
+  if (message.includes('F008_AUDIT_EXPORT_RANGE_INVALID')) {
+    return new ApiPolicyError('export-range-invalid', 409, 'export-range-invalid');
+  }
+  if (message.includes('F008_AUDIT_EXPORT_REQUEST_INVALID')) {
+    return new ApiPolicyError('validation-failed', 400, 'validation-failed');
+  }
+  if (message.includes('F008_AUDIT_EXPORT_DENIED')) {
+    return new ApiPolicyError('forbidden', 403, 'forbidden');
+  }
+  return error;
 }
