@@ -118,41 +118,41 @@
   - Depends on: `T016`, `T017`, `T021`, `T024`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test -- audit-export-internal` exits 0 with identical replay accepted and byte, digest, proof, auth, or state mismatch denied
 
-- [ ] T026 [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001, NFR-API-002, NFR-SEC-004] Register the four admin and internal export routes with validated schemas, RFC 9457 problems, request IDs, cache controls, AAL/purpose, and service authentication — `services/api/src/routes/audit-admin.ts`
+- [x] T026 [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001, NFR-API-002, NFR-SEC-004] Register the four admin and internal export routes with validated schemas, RFC 9457 problems, request IDs, cache controls, AAL/purpose, and service authentication — `services/api/src/routes/audit-admin.ts`
   - Depends on: `T004`, `T022`, `T023`, `T024`, `T025`
   - Acceptance evidence: `node tools/verify-feature-008-contract.mjs --implemented admin-export` exits 0 with exactly five registered Feature 008 operations and no undocumented route
 
-- [ ] T027 [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-001, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006, NFR-API-002, NFR-QUALITY-001] Add API contract, authorization, cursor, redaction, idempotency, race, tamper, failure, and cache-control integration tests — `services/api/test/audit-admin-observability.integration.test.ts`
+- [x] T027 [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-001, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006, NFR-API-002, NFR-QUALITY-001] Add API contract, authorization, cursor, redaction, idempotency, race, tamper, failure, and cache-control integration tests — `services/api/test/audit-admin-observability.integration.test.ts`
   - Depends on: `T022`, `T023`, `T024`, `T025`, `T026`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test:integration -- audit-admin-observability` exits 0 with every AC-01 through AC-07 API case passing
 
-- [ ] T028 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001] Add deterministic generation and generate TypeBox contracts and the API client only from the locked Feature 008 OpenAPI source — `tools/generate-feature-008-contracts.mjs`, `packages/contracts/src/audit-admin.ts`, `packages/api-client/src/audit-admin.ts`
+- [x] T028 [P] [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001] Add deterministic generation and generate TypeBox contracts and the API client only from the locked Feature 008 OpenAPI source — `tools/generate-feature-008-contracts.mjs`, `packages/contracts/src/audit-admin.ts`, `packages/api-client/src/audit-admin.ts`
   - Depends on: `T004`
   - Acceptance evidence: `node tools/generate-feature-008-contracts.mjs --check` exits 0 and a write run followed by check produces zero Git diff
 
-- [ ] T029 [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001, NFR-API-002, NFR-QUALITY-001] Add contract/client/catalog parity tests and public export maps for the locked seven-operation source — `packages/contracts/src/audit-admin.test.ts`, `packages/api-client/src/audit-admin.test.ts`
+- [x] T029 [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001, NFR-API-002, NFR-QUALITY-001] Add contract/client/catalog parity tests and public export maps for the locked seven-operation source — `packages/contracts/src/audit-admin.test.ts`, `packages/api-client/src/audit-admin.test.ts`
   - Depends on: `T026`, `T028`
   - Acceptance evidence: `corepack pnpm contracts:check` exits 0 with exact seven-operation schema and client parity
 
 ## Phase 5 — Export worker and adapters
 
-- [ ] T030 [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-006, NFR-PORT-001] Define the minimum export work, immutable object, retention-proof, clock, and telemetry adapter ports — `services/worker/src/audit-export.ts`
+- [x] T030 [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-006, NFR-PORT-001] Define the minimum export work, immutable object, retention-proof, clock, and telemetry adapter ports — `services/worker/src/audit-export.ts`
   - Depends on: `T020`, `T024`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/worker typecheck` exits 0 and ports expose no audit payload, signed URL, credential, or actor secret
 
-- [ ] T031 [P] [NFR-SEC-002, NFR-PORT-001] Implement a local synthetic create-if-absent encrypted object and retention-proof simulator without production WORM claims — `services/worker/src/adapters/local-synthetic-audit-object.ts`
+- [x] T031 [P] [NFR-SEC-002, NFR-PORT-001] Implement a local synthetic create-if-absent encrypted object and retention-proof simulator without production WORM claims — `services/worker/src/adapters/local-synthetic-audit-object.ts`
   - Depends on: `T030`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/worker test -- local-synthetic-audit-object` exits 0 with overwrite and digest mismatch rejected
 
-- [ ] T032 [FR-ADMIN-002, NFR-SEC-005, NFR-SEC-006, NFR-OBS-001] Implement ordered export claims, bounded leases/backoff, unique receipts, internal operation calls, dead letter, and append-only replay handling — `services/worker/src/audit-export.ts`
+- [x] T032 [FR-ADMIN-002, NFR-SEC-005, NFR-SEC-006, NFR-OBS-001] Implement ordered export claims, bounded leases/backoff, unique receipts, internal operation calls, dead letter, and append-only replay handling — `services/worker/src/audit-export.ts`
   - Depends on: `T009`, `T019`, `T025`, `T030`, `T031`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/worker test -- audit-export` exits 0 with per-export order, one reclaim, bounded retry, and immutable original request
 
-- [ ] T033 [FR-ADMIN-002, NFR-SEC-005, NFR-SEC-006, NFR-QUALITY-001] Add worker race, transient, permanent-schema, service-auth, proof, lease-expiry, deduplication, dead-letter, and replay tests — `services/worker/src/audit-export.test.ts`
+- [x] T033 [FR-ADMIN-002, NFR-SEC-005, NFR-SEC-006, NFR-QUALITY-001] Add worker race, transient, permanent-schema, service-auth, proof, lease-expiry, deduplication, dead-letter, and replay tests — `services/worker/src/audit-export.test.ts`
   - Depends on: `T032`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/worker test -- audit-export` exits 0 with all AC-05 through AC-07 worker cases passing
 
-- [ ] T034 [NFR-SEC-001, NFR-SEC-005, NFR-SEC-007, NFR-QUALITY-001] Add private-network service-auth, wrong-batch, wrong-range, changed-body replay, and rate-abuse integration tests for the internal export operation — `services/api/test/audit-export-service-auth.integration.test.ts`
+- [x] T034 [NFR-SEC-001, NFR-SEC-005, NFR-SEC-007, NFR-QUALITY-001] Add private-network service-auth, wrong-batch, wrong-range, changed-body replay, and rate-abuse integration tests for the internal export operation — `services/api/test/audit-export-service-auth.integration.test.ts`
   - Depends on: `T025`, `T026`, `T033`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test:integration -- audit-export-service-auth` exits 0 with every unauthenticated or mismatched request denied
 

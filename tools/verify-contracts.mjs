@@ -68,6 +68,13 @@ const identityContinuityRoutesPath = path.join(
   repoRoot,
   'services/api/src/routes/identity-continuity.ts',
 );
+const auditAdminOpenApiPath = path.join(
+  repoRoot,
+  'specs/008-audit-admin-aggregates-observability/contracts/openapi.yaml',
+);
+const auditAdminContractModulePath = path.join(repoRoot, 'packages/contracts/src/audit-admin.ts');
+const auditAdminClientPath = path.join(repoRoot, 'packages/api-client/src/audit-admin.ts');
+const auditAdminRoutesPath = path.join(repoRoot, 'services/api/src/routes/audit-admin.ts');
 const failures = [];
 
 function mustRead(file) {
@@ -415,6 +422,60 @@ for (const feature008Operation of ['listAuditEvents', 'getAuditEvent', 'createAu
   if (identityContinuityOpenApi.has(feature008Operation))
     failures.push(`Feature 008 operation leaked into Feature 007: ${feature008Operation}.`);
 
+const auditAdminOpenApiText = mustRead(auditAdminOpenApiPath);
+const auditAdminContractModule = mustRead(auditAdminContractModulePath);
+const auditAdminClient = mustRead(auditAdminClientPath);
+const auditAdminRoutes = mustRead(auditAdminRoutesPath);
+const auditAdminOpenApi = parseOpenApi(auditAdminOpenApiText);
+const auditAdminOperations = new Set([
+  'getAdminSummary',
+  'listAuditEvents',
+  'getAuditEvent',
+  'createAuditExport',
+  'exportAuditPartition',
+  'healthLive',
+  'healthReady',
+]);
+const checkpointRoutes = new Set([...auditAdminOperations].slice(0, 5));
+if (!/^openapi:\s*3\.1\.1\s*$/m.test(auditAdminOpenApiText))
+  failures.push('Audit/admin/observability contract must declare OpenAPI 3.1.1.');
+if (auditAdminOpenApi.size !== auditAdminOperations.size)
+  failures.push(
+    `Feature 008 OpenAPI must contain exactly 7 operations; found ${auditAdminOpenApi.size}.`,
+  );
+for (const operationId of auditAdminOperations)
+  if (!auditAdminOpenApi.has(operationId))
+    failures.push(`Feature 008 operation is missing: ${operationId}.`);
+for (const [operationId, operation] of auditAdminOpenApi) {
+  if (!auditAdminOperations.has(operationId))
+    failures.push(`Feature 008 contains an unapproved eighth operation: ${operationId}.`);
+  const canonical = catalog.get(operationId);
+  if (!canonical)
+    failures.push(`Feature 008 operation ${operationId} is absent from the API catalog.`);
+  else if (canonical.method !== operation.method || canonical.path !== operation.path)
+    failures.push(
+      `${operationId} drift: Feature 008 OpenAPI ${operation.method} ${operation.path}; catalog ${canonical.method} ${canonical.path}.`,
+    );
+  for (const [label, source] of [
+    ['contract module', auditAdminContractModule],
+    ['generated client', auditAdminClient],
+  ])
+    if (!new RegExp(`\\b${operationId}\\b`).test(source))
+      failures.push(`Feature 008 ${label} is missing ${operationId}.`);
+  if (
+    checkpointRoutes.has(operationId) &&
+    !new RegExp(`\\b${operationId}\\b`).test(auditAdminRoutes)
+  )
+    failures.push(`Feature 008 registered routes are missing ${operationId}.`);
+  if (
+    !checkpointRoutes.has(operationId) &&
+    new RegExp(`app\\.(?:get|post)\\([^)]*\\b${operationId}\\b`).test(auditAdminRoutes)
+  )
+    failures.push(`Feature 008 route ${operationId} was registered before its checkpoint.`);
+}
+if (!/@generated\b/i.test(auditAdminContractModule) || !/@generated\b/i.test(auditAdminClient))
+  failures.push('Feature 008 contracts and client must both be generated artifacts.');
+
 if (failures.length > 0) {
   console.error('Contract verification failed:');
   for (const failure of failures.sort()) console.error(`- ${failure}`);
@@ -422,5 +483,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  'Contract verification passed: 80 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
+  'Contract verification passed: 87 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
 );
