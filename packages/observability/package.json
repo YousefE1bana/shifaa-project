@@ -13,6 +13,7 @@
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
+    "@shifaa/test-kit": "workspace:*",
     "typescript": "7.0.2"
   }
 }

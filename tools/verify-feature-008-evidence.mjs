@@ -45,9 +45,14 @@ function sha256(text) {
 
 const requestedModes = process.argv.slice(2).filter((argument) => argument !== '--');
 const requestedStories = new Set();
+const requestedReports = new Set();
 for (let index = 0; index < requestedModes.length; index += 1) {
   const argument = requestedModes[index];
   if (argument === '--fixtures') continue;
+  if (['--security', '--ui', '--privacy'].includes(argument)) {
+    requestedReports.add(argument.slice(2));
+    continue;
+  }
   if (argument === '--story' && /^US[1-4]$/.test(requestedModes[index + 1] ?? '')) {
     requestedStories.add(requestedModes[index + 1]);
     index += 1;
@@ -138,27 +143,127 @@ const storyEvidence = {
   },
 };
 
-for (const story of requestedStories) verifyStoryEvidence(story);
+const reportEvidence = {
+  security: {
+    path: 'evidence/security/security-report.md',
+    tokens: [
+      'authorized=1 denied=13',
+      'worker_exact=1',
+      'direct_tables=denied',
+      'force_rls=3',
+      'bypass_roles=0',
+      '54/54',
+      '47/47',
+      '8/8',
+      '9/9',
+      'exactly seven operations',
+      'zero unresolved reportable high or critical findings',
+      'synthetic graduation-engineering evidence only',
+    ],
+  },
+  ui: {
+    path: 'evidence/ui/acceptance.md',
+    tokens: [
+      'ar-EG',
+      'en-EG',
+      'RTL',
+      'LTR',
+      '768x1024',
+      '1440x900',
+      'keyboard',
+      'focus',
+      '200% text',
+      '400% zoom',
+      'forced colors',
+      'reduced motion',
+      'informative rather than pixel-identical',
+      'synthetic graduation data only',
+    ],
+  },
+  privacy: {
+    path: 'evidence/observability/redaction-report.md',
+    tokens: [
+      'zero prohibited values',
+      'zero high-cardinality identifier labels',
+      'no PHI',
+      'no raw metadata',
+      'no suppressed or released exact counts',
+      'no tokens, signed URLs, hashes, cursors, or free text in telemetry',
+      'request/trace correlation',
+      'bounded low-cardinality labels',
+      'synthetic graduation-engineering evidence only',
+    ],
+  },
+};
 
-function verifyStoryEvidence(story) {
-  const requirement = storyEvidence[story];
+for (const story of requestedStories) verifyEvidenceDocument(story, storyEvidence[story]);
+for (const report of requestedReports) verifyEvidenceDocument(report, reportEvidence[report]);
+if (requestedReports.has('privacy')) verifyProhibitedSentinels();
+
+function verifyProhibitedSentinels() {
+  const sentinels = [...auditFixtures.matchAll(/'((?:SYNTHETIC-008-)[A-Z0-9-]+)'/g)].map(
+    ([, sentinel]) => sentinel,
+  );
+  if (sentinels.length !== 10 || new Set(sentinels).size !== 10) {
+    failures.push(`Expected 10 unique prohibited sentinels; found ${sentinels.length}.`);
+    return;
+  }
+
+  const artifacts = [
+    'apps/admin/src/app/audit',
+    'apps/admin/src/app/dashboard',
+    'packages/core/src/audit-admin',
+    'packages/observability/src/audit-admin.ts',
+    'services/api/src/adapters/postgres/audit-admin-service.ts',
+    'services/api/src/modules/audit-admin',
+    'services/api/src/routes/audit-admin.ts',
+    'services/worker/src/audit-export.ts',
+    'services/worker/src/adapters/local-synthetic-audit-object.ts',
+    'specs/008-audit-admin-aggregates-observability/evidence',
+  ].flatMap((relativePath) => evidenceFiles(path.join(repositoryRoot, relativePath)));
+
+  for (const artifactPath of artifacts) {
+    const bytes = fs.readFileSync(artifactPath);
+    for (const sentinel of sentinels) {
+      if (bytes.includes(Buffer.from(sentinel))) {
+        failures.push(
+          `Prohibited sentinel present in ${path.relative(repositoryRoot, artifactPath)}.`,
+        );
+      }
+    }
+  }
+}
+
+function evidenceFiles(absolutePath) {
+  const stat = fs.statSync(absolutePath);
+  if (stat.isFile()) return [absolutePath];
+  return fs
+    .readdirSync(absolutePath, { withFileTypes: true })
+    .flatMap((entry) => evidenceFiles(path.join(absolutePath, entry.name)));
+}
+
+function verifyEvidenceDocument(label, requirement) {
   const absolutePath = path.join(featureDirectory, requirement.path);
   const evidence = readRequired(absolutePath);
   for (const token of requirement.tokens)
-    if (!evidence.includes(token)) failures.push(`${story} evidence is missing: ${token}.`);
+    if (!evidence.includes(token)) failures.push(`${label} evidence is missing: ${token}.`);
 
   const digestLines = [...evidence.matchAll(/- `([^`]+)`: `([a-f0-9]{64})`/g)];
   if (digestLines.length < 3)
-    failures.push(`${story} evidence must bind at least three artifacts.`);
+    failures.push(`${label} evidence must bind at least three artifacts.`);
   for (const [, relativePath, expectedDigest] of digestLines) {
     const artifactPath = path.resolve(repositoryRoot, relativePath);
     if (!artifactPath.startsWith(`${repositoryRoot}${path.sep}`)) {
-      failures.push(`${story} evidence path escapes the repository: ${relativePath}.`);
+      failures.push(`${label} evidence path escapes the repository: ${relativePath}.`);
       continue;
     }
-    const artifact = readRequired(artifactPath);
-    if (artifact && sha256(artifact) !== expectedDigest)
-      failures.push(`${story} artifact digest mismatch: ${relativePath}.`);
+    if (!fs.existsSync(artifactPath)) {
+      failures.push(`${label} evidence input is missing: ${relativePath}.`);
+      continue;
+    }
+    const artifactDigest = createHash('sha256').update(fs.readFileSync(artifactPath)).digest('hex');
+    if (artifactDigest !== expectedDigest)
+      failures.push(`${label} artifact digest mismatch: ${relativePath}.`);
   }
 }
 
@@ -169,5 +274,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Feature 008 evidence verified: privacy_vectors=34, authorization_scenarios=18, failure_classes=${requiredFailureClasses.length}, stories=${requestedStories.size === 0 ? 'fixtures' : [...requestedStories].sort().join(',')}, policy_sha256=${privacyDigest}, fixture_sha256=${sha256(privacyFixtures + auditFixtures)}.`,
+  `Feature 008 evidence verified: privacy_vectors=34, authorization_scenarios=18, failure_classes=${requiredFailureClasses.length}, stories=${requestedStories.size === 0 ? 'fixtures' : [...requestedStories].sort().join(',')}, reports=${requestedReports.size === 0 ? 'none' : [...requestedReports].sort().join(',')}, policy_sha256=${privacyDigest}, fixture_sha256=${sha256(privacyFixtures + auditFixtures)}.`,
 );

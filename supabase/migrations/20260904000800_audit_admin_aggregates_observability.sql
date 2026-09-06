@@ -844,6 +844,60 @@ AS $function$
     )
 $function$;
 
+-- Page and detail reads validate the immutable row plus both adjacent links.
+-- Full-partition verification remains the authority for export and restore;
+-- recomputing an entire completed partition for every bounded page would make
+-- read latency grow linearly with retained history.
+CREATE OR REPLACE FUNCTION audit.event_integrity_v1(
+  p_occurred_at timestamptz,
+  p_event_id uuid
+)
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+  SELECT coalesce(
+    event.partition_key = pg_catalog.date_trunc(
+      'month',event.occurred_at AT TIME ZONE 'UTC'
+    )::date
+    AND event.chain_version = 1
+    AND event.event_hash = audit.sha256_v1(pg_catalog.convert_to(
+      audit.canonical_event_v1(
+        event.occurred_at,event.partition_key,event.chain_sequence,
+        event.request_id,event.trace_id,event.actor_user_id,event.actor_person_id,
+        event.authentication_aal,event.facility_id,event.patient_id,event.purpose_code,
+        event.action_code,event.resource_type,event.resource_id,event.resource_version,
+        event.outcome,event.reason_code,event.source_ip_prefix,event.user_agent_class,
+        event.previous_hash
+      ),
+      'UTF8'
+    ))
+    AND CASE
+      WHEN event.chain_sequence = 1 THEN
+        event.previous_hash = pg_catalog.decode(pg_catalog.repeat('00',32),'hex')
+        AND previous.id IS NULL
+      ELSE previous.event_hash = event.previous_hash
+    END
+    AND (following.id IS NULL OR following.previous_hash = event.event_hash),
+    false
+  )
+  FROM audit.events AS event
+  LEFT JOIN audit.events AS previous
+    ON previous.partition_key = event.partition_key
+   AND previous.chain_sequence = event.chain_sequence - 1
+   AND previous.occurred_at >= event.partition_key::timestamp AT TIME ZONE 'UTC'
+   AND previous.occurred_at < (event.partition_key + INTERVAL '1 month')::timestamp AT TIME ZONE 'UTC'
+  LEFT JOIN audit.events AS following
+    ON following.partition_key = event.partition_key
+   AND following.chain_sequence = event.chain_sequence + 1
+   AND following.occurred_at >= event.partition_key::timestamp AT TIME ZONE 'UTC'
+   AND following.occurred_at < (event.partition_key + INTERVAL '1 month')::timestamp AT TIME ZONE 'UTC'
+  WHERE event.occurred_at = p_occurred_at
+    AND event.id = p_event_id
+$function$;
+
 CREATE OR REPLACE FUNCTION audit.read_events_v1(
   p_actor_person_id uuid,
   p_action_code text,
@@ -905,9 +959,9 @@ AS $function$
     ORDER BY event.occurred_at DESC,event.id DESC
     LIMIT least(greatest(coalesce(p_limit,1),1),101)
   ), verifications AS MATERIALIZED (
-    SELECT partition.partition_key,verification.valid
-    FROM (SELECT DISTINCT page.partition_key FROM page) AS partition
-    CROSS JOIN LATERAL audit.verify_event_chain_v1(partition.partition_key) AS verification
+    SELECT event.occurred_at,event.id,
+      audit.event_integrity_v1(event.occurred_at,event.id) AS valid
+    FROM page AS event
   )
   SELECT
     event.id,event.occurred_at,event.request_id,event.trace_id,event.actor_person_id,
@@ -918,7 +972,7 @@ AS $function$
     pg_catalog.encode(event.previous_hash,'hex'),pg_catalog.encode(event.event_hash,'hex'),
     CASE WHEN verification.valid THEN 'verified' ELSE 'failed' END
   FROM page AS event
-  JOIN verifications AS verification USING(partition_key)
+  JOIN verifications AS verification USING(occurred_at,id)
   ORDER BY event.occurred_at DESC,event.id DESC
 $function$;
 
@@ -962,7 +1016,9 @@ AS $function$
     pg_catalog.encode(event.previous_hash,'hex'),pg_catalog.encode(event.event_hash,'hex'),
     CASE WHEN verification.valid THEN 'verified' ELSE 'failed' END
   FROM audit.events AS event
-  CROSS JOIN LATERAL audit.verify_event_chain_v1(event.partition_key) AS verification
+  CROSS JOIN LATERAL (
+    SELECT audit.event_integrity_v1(event.occurred_at,event.id) AS valid
+  ) AS verification
   WHERE event.id = p_event_id
     AND audit.current_super_admin_context_v1('security.audit.review')
     AND platform.feature_enabled('audit.read',platform.context_environment())
@@ -1497,6 +1553,7 @@ REVOKE ALL ON ALL TABLES IN SCHEMA audit FROM PUBLIC,shifaa_api,shifaa_worker;
 
 REVOKE ALL ON FUNCTION audit.current_super_admin_context_v1(text) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.current_admin_summary_context_v1() FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.event_integrity_v1(timestamptz,uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.read_events_v1(uuid,text,text,uuid,timestamptz,timestamptz,text,timestamptz,uuid,integer) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.read_event_v1(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.read_chain_verification_v1(date) FROM PUBLIC;

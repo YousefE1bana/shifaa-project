@@ -13,7 +13,11 @@ import {
   type SafeDashboardSummary,
 } from './dashboard-model';
 
-const noAdminAccessToken = () => undefined;
+const localSyntheticEvidenceMode =
+  process.env.NODE_ENV === 'development' &&
+  process.env['NEXT_PUBLIC_FEATURE_008_EVIDENCE_MODE'] === 'synthetic';
+const noAdminAccessToken = () =>
+  localSyntheticEvidenceMode ? 'synthetic-feature-008-ui-evidence' : undefined;
 
 export function AdminDashboard({
   accessToken = noAdminAccessToken,

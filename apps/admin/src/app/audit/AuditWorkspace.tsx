@@ -30,13 +30,20 @@ const emptyFilters: AuditFilters = {
   occurredFrom: '',
   occurredBefore: '',
 };
-const noAdminAccessToken = () => undefined;
+const localSyntheticEvidenceMode =
+  process.env.NODE_ENV === 'development' &&
+  process.env['NEXT_PUBLIC_FEATURE_008_EVIDENCE_MODE'] === 'synthetic';
+const noAdminAccessToken = () =>
+  localSyntheticEvidenceMode ? 'synthetic-feature-008-ui-evidence' : undefined;
+const defaultAuditAal = localSyntheticEvidenceMode ? 2 : 1;
+const defaultAuditFactorAgeSeconds = localSyntheticEvidenceMode ? 300 : null;
+const defaultAuditRole = localSyntheticEvidenceMode ? 'super_admin' : null;
 
 export function AuditWorkspace({
   accessToken = noAdminAccessToken,
-  aal = 1,
-  factorAgeSeconds = null,
-  role = null,
+  aal = defaultAuditAal,
+  factorAgeSeconds = defaultAuditFactorAgeSeconds,
+  role = defaultAuditRole,
   fetcher,
   onStepUp = () => undefined,
 }: {
@@ -47,22 +54,6 @@ export function AuditWorkspace({
   fetcher?: typeof globalThis.fetch;
   onStepUp?: () => void;
 }) {
-  const [locale, setLocale] = useState<Locale>('ar-EG');
-  const [purpose, setPurpose] = useState('');
-  const [state, setState] = useState<AuditWorkspaceState>('aal-required');
-  const [events, setEvents] = useState<SafeAuditEvent[]>([]);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [selected, setSelected] = useState<SafeAuditEvent | null>(null);
-  const [filters, setFilters] = useState<AuditFilters>(emptyFilters);
-  const [online, setOnline] = useState(true);
-  const [exportState, setExportState] = useState<ExportUiState>('idle');
-  const [exportReference, setExportReference] = useState<{ id: string; acceptedAt: string } | null>(
-    null,
-  );
-  const [partitionStart, setPartitionStart] = useState('');
-  const [partitionEnd, setPartitionEnd] = useState('');
-  const detailsRef = useRef<HTMLElement>(null);
-  const returnFocusRef = useRef<HTMLButtonElement | null>(null);
   const token = accessToken();
   const authorized = Boolean(
     token &&
@@ -77,6 +68,24 @@ export function AuditWorkspace({
       role === 'super_admin' &&
       (aal !== 2 || factorAgeSeconds === null || factorAgeSeconds < 0 || factorAgeSeconds > 300),
   );
+  const [locale, setLocale] = useState<Locale>('ar-EG');
+  const [purpose, setPurpose] = useState('');
+  const [state, setState] = useState<AuditWorkspaceState>(
+    authorized ? 'purpose-required' : needsStepUp ? 'aal-required' : 'permission',
+  );
+  const [events, setEvents] = useState<SafeAuditEvent[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [selected, setSelected] = useState<SafeAuditEvent | null>(null);
+  const [filters, setFilters] = useState<AuditFilters>(emptyFilters);
+  const [online, setOnline] = useState(true);
+  const [exportState, setExportState] = useState<ExportUiState>('idle');
+  const [exportReference, setExportReference] = useState<{ id: string; acceptedAt: string } | null>(
+    null,
+  );
+  const [partitionStart, setPartitionStart] = useState('');
+  const [partitionEnd, setPartitionEnd] = useState('');
+  const detailsRef = useRef<HTMLElement>(null);
+  const returnFocusRef = useRef<HTMLButtonElement | null>(null);
   const client = useMemo(
     () =>
       token
@@ -108,6 +117,9 @@ export function AuditWorkspace({
   useEffect(() => {
     if (!online) setState(events.length ? 'stale' : 'offline');
   }, [events.length, online]);
+  useEffect(() => {
+    if (selected) detailsRef.current?.focus();
+  }, [selected]);
 
   const load = useCallback(
     async (cursor?: string) => {
@@ -167,15 +179,14 @@ export function AuditWorkspace({
       const detail = parseAuditDetail(await client.getAuditEvent(event.eventId, purpose));
       if (!detail) return setState('error');
       setSelected(detail);
-      queueMicrotask(() => detailsRef.current?.focus());
     } catch (error) {
       const { status, code } = problem(error);
       setState(auditProblemState(status, code, events.length > 0));
     }
   };
   const closeDetails = () => {
+    returnFocusRef.current?.focus();
     setSelected(null);
-    queueMicrotask(() => returnFocusRef.current?.focus());
   };
 
   const requestExport = async () => {

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { auditAdminSyntheticSentinels } from '../../test-kit/src/audit-admin-fixtures.ts';
+import { auditAdminSyntheticSentinels } from '@shifaa/test-kit/audit-admin-fixtures';
 import {
   AUDIT_ADMIN_POLICY_VERSION,
   auditAdminMetricLabels,

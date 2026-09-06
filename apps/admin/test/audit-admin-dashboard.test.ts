@@ -95,6 +95,8 @@ test('dashboard provides Arabic RTL and English LTR accessible, reflow-safe cont
     'bdi dir="ltr"',
     "window.addEventListener('offline'",
     "window.addEventListener('online'",
+    "process.env.NODE_ENV === 'development'",
+    "NEXT_PUBLIC_FEATURE_008_EVIDENCE_MODE'] === 'synthetic'",
   ])
     assert.match(source, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   for (const forbidden of [

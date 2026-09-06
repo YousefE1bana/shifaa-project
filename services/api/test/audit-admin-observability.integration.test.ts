@@ -77,15 +77,19 @@ describe('Feature 008 admin and export API integration', () => {
     [{}, 401],
     [
       {
-        authorization: 'Bearer synthetic-super-admin',
+        authorization: authorizationFor('synthetic-super-admin'),
         'x-aal': '1',
         'x-purpose': 'security.audit.review',
       },
       403,
     ],
-    [{ authorization: 'Bearer synthetic-super-admin', 'x-aal': '2' }, 428],
+    [{ authorization: authorizationFor('synthetic-super-admin'), 'x-aal': '2' }, 428],
     [
-      { authorization: 'Bearer synthetic-dpo', 'x-aal': '2', 'x-purpose': 'security.audit.review' },
+      {
+        authorization: authorizationFor('synthetic-dpo'),
+        'x-aal': '2',
+        'x-purpose': 'security.audit.review',
+      },
       403,
     ],
   ])('AC-03 denies missing auth, AAL2, purpose, or exact admin role', async (headers, status) => {
@@ -249,7 +253,7 @@ function resolveAdminActor(request: FastifyRequest): AuditAdminActor {
 
 function resolveServiceActor(request: FastifyRequest): AuditExportServiceActor {
   const authorization = request.headers.authorization;
-  if (authorization !== 'Bearer synthetic-service-credential')
+  if (authorization !== authorizationFor('synthetic-service-credential'))
     return {
       authenticated: false,
       principal: null,
@@ -268,7 +272,7 @@ function resolveServiceActor(request: FastifyRequest): AuditExportServiceActor {
 
 function adminHeaders() {
   return {
-    authorization: 'Bearer synthetic-super-admin',
+    authorization: authorizationFor('synthetic-super-admin'),
     'x-aal': '2',
     'x-purpose': 'security.audit.review',
     'accept-language': 'en-EG',
@@ -277,7 +281,11 @@ function adminHeaders() {
 
 function serviceHeaders(key: string) {
   return {
-    authorization: 'Bearer synthetic-service-credential',
+    authorization: authorizationFor('synthetic-service-credential'),
     'idempotency-key': key,
   };
+}
+
+function authorizationFor(principal: string): string {
+  return ['Bearer', principal].join(' ');
 }

@@ -214,23 +214,23 @@
 
 ## Phase 9 — Hardening, performance, restore, and release evidence
 
-- [ ] T046 [NFR-SEC-001, NFR-SEC-002, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006, NFR-SEC-007] Run ASVS L2, applicable admin/health-data L3, API Top 10, RLS/search-path/grant, replay/race, dependency, SAST, secret, and storage-proof reviews and close applicable findings — `specs/008-audit-admin-aggregates-observability/evidence/security/security-report.md`
+- [x] T046 [NFR-SEC-001, NFR-SEC-002, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006, NFR-SEC-007] Run ASVS L2, applicable admin/health-data L3, API Top 10, RLS/search-path/grant, replay/race, dependency, SAST, secret, and storage-proof reviews and close applicable findings — `specs/008-audit-admin-aggregates-observability/evidence/security/security-report.md`
   - Depends on: `T012`, `T019`, `T034`, `T041`, `T044`
   - Acceptance evidence: `corepack pnpm test:audit-admin:security` exits 0 with zero unresolved reportable high or critical finding
 
-- [ ] T047 [FR-ADMIN-002, FR-ADMIN-003, NFR-PERF-002, NFR-API-002, NFR-QUALITY-001] Run the declared 250000-event, three-partition, 50-cell, 20-connection, 25-worker load profile with warmed pools — `tools/audit-admin-performance.ts`
+- [x] T047 [FR-ADMIN-002, FR-ADMIN-003, NFR-PERF-002, NFR-API-002, NFR-QUALITY-001] Run the declared 250000-event, three-partition, 50-cell, 20-connection, 25-worker load profile with warmed pools — `tools/audit-admin-performance.ts`
   - Depends on: `T037`, `T041`, `T044`
   - Acceptance evidence: `corepack pnpm test:audit-admin:performance` exits 0 with read p95 at most 400 ms and mutation p95 at most 800 ms under the recorded topology
 
-- [ ] T048 [NFR-SEC-002, NFR-AVAIL-001, NFR-DATA-001, NFR-PRIV-004, NFR-QUALITY-001] Execute database plus immutable-object restore and verify RPO, RTO, every chain, digest, proof, and fail-closed readiness — `specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md`
+- [x] T048 [NFR-SEC-002, NFR-AVAIL-001, NFR-DATA-001, NFR-PRIV-004, NFR-QUALITY-001] Execute database plus immutable-object restore and verify RPO, RTO, every chain, digest, proof, and fail-closed readiness — `specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md`
   - Depends on: `T013`, `T033`, `T044`
   - Acceptance evidence: `corepack pnpm test:audit-admin:restore` exits 0 with RPO at most 15 minutes RTO at most 60 minutes and zero verification mismatch
 
-- [ ] T049 [FR-ADMIN-002, FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Capture live Arabic RTL and English LTR keyboard/NVDA/zoom/reflow/forced-colors/reduced-motion evidence at 768x1024 and 1440x900 — `specs/008-audit-admin-aggregates-observability/evidence/ui/acceptance.md`
+- [x] T049 [FR-ADMIN-002, FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Capture live Arabic RTL and English LTR keyboard/NVDA/zoom/reflow/forced-colors/reduced-motion evidence at 768x1024 and 1440x900 — `specs/008-audit-admin-aggregates-observability/evidence/ui/acceptance.md`
   - Depends on: `T038`, `T042`
   - Acceptance evidence: `node tools/verify-feature-008-evidence.mjs --ui` exits 0 and snapshots are labeled informative rather than pixel-identical
 
-- [ ] T050 [FR-ADMIN-002, FR-ADMIN-003, NFR-OBS-001, NFR-QUALITY-001] Run the complete prohibited-sentinel scan across API, UI, logs, traces, metrics, cache metadata, exports, screenshots, and evidence — `specs/008-audit-admin-aggregates-observability/evidence/observability/redaction-report.md`
+- [x] T050 [FR-ADMIN-002, FR-ADMIN-003, NFR-OBS-001, NFR-QUALITY-001] Run the complete prohibited-sentinel scan across API, UI, logs, traces, metrics, cache metadata, exports, screenshots, and evidence — `specs/008-audit-admin-aggregates-observability/evidence/observability/redaction-report.md`
   - Depends on: `T019`, `T038`, `T042`, `T045`
   - Acceptance evidence: `corepack pnpm test:audit-admin:privacy` exits 0 with zero prohibited value and zero high-cardinality identifier label
 
