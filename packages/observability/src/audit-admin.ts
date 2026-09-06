@@ -187,6 +187,7 @@ export function auditAdminTelemetry<Input extends AuditAdminTelemetryInput>(
   if (policyVersion !== undefined && policyVersion !== AUDIT_ADMIN_POLICY_VERSION) {
     throw new TypeError('Invalid audit-admin telemetry policy version.');
   }
+  const safeDurationBucket = durationBucket(input.durationMs);
 
   return {
     event: 'audit_admin.operation',
@@ -197,7 +198,7 @@ export function auditAdminTelemetry<Input extends AuditAdminTelemetryInput>(
     outcome,
     ...(reason === undefined ? {} : { reason }),
     ...(policyVersion === undefined ? {} : { policyVersion }),
-    ...(input.durationMs === undefined ? {} : { durationBucket: durationBucket(input.durationMs) }),
+    ...(safeDurationBucket === undefined ? {} : { durationBucket: safeDurationBucket }),
   };
 }
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "test": "node --test test/*.test.ts",
+    "test": "node test/run-tests.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },

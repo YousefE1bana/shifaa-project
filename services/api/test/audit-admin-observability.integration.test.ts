@@ -219,6 +219,10 @@ function routeDependencies(): AuditAdminRouteDependencies & { effects(): number 
         };
       }),
     },
+    healthService: {
+      healthLive: vi.fn(),
+      healthReady: vi.fn(),
+    },
     resolveAdminActor: async (request) => resolveAdminActor(request),
     resolveServiceActor: async (request) => resolveServiceActor(request),
     rateLimitHmacKey: new Uint8Array(32).fill(8),

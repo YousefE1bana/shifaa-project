@@ -138,6 +138,10 @@ function routeDependencies(exportService: {
       createAuditExport: vi.fn(),
     },
     exportService,
+    healthService: {
+      healthLive: vi.fn(),
+      healthReady: vi.fn(),
+    },
     resolveAdminActor: vi.fn(),
     resolveServiceActor: async (request: FastifyRequest): Promise<AuditExportServiceActor> => {
       if (!isPrivateAddress(request.ip)) throw new ApiPolicyError('forbidden', 403, 'forbidden');

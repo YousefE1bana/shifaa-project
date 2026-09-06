@@ -3,6 +3,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { HmacRateLimiter } from '../modules/identity-continuity/index.js';
 import type { AuditAdminService } from '../modules/audit-admin/service.js';
 import type { AuditExportService } from '../modules/audit-admin/export-service.js';
+import type { AuditAdminHealthService } from '../modules/audit-admin/health-service.js';
 import type {
   AuditAdminActor,
   AuditEventListQuery,
@@ -17,6 +18,8 @@ export const registeredAuditAdminOperationIds = [
   'getAuditEvent',
   'createAuditExport',
   'exportAuditPartition',
+  'healthLive',
+  'healthReady',
 ] as const;
 
 const noStore = {
@@ -66,10 +69,12 @@ type AdminService = Pick<
   'getAdminSummary' | 'listAuditEvents' | 'getAuditEvent' | 'createAuditExport'
 >;
 type ExportService = Pick<AuditExportService, 'exportAuditPartition'>;
+type HealthService = Pick<AuditAdminHealthService, 'healthLive' | 'healthReady'>;
 
 export interface AuditAdminRouteDependencies {
   adminService: AdminService;
   exportService: ExportService;
+  healthService: HealthService;
   resolveAdminActor(request: FastifyRequest): Promise<AuditAdminActor>;
   resolveServiceActor(request: FastifyRequest): Promise<AuditExportServiceActor>;
   rateLimitHmacKey: Uint8Array;
@@ -243,4 +248,24 @@ export async function registerAuditAdminRoutes(
       return reply.headers(responseHeaders(request, false)).send(response);
     },
   );
+
+  app.get('/v1/internal/health/live', async (request, reply) => {
+    const actor = serviceActor(await dependencies.resolveServiceActor(request), request);
+    applyRateLimit(limiter, reply, 'healthLive', actor.principal, 120);
+    const response = dependencies.healthService.healthLive(actor);
+    return reply.headers(responseHeaders(request, false)).send(response);
+  });
+
+  app.get('/v1/internal/health/ready', async (request, reply) => {
+    const actor = serviceActor(await dependencies.resolveServiceActor(request), request);
+    applyRateLimit(limiter, reply, 'healthReady', actor.principal, 120);
+    const response = await dependencies.healthService.healthReady(actor);
+    if (response.status === 'not_ready')
+      throw new ApiPolicyError(
+        'service-unavailable',
+        503,
+        'A required internal capability is unavailable.',
+      );
+    return reply.headers(responseHeaders(request, false)).send(response);
+  });
 }

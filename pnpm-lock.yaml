@@ -394,6 +394,9 @@ importers:
       '@shifaa/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@shifaa/observability':
+        specifier: workspace:*
+        version: link:../../packages/observability
       '@supabase/supabase-js':
         specifier: 2.112.2
         version: 2.112.2

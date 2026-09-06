@@ -160,19 +160,19 @@
 
 **Independent outcome:** An authorized admin sees the bilingual gated state with `metrics: []`, and approved test fixtures render only safe role-projected cells.
 
-- [ ] T035 [US1] [FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Implement `/dashboard` loading, empty, gated, suppressed, stale, offline, permission, error, and safe-success states using shared primitives — `apps/admin/src/app/dashboard/AdminDashboard.tsx`
+- [x] T035 [US1] [FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Implement `/dashboard` loading, empty, gated, suppressed, stale, offline, permission, error, and safe-success states using shared primitives — `apps/admin/src/app/dashboard/AdminDashboard.tsx`
   - Depends on: `T005`, `T022`, `T028`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/admin test -- dashboard` exits 0 with no selector, drill-down, raw suppressed count, or offline mutation
 
-- [ ] T036 [US1] [FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001, NFR-QUALITY-001] Add Arabic/English parity, RTL/LTR, bidi, keyboard, screen-reader, focus, reflow, contrast, targets, and reduced-motion component tests — `apps/admin/test/audit-admin-dashboard.test.ts`
+- [x] T036 [US1] [FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001, NFR-QUALITY-001] Add Arabic/English parity, RTL/LTR, bidi, keyboard, screen-reader, focus, reflow, contrast, targets, and reduced-motion component tests — `apps/admin/test/audit-admin-dashboard.test.ts`
   - Depends on: `T035`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/admin test -- audit-admin-dashboard` exits 0 in both locales and all required accessibility states
 
-- [ ] T037 [US1] [FR-ADMIN-003, NFR-PRIV-002, NFR-AVAIL-002, NFR-QUALITY-001] Add end-to-end inactive-config, suppression, linked-release, stale/reconnect, private-cache, and non-admin denial coverage — `tests/e2e/audit-admin-summary.spec.ts`
+- [x] T037 [US1] [FR-ADMIN-003, NFR-PRIV-002, NFR-AVAIL-002, NFR-QUALITY-001] Add end-to-end inactive-config, suppression, linked-release, stale/reconnect, private-cache, and non-admin denial coverage — `tests/e2e/audit-admin-summary.spec.ts`
   - Depends on: `T015`, `T027`, `T036`
   - Acceptance evidence: `corepack pnpm test:audit-admin:e2e -- summary` exits 0 with metrics empty gated and every safe-disclosure assertion passing
 
-- [ ] T038 [US1] [FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001, NFR-PRIV-002] Record the independently demonstrable dashboard checkpoint and privacy-vector evidence — `specs/008-audit-admin-aggregates-observability/evidence/dashboard/checkpoint.md`
+- [x] T038 [US1] [FR-ADMIN-003, NFR-I18N-001, NFR-A11Y-001, NFR-PRIV-002] Record the independently demonstrable dashboard checkpoint and privacy-vector evidence — `specs/008-audit-admin-aggregates-observability/evidence/dashboard/checkpoint.md`
   - Depends on: `T037`
   - Acceptance evidence: `node tools/verify-feature-008-evidence.mjs --story US1` exits 0 with 34 of 34 vectors and complete Arabic/English accessibility metadata
 
@@ -180,19 +180,19 @@
 
 **Independent outcome:** A current super-admin at AAL2 with purpose can inspect redacted evidence and queue one verifiable export without any new operation or offline mutation.
 
-- [ ] T039 [US2] [FR-ADMIN-002, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Implement `/audit` step-up, purpose, filters, list/detail, empty, permission, stale, offline, error, and chain-evidence states — `apps/admin/src/app/audit/AuditWorkspace.tsx`
+- [x] T039 [US2] [FR-ADMIN-002, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Implement `/audit` step-up, purpose, filters, list/detail, empty, permission, stale, offline, error, and chain-evidence states — `apps/admin/src/app/audit/AuditWorkspace.tsx`
   - Depends on: `T005`, `T023`, `T028`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/admin test -- audit-workspace` exits 0 with non-super, DPO-only, AAL1, and no-purpose states denied
 
-- [ ] T040 [US3] [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-005, NFR-I18N-001, NFR-A11Y-001] Add queued, retrying, dead-letter, proven, digest, retention-proof, and no-offline-export states sourced only from catalogued audit evidence — `apps/admin/src/app/audit/AuditWorkspace.tsx`
+- [x] T040 [US3] [FR-ADMIN-002, NFR-SEC-002, NFR-SEC-005, NFR-I18N-001, NFR-A11Y-001] Add queued, retrying, dead-letter, proven, digest, retention-proof, and no-offline-export states sourced only from catalogued audit evidence — `apps/admin/src/app/audit/AuditWorkspace.tsx`
   - Depends on: `T024`, `T025`, `T039`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/admin test -- audit-export` exits 0 with no export polling endpoint and no toast-only success
 
-- [ ] T041 [US3] [FR-ADMIN-002, NFR-SEC-001, NFR-SEC-004, NFR-SEC-006, NFR-I18N-001, NFR-A11Y-001, NFR-QUALITY-001] Add Arabic/English audit UI, full authorization matrix, cursor, redaction, export race/failure, keyboard/NVDA, reflow, contrast, and reduced-motion E2E tests — `tests/e2e/audit-admin-events.spec.ts`, `tests/e2e/audit-export.spec.ts`
+- [x] T041 [US3] [FR-ADMIN-002, NFR-SEC-001, NFR-SEC-004, NFR-SEC-006, NFR-I18N-001, NFR-A11Y-001, NFR-QUALITY-001] Add Arabic/English audit UI, full authorization matrix, cursor, redaction, export race/failure, keyboard/NVDA, reflow, contrast, and reduced-motion E2E tests — `tests/e2e/audit-admin-events.spec.ts`, `tests/e2e/audit-export.spec.ts`
   - Depends on: `T027`, `T033`, `T036`, `T040`
   - Acceptance evidence: `corepack pnpm test:audit-admin:e2e -- audit export` exits 0 with AC-03 through AC-08 passing and zero offline export effects
 
-- [ ] T042 [US3] [FR-ADMIN-002, NFR-SEC-004, NFR-SEC-006, NFR-I18N-001, NFR-A11Y-001] Record independently demonstrable audit investigation and export checkpoints with immutable digests — `specs/008-audit-admin-aggregates-observability/evidence/audit/checkpoint.md`
+- [x] T042 [US3] [FR-ADMIN-002, NFR-SEC-004, NFR-SEC-006, NFR-I18N-001, NFR-A11Y-001] Record independently demonstrable audit investigation and export checkpoints with immutable digests — `specs/008-audit-admin-aggregates-observability/evidence/audit/checkpoint.md`
   - Depends on: `T041`
   - Acceptance evidence: `node tools/verify-feature-008-evidence.mjs --story US2 --story US3` exits 0 with exact SHA-backed authorization, redaction, chain, export, and bilingual evidence
 
@@ -200,15 +200,15 @@
 
 **Independent outcome:** Private probes distinguish live from ready and operators receive correlated low-cardinality signals without sensitive detail.
 
-- [ ] T043 [US4] [NFR-API-001, NFR-AVAIL-001, NFR-OBS-001, NFR-PORT-001] Implement process-only liveness and bounded database/outbox/audit-integrity readiness policies and register both health routes — `services/api/src/modules/audit-admin/health-service.ts`, `services/api/src/routes/audit-admin.ts`
+- [x] T043 [US4] [NFR-API-001, NFR-AVAIL-001, NFR-OBS-001, NFR-PORT-001] Implement process-only liveness and bounded database/outbox/audit-integrity readiness policies and register both health routes — `services/api/src/modules/audit-admin/health-service.ts`, `services/api/src/routes/audit-admin.ts`
   - Depends on: `T018`, `T021`, `T026`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test -- health-readiness` and `node tools/verify-feature-008-contract.mjs --implemented all` exit 0 with liveness independent of database and exactly seven registered operations
 
-- [ ] T044 [US4] [NFR-SEC-001, NFR-SEC-007, NFR-AVAIL-001, NFR-OBS-001, NFR-QUALITY-001] Add service-auth, healthy, database-down, backlog, chain/proof failure, timeout, abuse, redaction, and bounded-reason health tests — `services/api/test/audit-admin-health.integration.test.ts`
+- [x] T044 [US4] [NFR-SEC-001, NFR-SEC-007, NFR-AVAIL-001, NFR-OBS-001, NFR-QUALITY-001] Add service-auth, healthy, database-down, backlog, chain/proof failure, timeout, abuse, redaction, and bounded-reason health tests — `services/api/test/audit-admin-health.integration.test.ts`
   - Depends on: `T019`, `T034`, `T043`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api test:integration -- audit-admin-health` exits 0 with AC-09 passing and zero secret topology or payload detail
 
-- [ ] T045 [US4] [NFR-AVAIL-001, NFR-OBS-001] Record the independent liveness/readiness and operational-signal checkpoint — `specs/008-audit-admin-aggregates-observability/evidence/operations/health-checkpoint.md`
+- [x] T045 [US4] [NFR-AVAIL-001, NFR-OBS-001] Record the independent liveness/readiness and operational-signal checkpoint — `specs/008-audit-admin-aggregates-observability/evidence/operations/health-checkpoint.md`
   - Depends on: `T044`
   - Acceptance evidence: `node tools/verify-feature-008-evidence.mjs --story US4` exits 0 with every expected ready degraded and not-ready result
 
