@@ -1,3 +1,5 @@
+'use client';
+
 import { AuditWorkspace } from './AuditWorkspace';
 import { AdminAuditSession } from '../AdminAuditSession';
 

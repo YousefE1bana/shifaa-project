@@ -1,3 +1,5 @@
+'use client';
+
 import { AdminDashboard } from './AdminDashboard';
 import { AdminAuditSession } from '../AdminAuditSession';
 
