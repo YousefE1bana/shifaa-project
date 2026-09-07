@@ -143,6 +143,7 @@ function makeService(repository: AuditAdminRepository): AuditAdminService {
 function repositoryStub(overrides: Partial<AuditAdminRepository> = {}): AuditAdminRepository {
   return {
     canReadAdminSummary: vi.fn().mockResolvedValue(true),
+    approvedAdminSummaryMetricIds: vi.fn().mockResolvedValue(new Set<string>()),
     canReadAudit: vi.fn().mockResolvedValue(true),
     listRedactedAuditEvents: vi.fn().mockResolvedValue([]),
     getRedactedAuditEvent: vi.fn().mockResolvedValue(null),
@@ -150,6 +151,7 @@ function repositoryStub(overrides: Partial<AuditAdminRepository> = {}): AuditAdm
     getAuditExportBatch: vi.fn().mockResolvedValue(null),
     requestAuditExport: vi.fn().mockResolvedValue(accepted),
     readiness: vi.fn(),
+    healthExposureEnabled: vi.fn().mockResolvedValue(true),
     ...overrides,
   };
 }

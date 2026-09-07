@@ -9,19 +9,19 @@ import type {
 const observedAt = '2026-09-01T12:00:00.000Z';
 
 describe('Feature 008 bounded health policy', () => {
-  it('keeps liveness process-only and rejects non-platform principals', () => {
+  it('keeps liveness process-only and rejects non-platform principals', async () => {
     const readiness = vi.fn<() => Promise<ReadinessSnapshot>>();
     const auditIntegrity = vi.fn<() => Promise<'ready' | 'failed'>>();
     const exportProof = vi.fn<() => Promise<'ready' | 'failed'>>();
     const telemetry = { emit: vi.fn() };
     const service = new AuditAdminHealthService({
-      readiness: { readiness },
+      readiness: { readiness, healthExposureEnabled: async () => true },
       integrity: { auditIntegrity, exportProof },
       clock: { now: () => new Date(observedAt) },
       telemetry,
     });
 
-    expect(service.healthLive(platformActor())).toEqual({
+    expect(await service.healthLive(platformActor())).toEqual({
       status: 'live',
       observed_at: observedAt,
     });
@@ -31,16 +31,18 @@ describe('Feature 008 bounded health policy', () => {
     expect(telemetry.emit).toHaveBeenCalledWith(
       expect.objectContaining({ surface: 'health', operation: 'healthLive', outcome: 'succeeded' }),
     );
-    expect(() => service.healthLive({ ...platformActor(), authenticated: false })).toThrowError(
+    await expect(
+      service.healthLive({ ...platformActor(), authenticated: false }),
+    ).rejects.toThrowError(
       expect.objectContaining({ code: 'authentication-required', status: 401 }),
     );
-    expect(() =>
+    await expect(
       service.healthLive({
         ...platformActor(),
         principal: 'service:audit-export-worker',
         workerId: 'worker.export.008',
       }),
-    ).toThrowError(expect.objectContaining({ code: 'forbidden', status: 403 }));
+    ).rejects.toThrowError(expect.objectContaining({ code: 'forbidden', status: 403 }));
   });
 
   it.each([
@@ -69,7 +71,10 @@ describe('Feature 008 bounded health policy', () => {
     });
 
     const timedOut = new AuditAdminHealthService({
-      readiness: { readiness: () => new Promise(() => undefined) },
+      readiness: {
+        readiness: () => new Promise(() => undefined),
+        healthExposureEnabled: async () => true,
+      },
       integrity: {
         auditIntegrity: async () => {
           throw new Error('synthetic SQL detail must not escape');
@@ -93,6 +98,29 @@ describe('Feature 008 bounded health policy', () => {
       reasons: ['database_unavailable'],
     });
   });
+
+  it('fails closed before exposing liveness or readiness when health.exposure is disabled', async () => {
+    const readiness = vi.fn<() => Promise<ReadinessSnapshot>>();
+    const auditIntegrity = vi.fn<() => Promise<'ready' | 'failed'>>();
+    const exportProof = vi.fn<() => Promise<'ready' | 'failed'>>();
+    const service = new AuditAdminHealthService({
+      readiness: { readiness, healthExposureEnabled: async () => false },
+      integrity: { auditIntegrity, exportProof },
+      clock: { now: () => new Date(observedAt) },
+    });
+
+    await expect(service.healthLive(platformActor())).rejects.toMatchObject({
+      code: 'feature-disabled',
+      status: 404,
+    });
+    await expect(service.healthReady(platformActor())).rejects.toMatchObject({
+      code: 'feature-disabled',
+      status: 404,
+    });
+    expect(readiness).not.toHaveBeenCalled();
+    expect(auditIntegrity).not.toHaveBeenCalled();
+    expect(exportProof).not.toHaveBeenCalled();
+  });
 });
 
 function serviceFor(
@@ -103,7 +131,10 @@ function serviceFor(
   } = {},
 ) {
   return new AuditAdminHealthService({
-    readiness: { readiness: async () => overrides.readiness ?? snapshot('ready', 'ready') },
+    readiness: {
+      readiness: async () => overrides.readiness ?? snapshot('ready', 'ready'),
+      healthExposureEnabled: async () => true,
+    },
     integrity: {
       auditIntegrity: async () => overrides.auditIntegrity ?? 'ready',
       exportProof: async () => overrides.exportProof ?? 'ready',

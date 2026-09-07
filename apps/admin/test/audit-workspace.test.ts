@@ -13,20 +13,39 @@ const source = fs.readFileSync(
   'utf8',
 );
 const event = safeEvent();
+const sessionSource = fs.readFileSync(
+  new URL('../src/app/AdminAuditSession.tsx', import.meta.url),
+  'utf8',
+);
 
-test('audit workspace denies non-super, DPO-only, AAL1, stale AAL2, and no-purpose states', () => {
+test('audit workspace defers role authority to the server and blocks AAL1, stale AAL2, and no-purpose states', () => {
   assert.equal(auditProblemState(403, 'forbidden', false), 'permission');
   assert.equal(auditProblemState(403, 'mfa-required', false), 'aal-required');
   assert.equal(auditProblemState(428, 'purpose-required', false), 'purpose-required');
   for (const token of [
-    "role === 'super_admin'",
-    "role !== 'super_admin' ? 'permission' : 'aal-required'",
+    "return setState(!token ? 'permission' : 'aal-required')",
     'factorAgeSeconds <= 300',
     "purpose !== 'security.audit.review'",
     "'permission'",
     "setState('purpose-required')",
   ])
     assert.match(source, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+});
+
+test('audit page installs the real Feature 007 session and step-up boundaries', () => {
+  for (const token of [
+    'IdentityOnboardingClient',
+    'IdentityContinuityClient',
+    'beginMfaEnrollment',
+    'verifyMfaEnrollment',
+    "verification.assurance !== 'aal2'",
+    'onStepUp: () => void beginStepUp()',
+  ])
+    assert.match(sessionSource, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  assert.doesNotMatch(
+    sessionSource,
+    /localStorage|sessionStorage|console\.|service_role|BYPASSRLS/i,
+  );
 });
 
 test('audit parser keeps only fixed redacted evidence and opaque bounded cursors', () => {

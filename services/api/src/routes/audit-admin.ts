@@ -252,7 +252,7 @@ export async function registerAuditAdminRoutes(
   app.get('/v1/internal/health/live', async (request, reply) => {
     const actor = serviceActor(await dependencies.resolveServiceActor(request), request);
     applyRateLimit(limiter, reply, 'healthLive', actor.principal, 120);
-    const response = dependencies.healthService.healthLive(actor);
+    const response = await dependencies.healthService.healthLive(actor);
     return reply.headers(responseHeaders(request, false)).send(response);
   });
 

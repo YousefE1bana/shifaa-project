@@ -117,10 +117,10 @@ export class PostgresPrivacyDsrNotificationService implements PrivacyDsrNotifica
     aggregateVersion: number,
     aggregateType = 'privacy-dsr',
   ) {
-    const digest = createHash('sha256')
-      .update(`${action}:${resourceId}:${actor.requestId}`)
-      .digest('hex');
-    await sql`insert into audit.events(event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,metadata) values(${digest},${actor.personId}::uuid,${action},'privacy-dsr-notifications',${resourceId}::uuid,'success',${actor.requestId}::uuid,${sql.json({ purpose_code: actor.purpose ?? null })})`;
+    await sql`select platform.append_privacy_effect_audit_v1(
+      ${actor.requestId}::uuid,${action},${actor.personId}::uuid,
+      ${resourceId}::uuid,${aggregateVersion}
+    )`;
     await sql`insert into platform.outbox_events(aggregate_type,aggregate_id,aggregate_version,event_type,payload) values(${aggregateType},${resourceId}::uuid,${aggregateVersion},${action},${sql.json({ resource_id: resourceId, request_id: actor.requestId })})`;
   }
 
@@ -430,10 +430,9 @@ export class PostgresPrivacyDsrNotificationService implements PrivacyDsrNotifica
         throw error;
       }
       const effectRequestId = randomUUID();
-      const eventHash = createHash('sha256')
-        .update(`notification.delivery.receipt_recorded:${receiptId}:${effectRequestId}`)
-        .digest('hex');
-      await sql`insert into audit.events(event_hash,action,resource_type,resource_id,outcome,request_id,metadata) values(${eventHash},'notification.delivery.receipt_recorded','provider-receipt',${receiptId}::uuid,'success',${effectRequestId}::uuid,${sql.json({ provider_code: 'local-synthetic', delivery_status: body.delivery_status })})`;
+      await sql`select platform.append_notification_receipt_audit_v1(
+        ${effectRequestId}::uuid,${receiptId}::uuid
+      )`;
       await sql`insert into platform.outbox_events(aggregate_type,aggregate_id,aggregate_version,event_type,payload) values('notification-receipt',${receiptId}::uuid,1,'notification.delivery.receipt_recorded',${sql.json({ receipt_id: receiptId, delivery_status: body.delivery_status })})`;
       return { accepted: true };
     });

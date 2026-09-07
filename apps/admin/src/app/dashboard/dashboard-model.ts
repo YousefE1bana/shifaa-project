@@ -69,6 +69,10 @@ export function dashboardStateFor(summary: SafeDashboardSummary): DashboardState
   return summary.cells.every((cell) => cell.disclosure === 'suppressed') ? 'suppressed' : 'success';
 }
 
+export function summarySnapshotAt(summary: SafeDashboardSummary): string {
+  return summary.cells.map((cell) => cell.snapshotAt).sort()[0] ?? summary.generatedAt;
+}
+
 export function dashboardProblemState(
   status: number,
   code: string | undefined,
@@ -96,7 +100,7 @@ function parseCell(value: unknown): SafeDashboardCell | null {
     typeof value['metric_id'] !== 'string' ||
     !boundedCode.test(value['metric_id']) ||
     typeof value['period'] !== 'string' ||
-    !/^\d{4}-\d{2}-01$/.test(value['period']) ||
+    !/^\d{4}-(?:0[1-9]|1[0-2])$/.test(value['period']) ||
     !isSafeDimensions(value['dimensions']) ||
     (value['disclosure'] !== 'released' && value['disclosure'] !== 'suppressed') ||
     typeof value['policy_version'] !== 'string' ||

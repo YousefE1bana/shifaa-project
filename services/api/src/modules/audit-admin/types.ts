@@ -212,11 +212,18 @@ export interface AggregatePolicyPort {
 }
 
 export interface AggregateDataPort {
-  getCells(configuration: AggregatePolicyConfiguration): Promise<readonly AggregateCellInput[]>;
+  getCells(
+    configuration: AggregatePolicyConfiguration,
+    approvedMetricIds: ReadonlySet<string>,
+  ): Promise<readonly AggregateCellInput[]>;
 }
 
 export interface AuditAdminAuthorizationPort {
   canReadAdminSummary(actor: AuditAdminActor): Promise<boolean>;
+  approvedAdminSummaryMetricIds(
+    actor: AuditAdminActor,
+    configuredMetricIds: readonly string[],
+  ): Promise<ReadonlySet<string>>;
   canReadAudit(actor: AuditAdminActor): Promise<boolean>;
 }
 
@@ -271,6 +278,7 @@ export interface ObjectProofPort {
 
 export interface ReadinessPort {
   readiness(): Promise<ReadinessSnapshot>;
+  healthExposureEnabled(): Promise<boolean>;
 }
 
 export type AuditAdminRepository = AuditAdminAuthorizationPort &

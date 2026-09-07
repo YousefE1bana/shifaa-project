@@ -5,3 +5,4 @@ export * from './facility-service.js';
 export * from './family-service.js';
 export * from './privacy-dsr-service.js';
 export * from './discovery-sos-service.js';
+export * from './audit-admin-service.js';

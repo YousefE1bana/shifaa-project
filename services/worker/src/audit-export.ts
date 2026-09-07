@@ -21,6 +21,8 @@ export type AuditExportClaim = Readonly<{
 type AuditExportCompletionContext = Readonly<{
   claim: AuditExportClaim;
   workerId: string;
+  requestId: string;
+  traceId: string;
 }>;
 
 export type AuditExportCompletion = AuditExportCompletionContext &
@@ -150,7 +152,7 @@ export class AuditExportWorker {
     } catch (error) {
       return this.completeFailure(claim, classifyFailure(error), requestId, traceId);
     }
-    await this.completeProven(claim, proof);
+    await this.completeProven(claim, proof, requestId, traceId);
     this.emit(requestId, traceId, 'succeeded');
     return 'proven';
   }
@@ -174,10 +176,14 @@ export class AuditExportWorker {
   private completeProven(
     claim: AuditExportClaim,
     proof: Awaited<ReturnType<AuditExportOperationPort['materialize']>>,
+    requestId: string,
+    traceId: string,
   ) {
     return this.completeOrThrow({
       claim,
       workerId: this.workerId,
+      requestId,
+      traceId,
       outcome: 'proven',
       objectDigest: proof.objectDigest,
       proofClass: proof.proofClass,
@@ -194,6 +200,8 @@ export class AuditExportWorker {
       await this.completeOrThrow({
         claim,
         workerId: this.workerId,
+        requestId,
+        traceId,
         outcome: 'retryable',
         failureCode: failure.failureCode,
         retryAt: retryAt(claim.exportBatchId, claim.attemptCount, this.clock.now()),
@@ -204,6 +212,8 @@ export class AuditExportWorker {
     await this.completeOrThrow({
       claim,
       workerId: this.workerId,
+      requestId,
+      traceId,
       outcome: 'dead_letter',
       failureCode: failure.failureCode,
     });
@@ -254,22 +264,26 @@ export class PrivateAuditExportHttpAdapter implements AuditExportOperationPort {
   private readonly endpoint: URL;
   private readonly serviceCredential: string;
   private readonly fetcher: typeof globalThis.fetch;
+  private readonly workerId: string;
 
   public constructor(
     baseUrl: string,
     serviceCredential: string,
     fetcher: typeof globalThis.fetch = globalThis.fetch,
+    workerId = 'audit-export-worker-008',
   ) {
     const endpoint = new URL('/v1/internal/audit/exports', baseUrl);
     if (
       !isPrivateServiceUrl(endpoint) ||
       serviceCredential.length < 24 ||
-      serviceCredential.length > 512
+      serviceCredential.length > 512 ||
+      !WORKER_ID.test(workerId)
     )
       throw new TypeError('Invalid private audit export service configuration.');
     this.endpoint = endpoint;
     this.serviceCredential = serviceCredential;
     this.fetcher = fetcher.bind(globalThis);
+    this.workerId = workerId;
   }
 
   public async materialize(
@@ -294,6 +308,7 @@ export class PrivateAuditExportHttpAdapter implements AuditExportOperationPort {
           'Content-Type': 'application/json',
           'Idempotency-Key': key,
           'X-Request-Id': context.requestId,
+          'X-Worker-Id': this.workerId,
           traceparent: `00-${context.traceId}-${randomBytes(8).toString('hex')}-01`,
         },
         body: JSON.stringify({ export_batch_id: exportBatchId }),

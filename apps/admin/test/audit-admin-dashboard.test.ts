@@ -8,6 +8,7 @@ import {
   dashboardProblemState,
   dashboardStateFor,
   parseAdminSummary,
+  summarySnapshotAt,
 } from '../src/app/dashboard/dashboard-model.ts';
 
 const source = fs.readFileSync(
@@ -65,17 +66,18 @@ test('dashboard distinguishes empty, suppressed, released, stale, permission, an
     data: [
       {
         metric_id: 'safe.metric',
-        period: '2026-08-01',
+        period: '2026-08',
         dimensions: { facility_type: 'clinic' },
         disclosure: 'suppressed',
         suppression_reason: 'linked_release',
         policy_version: '1.0.0-approved',
-        snapshot_at: generatedAt,
+        snapshot_at: '2026-08-31T23:59:59.000Z',
       },
     ],
   });
   assert.ok(suppressed);
   assert.equal(dashboardStateFor(suppressed), 'suppressed');
+  assert.equal(summarySnapshotAt(suppressed), '2026-08-31T23:59:59.000Z');
   assert.equal(dashboardProblemState(0, undefined, true), 'stale');
   assert.equal(dashboardProblemState(403, 'forbidden', false), 'permission');
   assert.equal(dashboardProblemState(500, undefined, false), 'error');

@@ -12,6 +12,7 @@ import {
   type AuditAdminRouteDependencies,
 } from '../src/routes/audit-admin.js';
 import { installIdentityErrorHandler } from '../src/routes/identity-onboarding.js';
+import { buildApp } from '../src/app.js';
 
 const eventId = '82000000-0000-4000-8000-000000000001';
 const batchId = '83000000-0000-4000-8000-000000000001';
@@ -71,6 +72,33 @@ describe('Feature 008 admin and export API integration', () => {
       request_id: '84000000-0000-4000-8000-000000000099',
       errors: [],
     });
+  });
+
+  it('installs all seven approved Feature 008 routes in buildApp and preserves a valid request ID', async () => {
+    const harness = await buildApp();
+    try {
+      for (const [method, url] of [
+        ['GET', '/v1/admin/dashboard-summary'],
+        ['GET', '/v1/admin/audit/events'],
+        ['GET', '/v1/admin/audit/events/:eventId'],
+        ['POST', '/v1/admin/audit/exports'],
+        ['POST', '/v1/internal/audit/exports'],
+        ['GET', '/v1/internal/health/live'],
+        ['GET', '/v1/internal/health/ready'],
+      ] as const) {
+        expect(harness.app.hasRoute({ method, url })).toBe(true);
+      }
+      const requestId = '84000000-0000-4000-8000-000000000088';
+      const response = await harness.app.inject({
+        method: 'GET',
+        url: '/v1/admin/dashboard-summary',
+        headers: { 'x-request-id': requestId },
+      });
+      expect(response.statusCode).toBe(401);
+      expect(response.json()).toMatchObject({ request_id: requestId });
+    } finally {
+      await harness.app.close();
+    }
   });
 
   it.each([

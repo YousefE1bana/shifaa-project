@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
 import process from 'node:process';
@@ -285,6 +286,7 @@ function measureAggregateReads(): number[] {
     measure: 'distinct_subject_count',
     snapshotId: `snapshot-performance-${String(index + 1).padStart(2, '0')}`,
     snapshotVersion: 1,
+    snapshotAt: '2026-07-31T23:59:59.000Z',
     dimensions: { calendar_month_utc: '2026-07' },
     completedPeriod: true,
   }));
@@ -342,7 +344,9 @@ async function claimExports(worker: Sql): Promise<{ durations: number[]; batchId
           SELECT set_config('shifaa.worker_id',${workerId},true),
             set_config('shifaa.environment','local',true)
         `;
-        return sql`SELECT * FROM audit.claim_export_v1(${workerId},300)`;
+        return sql`SELECT * FROM audit.claim_export_v1(
+          ${workerId},300,${randomUUID()}::uuid,${`trace-performance-${workerId}`}
+        )`;
       });
       assert.equal(rows.length, 1, `${workerId} must claim exactly one export`);
       assert.equal(rows[0]!.lease_owner, workerId);

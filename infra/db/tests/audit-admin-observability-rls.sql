@@ -54,7 +54,8 @@ BEGIN
       'current_super_admin_context_v1','exact_export_worker_context_v1',
       'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1',
       'current_admin_summary_context_v1','read_events_v1','read_event_v1',
-      'read_chain_verification_v1','read_export_batch_v1','readiness_v1'
+      'read_chain_verification_v1','read_export_batch_v1','readiness_v1',
+      'record_admin_read_v1','health_integrity_v1','read_export_work_v1'
     )
     AND acl.grantee = 0
     AND acl.privilege_type = 'EXECUTE';
@@ -97,6 +98,22 @@ BEGIN
       'shifaa_api',
       'platform.append_facility_governance_audit_v1(uuid,text,uuid,uuid)',
       'EXECUTE'
+    ) OR NOT pg_catalog.has_function_privilege(
+      'shifaa_api',
+      'platform.append_family_mutation_audit_v1(uuid,text,uuid,uuid,uuid,integer)',
+      'EXECUTE'
+    ) OR NOT pg_catalog.has_function_privilege(
+      'shifaa_api',
+      'platform.append_family_invitation_audit_v1(uuid,text,uuid,uuid)',
+      'EXECUTE'
+    ) OR NOT pg_catalog.has_function_privilege(
+      'shifaa_api',
+      'platform.append_privacy_effect_audit_v1(uuid,text,uuid,uuid,integer)',
+      'EXECUTE'
+    ) OR NOT pg_catalog.has_function_privilege(
+      'shifaa_api',
+      'platform.append_notification_receipt_audit_v1(uuid,uuid)',
+      'EXECUTE'
     ) OR pg_catalog.has_function_privilege(
       'shifaa_api',
       'audit.append_event_v1(uuid,text,text,text,text,uuid,uuid,smallint,uuid,uuid,text,uuid,integer,text,inet,text)',
@@ -116,6 +133,22 @@ BEGIN
     ) OR pg_catalog.has_function_privilege(
       'shifaa_worker',
       'platform.append_facility_governance_audit_v1(uuid,text,uuid,uuid)',
+      'EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker',
+      'platform.append_family_mutation_audit_v1(uuid,text,uuid,uuid,uuid,integer)',
+      'EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker',
+      'platform.append_family_invitation_audit_v1(uuid,text,uuid,uuid)',
+      'EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker',
+      'platform.append_privacy_effect_audit_v1(uuid,text,uuid,uuid,integer)',
+      'EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker',
+      'platform.append_notification_receipt_audit_v1(uuid,uuid)',
       'EXECUTE'
     ) THEN
     RAISE EXCEPTION 'scoped pre-008 audit grant separation failed';
@@ -174,10 +207,26 @@ BEGIN
     RAISE EXCEPTION 'shifaa_api lacks the minimum redacted-read grants';
   END IF;
 
-  IF pg_catalog.has_function_privilege(
-      'shifaa_api','audit.claim_export_v1(text,integer)','EXECUTE'
+  IF NOT pg_catalog.has_function_privilege(
+      'shifaa_api','audit.record_admin_read_v1(uuid,text,text,uuid)','EXECUTE'
+    ) OR NOT pg_catalog.has_function_privilege(
+      'shifaa_api','audit.health_integrity_v1()','EXECUTE'
+    ) OR NOT pg_catalog.has_function_privilege(
+      'shifaa_api','audit.read_export_work_v1(uuid,text)','EXECUTE'
     ) OR pg_catalog.has_function_privilege(
-      'shifaa_api','audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz)','EXECUTE'
+      'shifaa_worker','audit.record_admin_read_v1(uuid,text,text,uuid)','EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker','audit.health_integrity_v1()','EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker','audit.read_export_work_v1(uuid,text)','EXECUTE'
+    ) THEN
+    RAISE EXCEPTION 'API audit read/orchestration grant separation failed';
+  END IF;
+
+  IF pg_catalog.has_function_privilege(
+      'shifaa_api','audit.claim_export_v1(text,integer,uuid,text)','EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_api','audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz,uuid,text)','EXECUTE'
     ) OR pg_catalog.has_function_privilege(
       'shifaa_worker','audit.request_export_v1(text,text,date,date,uuid,text)','EXECUTE'
     ) OR pg_catalog.has_function_privilege(
@@ -191,9 +240,9 @@ BEGIN
   END IF;
 
   IF NOT pg_catalog.has_function_privilege(
-      'shifaa_worker','audit.claim_export_v1(text,integer)','EXECUTE'
+      'shifaa_worker','audit.claim_export_v1(text,integer,uuid,text)','EXECUTE'
     ) OR NOT pg_catalog.has_function_privilege(
-      'shifaa_worker','audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz)','EXECUTE'
+      'shifaa_worker','audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz,uuid,text)','EXECUTE'
     ) THEN
     RAISE EXCEPTION 'worker lacks its minimum claim/complete grants';
   END IF;
@@ -207,10 +256,11 @@ BEGIN
         'current_super_admin_context_v1','exact_export_worker_context_v1',
         'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1',
         'current_admin_summary_context_v1','read_events_v1','read_event_v1',
-        'read_chain_verification_v1','read_export_batch_v1','readiness_v1'
+        'read_chain_verification_v1','read_export_batch_v1','readiness_v1',
+        'record_admin_read_v1','health_integrity_v1','read_export_work_v1'
       )
       AND procedure.proconfig @> ARRAY['search_path=pg_catalog']
-  ) <> 12 THEN
+  ) <> 15 THEN
     RAISE EXCEPTION 'authorization boundary search_path is not fixed';
   END IF;
 END

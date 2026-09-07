@@ -10,6 +10,11 @@ import type {
   ChainVerification,
   ReadinessSnapshot,
   RedactedAuditEvent,
+  AuditExportOrchestrationPort,
+  AuditExportServiceActor,
+  AuditExportWork,
+  ProvenAuditExportWork,
+  RetentionProof,
 } from '../../modules/audit-admin/types.js';
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
 import type { PostgresIdentityRepository } from './identity-repository.js';
@@ -73,6 +78,18 @@ type ReadinessRow = {
   outbox_status: ReadinessSnapshot['outbox'];
 };
 
+type ExportWorkRow = {
+  export_batch_id: string;
+  status: 'claimed' | 'proven';
+  partition_start: Date | string;
+  partition_end_exclusive: Date | string;
+  object_key: string;
+  object_digest: string | null;
+  retention_proof: RetentionProof | null;
+  exported_at: Date | string | null;
+  events: Extract<AuditExportWork, { status: 'claimed' }>['events'];
+};
+
 export class PostgresAuditAdminRepository implements AuditAdminRepository {
   public constructor(
     private readonly repository: RawTransactionRepository,
@@ -86,6 +103,17 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
       `;
       return row?.allowed === true;
     });
+  }
+
+  public async approvedAdminSummaryMetricIds(
+    actor: AuditAdminActor,
+    configuredMetricIds: readonly string[],
+  ): Promise<ReadonlySet<string>> {
+    await this.canReadAdminSummary(actor);
+    void configuredMetricIds;
+    // No metric/role mapping is approved in the canonical runtime configuration.
+    // Returning no IDs is the intentional fail-closed projection for metrics: [].
+    return new Set<string>();
   }
 
   public async canReadAudit(actor: AuditAdminActor): Promise<boolean> {
@@ -117,6 +145,9 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
           ${query.limit}
         )
       `;
+      await sql`select audit.record_admin_read_v1(
+        ${actor.requestId}::uuid,${actor.traceId},'audit.events.listed',null::uuid
+      )`;
       return rows.map(redactedEvent);
     });
   }
@@ -129,6 +160,11 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
       const [row] = await sql<AuditEventRow[]>`
         select * from audit.read_event_v1(${eventId}::uuid)
       `;
+      if (row) {
+        await sql`select audit.record_admin_read_v1(
+          ${actor.requestId}::uuid,${actor.traceId},'audit.event.read',${eventId}::uuid
+        )`;
+      }
       return row ? redactedEvent(row) : null;
     });
   }
@@ -220,6 +256,36 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
     });
   }
 
+  public async healthExposureEnabled(): Promise<boolean> {
+    return this.repository.withRawTransaction(async (sql) => {
+      const [row] = await sql<{ enabled: boolean }[]>`
+        select platform.feature_enabled('health.exposure',${this.environment}) as enabled
+      `;
+      return row?.enabled === true;
+    });
+  }
+
+  public async auditIntegrity(): Promise<'ready' | 'failed'> {
+    return (await this.healthIntegrity()).audit_integrity;
+  }
+
+  public async exportProof(): Promise<'ready' | 'failed'> {
+    return (await this.healthIntegrity()).export_proof;
+  }
+
+  private async healthIntegrity(): Promise<{
+    audit_integrity: 'ready' | 'failed';
+    export_proof: 'ready' | 'failed';
+  }> {
+    return this.repository.withRawTransaction(async (sql) => {
+      await sql`select set_config('shifaa.environment',${this.environment},true)`;
+      const [row] = await sql<
+        { audit_integrity: 'ready' | 'failed'; export_proof: 'ready' | 'failed' }[]
+      >`select * from audit.health_integrity_v1()`;
+      return row ?? { audit_integrity: 'failed', export_proof: 'failed' };
+    });
+  }
+
   private async withActor<T>(
     actor: AuditAdminActor,
     work: (sql: TransactionSql) => Promise<T>,
@@ -232,6 +298,75 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
           set_config('shifaa.principal',${actor.principal ?? ''},true),
           set_config('shifaa.environment',${this.environment},true)
       `;
+      return work(sql);
+    });
+  }
+}
+
+export class PostgresAuditExportOrchestrationRepository implements AuditExportOrchestrationPort {
+  public constructor(
+    private readonly repository: RawTransactionRepository,
+    private readonly environment: 'local' | 'ci' | 'production',
+  ) {}
+
+  public async getAuditExportWork(
+    actor: AuditExportServiceActor,
+    exportBatchId: string,
+  ): Promise<AuditExportWork | null> {
+    return this.withServiceActor(actor, async (sql) => {
+      const [row] = await sql<ExportWorkRow[]>`
+        select * from audit.read_export_work_v1(${exportBatchId}::uuid,${actor.workerId})
+      `;
+      if (!row) return null;
+      if (row.status === 'proven' && row.object_digest && row.retention_proof && row.exported_at) {
+        return {
+          exportBatchId: row.export_batch_id,
+          status: 'proven',
+          partitionStart: dateOnly(row.partition_start),
+          partitionEndExclusive: dateOnly(row.partition_end_exclusive),
+          objectKey: row.object_key,
+          objectDigest: row.object_digest,
+          retentionProof: row.retention_proof,
+          exportedAt: iso(row.exported_at),
+        };
+      }
+      return {
+        exportBatchId: row.export_batch_id,
+        status: 'claimed',
+        partitionStart: dateOnly(row.partition_start),
+        partitionEndExclusive: dateOnly(row.partition_end_exclusive),
+        objectKey: row.object_key,
+        events: row.events,
+      };
+    });
+  }
+
+  public async recordProvenAuditExport(
+    actor: AuditExportServiceActor,
+    input: { exportBatchId: string; objectDigest: string; retentionProof: RetentionProof },
+  ): Promise<ProvenAuditExportWork | null> {
+    const work = await this.getAuditExportWork(actor, input.exportBatchId);
+    if (!work || work.status !== 'claimed') return null;
+    return {
+      exportBatchId: work.exportBatchId,
+      status: 'proven',
+      partitionStart: work.partitionStart,
+      partitionEndExclusive: work.partitionEndExclusive,
+      objectKey: work.objectKey,
+      objectDigest: input.objectDigest,
+      retentionProof: input.retentionProof,
+      exportedAt: input.retentionProof.verified_at,
+    };
+  }
+
+  private async withServiceActor<T>(
+    actor: AuditExportServiceActor,
+    work: (sql: TransactionSql) => Promise<T>,
+  ): Promise<T> {
+    return this.repository.withRawTransaction(async (sql) => {
+      await sql`select set_config('shifaa.service_principal',${actor.principal ?? ''},true),
+        set_config('shifaa.worker_id',${actor.workerId ?? ''},true),
+        set_config('shifaa.environment',${this.environment},true)`;
       return work(sql);
     });
   }

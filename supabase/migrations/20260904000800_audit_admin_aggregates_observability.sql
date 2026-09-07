@@ -190,6 +190,8 @@ $partitions$;
 
 CREATE INDEX audit_events_cursor_idx
   ON audit.events(occurred_at DESC,id DESC);
+CREATE INDEX audit_events_id_idx
+  ON audit.events(id);
 CREATE INDEX audit_events_actor_idx
   ON audit.events(actor_person_id,occurred_at DESC,id DESC)
   WHERE actor_person_id IS NOT NULL;
@@ -520,6 +522,34 @@ BEGIN
   partition_start_value := partition_key_value::timestamp AT TIME ZONE 'UTC';
   partition_end_value := (partition_key_value + INTERVAL '1 month')::timestamp AT TIME ZONE 'UTC';
 
+  IF pg_catalog.to_regclass(
+       'audit.events_' || pg_catalog.to_char(partition_key_value,'YYYY_MM')
+     ) IS NULL THEN
+    BEGIN
+      EXECUTE pg_catalog.format(
+        'CREATE TABLE audit.%I PARTITION OF audit.events FOR VALUES FROM (%L) TO (%L)',
+        'events_' || pg_catalog.to_char(partition_key_value,'YYYY_MM'),
+        partition_start_value,
+        partition_end_value
+      );
+      EXECUTE pg_catalog.format(
+        'ALTER TABLE audit.%I ENABLE ROW LEVEL SECURITY',
+        'events_' || pg_catalog.to_char(partition_key_value,'YYYY_MM')
+      );
+      EXECUTE pg_catalog.format(
+        'ALTER TABLE audit.%I FORCE ROW LEVEL SECURITY',
+        'events_' || pg_catalog.to_char(partition_key_value,'YYYY_MM')
+      );
+      EXECUTE pg_catalog.format(
+        'CREATE UNIQUE INDEX %I ON audit.%I(partition_key,chain_sequence)',
+        'events_' || pg_catalog.to_char(partition_key_value,'YYYY_MM') || '_chain_uq',
+        'events_' || pg_catalog.to_char(partition_key_value,'YYYY_MM')
+      );
+    EXCEPTION WHEN duplicate_table THEN
+      NULL;
+    END;
+  END IF;
+
   PERFORM pg_catalog.pg_advisory_xact_lock(
     8008,
     partition_key_value - DATE '2000-01-01'
@@ -567,6 +597,122 @@ BEGIN
   RETURNING inserted.id INTO event_id_value;
 
   RETURN QUERY SELECT event_id_value,occurred_at_value,event_hash_value;
+END
+$function$;
+
+-- Narrow compatibility boundaries for approved Feature 004/005 effects.
+-- They expose neither the audit table nor the generic append primitive.
+CREATE OR REPLACE FUNCTION platform.append_family_mutation_audit_v1(
+  p_request_id uuid,p_action_code text,p_actor_person_id uuid,p_patient_id uuid,
+  p_resource_id uuid,p_resource_version integer
+)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog
+AS $function$
+BEGIN
+  IF session_user <> 'shifaa_api'
+     OR platform.context_person_id() IS DISTINCT FROM p_actor_person_id
+     OR p_request_id IS NULL OR p_patient_id IS NULL OR p_resource_id IS NULL
+     OR p_resource_version IS NULL OR p_resource_version < 1
+     OR p_action_code NOT IN (
+       'relationship.guardianship.created','relationship.guardianship.approved',
+       'relationship.guardianship.active',
+       'relationship.guardianship.rejected','relationship.guardianship.revoked',
+       'relationship.delegation.created',
+       'relationship.delegation.accepted','relationship.delegation.updated',
+       'relationship.delegation.revoked','emergency_contact.created',
+       'emergency_contact.confirmed','emergency_contact.declined',
+       'emergency_contact.revoked'
+     ) THEN
+    RAISE EXCEPTION 'F008_FAMILY_MUTATION_AUDIT_DENIED' USING ERRCODE = '42501';
+  END IF;
+  PERFORM audit.append_event_v1(
+    p_request_id,p_request_id::text,p_action_code,'family-care','success',
+    p_actor_person_id => p_actor_person_id,
+    p_authentication_aal => nullif(platform.context_aal(),0)::smallint,
+    p_patient_id => p_patient_id,p_purpose_code => (platform.context_purposes())[1],
+    p_resource_id => p_resource_id,p_resource_version => p_resource_version,
+    p_user_agent_class => 'web'
+  );
+END
+$function$;
+
+CREATE OR REPLACE FUNCTION platform.append_privacy_effect_audit_v1(
+  p_request_id uuid,p_action_code text,p_actor_person_id uuid,
+  p_resource_id uuid,p_resource_version integer
+)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog
+AS $function$
+BEGIN
+  IF session_user <> 'shifaa_api'
+     OR platform.context_person_id() IS DISTINCT FROM p_actor_person_id
+     OR p_request_id IS NULL OR p_resource_id IS NULL
+     OR p_resource_version IS NULL OR p_resource_version < 1
+     OR p_action_code NOT IN (
+       'privacy.dsr.submitted','privacy.dsr.identity_required',
+       'privacy.dsr.export_consumed','privacy.dsr.status_changed',
+       'notification.template.drafted','notification.template.published',
+       'notification.delivery.replay_requested'
+     ) THEN
+    RAISE EXCEPTION 'F008_PRIVACY_AUDIT_DENIED' USING ERRCODE = '42501';
+  END IF;
+  PERFORM audit.append_event_v1(
+    p_request_id,p_request_id::text,p_action_code,'privacy-dsr-notifications','success',
+    p_actor_person_id => p_actor_person_id,
+    p_authentication_aal => nullif(platform.context_aal(),0)::smallint,
+    p_purpose_code => (platform.context_purposes())[1],p_resource_id => p_resource_id,
+    p_resource_version => p_resource_version,p_user_agent_class => 'web'
+  );
+END
+$function$;
+
+CREATE OR REPLACE FUNCTION platform.append_family_invitation_audit_v1(
+  p_request_id uuid,p_action_code text,p_patient_id uuid,p_resource_id uuid
+)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog
+AS $function$
+DECLARE
+  resource_version_value integer;
+BEGIN
+  IF session_user <> 'shifaa_api' OR p_request_id IS NULL OR p_patient_id IS NULL
+     OR p_resource_id IS NULL
+     OR p_action_code NOT IN ('emergency_contact.confirmed','emergency_contact.declined') THEN
+    RAISE EXCEPTION 'F008_FAMILY_INVITATION_AUDIT_DENIED' USING ERRCODE = '42501';
+  END IF;
+  SELECT contact.version INTO resource_version_value
+  FROM identity.emergency_contacts AS contact
+  WHERE contact.id = p_resource_id AND contact.subject_patient_id = p_patient_id
+    AND contact.status = pg_catalog.substring(
+      p_action_code,pg_catalog.length('emergency_contact.') + 1
+    );
+  IF resource_version_value IS NULL THEN
+    RAISE EXCEPTION 'F008_FAMILY_INVITATION_AUDIT_RESOURCE_DENIED' USING ERRCODE = '42501';
+  END IF;
+  PERFORM audit.append_event_v1(
+    p_request_id,p_request_id::text,p_action_code,'family-care','success',
+    p_patient_id => p_patient_id,p_resource_id => p_resource_id,
+    p_resource_version => resource_version_value,p_user_agent_class => 'web'
+  );
+END
+$function$;
+
+CREATE OR REPLACE FUNCTION platform.append_notification_receipt_audit_v1(
+  p_request_id uuid,p_resource_id uuid
+)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog
+AS $function$
+BEGIN
+  IF session_user <> 'shifaa_api' OR p_request_id IS NULL OR p_resource_id IS NULL
+     OR NOT EXISTS (
+       SELECT 1 FROM platform.provider_callback_receipts AS receipt
+       WHERE receipt.id = p_resource_id
+     ) THEN
+    RAISE EXCEPTION 'F008_NOTIFICATION_RECEIPT_AUDIT_DENIED' USING ERRCODE = '42501';
+  END IF;
+  PERFORM audit.append_event_v1(
+    p_request_id,p_request_id::text,'notification.delivery.receipt_recorded',
+    'provider-receipt','success',p_resource_id => p_resource_id,
+    p_resource_version => 1,p_user_agent_class => 'service'
+  );
 END
 $function$;
 
@@ -1587,6 +1733,31 @@ AS $function$
     AND batch.requested_by_person_id = platform.context_person_id()
 $function$;
 
+CREATE OR REPLACE FUNCTION audit.record_admin_read_v1(
+  p_request_id uuid,p_trace_id text,p_action_code text,p_resource_id uuid DEFAULT NULL
+)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog
+AS $function$
+BEGIN
+  IF session_user <> 'shifaa_api'
+     OR NOT audit.current_super_admin_context_v1('security.audit.review')
+     OR NOT platform.feature_enabled('audit.read',platform.context_environment())
+     OR p_request_id IS NULL OR p_trace_id IS NULL
+     OR p_action_code NOT IN ('audit.events.listed','audit.event.read')
+     OR (p_action_code = 'audit.event.read' AND p_resource_id IS NULL)
+     OR (p_action_code = 'audit.events.listed' AND p_resource_id IS NOT NULL) THEN
+    RAISE EXCEPTION 'F008_AUDIT_READ_EVIDENCE_DENIED' USING ERRCODE = '42501';
+  END IF;
+  PERFORM audit.append_event_v1(
+    p_request_id,p_trace_id,p_action_code,
+    CASE WHEN p_action_code = 'audit.event.read' THEN 'audit_event' ELSE 'audit_event_collection' END,
+    'success',p_actor_person_id => platform.context_person_id(),
+    p_authentication_aal => 2,p_purpose_code => 'security.audit.review',
+    p_resource_id => p_resource_id,p_user_agent_class => 'web'
+  );
+END
+$function$;
+
 CREATE OR REPLACE FUNCTION audit.readiness_v1()
 RETURNS TABLE(database_status text,outbox_status text)
 LANGUAGE sql
@@ -1602,9 +1773,85 @@ AS $function$
         WHERE event.event_type = 'audit.export.requested'
           AND event.state = 'dead_letter'
       ) THEN 'integrity_failed'
+      WHEN EXISTS (
+        SELECT 1 FROM platform.outbox_events AS event
+        WHERE event.event_type = 'audit.export.requested'
+          AND event.aggregate_type = 'audit-export'
+          AND (
+            (event.state = 'pending' AND event.available_at <= pg_catalog.statement_timestamp())
+            OR (
+              event.state = 'processing'
+              AND event.lease_expires_at <= pg_catalog.statement_timestamp()
+            )
+          )
+      ) THEN 'backlogged'
       ELSE 'ready'
     END
   WHERE session_user = 'shifaa_api'
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.health_integrity_v1()
+RETURNS TABLE(audit_integrity text,export_proof text)
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog
+AS $function$
+  SELECT
+    CASE WHEN EXISTS (
+      SELECT 1
+      FROM (SELECT DISTINCT event.partition_key FROM audit.events AS event) AS partition
+      CROSS JOIN LATERAL audit.verify_event_chain_v1(partition.partition_key) AS verification
+      WHERE NOT verification.valid
+    ) THEN 'failed' ELSE 'ready' END,
+    CASE WHEN EXISTS (
+      SELECT 1 FROM audit.export_batches AS batch
+      WHERE batch.status = 'proven'
+        AND (batch.object_digest IS NULL OR pg_catalog.octet_length(batch.object_digest) <> 32
+          OR batch.retention_proof IS NULL OR batch.exported_at IS NULL)
+    ) THEN 'failed' ELSE 'ready' END
+  WHERE session_user = 'shifaa_api'
+    AND platform.feature_enabled('health.exposure',platform.context_environment())
+$function$;
+
+CREATE OR REPLACE FUNCTION audit.read_export_work_v1(
+  p_export_batch_id uuid,p_worker_id text
+)
+RETURNS TABLE(
+  export_batch_id uuid,status text,partition_start date,partition_end_exclusive date,
+  object_key text,object_digest text,retention_proof jsonb,exported_at timestamptz,
+  events jsonb
+)
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog
+AS $function$
+  SELECT batch.id,batch.status,batch.partition_start,batch.partition_end_exclusive,
+    batch.object_key,
+    CASE WHEN batch.object_digest IS NULL THEN NULL ELSE pg_catalog.encode(batch.object_digest,'hex') END,
+    batch.retention_proof,batch.exported_at,
+    coalesce((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+        'occurredAt',event.occurred_at,'partitionKey',event.partition_key,
+        'chainSequence',event.chain_sequence,'requestId',event.request_id,
+        'traceId',event.trace_id,'actorUserId',event.actor_user_id,
+        'actorPersonId',event.actor_person_id,'authenticationAal',event.authentication_aal,
+        'facilityId',event.facility_id,'patientId',event.patient_id,
+        'purposeCode',event.purpose_code,'actionCode',event.action_code,
+        'resourceType',event.resource_type,'resourceId',event.resource_id,
+        'resourceVersion',event.resource_version,'outcome',event.outcome,
+        'reasonCode',event.reason_code,'sourceIpPrefix',event.source_ip_prefix,
+        'userAgentClass',event.user_agent_class,
+        'previousHash',pg_catalog.encode(event.previous_hash,'hex'),
+        'eventHash',pg_catalog.encode(event.event_hash,'hex')
+      ) ORDER BY event.occurred_at,event.chain_sequence,event.id)
+      FROM audit.events AS event
+      WHERE event.occurred_at >= batch.partition_start::timestamp AT TIME ZONE 'UTC'
+        AND event.occurred_at < batch.partition_end_exclusive::timestamp AT TIME ZONE 'UTC'
+    ),'[]'::jsonb)
+  FROM audit.export_batches AS batch
+  WHERE batch.id = p_export_batch_id
+    AND session_user = 'shifaa_api'
+    AND nullif(current_setting('shifaa.service_principal',true),'') = 'service:audit-export-worker'
+    AND nullif(current_setting('shifaa.worker_id',true),'') = p_worker_id
+    AND p_worker_id = batch.lease_owner
+    AND batch.lease_expires_at > pg_catalog.statement_timestamp()
+    AND batch.status IN ('claimed','proven')
 $function$;
 
 CREATE OR REPLACE FUNCTION audit.exact_export_worker_context_v1(p_worker_id text)
@@ -1797,13 +2044,17 @@ $function$;
 
 CREATE OR REPLACE FUNCTION audit.claim_export_v1(
   p_worker_id text,
-  p_lease_seconds integer DEFAULT 30
+  p_lease_seconds integer,
+  p_request_id uuid,
+  p_trace_id text
 )
 RETURNS TABLE(
+  event_id uuid,
   export_batch_id uuid,
   partition_start date,
   partition_end_exclusive date,
   object_key text,
+  aggregate_version integer,
   attempt_count integer,
   lease_owner text,
   lease_expires_at timestamptz
@@ -1823,6 +2074,9 @@ BEGIN
   END IF;
   IF p_lease_seconds NOT BETWEEN 1 AND 300 THEN
     RAISE EXCEPTION 'F008_EXPORT_LEASE_INVALID' USING ERRCODE = '22023';
+  END IF;
+  IF p_request_id IS NULL OR p_trace_id IS NULL THEN
+    RAISE EXCEPTION 'F008_EXPORT_CORRELATION_INVALID' USING ERRCODE = '22023';
   END IF;
 
   SELECT event.id,batch.id
@@ -1877,9 +2131,15 @@ BEGIN
       updated_at = pg_catalog.statement_timestamp()
   WHERE event.id = event_id_value;
 
+  PERFORM audit.append_event_v1(
+    p_request_id,p_trace_id,'audit.export.claimed','audit_export','success',
+    p_resource_id => batch_row.id,p_resource_version => batch_row.version,
+    p_user_agent_class => 'worker'
+  );
+
   RETURN QUERY SELECT
-    batch_row.id,batch_row.partition_start,batch_row.partition_end_exclusive,
-    batch_row.object_key,batch_row.attempt_count,batch_row.lease_owner,
+    event_id_value,batch_row.id,batch_row.partition_start,batch_row.partition_end_exclusive,
+    batch_row.object_key,batch_row.version,batch_row.attempt_count,batch_row.lease_owner,
     batch_row.lease_expires_at;
 END
 $function$;
@@ -1888,10 +2148,12 @@ CREATE OR REPLACE FUNCTION audit.complete_export_v1(
   p_export_batch_id uuid,
   p_worker_id text,
   p_outcome text,
-  p_object_digest bytea DEFAULT NULL,
-  p_retention_proof jsonb DEFAULT NULL,
-  p_failure_code text DEFAULT NULL,
-  p_retry_at timestamptz DEFAULT NULL
+  p_object_digest bytea,
+  p_retention_proof jsonb,
+  p_failure_code text,
+  p_retry_at timestamptz,
+  p_request_id uuid,
+  p_trace_id text
 )
 RETURNS boolean
 LANGUAGE plpgsql
@@ -1907,6 +2169,9 @@ BEGIN
   END IF;
   IF p_outcome NOT IN ('proven','retryable','dead_letter') THEN
     RAISE EXCEPTION 'F008_EXPORT_OUTCOME_INVALID' USING ERRCODE = '22023';
+  END IF;
+  IF p_request_id IS NULL OR p_trace_id IS NULL THEN
+    RAISE EXCEPTION 'F008_EXPORT_CORRELATION_INVALID' USING ERRCODE = '22023';
   END IF;
   IF p_outcome = 'proven' AND (
     p_object_digest IS NULL OR pg_catalog.octet_length(p_object_digest) <> 32
@@ -1976,6 +2241,19 @@ BEGIN
     INSERT INTO platform.event_receipts(event_id,consumer,result_code)
     VALUES(event_id_value,'audit-export-worker',p_outcome)
     ON CONFLICT(event_id,consumer) DO NOTHING;
+  END IF;
+  IF changed_count = 1 THEN
+    PERFORM audit.append_event_v1(
+      p_request_id,p_trace_id,
+      CASE p_outcome
+        WHEN 'proven' THEN 'audit.export.proven'
+        WHEN 'retryable' THEN 'audit.export.retryable'
+        ELSE 'audit.export.dead_lettered'
+      END,
+      'audit_export',CASE WHEN p_outcome = 'proven' THEN 'success' ELSE 'failed' END,
+      p_resource_id => p_export_batch_id,p_reason_code => p_failure_code,
+      p_user_agent_class => 'worker'
+    );
   END IF;
   RETURN changed_count = 1;
 END
@@ -2088,11 +2366,14 @@ REVOKE ALL ON FUNCTION audit.read_event_v1(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.read_chain_verification_v1(date) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.read_export_batch_v1(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.readiness_v1() FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.health_integrity_v1() FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.read_export_work_v1(uuid,text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.record_admin_read_v1(uuid,text,text,uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.exact_export_worker_context_v1(text) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.worker_claims_export_v1(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.request_export_v1(text,text,date,date,uuid,text) FROM PUBLIC;
-REVOKE ALL ON FUNCTION audit.claim_export_v1(text,integer) FROM PUBLIC;
-REVOKE ALL ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.claim_export_v1(text,integer,uuid,text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz,uuid,text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION audit.current_super_admin_context_v1(text) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.current_admin_summary_context_v1() TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.read_events_v1(uuid,text,text,uuid,timestamptz,timestamptz,text,timestamptz,uuid,integer) TO shifaa_api;
@@ -2100,6 +2381,9 @@ GRANT EXECUTE ON FUNCTION audit.read_event_v1(uuid) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.read_chain_verification_v1(date) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.read_export_batch_v1(uuid) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.readiness_v1() TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.health_integrity_v1() TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.read_export_work_v1(uuid,text) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.record_admin_read_v1(uuid,text,text,uuid) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.exact_export_worker_context_v1(text) TO shifaa_worker;
 GRANT EXECUTE ON FUNCTION audit.worker_claims_export_v1(uuid) TO shifaa_worker;
 GRANT EXECUTE ON FUNCTION audit.request_export_v1(text,text,date,date,uuid,text) TO shifaa_api;
@@ -2107,8 +2391,12 @@ GRANT EXECUTE ON FUNCTION platform.append_discovery_sos_effect_v1(uuid,text,uuid
 GRANT EXECUTE ON FUNCTION platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION platform.append_facility_governance_audit_v1(uuid,text,uuid,uuid) TO shifaa_api;
-GRANT EXECUTE ON FUNCTION audit.claim_export_v1(text,integer) TO shifaa_worker;
-GRANT EXECUTE ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz) TO shifaa_worker;
+GRANT EXECUTE ON FUNCTION platform.append_family_mutation_audit_v1(uuid,text,uuid,uuid,uuid,integer) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION platform.append_family_invitation_audit_v1(uuid,text,uuid,uuid) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION platform.append_privacy_effect_audit_v1(uuid,text,uuid,uuid,integer) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION platform.append_notification_receipt_audit_v1(uuid,uuid) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION audit.claim_export_v1(text,integer,uuid,text) TO shifaa_worker;
+GRANT EXECUTE ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz,uuid,text) TO shifaa_worker;
 
 DO $optional_roles$
 DECLARE
@@ -2141,5 +2429,9 @@ REVOKE ALL ON FUNCTION platform.append_discovery_sos_effect_v1(uuid,text,uuid,in
 REVOKE ALL ON FUNCTION platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text) FROM PUBLIC;
 REVOKE ALL ON FUNCTION platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer) FROM PUBLIC;
 REVOKE ALL ON FUNCTION platform.append_facility_governance_audit_v1(uuid,text,uuid,uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION platform.append_family_mutation_audit_v1(uuid,text,uuid,uuid,uuid,integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION platform.append_family_invitation_audit_v1(uuid,text,uuid,uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION platform.append_privacy_effect_audit_v1(uuid,text,uuid,uuid,integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION platform.append_notification_receipt_audit_v1(uuid,uuid) FROM PUBLIC;
 
 COMMIT;

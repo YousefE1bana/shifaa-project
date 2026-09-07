@@ -37,27 +37,23 @@ const noAdminAccessToken = () =>
   localSyntheticEvidenceMode ? 'synthetic-feature-008-ui-evidence' : undefined;
 const defaultAuditAal = localSyntheticEvidenceMode ? 2 : 1;
 const defaultAuditFactorAgeSeconds = localSyntheticEvidenceMode ? 300 : null;
-const defaultAuditRole = localSyntheticEvidenceMode ? 'super_admin' : null;
 
 export function AuditWorkspace({
   accessToken = noAdminAccessToken,
   aal = defaultAuditAal,
   factorAgeSeconds = defaultAuditFactorAgeSeconds,
-  role = defaultAuditRole,
   fetcher,
   onStepUp = () => undefined,
 }: {
   accessToken?: () => string | undefined;
   aal?: 1 | 2;
   factorAgeSeconds?: number | null;
-  role?: string | null;
   fetcher?: typeof globalThis.fetch;
   onStepUp?: () => void;
 }) {
   const token = accessToken();
   const authorized = Boolean(
     token &&
-      role === 'super_admin' &&
       aal === 2 &&
       factorAgeSeconds !== null &&
       factorAgeSeconds >= 0 &&
@@ -65,7 +61,6 @@ export function AuditWorkspace({
   );
   const needsStepUp = Boolean(
     token &&
-      role === 'super_admin' &&
       (aal !== 2 || factorAgeSeconds === null || factorAgeSeconds < 0 || factorAgeSeconds > 300),
   );
   const [locale, setLocale] = useState<Locale>('ar-EG');
@@ -86,6 +81,7 @@ export function AuditWorkspace({
   const [partitionEnd, setPartitionEnd] = useState('');
   const detailsRef = useRef<HTMLElement>(null);
   const returnFocusRef = useRef<HTMLButtonElement | null>(null);
+  const exportAttemptRef = useRef<{ body: string; idempotencyKey: string } | null>(null);
   const client = useMemo(
     () =>
       token
@@ -124,8 +120,7 @@ export function AuditWorkspace({
   const load = useCallback(
     async (cursor?: string) => {
       if (!online) return setState(events.length ? 'stale' : 'offline');
-      if (!authorized || !client)
-        return setState(!token || role !== 'super_admin' ? 'permission' : 'aal-required');
+      if (!authorized || !client) return setState(!token ? 'permission' : 'aal-required');
       if (purpose !== 'security.audit.review') return setState('purpose-required');
       setState('loading');
       try {
@@ -205,10 +200,20 @@ export function AuditWorkspace({
     }
     setExportState('submitting');
     try {
+      const body = JSON.stringify({
+        partition_start: partitionStart,
+        partition_end_exclusive: partitionEnd,
+      });
+      if (exportAttemptRef.current?.body !== body) {
+        exportAttemptRef.current = {
+          body,
+          idempotencyKey: `audit-ui-${globalThis.crypto.randomUUID()}`,
+        };
+      }
       const value = await client.createAuditExport(
         { partition_start: partitionStart, partition_end_exclusive: partitionEnd },
         purpose,
-        `audit-ui-${globalThis.crypto.randomUUID()}`,
+        exportAttemptRef.current.idempotencyKey,
       );
       if (!isAcceptedExport(value)) return setExportState('failed');
       setExportReference({ id: value.export_batch_id, acceptedAt: value.accepted_at });

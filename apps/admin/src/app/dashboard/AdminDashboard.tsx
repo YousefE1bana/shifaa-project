@@ -9,6 +9,7 @@ import {
   dashboardProblemState,
   dashboardStateFor,
   parseAdminSummary,
+  summarySnapshotAt,
   type DashboardState,
   type SafeDashboardSummary,
 } from './dashboard-model';
@@ -120,7 +121,9 @@ export function AdminDashboard({
         {summary && (
           <p>
             {translate(locale, 'auditAdmin.summary.lastUpdated')}:{' '}
-            <bdi dir="ltr">{isolateLtr(new Date(summary.generatedAt).toLocaleString(locale))}</bdi>
+            <bdi dir="ltr">
+              {isolateLtr(new Date(summarySnapshotAt(summary)).toLocaleString(locale))}
+            </bdi>
           </p>
         )}
         <button

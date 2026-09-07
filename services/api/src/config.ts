@@ -31,6 +31,8 @@ export interface ApiConfig {
   supabaseJwksUrl?: string;
   supabaseJwtIssuer?: string;
   supabaseJwtAudience: string;
+  auditExportServiceCredential?: string;
+  healthProbeServiceCredential?: string;
 }
 
 export class ConfigurationError extends Error {
@@ -243,5 +245,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     ...(env['SUPABASE_JWKS_URL'] ? { supabaseJwksUrl: env['SUPABASE_JWKS_URL'] } : {}),
     ...(env['SUPABASE_JWT_ISSUER'] ? { supabaseJwtIssuer: env['SUPABASE_JWT_ISSUER'] } : {}),
     supabaseJwtAudience: env['SUPABASE_JWT_AUDIENCE'] ?? 'authenticated',
+    ...(env['AUDIT_EXPORT_SERVICE_CREDENTIAL']
+      ? { auditExportServiceCredential: env['AUDIT_EXPORT_SERVICE_CREDENTIAL'] }
+      : {}),
+    ...(env['HEALTH_PROBE_SERVICE_CREDENTIAL']
+      ? { healthProbeServiceCredential: env['HEALTH_PROBE_SERVICE_CREDENTIAL'] }
+      : {}),
   };
 }

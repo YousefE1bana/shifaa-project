@@ -39,8 +39,9 @@ export class AuditAdminHealthService {
     this.timeoutMs = timeoutMs;
   }
 
-  public healthLive(actor: AuditExportServiceActor): LivenessResponse {
+  public async healthLive(actor: AuditExportServiceActor): Promise<LivenessResponse> {
     this.requirePlatformProbe(actor);
+    await this.requireExposure();
     const response = { status: 'live' as const, observed_at: this.observedAt() };
     this.emit(actor, 'healthLive', 'succeeded');
     return response;
@@ -48,6 +49,7 @@ export class AuditAdminHealthService {
 
   public async healthReady(actor: AuditExportServiceActor): Promise<ReadinessResponse> {
     this.requirePlatformProbe(actor);
+    await this.requireExposure();
     const [snapshot, auditIntegrity, exportProof] = await Promise.all([
       within(() => this.dependencies.readiness.readiness(), this.timeoutMs, null),
       within(() => this.dependencies.integrity.auditIntegrity(), this.timeoutMs, 'failed' as const),
@@ -84,6 +86,12 @@ export class AuditAdminHealthService {
       );
     if (actor.principal !== platformProbePrincipal || actor.workerId !== null)
       throw new ApiPolicyError('forbidden', 403, 'The service principal is not permitted.');
+  }
+
+  private async requireExposure(): Promise<void> {
+    if (!(await this.dependencies.readiness.healthExposureEnabled())) {
+      throw new ApiPolicyError('feature-disabled', 404, 'Health exposure is disabled.');
+    }
   }
 
   private observedAt(): string {

@@ -55,6 +55,7 @@ function cell(overrides: Partial<AggregateCellInput> = {}): AggregateCellInput {
     measure: 'distinct_subject_count',
     snapshotId: 'snapshot-001',
     snapshotVersion: 1,
+    snapshotAt: '2026-08-31T23:59:59.000Z',
     ...overrides,
   };
 }

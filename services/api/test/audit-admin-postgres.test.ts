@@ -15,6 +15,9 @@ describe('Postgres audit admin repository', () => {
 
     await expect(repository.canReadAdminSummary(actor())).resolves.toBe(true);
     await expect(repository.canReadAudit(actor())).resolves.toBe(true);
+    await expect(
+      repository.approvedAdminSummaryMetricIds(actor(), ['synthetic_patient_total']),
+    ).resolves.toEqual(new Set());
     const events = await repository.listRedactedAuditEvents(actor(), { limit: 26 });
     const detail = await repository.getRedactedAuditEvent(actor(), events[0]!.event_id);
     const chain = await repository.verifyAuditChain(actor(), '2026-08-01');
@@ -28,6 +31,9 @@ describe('Postgres audit admin repository', () => {
       requestHash: 'a'.repeat(64),
     });
     const readiness = await repository.readiness();
+    await expect(repository.healthExposureEnabled()).resolves.toBe(true);
+    await expect(repository.auditIntegrity()).resolves.toBe('ready');
+    await expect(repository.exportProof()).resolves.toBe('ready');
 
     expect(events).toHaveLength(1);
     expect(detail).toEqual(events[0]);
@@ -54,6 +60,7 @@ describe('Postgres audit admin repository', () => {
     expect(statements.join('\n')).toContain("set_config('shifaa.environment'");
     expect(statements.join('\n')).toContain('audit.read_events_v1');
     expect(statements.join('\n')).toContain('audit.read_event_v1');
+    expect(statements.join('\n').match(/audit\.record_admin_read_v1/g)).toHaveLength(2);
     expect(statements.join('\n')).toContain('audit.read_chain_verification_v1');
     expect(statements.join('\n')).toContain('audit.read_export_batch_v1');
     expect(statements.join('\n')).toContain('audit.request_export_v1');
@@ -109,6 +116,12 @@ function fakeSql(statements: string[]): TransactionSql {
     }
     if (statement.includes('readiness_v1')) {
       return Promise.resolve([{ database_status: 'ready', outbox_status: 'ready' }]);
+    }
+    if (statement.includes("feature_enabled('health.exposure'")) {
+      return Promise.resolve([{ enabled: true }]);
+    }
+    if (statement.includes('health_integrity_v1')) {
+      return Promise.resolve([{ audit_integrity: 'ready', export_proof: 'ready' }]);
     }
     return Promise.resolve([]);
   };

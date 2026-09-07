@@ -65,7 +65,17 @@ export class AuditAdminService {
     }
 
     const policy = policyValue as AggregatePolicyConfiguration;
-    const sourceCells = await this.dependencies.aggregates.getCells(policy);
+    const approvedMetricIds = await this.dependencies.repository.approvedAdminSummaryMetricIds(
+      actor,
+      policy.metrics.map((metric) => metric.metricId),
+    );
+    if (
+      approvedMetricIds.size === 0 ||
+      policy.metrics.some((metric) => !approvedMetricIds.has(metric.metricId))
+    ) {
+      this.deny('legal-gate-disabled', 503);
+    }
+    const sourceCells = await this.dependencies.aggregates.getCells(policy, approvedMetricIds);
     const disclosure = discloseAggregateRelease(
       policy,
       { cells: sourceCells, requestedOperation: 'summary' },
@@ -100,7 +110,7 @@ export class AuditAdminService {
               }
             : {}),
           policy_version: cell.policyVersion,
-          snapshot_at: generatedAt,
+          snapshot_at: source.snapshotAt,
         };
       }),
       generated_at: generatedAt,

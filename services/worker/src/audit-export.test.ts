@@ -41,6 +41,8 @@ describe('audit export worker', () => {
       await fixture.queue.complete({
         claim: stale,
         workerId: 'worker.old.008',
+        requestId: '84000000-0000-4000-8000-000000000099',
+        traceId: 'f'.repeat(32),
         outcome: 'proven',
         objectDigest: digest,
         proofClass: 'local_synthetic_write_once',
@@ -66,6 +68,7 @@ describe('audit export worker', () => {
     }
     assert.equal(await subject.processNext(), 'dead_letter');
     assert.equal(fixture.queue.attemptCount, 6);
+    assert.equal(new Set(fixture.operationCalls.map(({ key }) => key)).size, 1);
     assert.deepEqual(fixture.queue.originalPayload, { exportBatchId: batchId });
     assert.ok(Object.isFrozen(fixture.queue.originalPayload));
   });
@@ -121,6 +124,9 @@ describe('audit export worker', () => {
       const headers = init?.headers as Record<string, string>;
       assert.equal(headers.Authorization, 'Bearer synthetic-private-worker-credential');
       assert.match(headers['Idempotency-Key']!, /^[a-f0-9]{64}$/);
+      assert.match(headers['X-Request-Id']!, /^[0-9a-f-]{36}$/);
+      assert.equal(headers['X-Worker-Id'], 'audit-export-worker-008');
+      assert.match(headers.traceparent!, /^00-[a-f0-9]{32}-[a-f0-9]{16}-01$/);
       assert.deepEqual(JSON.parse(String(init?.body)), { export_batch_id: batchId });
       return new Response(
         JSON.stringify({

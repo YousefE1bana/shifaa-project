@@ -130,7 +130,10 @@ async function buildHealthApp(scenario: HealthScenario = {}) {
   const exportProof = vi.fn(async () => scenario.exportProof ?? 'ready');
   const telemetry: unknown[] = [];
   const healthService = new AuditAdminHealthService({
-    readiness: { readiness: scenario.timeout ? never : readiness },
+    readiness: {
+      readiness: scenario.timeout ? never : readiness,
+      healthExposureEnabled: async () => true,
+    },
     integrity: {
       auditIntegrity: scenario.timeout ? never : auditIntegrity,
       exportProof: scenario.timeout ? never : exportProof,

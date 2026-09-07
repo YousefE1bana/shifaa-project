@@ -122,6 +122,7 @@ describe('audit admin summary', () => {
         completedPeriod: true,
         snapshotId: 'snapshot-008-001',
         snapshotVersion: 1,
+        snapshotAt: '2026-08-31T23:59:59.000Z',
       },
     ];
 
@@ -131,6 +132,8 @@ describe('audit admin summary', () => {
       expect.objectContaining({ disclosure: 'suppressed', suppression_reason: 'small_cell' }),
     ]);
     expect(response.data[0]).not.toHaveProperty('distinct_subject_count');
+    expect(response.data[0]?.snapshot_at).toBe('2026-08-31T23:59:59.000Z');
+    expect(response.generated_at).toBe('2026-09-01T12:00:00.000Z');
     expect(JSON.stringify(response)).not.toContain('distinctSubjectCount');
   });
 
@@ -146,6 +149,7 @@ describe('audit admin summary', () => {
         completedPeriod: true,
         snapshotId: 'snapshot-008-002',
         snapshotVersion: 1,
+        snapshotAt: '2026-08-31T23:59:58.000Z',
       },
     ]).getAdminSummary(actor);
 
@@ -155,6 +159,20 @@ describe('audit admin summary', () => {
       data: [{ disclosure: 'released', distinct_subject_count: 11, period: '2026-08' }],
     });
   });
+
+  it('filters the configured metric set through current server-side role grants before source access', async () => {
+    const policy = activePolicy();
+    const getCells = vi.fn();
+    const service = makeService(policy, [], getCells, {
+      approvedAdminSummaryMetricIds: vi.fn().mockResolvedValue(new Set<string>()),
+    });
+
+    await expect(service.getAdminSummary(actor)).rejects.toMatchObject({
+      code: 'legal-gate-disabled',
+      status: 503,
+    });
+    expect(getCells).not.toHaveBeenCalled();
+  });
 });
 
 function makeService(
@@ -163,11 +181,15 @@ function makeService(
   getCells = vi.fn().mockResolvedValue(cells),
   overrides: {
     canReadAdminSummary?: AuditAdminRepository['canReadAdminSummary'];
+    approvedAdminSummaryMetricIds?: AuditAdminRepository['approvedAdminSummaryMetricIds'];
     getApprovedPolicy?: () => Promise<unknown>;
   } = {},
 ): AuditAdminService {
   const repository = repositoryStub({
     canReadAdminSummary: overrides.canReadAdminSummary ?? vi.fn().mockResolvedValue(true),
+    approvedAdminSummaryMetricIds:
+      overrides.approvedAdminSummaryMetricIds ??
+      vi.fn().mockResolvedValue(new Set(policyValue.metrics.map((metric) => metric.metricId))),
   });
   const dependencies: AuditAdminServiceDependencies = {
     repository,
@@ -191,6 +213,7 @@ function makeService(
 function repositoryStub(overrides: Partial<AuditAdminRepository> = {}): AuditAdminRepository {
   return {
     canReadAdminSummary: vi.fn().mockResolvedValue(true),
+    approvedAdminSummaryMetricIds: vi.fn().mockResolvedValue(new Set<string>()),
     canReadAudit: vi.fn().mockResolvedValue(true),
     listRedactedAuditEvents: vi.fn().mockResolvedValue([]),
     getRedactedAuditEvent: vi.fn().mockResolvedValue(null),
@@ -198,6 +221,7 @@ function repositoryStub(overrides: Partial<AuditAdminRepository> = {}): AuditAdm
     getAuditExportBatch: vi.fn().mockResolvedValue(null),
     requestAuditExport: vi.fn(),
     readiness: vi.fn(),
+    healthExposureEnabled: vi.fn().mockResolvedValue(true),
     ...overrides,
   };
 }

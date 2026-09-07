@@ -38,12 +38,12 @@
     "mutation_p95": 800
   },
   "results_ms": {
-    "audit_read_p95": 97.59,
-    "aggregate_read_p95": 0.92,
-    "read_p95": 97.59,
-    "export_request_p95": 120.76,
-    "export_claim_p95": 118.22,
-    "mutation_p95": 120.76
+    "audit_read_p95": 110.63,
+    "aggregate_read_p95": 1.04,
+    "read_p95": 110.63,
+    "export_request_p95": 151.47,
+    "export_claim_p95": 397.43,
+    "mutation_p95": 397.43
   },
   "concurrency": {
     "requested_batches": 25,

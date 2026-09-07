@@ -28,7 +28,7 @@ test('summary: all 34 approved privacy vectors preserve safe-disclosure boundari
         data: [
           {
             metric_id: 'approved.metric',
-            period: '2026-08-01',
+            period: '2026-08',
             dimensions: {},
             disclosure: 'suppressed',
             suppression_reason:
@@ -57,8 +57,8 @@ test('summary: linked release, stale reconnect, private cache, and non-admin den
     data: [
       {
         metric_id: 'approved.metric',
-        period: '2026-08-01',
-        dimensions: { calendar_month_utc: '2026-08-01', facility_type: 'hospital' },
+        period: '2026-08',
+        dimensions: { calendar_month_utc: '2026-08', facility_type: 'hospital' },
         disclosure: 'suppressed',
         suppression_reason: 'linked_release',
         policy_version: '1.0.0-approved',

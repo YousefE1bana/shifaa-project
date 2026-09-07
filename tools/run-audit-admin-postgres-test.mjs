@@ -209,6 +209,7 @@ async function runSchemaMode() {
 
       const requiredIndexes = [
         'audit_events_cursor_idx',
+        'audit_events_id_idx',
         'audit_events_actor_idx',
         'audit_events_action_idx',
         'audit_events_resource_idx',
@@ -297,6 +298,38 @@ async function runSchemaMode() {
             NULL,NULL,NULL,NULL,NULL,'audit_review',NULL,NULL,NULL,NULL,'system'
           )
         `;
+      });
+
+      await sql.begin(async (transaction) => {
+        await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
+        await transaction`SELECT pg_catalog.set_config('shifaa.test_now','2031-02-15T10:00:00Z',true)`;
+        await transaction`
+          SELECT * FROM audit.append_event_v1(
+            '81000000-0000-4000-8000-000000000006',
+            'trace-008-future-partition',
+            'audit.future_partition_test',
+            'audit_event',
+            'success',
+            NULL,NULL,NULL,NULL,NULL,'audit_review',NULL,NULL,NULL,NULL,'system'
+          )
+        `;
+      });
+      const [futurePartition] = await sql`
+        SELECT relation.relrowsecurity,relation.relforcerowsecurity,
+          count(index_row.indexname)::int AS unique_chain_indexes
+        FROM pg_catalog.pg_class AS relation
+        JOIN pg_catalog.pg_namespace AS namespace ON namespace.oid=relation.relnamespace
+        LEFT JOIN pg_catalog.pg_indexes AS index_row
+          ON index_row.schemaname=namespace.nspname
+         AND index_row.tablename=relation.relname
+         AND index_row.indexdef LIKE 'CREATE UNIQUE INDEX%partition_key, chain_sequence%'
+        WHERE namespace.nspname='audit' AND relation.relname='events_2031_02'
+        GROUP BY relation.relrowsecurity,relation.relforcerowsecurity
+      `;
+      assert.deepEqual(futurePartition, {
+        relrowsecurity: true,
+        relforcerowsecurity: true,
+        unique_chain_indexes: 1,
       });
 
       await sql`
@@ -916,7 +949,10 @@ async function runRlsMode() {
         await expectDatabaseError(() => worker`SELECT * FROM audit.signature_evidence`, '42501');
         await expectDatabaseError(() => worker`SELECT * FROM audit.export_batches`, '42501');
         await expectDatabaseError(
-          () => api`SELECT * FROM audit.claim_export_v1('worker-008-alpha',30)`,
+          () =>
+            api`SELECT * FROM audit.claim_export_v1(
+              'worker-008-alpha',30,'88000000-0000-4000-8000-000000000091','trace-db-api-claim-denied'
+            )`,
           '42501',
         );
         await expectDatabaseError(
@@ -924,14 +960,18 @@ async function runRlsMode() {
             worker.begin(async (transaction) => {
               await transaction`SELECT pg_catalog.set_config('shifaa.worker_id','worker-008-alpha',true)`;
               await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
-              return transaction`SELECT * FROM audit.claim_export_v1('worker-008-other',30)`;
+              return transaction`SELECT * FROM audit.claim_export_v1(
+                'worker-008-other',30,'88000000-0000-4000-8000-000000000092','trace-db-worker-mismatch'
+              )`;
             }),
           '42501',
         );
         const claimed = await worker.begin(async (transaction) => {
           await transaction`SELECT pg_catalog.set_config('shifaa.worker_id','worker-008-alpha',true)`;
           await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
-          return transaction`SELECT * FROM audit.claim_export_v1('worker-008-alpha',30)`;
+          return transaction`SELECT * FROM audit.claim_export_v1(
+            'worker-008-alpha',30,'88000000-0000-4000-8000-000000000093','trace-db-worker-claim'
+          )`;
         });
         assert.equal(claimed.length, 1);
         assert.equal(claimed[0].lease_owner, 'worker-008-alpha');
@@ -944,6 +984,102 @@ async function runRlsMode() {
           `;
         });
         assert.equal(visibleOutbox.count, 1);
+
+        const exportActor = {
+          personId: '81000000-0000-4000-8000-000000000014',
+          aal: 2,
+          purpose: 'security.audit.review',
+          partitionStart: '2026-05-01',
+          partitionEndExclusive: '2026-08-01',
+        };
+        await requestAuditExport(database, {
+          ...exportActor,
+          idempotencyKey: 'synthetic-008-rls-retry-transition',
+          requestHash: 'c'.repeat(64),
+          requestId: '81400000-0000-4000-8000-000000000094',
+          traceId: 'trace-008-rls-retry-request',
+        });
+        await requestAuditExport(database, {
+          ...exportActor,
+          idempotencyKey: 'synthetic-008-rls-dead-transition',
+          requestHash: 'd'.repeat(64),
+          requestId: '81400000-0000-4000-8000-000000000095',
+          traceId: 'trace-008-rls-dead-request',
+        });
+
+        const completeClaim = async (outcome, requestId, traceId) => {
+          const [next] = await worker.begin(async (transaction) => {
+            await transaction`SELECT pg_catalog.set_config('shifaa.worker_id','worker-008-alpha',true)`;
+            await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
+            return transaction`SELECT * FROM audit.claim_export_v1(
+              'worker-008-alpha',30,${requestId}::uuid,${traceId}
+            )`;
+          });
+          assert.ok(next);
+          const [result] = await worker.begin(async (transaction) => {
+            await transaction`SELECT pg_catalog.set_config('shifaa.worker_id','worker-008-alpha',true)`;
+            await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
+            return transaction`SELECT audit.complete_export_v1(
+              ${next.export_batch_id}::uuid,'worker-008-alpha',${outcome},
+              ${outcome === 'proven' ? Buffer.from('ab'.repeat(32), 'hex') : null}::bytea,
+              ${outcome === 'proven' ? transaction.json({ proof_version: 1, proof_class: 'synthetic_write_once', verified_at: new Date().toISOString() }) : null}::jsonb,
+              ${outcome === 'proven' ? null : outcome === 'retryable' ? 'service-unavailable' : 'validation-failed'},
+              ${outcome === 'retryable' ? new Date(Date.now() + 60_000) : null}::timestamptz,
+              ${requestId}::uuid,${traceId}
+            ) AS completed`;
+          });
+          assert.equal(result.completed, true);
+          return next.export_batch_id;
+        };
+
+        const [provenResult] = await worker.begin(async (transaction) => {
+          await transaction`SELECT pg_catalog.set_config('shifaa.worker_id','worker-008-alpha',true)`;
+          await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
+          return transaction`SELECT audit.complete_export_v1(
+            ${claimed[0].export_batch_id}::uuid,'worker-008-alpha','proven',
+            ${Buffer.from('aa'.repeat(32), 'hex')}::bytea,
+            ${transaction.json({ proof_version: 1, proof_class: 'synthetic_write_once', verified_at: new Date().toISOString() })}::jsonb,
+            null,null,'81400000-0000-4000-8000-000000000096'::uuid,
+            'trace-008-rls-proven'
+          ) AS completed`;
+        });
+        assert.equal(provenResult.completed, true);
+
+        await completeClaim(
+          'retryable',
+          '81400000-0000-4000-8000-000000000097',
+          'trace-008-rls-retryable',
+        );
+        const [backlog] = await api.begin(async (transaction) => {
+          await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
+          return transaction`SELECT * FROM audit.readiness_v1()`;
+        });
+        assert.equal(backlog.outbox_status, 'backlogged');
+
+        await completeClaim(
+          'dead_letter',
+          '81400000-0000-4000-8000-000000000098',
+          'trace-008-rls-dead-letter',
+        );
+        const transitionEvidence = await owner`
+          SELECT action_code,count(*)::int AS count
+          FROM audit.events
+          WHERE action_code IN (
+            'audit.export.claimed','audit.export.proven','audit.export.retryable',
+            'audit.export.dead_lettered'
+          )
+          GROUP BY action_code
+          ORDER BY action_code
+        `;
+        assert.deepEqual(
+          Object.fromEntries(transitionEvidence.map((row) => [row.action_code, row.count])),
+          {
+            'audit.export.claimed': 3,
+            'audit.export.dead_lettered': 1,
+            'audit.export.proven': 1,
+            'audit.export.retryable': 1,
+          },
+        );
       } finally {
         await api.end({ timeout: 5 });
         await worker.end({ timeout: 5 });
@@ -965,19 +1101,20 @@ async function runRlsMode() {
         WHERE namespace.nspname='audit'
           AND procedure.proname IN (
             'current_super_admin_context_v1','exact_export_worker_context_v1',
-            'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1'
+            'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1',
+            'record_admin_read_v1','health_integrity_v1','read_export_work_v1'
           )
           AND procedure.proconfig @> ARRAY['search_path=pg_catalog']
       `;
-      assert.equal(fixedSearchPaths.count, 6);
+      assert.equal(fixedSearchPaths.count, 9);
 
       const [functionGrants] = await owner`
         SELECT
           has_function_privilege('shifaa_api','audit.request_export_v1(text,text,date,date,uuid,text)','EXECUTE') AS api_request,
-          has_function_privilege('shifaa_api','audit.claim_export_v1(text,integer)','EXECUTE') AS api_claim,
+          has_function_privilege('shifaa_api','audit.claim_export_v1(text,integer,uuid,text)','EXECUTE') AS api_claim,
           has_function_privilege('shifaa_worker','audit.request_export_v1(text,text,date,date,uuid,text)','EXECUTE') AS worker_request,
-          has_function_privilege('shifaa_worker','audit.claim_export_v1(text,integer)','EXECUTE') AS worker_claim,
-          has_function_privilege('shifaa_worker','audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz)','EXECUTE') AS worker_complete
+          has_function_privilege('shifaa_worker','audit.claim_export_v1(text,integer,uuid,text)','EXECUTE') AS worker_claim,
+          has_function_privilege('shifaa_worker','audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz,uuid,text)','EXECUTE') AS worker_complete
       `;
       assert.equal(functionGrants.api_request, true);
       assert.equal(functionGrants.api_claim, false);
@@ -995,7 +1132,8 @@ async function runRlsMode() {
         WHERE namespace.nspname='audit'
           AND procedure.proname IN (
             'current_super_admin_context_v1','exact_export_worker_context_v1',
-            'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1'
+            'worker_claims_export_v1','request_export_v1','claim_export_v1','complete_export_v1',
+            'record_admin_read_v1','health_integrity_v1','read_export_work_v1'
           )
           AND acl.grantee=0
           AND acl.privilege_type='EXECUTE'

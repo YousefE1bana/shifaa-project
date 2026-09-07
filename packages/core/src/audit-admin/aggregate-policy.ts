@@ -77,6 +77,7 @@ export type AggregateCellInput = {
   completedPeriod?: boolean;
   snapshotId: string;
   snapshotVersion: number;
+  snapshotAt: string;
   lateDataArrival?: boolean;
 };
 
