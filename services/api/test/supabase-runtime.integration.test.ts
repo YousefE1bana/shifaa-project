@@ -415,7 +415,7 @@ describe.sequential('002 Supabase runtime', () => {
       const [row] = await admin<{ consents: number; audits: number; events: number }[]>`
         select
           (select count(*)::int from consent.records where person_id=${profileId}::uuid and purpose_code='care_updates') consents,
-          (select count(*)::int from audit.events where actor_person_id=${profileId}::uuid and action='consent.decision.recorded' and metadata->>'purpose_code'='care_updates') audits,
+          (select count(*)::int from audit.events where actor_person_id=${profileId}::uuid and action_code='consent.decision.recorded' and purpose_code='care_updates') audits,
           (select count(*)::int from platform.outbox_events where event_type='consent.changed' and payload->>'purpose_code'='care_updates') events`;
       if (!row) throw new Error('Count query failed.');
       return row;

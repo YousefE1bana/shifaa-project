@@ -796,6 +796,7 @@ AS $function$
 DECLARE
   actor_person_id_value uuid := platform.context_person_id();
   canonical_outcome_value text;
+  purpose_code_value text;
 BEGIN
   IF SESSION_USER <> 'shifaa_api'
      OR actor_person_id_value IS NULL
@@ -832,6 +833,19 @@ BEGIN
       USING ERRCODE = '42501';
   END IF;
 
+  IF p_action_code IN ('consent.decision.recorded','consent.withdrawn') THEN
+    SELECT consent_row.purpose_code
+    INTO purpose_code_value
+    FROM consent.records AS consent_row
+    WHERE consent_row.id = p_resource_id
+      AND consent_row.person_id = actor_person_id_value;
+
+    IF purpose_code_value IS NULL THEN
+      RAISE EXCEPTION 'F008_IDENTITY_AUDIT_RESOURCE_DENIED'
+        USING ERRCODE = '42501';
+    END IF;
+  END IF;
+
   PERFORM audit.append_event_v1(
     p_request_id,p_request_id::text,p_action_code,p_resource_type,canonical_outcome_value,
     p_actor_person_id => actor_person_id_value,
@@ -839,8 +853,179 @@ BEGIN
       WHEN platform.context_aal() = 0 THEN NULL
       ELSE platform.context_aal()::smallint
     END,
+    p_purpose_code => purpose_code_value,
     p_resource_id => p_resource_id,
     p_resource_version => p_resource_version,
+    p_user_agent_class => 'web'
+  );
+END
+$function$;
+
+-- Feature 003 facility-governance mutations previously wrote the retired
+-- audit shape directly. Validate the persisted effect at a narrow boundary
+-- and derive all integrity inputs before entering the canonical chain.
+CREATE OR REPLACE FUNCTION platform.append_facility_governance_audit_v1(
+  p_request_id uuid,
+  p_action_code text,
+  p_resource_id uuid,
+  p_facility_id uuid DEFAULT NULL
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+DECLARE
+  actor_person_id_value uuid := platform.context_person_id();
+  actor_role_value text := pg_catalog.current_setting('shifaa.actor_role',true);
+  purpose_code_value text := (platform.context_purposes())[1];
+  resource_version_value integer;
+  resolved_facility_id_value uuid;
+  effect_authorized boolean := false;
+BEGIN
+  IF SESSION_USER <> 'shifaa_api'
+     OR actor_person_id_value IS NULL
+     OR p_request_id IS NULL
+     OR p_action_code IS NULL
+     OR p_resource_id IS NULL THEN
+    RAISE EXCEPTION 'F008_FACILITY_AUDIT_CONTEXT_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  IF p_action_code IN (
+    'facility.created','facility.updated','facility.evidence_uploaded',
+    'facility.submitted','facility.active','facility.rejected','facility.suspended'
+  ) THEN
+    SELECT facility.version,facility.id,
+      CASE
+        WHEN p_action_code = 'facility.created' THEN
+          facility.created_by_person_id = actor_person_id_value
+          AND facility.version = 1
+          AND facility.facility_status = 'draft'
+        WHEN p_action_code IN (
+          'facility.updated','facility.evidence_uploaded','facility.submitted'
+        ) THEN
+          facility.created_by_person_id = actor_person_id_value
+          AND (
+            p_action_code <> 'facility.submitted'
+            OR facility.facility_status = 'pending_review'
+          )
+        ELSE
+          actor_role_value = 'ADM-FACILITY'
+          AND platform.context_aal() = 2
+          AND purpose_code_value = 'facility_approval'
+          AND facility.created_by_person_id <> actor_person_id_value
+          AND facility.facility_status = pg_catalog.substring(
+            p_action_code,pg_catalog.length('facility.') + 1
+          )
+      END
+    INTO resource_version_value,resolved_facility_id_value,effect_authorized
+    FROM identity.facilities AS facility
+    WHERE facility.id = p_resource_id;
+  ELSIF p_action_code IN (
+    'professional_license.created','professional_license.evidence_uploaded',
+    'professional_license.verified','professional_license.rejected',
+    'professional_license.suspended'
+  ) THEN
+    SELECT license.version,NULL::uuid,
+      CASE
+        WHEN p_action_code = 'professional_license.created' THEN
+          license.person_id = actor_person_id_value
+          AND license.version = 1
+          AND license.status = 'pending'
+        WHEN p_action_code = 'professional_license.evidence_uploaded' THEN
+          license.person_id = actor_person_id_value
+        ELSE
+          actor_role_value = 'ADM-FACILITY'
+          AND platform.context_aal() = 2
+          AND purpose_code_value = 'professional_license_review'
+          AND license.person_id <> actor_person_id_value
+          AND license.status = pg_catalog.substring(
+            p_action_code,pg_catalog.length('professional_license.') + 1
+          )
+      END
+    INTO resource_version_value,resolved_facility_id_value,effect_authorized
+    FROM identity.professional_licenses AS license
+    WHERE license.id = p_resource_id;
+  ELSIF p_action_code IN (
+    'membership.invited','membership.accepted','membership.updated','membership.ended'
+  ) THEN
+    SELECT membership.version,membership.facility_id,
+      CASE
+        WHEN p_action_code = 'membership.accepted' THEN
+          membership.person_id = actor_person_id_value
+          AND membership.membership_status = 'active'
+        ELSE
+          facility.created_by_person_id = actor_person_id_value
+          AND (
+            p_action_code NOT IN ('membership.invited','membership.ended')
+            OR membership.membership_status = CASE p_action_code
+              WHEN 'membership.invited' THEN 'invited'
+              ELSE 'ended'
+            END
+          )
+      END
+    INTO resource_version_value,resolved_facility_id_value,effect_authorized
+    FROM identity.facility_memberships AS membership
+    JOIN identity.facilities AS facility ON facility.id = membership.facility_id
+    WHERE membership.id = p_resource_id;
+  ELSIF p_action_code IN ('admin_role.grant_proposed','admin_role.grant_decided') THEN
+    SELECT grant_row.version,NULL::uuid,
+      actor_role_value = 'ADM-SUPER'
+      AND platform.context_aal() = 2
+      AND purpose_code_value = 'role_governance'
+      AND CASE p_action_code
+        WHEN 'admin_role.grant_proposed' THEN
+          grant_row.proposed_by = actor_person_id_value
+          AND grant_row.status = 'pending'
+        ELSE
+          grant_row.decided_by = actor_person_id_value
+          AND grant_row.status IN ('active','rejected')
+      END
+    INTO resource_version_value,resolved_facility_id_value,effect_authorized
+    FROM identity.admin_role_grants AS grant_row
+    WHERE grant_row.id = p_resource_id;
+  ELSIF p_action_code IN (
+    'admin_role.revocation_proposed','admin_role.revocation_decided'
+  ) THEN
+    SELECT revocation.version,NULL::uuid,
+      actor_role_value = 'ADM-SUPER'
+      AND platform.context_aal() = 2
+      AND purpose_code_value = 'role_governance'
+      AND CASE p_action_code
+        WHEN 'admin_role.revocation_proposed' THEN
+          revocation.proposed_by = actor_person_id_value
+          AND revocation.status = 'pending'
+        ELSE
+          revocation.decided_by = actor_person_id_value
+          AND revocation.status IN ('approved','rejected')
+      END
+    INTO resource_version_value,resolved_facility_id_value,effect_authorized
+    FROM identity.admin_role_revocation_requests AS revocation
+    WHERE revocation.id = p_resource_id;
+  ELSE
+    RAISE EXCEPTION 'F008_FACILITY_AUDIT_ACTION_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  IF resource_version_value IS NULL
+     OR p_facility_id IS DISTINCT FROM resolved_facility_id_value
+     OR NOT coalesce(effect_authorized,false) THEN
+    RAISE EXCEPTION 'F008_FACILITY_AUDIT_RESOURCE_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  PERFORM audit.append_event_v1(
+    p_request_id,p_request_id::text,p_action_code,'facility-governance','success',
+    p_actor_person_id => actor_person_id_value,
+    p_authentication_aal => CASE
+      WHEN platform.context_aal() = 0 THEN NULL
+      ELSE platform.context_aal()::smallint
+    END,
+    p_facility_id => resolved_facility_id_value,
+    p_purpose_code => purpose_code_value,
+    p_resource_id => p_resource_id,
+    p_resource_version => resource_version_value,
     p_user_agent_class => 'web'
   );
 END
@@ -1921,6 +2106,7 @@ GRANT EXECUTE ON FUNCTION audit.request_export_v1(text,text,date,date,uuid,text)
 GRANT EXECUTE ON FUNCTION platform.append_discovery_sos_effect_v1(uuid,text,uuid,integer,uuid) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION platform.append_facility_governance_audit_v1(uuid,text,uuid,uuid) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.claim_export_v1(text,integer) TO shifaa_worker;
 GRANT EXECUTE ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz) TO shifaa_worker;
 
@@ -1954,5 +2140,6 @@ REVOKE ALL ON FUNCTION audit.verify_event_chain_v1(date) FROM PUBLIC;
 REVOKE ALL ON FUNCTION platform.append_discovery_sos_effect_v1(uuid,text,uuid,integer,uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text) FROM PUBLIC;
 REVOKE ALL ON FUNCTION platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION platform.append_facility_governance_audit_v1(uuid,text,uuid,uuid) FROM PUBLIC;
 
 COMMIT;

@@ -13,6 +13,6 @@
 
 ## SHA-256 bindings
 
-- `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`: `efbf610943261114e1adc2ea84fbb9c247fdf7f10055e2c67fb8d8d96d830d99`
+- `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`: `dc189b423f1b798cbc95589624f62348ad97d3c1a5a2c8bd9382159617ccf03d`
 - `infra/db/fixtures/audit-admin-restore.sql`: `dfc64c8957743f25913ff5d69123d408c3f30c4f9ed346c381cd94252d9f3e51`
 - `tools/run-audit-admin-restore-test.mjs`: `c75ed245b4dbb9253ea2d37f72958eb66a43ce42efc2bf20d1c07db5768f2b16`

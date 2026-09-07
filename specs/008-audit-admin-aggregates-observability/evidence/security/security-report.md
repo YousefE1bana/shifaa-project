@@ -27,7 +27,7 @@ Status: PASS with zero unresolved reportable high or critical findings. This is 
 
 ## SHA-256 bindings
 
-- `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`: `efbf610943261114e1adc2ea84fbb9c247fdf7f10055e2c67fb8d8d96d830d99`
+- `supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql`: `dc189b423f1b798cbc95589624f62348ad97d3c1a5a2c8bd9382159617ccf03d`
 - `tools/run-audit-admin-postgres-test.mjs`: `4822e2c9f34f8f67f77efb0539f63f42696044e9410a6b376ff9b35a6dbaacea`
 - `packages/core/src/audit-admin/audit-integrity.test.ts`: `23c81cf9d89978c9c3cf15f88e0f317ead1f42999b94680c9030f05e5e048d7c`
 - `services/api/test/audit-admin-observability.integration.test.ts`: `299d2ced29060c7a3157a0f5767bc5b6581cd376f1385d43ed1795a411687bdf`
