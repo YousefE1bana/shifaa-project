@@ -13,6 +13,7 @@ const featureDirectory = path.join(
   'specs/008-audit-admin-aggregates-observability',
 );
 const planningBaseline = '6a7475f6c7c1311b1b09f4ce94556fba75bb9995';
+const canonicalSquashCommit = '650e896e550fb78aeda7b4b192d781985f9f7835';
 const approvedPrivacyDigest = '38855c7319b6bcd06b491bf4213a277303a6d6e2c1ebe7499b65fdfa4ae15039';
 const canonicalOperations = new Map([
   ['getAdminSummary', ['GET', '/admin/dashboard-summary']],
@@ -143,10 +144,21 @@ function verifyPlannedScripts(packageText) {
 }
 
 function verifyProtectedScope() {
-  execFileSync('git', ['merge-base', '--is-ancestor', planningBaseline, 'HEAD'], {
-    cwd: repositoryRoot,
-    stdio: 'ignore',
+  const hasApprovedProvenance = [planningBaseline, canonicalSquashCommit].some((commit) => {
+    try {
+      execFileSync('git', ['merge-base', '--is-ancestor', commit, 'HEAD'], {
+        cwd: repositoryRoot,
+        stdio: 'ignore',
+      });
+      return true;
+    } catch {
+      return false;
+    }
   });
+  if (!hasApprovedProvenance)
+    failures.push(
+      `Feature 008 provenance requires planning baseline ${planningBaseline} or canonical squash commit ${canonicalSquashCommit} to be an ancestor of HEAD.`,
+    );
   const status = execFileSync('git', ['status', '--porcelain=v1', '--untracked-files=all'], {
     cwd: repositoryRoot,
     encoding: 'utf8',
