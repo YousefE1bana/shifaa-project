@@ -3,9 +3,9 @@
 - Verdict: **PASS**
 - Scope: local graduation-only PostgreSQL logical backup plus synthetic immutable-object copy; this is not a production DR or WORM certification.
 - Dataset: two completed UTC partitions, three canonically chained audit events, one signature evidence row, one proven export batch, and one synthetic write-once object.
-- Backup size: 591495 bytes.
+- Backup size: 591552 bytes.
 - RPO result: 0.0000 minutes (limit 15; exact snapshot comparison found zero lost rows or proof state).
-- RTO result: 0.0434 minutes (limit 60; includes target database creation, database restore, object restore, and verification).
+- RTO result: 0.0411 minutes (limit 60; includes target database creation, database restore, object restore, and verification).
 - Chain result: every restored partition valid; checked event counts and terminal hashes exactly match the source.
 - Export result: restored object bytes hash to `5a2e054f9f4fea37fc943f84f3caa31776009a77878551ec08b691a2f4bdc059`; database digest and full retention proof match.
 - Restore admission/readiness: remains closed unless database snapshot, every chain, object digest, and complete proof all match.
