@@ -118,10 +118,11 @@ export class PostgresFamilyCareService {
         ? (actor.purpose ?? 'self_care')
         : relationship.purpose_code;
     await sql`insert into identity.relationship_authorization_uses(relationship_id,subject_patient_id,actor_person_id,permission_code,purpose_code,outcome,relationship_version,request_id) values(${relationship.id}::uuid,${patientId}::uuid,${actor.personId}::uuid,${permission},${purpose},'allowed',${relationship.version},${actor.requestId})`;
-    const digest = createHash('sha256')
-      .update(`${relationship.id}:${relationship.version}:${permission}:${actor.requestId}`)
-      .digest('hex');
-    await sql`insert into audit.events(event_hash,actor_person_id,patient_id,action,resource_type,resource_id,outcome,request_id,metadata) values(${digest},${actor.personId}::uuid,${patientId}::uuid,${`relationship.${relationship.relationship_type}.used`},'family-care',${relationship.id}::uuid,'success',${actor.requestId}::uuid,${sql.json({ permission_code: permission, purpose_code: purpose, relationship_version: relationship.version })})`;
+    await sql`
+      select platform.append_family_authorization_audit_v1(
+        ${actor.requestId}::uuid,${`relationship.${relationship.relationship_type}.used`},
+        ${patientId}::uuid,${relationship.id}::uuid,${relationship.version}
+      )`;
   }
 
   private async hydrate(
@@ -293,8 +294,11 @@ export class PostgresFamilyCareService {
       }
     }
     for (const effect of delegate.audit) {
-      const digest = createHash('sha256').update(JSON.stringify(effect)).digest('hex');
-      await sql`insert into audit.events(event_hash,actor_person_id,patient_id,action,resource_type,resource_id,outcome,request_id,metadata) values(${digest},${effect.actor_person_id}::uuid,${effect.patient_id}::uuid,${effect.action},'family-care',${effect.resource_id}::uuid,'success',${effect.request_id}::uuid,${sql.json({ synthetic: true })})`;
+      const resourceVersion = Number(effect.payload['version'] ?? 1);
+      await sql`select platform.append_family_mutation_audit_v1(
+        ${effect.request_id}::uuid,${effect.action},${effect.actor_person_id}::uuid,
+        ${effect.patient_id}::uuid,${effect.resource_id}::uuid,${resourceVersion}
+      )`;
       await sql`insert into platform.outbox_events(aggregate_type,aggregate_id,event_type,payload) values('family-care',${effect.resource_id}::uuid,${effect.action},${sql.json(effect.payload)})`;
     }
   }
@@ -355,10 +359,9 @@ export class PostgresFamilyCareService {
         >`select * from platform.respond_emergency_contact_invite(${digest},${b.decision})`;
         if (!row) throw new Error('unavailable');
         const action = `emergency_contact.${b.decision}`;
-        const eventHash = createHash('sha256')
-          .update(`${action}:${row.contact_id}:${requestId}`)
-          .digest('hex');
-        await sql`insert into audit.events(event_hash,actor_person_id,patient_id,action,resource_type,resource_id,outcome,request_id,metadata) values(${eventHash},null,${row.subject_patient_id}::uuid,${action},'family-care',${row.contact_id}::uuid,'success',${requestId}::uuid,${sql.json({ actor_type: 'invitation', synthetic: true })})`;
+        await sql`select platform.append_family_invitation_audit_v1(
+          ${requestId}::uuid,${action},${row.subject_patient_id}::uuid,${row.contact_id}::uuid
+        )`;
         await sql`insert into platform.outbox_events(aggregate_type,aggregate_id,event_type,payload) values('family-care',${row.contact_id}::uuid,${action},${sql.json({ contact_id: row.contact_id, subject_patient_id: row.subject_patient_id, status: b.decision, request_id: requestId })})`;
         return { status: b.decision };
       } catch (error: any) {

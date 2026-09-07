@@ -146,7 +146,6 @@ export class PostgresDiscoverySosService implements DiscoverySosServicePort {
           ${input.coordinates.latitude},${input.qualifying_reason_code},${input.contact_preference},
           ${input.callback_source},${this.config.sosMatchRadiusM},${this.config.capacitySourceCode})`;
       if (!row) throw new Error('SOS incident creation returned no row.');
-      await this.appendEffect(sql, actor, row, 'sos.incident.created');
       if (input.contact_preference === 'all_confirmed') {
         await sql`
           insert into platform.outbox_events(aggregate_type,aggregate_id,aggregate_version,event_type,payload)
@@ -159,8 +158,10 @@ export class PostgresDiscoverySosService implements DiscoverySosServicePort {
         input.coordinates.latitude,
         actor.locale,
       );
+      const incident = await this.incidentProjection(sql, row, actor.locale, true);
+      await this.appendEffect(sql, actor, row, 'sos.incident.created');
       return {
-        incident: await this.incidentProjection(sql, row, actor.locale, true),
+        incident,
         nearby_hospitals: nearby,
         guidance: sosGuidance,
       };
@@ -542,19 +543,10 @@ export class PostgresDiscoverySosService implements DiscoverySosServicePort {
     resourceId = incident.id,
     effectVersion = incident.version,
   ): Promise<void> {
-    const eventHash = createHash('sha256')
-      .update(`${action}:${resourceId}:${effectVersion}:${actor.requestId}`)
-      .digest('hex');
     await sql`
-      insert into audit.events(event_hash,actor_person_id,patient_id,facility_id,purpose_code,action,resource_type,
-        resource_id,outcome,request_id,metadata)
-      values(${eventHash},${actor.personId}::uuid,${incident.patient_id}::uuid,${facilityId ?? null}::uuid,${actor.purpose ?? null},
-        ${action},'discovery-sos',${resourceId}::uuid,'success',${actor.requestId}::uuid,
-        ${sql.json({ purpose_code: actor.purpose ?? null, version: effectVersion })})`;
-    await sql`
-      insert into platform.outbox_events(aggregate_type,aggregate_id,aggregate_version,event_type,payload)
-      values('discovery-sos',${resourceId}::uuid,${effectVersion},${action},
-        ${sql.json({ resource_id: resourceId, request_id: actor.requestId })})`;
+      select platform.append_discovery_sos_effect_v1(
+        ${actor.requestId}::uuid,${action},${resourceId}::uuid,${effectVersion},${facilityId ?? null}::uuid
+      )`;
   }
 
   private shareSummary(row: ShareRow): EmergencyShareSummary {

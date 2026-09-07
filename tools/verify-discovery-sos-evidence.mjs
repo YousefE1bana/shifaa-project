@@ -143,6 +143,8 @@ try {
       'steady-state regional API latency; process and connection cold start excluded' ||
     performance.measurement_profile?.api_pool_connections !== 20 ||
     performance.measurement_profile?.read_only_warmup_requests !== 20 ||
+    performance.measurement_profile?.mutation_warmup_requests !== 20 ||
+    performance.measurement_profile?.worker_warmup_claims !== 20 ||
     performance.measurement_profile?.observed_api_connections !== 20 ||
     performance.measurement_profile?.warmup_excluded_from_samples !== true
   )

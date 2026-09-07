@@ -74,7 +74,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `audit.events`, `audit.signature_evidence`, `audit.export_batches`, feature-flag/health projections; append-only/hash-chain/export proofs; `super_admin` AAL2+purpose redacted reads; DPO has no general audit grant.
 - **UI/apps/services:** admin `/dashboard` and `/audit`; `apps/admin`, Core API, worker/export adapter, `packages/observability`.
 - **Dependencies/exclusions:** requires 007 real MFA/session step-up. Excludes patient-level admin analytics, raw PHI logs, guessed minimum-cell threshold, production WORM claims without evidence, and general DPO audit access.
-- **OPEN gates:** `OPEN-PRIV-001` blocks `SPEC_APPROVED`; `OPEN-LEGAL-001/002/007`, `OPEN-TECH-001/002/003`, `OPEN-UX-001/002`, `OPEN-PRODUCT-001` retain canonical effects.
+- **OPEN gates:** no valid blocker remains before Feature-008 `SPEC_APPROVED`: `OPEN-PRIV-001` is closed for graduation engineering by approved package v1.0.0. `metrics: []` activates no aggregate and does not block planning; each metric/status mapping stays fail-closed until later approved configuration. `OPEN-LEGAL-001/002/007`, `OPEN-TECH-001/002/003`, `OPEN-UX-001/002`, and `OPEN-PRODUCT-001` retain canonical later-stage effects.
 - **Evidence:** minimum-cell suppression/re-identification negatives; self/grant/purpose/AAL denial matrix; hash-chain tamper detection; write-once export digest/tabletop; redaction sentinel scan; low-cardinality metrics; health degraded/readiness behavior; restore prerequisites; admin AR/EN accessibility; performance and full verification.
 
 ### 009 — Clinic Scheduling, Appointments, and Queue
@@ -204,7 +204,7 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **Data/RLS:** `trust.reviews`, `review_reports`, `complaints`, `complaint_events`; verified-source uniqueness, attributable anonymous display, private timelines, SLA/escalation history; rating summary derives from moderated reviews.
 - **UI/apps/services:** patient `/reviews`, `/complaints`, `/discover`; admin `/reviews`, `/complaints`; patient/admin/staff apps, API, SLA worker. The facility complaint route/composition is `BASELINE RECONCILIATION REQUIRED`.
 - **Dependencies/exclusions:** completed encounters/orders from 009-017, notification foundation, verified discovery. Excludes public complaints, unattributable reviews, exact patient disclosure in aggregates, and general chat.
-- **OPEN gates:** legal/retention, `OPEN-PRIV-001` where aggregates could identify, team/tech/UX/product gates.
+- **OPEN gates:** legal/retention plus team/tech/UX/product gates; later identifying aggregates must reuse approved OPEN-PRIV-001 policy v1.0.0 or obtain an approved policy amendment.
 - **Evidence:** verified-source and one-review rules; anonymous display/internal attribution; report/moderation; role-projected complaint timeline; SLA escalation/dedup; facility/admin separation; rating freshness; RLS; AR/EN accessibility; p95 and full verification.
 
 ### 022 — Care Payments
@@ -289,28 +289,28 @@ This graph has 21 nodes including completed predecessor 006, 20 forward edges, n
 
 ## 6. OPEN-gate ownership map
 
-| Gate                                                 | Earliest affected remaining feature(s) | Frozen effect                                                                 |
-| ---------------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------- |
-| OPEN-SEC-001                                         | 007                                    | CLOSED for Feature-007 specification/development by the Product Owner/Architecture-approved v2.1.2 policy; implementation/security/release evidence remains required |
-| OPEN-LEGAL-006                                       | 007                                    | CLOSED for FR-FAM-003 specification/development by the Product Owner-approved v2.1.1 amendment; production legal/DPO/PHI gates remain open |
-| OPEN-PRIV-001                                        | 008                                    | Blocks FR-ADMIN-003 `SPEC_APPROVED`; may affect later aggregates              |
-| OPEN-PHARM-001                                       | 014                                    | Blocks FR-PHARM-006 `SPEC_APPROVED`                                           |
-| OPEN-LEGAL-003                                       | 012-014, 019                           | Blocks controlled/e-prescription production release                           |
-| OPEN-LEGAL-005                                       | 020                                    | Blocks automated disability entitlement                                       |
-| OPEN-CLIN-001                                        | 011-012                                | Blocks prescription-safety release                                            |
-| OPEN-CLIN-002                                        | 012, 014, 019                          | Blocks controlled/NTI paths                                                   |
-| OPEN-CLIN-003                                        | 016-018                                | Blocks lab/vaccine governed content                                           |
-| OPEN-VENDOR-001                                      | completed identity / 026               | Automated production proofing remains disabled                                |
-| OPEN-VENDOR-002                                      | 007, 009, 017, 019                     | Production OTP/SMS remains disabled                                           |
-| OPEN-VENDOR-003                                      | 022                                    | Production digital payments remain disabled                                   |
-| OPEN-AI-001                                          | 023-024                                | Blocks graduation AI verification, not scope                                  |
-| `OPEN-LEGAL-001`, `OPEN-LEGAL-002`, `OPEN-LEGAL-007` | all PHI features / 026                 | Production PHI, retention automation, and article-level claims remain blocked |
-| `OPEN-UX-001`, `OPEN-UX-002`                         | every UI feature / 026                 | Pixel-identical/formal visual claims remain blocked                           |
-| OPEN-PRODUCT-001                                     | journey features / 026                 | UAT baseline remains blocked                                                  |
-| OPEN-TEAM-001                                        | every feature                          | CLOSED by the Product Owner-approved v2.1.2 operating model; implementation assignments activate under approved specs/tasks and do not create independent lifecycle approvers |
-| OPEN-TECH-001                                        | 025-026 and reproducibility claims     | Byte-reproducible tool/runtime claim remains blocked                          |
-| OPEN-TECH-002                                        | every affected feature / 026           | Full active API/DDL/client parity closes incrementally                        |
-| OPEN-TECH-003                                        | every performance/UI feature / 026     | Formal device/network/accessibility performance acceptance remains blocked    |
+| Gate                                                 | Earliest affected remaining feature(s) | Frozen effect                                                                                                                                                                         |
+| ---------------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OPEN-SEC-001                                         | 007                                    | CLOSED for Feature-007 specification/development by the Product Owner/Architecture-approved v2.1.2 policy; implementation/security/release evidence remains required                  |
+| OPEN-LEGAL-006                                       | 007                                    | CLOSED for FR-FAM-003 specification/development by the Product Owner-approved v2.1.1 amendment; production legal/DPO/PHI gates remain open                                            |
+| OPEN-PRIV-001                                        | 008                                    | CLOSED for Feature-008 graduation engineering by package v1.0.0; later aggregate metrics remain fail-closed pending approved configuration and policy-level changes require amendment |
+| OPEN-PHARM-001                                       | 014                                    | Blocks FR-PHARM-006 `SPEC_APPROVED`                                                                                                                                                   |
+| OPEN-LEGAL-003                                       | 012-014, 019                           | Blocks controlled/e-prescription production release                                                                                                                                   |
+| OPEN-LEGAL-005                                       | 020                                    | Blocks automated disability entitlement                                                                                                                                               |
+| OPEN-CLIN-001                                        | 011-012                                | Blocks prescription-safety release                                                                                                                                                    |
+| OPEN-CLIN-002                                        | 012, 014, 019                          | Blocks controlled/NTI paths                                                                                                                                                           |
+| OPEN-CLIN-003                                        | 016-018                                | Blocks lab/vaccine governed content                                                                                                                                                   |
+| OPEN-VENDOR-001                                      | completed identity / 026               | Automated production proofing remains disabled                                                                                                                                        |
+| OPEN-VENDOR-002                                      | 007, 009, 017, 019                     | Production OTP/SMS remains disabled                                                                                                                                                   |
+| OPEN-VENDOR-003                                      | 022                                    | Production digital payments remain disabled                                                                                                                                           |
+| OPEN-AI-001                                          | 023-024                                | Blocks graduation AI verification, not scope                                                                                                                                          |
+| `OPEN-LEGAL-001`, `OPEN-LEGAL-002`, `OPEN-LEGAL-007` | all PHI features / 026                 | Production PHI, retention automation, and article-level claims remain blocked                                                                                                         |
+| `OPEN-UX-001`, `OPEN-UX-002`                         | every UI feature / 026                 | Pixel-identical/formal visual claims remain blocked                                                                                                                                   |
+| OPEN-PRODUCT-001                                     | journey features / 026                 | UAT baseline remains blocked                                                                                                                                                          |
+| OPEN-TEAM-001                                        | every feature                          | CLOSED by the Product Owner-approved v2.1.2 operating model; implementation assignments activate under approved specs/tasks and do not create independent lifecycle approvers         |
+| OPEN-TECH-001                                        | 025-026 and reproducibility claims     | Byte-reproducible tool/runtime claim remains blocked                                                                                                                                  |
+| OPEN-TECH-002                                        | every affected feature / 026           | Full active API/DDL/client parity closes incrementally                                                                                                                                |
+| OPEN-TECH-003                                        | every performance/UI feature / 026     | Formal device/network/accessibility performance acceptance remains blocked                                                                                                            |
 
 ## 7. Machine-checkable reconciliation targets
 

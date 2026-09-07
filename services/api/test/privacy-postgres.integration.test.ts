@@ -101,7 +101,7 @@ describe.skipIf(!enabled)('privacy PostgreSQL adapter', () => {
     expect(fulfilled.statusCode, fulfilled.body).toBe(200);
     const [counts] = await owner<any[]>`select
       (select count(*)::int from consent.data_subject_request_events where request_id=${requestId}::uuid) events,
-      (select count(*)::int from audit.events where resource_id=${requestId}::uuid and action='privacy.dsr.status_changed') audits,
+      (select count(*)::int from audit.events where resource_id=${requestId}::uuid and action_code='privacy.dsr.status_changed') audits,
       (select count(*)::int from platform.outbox_events where aggregate_id=${requestId}::uuid and event_type='privacy.dsr.status_changed') outbox,
       (select count(*)::int from platform.idempotency_records where idempotency_key in (${decisionKey},${fulfilKey}) and state='completed') idempotency`;
     expect(counts).toEqual({ events: 4, audits: 2, outbox: 2, idempotency: 2 });
@@ -197,7 +197,7 @@ describe.skipIf(!enabled)('privacy PostgreSQL adapter', () => {
     expect(replay.statusCode, replay.body).toBe(202);
     const [effects] = await owner<any[]>`select
       (select count(*)::int from platform.provider_callback_receipts where event_reference=${callbackBody.event_reference}) receipts,
-      (select count(*)::int from audit.events where action='notification.delivery.receipt_recorded' and resource_id=(select id from platform.provider_callback_receipts where event_reference=${callbackBody.event_reference})) callback_audits,
+      (select count(*)::int from audit.events where action_code='notification.delivery.receipt_recorded' and resource_id=(select id from platform.provider_callback_receipts where event_reference=${callbackBody.event_reference})) callback_audits,
       (select count(*)::int from platform.outbox_replay_attempts where original_event_id=${original}::uuid) replays`;
     expect(effects).toEqual({ receipts: 1, callback_audits: 1, replays: 1 });
   });

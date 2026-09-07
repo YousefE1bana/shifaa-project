@@ -124,14 +124,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
 
   public async appendAudit(input: ContinuityAuditInput): Promise<void> {
     await this.repository.withRawTransaction(async (sql) => {
-      const digest = createHash('sha256').update(JSON.stringify(input)).digest('hex');
-      await sql`
-        insert into audit.events(
-          event_hash,actor_person_id,action,resource_type,outcome,request_id,occurred_at,metadata
-        ) values(
-          ${digest},${input.actorPersonId}::uuid,${input.action},'native-session',${input.outcome},${input.requestId}::uuid,
-          ${input.occurredAt}::timestamptz,${sql.json(input.metadata ?? {})}
-        )`;
+      await this.appendCanonicalAudit(sql, input, 'native-session');
     });
   }
 
@@ -146,15 +139,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     )
       throw new ApiPolicyError('event-payload-prohibited', 500, 'Prohibited event payload field.');
     await this.repository.withRawTransaction(async (sql) => {
-      const digest = createHash('sha256').update(JSON.stringify(input.audit)).digest('hex');
-      await sql`
-        insert into audit.events(
-          event_hash,actor_person_id,action,resource_type,outcome,request_id,occurred_at,metadata
-        ) values(
-          ${digest},${input.audit.actorPersonId}::uuid,${input.audit.action},'native-session',${input.audit.outcome},
-          ${input.audit.requestId}::uuid,${input.audit.occurredAt}::timestamptz,
-          ${sql.json(input.audit.metadata ?? {})}
-        )`;
+      await this.appendCanonicalAudit(sql, input.audit, 'native-session');
       await sql`
         insert into platform.outbox_events(
           aggregate_type,aggregate_id,event_type,payload,aggregate_version
@@ -182,15 +167,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     audit: ContinuityAuditInput;
   }): Promise<void> {
     await this.repository.withRawTransaction(async (sql) => {
-      const digest = createHash('sha256').update(JSON.stringify(input.audit)).digest('hex');
-      await sql`
-        insert into audit.events(
-          event_hash,actor_person_id,action,resource_type,outcome,request_id,occurred_at,metadata
-        ) values(
-          ${digest},${input.audit.actorPersonId}::uuid,${input.audit.action},'native-session',${input.audit.outcome},
-          ${input.audit.requestId}::uuid,${input.audit.occurredAt}::timestamptz,
-          ${sql.json(input.audit.metadata ?? {})}
-        )`;
+      await this.appendCanonicalAudit(sql, input.audit, 'native-session');
       await this.upsertTransientMarker(sql, REFRESH_RESUME_ROUTE, input.markerKey, input.marker);
     });
   }
@@ -218,17 +195,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     )
       throw new ApiPolicyError('event-payload-prohibited', 500, 'Prohibited event payload field.');
     await this.repository.withRawTransaction(async (sql) => {
-      const auditDigest = createHash('sha256')
-        .update(JSON.stringify(input.evidence.audit))
-        .digest('hex');
-      await sql`
-        insert into audit.events(
-          event_hash,actor_person_id,action,resource_type,outcome,request_id,occurred_at,metadata
-        ) values(
-          ${auditDigest},${input.evidence.audit.actorPersonId}::uuid,${input.evidence.audit.action},'native-factor',${input.evidence.audit.outcome},
-          ${input.evidence.audit.requestId}::uuid,${input.evidence.audit.occurredAt}::timestamptz,
-          ${sql.json(input.evidence.audit.metadata ?? {})}
-        )`;
+      await this.appendCanonicalAudit(sql, input.evidence.audit, 'native-factor');
       await sql`
         insert into platform.outbox_events(
           aggregate_type,aggregate_id,event_type,payload,aggregate_version
@@ -424,20 +391,19 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           409,
           'The restricted enrollment case could not be completed.',
         );
-      const audit = {
-        requestId: input.requestId,
-        action: 'identity.recovery.enrollment_completed',
-        outcome: 'succeeded',
-        occurredAt: input.occurredAt,
-      };
-      const digest = createHash('sha256').update(JSON.stringify(audit)).digest('hex');
-      await sql`
-        insert into audit.events(
-          event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,occurred_at,metadata
-        ) values(
-          ${digest},${mapping.person_id}::uuid,${audit.action},'continuity-case',${completed[0]?.['id']}::uuid,${audit.outcome},
-          ${input.requestId}::uuid,${input.occurredAt}::timestamptz,${sql.json({})}
-        )`;
+      await this.appendCanonicalAudit(
+        sql,
+        {
+          actorPersonId: mapping.person_id,
+          requestId: input.requestId,
+          action: 'identity.recovery.enrollment_completed',
+          outcome: 'succeeded',
+          occurredAt: input.occurredAt,
+        },
+        'continuity-case',
+        completed[0]?.['id'] as string,
+        completed[0]?.['version'] as number,
+      );
       await sql`
         insert into platform.outbox_events(aggregate_type,aggregate_id,event_type,payload,aggregate_version)
         values(
@@ -822,21 +788,19 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           409,
           'The recovery case is unavailable.',
         );
-      const audit = {
-        requestId: input.requestId,
-        action: 'identity.recovery.completed',
-        outcome: 'succeeded',
-        occurredAt: input.occurredAt,
-      };
-      const digest = createHash('sha256').update(JSON.stringify(audit)).digest('hex');
-      await sql`
-        insert into audit.events(
-          event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,occurred_at,metadata
-        ) values(
-          ${digest},${input.personId}::uuid,${audit.action},'continuity-case',${input.caseId}::uuid,
-          ${audit.outcome},${input.requestId}::uuid,${input.occurredAt}::timestamptz,
-          ${sql.json({ restricted: input.restricted })}
-        )`;
+      await this.appendCanonicalAudit(
+        sql,
+        {
+          actorPersonId: input.personId,
+          requestId: input.requestId,
+          action: 'identity.recovery.completed',
+          outcome: 'succeeded',
+          occurredAt: input.occurredAt,
+        },
+        'continuity-case',
+        input.caseId,
+        completed[0]?.['version'] as number,
+      );
       if (!input.restricted) {
         await sql`
           insert into platform.outbox_events(aggregate_type,aggregate_id,event_type,payload,aggregate_version)
@@ -959,24 +923,19 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           action === 'submit_proof'
             ? 'identity.transition.submitted'
             : 'identity.transition.decided';
-        const audit = {
-          requestId: input.requestId,
-          action: eventType,
-          outcome: 'succeeded',
-          occurredAt: input.occurredAt,
-          caseId: transition.id,
-          version: transition.version,
-        };
-        const digest = createHash('sha256').update(JSON.stringify(audit)).digest('hex');
-        await sql`
-          insert into audit.events(
-            event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,
-            occurred_at,metadata
-          ) values(
-            ${digest},${input.actorPersonId}::uuid,${eventType},'continuity-case',
-            ${transition.id}::uuid,'succeeded',${input.requestId}::uuid,
-            ${input.occurredAt}::timestamptz,${sql.json({ version: transition.version })}
-          )`;
+        await this.appendCanonicalAudit(
+          sql,
+          {
+            actorPersonId: input.actorPersonId,
+            requestId: input.requestId,
+            action: eventType,
+            outcome: 'succeeded',
+            occurredAt: input.occurredAt,
+          },
+          'continuity-case',
+          transition.id,
+          transition.version,
+        );
         await sql`
           insert into platform.outbox_events(
             aggregate_type,aggregate_id,event_type,payload,aggregate_version
@@ -1064,6 +1023,21 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
         await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
       }
     });
+  }
+
+  private async appendCanonicalAudit(
+    sql: TransactionSql,
+    input: ContinuityAuditInput,
+    resourceType: 'native-session' | 'native-factor' | 'continuity-case',
+    resourceId?: string,
+    resourceVersion?: number,
+  ): Promise<void> {
+    await sql`select set_config('shifaa.person_id',${input.actorPersonId},true)`;
+    await sql`
+      select platform.append_identity_audit_effect_v1(
+        ${input.requestId}::uuid,${input.action},${resourceType},
+        ${resourceId ?? null}::uuid,${resourceVersion ?? null},${input.outcome}
+      )`;
   }
 
   private async saveTransientMarker<T extends { expiresAt: string }>(

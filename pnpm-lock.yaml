@@ -364,6 +364,9 @@ importers:
 
   packages/observability:
     devDependencies:
+      '@shifaa/test-kit':
+        specifier: workspace:*
+        version: link:../test-kit
       typescript:
         specifier: 7.0.2
         version: 7.0.2
@@ -394,6 +397,9 @@ importers:
       '@shifaa/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@shifaa/observability':
+        specifier: workspace:*
+        version: link:../../packages/observability
       '@supabase/supabase-js':
         specifier: 2.112.2
         version: 2.112.2
@@ -404,6 +410,9 @@ importers:
         specifier: 3.4.9
         version: 3.4.9
     devDependencies:
+      '@shifaa/test-kit':
+        specifier: workspace:*
+        version: link:../../packages/test-kit
       '@types/node':
         specifier: 24.10.1
         version: 24.10.1

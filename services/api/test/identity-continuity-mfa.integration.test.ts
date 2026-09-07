@@ -264,8 +264,8 @@ describe.skipIf(!enabled).sequential('007 real native TOTP enrollment and remova
         where route='/v1/auth/mfa/enroll' and state='completed'
         order by created_at desc limit 3`;
       const audits = await sql`
-        select metadata::text metadata from audit.events
-        where action like 'identity.factor.%' order by occurred_at desc limit 10`;
+        select action_code,resource_type,outcome from audit.events
+        where action_code like 'identity.factor.%' order by occurred_at desc limit 10`;
       const outbox = await sql`
         select aggregate_id::text aggregate_id,payload from platform.outbox_events
         where event_type='identity.factor.changed'`;

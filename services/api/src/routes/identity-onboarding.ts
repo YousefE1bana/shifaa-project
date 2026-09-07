@@ -451,6 +451,8 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
       .type('application/problem+json')
       .headers({
         ...noStoreHeaders,
+        'x-request-id': request.id,
+        'content-language': request.headers['accept-language'] === 'en-EG' ? 'en-EG' : 'ar-EG',
         ...(shareRequest ? { pragma: 'no-cache', 'referrer-policy': 'no-referrer' } : {}),
         ...(policy ? error.headers : {}),
       })

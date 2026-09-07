@@ -368,8 +368,6 @@ export class PostgresFacilityOnboardingService {
       if (existingFacilityLicenseIds.has(fl.id))
         await sql`update identity.facility_licenses set status=${fl.status} where id=${fl.id}::uuid and status is distinct from ${fl.status}`;
     for (const a of d.audit) {
-      const digest = createHash('sha256').update(JSON.stringify(a)).digest('hex');
-      await sql`insert into audit.events(event_hash,actor_person_id,facility_id,action,resource_type,resource_id,outcome,request_id,metadata) values(${digest},${actor.personId}::uuid,${a.facility_id ?? null}::uuid,${a.action},'facility-governance',${a.resource_id}::uuid,'success',${actor.requestId ?? randomUUID()}::uuid,${sql.json({ synthetic: true })})`;
       const type = String(a.action).startsWith('facility.')
         ? 'facility.changed'
         : String(a.action).startsWith('professional_license.')
@@ -378,6 +376,12 @@ export class PostgresFacilityOnboardingService {
             ? 'membership.changed'
             : 'admin_role.changed';
       await sql`insert into platform.outbox_events(aggregate_type,aggregate_id,event_type,payload) values('facility-governance',${a.resource_id}::uuid,${type},${sql.json({ resource_id: a.resource_id, facility_id: a.facility_id, status: 'changed' })})`;
+      await sql`select platform.append_facility_governance_audit_v1(
+        ${actor.requestId ?? randomUUID()}::uuid,
+        ${a.action},
+        ${a.resource_id}::uuid,
+        ${a.facility_id ?? null}::uuid
+      )`;
     }
   }
 

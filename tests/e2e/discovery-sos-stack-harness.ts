@@ -106,7 +106,7 @@ async function cleanRuntimeState(owner: postgres.Sql) {
     await sql`delete from platform.emergency_share_links where true`;
     await sql`delete from platform.sos_incidents where true`;
     await sql`delete from platform.idempotency_records where route like '%sos%' or route like '%discovery%'`;
-    await sql`delete from audit.events where resource_type in ('discovery-sos','emergency-share') or action like 'sos.%'`;
+    await sql`delete from audit.events where resource_type in ('discovery-sos','emergency-share') or action_code like 'sos.%'`;
 
     await sql`alter table audit.events enable trigger user`;
     await sql`alter table platform.idempotency_records enable trigger user`;

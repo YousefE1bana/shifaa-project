@@ -395,7 +395,8 @@ describe.skipIf(!enabled).sequential('007 PostgreSQL staged idempotency', () => 
       if (verificationCaseId)
         await owner`delete from identity.verification_cases where id=${verificationCaseId}::uuid`;
       if (identityId) await owner`delete from identity.identities where id=${identityId}::uuid`;
-      await owner`delete from identity.people where id=${personId}::uuid`;
+      // The synthetic actor is intentionally retained because canonical audit
+      // evidence is immutable and keeps its actor referential constraint.
       await owner.end({ timeout: 5 });
     }
   });

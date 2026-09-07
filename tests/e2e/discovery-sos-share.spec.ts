@@ -250,7 +250,8 @@ test('real-stack one-use emergency share scope, token secrecy, 410 expiry/replay
     // 9. Audits & outbox contain zero plaintext tokens
     const [leaks] = await stack.owner<any[]>`
       select
-        (select count(*)::int from audit.events where metadata::text ~* ${token}) audit_leaks,
+        (select count(*)::int from audit.events as event
+          where (to_jsonb(event)-'previous_hash'-'event_hash')::text ~* ${token}) audit_leaks,
         (select count(*)::int from platform.outbox_events where payload::text ~* ${token}) outbox_leaks,
         (select count(*)::int from platform.idempotency_records where response_body::text ~* ${token}) idempotency_raw_leaks
     `;
