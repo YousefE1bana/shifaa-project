@@ -11,7 +11,7 @@ Status: PASS for the synthetic graduation-engineering checkpoint. This evidence 
 
 ## Independently demonstrable health states
 
-- `healthLive` is process-only and returns `live` without invoking database, outbox, audit-chain, or export-proof checks.
+- `healthLive` is exposed only when `health.exposure` is enabled. After that control lookup, it returns `live` without invoking readiness, outbox, audit-chain, or export-proof checks.
 - `healthReady` returns `ready` only when database, outbox, audit integrity, and export proof are safe.
 - A bounded `outbox_backlog` returns `degraded` while retaining a successful probe response.
 - `database_unavailable`, `outbox_integrity_failed`, `audit_integrity_failed`, or `export_proof_failed` produces a `not_ready` operational signal and the contracted generic RFC 9457 `service-unavailable` response; thrown and timed-out checks also fail closed.
@@ -24,8 +24,8 @@ Health telemetry uses only request/trace correlation plus the fixed `health`, op
 
 ## SHA-256 bindings
 
-- `services/api/src/modules/audit-admin/health-service.ts`: `3c3d8fa73e53ccff96483d36d0ecbb747ab2110902169edde577ce8d47a82d41`
-- `services/api/src/routes/audit-admin.ts`: `455d8618c1907fefee336242583907306a053a3dfa67f4dbb3afb0f6419ebca8`
-- `services/api/test/health-readiness.test.ts`: `d2c6015eab74492bc519dcdc3272bed103a6a16304af91b6b7ceff43f6e007f4`
-- `services/api/test/audit-admin-health.integration.test.ts`: `1b6aee41774d1a92338d9b92f8d3a887d088376413adac44617c31bd8c5c4f1e`
+- `services/api/src/modules/audit-admin/health-service.ts`: `7b2cc772e6c7bcbb60153095be0090707cda5193050c14a5f1237d16365632c3`
+- `services/api/src/routes/audit-admin.ts`: `8cce87859706e5183dcc1423158ad701d6865077be43681be573a5b1bafcdbe2`
+- `services/api/test/health-readiness.test.ts`: `89b7c401222f45023d939eee54d8f06eec1e6ad13064ff26d04c76c91e090138`
+- `services/api/test/audit-admin-health.integration.test.ts`: `095f8958fe4b04eb487b223ab586a207d52c6547409c4e792968cddfae7f3a93`
 - `packages/observability/src/audit-admin.ts`: `869aa7f27b17e61f80270997bd4208f37667736fa929c3736417dad7b6cc5f09`

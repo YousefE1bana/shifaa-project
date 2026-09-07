@@ -24,8 +24,9 @@ Status: PASS for the synthetic graduation-engineering checkpoint. This is indepe
 
 ## SHA-256 bindings
 
-- `apps/admin/src/app/audit/AuditWorkspace.tsx`: `3f77b8e9d63f3f4c0e2e2928424c5632872fe6fd1d55c60f36b7c9cf34b2d29f`
-- `apps/admin/test/audit-workspace.test.ts`: `d460f3013ad8642208adbd1b5b0b300ac05abacb9451b7fa5ac5cc0353eeb747`
+- `apps/admin/src/app/AdminAuditSession.tsx`: `1cd28d0c5eb06bd49921e52c3c94cd8ea123741a271eec499990101abdffc294`
+- `apps/admin/src/app/audit/AuditWorkspace.tsx`: `73899d9459292912440faadfcb0acc843e06328d68e1e04e5b017ecda8d4838a`
+- `apps/admin/test/audit-workspace.test.ts`: `25d56e02e13856d9dcadf9701286991b708a56b6e061548e9704b23fc1d0f941`
 - `apps/admin/test/audit-export.test.ts`: `f1ab230c4f2137448200cb7ace3a752c8ba016209da2a2eed7a53e0f0676a131`
 - `tests/e2e/audit-admin-events.spec.ts`: `c79dfadc7339e883bd87cc72e967791b264e910cb23f7b883fe7e130dc564cef`
 - `tests/e2e/audit-export.spec.ts`: `222dbf386786d258fbca15cdc9051356c617a0372f58800c7c638c019dc8b544`

@@ -36,8 +36,9 @@ Status: PASS for the supported synthetic graduation data only. Screenshots are i
 
 ## Implementation bindings
 
-- `apps/admin/src/app/dashboard/AdminDashboard.tsx`: `6cf91bad322fdc8cb825424c4694ca2f413714058f4c5f3a249752661fea066b`
-- `apps/admin/src/app/audit/AuditWorkspace.tsx`: `3f77b8e9d63f3f4c0e2e2928424c5632872fe6fd1d55c60f36b7c9cf34b2d29f`
-- `apps/admin/test/audit-workspace.test.ts`: `d460f3013ad8642208adbd1b5b0b300ac05abacb9451b7fa5ac5cc0353eeb747`
-- `apps/admin/test/audit-admin-dashboard.test.ts`: `1de679ff68f600d9a550d18ab6621c0e6e4cb9a99e7497abcabbf2c0ba761238`
+- `apps/admin/src/app/AdminAuditSession.tsx`: `1cd28d0c5eb06bd49921e52c3c94cd8ea123741a271eec499990101abdffc294`
+- `apps/admin/src/app/dashboard/AdminDashboard.tsx`: `86b013ad7c8a3ccdd9531f88f5713b1f290c4f7ea7046c6ced7b41b7a51b3437`
+- `apps/admin/src/app/audit/AuditWorkspace.tsx`: `73899d9459292912440faadfcb0acc843e06328d68e1e04e5b017ecda8d4838a`
+- `apps/admin/test/audit-workspace.test.ts`: `25d56e02e13856d9dcadf9701286991b708a56b6e061548e9704b23fc1d0f941`
+- `apps/admin/test/audit-admin-dashboard.test.ts`: `589f7372a00d9af68b59ec3dc1fcd289547af921687648beed91f6bb6a81f035`
 - `packages/i18n/src/audit-admin.ts`: `cdfbeda92daf25b502c32de8b4a77093f15abdef3e4b542deae2d8aa4ed14a13`

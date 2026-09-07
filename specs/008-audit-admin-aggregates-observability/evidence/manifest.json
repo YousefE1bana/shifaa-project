@@ -3,7 +3,7 @@
   "feature": "008-audit-admin-aggregates-observability",
   "evidence_class": "synthetic_graduation_engineering",
   "production_approved": false,
-  "implementation_baseline_commit": "fdf6140b379b6e0423ac76f273b58c331ba77b09",
+  "implementation_baseline_commit": "8552e4e5b3afca9fcc67704ef11097255fe42909",
   "operations": [
     "getAdminSummary",
     "listAuditEvents",
@@ -54,7 +54,7 @@
     },
     "migration": {
       "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
-      "sha256": "dc189b423f1b798cbc95589624f62348ad97d3c1a5a2c8bd9382159617ccf03d"
+      "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed"
     },
     "db_schema": {
       "path": "infra/db/tests/audit-admin-observability-schema.sql",
@@ -62,7 +62,7 @@
     },
     "db_rls": {
       "path": "infra/db/tests/audit-admin-observability-rls.sql",
-      "sha256": "be9564064b89265bb3f24b61fe8191385fb8c1289c1cd77bd3786e9e0ee1ca7b"
+      "sha256": "292dbbeba0490296ca985a239fe7e356ef4548a52311d021226e6d5447024d7d"
     },
     "privacy_vectors": {
       "path": "packages/test-kit/src/audit-admin-privacy-fixtures.ts",
@@ -74,7 +74,7 @@
     },
     "aggregate_tests": {
       "path": "packages/core/src/audit-admin/aggregate-policy.test.ts",
-      "sha256": "4766b3fc400db7310d8ed4a2d68ad28a1d1f6872279b5b0cf6a32fc894405db7"
+      "sha256": "66f5ce90f89914888f4f9a4d5bdf598b32f4e8a221fd194163260b12c4767949"
     },
     "integrity_tests": {
       "path": "packages/core/src/audit-admin/audit-integrity.test.ts",
@@ -82,43 +82,43 @@
     },
     "api_tests": {
       "path": "services/api/test/audit-admin-observability.integration.test.ts",
-      "sha256": "299d2ced29060c7a3157a0f5767bc5b6581cd376f1385d43ed1795a411687bdf"
+      "sha256": "3ce8c21a8a8ddb40e9e18d12366a7c7d948c8b03d13741dc881c7a2ab4f4ce5c"
     },
     "worker_tests": {
       "path": "services/worker/src/audit-export.test.ts",
-      "sha256": "9887642065f98f5b464dd8ddf2c079957185c92fd7ff2979a9e3dce81ae457ef"
+      "sha256": "af41152f69c532b2e8aa66fae0692946f53a62e0d613a9e4941662b67fa88ce4"
     },
     "dashboard_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/dashboard/checkpoint.md",
-      "sha256": "7d231275e844c94ec96fa61b451f5cd61ec3cc1bbc9d81b799a7074f561f32db"
+      "sha256": "920560e77c5129662aa0ba8a8700fab6da9da5cb0e26b7f00bcbfa47d546125b"
     },
     "audit_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/audit/checkpoint.md",
-      "sha256": "4a0eb0e7b82101726689eb7c091999a2f8522fe00b8de1921ff3a74f83aa7ef5"
+      "sha256": "ca1a27d493a5c45ac47fd2c4bdd78edccdd573b7075ab9194415fee419c9d72b"
     },
     "health_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/operations/health-checkpoint.md",
-      "sha256": "1f920a0cd99ed4e02a2276db78b01279bc8138a953b2db2d1361ec9ef235fa80"
+      "sha256": "38586846049656ec047dd815ead2f61ab618f62a5acf256ff08383f594b996e1"
     },
     "security_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/security/security-report.md",
-      "sha256": "32cf13a4c82133ae9db2791b1b6600d7111622754896495e55b0226f8febad42"
+      "sha256": "44b7803304b03df1b96c64a643bf734c16a5b74d535b0b8a507672f33a3fd47b"
     },
     "performance_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json",
-      "sha256": "dc672c006d2227d052d8a2033fc01b51aeb536cd7fba31977f1da28a967f58a5"
+      "sha256": "2dce7b11307fc87426b527de7c55df5843840987aa7d3ad1a28ea57a25775fef"
     },
     "restore_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md",
-      "sha256": "0c9b051b8f7077ffc96132b8533c37828295887c9fecef4e769981e03a91296b"
+      "sha256": "7934e05bbd5a0ac5b1fdc312813f33279eb652c25983b346cc4db60934d129c1"
     },
     "ui_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/ui/acceptance.md",
-      "sha256": "cc9ccc1849ffba20e0e40964e25e3a11626b22b7dd2308eb43c95aa0bac108d6"
+      "sha256": "42fa92a72c65079f019b7deb094be6717b921a65d35f1f9898c29745c9ad365b"
     },
     "redaction_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/observability/redaction-report.md",
-      "sha256": "378bdc6eb98f6f7e46f4e78740c0afc3ebf5dde55a8539ed921a36567babdee2"
+      "sha256": "b15b7335dee9c2bd79d40fa3c987dc149038ef681108408d16464994c8034779"
     }
   },
   "acceptance_criteria": {

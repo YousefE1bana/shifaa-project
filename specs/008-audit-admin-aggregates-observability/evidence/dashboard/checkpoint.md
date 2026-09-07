@@ -24,7 +24,7 @@ The `/dashboard` projection covers loading, empty, gated, suppressed, stale, off
 
 ## SHA-256 bindings
 
-- `apps/admin/src/app/dashboard/AdminDashboard.tsx`: `6cf91bad322fdc8cb825424c4694ca2f413714058f4c5f3a249752661fea066b`
-- `apps/admin/test/audit-admin-dashboard.test.ts`: `1de679ff68f600d9a550d18ab6621c0e6e4cb9a99e7497abcabbf2c0ba761238`
-- `tests/e2e/audit-admin-summary.spec.ts`: `75524b85fcc8d966f6493b959438c8b0a7532c6bc5b16ebabb791f72a59c876e`
+- `apps/admin/src/app/dashboard/AdminDashboard.tsx`: `86b013ad7c8a3ccdd9531f88f5713b1f290c4f7ea7046c6ced7b41b7a51b3437`
+- `apps/admin/test/audit-admin-dashboard.test.ts`: `589f7372a00d9af68b59ec3dc1fcd289547af921687648beed91f6bb6a81f035`
+- `tests/e2e/audit-admin-summary.spec.ts`: `db700bcea9860ab2b0ccdd4bfbd02288b6b25d94db1a349e5d52bfaa1c684d9e`
 - `packages/test-kit/src/audit-admin-privacy-fixtures.ts`: `69b215ad881b1be2a666bcc7dc8327cdcbdc08d85a1c98ffcdb60644f1f3b88d`

@@ -25,8 +25,9 @@ Status: PASS with zero prohibited values and zero high-cardinality identifier la
 - `tools/verify-feature-008-evidence.mjs`: `c93c2c53e2ca3c475904664ce0b728a9fb8af9a4caa1428d3ff28eb9b068e662`
 - `packages/observability/src/audit-admin.ts`: `869aa7f27b17e61f80270997bd4208f37667736fa929c3736417dad7b6cc5f09`
 - `packages/observability/src/audit-admin.test.ts`: `c76b3c795960d1b683615a5bcddc179d97ca007c83ac2bf59e721353f67b14d8`
-- `services/api/test/audit-admin-observability.integration.test.ts`: `299d2ced29060c7a3157a0f5767bc5b6581cd376f1385d43ed1795a411687bdf`
-- `apps/admin/src/app/audit/AuditWorkspace.tsx`: `3f77b8e9d63f3f4c0e2e2928424c5632872fe6fd1d55c60f36b7c9cf34b2d29f`
-- `apps/admin/test/audit-workspace.test.ts`: `d460f3013ad8642208adbd1b5b0b300ac05abacb9451b7fa5ac5cc0353eeb747`
-- `services/worker/src/audit-export.test.ts`: `9887642065f98f5b464dd8ddf2c079957185c92fd7ff2979a9e3dce81ae457ef`
-- `packages/core/src/audit-admin/aggregate-policy.test.ts`: `4766b3fc400db7310d8ed4a2d68ad28a1d1f6872279b5b0cf6a32fc894405db7`
+- `services/api/test/audit-admin-observability.integration.test.ts`: `3ce8c21a8a8ddb40e9e18d12366a7c7d948c8b03d13741dc881c7a2ab4f4ce5c`
+- `apps/admin/src/app/AdminAuditSession.tsx`: `1cd28d0c5eb06bd49921e52c3c94cd8ea123741a271eec499990101abdffc294`
+- `apps/admin/src/app/audit/AuditWorkspace.tsx`: `73899d9459292912440faadfcb0acc843e06328d68e1e04e5b017ecda8d4838a`
+- `apps/admin/test/audit-workspace.test.ts`: `25d56e02e13856d9dcadf9701286991b708a56b6e061548e9704b23fc1d0f941`
+- `services/worker/src/audit-export.test.ts`: `af41152f69c532b2e8aa66fae0692946f53a62e0d613a9e4941662b67fa88ce4`
+- `packages/core/src/audit-admin/aggregate-policy.test.ts`: `66f5ce90f89914888f4f9a4d5bdf598b32f4e8a221fd194163260b12c4767949`
