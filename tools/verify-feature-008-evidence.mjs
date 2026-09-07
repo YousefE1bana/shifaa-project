@@ -137,6 +137,9 @@ const privacyFixtures = readRequired(
 const auditFixtures = readRequired(
   path.join(repositoryRoot, 'packages/test-kit/src/audit-admin-fixtures.ts'),
 );
+const performanceEvidence = readRequired(
+  path.join(featureDirectory, 'evidence/performance/load-profile.json'),
+);
 const canonicalPrivacyBytes = privacyPackage.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
 const privacyDigest = sha256(canonicalPrivacyBytes);
 if (
@@ -259,6 +262,7 @@ const reportEvidence = {
 
 for (const story of requestedStories) verifyEvidenceDocument(story, storyEvidence[story]);
 for (const report of requestedReports) verifyEvidenceDocument(report, reportEvidence[report]);
+verifyPerformanceEvidence();
 if (requestedReports.has('privacy')) verifyProhibitedSentinels();
 if (verifyManifest) verifyEvidenceManifest();
 if (verifyRelease) verifyReleaseSignoff();
@@ -326,6 +330,38 @@ function verifyEvidenceManifest() {
     artifacts,
   );
   verifyCriterionMap('requirements', manifest.requirements, requiredRequirements, artifacts);
+}
+
+function verifyPerformanceEvidence() {
+  let performance;
+  try {
+    performance = JSON.parse(performanceEvidence);
+  } catch (error) {
+    failures.push(`Invalid Feature 008 performance evidence JSON: ${error.message}`);
+    return;
+  }
+  if (
+    performance.topology?.warmed_api_database_connections !== 20 ||
+    performance.topology?.warmed_worker_database_connections !== 25 ||
+    performance.warmup?.export_requests !== 25 ||
+    performance.warmup?.export_claims !== 25 ||
+    performance.warmup?.excluded_from_samples !== true
+  )
+    failures.push('Feature 008 performance evidence must prove warmed API and worker pools.');
+  if (
+    performance.thresholds_ms?.read_p95 !== 400 ||
+    performance.thresholds_ms?.mutation_p95 !== 800
+  )
+    failures.push('Feature 008 performance thresholds have drifted.');
+  if (performance.samples?.export_requests !== 25 || performance.samples?.export_claims !== 25)
+    failures.push('Feature 008 performance evidence must retain 25 measured requests and claims.');
+  if (
+    !Number.isFinite(performance.results_ms?.read_p95) ||
+    performance.results_ms.read_p95 > 400 ||
+    !Number.isFinite(performance.results_ms?.mutation_p95) ||
+    performance.results_ms.mutation_p95 > 800
+  )
+    failures.push('Feature 008 performance evidence exceeds its declared thresholds.');
 }
 
 function verifyCriterionMap(label, map, requiredIds, artifacts) {

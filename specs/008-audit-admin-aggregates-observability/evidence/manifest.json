@@ -106,7 +106,7 @@
     },
     "performance_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json",
-      "sha256": "2dce7b11307fc87426b527de7c55df5843840987aa7d3ad1a28ea57a25775fef"
+      "sha256": "d294ac7ac90301462e2f4c11e8fdcc693da8f9d920a20fe502b6125ad06378b5"
     },
     "restore_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md",
@@ -118,7 +118,7 @@
     },
     "redaction_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/observability/redaction-report.md",
-      "sha256": "b15b7335dee9c2bd79d40fa3c987dc149038ef681108408d16464994c8034779"
+      "sha256": "1eb647d8b320db5772d9b1956c0b981020ffa664a6f58289dd6df5ec18abc222"
     }
   },
   "acceptance_criteria": {

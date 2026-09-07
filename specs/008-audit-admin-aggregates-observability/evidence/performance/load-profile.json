@@ -23,9 +23,15 @@
   },
   "topology": {
     "warmed_api_database_connections": 20,
+    "warmed_worker_database_connections": 25,
     "concurrent_export_requests": 25,
     "concurrent_export_workers": 25,
     "external_vendors": 0
+  },
+  "warmup": {
+    "export_requests": 25,
+    "export_claims": 25,
+    "excluded_from_samples": true
   },
   "samples": {
     "audit_reads": 24,
@@ -38,12 +44,12 @@
     "mutation_p95": 800
   },
   "results_ms": {
-    "audit_read_p95": 110.63,
-    "aggregate_read_p95": 1.04,
-    "read_p95": 110.63,
-    "export_request_p95": 151.47,
-    "export_claim_p95": 397.43,
-    "mutation_p95": 397.43
+    "audit_read_p95": 91.61,
+    "aggregate_read_p95": 1.29,
+    "read_p95": 91.61,
+    "export_request_p95": 92.28,
+    "export_claim_p95": 79.82,
+    "mutation_p95": 92.28
   },
   "concurrency": {
     "requested_batches": 25,

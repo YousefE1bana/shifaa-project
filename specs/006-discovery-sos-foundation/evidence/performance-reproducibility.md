@@ -52,3 +52,11 @@ In Diagnosis C, the slowest mutation indices were 85-99, the final connection-po
 4. **Host/runtime reproducibility:** confirmed as a contributor. The original artifact omitted pool warmup and host/container measurement details, allowing scheduler variance to decide a single-shot threshold result.
 
 The checked-in measurement profile now records warmup semantics, requested and observed pool size, Node version, platform, and architecture. Formal cross-device/network performance acceptance remains gated by `OPEN-TECH-003`.
+
+## 2026-09-07 PR #294 pre-merge isolation correction
+
+Feature 008 pre-merge verification exposed a second harness-isolation gap. Full repository verification measured mutation p95 values of 918.85 ms and 1058.75 ms, while immediate reruns of the unchanged gate measured 740.98 ms and 636.15 ms. Recreating only the canonical `db:reset` through Discovery/SOS E2E prefix produced a first-run mutation p95 of 578.43 ms.
+
+State inspection before the narrow reproduction found zero retained audit, outbox, SOS, idempotency, notification, or receipt rows; no leaked test/worker process; no idle API/worker database connection; no lock backlog; and low Docker CPU, host CPU, and disk queue. The database prefix and row cardinality therefore did not reproduce the full-suite failure. The differentiator was transient host scheduling pressure after the broader build/test workload while the benchmark's first mutation and worker operations were still timed, despite the profile claiming process and connection cold start were excluded.
+
+The harness now warms one complete 20-connection mutation wave and 20 worker claims before the unchanged 100-session and 100-worker timed samples. Warmup identities and effects remain synthetic, are explicitly counted in the evidence profile, are excluded from latency samples, and are removed by the existing cleanup transaction. The read p95 400 ms, mutation p95 800 ms, matching p95 2000 ms, and worker p95 800 ms thresholds are unchanged. Three consecutive corrected runs measured mutation p95 values of 532.21 ms, 520.50 ms, and 505.16 ms. No Feature 008 or production application behavior changed.

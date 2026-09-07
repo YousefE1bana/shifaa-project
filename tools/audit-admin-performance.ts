@@ -196,18 +196,27 @@ async function seedAuditEvents(owner: Sql): Promise<void> {
   assert.equal(count, eventCount, 'performance event dataset must be exact');
 }
 
-async function warmApiPool(api: Sql, owner: Sql): Promise<number> {
+async function warmDatabasePool(
+  connection: Sql,
+  owner: Sql,
+  username: 'shifaa_api' | 'shifaa_worker',
+  expectedConnections: number,
+): Promise<number> {
   const warming = Promise.all(
-    Array.from({ length: apiConnectionCount }, () => api`SELECT pg_sleep(0.5)`),
+    Array.from({ length: expectedConnections }, () => connection`SELECT pg_sleep(0.5)`),
   );
   await new Promise((resolve) => setTimeout(resolve, 100));
   const [{ count }] = await owner<{ count: number }[]>`
     SELECT count(*)::int AS count
     FROM pg_catalog.pg_stat_activity
-    WHERE datname=${database} AND usename='shifaa_api'
+    WHERE datname=${database} AND usename=${username}
   `;
   await warming;
-  assert.equal(count, apiConnectionCount, 'all 20 API connections must be warmed');
+  assert.equal(
+    count,
+    expectedConnections,
+    `all ${expectedConnections} ${username} connections must be warmed`,
+  );
   return count;
 }
 
@@ -305,19 +314,24 @@ function measureAggregateReads(): number[] {
   return samples;
 }
 
-async function requestExports(api: Sql): Promise<{ durations: number[]; batchIds: string[] }> {
+async function requestExports(
+  api: Sql,
+  phase: 'warmup' | 'measured',
+): Promise<{ durations: number[]; batchIds: string[] }> {
   const results = await Promise.all(
     Array.from({ length: workerCount }, async (_, index) => {
       const suffix = String(index + 1).padStart(4, '0');
+      const phaseCode = phase === 'warmup' ? '8100' : '8200';
+      const bodyHashPrefix = phase === 'warmup' ? 'b' : 'a';
       const started = performance.now();
       const rows = await withApiContext(
         api,
         (sql) => sql`
         SELECT * FROM audit.request_export_v1(
-          ${`synthetic-performance-export-${suffix}`},${`${'a'.repeat(63)}${index % 10}`},
+          ${`synthetic-performance-${phase}-export-${suffix}`},${`${bodyHashPrefix.repeat(63)}${index % 10}`},
           '2026-05-01'::date,'2026-08-01'::date,
-          ${`81500000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`}::uuid,
-          ${`trace-f008-performance-export-${suffix}`}
+          ${`81500000-0000-4000-${phaseCode}-${String(index + 1).padStart(12, '0')}`}::uuid,
+          ${`trace-f008-performance-${phase}-export-${suffix}`}
         )
       `,
       );
@@ -334,10 +348,13 @@ async function requestExports(api: Sql): Promise<{ durations: number[]; batchIds
   };
 }
 
-async function claimExports(worker: Sql): Promise<{ durations: number[]; batchIds: string[] }> {
+async function claimExports(
+  worker: Sql,
+  phase: 'warmup' | 'measured',
+): Promise<{ durations: number[]; batchIds: string[] }> {
   const results = await Promise.all(
     Array.from({ length: workerCount }, async (_, index) => {
-      const workerId = `worker-f008-performance-${String(index + 1).padStart(2, '0')}`;
+      const workerId = `worker-f008-performance-${phase}-${String(index + 1).padStart(2, '0')}`;
       const started = performance.now();
       const rows = await worker.begin(async (sql) => {
         await sql`
@@ -381,12 +398,30 @@ async function main(): Promise<void> {
     applyMigrations();
     await seedActor(owner);
     await seedAuditEvents(owner);
-    const warmedConnections = await warmApiPool(api, owner);
+    const warmedApiConnections = await warmDatabasePool(
+      api,
+      owner,
+      'shifaa_api',
+      apiConnectionCount,
+    );
+    const warmedWorkerConnections = await warmDatabasePool(
+      worker,
+      owner,
+      'shifaa_worker',
+      workerCount,
+    );
+    const warmupExportRequests = await requestExports(api, 'warmup');
+    const warmupExportClaims = await claimExports(worker, 'warmup');
+    assert.deepEqual(
+      [...new Set(warmupExportClaims.batchIds)].sort(),
+      [...new Set(warmupExportRequests.batchIds)].sort(),
+      'warmup workers must claim the warmup batches exactly once',
+    );
     const auditReadSamples = await measureAuditReads(api);
     const aggregateReadSamples = measureAggregateReads();
-    const exportRequests = await requestExports(api);
+    const exportRequests = await requestExports(api, 'measured');
     assert.equal(new Set(exportRequests.batchIds).size, workerCount);
-    const exportClaims = await claimExports(worker);
+    const exportClaims = await claimExports(worker, 'measured');
     assert.equal(new Set(exportClaims.batchIds).size, workerCount);
     assert.deepEqual(
       [...new Set(exportClaims.batchIds)].sort(),
@@ -403,7 +438,7 @@ async function main(): Promise<void> {
     assert.ok(readP95Ms <= readThresholdMs, `read p95 ${readP95Ms}ms exceeds 400ms`);
     assert.ok(
       mutationP95Ms <= mutationThresholdMs,
-      `mutation p95 ${mutationP95Ms}ms exceeds 800ms`,
+      `mutation p95 ${mutationP95Ms}ms exceeds 800ms (request=${exportRequestP95Ms}ms claim=${exportClaimP95Ms}ms)`,
     );
 
     const evidence = {
@@ -417,10 +452,16 @@ async function main(): Promise<void> {
         runtime_metrics_remain_inactive: true,
       },
       topology: {
-        warmed_api_database_connections: warmedConnections,
+        warmed_api_database_connections: warmedApiConnections,
+        warmed_worker_database_connections: warmedWorkerConnections,
         concurrent_export_requests: workerCount,
         concurrent_export_workers: workerCount,
         external_vendors: 0,
+      },
+      warmup: {
+        export_requests: warmupExportRequests.durations.length,
+        export_claims: warmupExportClaims.durations.length,
+        excluded_from_samples: true,
       },
       samples: {
         audit_reads: auditReadSamples.length,
@@ -458,7 +499,7 @@ async function main(): Promise<void> {
       `${JSON.stringify(evidence, null, 2)}\n`,
     );
     console.log(
-      `audit-admin performance: PASS events=${eventCount} partitions=3 cells=${aggregateCellCount} connections=${warmedConnections} requests=${workerCount} workers=${workerCount} read_p95_ms=${rounded(readP95Ms)} mutation_p95_ms=${rounded(mutationP95Ms)} duplicate_claims=0`,
+      `audit-admin performance: PASS events=${eventCount} partitions=3 cells=${aggregateCellCount} api_connections=${warmedApiConnections} worker_connections=${warmedWorkerConnections} requests=${workerCount} workers=${workerCount} read_p95_ms=${rounded(readP95Ms)} mutation_p95_ms=${rounded(mutationP95Ms)} duplicate_claims=0`,
     );
   } finally {
     await Promise.allSettled([
