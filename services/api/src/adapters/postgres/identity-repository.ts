@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 
 import type { ConsentRecord, Locale, PersonAggregate } from '@shifaa/core';
 import postgres, { type Sql, type TransactionSql } from 'postgres';
@@ -275,8 +275,13 @@ export class PostgresIdentityRepository implements IdentityRepository {
   }
   public async appendAudit(value: AuditOutcome): Promise<void> {
     await this.use(async (sql) => {
-      const digest = createHash('sha256').update(JSON.stringify(value)).digest('hex');
-      await sql`insert into audit.events(event_hash,actor_person_id,action,resource_type,resource_id,outcome,request_id,metadata) values(${digest},${value.actorPersonId ?? null}::uuid,${value.action},${value.resourceType},${value.resourceId ?? null}::uuid,${value.outcome},${value.requestId}::uuid,${sql.json(value.metadata ?? {})})`;
+      if (value.actorPersonId)
+        await sql`select set_config('shifaa.person_id',${value.actorPersonId},true)`;
+      await sql`
+        select platform.append_identity_audit_effect_v1(
+          ${value.requestId}::uuid,${value.action},${value.resourceType},
+          ${value.resourceId ?? null}::uuid,null,${value.outcome}
+        )`;
     });
   }
   public async appendOutbox(value: OutboxOutcome): Promise<void> {

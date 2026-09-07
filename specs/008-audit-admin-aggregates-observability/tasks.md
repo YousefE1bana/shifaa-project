@@ -234,18 +234,18 @@
   - Depends on: `T019`, `T038`, `T042`, `T045`
   - Acceptance evidence: `corepack pnpm test:audit-admin:privacy` exits 0 with zero prohibited value and zero high-cardinality identifier label
 
-- [ ] T051 [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-006, NFR-AVAIL-001, NFR-AVAIL-002, NFR-OBS-001, NFR-QUALITY-001] Run the full AC-01 through AC-10 and SC-001 through SC-008 suite and generate a SHA-bound evidence manifest — `specs/008-audit-admin-aggregates-observability/evidence/manifest.json`
+- [x] T051 [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-006, NFR-AVAIL-001, NFR-AVAIL-002, NFR-OBS-001, NFR-QUALITY-001] Run the full AC-01 through AC-10 and SC-001 through SC-008 suite and generate a SHA-bound evidence manifest — `specs/008-audit-admin-aggregates-observability/evidence/manifest.json`
   - Depends on: `T046`, `T047`, `T048`, `T049`, `T050`
   - Acceptance evidence: `node tools/verify-feature-008-evidence.mjs --all` exits 0 with every acceptance and success criterion mapped to a present digest
 
-- [ ] T052 [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001, NFR-DATA-001, NFR-OBS-001] Update the Feature 008 realization, API/data/UI catalogs, traceability, processing inventory, and audit/export/health/restore incident runbooks without changing the frozen scope — `docs/architecture/SHIFAA-API-Catalog.md`, `docs/architecture/SHIFAA-Data-RLS.md`, `docs/design/SHIFAA-UI-Contract.md`, `docs/traceability/SHIFAA-Traceability-Matrix.md`, `infra/runbooks/audit-admin-observability.md`
+- [x] T052 [FR-ADMIN-002, FR-ADMIN-003, NFR-API-001, NFR-DATA-001, NFR-OBS-001] Update the Feature 008 realization, API/data/UI catalogs, traceability, processing inventory, and audit/export/health/restore incident runbooks without changing the frozen scope — `docs/architecture/SHIFAA-API-Catalog.md`, `docs/architecture/SHIFAA-Data-RLS.md`, `docs/design/SHIFAA-UI-Contract.md`, `docs/traceability/SHIFAA-Traceability-Matrix.md`, `infra/runbooks/audit-admin-observability.md`
   - Depends on: `T051`
   - Acceptance evidence: `corepack pnpm architecture:check` exits 0 and the trace matrix maps only the seven canonical operations and approved Feature 008 requirements
 
-- [ ] T053 [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-007, NFR-PRIV-002, NFR-I18N-001, NFR-A11Y-001, NFR-PERF-002, NFR-AVAIL-001, NFR-AVAIL-002, NFR-DATA-002, NFR-API-001, NFR-API-002, NFR-OBS-001, NFR-QUALITY-001, NFR-PORT-001] Run clean full repository verification, contract regeneration zero-diff, migration reset, and final scope/security-branch audit — `specs/008-audit-admin-aggregates-observability/evidence/final-verification.md`
+- [x] T053 [FR-ADMIN-002, FR-ADMIN-003, NFR-SEC-007, NFR-PRIV-002, NFR-I18N-001, NFR-A11Y-001, NFR-PERF-002, NFR-AVAIL-001, NFR-AVAIL-002, NFR-DATA-002, NFR-API-001, NFR-API-002, NFR-OBS-001, NFR-QUALITY-001, NFR-PORT-001] Run clean full repository verification, contract regeneration zero-diff, migration reset, and final scope/security-branch audit — `specs/008-audit-admin-aggregates-observability/evidence/final-verification.md`
   - Depends on: `T029`, `T046`, `T047`, `T048`, `T049`, `T050`, `T051`, `T052`
   - Acceptance evidence: `corepack pnpm verify` and `git diff --check` exit 0 with exact seven operations metrics empty by default and no security remediation diff
 
-- [ ] T054 [FR-ADMIN-002, FR-ADMIN-003, NFR-PRIV-002, NFR-PRIV-004, NFR-QUALITY-001] Record implementation-stage QA/Product/Security/Data evidence, preserve production and formal-UX blockers, and approve only the supported synthetic rollout/kill-switch state — `specs/008-audit-admin-aggregates-observability/checklists/requirements.md`
+- [x] T054 [FR-ADMIN-002, FR-ADMIN-003, NFR-PRIV-002, NFR-PRIV-004, NFR-QUALITY-001] Record implementation-stage QA/Product/Security/Data evidence, preserve production and formal-UX blockers, and approve only the supported synthetic rollout/kill-switch state — `specs/008-audit-admin-aggregates-observability/checklists/requirements.md`
   - Depends on: `T053`
   - Acceptance evidence: `node tools/verify-feature-008-evidence.mjs --release` exits 0 with no fabricated production WORM legal retention device pixel-identity or UAT approval

@@ -22,7 +22,7 @@ Status: PASS with zero prohibited values and zero high-cardinality identifier la
 
 ## SHA-256 bindings
 
-- `tools/verify-feature-008-evidence.mjs`: `d621069b6b70659a2a7f506924371b8267e0608ca8bfa6072f71d6e499e90ea0`
+- `tools/verify-feature-008-evidence.mjs`: `c93c2c53e2ca3c475904664ce0b728a9fb8af9a4caa1428d3ff28eb9b068e662`
 - `packages/observability/src/audit-admin.ts`: `869aa7f27b17e61f80270997bd4208f37667736fa929c3736417dad7b6cc5f09`
 - `packages/observability/src/audit-admin.test.ts`: `c76b3c795960d1b683615a5bcddc179d97ca007c83ac2bf59e721353f67b14d8`
 - `services/api/test/audit-admin-observability.integration.test.ts`: `299d2ced29060c7a3157a0f5767bc5b6581cd376f1385d43ed1795a411687bdf`

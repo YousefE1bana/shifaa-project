@@ -118,10 +118,11 @@ export class PostgresFamilyCareService {
         ? (actor.purpose ?? 'self_care')
         : relationship.purpose_code;
     await sql`insert into identity.relationship_authorization_uses(relationship_id,subject_patient_id,actor_person_id,permission_code,purpose_code,outcome,relationship_version,request_id) values(${relationship.id}::uuid,${patientId}::uuid,${actor.personId}::uuid,${permission},${purpose},'allowed',${relationship.version},${actor.requestId})`;
-    const digest = createHash('sha256')
-      .update(`${relationship.id}:${relationship.version}:${permission}:${actor.requestId}`)
-      .digest('hex');
-    await sql`insert into audit.events(event_hash,actor_person_id,patient_id,action,resource_type,resource_id,outcome,request_id,metadata) values(${digest},${actor.personId}::uuid,${patientId}::uuid,${`relationship.${relationship.relationship_type}.used`},'family-care',${relationship.id}::uuid,'success',${actor.requestId}::uuid,${sql.json({ permission_code: permission, purpose_code: purpose, relationship_version: relationship.version })})`;
+    await sql`
+      select platform.append_family_authorization_audit_v1(
+        ${actor.requestId}::uuid,${`relationship.${relationship.relationship_type}.used`},
+        ${patientId}::uuid,${relationship.id}::uuid,${relationship.version}
+      )`;
   }
 
   private async hydrate(

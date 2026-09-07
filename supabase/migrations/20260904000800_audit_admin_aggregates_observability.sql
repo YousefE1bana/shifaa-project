@@ -164,6 +164,7 @@ BEGIN
       DATE '2026-05-01',
       DATE '2026-06-01',
       DATE '2026-07-01',
+      DATE '2026-08-01',
       pg_catalog.date_trunc('month', pg_catalog.statement_timestamp() AT TIME ZONE 'UTC')::date,
       (pg_catalog.date_trunc('month', pg_catalog.statement_timestamp() AT TIME ZONE 'UTC') + INTERVAL '1 month')::date
     ]) AS candidate(month_start)
@@ -566,6 +567,349 @@ BEGIN
   RETURNING inserted.id INTO event_id_value;
 
   RETURN QUERY SELECT event_id_value,occurred_at_value,event_hash_value;
+END
+$function$;
+
+-- Preserve the existing public emergency-share operation after replacing the
+-- empty legacy audit table. Its audit writes now enter the canonical chain and
+-- deliberately omit the former free-form metadata payload.
+CREATE OR REPLACE FUNCTION platform.consume_emergency_share(
+  p_token_digest bytea,p_request_id uuid
+) RETURNS TABLE(
+  outcome text,denial_code text,share_id uuid,incident_id uuid,expires_at timestamptz,
+  scope_fields text[],blood_group text,unavailable_fields text[]
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+DECLARE
+  link platform.emergency_share_links;
+  incident platform.sos_incidents;
+  patient_blood text;
+  available text[] := ARRAY[]::text[];
+  unavailable text[];
+BEGIN
+  IF platform.context_environment() NOT IN ('local','ci')
+     OR NOT platform.feature_enabled('sos.share',platform.context_environment()) THEN
+    PERFORM audit.append_event_v1(
+      p_request_id,p_request_id::text,'sos.share.view','emergency-share','denied',
+      p_reason_code => 'share-disabled',p_user_agent_class => 'web'
+    );
+    RETURN QUERY SELECT 'denied'::text,'emergency-share-expired'::text,NULL::uuid,NULL::uuid,NULL::timestamptz,NULL::text[],NULL::text,NULL::text[];
+    RETURN;
+  END IF;
+  IF pg_catalog.octet_length(p_token_digest) = 32 THEN
+    SELECT * INTO link
+    FROM platform.emergency_share_links AS candidate
+    WHERE candidate.token_digest = p_token_digest
+    FOR UPDATE;
+  END IF;
+  IF link.id IS NULL OR link.used_at IS NOT NULL OR link.revoked_at IS NOT NULL
+     OR link.expires_at <= pg_catalog.statement_timestamp() THEN
+    PERFORM audit.append_event_v1(
+      p_request_id,p_request_id::text,'sos.share.view','emergency-share','denied',
+      p_reason_code => 'emergency-share-expired',p_user_agent_class => 'web'
+    );
+    RETURN QUERY SELECT 'denied'::text,'emergency-share-expired'::text,NULL::uuid,NULL::uuid,NULL::timestamptz,NULL::text[],NULL::text,NULL::text[];
+    RETURN;
+  END IF;
+  SELECT * INTO incident
+  FROM platform.sos_incidents AS candidate
+  WHERE candidate.id = link.incident_id;
+  IF incident.id IS NULL OR incident.status = 'closed' THEN
+    PERFORM audit.append_event_v1(
+      p_request_id,p_request_id::text,'sos.share.view','emergency-share','denied',
+      p_patient_id => incident.patient_id,p_resource_id => link.id,
+      p_reason_code => 'incident-closed',p_user_agent_class => 'web'
+    );
+    RETURN QUERY SELECT 'denied'::text,'emergency-share-expired'::text,NULL::uuid,NULL::uuid,NULL::timestamptz,NULL::text[],NULL::text,NULL::text[];
+    RETURN;
+  END IF;
+  SELECT patient.blood_group INTO patient_blood
+  FROM identity.patients AS patient
+  WHERE patient.id = incident.patient_id;
+  IF 'blood_group' = ANY(link.scope_fields) AND patient_blood IS NOT NULL THEN
+    available := ARRAY['blood_group'];
+  END IF;
+  SELECT ARRAY(
+    SELECT field
+    FROM pg_catalog.unnest(link.scope_fields) AS field
+    WHERE NOT field = ANY(available)
+    ORDER BY field
+  ) INTO unavailable;
+  UPDATE platform.emergency_share_links
+  SET access_count = 1,used_at = pg_catalog.statement_timestamp()
+  WHERE id = link.id;
+  PERFORM audit.append_event_v1(
+    p_request_id,p_request_id::text,'sos.share.view','emergency-share','success',
+    p_patient_id => incident.patient_id,p_resource_id => link.id,
+    p_user_agent_class => 'web'
+  );
+  RETURN QUERY SELECT
+    'success'::text,NULL::text,link.id,link.incident_id,link.expires_at,link.scope_fields,
+    CASE WHEN 'blood_group' = ANY(available) THEN patient_blood ELSE NULL END,unavailable;
+END
+$function$;
+
+-- Feature 006 mutations previously wrote the legacy audit shape directly.
+-- Keep those already-approved operations compatible without granting the API
+-- either direct audit-table access or the generic canonical append primitive.
+CREATE OR REPLACE FUNCTION platform.append_discovery_sos_effect_v1(
+  p_request_id uuid,
+  p_action_code text,
+  p_resource_id uuid,
+  p_resource_version integer,
+  p_facility_id uuid DEFAULT NULL
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+DECLARE
+  actor_person_id_value uuid := platform.context_person_id();
+  patient_id_value uuid;
+  matched_facility_id_value uuid;
+  incident_status_value text;
+BEGIN
+  IF SESSION_USER <> 'shifaa_api'
+     OR actor_person_id_value IS NULL
+     OR p_request_id IS NULL
+     OR p_resource_id IS NULL
+     OR p_resource_version IS NULL
+     OR p_resource_version < 1 THEN
+    RAISE EXCEPTION 'F008_DISCOVERY_SOS_AUDIT_CONTEXT_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  IF p_action_code IN (
+    'sos.incident.created','sos.incident.accepted','sos.incident.closed'
+  ) THEN
+    SELECT incident.patient_id,incident.matched_facility_id,incident.status
+    INTO patient_id_value,matched_facility_id_value,incident_status_value
+    FROM platform.sos_incidents AS incident
+    WHERE incident.id = p_resource_id
+      AND incident.version = p_resource_version;
+  ELSIF p_action_code IN ('sos.share.created','sos.share.revoked') THEN
+    SELECT incident.patient_id,incident.matched_facility_id,incident.status
+    INTO patient_id_value,matched_facility_id_value,incident_status_value
+    FROM platform.emergency_share_links AS share
+    JOIN platform.sos_incidents AS incident ON incident.id = share.incident_id
+    WHERE share.id = p_resource_id
+      AND share.version = p_resource_version
+      AND (
+        (p_action_code = 'sos.share.created' AND share.revoked_at IS NULL)
+        OR (p_action_code = 'sos.share.revoked' AND share.revoked_at IS NOT NULL)
+      );
+  ELSE
+    RAISE EXCEPTION 'F008_DISCOVERY_SOS_AUDIT_ACTION_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  IF patient_id_value IS NULL
+     OR (p_facility_id IS NOT NULL AND p_facility_id IS DISTINCT FROM matched_facility_id_value)
+     OR (p_action_code = 'sos.incident.accepted' AND incident_status_value <> 'accepted')
+     OR (p_action_code = 'sos.incident.closed' AND incident_status_value <> 'closed')
+     OR (
+       p_action_code = 'sos.incident.created'
+       AND (
+         patient_id_value IS DISTINCT FROM platform.context_patient_id()
+         OR NOT platform.person_can_activate_sos(patient_id_value,actor_person_id_value)
+       )
+     )
+     OR (
+       p_action_code IN ('sos.share.created','sos.share.revoked')
+       AND (
+         patient_id_value IS DISTINCT FROM platform.context_patient_id()
+         OR NOT platform.person_can_share_sos(patient_id_value,actor_person_id_value)
+       )
+     )
+     OR (
+       p_action_code = 'sos.incident.accepted'
+       AND NOT platform.hospital_member_authorized(
+         matched_facility_id_value,actor_person_id_value,true
+       )
+     )
+     OR (
+       p_action_code = 'sos.incident.closed'
+       AND NOT (
+         (
+           patient_id_value = platform.context_patient_id()
+           AND platform.person_can_activate_sos(patient_id_value,actor_person_id_value)
+         )
+         OR platform.hospital_member_authorized(
+           matched_facility_id_value,actor_person_id_value,true
+         )
+       )
+     ) THEN
+    RAISE EXCEPTION 'F008_DISCOVERY_SOS_AUDIT_RESOURCE_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  INSERT INTO platform.outbox_events(
+    aggregate_type,aggregate_id,aggregate_version,event_type,payload
+  ) VALUES (
+    'discovery-sos',p_resource_id,p_resource_version,p_action_code,
+    pg_catalog.jsonb_build_object(
+      'request_id',p_request_id,
+      'resource_id',p_resource_id
+    )
+  );
+
+  -- Keep the globally serialized chain append as the final database effect in
+  -- this function so unrelated outbox work never extends the chain lock.
+  PERFORM audit.append_event_v1(
+    p_request_id,
+    p_request_id::text,
+    p_action_code,
+    'discovery-sos',
+    'success',
+    p_actor_person_id => actor_person_id_value,
+    p_authentication_aal => platform.context_aal()::smallint,
+    p_facility_id => p_facility_id,
+    p_patient_id => patient_id_value,
+    p_purpose_code => (platform.context_purposes())[1],
+    p_resource_id => p_resource_id,
+    p_resource_version => p_resource_version,
+    p_user_agent_class => 'web'
+  );
+END
+$function$;
+
+-- Features 001 and 007 previously wrote the legacy audit shape directly.
+-- Preserve only their approved identity actions through a narrow boundary;
+-- callers never receive direct table access or the generic append primitive.
+CREATE OR REPLACE FUNCTION platform.append_identity_audit_effect_v1(
+  p_request_id uuid,
+  p_action_code text,
+  p_resource_type text,
+  p_resource_id uuid DEFAULT NULL,
+  p_resource_version integer DEFAULT NULL,
+  p_outcome text DEFAULT 'allowed'
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+DECLARE
+  actor_person_id_value uuid := platform.context_person_id();
+  canonical_outcome_value text;
+BEGIN
+  IF SESSION_USER <> 'shifaa_api'
+     OR actor_person_id_value IS NULL
+     OR p_request_id IS NULL
+     OR p_action_code IS NULL
+     OR p_resource_type IS NULL THEN
+    RAISE EXCEPTION 'F008_IDENTITY_AUDIT_CONTEXT_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  IF NOT (
+    (p_action_code = 'identity.registration.created' AND p_resource_type = 'person' AND p_resource_id IS NOT NULL)
+    OR (p_action_code = 'auth.otp.verified' AND p_resource_type = 'session' AND p_resource_id IS NULL)
+    OR (p_action_code = 'identity.profile.updated' AND p_resource_type = 'person' AND p_resource_id IS NOT NULL)
+    OR (p_action_code IN ('identity.proof.created','identity.review.decided','identity.provider.callback') AND p_resource_type = 'verification_case' AND p_resource_id IS NOT NULL)
+    OR (p_action_code IN ('consent.decision.recorded','consent.withdrawn') AND p_resource_type = 'consent' AND p_resource_id IS NOT NULL)
+    OR (p_action_code IN ('identity.session.refreshed','identity.session.logged_out','identity.factor.enrollment_started','identity.factor.verified') AND p_resource_type = 'native-session' AND p_resource_id IS NULL)
+    OR (p_action_code = 'identity.factor.removed' AND p_resource_type = 'native-factor' AND p_resource_id IS NULL)
+    OR (p_action_code IN ('identity.recovery.enrollment_completed','identity.recovery.completed','identity.transition.submitted','identity.transition.decided') AND p_resource_type = 'continuity-case' AND p_resource_id IS NOT NULL)
+  ) THEN
+    RAISE EXCEPTION 'F008_IDENTITY_AUDIT_ACTION_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  canonical_outcome_value := CASE p_outcome
+    WHEN 'allowed' THEN 'success'
+    WHEN 'succeeded' THEN 'success'
+    WHEN 'denied' THEN 'denied'
+    WHEN 'failed' THEN 'failed'
+    ELSE NULL
+  END;
+  IF canonical_outcome_value IS NULL THEN
+    RAISE EXCEPTION 'F008_IDENTITY_AUDIT_OUTCOME_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  PERFORM audit.append_event_v1(
+    p_request_id,p_request_id::text,p_action_code,p_resource_type,canonical_outcome_value,
+    p_actor_person_id => actor_person_id_value,
+    p_authentication_aal => CASE
+      WHEN platform.context_aal() = 0 THEN NULL
+      ELSE platform.context_aal()::smallint
+    END,
+    p_resource_id => p_resource_id,
+    p_resource_version => p_resource_version,
+    p_user_agent_class => 'web'
+  );
+END
+$function$;
+
+-- Feature 004 dependent-transition reads record an authorization use after
+-- inserting the immutable relationship-use row. Validate that exact effect
+-- before appending it to the canonical chain.
+CREATE OR REPLACE FUNCTION platform.append_family_authorization_audit_v1(
+  p_request_id uuid,
+  p_action_code text,
+  p_patient_id uuid,
+  p_relationship_id uuid,
+  p_relationship_version integer
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = pg_catalog
+AS $function$
+DECLARE
+  actor_person_id_value uuid := platform.context_person_id();
+  purpose_code_value text;
+BEGIN
+  IF SESSION_USER <> 'shifaa_api'
+     OR actor_person_id_value IS NULL
+     OR p_request_id IS NULL
+     OR p_patient_id IS NULL
+     OR p_relationship_id IS NULL
+     OR p_relationship_version IS NULL
+     OR p_relationship_version < 1
+     OR p_action_code NOT IN (
+       'relationship.self.used','relationship.guardianship.used','relationship.delegation.used'
+     ) THEN
+    RAISE EXCEPTION 'F008_FAMILY_AUDIT_CONTEXT_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  SELECT authorization_use.purpose_code
+  INTO purpose_code_value
+  FROM identity.relationship_authorization_uses AS authorization_use
+  JOIN identity.care_relationships AS relationship
+    ON relationship.id = authorization_use.relationship_id
+  WHERE authorization_use.request_id = p_request_id::text
+    AND authorization_use.relationship_id = p_relationship_id
+    AND authorization_use.subject_patient_id = p_patient_id
+    AND authorization_use.actor_person_id = actor_person_id_value
+    AND authorization_use.relationship_version = p_relationship_version
+    AND authorization_use.outcome = 'allowed'
+    AND p_action_code = 'relationship.' || relationship.relationship_type || '.used';
+
+  IF purpose_code_value IS NULL THEN
+    RAISE EXCEPTION 'F008_FAMILY_AUDIT_RESOURCE_DENIED'
+      USING ERRCODE = '42501';
+  END IF;
+
+  PERFORM audit.append_event_v1(
+    p_request_id,p_request_id::text,p_action_code,'family-care','success',
+    p_actor_person_id => actor_person_id_value,
+    p_authentication_aal => CASE
+      WHEN platform.context_aal() = 0 THEN NULL
+      ELSE platform.context_aal()::smallint
+    END,
+    p_patient_id => p_patient_id,
+    p_purpose_code => purpose_code_value,
+    p_resource_id => p_relationship_id,
+    p_resource_version => p_relationship_version,
+    p_user_agent_class => 'web'
+  );
 END
 $function$;
 
@@ -1574,6 +1918,9 @@ GRANT EXECUTE ON FUNCTION audit.readiness_v1() TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.exact_export_worker_context_v1(text) TO shifaa_worker;
 GRANT EXECUTE ON FUNCTION audit.worker_claims_export_v1(uuid) TO shifaa_worker;
 GRANT EXECUTE ON FUNCTION audit.request_export_v1(text,text,date,date,uuid,text) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION platform.append_discovery_sos_effect_v1(uuid,text,uuid,integer,uuid) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer) TO shifaa_api;
 GRANT EXECUTE ON FUNCTION audit.claim_export_v1(text,integer) TO shifaa_worker;
 GRANT EXECUTE ON FUNCTION audit.complete_export_v1(uuid,text,text,bytea,jsonb,text,timestamptz) TO shifaa_worker;
 
@@ -1604,5 +1951,8 @@ REVOKE ALL ON FUNCTION audit.append_event_v1(
   uuid,text,text,text,text,uuid,uuid,smallint,uuid,uuid,text,uuid,integer,text,inet,text
 ) FROM PUBLIC;
 REVOKE ALL ON FUNCTION audit.verify_event_chain_v1(date) FROM PUBLIC;
+REVOKE ALL ON FUNCTION platform.append_discovery_sos_effect_v1(uuid,text,uuid,integer,uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer) FROM PUBLIC;
 
 COMMIT;

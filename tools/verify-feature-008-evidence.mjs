@@ -27,6 +27,58 @@ const requiredFailureClasses = [
   'rate-limited',
   'service-unavailable',
 ];
+const requiredAcceptanceCriteria = Array.from(
+  { length: 10 },
+  (_, index) => `AC-${String(index + 1).padStart(2, '0')}`,
+);
+const requiredSuccessCriteria = Array.from(
+  { length: 8 },
+  (_, index) => `SC-${String(index + 1).padStart(3, '0')}`,
+);
+const requiredRequirements = [
+  'FR-ADMIN-002',
+  'FR-ADMIN-003',
+  'NFR-SEC-001',
+  'NFR-SEC-002',
+  'NFR-SEC-004',
+  'NFR-SEC-005',
+  'NFR-SEC-006',
+  'NFR-SEC-007',
+  'NFR-PRIV-002',
+  'NFR-PRIV-004',
+  'NFR-I18N-001',
+  'NFR-A11Y-001',
+  'NFR-PERF-002',
+  'NFR-AVAIL-001',
+  'NFR-AVAIL-002',
+  'NFR-DATA-001',
+  'NFR-DATA-002',
+  'NFR-API-001',
+  'NFR-API-002',
+  'NFR-OBS-001',
+  'NFR-QUALITY-001',
+  'NFR-PORT-001',
+];
+const canonicalOperations = [
+  'getAdminSummary',
+  'listAuditEvents',
+  'getAuditEvent',
+  'createAuditExport',
+  'exportAuditPartition',
+  'healthLive',
+  'healthReady',
+];
+const retainedProductionGates = [
+  'OPEN-LEGAL-001',
+  'OPEN-LEGAL-002',
+  'OPEN-LEGAL-007',
+  'OPEN-TECH-001',
+  'OPEN-TECH-002',
+  'OPEN-TECH-003',
+  'OPEN-UX-001',
+  'OPEN-UX-002',
+  'OPEN-PRODUCT-001',
+];
 const failures = [];
 
 function readRequired(absolutePath) {
@@ -46,9 +98,18 @@ function sha256(text) {
 const requestedModes = process.argv.slice(2).filter((argument) => argument !== '--');
 const requestedStories = new Set();
 const requestedReports = new Set();
+let verifyManifest = false;
+let verifyRelease = false;
 for (let index = 0; index < requestedModes.length; index += 1) {
   const argument = requestedModes[index];
   if (argument === '--fixtures') continue;
+  if (argument === '--all' || argument === '--release') {
+    verifyManifest = true;
+    verifyRelease ||= argument === '--release';
+    for (const story of ['US1', 'US2', 'US3', 'US4']) requestedStories.add(story);
+    for (const report of ['security', 'ui', 'privacy']) requestedReports.add(report);
+    continue;
+  }
   if (['--security', '--ui', '--privacy'].includes(argument)) {
     requestedReports.add(argument.slice(2));
     continue;
@@ -199,6 +260,114 @@ const reportEvidence = {
 for (const story of requestedStories) verifyEvidenceDocument(story, storyEvidence[story]);
 for (const report of requestedReports) verifyEvidenceDocument(report, reportEvidence[report]);
 if (requestedReports.has('privacy')) verifyProhibitedSentinels();
+if (verifyManifest) verifyEvidenceManifest();
+if (verifyRelease) verifyReleaseSignoff();
+
+function verifyEvidenceManifest() {
+  const manifestPath = path.join(featureDirectory, 'evidence/manifest.json');
+  const manifestText = readRequired(manifestPath);
+  let manifest;
+  try {
+    manifest = JSON.parse(manifestText);
+  } catch (error) {
+    failures.push(`Invalid Feature 008 evidence manifest JSON: ${error.message}`);
+    return;
+  }
+
+  if (manifest.feature !== '008-audit-admin-aggregates-observability')
+    failures.push('Evidence manifest feature identifier is invalid.');
+  if (manifest.evidence_class !== 'synthetic_graduation_engineering')
+    failures.push('Evidence manifest must remain synthetic graduation engineering evidence.');
+  if (manifest.production_approved !== false)
+    failures.push('Evidence manifest must not claim production approval.');
+  if (!/^[a-f0-9]{40}$/.test(manifest.implementation_baseline_commit ?? ''))
+    failures.push('Evidence manifest must bind the implementation baseline commit.');
+  if (JSON.stringify(manifest.operations) !== JSON.stringify(canonicalOperations))
+    failures.push('Evidence manifest must contain the exact seven canonical operations in order.');
+  if (JSON.stringify(manifest.aggregate_policy?.metrics) !== '[]')
+    failures.push('Evidence manifest must keep aggregate metrics inactive.');
+  if (manifest.aggregate_policy?.minimum_cell_threshold !== 11)
+    failures.push('Evidence manifest must retain the approved k=11 threshold.');
+  if (JSON.stringify(manifest.retained_gates) !== JSON.stringify(retainedProductionGates))
+    failures.push('Evidence manifest must preserve every production/legal/UX gate.');
+
+  const artifacts = manifest.artifacts ?? {};
+  for (const [artifactId, artifact] of Object.entries(artifacts)) {
+    const relativePath = artifact?.path;
+    const expectedDigest = artifact?.sha256;
+    if (typeof relativePath !== 'string' || !/^[a-f0-9]{64}$/.test(expectedDigest ?? '')) {
+      failures.push(`Evidence manifest artifact is malformed: ${artifactId}.`);
+      continue;
+    }
+    const artifactPath = path.resolve(repositoryRoot, relativePath);
+    if (!artifactPath.startsWith(`${repositoryRoot}${path.sep}`)) {
+      failures.push(`Evidence manifest path escapes the repository: ${relativePath}.`);
+      continue;
+    }
+    if (!fs.existsSync(artifactPath)) {
+      failures.push(`Evidence manifest artifact is missing: ${relativePath}.`);
+      continue;
+    }
+    const actualDigest = createHash('sha256').update(fs.readFileSync(artifactPath)).digest('hex');
+    if (actualDigest !== expectedDigest)
+      failures.push(`Evidence manifest digest mismatch: ${relativePath}.`);
+  }
+
+  verifyCriterionMap(
+    'acceptance criteria',
+    manifest.acceptance_criteria,
+    requiredAcceptanceCriteria,
+    artifacts,
+  );
+  verifyCriterionMap(
+    'success criteria',
+    manifest.success_criteria,
+    requiredSuccessCriteria,
+    artifacts,
+  );
+  verifyCriterionMap('requirements', manifest.requirements, requiredRequirements, artifacts);
+}
+
+function verifyCriterionMap(label, map, requiredIds, artifacts) {
+  const actualIds = Object.keys(map ?? {}).sort();
+  const expectedIds = [...requiredIds].sort();
+  if (JSON.stringify(actualIds) !== JSON.stringify(expectedIds)) {
+    failures.push(`Evidence manifest ${label} coverage is incomplete or contains drift.`);
+    return;
+  }
+  for (const [criterion, artifactIds] of Object.entries(map)) {
+    if (!Array.isArray(artifactIds) || artifactIds.length === 0) {
+      failures.push(`Evidence manifest ${criterion} has no artifact binding.`);
+      continue;
+    }
+    for (const artifactId of artifactIds)
+      if (!Object.hasOwn(artifacts, artifactId))
+        failures.push(`Evidence manifest ${criterion} references unknown artifact: ${artifactId}.`);
+  }
+}
+
+function verifyReleaseSignoff() {
+  const tasks = readRequired(path.join(featureDirectory, 'tasks.md'));
+  const requirements = readRequired(path.join(featureDirectory, 'checklists/requirements.md'));
+  const checkedTasks = new Set(
+    [...tasks.matchAll(/^- \[x\] (T\d{3})\b/gm)].map((match) => match[1]),
+  );
+  for (let index = 1; index <= 54; index += 1) {
+    const taskId = `T${String(index).padStart(3, '0')}`;
+    if (!checkedTasks.has(taskId))
+      failures.push(`Release signoff is missing completed task: ${taskId}.`);
+  }
+  for (const marker of [
+    'IMPLEMENTATION_STAGE_APPROVED — synthetic graduation engineering only',
+    'Production approval: NOT GRANTED',
+    'Exactly seven Feature 008 operations: VERIFIED',
+    'Aggregate metrics: INACTIVE (`metrics: []`)',
+    'security/sec-001-002-remediation: UNCHANGED',
+    ...retainedProductionGates,
+  ])
+    if (!requirements.includes(marker))
+      failures.push(`Release signoff marker is missing: ${marker}.`);
+}
 
 function verifyProhibitedSentinels() {
   const sentinels = [...auditFixtures.matchAll(/'((?:SYNTHETIC-008-)[A-Z0-9-]+)'/g)].map(
@@ -274,5 +443,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Feature 008 evidence verified: privacy_vectors=34, authorization_scenarios=18, failure_classes=${requiredFailureClasses.length}, stories=${requestedStories.size === 0 ? 'fixtures' : [...requestedStories].sort().join(',')}, reports=${requestedReports.size === 0 ? 'none' : [...requestedReports].sort().join(',')}, policy_sha256=${privacyDigest}, fixture_sha256=${sha256(privacyFixtures + auditFixtures)}.`,
+  `Feature 008 evidence verified: privacy_vectors=34, authorization_scenarios=18, failure_classes=${requiredFailureClasses.length}, stories=${requestedStories.size === 0 ? 'fixtures' : [...requestedStories].sort().join(',')}, reports=${requestedReports.size === 0 ? 'none' : [...requestedReports].sort().join(',')}, manifest=${verifyManifest ? 'verified' : 'not-requested'}, release=${verifyRelease ? 'verified' : 'not-requested'}, policy_sha256=${privacyDigest}, fixture_sha256=${sha256(privacyFixtures + auditFixtures)}.`,
 );

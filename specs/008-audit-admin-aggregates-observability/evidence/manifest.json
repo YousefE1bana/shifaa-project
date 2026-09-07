@@ -1,0 +1,176 @@
+{
+  "version": "1.0.0",
+  "feature": "008-audit-admin-aggregates-observability",
+  "evidence_class": "synthetic_graduation_engineering",
+  "production_approved": false,
+  "implementation_baseline_commit": "fdf6140b379b6e0423ac76f273b58c331ba77b09",
+  "operations": [
+    "getAdminSummary",
+    "listAuditEvents",
+    "getAuditEvent",
+    "createAuditExport",
+    "exportAuditPartition",
+    "healthLive",
+    "healthReady"
+  ],
+  "aggregate_policy": {
+    "metrics": [],
+    "minimum_cell_threshold": 11,
+    "suppressed_distinct_subject_range": [0, 10],
+    "individual_metric_mappings": "fail_closed_pending_approved_configuration"
+  },
+  "retained_gates": [
+    "OPEN-LEGAL-001",
+    "OPEN-LEGAL-002",
+    "OPEN-LEGAL-007",
+    "OPEN-TECH-001",
+    "OPEN-TECH-002",
+    "OPEN-TECH-003",
+    "OPEN-UX-001",
+    "OPEN-UX-002",
+    "OPEN-PRODUCT-001"
+  ],
+  "limitations": [
+    "Synthetic graduation data and local adapters only.",
+    "No production PHI, legal retention, WORM, disaster-recovery, DPO, rollout, pixel-identity, reference-device, or UAT approval is claimed.",
+    "Performance and restore results describe only the recorded local synthetic topology."
+  ],
+  "artifacts": {
+    "privacy_decision": {
+      "path": "specs/008-audit-admin-aggregates-observability/decisions/OPEN-PRIV-001-reidentification-risk-decision-package.md",
+      "sha256": "38855c7319b6bcd06b491bf4213a277303a6d6e2c1ebe7499b65fdfa4ae15039"
+    },
+    "openapi": {
+      "path": "specs/008-audit-admin-aggregates-observability/contracts/openapi.yaml",
+      "sha256": "7922f42093223315a32f709792c6bafd9e53816c04d7f2dd3aacf2de34c1410e"
+    },
+    "contracts": {
+      "path": "packages/contracts/src/audit-admin.ts",
+      "sha256": "5773d332cb44083d17130ad5bb4c7f47c3beae6d412c274b6191231c8f157c3a"
+    },
+    "client": {
+      "path": "packages/api-client/src/audit-admin.ts",
+      "sha256": "b7b68572edde5b3ff1a88b276407dd61575a40c0b52b23ebdabf4b34e5a4d059"
+    },
+    "migration": {
+      "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+      "sha256": "efbf610943261114e1adc2ea84fbb9c247fdf7f10055e2c67fb8d8d96d830d99"
+    },
+    "db_schema": {
+      "path": "infra/db/tests/audit-admin-observability-schema.sql",
+      "sha256": "31ef98472d7cf31f9cf4981848aa5007358f51bf356d3f56a339995bd6b10db5"
+    },
+    "db_rls": {
+      "path": "infra/db/tests/audit-admin-observability-rls.sql",
+      "sha256": "1611f76c8b75cb330876c2eaed3687283ba2a0ac197498c6df15c0013480f0a8"
+    },
+    "privacy_vectors": {
+      "path": "packages/test-kit/src/audit-admin-privacy-fixtures.ts",
+      "sha256": "69b215ad881b1be2a666bcc7dc8327cdcbdc08d85a1c98ffcdb60644f1f3b88d"
+    },
+    "authorization_vectors": {
+      "path": "packages/test-kit/src/audit-admin-fixtures.ts",
+      "sha256": "89a7aaa6c9a00dc355c57f018311fb23500bcb24b35816e2eaf8544adbcb2828"
+    },
+    "aggregate_tests": {
+      "path": "packages/core/src/audit-admin/aggregate-policy.test.ts",
+      "sha256": "4766b3fc400db7310d8ed4a2d68ad28a1d1f6872279b5b0cf6a32fc894405db7"
+    },
+    "integrity_tests": {
+      "path": "packages/core/src/audit-admin/audit-integrity.test.ts",
+      "sha256": "23c81cf9d89978c9c3cf15f88e0f317ead1f42999b94680c9030f05e5e048d7c"
+    },
+    "api_tests": {
+      "path": "services/api/test/audit-admin-observability.integration.test.ts",
+      "sha256": "299d2ced29060c7a3157a0f5767bc5b6581cd376f1385d43ed1795a411687bdf"
+    },
+    "worker_tests": {
+      "path": "services/worker/src/audit-export.test.ts",
+      "sha256": "9887642065f98f5b464dd8ddf2c079957185c92fd7ff2979a9e3dce81ae457ef"
+    },
+    "dashboard_evidence": {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/dashboard/checkpoint.md",
+      "sha256": "7d231275e844c94ec96fa61b451f5cd61ec3cc1bbc9d81b799a7074f561f32db"
+    },
+    "audit_evidence": {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/audit/checkpoint.md",
+      "sha256": "4a0eb0e7b82101726689eb7c091999a2f8522fe00b8de1921ff3a74f83aa7ef5"
+    },
+    "health_evidence": {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/operations/health-checkpoint.md",
+      "sha256": "1f920a0cd99ed4e02a2276db78b01279bc8138a953b2db2d1361ec9ef235fa80"
+    },
+    "security_evidence": {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/security/security-report.md",
+      "sha256": "0f7d825c726a7ea12054fb0b10aff243e28c78a417f95b7e4f8c26bc7edc7d07"
+    },
+    "performance_evidence": {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json",
+      "sha256": "dc672c006d2227d052d8a2033fc01b51aeb536cd7fba31977f1da28a967f58a5"
+    },
+    "restore_evidence": {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md",
+      "sha256": "448ab7d8d279f283bec1966a0d1dd445e51e86ce2f89fdb302d9e169ee1e90e8"
+    },
+    "ui_evidence": {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/ui/acceptance.md",
+      "sha256": "cc9ccc1849ffba20e0e40964e25e3a11626b22b7dd2308eb43c95aa0bac108d6"
+    },
+    "redaction_evidence": {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/observability/redaction-report.md",
+      "sha256": "378bdc6eb98f6f7e46f4e78740c0afc3ebf5dde55a8539ed921a36567babdee2"
+    }
+  },
+  "acceptance_criteria": {
+    "AC-01": ["privacy_decision", "aggregate_tests", "dashboard_evidence"],
+    "AC-02": ["privacy_decision", "privacy_vectors", "aggregate_tests"],
+    "AC-03": ["authorization_vectors", "db_rls", "security_evidence"],
+    "AC-04": ["openapi", "api_tests", "audit_evidence"],
+    "AC-05": ["migration", "db_schema", "audit_evidence"],
+    "AC-06": ["integrity_tests", "db_schema", "restore_evidence"],
+    "AC-07": ["worker_tests", "security_evidence", "audit_evidence"],
+    "AC-08": ["dashboard_evidence", "ui_evidence"],
+    "AC-09": ["api_tests", "health_evidence", "redaction_evidence"],
+    "AC-10": ["performance_evidence", "restore_evidence"]
+  },
+  "success_criteria": {
+    "SC-001": ["privacy_vectors", "aggregate_tests"],
+    "SC-002": ["authorization_vectors", "db_rls", "security_evidence"],
+    "SC-003": ["integrity_tests", "restore_evidence"],
+    "SC-004": ["redaction_evidence", "security_evidence"],
+    "SC-005": ["health_evidence", "api_tests"],
+    "SC-006": ["performance_evidence"],
+    "SC-007": ["restore_evidence"],
+    "SC-008": ["ui_evidence", "dashboard_evidence"]
+  },
+  "requirements": {
+    "FR-ADMIN-002": ["openapi", "audit_evidence", "security_evidence", "worker_tests"],
+    "FR-ADMIN-003": ["privacy_decision", "aggregate_tests", "dashboard_evidence"],
+    "NFR-SEC-001": ["db_rls", "security_evidence"],
+    "NFR-SEC-002": ["restore_evidence"],
+    "NFR-SEC-004": ["authorization_vectors", "security_evidence"],
+    "NFR-SEC-005": ["api_tests", "audit_evidence"],
+    "NFR-SEC-006": ["migration", "integrity_tests", "restore_evidence"],
+    "NFR-SEC-007": ["security_evidence"],
+    "NFR-PRIV-002": ["privacy_decision", "redaction_evidence"],
+    "NFR-PRIV-004": ["migration", "restore_evidence"],
+    "NFR-I18N-001": ["dashboard_evidence", "ui_evidence"],
+    "NFR-A11Y-001": ["ui_evidence"],
+    "NFR-PERF-002": ["performance_evidence"],
+    "NFR-AVAIL-001": ["health_evidence", "restore_evidence"],
+    "NFR-AVAIL-002": ["dashboard_evidence", "ui_evidence"],
+    "NFR-DATA-001": ["migration", "db_schema", "integrity_tests"],
+    "NFR-DATA-002": ["migration", "db_schema", "openapi"],
+    "NFR-API-001": ["openapi", "contracts", "client"],
+    "NFR-API-002": ["openapi", "api_tests"],
+    "NFR-OBS-001": ["health_evidence", "redaction_evidence"],
+    "NFR-QUALITY-001": [
+      "security_evidence",
+      "performance_evidence",
+      "restore_evidence",
+      "ui_evidence",
+      "redaction_evidence"
+    ],
+    "NFR-PORT-001": ["aggregate_tests", "integrity_tests", "worker_tests"]
+  }
+}

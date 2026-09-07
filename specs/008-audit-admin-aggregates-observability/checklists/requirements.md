@@ -41,3 +41,19 @@
 - The frozen baseline explicitly assigns append-only/hash-chain/export proofs to Feature 008 under
   `NFR-SEC-006`. This does not modify or absorb `security/sec-001-002-remediation` and does not create
   an additional SEC-004 scope.
+
+## Implementation-stage signoff
+
+- **IMPLEMENTATION_STAGE_APPROVED — synthetic graduation engineering only**
+- Evidence owner: **Yousef Osama**.
+- QA evidence: **VERIFIED** against the full repository gate, Feature 008 acceptance manifest, database/RLS suites, bilingual UI/accessibility evidence, performance, restore, and redaction evidence.
+- Product scope evidence: **VERIFIED** against `FR-ADMIN-002`, `FR-ADMIN-003`, and the frozen Feature 008 exclusions.
+- Security evidence: **VERIFIED** for the synthetic engineering boundary; FORCE RLS, fixed-search-path functions, exact API/worker grants, AAL2 and purpose enforcement, replay/tamper denial, and direct-table denial remain intact.
+- Data/privacy evidence: **VERIFIED** for k=11, 0–10 suppression, distinct-subject counting, linked-release protections, and fail-closed inactive metrics.
+- Production approval: NOT GRANTED.
+- Exactly seven Feature 008 operations: VERIFIED.
+- Aggregate metrics: INACTIVE (`metrics: []`).
+- security/sec-001-002-remediation: UNCHANGED.
+- Synthetic rollout/kill-switch state: approved only for the local graduation-engineering profile; every aggregate remains off until an individual metric and mapping is separately approved.
+- Retained gates: `OPEN-LEGAL-001`, `OPEN-LEGAL-002`, `OPEN-LEGAL-007`, `OPEN-TECH-001`, `OPEN-TECH-002`, `OPEN-TECH-003`, `OPEN-UX-001`, `OPEN-UX-002`, and `OPEN-PRODUCT-001`.
+- Not approved or claimed: production PHI operation, legal retention, production WORM, production DR, DPO/rollout approval, reference-device/browser pixel identity, audible NVDA acceptance, or formal UAT.

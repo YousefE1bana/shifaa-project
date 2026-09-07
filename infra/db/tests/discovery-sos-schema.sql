@@ -76,10 +76,18 @@ BEGIN
   IF (SELECT blood_group FROM identity.patients WHERE id='61000000-0000-4000-8000-000000000001')<>'O+' THEN
     RAISE EXCEPTION 'synthetic canonical blood group seed missing';
   END IF;
-  IF EXISTS(SELECT 1 FROM platform.feature_flags WHERE environment='production' AND enabled) THEN
+  IF EXISTS(
+    SELECT 1 FROM platform.feature_flags
+    WHERE environment='production' AND enabled
+      AND code IN ('discovery.ui','sos.activation','sos.contact_delivery','sos.prearrival','sos.share')
+  ) THEN
     RAISE EXCEPTION 'a production 006 feature flag is enabled';
   END IF;
-  IF (SELECT count(*) FROM platform.feature_flags WHERE environment IN ('local','ci') AND enabled)<>10 THEN
+  IF (
+    SELECT count(*) FROM platform.feature_flags
+    WHERE environment IN ('local','ci') AND enabled
+      AND code IN ('discovery.ui','sos.activation','sos.contact_delivery','sos.prearrival','sos.share')
+  )<>10 THEN
     RAISE EXCEPTION 'local/CI feature flags are incomplete';
   END IF;
   IF NOT EXISTS(
@@ -116,7 +124,7 @@ BEGIN
     'platform.capacity_count_band','platform.search_discovery_facilities','platform.get_discovery_facility','platform.callback_source_is_verified','platform.create_sos_incident_record',
     'platform.accept_sos_prearrival','platform.close_sos_incident',
     'platform.create_emergency_share_record','platform.revoke_emergency_share',
-    'platform.consume_emergency_share','platform.claim_next_sos_contact_event',
+    'platform.consume_emergency_share','platform.append_discovery_sos_effect_v1','platform.claim_next_sos_contact_event',
     'platform.complete_sos_contact_event','platform.sos_contact_delivery_status',
     'platform.deliver_local_synthetic_message'
   ] LOOP
@@ -131,6 +139,7 @@ BEGIN
       WHEN 'platform.create_emergency_share_record' THEN '(uuid,uuid,bytea,text[],timestamp with time zone)'
       WHEN 'platform.revoke_emergency_share' THEN '(uuid,integer)'
       WHEN 'platform.consume_emergency_share' THEN '(bytea,uuid)'
+      WHEN 'platform.append_discovery_sos_effect_v1' THEN '(uuid,text,uuid,integer,uuid)'
       WHEN 'platform.claim_next_sos_contact_event' THEN '(text,integer)'
       WHEN 'platform.complete_sos_contact_event' THEN '(uuid,text,text,text,timestamp with time zone)'
       WHEN 'platform.deliver_local_synthetic_message' THEN '(text,text,text)'
@@ -248,9 +257,9 @@ BEGIN
     '68100000-0000-4000-8000-000000000001','68100000-0000-4000-8000-000000000002','68100000-0000-4000-8000-000000000003'
   ))<>3 THEN RAISE EXCEPTION 'share success/denial audits did not persist as transaction results'; END IF;
   IF EXISTS(
-    SELECT 1 FROM audit.events
+    SELECT 1 FROM audit.events AS event
     WHERE request_id IN ('68100000-0000-4000-8000-000000000001','68100000-0000-4000-8000-000000000002','68100000-0000-4000-8000-000000000003')
-      AND metadata::text ~* '81818181|token|digest|O\\+'
+      AND (to_jsonb(event)-'event_hash'-'previous_hash')::text ~* '81818181|token|digest|O\\+'
   ) THEN RAISE EXCEPTION 'share audit leaked token/digest/payload'; END IF;
   BEGIN
     PERFORM platform.create_emergency_share_record(

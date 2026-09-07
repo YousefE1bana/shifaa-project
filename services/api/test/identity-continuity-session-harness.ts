@@ -243,9 +243,9 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
 
   const owner = postgres(runtime.DB_URL, { max: 1 });
   const auditRows = await owner`
-    select action,metadata::text metadata
+    select action_code action,resource_type,outcome,authentication_aal
     from audit.events
-    where action in ('identity.session.refreshed','identity.session.logged_out')
+    where action_code in ('identity.session.refreshed','identity.session.logged_out')
     order by occurred_at desc limit 4`;
   const idempotencyRows = await owner`
     select route,idempotency_key,response_body::text response_body

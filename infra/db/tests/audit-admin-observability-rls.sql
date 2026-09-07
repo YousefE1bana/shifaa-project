@@ -81,6 +81,71 @@ BEGIN
     RAISE EXCEPTION 'shifaa_api lacks the one required export-request grant';
   END IF;
 
+  IF NOT pg_catalog.has_function_privilege(
+      'shifaa_api',
+      'platform.append_discovery_sos_effect_v1(uuid,text,uuid,integer,uuid)',
+      'EXECUTE'
+    ) OR NOT pg_catalog.has_function_privilege(
+      'shifaa_api',
+      'platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text)',
+      'EXECUTE'
+    ) OR NOT pg_catalog.has_function_privilege(
+      'shifaa_api',
+      'platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer)',
+      'EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_api',
+      'audit.append_event_v1(uuid,text,text,text,text,uuid,uuid,smallint,uuid,uuid,text,uuid,integer,text,inet,text)',
+      'EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker',
+      'platform.append_discovery_sos_effect_v1(uuid,text,uuid,integer,uuid)',
+      'EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker',
+      'platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text)',
+      'EXECUTE'
+    ) OR pg_catalog.has_function_privilege(
+      'shifaa_worker',
+      'platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer)',
+      'EXECUTE'
+    ) THEN
+    RAISE EXCEPTION 'scoped pre-008 audit grant separation failed';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_catalog.pg_proc AS procedure
+    WHERE procedure.oid = pg_catalog.to_regprocedure(
+      'platform.append_discovery_sos_effect_v1(uuid,text,uuid,integer,uuid)'
+    )
+      AND procedure.proconfig @> ARRAY['search_path=pg_catalog']
+  ) THEN
+    RAISE EXCEPTION 'scoped Discovery/SOS audit boundary search_path is not fixed';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_catalog.pg_proc AS procedure
+    WHERE procedure.oid = pg_catalog.to_regprocedure(
+      'platform.append_identity_audit_effect_v1(uuid,text,text,uuid,integer,text)'
+    )
+      AND procedure.proconfig @> ARRAY['search_path=pg_catalog']
+  ) THEN
+    RAISE EXCEPTION 'scoped identity audit boundary search_path is not fixed';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_catalog.pg_proc AS procedure
+    WHERE procedure.oid = pg_catalog.to_regprocedure(
+      'platform.append_family_authorization_audit_v1(uuid,text,uuid,uuid,integer)'
+    )
+      AND procedure.proconfig @> ARRAY['search_path=pg_catalog']
+  ) THEN
+    RAISE EXCEPTION 'scoped family authorization audit boundary search_path is not fixed';
+  END IF;
+
   IF NOT pg_catalog.has_function_privilege('shifaa_api','audit.read_event_v1(uuid)','EXECUTE')
      OR NOT pg_catalog.has_function_privilege(
        'shifaa_api',

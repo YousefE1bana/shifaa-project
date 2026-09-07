@@ -242,9 +242,10 @@ async function main() {
         (select count(*)::int from platform.outbox_events
          where aggregate_id = any(${incidentIds}::uuid[])
            and payload::text ~* 'token|diagnos|medicat|lab|admission|record_link|SYNTHETIC-QUERY-COORDINATE') outbox,
-        (select count(*)::int from audit.events
+        (select count(*)::int from audit.events as event
          where resource_id = any(${incidentIds}::uuid[])
-           and metadata::text ~* 'token|diagnos|medicat|coordinates|SYNTHETIC-QUERY-COORDINATE') audit_leaks
+           and (to_jsonb(event)-'previous_hash'-'event_hash')::text
+             ~* 'token|diagnos|medicat|coordinates|SYNTHETIC-QUERY-COORDINATE') audit_leaks
     `;
     assert.deepEqual(leaks, {
       idempotency: 0,
