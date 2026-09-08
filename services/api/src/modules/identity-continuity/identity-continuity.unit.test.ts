@@ -224,7 +224,7 @@ class FakeRepository implements ContinuityRepository {
     idempotencyPrincipal: string;
     verificationCaseId?: string;
     decision?: 'approve' | 'reject' | 'defer';
-    purpose?: string;
+    authorizedPurpose?: 'guardianship_review';
     factorAmrAt?: string;
   }> = [];
   public markers = new Map<
@@ -1011,7 +1011,7 @@ describe('dependent transition service policy', () => {
     harness.auth.aal = 2;
     harness.auth.amr = [{ method: 'totp', timestamp: factorAt }];
     const decided = await harness.service.transitionDependent(
-      { ...transitionContext('102'), purpose: 'guardianship_review' },
+      { ...transitionContext('102'), requestedPurpose: 'guardianship_review' },
       relationshipId,
       { action: 'decide', decision: 'approve', reasonCode: 'human_review.approved' },
       2,
@@ -1024,10 +1024,33 @@ describe('dependent transition service policy', () => {
         relationshipId,
         decision: 'approve',
         expectedVersion: 2,
-        purpose: 'guardianship_review',
+        authorizedPurpose: 'guardianship_review',
         factorAmrAt: new Date(factorAt * 1_000).toISOString(),
       },
     ]);
+  });
+
+  it('treats the purpose header as intent and forwards only the server-authorized purpose', async () => {
+    const harness = service();
+    harness.auth.aal = 2;
+    harness.auth.amr = [{ method: 'totp', timestamp: Math.floor(now.getTime() / 1_000) }];
+
+    await expect(
+      harness.service.transitionDependent(
+        {
+          ...transitionContext('purpose-intent'),
+          requestedPurpose: 'guardianship_review',
+        },
+        '71000000-0000-4000-8000-000000000051',
+        { action: 'decide', decision: 'reject', reasonCode: 'human_review.rejected' },
+        2,
+      ),
+    ).resolves.toMatchObject({ status: 'rejected' });
+    expect(harness.repository.transitionActions.at(-1)).toMatchObject({
+      authorizedPurpose: 'guardianship_review',
+    });
+    expect(harness.repository.transitionActions.at(-1)).not.toHaveProperty('purpose');
+    expect(harness.repository.transitionActions.at(-1)).not.toHaveProperty('requestedPurpose');
   });
 
   it.each([299, 300])('allows a qualifying factor at %s seconds', async (ageSeconds) => {
@@ -1038,7 +1061,7 @@ describe('dependent transition service policy', () => {
     ];
     await expect(
       harness.service.transitionDependent(
-        { ...transitionContext(String(ageSeconds)), purpose: 'guardianship_review' },
+        { ...transitionContext(String(ageSeconds)), requestedPurpose: 'guardianship_review' },
         '71000000-0000-4000-8000-000000000051',
         { action: 'decide', decision: 'reject', reasonCode: 'human_review.rejected' },
         2,
@@ -1053,7 +1076,7 @@ describe('dependent transition service policy', () => {
     stale.auth.amr = [{ method: 'totp', timestamp: Math.floor(now.getTime() / 1_000) - 301 }];
     await expect(
       stale.service.transitionDependent(
-        { ...transitionContext('301'), purpose: 'guardianship_review' },
+        { ...transitionContext('301'), requestedPurpose: 'guardianship_review' },
         relationshipId,
         { action: 'decide', decision: 'approve', reasonCode: 'human_review.approved' },
         2,
@@ -1072,7 +1095,7 @@ describe('dependent transition service policy', () => {
     ).rejects.toMatchObject({ code: 'purpose-required', status: 403 });
     await expect(
       missingPurpose.service.transitionDependent(
-        { ...transitionContext('303'), purpose: 'guardianship_review' },
+        { ...transitionContext('303'), requestedPurpose: 'guardianship_review' },
         relationshipId,
         { action: 'decide', decision: 'defer', reasonCode: 'human_review.deferred' },
         2,

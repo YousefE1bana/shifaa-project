@@ -140,10 +140,17 @@ describe('Feature 008 admin and export API integration', () => {
     expect(response.headers['cache-control']).toBe('private, no-store');
     expect(response.json()).toEqual({ data: [safeEvent], meta: { next_cursor: null } });
     expect(response.body).not.toMatch(/raw_metadata|SENTINEL-PHI|signed_url|credential/i);
-    expect(dependencies.adminService.listAuditEvents).toHaveBeenCalledWith(
-      expect.objectContaining({ purpose: 'security.audit.review', aal: 2 }),
-      { action: 'audit.export.requested', limit: 25, cursor: 'c'.repeat(16) },
-    );
+    const forwardedActor = vi.mocked(dependencies.adminService.listAuditEvents).mock.calls[0]![0];
+    expect(forwardedActor).toMatchObject({
+      requestedPurpose: 'security.audit.review',
+      aal: 2,
+    });
+    expect(forwardedActor).not.toHaveProperty('purpose');
+    expect(dependencies.adminService.listAuditEvents).toHaveBeenCalledWith(forwardedActor, {
+      action: 'audit.export.requested',
+      limit: 25,
+      cursor: 'c'.repeat(16),
+    });
   });
 
   it('AC-05 collapses concurrent identical export requests and rejects changed-body reuse', async () => {
@@ -196,7 +203,7 @@ function routeDependencies(): AuditAdminRouteDependencies & { effects(): number 
     if (!actor.principal)
       throw new ApiPolicyError('authentication-required', 401, 'authentication-required');
     if (actor.aal !== 2) throw new ApiPolicyError('mfa-required', 403, 'mfa-required');
-    if (actor.purpose !== 'security.audit.review')
+    if (actor.requestedPurpose !== 'security.audit.review')
       throw new ApiPolicyError('purpose-required', 428, 'purpose-required');
     if (actor.principal !== 'synthetic-super-admin')
       throw new ApiPolicyError('forbidden', 403, 'forbidden');
@@ -273,7 +280,7 @@ function resolveAdminActor(request: FastifyRequest): AuditAdminActor {
     sessionCurrent: principal !== null,
     aal,
     factorAgeSeconds: aal === 2 ? 300 : null,
-    purpose: null,
+    requestedPurpose: null,
     requestId: request.id,
     traceId: 'trace-008-route-integration',
   };

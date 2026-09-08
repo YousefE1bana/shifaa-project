@@ -1,5 +1,7 @@
 import type { TransactionSql } from 'postgres';
 
+import { auditReviewPurpose } from '../../modules/audit-admin/types.js';
+
 import type {
   AuditAdminActor,
   AuditAdminRepository,
@@ -97,7 +99,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
   ) {}
 
   public async canReadAdminSummary(actor: AuditAdminActor): Promise<boolean> {
-    return this.withActor(actor, async (sql) => {
+    return this.withActor(actor, null, async (sql) => {
       const [row] = await sql<{ allowed: boolean }[]>`
         select audit.current_admin_summary_context_v1() as allowed
       `;
@@ -117,7 +119,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
   }
 
   public async canReadAudit(actor: AuditAdminActor): Promise<boolean> {
-    return this.withActor(actor, async (sql) => {
+    return this.withActor(actor, auditReviewPurpose, async (sql) => {
       const [row] = await sql<{ allowed: boolean }[]>`
         select audit.current_super_admin_context_v1('security.audit.review')
           and platform.feature_enabled('audit.read',platform.context_environment()) as allowed
@@ -130,7 +132,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
     actor: AuditAdminActor,
     query: AuditEventRepositoryQuery,
   ): Promise<readonly RedactedAuditEvent[]> {
-    return this.withActor(actor, async (sql) => {
+    return this.withActor(actor, auditReviewPurpose, async (sql) => {
       const rows = await sql<AuditEventRow[]>`
         select * from audit.read_events_v1(
           ${query.actor ?? null}::uuid,
@@ -156,7 +158,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
     actor: AuditAdminActor,
     eventId: string,
   ): Promise<RedactedAuditEvent | null> {
-    return this.withActor(actor, async (sql) => {
+    return this.withActor(actor, auditReviewPurpose, async (sql) => {
       const [row] = await sql<AuditEventRow[]>`
         select * from audit.read_event_v1(${eventId}::uuid)
       `;
@@ -173,7 +175,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
     actor: AuditAdminActor,
     partition: string,
   ): Promise<ChainVerification> {
-    return this.withActor(actor, async (sql) => {
+    return this.withActor(actor, auditReviewPurpose, async (sql) => {
       const [row] = await sql<ChainRow[]>`
         select * from audit.read_chain_verification_v1(${partition}::date)
       `;
@@ -198,7 +200,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
     actor: AuditAdminActor,
     exportBatchId: string,
   ): Promise<AuditExportBatch | null> {
-    return this.withActor(actor, async (sql) => {
+    return this.withActor(actor, auditReviewPurpose, async (sql) => {
       const [row] = await sql<ExportBatchRow[]>`
         select * from audit.read_export_batch_v1(${exportBatchId}::uuid)
       `;
@@ -218,7 +220,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
     command: AuditExportRequestCommand,
   ): Promise<AuditExportAccepted> {
     try {
-      return await this.withActor(actor, async (sql) => {
+      return await this.withActor(actor, auditReviewPurpose, async (sql) => {
         const [row] = await sql<ExportRequestRow[]>`
           select * from audit.request_export_v1(
             ${command.idempotencyKey},
@@ -288,13 +290,14 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
 
   private async withActor<T>(
     actor: AuditAdminActor,
+    authorizedPurpose: typeof auditReviewPurpose | null,
     work: (sql: TransactionSql) => Promise<T>,
   ): Promise<T> {
     return this.repository.withRawTransaction(async (sql) => {
       await sql`
         select set_config('shifaa.person_id',${actor.personId ?? ''},true),
           set_config('shifaa.aal',${String(actor.aal ?? 0)},true),
-          set_config('shifaa.purposes',${actor.purpose ?? ''},true),
+          set_config('shifaa.purposes',${authorizedPurpose ?? ''},true),
           set_config('shifaa.principal',${actor.principal ?? ''},true),
           set_config('shifaa.environment',${this.environment},true)
       `;

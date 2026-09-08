@@ -136,7 +136,7 @@ function actorFrom(fixture: (typeof auditAdminAuthorizationFixtures)[number]): A
     sessionCurrent: fixture.scenario !== 'unauthenticated',
     aal: fixture.aal,
     factorAgeSeconds: fixture.factorAgeSeconds,
-    purpose: fixture.purpose,
+    requestedPurpose: fixture.purpose,
     requestId: '84000000-0000-4000-8000-000000000002',
     traceId: `trace-008-${fixture.scenario}`,
   };
@@ -149,7 +149,7 @@ function authorizedActor(): AuditAdminActor {
     sessionCurrent: true,
     aal: 2,
     factorAgeSeconds: 300,
-    purpose: 'security.audit.review',
+    requestedPurpose: 'security.audit.review',
     requestId: '84000000-0000-4000-8000-000000000003',
     traceId: 'trace-008-audit-read',
   };

@@ -5,8 +5,27 @@ import { PostgresAuditAdminRepository } from '../src/adapters/postgres/audit-adm
 import type { AuditAdminActor } from '../src/modules/audit-admin/types.js';
 
 describe('Postgres audit admin repository', () => {
+  it('never installs a caller-requested purpose as database authorization context', async () => {
+    const statements: Array<{ text: string; values: readonly unknown[] }> = [];
+    const sql = fakeSql(statements);
+    const repository = new PostgresAuditAdminRepository(
+      { withRawTransaction: async (work) => work(sql) },
+      'ci',
+    );
+
+    await expect(
+      repository.canReadAudit({ ...actor(), requestedPurpose: 'caller.requested.elevation' }),
+    ).resolves.toBe(true);
+
+    const contextStatement = statements.find((statement) =>
+      statement.text.includes("set_config('shifaa.purposes'"),
+    );
+    expect(contextStatement?.values).toContain('security.audit.review');
+    expect(contextStatement?.values).not.toContain('caller.requested.elevation');
+  });
+
   it('uses non-owner fixed-shape functions and strips non-DTO source fields', async () => {
-    const statements: string[] = [];
+    const statements: Array<{ text: string; values: readonly unknown[] }> = [];
     const sql = fakeSql(statements);
     const repository = new PostgresAuditAdminRepository(
       { withRawTransaction: async (work) => work(sql) },
@@ -57,25 +76,26 @@ describe('Postgres audit admin repository', () => {
       accepted_at: '2026-09-01T12:00:00.000Z',
     });
     expect(readiness).toEqual({ status: 'ready', database: 'ready', outbox: 'ready' });
-    expect(statements.join('\n')).toContain("set_config('shifaa.environment'");
-    expect(statements.join('\n')).toContain('audit.read_events_v1');
-    expect(statements.join('\n')).toContain('audit.read_event_v1');
-    expect(statements.join('\n').match(/audit\.record_admin_read_v1/g)).toHaveLength(2);
-    expect(statements.join('\n')).toContain('audit.read_chain_verification_v1');
-    expect(statements.join('\n')).toContain('audit.read_export_batch_v1');
-    expect(statements.join('\n')).toContain('audit.request_export_v1');
-    expect(statements.join('\n')).toContain('audit.readiness_v1');
-    expect(statements.join('\n')).not.toMatch(
+    const statementText = statements.map((statement) => statement.text).join('\n');
+    expect(statementText).toContain("set_config('shifaa.environment'");
+    expect(statementText).toContain('audit.read_events_v1');
+    expect(statementText).toContain('audit.read_event_v1');
+    expect(statementText.match(/audit\.record_admin_read_v1/g)).toHaveLength(2);
+    expect(statementText).toContain('audit.read_chain_verification_v1');
+    expect(statementText).toContain('audit.read_export_batch_v1');
+    expect(statementText).toContain('audit.request_export_v1');
+    expect(statementText).toContain('audit.readiness_v1');
+    expect(statementText).not.toMatch(
       /from\s+audit\.(events|export_batches|signature_evidence)\b/i,
     );
-    expect(statements.join('\n')).not.toContain('metadata');
+    expect(statementText).not.toContain('metadata');
   });
 });
 
-function fakeSql(statements: string[]): TransactionSql {
-  const execute = (strings: TemplateStringsArray) => {
+function fakeSql(statements: Array<{ text: string; values: readonly unknown[] }>): TransactionSql {
+  const execute = (strings: TemplateStringsArray, ...values: unknown[]) => {
     const statement = strings.join('?').replace(/\s+/g, ' ').trim();
-    statements.push(statement);
+    statements.push({ text: statement, values });
     if (statement.includes('current_admin_summary_context_v1'))
       return Promise.resolve([{ allowed: true }]);
     if (statement.includes('current_super_admin_context_v1'))
@@ -164,7 +184,7 @@ function actor(): AuditAdminActor {
     sessionCurrent: true,
     aal: 2,
     factorAgeSeconds: 300,
-    purpose: 'security.audit.review',
+    requestedPurpose: 'security.audit.review',
     requestId: '84000000-0000-4000-8000-000000000001',
     traceId: 'trace-008-postgres',
   };

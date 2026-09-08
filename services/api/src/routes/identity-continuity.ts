@@ -142,7 +142,7 @@ function requestContext(request: FastifyRequest): ContinuityRequestContext {
       ? { fetchSite: request.headers['sec-fetch-site'] }
       : {}),
     ...(typeof request.headers['x-purpose'] === 'string'
-      ? { purpose: request.headers['x-purpose'] }
+      ? { requestedPurpose: request.headers['x-purpose'] }
       : {}),
   };
 }

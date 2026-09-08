@@ -4,13 +4,15 @@ import type {
 } from '@shifaa/core/audit-admin/aggregate-policy';
 import type { ChainedAuditEvent } from '@shifaa/core/audit-admin/audit-integrity';
 
+export const auditReviewPurpose = 'security.audit.review' as const;
+
 export type AuditAdminActor = {
   personId: string | null;
   principal: string | null;
   sessionCurrent: boolean;
   aal: 1 | 2 | null;
   factorAgeSeconds: number | null;
-  purpose: string | null;
+  requestedPurpose: string | null;
   requestId: string;
   traceId: string;
 };

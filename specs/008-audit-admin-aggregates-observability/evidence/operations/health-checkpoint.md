@@ -25,7 +25,7 @@ Health telemetry uses only request/trace correlation plus the fixed `health`, op
 ## SHA-256 bindings
 
 - `services/api/src/modules/audit-admin/health-service.ts`: `7b2cc772e6c7bcbb60153095be0090707cda5193050c14a5f1237d16365632c3`
-- `services/api/src/routes/audit-admin.ts`: `8cce87859706e5183dcc1423158ad701d6865077be43681be573a5b1bafcdbe2`
+- `services/api/src/routes/audit-admin.ts`: `ded6db2a0f1fc18f0947ae1e662eae5d295b631307d166f114d16f12586ca9ef`
 - `services/api/test/health-readiness.test.ts`: `89b7c401222f45023d939eee54d8f06eec1e6ad13064ff26d04c76c91e090138`
 - `services/api/test/audit-admin-health.integration.test.ts`: `095f8958fe4b04eb487b223ab586a207d52c6547409c4e792968cddfae7f3a93`
 - `packages/observability/src/audit-admin.ts`: `869aa7f27b17e61f80270997bd4208f37667736fa929c3736417dad7b6cc5f09`

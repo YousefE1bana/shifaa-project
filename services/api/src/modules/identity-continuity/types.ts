@@ -22,6 +22,8 @@ import type { NativeSessionProjection } from '@shifaa/auth';
 
 export type ContinuityRestriction = 'mfa_enrollment_only' | 'recovery_expired' | null;
 
+export const guardianshipReviewPurpose = 'guardianship_review' as const;
+
 export interface ContinuityRequestContext {
   requestId: string;
   idempotencyKey: string;
@@ -31,7 +33,7 @@ export interface ContinuityRequestContext {
   csrfHeader?: string;
   origin?: string;
   fetchSite?: string;
-  purpose?: string;
+  requestedPurpose?: string;
 }
 
 export interface TransitionMutationInput {
@@ -41,7 +43,7 @@ export interface TransitionMutationInput {
   idempotencyKey: string;
   idempotencyPrincipal: string;
   aal?: 1 | 2;
-  purpose?: string;
+  authorizedPurpose?: typeof guardianshipReviewPurpose;
   factorAmrAt?: string;
   verificationCaseId?: string;
   decision?: 'approve' | 'reject' | 'defer';

@@ -29,5 +29,5 @@ Status: PASS for the synthetic graduation-engineering checkpoint. This is indepe
 - `apps/admin/test/audit-workspace.test.ts`: `25d56e02e13856d9dcadf9701286991b708a56b6e061548e9704b23fc1d0f941`
 - `apps/admin/test/audit-export.test.ts`: `f1ab230c4f2137448200cb7ace3a752c8ba016209da2a2eed7a53e0f0676a131`
 - `tests/e2e/audit-admin-events.spec.ts`: `c79dfadc7339e883bd87cc72e967791b264e910cb23f7b883fe7e130dc564cef`
-- `tests/e2e/audit-export.spec.ts`: `222dbf386786d258fbca15cdc9051356c617a0372f58800c7c638c019dc8b544`
+- `tests/e2e/audit-export.spec.ts`: `ca07ec7f09256287ec35231dbae9db2aceda2128faeea8710cc9e17056999ae7`
 - `packages/test-kit/src/audit-admin-fixtures.ts`: `89a7aaa6c9a00dc355c57f018311fb23500bcb24b35816e2eaf8544adbcb2828`

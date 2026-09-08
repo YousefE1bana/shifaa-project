@@ -18,7 +18,7 @@ const actor: AuditAdminActor = {
   sessionCurrent: true,
   aal: 1,
   factorAgeSeconds: null,
-  purpose: null,
+  requestedPurpose: null,
   requestId: '84000000-0000-4000-8000-000000000001',
   traceId: 'trace-008-summary',
 };
