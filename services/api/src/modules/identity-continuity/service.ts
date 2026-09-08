@@ -20,6 +20,7 @@ import { evaluateFactorRemoval, evaluateMfaEnrollment, hasFreshQualifyingMfa } f
 
 import { ApiPolicyError } from '../identity-onboarding/errors.js';
 import { constantTimeMatch, hmacDigest, HmacRateLimiter, scopedPrincipal } from './security.js';
+import { guardianshipReviewPurpose } from './types.js';
 import type {
   ContinuityRepository,
   ContinuityRequestContext,
@@ -664,7 +665,8 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
         : Math.floor(this.dependencies.now().getTime() / 1_000) - factorAt;
     if (!hasFreshQualifyingMfa(factorAgeSeconds, claims.aal === 2 ? 'aal2' : 'aal1'))
       throw this.transitionProblem('mfa-step-up-required');
-    if (context.purpose !== 'guardianship_review') throw this.transitionProblem('purpose-required');
+    if (context.requestedPurpose !== guardianshipReviewPurpose)
+      throw this.transitionProblem('purpose-required');
     if (!/^human_review\.[a-z0-9_.-]{2,49}$/.test(body.reasonCode))
       throw this.transitionProblem('reason-required');
     if (body.decision === 'defer' && !body.reviewRequiredReason)
@@ -683,7 +685,7 @@ export class IdentityContinuityService implements IdentityContinuityServicePort 
       reasonCode: body.reasonCode,
       reviewRequiredReason: body.reviewRequiredReason ?? null,
       aal: claims.aal,
-      purpose: context.purpose,
+      authorizedPurpose: guardianshipReviewPurpose,
       ...(factorAt === undefined ? {} : { factorAmrAt: new Date(factorAt * 1_000).toISOString() }),
       requestId: context.requestId,
       occurredAt,

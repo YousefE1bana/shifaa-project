@@ -8,6 +8,7 @@ import {
 
 import { ApiPolicyError } from '../identity-onboarding/errors.js';
 import { hashRequest } from '../../platform/idempotency.js';
+import { auditReviewPurpose } from './types.js';
 import type {
   AdminSummary,
   AggregateDataPort,
@@ -23,7 +24,6 @@ import type {
   CreateAuditExportInput,
 } from './types.js';
 
-const AUDIT_PURPOSE = 'security.audit.review';
 const DEFAULT_LIMIT = 25;
 const MAX_LIMIT = 100;
 const MAX_CURSOR_BYTES = 512;
@@ -181,7 +181,7 @@ export class AuditAdminService {
     ) {
       this.deny('mfa-required');
     }
-    if (actor.purpose !== AUDIT_PURPOSE) this.deny('purpose-required', 428);
+    if (actor.requestedPurpose !== auditReviewPurpose) this.deny('purpose-required', 428);
     if (!(await this.dependencies.repository.canReadAudit(actor))) this.deny('forbidden');
   }
 

@@ -163,7 +163,7 @@ function authorizedActor(): AuditAdminActor {
     sessionCurrent: true,
     aal: 2,
     factorAgeSeconds: 300,
-    purpose: 'security.audit.review',
+    requestedPurpose: 'security.audit.review',
     requestId: '84000000-0000-4000-8000-000000000003',
     traceId: 'trace-008-audit-export',
   };

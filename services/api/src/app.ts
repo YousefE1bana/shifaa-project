@@ -420,7 +420,7 @@ async function resolveAuditAdminActor(
     aal: continuity?.aal ?? patient?.aal ?? null,
     factorAgeSeconds:
       factorAt === undefined ? null : Math.max(0, Math.floor(now.getTime() / 1000) - factorAt),
-    purpose: null,
+    requestedPurpose: null,
     requestId: request.id,
     traceId: traceId(request),
   };

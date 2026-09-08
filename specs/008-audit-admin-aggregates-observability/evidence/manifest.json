@@ -82,7 +82,7 @@
     },
     "api_tests": {
       "path": "services/api/test/audit-admin-observability.integration.test.ts",
-      "sha256": "3ce8c21a8a8ddb40e9e18d12366a7c7d948c8b03d13741dc881c7a2ab4f4ce5c"
+      "sha256": "3d14dccb0019eb4fe8d8bbfe2726c155056d8a9dfbd6968a7a2a7d8fc3b37d58"
     },
     "worker_tests": {
       "path": "services/worker/src/audit-export.test.ts",
@@ -94,15 +94,15 @@
     },
     "audit_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/audit/checkpoint.md",
-      "sha256": "ca1a27d493a5c45ac47fd2c4bdd78edccdd573b7075ab9194415fee419c9d72b"
+      "sha256": "231531a456f006991fcea7ba2e122d13ef474790edcda33abe183461bdfcb696"
     },
     "health_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/operations/health-checkpoint.md",
-      "sha256": "38586846049656ec047dd815ead2f61ab618f62a5acf256ff08383f594b996e1"
+      "sha256": "8f5cf68c333a39994f40e62df338fbca40d0b462c8858529790db46659c00fcf"
     },
     "security_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/security/security-report.md",
-      "sha256": "44b7803304b03df1b96c64a643bf734c16a5b74d535b0b8a507672f33a3fd47b"
+      "sha256": "20c2d420a8d2ca2fbac71210ab17ab2b23612f85bca2a381a2c970930dd3a867"
     },
     "performance_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json",
@@ -118,7 +118,7 @@
     },
     "redaction_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/observability/redaction-report.md",
-      "sha256": "1eb647d8b320db5772d9b1956c0b981020ffa664a6f58289dd6df5ec18abc222"
+      "sha256": "62961079d3feec6da030dfa17db0d68a63e6aa784877b7578c53f35f26f9fee4"
     }
   },
   "acceptance_criteria": {

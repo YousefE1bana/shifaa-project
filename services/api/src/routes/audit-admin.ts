@@ -117,7 +117,8 @@ function adminActor(actor: AuditAdminActor, request: FastifyRequest): AuditAdmin
   return {
     ...actor,
     requestId: request.id,
-    purpose: typeof request.headers['x-purpose'] === 'string' ? request.headers['x-purpose'] : null,
+    requestedPurpose:
+      typeof request.headers['x-purpose'] === 'string' ? request.headers['x-purpose'] : null,
   };
 }
 
