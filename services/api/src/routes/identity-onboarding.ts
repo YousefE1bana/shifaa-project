@@ -16,14 +16,15 @@ import {
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import type { ApiConfig } from '../config.js';
+import { HmacRateLimiter } from '../modules/identity-continuity/index.js';
 import {
   ApiPolicyError,
   type IdentityOnboardingService,
   type RequestActor,
 } from '../modules/identity-onboarding/index.js';
+import type { RecoveryProofGrantAuthority } from '../modules/identity-onboarding/ports.js';
 import { preauthPrincipal, type IdempotencyStore } from '../platform/idempotency.js';
 import { initialBrowserSessionCookies } from './auth-session-cookies.js';
-import type { RecoveryProofGrantAuthority } from '../modules/identity-onboarding/ports.js';
 
 export const registeredIdentityOnboardingOperationIds = routeCatalog.map(
   ({ operationId }) => operationId,
@@ -33,6 +34,7 @@ export interface IdentityRouteDependencies {
   config: ApiConfig;
   service: IdentityOnboardingService;
   idempotency: IdempotencyStore;
+  now: () => number;
   recoveryProofGrants?: RecoveryProofGrantAuthority;
 }
 
@@ -40,7 +42,26 @@ const noStoreHeaders = {
   'cache-control': 'private, no-store',
   pragma: 'no-cache',
 };
+const preauthAttemptLimit = 5;
+const preauthAttemptWindowMs = 15 * 60_000;
 const syntheticModes = new WeakMap<FastifyInstance, boolean>();
+
+function enforcePreauthPrincipalLimit(
+  limiter: HmacRateLimiter,
+  operation: 'registerPerson' | 'login',
+  principal: string,
+): void {
+  const retryAfter = limiter.consume(
+    operation,
+    principal,
+    preauthAttemptLimit,
+    preauthAttemptWindowMs,
+  );
+  if (retryAfter === null) return;
+  throw new ApiPolicyError('rate-limited', 429, 'Wait before trying again.', {
+    'retry-after': String(retryAfter),
+  });
+}
 
 function problemTitle(code: string, locale: string): string {
   const arabic = locale.toLowerCase().startsWith('ar');
@@ -149,6 +170,7 @@ export async function registerIdentityOnboardingRoutes(
   app: FastifyInstance,
   deps: IdentityRouteDependencies,
 ): Promise<void> {
+  const preauthLimiter = new HmacRateLimiter(deps.config.preauthHmacKey, deps.now);
   syntheticModes.set(app, deps.config.syntheticMode && deps.config.syntheticModeExplicitlyEnabled);
   app.addHook('onRequest', async (_request, reply) => {
     void reply.headers(noStoreHeaders);
@@ -159,11 +181,13 @@ export async function registerIdentityOnboardingRoutes(
     { schema: { body: requestSchemas.registerPerson } },
     async (request, reply) => {
       const body = request.body as RegisterPersonInput;
+      const principal = preauthPrincipal(body.handle, deps.config.preauthHmacKey);
+      enforcePreauthPrincipalLimit(preauthLimiter, 'registerPerson', principal);
       return executePreparedMutation(
         request,
         reply,
         deps,
-        preauthPrincipal(body.handle, deps.config.preauthHmacKey),
+        principal,
         201,
         () => deps.service.prepareRegistration(body),
         (challenge) =>
@@ -177,11 +201,13 @@ export async function registerIdentityOnboardingRoutes(
 
   app.post('/v1/auth/login', { schema: { body: requestSchemas.login } }, async (request, reply) => {
     const body = request.body as LoginInput;
+    const principal = preauthPrincipal(body.handle, deps.config.preauthHmacKey);
+    enforcePreauthPrincipalLimit(preauthLimiter, 'login', principal);
     return executePreparedMutation(
       request,
       reply,
       deps,
-      preauthPrincipal(body.handle, deps.config.preauthHmacKey),
+      principal,
       200,
       () => deps.service.login(body),
       async (result) => result,
