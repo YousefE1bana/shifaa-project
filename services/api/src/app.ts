@@ -237,6 +237,7 @@ export async function buildApp(
   await registerIdentityOnboardingRoutes(app, {
     config,
     service,
+    now: () => options.clock?.now().getTime() ?? Date.now(),
     idempotency:
       repository instanceof PostgresIdentityRepository
         ? new PostgresIdempotencyStore(repository, config.identityEncryptionKey)
