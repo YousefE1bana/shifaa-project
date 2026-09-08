@@ -13,6 +13,7 @@ $env:SUPABASE_JWKS_URL = "$($status.API_URL)/auth/v1/.well-known/jwks.json"
 $env:SUPABASE_JWT_ISSUER = "$($status.API_URL)/auth/v1"
 $env:SUPABASE_JWT_AUDIENCE = 'authenticated'
 $env:DATABASE_URL = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:54322/postgres'
+# Seeded-synthetic test keys ONLY; production startup rejects these constants.
 $env:IDENTITY_ENCRYPTION_KEY_BASE64 = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
 $env:IDENTITY_BLIND_INDEX_KEY_BASE64 = 'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE='
 $env:PREAUTH_HMAC_KEY_BASE64 = 'AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI='

@@ -243,7 +243,10 @@ describe('identity onboarding API acceptance', () => {
       ['SYNTHETIC-FAILED', 'failed'],
       ['SYNTHETIC-MANUAL', 'manual_review'],
     ] as const);
-    const harness = await buildApp({ proofing: new LocalProofingProvider(fixtures) });
+    const harness = await buildApp({
+      config: loadConfig({ NODE_ENV: 'test', SHIFAA_SYNTHETIC_MODE: 'true' }),
+      proofing: new LocalProofingProvider(fixtures),
+    });
     const { token } = await registerAndVerify(
       harness.app,
       'proof.patient@synthetic.shifaa.test',
@@ -379,7 +382,9 @@ describe('identity onboarding API acceptance', () => {
   });
 
   it('AC-10/11 denies queued/unauthorized behavior and minimum reviewer access below AAL2', async () => {
-    const harness = await buildApp();
+    const harness = await buildApp({
+      config: loadConfig({ NODE_ENV: 'test', SHIFAA_SYNTHETIC_MODE: 'true' }),
+    });
     const first = await registerAndVerify(
       harness.app,
       'owner.patient@synthetic.shifaa.test',
@@ -449,5 +454,66 @@ describe('identity onboarding API acceptance', () => {
       /Production startup denied/,
     );
     await harness.app.close();
+  });
+});
+
+describe('SEC-001 privileged synthetic reviewer mode boundary', () => {
+  const reviewerHeaders = {
+    authorization: 'Bearer synthetic-reviewer:forged-outside-synthetic-mode',
+    'x-aal': '2',
+    'x-purpose': 'identity.review',
+  };
+
+  it('rejects synthetic reviewer impersonation unless synthetic mode is explicitly enabled', async () => {
+    const base = loadConfig({ NODE_ENV: 'test' });
+    const harness = await buildApp({ config: base });
+
+    try {
+      const worklist = await harness.app.inject({
+        method: 'GET',
+        url: '/v1/admin/identity-verifications',
+        headers: reviewerHeaders,
+      });
+      expect(worklist.statusCode).toBe(503);
+      expect(worklist.json()).toMatchObject({ code: 'open-sec-001' });
+
+      const detail = await harness.app.inject({
+        method: 'GET',
+        url: '/v1/identity-verifications/00000000-0000-4000-8000-0000000000ff',
+        headers: reviewerHeaders,
+      });
+      expect(detail.statusCode).toBe(503);
+
+      const decision = await harness.app.inject({
+        method: 'POST',
+        url: '/v1/admin/identity-verifications/00000000-0000-4000-8000-0000000000ff/decision',
+        headers: {
+          ...reviewerHeaders,
+          'if-match': '"1"',
+          'idempotency-key': 'sec001-nonsynthetic-denied',
+        },
+        payload: { decision: 'approve', reason: 'Forged synthetic reviewer.' },
+      });
+      expect(decision.statusCode).toBe(503);
+    } finally {
+      await harness.app.close();
+    }
+  });
+
+  it('retains the explicit local synthetic reviewer fixture', async () => {
+    const harness = await buildApp({
+      config: loadConfig({ NODE_ENV: 'test', SHIFAA_SYNTHETIC_MODE: 'true' }),
+    });
+
+    try {
+      const worklist = await harness.app.inject({
+        method: 'GET',
+        url: '/v1/admin/identity-verifications',
+        headers: reviewerHeaders,
+      });
+      expect(worklist.statusCode).toBe(200);
+    } finally {
+      await harness.app.close();
+    }
   });
 });

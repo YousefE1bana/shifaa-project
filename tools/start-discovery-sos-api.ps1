@@ -25,6 +25,7 @@ $env:UPLOAD_ADAPTER = 'local'
 $env:DATABASE_URL = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa'
 $env:CORS_ALLOWED_ORIGINS = 'http://127.0.0.1:8081,http://localhost:8081,http://127.0.0.1:3013,http://localhost:3013'
 $env:PORT = "$Port"
+# Seeded-synthetic test keys ONLY; production startup rejects these constants.
 $env:IDENTITY_ENCRYPTION_KEY_BASE64 = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
 $env:IDENTITY_BLIND_INDEX_KEY_BASE64 = 'AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE='
 $env:PREAUTH_HMAC_KEY_BASE64 = 'AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI='

@@ -17,6 +17,7 @@ export interface ApiConfig {
   capacitySourceCode: string;
   discoverySosPublicAppUrl: string;
   syntheticMode: boolean;
+  syntheticModeExplicitlyEnabled: boolean;
   syntheticProofingEnabled: boolean;
   authAdapter: 'local' | 'supabase';
   repositoryAdapter: 'memory' | 'postgres';
@@ -56,6 +57,35 @@ function readKey(name: string, value: string | undefined): Uint8Array {
   return decoded;
 }
 
+const SYNTHETIC_TEST_KEY_CONSTANTS: readonly (readonly [string, Buffer])[] = [
+  ['zero-filled', Buffer.alloc(32)],
+  ['0x01-filled', Buffer.alloc(32, 1)],
+  ['0x02-filled', Buffer.alloc(32, 2)],
+];
+
+function rejectSyntheticProductionKey(name: string, value: string): void {
+  const decoded = Buffer.from(value, 'base64');
+  for (const [label, constant] of SYNTHETIC_TEST_KEY_CONSTANTS) {
+    if (decoded.equals(constant)) {
+      throw new ConfigurationError(
+        `Production startup denied: ${name} matches the documented ${label} seeded-synthetic test key.`,
+      );
+    }
+  }
+}
+
+function assertDistinctKeys(keys: ReadonlyArray<readonly [string, Uint8Array]>): void {
+  for (let left = 0; left < keys.length; left++) {
+    for (let right = left + 1; right < keys.length; right++) {
+      if (Buffer.from(keys[left]![1]).equals(Buffer.from(keys[right]![1]))) {
+        throw new ConfigurationError(
+          `${keys[left]![0]} and ${keys[right]![0]} must be distinct key material.`,
+        );
+      }
+    }
+  }
+}
+
 function readBoundedInteger(
   name: string,
   value: string | undefined,
@@ -77,6 +107,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
   }
 
   const syntheticMode = readBoolean(env['SHIFAA_SYNTHETIC_MODE'], environment !== 'production');
+  const syntheticModeExplicitlyEnabled = env['SHIFAA_SYNTHETIC_MODE'] === 'true';
   const syntheticProofingEnabled = readBoolean(
     env['SYNTHETIC_PROOFING_ENABLED'],
     environment !== 'production',
@@ -146,6 +177,19 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     if (!env['CORS_ALLOWED_ORIGINS']) {
       throw new ConfigurationError('Production startup denied: CORS_ALLOWED_ORIGINS is required.');
     }
+    for (const keyName of [
+      'IDENTITY_ENCRYPTION_KEY_BASE64',
+      'IDENTITY_BLIND_INDEX_KEY_BASE64',
+      'PREAUTH_HMAC_KEY_BASE64',
+    ] as const) {
+      const keyValue = env[keyName];
+      if (!keyValue) {
+        throw new ConfigurationError(
+          `Production startup denied: ${keyName} is required; fallback test keys are not permitted.`,
+        );
+      }
+      rejectSyntheticProductionKey(keyName, keyValue);
+    }
   }
 
   if (!['local', 'supabase'].includes(authAdapter))
@@ -177,6 +221,24 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
         throw new ConfigurationError(`${required} is required for the Supabase runtime.`);
     }
   }
+
+  const identityEncryptionKey = readKey(
+    'IDENTITY_ENCRYPTION_KEY_BASE64',
+    env['IDENTITY_ENCRYPTION_KEY_BASE64'] ?? Buffer.alloc(32).toString('base64'),
+  );
+  const identityBlindIndexKey = readKey(
+    'IDENTITY_BLIND_INDEX_KEY_BASE64',
+    env['IDENTITY_BLIND_INDEX_KEY_BASE64'] ?? Buffer.alloc(32, 1).toString('base64'),
+  );
+  const preauthHmacKey = readKey(
+    'PREAUTH_HMAC_KEY_BASE64',
+    env['PREAUTH_HMAC_KEY_BASE64'] ?? Buffer.alloc(32, 2).toString('base64'),
+  );
+  assertDistinctKeys([
+    ['IDENTITY_ENCRYPTION_KEY_BASE64', identityEncryptionKey],
+    ['IDENTITY_BLIND_INDEX_KEY_BASE64', identityBlindIndexKey],
+    ['PREAUTH_HMAC_KEY_BASE64', preauthHmacKey],
+  ]);
 
   return {
     environment,
@@ -220,23 +282,15 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     capacitySourceCode: env['CAPACITY_SOURCE_CODE'] ?? 'synthetic_seed',
     discoverySosPublicAppUrl: env['DISCOVERY_SOS_PUBLIC_APP_URL'] ?? 'http://127.0.0.1:8081',
     syntheticMode,
+    syntheticModeExplicitlyEnabled,
     syntheticProofingEnabled,
     authAdapter,
     repositoryAdapter,
     proofingAdapter,
     uploadAdapter,
-    identityEncryptionKey: readKey(
-      'IDENTITY_ENCRYPTION_KEY_BASE64',
-      env['IDENTITY_ENCRYPTION_KEY_BASE64'] ?? Buffer.alloc(32).toString('base64'),
-    ),
-    identityBlindIndexKey: readKey(
-      'IDENTITY_BLIND_INDEX_KEY_BASE64',
-      env['IDENTITY_BLIND_INDEX_KEY_BASE64'] ?? Buffer.alloc(32, 1).toString('base64'),
-    ),
-    preauthHmacKey: readKey(
-      'PREAUTH_HMAC_KEY_BASE64',
-      env['PREAUTH_HMAC_KEY_BASE64'] ?? Buffer.alloc(32, 2).toString('base64'),
-    ),
+    identityEncryptionKey,
+    identityBlindIndexKey,
+    preauthHmacKey,
     ...(env['SUPABASE_URL'] ? { supabaseUrl: env['SUPABASE_URL'] } : {}),
     ...(env['SUPABASE_ANON_KEY'] ? { supabaseAnonKey: env['SUPABASE_ANON_KEY'] } : {}),
     ...(env['SUPABASE_SERVICE_ROLE_KEY']
