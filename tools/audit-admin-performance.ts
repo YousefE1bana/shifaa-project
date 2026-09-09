@@ -13,6 +13,7 @@ import {
   type AggregatePolicyConfiguration,
 } from '../packages/core/src/audit-admin/aggregate-policy.ts';
 import { auditAdminApprovedPrivacyPolicy } from '../packages/test-kit/src/audit-admin-privacy-fixtures.ts';
+import { idempotencyScopeHash } from '../services/api/src/platform/idempotency.ts';
 import postgres, { type Sql, type TransactionSql } from 'postgres';
 
 const database = 'shifaa_f008_performance';
@@ -38,6 +39,7 @@ const baselineMigrations = [
 ];
 const featureMigration =
   'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql';
+const securityMigration = 'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql';
 const partitions = [
   { month: '2026-05-01', next: '2026-06-01', count: 83_334 },
   { month: '2026-06-01', next: '2026-07-01', count: 83_333 },
@@ -93,7 +95,7 @@ function dropDatabase(): void {
 }
 
 function applyMigrations(): void {
-  for (const migration of [...baselineMigrations, featureMigration]) {
+  for (const migration of [...baselineMigrations, featureMigration, securityMigration]) {
     runPsql(database, ['-f', `/workspace/${migration}`]);
   }
 }
@@ -226,6 +228,7 @@ async function withApiContext<T>(api: Sql, work: (sql: TransactionSql) => Promis
       SELECT
         set_config('shifaa.person_id',${actorPersonId},true),
         set_config('shifaa.principal',${`person:${actorPersonId}`},true),
+        set_config('shifaa.principal_hash',${idempotencyScopeHash('principal', `person:${actorPersonId}`)},true),
         set_config('shifaa.aal','2',true),
         set_config('shifaa.purposes','security.audit.review',true),
         set_config('shifaa.environment','local',true)
@@ -328,7 +331,7 @@ async function requestExports(
         api,
         (sql) => sql`
         SELECT * FROM audit.request_export_v1(
-          ${`synthetic-performance-${phase}-export-${suffix}`},${`${bodyHashPrefix.repeat(63)}${index % 10}`},
+          ${idempotencyScopeHash('key', `synthetic-performance-${phase}-export-${suffix}`)},${`${bodyHashPrefix.repeat(63)}${index % 10}`},
           '2026-05-01'::date,'2026-08-01'::date,
           ${`81500000-0000-4000-${phaseCode}-${String(index + 1).padStart(12, '0')}`}::uuid,
           ${`trace-f008-performance-${phase}-export-${suffix}`}

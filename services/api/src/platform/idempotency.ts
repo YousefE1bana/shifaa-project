@@ -28,6 +28,16 @@ export function hashRequest(body: unknown): string {
   return createHash('sha256').update(stableJson(body)).digest('hex');
 }
 
+export const idempotencyPrincipalType = 'sha256-v1' as const;
+
+export function idempotencyScopeHash(scope: 'principal' | 'key', value: string): string {
+  const valueBytes = Buffer.byteLength(value, 'utf8');
+  return createHash('sha256')
+    .update(`shifaa:idempotency:${scope}:v1:${valueBytes}:`, 'utf8')
+    .update(value, 'utf8')
+    .digest('hex');
+}
+
 export function preauthPrincipal(handle: string, key: Uint8Array): string {
   return createHmac('sha256', key).update(handle.trim().toLowerCase()).digest('base64url');
 }

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import process from 'node:process';
 import postgres from 'postgres';
 
@@ -24,6 +25,14 @@ const baselineMigrations = [
 ];
 const featureMigration =
   'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql';
+const securityMigration = 'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql';
+
+function idempotencyScopeHash(scope, value) {
+  return createHash('sha256')
+    .update(`shifaa:idempotency:${scope}:v1:${Buffer.byteLength(value, 'utf8')}:`, 'utf8')
+    .update(value, 'utf8')
+    .digest('hex');
+}
 const schemaFixture = 'infra/db/tests/audit-admin-observability-schema.sql';
 const rlsFixture = 'infra/db/tests/audit-admin-observability-rls.sql';
 const databaseNames = {
@@ -133,6 +142,20 @@ async function runSchemaMode() {
   try {
     applyBaseline(cleanDatabase);
     applyMigration(cleanDatabase, featureMigration, { quiet: true });
+    const legacyIdempotencySql = connect(cleanDatabase);
+    try {
+      await legacyIdempotencySql`
+        INSERT INTO platform.idempotency_records(
+          principal,method,route,idempotency_key,request_hash,state,expires_at
+        ) VALUES (
+          'sec008-legacy-principal@example.test','POST','/v1/security/sec-008-upgrade',
+          'sec008-legacy-key-0001',${'a'.repeat(64)},'processing',now()+interval '1 day'
+        )
+      `;
+    } finally {
+      await legacyIdempotencySql.end({ timeout: 5 });
+    }
+    applyMigration(cleanDatabase, securityMigration, { quiet: true });
     applyMigration(cleanDatabase, schemaFixture, { quiet: true });
     const sql = connect(cleanDatabase);
 
@@ -143,6 +166,25 @@ async function runSchemaMode() {
         WHERE relation.oid = pg_catalog.to_regclass('audit.events')
       `;
       assert.equal(relation?.relkind, 'p', 'audit.events must be range partitioned');
+
+      const [migratedIdempotency] = await sql`
+        SELECT principal_type,principal_hash,route_template,key_hash,request_hash,state
+        FROM platform.idempotency_records
+        WHERE route_template='/v1/security/sec-008-upgrade'
+      `;
+      assert.deepEqual(migratedIdempotency, {
+        principal_type: 'sha256-v1',
+        principal_hash: idempotencyScopeHash('principal', 'sec008-legacy-principal@example.test'),
+        route_template: '/v1/security/sec-008-upgrade',
+        key_hash: idempotencyScopeHash('key', 'sec008-legacy-key-0001'),
+        request_hash: 'a'.repeat(64),
+        state: 'processing',
+      });
+      assert.doesNotMatch(
+        JSON.stringify(migratedIdempotency),
+        /sec008-legacy-(principal|key)/,
+        'legacy raw idempotency scope must not survive the terminal migration',
+      );
 
       const columns = await sql`
         SELECT attribute.attname AS name
@@ -503,6 +545,7 @@ async function runChainMode() {
   try {
     applyBaseline(database);
     applyMigration(database, featureMigration, { quiet: true });
+    applyMigration(database, securityMigration, { quiet: true });
     const sql = connect(database);
 
     try {
@@ -673,12 +716,13 @@ async function requestAuditExport(database, input) {
     return await sql.begin(async (transaction) => {
       await transaction`SELECT pg_catalog.set_config('shifaa.person_id',${input.personId ?? ''},true)`;
       await transaction`SELECT pg_catalog.set_config('shifaa.principal',${input.personId ? `person:${input.personId}` : ''},true)`;
+      await transaction`SELECT pg_catalog.set_config('shifaa.principal_hash',${idempotencyScopeHash('principal', input.personId ? `person:${input.personId}` : '')},true)`;
       await transaction`SELECT pg_catalog.set_config('shifaa.aal',${String(input.aal ?? 0)},true)`;
       await transaction`SELECT pg_catalog.set_config('shifaa.purposes',${input.purpose ?? ''},true)`;
       await transaction`SELECT pg_catalog.set_config('shifaa.environment','local',true)`;
       return transaction`
         SELECT * FROM audit.request_export_v1(
-          ${input.idempotencyKey},${input.requestHash},
+          ${idempotencyScopeHash('key', input.idempotencyKey)},${input.requestHash},
           ${input.partitionStart ?? '2026-05-01'},${input.partitionEndExclusive ?? '2026-08-01'},
           ${input.requestId},${input.traceId}
         )
@@ -716,6 +760,7 @@ async function runExportMode() {
   try {
     applyBaseline(database);
     applyMigration(database, featureMigration, { quiet: true });
+    applyMigration(database, securityMigration, { quiet: true });
     const owner = connect(database);
     const personId = '81000000-0000-4000-8000-000000000014';
     const requestHash = 'a'.repeat(64);
@@ -744,7 +789,8 @@ async function runExportMode() {
           (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
           (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
           (SELECT count(*)::int FROM platform.idempotency_records
-            WHERE route='/v1/admin/audit/exports' AND idempotency_key='synthetic-008-audit-export-0001') AS idempotency
+            WHERE route_template='/v1/admin/audit/exports'
+              AND key_hash=${idempotencyScopeHash('key', 'synthetic-008-audit-export-0001')}) AS idempotency
       `;
       assert.deepEqual(effects, { batches: 1, events: 1, outbox: 1, idempotency: 1 });
 
@@ -792,7 +838,7 @@ async function runExportMode() {
           (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
           (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
           (SELECT count(*)::int FROM platform.idempotency_records
-            WHERE route='/v1/admin/audit/exports') AS idempotency
+            WHERE route_template='/v1/admin/audit/exports') AS idempotency
       `;
       await expectDatabaseError(
         () =>
@@ -815,7 +861,7 @@ async function runExportMode() {
           (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
           (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
           (SELECT count(*)::int FROM platform.idempotency_records
-            WHERE route='/v1/admin/audit/exports') AS idempotency
+            WHERE route_template='/v1/admin/audit/exports') AS idempotency
       `;
       assert.deepEqual(afterInvalidRange, beforeInvalidRange);
 
@@ -837,6 +883,7 @@ async function runRlsMode() {
   try {
     applyBaseline(database);
     applyMigration(database, featureMigration, { quiet: true });
+    applyMigration(database, securityMigration, { quiet: true });
     const owner = connect(database);
 
     try {
@@ -899,7 +946,7 @@ async function runRlsMode() {
             (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
             (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
             (SELECT count(*)::int FROM platform.idempotency_records
-              WHERE route='/v1/admin/audit/exports') AS idempotency
+              WHERE route_template='/v1/admin/audit/exports') AS idempotency
         `;
         if (allowed) {
           const result = await requestAuditExport(database, input);
@@ -914,7 +961,7 @@ async function runRlsMode() {
             (SELECT count(*)::int FROM audit.events WHERE action_code='audit.export.requested') AS events,
             (SELECT count(*)::int FROM platform.outbox_events WHERE event_type='audit.export.requested') AS outbox,
             (SELECT count(*)::int FROM platform.idempotency_records
-              WHERE route='/v1/admin/audit/exports') AS idempotency
+              WHERE route_template='/v1/admin/audit/exports') AS idempotency
         `;
         if (allowed) {
           assert.deepEqual(after, {

@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { AesGcmIdentityCipher } from '@shifaa/core';
 
 import { PostgresIdempotencyStore } from '../src/adapters/postgres/idempotency-store.js';
+import { idempotencyScopeHash } from '../src/platform/idempotency.js';
 import { PostgresIdentityContinuityService } from '../src/adapters/postgres/identity-continuity-service.js';
 import { PostgresIdentityRepository } from '../src/adapters/postgres/identity-repository.js';
 import {
@@ -134,10 +135,13 @@ describe.skipIf(!standaloneEnabled)(
         });
         const rows = await owner<{ response_body: unknown }[]>`
           select response_body from platform.idempotency_records
-          where route in (
+          where route_template in (
             '/v1/auth/session/refresh#rotation-marker',
             '/v1/auth/mfa/factors/:factorId#removal-marker'
-          ) and idempotency_key in (${refreshMarkerKey},${factorMarkerKey})`;
+          ) and key_hash in (
+            ${idempotencyScopeHash('key', refreshMarkerKey)},
+            ${idempotencyScopeHash('key', factorMarkerKey)}
+          )`;
         expect(rows).toHaveLength(2);
         expect(JSON.stringify(rows)).not.toMatch(/SENTINEL|refresh-token|access-token/i);
       } finally {
@@ -146,10 +150,13 @@ describe.skipIf(!standaloneEnabled)(
           where aggregate_type='identity-continuity' and aggregate_id=${factorId}::uuid`;
         await owner`
           delete from platform.idempotency_records
-          where route in (
+          where route_template in (
             '/v1/auth/session/refresh#rotation-marker',
             '/v1/auth/mfa/factors/:factorId#removal-marker'
-          ) and idempotency_key in (${refreshMarkerKey},${factorMarkerKey})`;
+          ) and key_hash in (
+            ${idempotencyScopeHash('key', refreshMarkerKey)},
+            ${idempotencyScopeHash('key', factorMarkerKey)}
+          )`;
         await repository.close();
         await owner.end({ timeout: 5 });
       }
@@ -230,11 +237,14 @@ describe.skipIf(!enabled).sequential('007 PostgreSQL staged idempotency', () => 
     });
 
     const record = await repository.withRawTransaction(async (sql) => {
-      await sql`select set_config('shifaa.principal',${principal},true)`;
+      const principalHash = idempotencyScopeHash('principal', principal);
+      const keyHash = idempotencyScopeHash('key', key);
+      await sql`select set_config('shifaa.principal_hash',${principalHash},true)`;
       const [row] = await sql<
         { state: string; resource_type: string | null; response_body: unknown }[]
       >`select state,resource_type,response_body from platform.idempotency_records
-        where principal=${principal} and method='POST' and route=${route} and idempotency_key=${key}`;
+        where principal_hash=${principalHash} and method='POST'
+          and route_template=${route} and key_hash=${keyHash}`;
       return row;
     });
     expect(record).toMatchObject({ state: 'completed', resource_type: null });

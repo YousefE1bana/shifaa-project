@@ -261,7 +261,7 @@ describe.skipIf(!enabled).sequential('007 real native TOTP enrollment and remova
       const rows = await sql`
         select response_body
         from platform.idempotency_records
-        where route='/v1/auth/mfa/enroll' and state='completed'
+        where route_template='/v1/auth/mfa/enroll' and state='completed'
         order by created_at desc limit 3`;
       const audits = await sql`
         select action_code,resource_type,outcome from audit.events

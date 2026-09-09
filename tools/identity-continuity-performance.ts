@@ -7,6 +7,7 @@ import { performance } from 'node:perf_hooks';
 
 import { PostgresIdentityContinuityService } from '../services/api/src/adapters/postgres/identity-continuity-service.ts';
 import { PostgresIdentityRepository } from '../services/api/src/adapters/postgres/identity-repository.ts';
+import { idempotencyScopeHash } from '../services/api/src/platform/idempotency.ts';
 import { LocalSyntheticMessagingAdapter } from '../services/worker/src/adapters/local-synthetic-messaging.ts';
 import { PostgresIdentityNotificationProcessor } from '../services/worker/src/identity-continuity.ts';
 import postgres from 'postgres';
@@ -220,6 +221,11 @@ async function cleanup(
     await sql`alter table platform.notification_delivery_attempts disable trigger user`;
     await sql`alter table audit.events disable trigger user`;
     await sql`alter table identity.care_relationships disable trigger user`;
+    await sql`delete from platform.idempotency_records
+      where route_template='/v1/guardianships/:relationshipId/transition'
+        and key_hash = any(${Array.from({ length: transitionCount }, (_, index) =>
+          idempotencyScopeHash('key', `perf-007-${run}-transition-${index + 1}`),
+        )}::text[])`;
     await sql.unsafe(`
       delete from platform.notification_delivery_attempts
       where source_event_id in (
@@ -251,7 +257,6 @@ async function cleanup(
           select ${uuidExpression(run, 'relationship')} from generate_series(1,${transitionCount}) i
         )
       );
-      delete from platform.idempotency_records where idempotency_key like 'perf-007-${run}-%';
       delete from identity.continuity_cases where relationship_id in (
         select ${uuidExpression(run, 'relationship')} from generate_series(1,${transitionCount}) i
       ) or id in (

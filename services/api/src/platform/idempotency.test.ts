@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { InMemoryIdempotencyStore, hashRequest, preauthPrincipal } from './idempotency.js';
+import {
+  idempotencyScopeHash,
+  InMemoryIdempotencyStore,
+  hashRequest,
+  preauthPrincipal,
+} from './idempotency.js';
 
 describe('atomic idempotency policy', () => {
   it('returns one stored result for the same principal/key/body', async () => {
@@ -41,5 +46,17 @@ describe('atomic idempotency policy', () => {
     const principal = preauthPrincipal('Patient@Synthetic.Shifaa.Test', Buffer.alloc(32, 7));
     expect(principal).not.toContain('patient');
     expect(principal).toHaveLength(43);
+  });
+
+  it('uses deterministic domain-separated hashes for persisted scope values', () => {
+    const raw = 'shared-sensitive-value';
+    const principalHash = idempotencyScopeHash('principal', raw);
+    const keyHash = idempotencyScopeHash('key', raw);
+
+    expect(principalHash).toMatch(/^[a-f0-9]{64}$/);
+    expect(keyHash).toMatch(/^[a-f0-9]{64}$/);
+    expect(principalHash).toBe(idempotencyScopeHash('principal', raw));
+    expect(principalHash).not.toBe(keyHash);
+    expect(principalHash).not.toContain(raw);
   });
 });

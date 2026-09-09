@@ -3,6 +3,8 @@ import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
 import {
   hashRequest,
+  idempotencyPrincipalType,
+  idempotencyScopeHash,
   type IdempotencyStore,
   type StoredHttpResult,
 } from '../../platform/idempotency.js';
@@ -123,35 +125,37 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
       );
     }
     const requestHash = hashRequest(input.body);
+    const scope = persistedScope(input);
     const expiresAt = new Date(
       this.now().getTime() + (input.retentionMs ?? 24 * 60 * 60_000),
     ).toISOString();
     if (input.prepare) {
-      const reservation = await this.reserve<T, P>(input, requestHash, expiresAt);
+      const reservation = await this.reserve<T, P>(input, scope, requestHash, expiresAt);
       if (reservation.kind === 'result') return reservation.result;
       let prepared: P;
       if (reservation.kind === 'prepared') prepared = reservation.prepared;
       else {
         try {
           prepared = await input.prepare();
-          await this.storePrepared(input, requestHash, prepared);
+          await this.storePrepared(input, scope, requestHash, prepared);
         } catch (error) {
-          await this.removeReservation(input);
+          await this.removeReservation(scope);
           throw error;
         }
       }
-      return this.complete(input, requestHash, prepared);
+      return this.complete(input, scope, requestHash, prepared);
     }
     return this.repository.withRawTransaction(async (sql) => {
-      await sql`select set_config('shifaa.principal',${input.principal},true),set_config('statement_timeout','10000',true),set_config('lock_timeout','5000',true)`;
-      await sql`delete from platform.idempotency_records where principal=${input.principal} and expires_at<=${this.now().toISOString()}::timestamptz`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true),set_config('statement_timeout','10000',true),set_config('lock_timeout','5000',true)`;
+      await sql`delete from platform.idempotency_records where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash} and expires_at<=${this.now().toISOString()}::timestamptz`;
       await sql`
-        insert into platform.idempotency_records(principal,method,route,idempotency_key,request_hash,state,expires_at)
-        values(${input.principal},${input.method.toUpperCase()},${input.route},${input.key},${requestHash},'processing',${expiresAt}::timestamptz)
-        on conflict(principal,method,route,idempotency_key) do nothing`;
+        insert into platform.idempotency_records(principal_type,principal_hash,method,route_template,key_hash,request_hash,state,expires_at)
+        values(${idempotencyPrincipalType},${scope.principalHash},${input.method.toUpperCase()},${input.route},${scope.keyHash},${requestHash},'processing',${expiresAt}::timestamptz)
+        on conflict(principal_type,principal_hash,method,route_template,key_hash) do nothing`;
       const [record] = await sql<IdempotencyRow[]>`
         select * from platform.idempotency_records
-        where principal=${input.principal} and method=${input.method.toUpperCase()} and route=${input.route} and idempotency_key=${input.key}
+        where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash}
+          and method=${input.method.toUpperCase()} and route_template=${input.route} and key_hash=${scope.keyHash}
         for update`;
       if (!record) throw new Error('Idempotency record could not be locked.');
       if (record.request_hash !== requestHash)
@@ -172,6 +176,7 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
 
   private async reserve<T, P>(
     input: { principal: string; method: string; route: string; key: string },
+    scope: PersistedIdempotencyScope,
     requestHash: string,
     expiresAt: string,
   ): Promise<
@@ -180,24 +185,24 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
     | { kind: 'result'; result: StoredHttpResult<T> }
   > {
     const inserted = await this.repository.withRawTransaction(async (sql) => {
-      await sql`select set_config('shifaa.principal',${input.principal},true)`;
-      await sql`delete from platform.idempotency_records where principal=${input.principal} and expires_at<=${this.now().toISOString()}::timestamptz`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
+      await sql`delete from platform.idempotency_records where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash} and expires_at<=${this.now().toISOString()}::timestamptz`;
       const rows = await sql`
-        insert into platform.idempotency_records(principal,method,route,idempotency_key,request_hash,state,expires_at)
-        values(${input.principal},${input.method.toUpperCase()},${input.route},${input.key},${requestHash},'processing',${expiresAt}::timestamptz)
-        on conflict(principal,method,route,idempotency_key) do nothing returning id`;
+        insert into platform.idempotency_records(principal_type,principal_hash,method,route_template,key_hash,request_hash,state,expires_at)
+        values(${idempotencyPrincipalType},${scope.principalHash},${input.method.toUpperCase()},${input.route},${scope.keyHash},${requestHash},'processing',${expiresAt}::timestamptz)
+        on conflict(principal_type,principal_hash,method,route_template,key_hash) do nothing returning id`;
       return rows.length > 0;
     });
     if (inserted) return { kind: 'new' };
     for (let attempt = 0; attempt < 100; attempt++) {
       const record = await this.repository.withRawTransaction(async (sql) => {
-        await sql`select set_config('shifaa.principal',${input.principal},true)`;
+        await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
         const [row] = await sql<
           IdempotencyRow[]
-        >`select * from platform.idempotency_records where principal=${input.principal} and method=${input.method.toUpperCase()} and route=${input.route} and idempotency_key=${input.key}`;
+        >`select * from platform.idempotency_records where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash} and method=${input.method.toUpperCase()} and route_template=${input.route} and key_hash=${scope.keyHash}`;
         return row;
       });
-      if (!record) return this.reserve<T, P>(input, requestHash, expiresAt);
+      if (!record) return this.reserve<T, P>(input, scope, requestHash, expiresAt);
       if (record.request_hash !== requestHash)
         throw new ApiPolicyError(
           'idempotency-key-reused',
@@ -220,16 +225,17 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
 
   private async storePrepared<P>(
     input: { principal: string; method: string; route: string; key: string },
+    scope: PersistedIdempotencyScope,
     requestHash: string,
     prepared: P,
   ): Promise<void> {
     await this.repository.withRawTransaction(async (sql) => {
-      await sql`select set_config('shifaa.principal',${input.principal},true)`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
       const rows = await sql`
         update platform.idempotency_records
         set resource_type='staged-native-completed',response_body=${sql.json(this.protect(prepared))},updated_at=now()
-        where principal=${input.principal} and method=${input.method.toUpperCase()}
-          and route=${input.route} and idempotency_key=${input.key}
+        where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash}
+          and method=${input.method.toUpperCase()} and route_template=${input.route} and key_hash=${scope.keyHash}
           and request_hash=${requestHash} and state='processing'
         returning id`;
       if (rows.length !== 1) throw new Error('Prepared native command checkpoint was lost.');
@@ -244,20 +250,21 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
       key: string;
       work: (prepared: P) => Promise<StoredHttpResult<T>>;
     },
+    scope: PersistedIdempotencyScope,
     requestHash: string,
     prepared: P,
   ): Promise<StoredHttpResult<T>> {
     return this.repository.withRawTransaction(async (sql) => {
-      await sql`select set_config('shifaa.principal',${input.principal},true)`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
       const [record] = await sql<
         IdempotencyRow[]
-      >`select * from platform.idempotency_records where principal=${input.principal} and method=${input.method.toUpperCase()} and route=${input.route} and idempotency_key=${input.key} and request_hash=${requestHash} for update`;
+      >`select * from platform.idempotency_records where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash} and method=${input.method.toUpperCase()} and route_template=${input.route} and key_hash=${scope.keyHash} and request_hash=${requestHash} for update`;
       if (!record) throw new Error('Prepared idempotency reservation was lost.');
       if (record.state === 'completed') return this.completedResult<T>(record);
       const result = await input.work(prepared);
       // The staged work may install a domain actor context on this shared transaction.
       // Restore the idempotency principal before its forced-RLS completion write.
-      await sql`select set_config('shifaa.principal',${input.principal},true)`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
       const completed =
         await sql`update platform.idempotency_records set state='completed',resource_type=null,response_status=${result.status},response_headers=${sql.json(this.protect(result.headers))},response_body=${sql.json(this.protect(result.body))},updated_at=now() where id=${record.id}::uuid returning id`;
       if (completed.length !== 1) throw new Error('Prepared idempotency reservation was lost.');
@@ -265,15 +272,31 @@ export class PostgresIdempotencyStore implements IdempotencyStore {
     });
   }
 
-  private async removeReservation(input: {
-    principal: string;
-    method: string;
-    route: string;
-    key: string;
-  }): Promise<void> {
+  private async removeReservation(scope: PersistedIdempotencyScope): Promise<void> {
     await this.repository.withRawTransaction(async (sql) => {
-      await sql`select set_config('shifaa.principal',${input.principal},true)`;
-      await sql`delete from platform.idempotency_records where principal=${input.principal} and method=${input.method.toUpperCase()} and route=${input.route} and idempotency_key=${input.key} and state='processing'`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
+      await sql`delete from platform.idempotency_records where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash} and method=${scope.method} and route_template=${scope.routeTemplate} and key_hash=${scope.keyHash} and state='processing'`;
     });
   }
+}
+
+type PersistedIdempotencyScope = {
+  principalHash: string;
+  method: string;
+  routeTemplate: string;
+  keyHash: string;
+};
+
+function persistedScope(input: {
+  principal: string;
+  method: string;
+  route: string;
+  key: string;
+}): PersistedIdempotencyScope {
+  return {
+    principalHash: idempotencyScopeHash('principal', input.principal),
+    method: input.method.toUpperCase(),
+    routeTemplate: input.route,
+    keyHash: idempotencyScopeHash('key', input.key),
+  };
 }

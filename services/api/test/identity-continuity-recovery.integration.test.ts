@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { idempotencyScopeHash } from '../src/platform/idempotency.js';
 
 import {
   authClient,
@@ -339,7 +340,7 @@ describe.skipIf(!enabled).sequential('007 recovery completion with native Supaba
     const [checkpoint] = await harness.ownerSql<Array<{ response_body: string }>>(
       (sql) => sql`select response_body::text from platform.idempotency_records
         where resource_type='recovery-resume-marker'
-          and idempotency_key=${firstIntake.caseId}`,
+          and key_hash=${idempotencyScopeHash('key', firstIntake.caseId)}`,
     );
     expect(checkpoint?.response_body).toContain('aes-256-gcm-v1');
     for (const prohibited of [
@@ -370,7 +371,7 @@ describe.skipIf(!enabled).sequential('007 recovery completion with native Supaba
     const [remaining] = await harness.ownerSql<Array<{ count: number }>>(
       (sql) => sql`select count(*)::integer count from platform.idempotency_records
         where resource_type='recovery-resume-marker'
-          and idempotency_key=${firstIntake.caseId}`,
+          and key_hash=${idempotencyScopeHash('key', firstIntake.caseId)}`,
     );
     expect(remaining?.count).toBe(0);
     expect(elevated.session.assurance).toBe('aal2');

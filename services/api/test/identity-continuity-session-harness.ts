@@ -11,6 +11,7 @@ import { PostgresIdempotencyStore } from '../src/adapters/postgres/idempotency-s
 import { IdentityContinuityService } from '../src/modules/identity-continuity/service.js';
 import { registerIdentityContinuityRoutes } from '../src/routes/identity-continuity.js';
 import { installIdentityErrorHandler } from '../src/routes/identity-onboarding.js';
+import { idempotencyScopeHash } from '../src/platform/idempotency.js';
 
 const requireFromApi = createRequire(new URL('../package.json', import.meta.url));
 const { createClient } = requireFromApi('@supabase/supabase-js') as {
@@ -248,9 +249,9 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
     where action_code in ('identity.session.refreshed','identity.session.logged_out')
     order by occurred_at desc limit 4`;
   const idempotencyRows = await owner`
-    select route,idempotency_key,response_body::text response_body
+    select route_template,key_hash,response_body::text response_body
     from platform.idempotency_records
-    where route in ('/v1/auth/session/refresh','/v1/auth/logout')`;
+    where route_template in ('/v1/auth/session/refresh','/v1/auth/logout')`;
   const outboxRows = await owner`
     select event_type,payload::text payload
     from platform.outbox_events
@@ -277,8 +278,9 @@ export async function runRealSessionJourney(locale: 'ar-EG' | 'en-EG') {
     currentCookieCleared: String(currentLogout.headers['set-cookie']).includes('Max-Age=0'),
     providerRefreshTokenLength: first.session.refresh_token.length,
     refreshPersistenceCount: idempotencyRows.filter(
-      (row: { route: string; idempotency_key: string }) =>
-        row.route === '/v1/auth/session/refresh' && journeyRefreshKeys.has(row.idempotency_key),
+      (row: { route_template: string; key_hash: string }) =>
+        row.route_template === '/v1/auth/session/refresh' &&
+        [...journeyRefreshKeys].some((key) => row.key_hash === idempotencyScopeHash('key', key)),
     ).length,
     auditCount: auditRows.length,
     durableText: JSON.stringify({ auditRows, idempotencyRows, outboxRows }),
