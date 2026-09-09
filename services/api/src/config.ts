@@ -127,6 +127,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     .filter(Boolean);
 
   if (environment === 'production') {
+    if (readBoolean(env['IDENTITY_ONBOARDING_ENABLED'], false)) {
+      throw new ConfigurationError(
+        'Production startup denied: automated identity proofing remains disabled by OPEN-VENDOR-001.',
+      );
+    }
     if (readBoolean(env['FACILITY_ONBOARDING_ENABLED'], false)) {
       throw new ConfigurationError(
         'Production startup denied: facility onboarding remains blocked by OPEN-SEC-001.',
