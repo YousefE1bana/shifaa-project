@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
+import { idempotencyScopeHash } from '../src/platform/idempotency.js';
 
 const enabled = process.env['SHIFAA_RUN_FAMILY_POSTGRES'] === 'true';
 const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
@@ -149,7 +150,8 @@ describe.skipIf(!enabled)('family PostgreSQL adapter', () => {
     expect(createReplay.json()).toEqual(value);
     const [idempotency] = await owner<
       any[]
-    >`select response_body::text body from platform.idempotency_records where idempotency_key=${createKey}`;
+    >`select response_body::text body from platform.idempotency_records
+      where key_hash=${idempotencyScopeHash('key', createKey)}`;
     expect(idempotency.body).not.toContain(value.invitation_token);
     expect(idempotency.body).toContain('aes-256-gcm-v1');
     const accepted = await harness.app.inject({

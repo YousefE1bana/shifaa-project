@@ -28,6 +28,7 @@ const baselineMigrations = [
 ];
 const featureMigration =
   'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql';
+const securityMigration = 'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql';
 const restoreFixture = 'infra/db/fixtures/audit-admin-restore.sql';
 const sourceDatabase = 'shifaa_f008_restore_source';
 const targetDatabase = 'shifaa_f008_restore_target';
@@ -230,6 +231,7 @@ async function artifactSha256(path) {
 async function writeReport({ rpoMinutes, rtoMinutes, dumpBytes, failClosed }) {
   const artifactDigests = {
     migration: await artifactSha256(featureMigration),
+    securityMigration: await artifactSha256(securityMigration),
     fixture: await artifactSha256(restoreFixture),
     runner: await artifactSha256('tools/run-audit-admin-restore-test.mjs'),
   };
@@ -249,6 +251,7 @@ async function writeReport({ rpoMinutes, rtoMinutes, dumpBytes, failClosed }) {
 ## SHA-256 bindings
 
 - \`${featureMigration}\`: \`${artifactDigests.migration}\`
+- \`${securityMigration}\`: \`${artifactDigests.securityMigration}\`
 - \`${restoreFixture}\`: \`${artifactDigests.fixture}\`
 - \`tools/run-audit-admin-restore-test.mjs\`: \`${artifactDigests.runner}\`
 `;
@@ -263,6 +266,7 @@ const temporaryRoot = await mkdtemp(join(tmpdir(), 'shifaa-f008-restore-'));
 try {
   for (const migration of baselineMigrations) applySql(sourceDatabase, migration);
   applySql(sourceDatabase, featureMigration);
+  applySql(sourceDatabase, securityMigration);
   applySql(sourceDatabase, restoreFixture);
 
   const sourceEvidence = await readEvidence(sourceDatabase);

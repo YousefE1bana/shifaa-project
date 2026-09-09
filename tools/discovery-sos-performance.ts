@@ -5,6 +5,7 @@ import { performance } from 'node:perf_hooks';
 
 import { buildApp } from '../services/api/src/app.ts';
 import { loadConfig } from '../services/api/src/config.ts';
+import { idempotencyScopeHash } from '../services/api/src/platform/idempotency.ts';
 import { LocalSyntheticMessagingAdapter } from '../services/worker/src/adapters/local-synthetic-messaging.ts';
 import { PostgresDiscoverySosProcessor } from '../services/worker/src/discovery-sos.ts';
 import postgres from 'postgres';
@@ -262,7 +263,13 @@ async function main() {
     const [leaks] = await owner<any[]>`
       select
         (select count(*)::int from platform.idempotency_records
-         where idempotency_key like ${`sos-perf-${run}-%`} and response_body::text ~* 'token|phone_e164|secret|diagnos|medicat') idempotency,
+         where key_hash = any(${Array.from({ length: totalSyntheticSubjects }, (_, index) =>
+           idempotencyScopeHash(
+             'key',
+             `sos-perf-${run}-${index < mutationWarmupSamples ? 'warmup' : 'measured'}-${index}`,
+           ),
+         )}::text[])
+           and response_body::text ~* 'token|phone_e164|secret|diagnos|medicat') idempotency,
         (select count(*)::int from platform.notifications
          where recipient_emergency_contact_id in (select ${owner.unsafe(uuidExpression(run, 'contact'))} from generate_series(${mutationWarmupSamples + 1}::integer,${totalSyntheticSubjects}::integer)i)
            and field_values::text ~* 'token|diagnos|medicat|lab|admission|record_link') notifications,
@@ -374,7 +381,8 @@ async function main() {
       await sql`delete from platform.notifications where recipient_emergency_contact_id in (select ${sql.unsafe(uuidExpression(run, 'contact'))} from generate_series(1,${totalSyntheticSubjects}::integer)i)`;
       await sql`delete from platform.outbox_events where aggregate_id in (select id from platform.sos_incidents where patient_id in (select ${sql.unsafe(uuidExpression(run, 'patient'))} from generate_series(1,${totalSyntheticSubjects}::integer)i)) or aggregate_type in ('sos-incident','sos-contact')`;
       await sql`delete from platform.sos_incidents where patient_id in (select ${sql.unsafe(uuidExpression(run, 'patient'))} from generate_series(1,${totalSyntheticSubjects}::integer)i)`;
-      await sql`delete from platform.idempotency_records where idempotency_key like ${`sos-perf-${run}-%`}`;
+      await sql`delete from platform.idempotency_records
+        where route_template like '%sos%' or route_template like '%discovery%'`;
       await sql`delete from audit.events where patient_id in (select ${sql.unsafe(uuidExpression(run, 'patient'))} from generate_series(1,${totalSyntheticSubjects}::integer)i)`;
       await sql`delete from identity.emergency_contacts where subject_patient_id in (select ${sql.unsafe(uuidExpression(run, 'patient'))} from generate_series(1,${totalSyntheticSubjects}::integer)i)`;
       await sql`delete from identity.care_relationships where subject_patient_id in (select ${sql.unsafe(uuidExpression(run, 'patient'))} from generate_series(1,${totalSyntheticSubjects}::integer)i)`;

@@ -35,7 +35,8 @@ async function cleanRuntimeState(sql: postgres.Sql) {
     await transaction`delete from platform.outbox_events where event_type like 'sos.%' or aggregate_type in ('sos-incident','sos-contact','discovery-sos')`;
     await transaction`delete from platform.emergency_share_links where true`;
     await transaction`delete from platform.sos_incidents where true`;
-    await transaction`delete from platform.idempotency_records where route like '%sos%' or route like '%discovery%'`;
+    await transaction`delete from platform.idempotency_records
+      where route_template like '%sos%' or route_template like '%discovery%'`;
     await transaction`delete from audit.events where resource_type in ('discovery-sos','emergency-share') or action_code like 'sos.%'`;
     for (const table of [
       'audit.events',

@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
+import { idempotencyScopeHash } from '../src/platform/idempotency.js';
 
 const enabled = process.env['SHIFAA_RUN_PRIVACY_POSTGRES'] === 'true';
 const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
@@ -103,7 +104,9 @@ describe.skipIf(!enabled)('privacy PostgreSQL adapter', () => {
       (select count(*)::int from consent.data_subject_request_events where request_id=${requestId}::uuid) events,
       (select count(*)::int from audit.events where resource_id=${requestId}::uuid and action_code='privacy.dsr.status_changed') audits,
       (select count(*)::int from platform.outbox_events where aggregate_id=${requestId}::uuid and event_type='privacy.dsr.status_changed') outbox,
-      (select count(*)::int from platform.idempotency_records where idempotency_key in (${decisionKey},${fulfilKey}) and state='completed') idempotency`;
+      (select count(*)::int from platform.idempotency_records
+        where key_hash in (${idempotencyScopeHash('key', decisionKey)},${idempotencyScopeHash('key', fulfilKey)})
+          and state='completed') idempotency`;
     expect(counts).toEqual({ events: 4, audits: 2, outbox: 2, idempotency: 2 });
   });
 

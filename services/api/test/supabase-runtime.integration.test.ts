@@ -7,6 +7,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp, type AppHarness } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
+import { idempotencyScopeHash } from '../src/platform/idempotency.js';
 
 type Status = {
   API_URL: string;
@@ -127,7 +128,8 @@ describe.sequential('002 Supabase runtime', () => {
     try {
       const [stored] = await idempotencySql<{ response_headers: string }[]>`
         select response_headers::text from platform.idempotency_records
-        where idempotency_key='runtime-verify-00001' and route='/v1/auth/otp/verify'`;
+        where key_hash=${idempotencyScopeHash('key', 'runtime-verify-00001')}
+          and route_template='/v1/auth/otp/verify'`;
       expect(stored?.response_headers).toContain('aes-256-gcm-v1');
       expect(stored?.response_headers).not.toContain('shifaa_refresh');
       expect(stored?.response_headers).not.toContain('shifaa_csrf');

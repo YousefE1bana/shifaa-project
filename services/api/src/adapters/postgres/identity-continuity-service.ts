@@ -16,6 +16,7 @@ import type { TransitionResult } from '@shifaa/contracts/identity-continuity';
 import { TransientReplayCipher } from '../../modules/identity-continuity/security.js';
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
 import type { AuthSession, SessionAuthority } from '../../modules/identity-onboarding/ports.js';
+import { idempotencyPrincipalType, idempotencyScopeHash } from '../../platform/idempotency.js';
 import type { TransactionSql } from 'postgres';
 import { PostgresIdentityRepository } from './identity-repository.js';
 
@@ -218,22 +219,25 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     liveOnly: boolean;
   }): Promise<PendingEnrollmentMarker | undefined> {
     return this.repository.withRawTransaction(async (sql) => {
-      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
-        { principal: string }[]
-      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
-      await sql`select set_config('shifaa.principal',${input.markerKey},true)`;
+      const principalHash = idempotencyScopeHash('principal', input.markerKey);
+      const [{ principal_hash: previousPrincipalHash } = { principal_hash: '' }] = await sql<
+        { principal_hash: string }[]
+      >`select coalesce(current_setting('shifaa.principal_hash',true),'') principal_hash`;
+      await sql`select set_config('shifaa.principal_hash',${principalHash},true)`;
       try {
         const rows = input.liveOnly
           ? await sql<
               { response_body: StoredSealedMarker; expires_at: string }[]
             >`select response_body,expires_at from platform.idempotency_records
-              where principal=${input.markerKey} and route=${PENDING_MARKER_ROUTE}
+              where principal_type=${idempotencyPrincipalType} and principal_hash=${principalHash}
+                and route_template=${PENDING_MARKER_ROUTE}
                 and state='completed' and expires_at>now()
               order by created_at desc limit 1`
           : await sql<
               { response_body: StoredSealedMarker; expires_at: string }[]
             >`select response_body,expires_at from platform.idempotency_records
-              where principal=${input.markerKey} and route=${PENDING_MARKER_ROUTE}
+              where principal_type=${idempotencyPrincipalType} and principal_hash=${principalHash}
+                and route_template=${PENDING_MARKER_ROUTE}
                 and state='completed'
               order by created_at desc limit 1`;
         const row = rows[0];
@@ -257,7 +261,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           return undefined;
         }
       } finally {
-        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+        await sql`select set_config('shifaa.principal_hash',${previousPrincipalHash},true)`;
       }
     });
   }
@@ -268,13 +272,15 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     expiresAt: string;
   }): Promise<void> {
     await this.repository.withRawTransaction(async (sql) => {
-      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
-        { principal: string }[]
-      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
-      await sql`select set_config('shifaa.principal',${input.markerKey},true)`;
+      const scope = persistedIdempotencyScope(input.markerKey, input.enrollmentId);
+      const [{ principal_hash: previousPrincipalHash } = { principal_hash: '' }] = await sql<
+        { principal_hash: string }[]
+      >`select coalesce(current_setting('shifaa.principal_hash',true),'') principal_hash`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
       try {
         await sql`delete from platform.idempotency_records
-          where principal=${input.markerKey} and route=${PENDING_MARKER_ROUTE}`;
+          where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash}
+            and route_template=${PENDING_MARKER_ROUTE}`;
         const sealed = this.cipher.seal(
           { enrollmentId: input.enrollmentId },
           new Date(input.expiresAt),
@@ -283,32 +289,34 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
         const requestHash = createHash('sha256').update(input.enrollmentId).digest('hex');
         await sql`
           insert into platform.idempotency_records(
-            principal,method,route,idempotency_key,request_hash,state,response_status,
+            principal_type,principal_hash,method,route_template,key_hash,request_hash,state,response_status,
             response_body,expires_at
           ) values(
-            ${input.markerKey},'POST',${PENDING_MARKER_ROUTE},${input.enrollmentId},
+            ${idempotencyPrincipalType},${scope.principalHash},'POST',${PENDING_MARKER_ROUTE},${scope.keyHash},
             ${requestHash},'completed',200,${sql.json(sealedJson)},${input.expiresAt}::timestamptz
           )
-          on conflict(principal,method,route,idempotency_key) do update
+          on conflict(principal_type,principal_hash,method,route_template,key_hash) do update
             set state='completed',response_status=200,response_body=${sql.json(sealedJson)},
                 expires_at=${input.expiresAt}::timestamptz,updated_at=now()`;
       } finally {
-        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+        await sql`select set_config('shifaa.principal_hash',${previousPrincipalHash},true)`;
       }
     });
   }
 
   public async consumePendingEnrollmentMarker(input: { markerKey: string }): Promise<void> {
     await this.repository.withRawTransaction(async (sql) => {
-      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
-        { principal: string }[]
-      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
-      await sql`select set_config('shifaa.principal',${input.markerKey},true)`;
+      const principalHash = idempotencyScopeHash('principal', input.markerKey);
+      const [{ principal_hash: previousPrincipalHash } = { principal_hash: '' }] = await sql<
+        { principal_hash: string }[]
+      >`select coalesce(current_setting('shifaa.principal_hash',true),'') principal_hash`;
+      await sql`select set_config('shifaa.principal_hash',${principalHash},true)`;
       try {
         await sql`delete from platform.idempotency_records
-          where principal=${input.markerKey} and route=${PENDING_MARKER_ROUTE}`;
+          where principal_type=${idempotencyPrincipalType} and principal_hash=${principalHash}
+            and route_template=${PENDING_MARKER_ROUTE}`;
       } finally {
-        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+        await sql`select set_config('shifaa.principal_hash',${previousPrincipalHash},true)`;
       }
     });
   }
@@ -526,15 +534,17 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
   public async findRecoveryResumeMarker(caseId: string): Promise<RecoveryResumeMarker | undefined> {
     return this.repository.withRawTransaction(async (sql) => {
       const principal = `recovery-resume:${caseId}`;
-      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
-        { principal: string }[]
-      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
-      await sql`select set_config('shifaa.principal',${principal},true)`;
+      const scope = persistedIdempotencyScope(principal, caseId);
+      const [{ principal_hash: previousPrincipalHash } = { principal_hash: '' }] = await sql<
+        { principal_hash: string }[]
+      >`select coalesce(current_setting('shifaa.principal_hash',true),'') principal_hash`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
       try {
         const [row] = await sql<{ response_body: StoredSealedMarker; expires_at: string }[]>`
           select response_body,expires_at from platform.idempotency_records
-          where principal=${principal} and route=${RECOVERY_RESUME_ROUTE}
-            and idempotency_key=${caseId} and state='completed' and expires_at>now()`;
+          where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash}
+            and route_template=${RECOVERY_RESUME_ROUTE} and key_hash=${scope.keyHash}
+            and state='completed' and expires_at>now()`;
         if (!row?.response_body) return undefined;
         return this.cipher.open<RecoveryResumeMarker>(
           {
@@ -551,7 +561,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           return undefined;
         throw error;
       } finally {
-        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+        await sql`select set_config('shifaa.principal_hash',${previousPrincipalHash},true)`;
       }
     });
   }
@@ -562,28 +572,29 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
   ): Promise<void> {
     await this.repository.withRawTransaction(async (sql) => {
       const principal = `recovery-resume:${caseId}`;
-      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
-        { principal: string }[]
-      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
-      await sql`select set_config('shifaa.principal',${principal},true)`;
+      const scope = persistedIdempotencyScope(principal, caseId);
+      const [{ principal_hash: previousPrincipalHash } = { principal_hash: '' }] = await sql<
+        { principal_hash: string }[]
+      >`select coalesce(current_setting('shifaa.principal_hash',true),'') principal_hash`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
       try {
         const sealed = this.cipher.seal(marker, new Date(marker.expiresAt));
         const sealedJson = sealed as unknown as Record<string, string>;
         const requestHash = createHash('sha256').update(caseId).digest('hex');
         await sql`
           insert into platform.idempotency_records(
-            principal,method,route,idempotency_key,request_hash,state,response_status,
+            principal_type,principal_hash,method,route_template,key_hash,request_hash,state,response_status,
             response_body,resource_type,expires_at
           ) values(
-            ${principal},'POST',${RECOVERY_RESUME_ROUTE},${caseId},${requestHash},'completed',200,
+            ${idempotencyPrincipalType},${scope.principalHash},'POST',${RECOVERY_RESUME_ROUTE},${scope.keyHash},${requestHash},'completed',200,
             ${sql.json(sealedJson)},'recovery-resume-marker',${marker.expiresAt}::timestamptz
           )
-          on conflict(principal,method,route,idempotency_key) do update
+          on conflict(principal_type,principal_hash,method,route_template,key_hash) do update
             set state='completed',response_status=200,response_body=${sql.json(sealedJson)},
                 resource_type='recovery-resume-marker',expires_at=${marker.expiresAt}::timestamptz,
                 updated_at=now()`;
       } finally {
-        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+        await sql`select set_config('shifaa.principal_hash',${previousPrincipalHash},true)`;
       }
     });
   }
@@ -810,16 +821,17 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           )`;
       }
       const markerPrincipal = `recovery-resume:${input.caseId}`;
-      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
-        { principal: string }[]
-      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
-      await sql`select set_config('shifaa.principal',${markerPrincipal},true)`;
+      const scope = persistedIdempotencyScope(markerPrincipal, input.caseId);
+      const [{ principal_hash: previousPrincipalHash } = { principal_hash: '' }] = await sql<
+        { principal_hash: string }[]
+      >`select coalesce(current_setting('shifaa.principal_hash',true),'') principal_hash`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
       try {
         await sql`delete from platform.idempotency_records
-          where principal=${markerPrincipal} and route=${RECOVERY_RESUME_ROUTE}
-            and idempotency_key=${input.caseId}`;
+          where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash}
+            and route_template=${RECOVERY_RESUME_ROUTE} and key_hash=${scope.keyHash}`;
       } finally {
-        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+        await sql`select set_config('shifaa.principal_hash',${previousPrincipalHash},true)`;
       }
     });
   }
@@ -862,6 +874,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
         const expiresAt = new Date(
           Date.parse(input.occurredAt) + TRANSITION_RETENTION_MS,
         ).toISOString();
+        const scope = persistedIdempotencyScope(input.idempotencyPrincipal, input.idempotencyKey);
         await sql`
           select set_config('shifaa.person_id',${input.actorPersonId},true),
                  set_config('shifaa.environment',${this.environment},true),
@@ -871,22 +884,24 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
                  set_config('shifaa.action','transitionDependent',true),
                  set_config('shifaa.factor_amr_at',${input.factorAmrAt ?? ''},true),
                  set_config('shifaa.test_now',${input.occurredAt},true),
-                 set_config('shifaa.principal',${input.idempotencyPrincipal},true)`;
+                 set_config('shifaa.principal_hash',${scope.principalHash},true)`;
         await sql`
           delete from platform.idempotency_records
-          where principal=${input.idempotencyPrincipal} and method='POST'
-            and route=${TRANSITION_ROUTE} and expires_at<=${input.occurredAt}::timestamptz`;
+          where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash}
+            and method='POST' and route_template=${TRANSITION_ROUTE}
+            and expires_at<=${input.occurredAt}::timestamptz`;
         await sql`
           insert into platform.idempotency_records(
-            principal,method,route,idempotency_key,request_hash,state,expires_at
+            principal_type,principal_hash,method,route_template,key_hash,request_hash,state,expires_at
           ) values(
-            ${input.idempotencyPrincipal},'POST',${TRANSITION_ROUTE},${input.idempotencyKey},
+            ${idempotencyPrincipalType},${scope.principalHash},'POST',${TRANSITION_ROUTE},${scope.keyHash},
             ${requestHash},'processing',${expiresAt}::timestamptz
-          ) on conflict(principal,method,route,idempotency_key) do nothing`;
+          ) on conflict(principal_type,principal_hash,method,route_template,key_hash) do nothing`;
         const [idempotency] = await sql<TransitionIdempotencyRow[]>`
           select id,request_hash,state,response_body from platform.idempotency_records
-          where principal=${input.idempotencyPrincipal} and method='POST' and route=${TRANSITION_ROUTE}
-            and idempotency_key=${input.idempotencyKey} for update`;
+          where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash}
+            and method='POST' and route_template=${TRANSITION_ROUTE} and key_hash=${scope.keyHash}
+          for update`;
         if (!idempotency) throw new Error('Transition idempotency record could not be locked.');
         if (idempotency.request_hash !== requestHash)
           throw new ApiPolicyError(
@@ -995,14 +1010,16 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
   ): Promise<T | undefined> {
     return this.repository.withRawTransaction(async (sql) => {
       const principal = `continuity-resume:${markerKey}`;
-      const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
-        { principal: string }[]
-      >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
-      await sql`select set_config('shifaa.principal',${principal},true)`;
+      const scope = persistedIdempotencyScope(principal, markerKey);
+      const [{ principal_hash: previousPrincipalHash } = { principal_hash: '' }] = await sql<
+        { principal_hash: string }[]
+      >`select coalesce(current_setting('shifaa.principal_hash',true),'') principal_hash`;
+      await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
       try {
         const [row] = await sql<{ response_body: StoredSealedMarker; expires_at: string }[]>`
           select response_body,expires_at from platform.idempotency_records
-          where principal=${principal} and route=${route} and idempotency_key=${markerKey}
+          where principal_type=${idempotencyPrincipalType} and principal_hash=${scope.principalHash}
+            and route_template=${route} and key_hash=${scope.keyHash}
             and state='completed' and expires_at>now()`;
         if (!row?.response_body) return undefined;
         return this.cipher.open<T>(
@@ -1020,7 +1037,7 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
           return undefined;
         throw error;
       } finally {
-        await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+        await sql`select set_config('shifaa.principal_hash',${previousPrincipalHash},true)`;
       }
     });
   }
@@ -1057,30 +1074,38 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     marker: T,
   ): Promise<void> {
     const principal = `continuity-resume:${markerKey}`;
-    const [{ principal: previousPrincipal } = { principal: '' }] = await sql<
-      { principal: string }[]
-    >`select coalesce(current_setting('shifaa.principal',true),'') principal`;
-    await sql`select set_config('shifaa.principal',${principal},true)`;
+    const scope = persistedIdempotencyScope(principal, markerKey);
+    const [{ principal_hash: previousPrincipalHash } = { principal_hash: '' }] = await sql<
+      { principal_hash: string }[]
+    >`select coalesce(current_setting('shifaa.principal_hash',true),'') principal_hash`;
+    await sql`select set_config('shifaa.principal_hash',${scope.principalHash},true)`;
     try {
       const sealed = this.cipher.seal(marker, new Date(marker.expiresAt));
       const requestHash = createHash('sha256').update(markerKey).digest('hex');
       await sql`
         insert into platform.idempotency_records(
-          principal,method,route,idempotency_key,request_hash,state,response_status,
+          principal_type,principal_hash,method,route_template,key_hash,request_hash,state,response_status,
           response_body,resource_type,expires_at
         ) values(
-          ${principal},'POST',${route},${markerKey},${requestHash},'completed',200,
+          ${idempotencyPrincipalType},${scope.principalHash},'POST',${route},${scope.keyHash},${requestHash},'completed',200,
           ${sql.json(sealed as unknown as Record<string, string>)},'continuity-resume-marker',
           ${marker.expiresAt}::timestamptz
         )
-        on conflict(principal,method,route,idempotency_key) do update
+        on conflict(principal_type,principal_hash,method,route_template,key_hash) do update
           set state='completed',response_status=200,response_body=excluded.response_body,
               resource_type='continuity-resume-marker',expires_at=excluded.expires_at,
               updated_at=now()`;
     } finally {
-      await sql`select set_config('shifaa.principal',${previousPrincipal},true)`;
+      await sql`select set_config('shifaa.principal_hash',${previousPrincipalHash},true)`;
     }
   }
+}
+
+function persistedIdempotencyScope(principal: string, key: string) {
+  return {
+    principalHash: idempotencyScopeHash('principal', principal),
+    keyHash: idempotencyScopeHash('key', key),
+  };
 }
 
 type TransitionRow = {

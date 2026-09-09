@@ -19,6 +19,7 @@ import type {
   RetentionProof,
 } from '../../modules/audit-admin/types.js';
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
+import { idempotencyScopeHash } from '../../platform/idempotency.js';
 import type { PostgresIdentityRepository } from './identity-repository.js';
 
 type RawTransactionRepository = Pick<PostgresIdentityRepository, 'withRawTransaction'>;
@@ -223,7 +224,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
       return await this.withActor(actor, auditReviewPurpose, async (sql) => {
         const [row] = await sql<ExportRequestRow[]>`
           select * from audit.request_export_v1(
-            ${command.idempotencyKey},
+            ${idempotencyScopeHash('key', command.idempotencyKey)},
             ${command.requestHash},
             ${command.input.partition_start}::date,
             ${command.input.partition_end_exclusive}::date,
@@ -299,6 +300,7 @@ export class PostgresAuditAdminRepository implements AuditAdminRepository {
           set_config('shifaa.aal',${String(actor.aal ?? 0)},true),
           set_config('shifaa.purposes',${authorizedPurpose ?? ''},true),
           set_config('shifaa.principal',${actor.principal ?? ''},true),
+          set_config('shifaa.principal_hash',${idempotencyScopeHash('principal', actor.principal ?? '')},true),
           set_config('shifaa.environment',${this.environment},true)
       `;
       return work(sql);

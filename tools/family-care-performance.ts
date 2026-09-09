@@ -5,6 +5,7 @@ import { performance } from 'node:perf_hooks';
 
 import { buildApp } from '../services/api/src/app.ts';
 import { loadConfig } from '../services/api/src/config.ts';
+import { idempotencyScopeHash } from '../services/api/src/platform/idempotency.ts';
 import postgres from 'postgres';
 
 const samples = 100;
@@ -16,6 +17,9 @@ const uuidExpression = (run: string, label: string) => `md5('${run}:${label}:' |
 
 async function main() {
   const run = randomUUID();
+  const performanceKeyHashes = Array.from({ length: samples }, (_, index) =>
+    idempotencyScopeHash('key', `family-performance-${run}-${index}`),
+  );
   const owner = postgres(ownerUrl, { max: 2 });
   const people = await owner<
     { id: string }[]
@@ -109,7 +113,9 @@ async function main() {
       }),
     );
     const [leaks] = await owner<any[]>`select
-      (select count(*)::int from platform.idempotency_records where idempotency_key like ${`family-performance-${run}-%`} and response_body::text ~* 'invitation_token|synthetic_load') idempotency,
+      (select count(*)::int from platform.idempotency_records
+        where key_hash = any(${performanceKeyHashes}::text[])
+          and response_body::text ~* 'invitation_token|synthetic_load') idempotency,
       (select count(*)::int from platform.outbox_events o join identity.care_relationships r on r.id=o.aggregate_id where r.purpose_code like ${`synthetic_load_${run}%`} and o.payload::text ~* 'token|phone|diagnos|medicat|lab|evidence') outbox`;
     assert.deepEqual(leaks, { idempotency: 0, outbox: 0 });
     const mutationP95 = p95(mutations);
@@ -146,7 +152,8 @@ async function main() {
       await sql`delete from identity.relationship_authorization_uses where request_id::uuid in (select id from performance_request_ids)`;
       await sql`alter table audit.events enable trigger user`;
       await sql`alter table identity.relationship_authorization_uses enable trigger user`;
-      await sql`delete from platform.idempotency_records where idempotency_key like ${`family-performance-${run}-%`}`;
+      await sql`delete from platform.idempotency_records
+        where key_hash = any(${performanceKeyHashes}::text[])`;
       await sql`delete from platform.outbox_events where aggregate_id in (select id from identity.care_relationships where purpose_code like ${`perf_${run}%`} or purpose_code like ${`synthetic_load_${run}%`})`;
       await sql`delete from identity.care_relationship_permissions where relationship_id in (select id from identity.care_relationships where purpose_code like ${`perf_${run}%`} or purpose_code like ${`synthetic_load_${run}%`})`;
       await sql`delete from identity.emergency_contacts where created_by_person_id=any(${people.map((item) => item.id)}::uuid[])`;
