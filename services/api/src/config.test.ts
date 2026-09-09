@@ -3,6 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { ConfigurationError, loadConfig } from './config.js';
 
 describe('production-deny runtime configuration', () => {
+  it('keeps production identity proofing disabled under OPEN-VENDOR-001', () => {
+    expect(() =>
+      loadConfig({ NODE_ENV: 'production', IDENTITY_ONBOARDING_ENABLED: 'true' }),
+    ).toThrowError(/OPEN-VENDOR-001/);
+  });
+
   it('allows explicit seeded-synthetic test configuration', () => {
     const config = loadConfig({ NODE_ENV: 'test', SHIFAA_SYNTHETIC_MODE: 'true' });
     expect(config).toMatchObject({

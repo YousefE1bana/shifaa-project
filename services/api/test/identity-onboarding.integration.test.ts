@@ -1,5 +1,8 @@
+import { createHmac } from 'node:crypto';
+
 import { describe, expect, it } from 'vitest';
 
+import type { ProviderCallbackInput } from '@shifaa/contracts';
 import type { FastifyInstance } from 'fastify';
 
 import { LocalAuthIssuer, LocalProofingProvider } from '../src/adapters/index.js';
@@ -37,6 +40,146 @@ async function registerAndVerify(
 }
 
 describe('identity onboarding API acceptance', () => {
+  it('keeps identity provider callbacks inside the explicitly enabled local synthetic boundary', async () => {
+    const implicitSynthetic = await buildApp();
+    const payload = {
+      event_id: 'synthetic-provider-event-0001',
+      case_id: '00000000-0000-4000-8000-000000000001',
+      outcome: 'verified',
+    } as const;
+    const implicitSignature = createHmac('sha256', implicitSynthetic.config.preauthHmacKey)
+      .update(JSON.stringify(payload))
+      .digest('hex');
+
+    const localDenied = await implicitSynthetic.app.inject({
+      method: 'POST',
+      url: '/v1/internal/callbacks/identity/local',
+      headers: {
+        'idempotency-key': 'provider-local-disabled-0001',
+        'x-provider-signature': implicitSignature,
+      },
+      payload,
+    });
+    expect(localDenied.statusCode).toBe(503);
+    expect(localDenied.json()).toMatchObject({ code: 'production-integration-disabled' });
+    expect(implicitSynthetic.repository.audits).toHaveLength(0);
+    expect(implicitSynthetic.repository.outbox).toHaveLength(0);
+    await implicitSynthetic.app.close();
+
+    const explicitSynthetic = await buildApp({
+      config: loadConfig({ NODE_ENV: 'test', SHIFAA_SYNTHETIC_MODE: 'true' }),
+    });
+    const explicitSignature = createHmac('sha256', explicitSynthetic.config.preauthHmacKey)
+      .update(JSON.stringify(payload))
+      .digest('hex');
+
+    for (const provider of ['valify', 'unknown-provider']) {
+      const providerDenied = await explicitSynthetic.app.inject({
+        method: 'POST',
+        url: `/v1/internal/callbacks/identity/${provider}`,
+        headers: {
+          'idempotency-key': `provider-disabled-${provider}-0001`,
+          'x-provider-signature': explicitSignature,
+        },
+        payload,
+      });
+      expect(providerDenied.statusCode).toBe(503);
+      expect(providerDenied.json()).toMatchObject({ code: 'production-integration-disabled' });
+    }
+    expect(explicitSynthetic.repository.audits).toHaveLength(0);
+    expect(explicitSynthetic.repository.outbox).toHaveLength(0);
+    await explicitSynthetic.app.close();
+  });
+
+  it('rejects invalid local signatures and preserves one terminal callback effect across replay', async () => {
+    const identityValue = 'SYNTHETIC-CALLBACK-PENDING';
+    const harness = await buildApp({
+      config: loadConfig({ NODE_ENV: 'test', SHIFAA_SYNTHETIC_MODE: 'true' }),
+      proofing: new LocalProofingProvider(new Map([[identityValue, 'pending']])),
+    });
+    const { token } = await registerAndVerify(
+      harness.app,
+      'callback.patient@synthetic.shifaa.test',
+      'callback',
+    );
+    const created = await harness.app.inject({
+      method: 'POST',
+      url: '/v1/people/me/identities',
+      headers: {
+        authorization: `Bearer ${token}`,
+        'idempotency-key': 'callback-proof-create-0001',
+      },
+      payload: { identity_type: 'passport', value: identityValue, issuing_country: 'EG' },
+    });
+    expect(created.statusCode).toBe(201);
+    const caseId = created.json().verification_case.id as string;
+    const callbackAuditsBefore = harness.repository.audits.filter(
+      ({ action }) => action === 'identity.provider.callback',
+    ).length;
+    const callbackOutboxBefore = harness.repository.outbox.filter(
+      ({ eventType }) => eventType === 'identity.verification.changed',
+    ).length;
+    const payload = {
+      event_id: 'synthetic-provider-event-0002',
+      case_id: caseId,
+      outcome: 'verified',
+    } as const;
+    const signature = createHmac('sha256', harness.config.preauthHmacKey)
+      .update(JSON.stringify(payload))
+      .digest('hex');
+    const callback = (input: ProviderCallbackInput, callbackSignature: string, key: string) =>
+      harness.app.inject({
+        method: 'POST',
+        url: '/v1/internal/callbacks/identity/local',
+        headers: {
+          'idempotency-key': key,
+          'x-provider-signature': callbackSignature,
+        },
+        payload: input,
+      });
+
+    const invalid = await callback(payload, '0'.repeat(64), 'callback-invalid-signature-0001');
+    expect(invalid.statusCode).toBe(401);
+    expect(
+      harness.repository.audits.filter(({ action }) => action === 'identity.provider.callback'),
+    ).toHaveLength(callbackAuditsBefore);
+
+    const accepted = await callback(payload, signature, 'callback-valid-replay-0001');
+    const replay = await callback(payload, signature, 'callback-valid-replay-0001');
+    expect(accepted.statusCode).toBe(200);
+    expect(accepted.json()).toMatchObject({ id: caseId, status: 'verified' });
+    expect(replay.json()).toEqual(accepted.json());
+
+    const conflictingPayload = { ...payload, outcome: 'failed' as const };
+    const conflictingSignature = createHmac('sha256', harness.config.preauthHmacKey)
+      .update(JSON.stringify(conflictingPayload))
+      .digest('hex');
+    const changedSameKey = await callback(
+      conflictingPayload,
+      conflictingSignature,
+      'callback-valid-replay-0001',
+    );
+    expect(changedSameKey.statusCode).toBe(409);
+    const terminalReplay = await callback(
+      conflictingPayload,
+      conflictingSignature,
+      'callback-terminal-replay-0002',
+    );
+    expect(terminalReplay.statusCode).toBe(200);
+    expect(terminalReplay.json()).toMatchObject({ id: caseId, status: 'verified' });
+    expect(
+      harness.repository.audits.filter(({ action }) => action === 'identity.provider.callback'),
+    ).toHaveLength(callbackAuditsBefore + 1);
+    expect(
+      harness.repository.outbox.filter(
+        ({ eventType }) => eventType === 'identity.verification.changed',
+      ),
+    ).toHaveLength(callbackOutboxBefore + 1);
+    expect(JSON.stringify(harness.repository.audits)).not.toContain(signature);
+    expect(JSON.stringify(harness.repository.outbox)).not.toContain(signature);
+    await harness.app.close();
+  });
+
   it('consumes a recovery proof grant once while same-key replay returns canonical success', async () => {
     const personId = '71000000-0000-4000-8000-000000000071';
     const recoveryCaseId = '71000000-0000-4000-8000-000000000072';

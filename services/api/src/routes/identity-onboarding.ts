@@ -93,6 +93,22 @@ function idempotencyKey(request: FastifyRequest): string {
   return key;
 }
 
+function assertIdentityProviderCallbackEnabled(config: ApiConfig, provider: string): void {
+  const explicitlyEnabledLocalSyntheticCallback =
+    provider === 'local' &&
+    config.environment !== 'production' &&
+    config.syntheticMode &&
+    config.syntheticModeExplicitlyEnabled &&
+    config.syntheticProofingEnabled &&
+    config.proofingAdapter === 'local';
+  if (explicitlyEnabledLocalSyntheticCallback) return;
+  throw new ApiPolicyError(
+    'production-integration-disabled',
+    503,
+    'Identity provider callbacks remain disabled until OPEN-VENDOR-001 is approved.',
+  );
+}
+
 async function actorFor(
   request: FastifyRequest,
   service: IdentityOnboardingService,
@@ -401,6 +417,8 @@ export async function registerIdentityOnboardingRoutes(
     '/v1/internal/callbacks/identity/:provider',
     { schema: { body: requestSchemas.identityProviderCallback } },
     async (request, reply) => {
+      const { provider } = request.params as { provider: string };
+      assertIdentityProviderCallbackEnabled(deps.config, provider);
       const signature = request.headers['x-provider-signature'];
       const expected = createHmac('sha256', deps.config.preauthHmacKey)
         .update(JSON.stringify(request.body))
