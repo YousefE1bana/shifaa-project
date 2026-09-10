@@ -1,7 +1,9 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.6",
   "integration_state_schema": 1,
-  "installed_integrations": ["codex"],
+  "installed_integrations": [
+    "codex"
+  ],
   "integration_settings": {
     "codex": {
       "script": "ps",
