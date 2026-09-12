@@ -1,0 +1,755 @@
+openapi: 3.1.1
+info:
+  title: SHIFAA Feature 009 API
+  version: 0.1.0-plan
+  description: Planning contract for the frozen Feature 009 boundary. Exactly 18 operations.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Discovery
+  - name: Schedules
+  - name: Appointments
+  - name: Queue
+paths:
+  /discovery/doctors:
+    get:
+      tags: [Discovery]
+      operationId: searchDoctors
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+        - { name: specialty, in: query, schema: { type: string, maxLength: 120 } }
+        - { name: facilityId, in: query, schema: { $ref: '#/components/schemas/Uuid' } }
+        - $ref: '#/components/parameters/NearQuery'
+        - $ref: '#/components/parameters/RadiusQuery'
+        - { name: date, in: query, schema: { type: string, format: date } }
+        - { name: cursor, in: query, schema: { type: string, maxLength: 512 } }
+      responses:
+        '200': { $ref: '#/components/responses/DoctorSearchPage' }
+        default: { $ref: '#/components/responses/Problem' }
+  /clinics/{facilityId}/doctors/{doctorId}/availability:
+    get:
+      tags: [Discovery]
+      operationId: listDoctorAvailability
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/FacilityId'
+        - $ref: '#/components/parameters/DoctorId'
+        - $ref: '#/components/parameters/Locale'
+        - { name: fromDate, in: query, required: true, schema: { type: string, format: date } }
+        - { name: toDate, in: query, required: true, schema: { type: string, format: date } }
+        - { name: cursor, in: query, schema: { type: string, maxLength: 512 } }
+      responses:
+        '200': { $ref: '#/components/responses/AvailabilityPage' }
+        default: { $ref: '#/components/responses/Problem' }
+  /clinics/{facilityId}/schedules:
+    post:
+      tags: [Schedules]
+      operationId: createSchedule
+      parameters:
+        - $ref: '#/components/parameters/FacilityId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateScheduleRequest' }
+      responses:
+        '201': { $ref: '#/components/responses/Schedule' }
+        default: { $ref: '#/components/responses/Problem' }
+  /clinics/{facilityId}/schedules/{scheduleId}:
+    patch:
+      tags: [Schedules]
+      operationId: updateSchedule
+      parameters:
+        - $ref: '#/components/parameters/FacilityId'
+        - $ref: '#/components/parameters/ScheduleId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateScheduleRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/Schedule' }
+        default: { $ref: '#/components/responses/Problem' }
+  /clinics/{facilityId}/schedules/{scheduleId}/exceptions:
+    post:
+      tags: [Schedules]
+      operationId: createScheduleException
+      parameters:
+        - $ref: '#/components/parameters/FacilityId'
+        - $ref: '#/components/parameters/ScheduleId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateScheduleExceptionRequest' }
+      responses:
+        '201': { $ref: '#/components/responses/ScheduleException' }
+        default: { $ref: '#/components/responses/Problem' }
+  /appointments:
+    post:
+      tags: [Appointments]
+      operationId: createAppointment
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateAppointmentRequest' }
+      responses:
+        '201': { $ref: '#/components/responses/Appointment' }
+        default: { $ref: '#/components/responses/Problem' }
+    get:
+      tags: [Appointments]
+      operationId: listAppointments
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+        - { name: patientId, in: query, schema: { $ref: '#/components/schemas/Uuid' } }
+        - { name: facilityId, in: query, schema: { $ref: '#/components/schemas/Uuid' } }
+        - { name: doctorId, in: query, schema: { $ref: '#/components/schemas/Uuid' } }
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/AppointmentStatus' } }
+        - { name: date, in: query, schema: { type: string, format: date } }
+        - { name: cursor, in: query, schema: { type: string, maxLength: 512 } }
+      responses:
+        '200': { $ref: '#/components/responses/AppointmentPage' }
+        default: { $ref: '#/components/responses/Problem' }
+  /appointments/{appointmentId}:
+    get:
+      tags: [Appointments]
+      operationId: getAppointment
+      parameters:
+        - $ref: '#/components/parameters/AppointmentId'
+        - $ref: '#/components/parameters/Locale'
+      responses:
+        '200': { $ref: '#/components/responses/Appointment' }
+        default: { $ref: '#/components/responses/Problem' }
+  /appointments/{appointmentId}/cancel:
+    post:
+      tags: [Appointments]
+      operationId: cancelAppointment
+      parameters:
+        - $ref: '#/components/parameters/AppointmentId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Locale'
+      requestBody: { $ref: '#/components/requestBodies/ReasonRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/Appointment' }
+        default: { $ref: '#/components/responses/Problem' }
+  /appointments/{appointmentId}/reschedule:
+    post:
+      tags: [Appointments]
+      operationId: rescheduleAppointment
+      parameters:
+        - $ref: '#/components/parameters/AppointmentId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RescheduleRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/Appointment' }
+        default: { $ref: '#/components/responses/Problem' }
+  /appointments/{appointmentId}/check-in:
+    post:
+      tags: [Appointments]
+      operationId: checkInAppointment
+      parameters:
+        - $ref: '#/components/parameters/AppointmentId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Locale'
+      responses:
+        '200': { $ref: '#/components/responses/CheckInResult' }
+        default: { $ref: '#/components/responses/Problem' }
+  /clinics/{facilityId}/queues:
+    get:
+      tags: [Queue]
+      operationId: getQueue
+      parameters:
+        - $ref: '#/components/parameters/FacilityId'
+        - $ref: '#/components/parameters/DoctorIdQuery'
+        - { name: date, in: query, required: true, schema: { type: string, format: date } }
+        - { name: cursor, in: query, schema: { type: string, maxLength: 512 } }
+        - $ref: '#/components/parameters/Locale'
+      responses:
+        '200': { $ref: '#/components/responses/Queue' }
+        default: { $ref: '#/components/responses/Problem' }
+  /appointments/{appointmentId}/queue-position:
+    get:
+      tags: [Queue]
+      operationId: getMyQueuePosition
+      parameters:
+        - $ref: '#/components/parameters/AppointmentId'
+        - $ref: '#/components/parameters/Locale'
+      responses:
+        '200': { $ref: '#/components/responses/QueuePosition' }
+        default: { $ref: '#/components/responses/Problem' }
+  /queue-entries/{queueEntryId}/call:
+    post:
+      tags: [Queue]
+      operationId: callQueueEntry
+      parameters:
+        - $ref: '#/components/parameters/QueueEntryId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Locale'
+      responses:
+        '200': { $ref: '#/components/responses/QueueEntry' }
+        default: { $ref: '#/components/responses/Problem' }
+  /queue-entries/{queueEntryId}/reorder:
+    post:
+      tags: [Queue]
+      operationId: reorderQueueEntry
+      parameters:
+        - $ref: '#/components/parameters/QueueEntryId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReorderRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/Queue' }
+        default: { $ref: '#/components/responses/Problem' }
+  /queue-entries/{queueEntryId}/complete:
+    post:
+      tags: [Queue]
+      operationId: completeQueueEntry
+      parameters:
+        - $ref: '#/components/parameters/QueueEntryId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/Locale'
+      responses:
+        '200': { $ref: '#/components/responses/QueueEntry' }
+        default: { $ref: '#/components/responses/Problem' }
+  /clinics/{facilityId}/doctors/{doctorId}/delay:
+    post:
+      tags: [Schedules]
+      operationId: sendDoctorDelay
+      parameters:
+        - $ref: '#/components/parameters/FacilityId'
+        - $ref: '#/components/parameters/DoctorId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DelayRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/DelayResult' }
+        default: { $ref: '#/components/responses/Problem' }
+  /clinics/{facilityId}/doctors/{doctorId}/absence:
+    post:
+      tags: [Schedules]
+      operationId: declareDoctorAbsence
+      parameters:
+        - $ref: '#/components/parameters/FacilityId'
+        - $ref: '#/components/parameters/DoctorId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/Locale'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AbsenceRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/AbsenceResult' }
+        default: { $ref: '#/components/responses/Problem' }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  parameters:
+    Locale:
+      {
+        name: Accept-Language,
+        in: header,
+        schema: { type: string, enum: [ar-EG, en-EG], default: ar-EG },
+      }
+    IdempotencyKey:
+      {
+        name: Idempotency-Key,
+        in: header,
+        required: true,
+        schema: { type: string, minLength: 16, maxLength: 128 },
+      }
+    IfMatch:
+      {
+        name: If-Match,
+        in: header,
+        required: true,
+        schema: { type: string, pattern: '^"[1-9][0-9]*"$' },
+      }
+    FacilityId:
+      { name: facilityId, in: path, required: true, schema: { $ref: '#/components/schemas/Uuid' } }
+    DoctorId:
+      { name: doctorId, in: path, required: true, schema: { $ref: '#/components/schemas/Uuid' } }
+    DoctorIdQuery:
+      { name: doctorId, in: query, required: true, schema: { $ref: '#/components/schemas/Uuid' } }
+    NearQuery:
+      name: near
+      in: query
+      description: Transient `latitude,longitude`; never persisted or logged
+      schema:
+        type: string
+        pattern: '^-?(?:[0-8]?[0-9](?:\.[0-9]{1,6})?|90(?:\.0{1,6})?),-?(?:1[0-7][0-9](?:\.[0-9]{1,6})?|[0-9]?[0-9](?:\.[0-9]{1,6})?|180(?:\.0{1,6})?)$'
+    RadiusQuery:
+      name: radius
+      in: query
+      description: Distance radius in meters; server configuration provides the default and maximum
+      schema: { type: integer, minimum: 100, maximum: 100000 }
+    ScheduleId:
+      { name: scheduleId, in: path, required: true, schema: { $ref: '#/components/schemas/Uuid' } }
+    AppointmentId:
+      {
+        name: appointmentId,
+        in: path,
+        required: true,
+        schema: { $ref: '#/components/schemas/Uuid' },
+      }
+    QueueEntryId:
+      {
+        name: queueEntryId,
+        in: path,
+        required: true,
+        schema: { $ref: '#/components/schemas/Uuid' },
+      }
+  requestBodies:
+    ReasonRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required: [reason]
+            properties:
+              reason: { type: string, minLength: 1, maxLength: 500 }
+  responses:
+    Problem:
+      description: Localized RFC 9457 problem
+      headers:
+        Cache-Control: { schema: { type: string, const: 'private, no-store' } }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    DoctorSearchPage:
+      {
+        description: Minimum verified doctor results,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/DoctorSearchPage' } } },
+      }
+    AvailabilityPage:
+      {
+        description: Effective slots and delay projection,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/AvailabilityPage' } } },
+      }
+    Schedule:
+      {
+        description: Schedule,
+        content: { application/json: { schema: { $ref: '#/components/schemas/Schedule' } } },
+      }
+    ScheduleException:
+      {
+        description: Schedule exception,
+        content:
+          { application/json: { schema: { $ref: '#/components/schemas/ScheduleException' } } },
+      }
+    Appointment:
+      {
+        description: Authorized appointment projection,
+        content: { application/json: { schema: { $ref: '#/components/schemas/Appointment' } } },
+      }
+    AppointmentPage:
+      {
+        description: Authorized appointment page,
+        content: { application/json: { schema: { $ref: '#/components/schemas/AppointmentPage' } } },
+      }
+    CheckInResult:
+      {
+        description: Checked-in appointment and waiting queue entry,
+        content: { application/json: { schema: { $ref: '#/components/schemas/CheckInResult' } } },
+      }
+    Queue:
+      {
+        description: Scoped queue projection,
+        content: { application/json: { schema: { $ref: '#/components/schemas/Queue' } } },
+      }
+    QueueEntry:
+      {
+        description: Queue entry,
+        content: { application/json: { schema: { $ref: '#/components/schemas/QueueEntry' } } },
+      }
+    QueuePosition:
+      {
+        description: Minimum subject queue position,
+        content: { application/json: { schema: { $ref: '#/components/schemas/QueuePosition' } } },
+      }
+    DelayResult:
+      {
+        description: Current superseding delay overlay,
+        content: { application/json: { schema: { $ref: '#/components/schemas/DelayResult' } } },
+      }
+    AbsenceResult:
+      {
+        description: Absence effects and non-held suggestions,
+        content: { application/json: { schema: { $ref: '#/components/schemas/AbsenceResult' } } },
+      }
+  schemas:
+    Uuid: { type: string, format: uuid }
+    Version: { type: integer, minimum: 1 }
+    AppointmentStatus:
+      type: string
+      enum:
+        [
+          requested,
+          confirmed,
+          checked_in,
+          in_queue,
+          in_consultation,
+          completed,
+          cancelled,
+          no_show,
+          reschedule_required,
+        ]
+    QueueStatus:
+      type: string
+      enum: [waiting, called, in_service, completed, removed]
+    ScheduleStatus: { type: string, enum: [active, paused, retired] }
+    ExceptionType: { type: string, enum: [blocked, added, delay, absence] }
+    OrdinaryExceptionType: { type: string, enum: [blocked, added] }
+    LocalWindow:
+      type: object
+      additionalProperties: false
+      required: [isoWeekday, localStart, localEnd]
+      properties:
+        isoWeekday: { type: integer, minimum: 1, maximum: 7 }
+        localStart: { type: string, format: time }
+        localEnd: { type: string, format: time }
+    Slot:
+      type: object
+      required: [facilityId, doctorId, startsAt, endsAt, timezone, civilDate]
+      properties:
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        timezone: { type: string }
+        civilDate: { type: string, format: date }
+        delayMinutes: { type: integer, minimum: 0 }
+    CreateScheduleRequest:
+      type: object
+      additionalProperties: false
+      required: [doctorId, timezone, validFrom, validTo, slotDurationMinutes, status, windows]
+      properties:
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        timezone: { type: string, minLength: 1, maxLength: 100 }
+        validFrom: { type: string, format: date }
+        validTo: { type: string, format: date }
+        slotDurationMinutes: { type: integer, minimum: 1, maximum: 1440 }
+        status: { $ref: '#/components/schemas/ScheduleStatus' }
+        windows:
+          {
+            type: array,
+            minItems: 1,
+            maxItems: 70,
+            items: { $ref: '#/components/schemas/LocalWindow' },
+          }
+    UpdateScheduleRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        timezone: { type: string, minLength: 1, maxLength: 100 }
+        validFrom: { type: string, format: date }
+        validTo: { type: string, format: date }
+        slotDurationMinutes: { type: integer, minimum: 1, maximum: 1440 }
+        status: { $ref: '#/components/schemas/ScheduleStatus' }
+        windows:
+          {
+            type: array,
+            minItems: 1,
+            maxItems: 70,
+            items: { $ref: '#/components/schemas/LocalWindow' },
+          }
+    Schedule:
+      allOf:
+        - $ref: '#/components/schemas/CreateScheduleRequest'
+        - type: object
+          required: [id, facilityId, version]
+          properties:
+            id: { $ref: '#/components/schemas/Uuid' }
+            facilityId: { $ref: '#/components/schemas/Uuid' }
+            version: { $ref: '#/components/schemas/Version' }
+    CreateScheduleExceptionRequest:
+      type: object
+      additionalProperties: false
+      required: [type, startsAt, endsAt, civilDate, reason]
+      properties:
+        type: { $ref: '#/components/schemas/OrdinaryExceptionType' }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        civilDate: { type: string, format: date }
+        reason: { type: string, minLength: 1, maxLength: 500 }
+    ScheduleException:
+      type: object
+      additionalProperties: false
+      required:
+        [id, scheduleId, facilityId, doctorId, type, startsAt, endsAt, civilDate, reason, version]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        scheduleId: { $ref: '#/components/schemas/Uuid' }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        type: { $ref: '#/components/schemas/OrdinaryExceptionType' }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        civilDate: { type: string, format: date }
+        reason: { type: string, minLength: 1, maxLength: 500 }
+        version: { $ref: '#/components/schemas/Version' }
+        affectedAppointmentCount: { type: integer, minimum: 0 }
+    CreateAppointmentRequest:
+      type: object
+      additionalProperties: false
+      required:
+        [patientId, facilityId, doctorId, startsAt, endsAt, timezone, civilDate, paymentMethod]
+      properties:
+        patientId: { $ref: '#/components/schemas/Uuid' }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        timezone: { type: string }
+        civilDate: { type: string, format: date }
+        paymentMethod: { type: string, const: cash_on_arrival }
+        sourceReferralId: { oneOf: [{ $ref: '#/components/schemas/Uuid' }, { type: 'null' }] }
+    Appointment:
+      type: object
+      required:
+        [
+          id,
+          patientId,
+          facilityId,
+          doctorId,
+          startsAt,
+          endsAt,
+          timezone,
+          civilDate,
+          status,
+          feeMinorUnits,
+          currency,
+          paymentMethod,
+          version,
+        ]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        patientId: { $ref: '#/components/schemas/Uuid' }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        timezone: { type: string }
+        civilDate: { type: string, format: date }
+        status: { $ref: '#/components/schemas/AppointmentStatus' }
+        feeMinorUnits: { type: integer, minimum: 0 }
+        currency: { type: string, minLength: 3, maxLength: 3 }
+        paymentMethod: { type: string, const: cash_on_arrival }
+        version: { $ref: '#/components/schemas/Version' }
+    RescheduleRequest:
+      type: object
+      additionalProperties: false
+      required: [startsAt, endsAt, timezone, civilDate]
+      properties:
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        timezone: { type: string }
+        civilDate: { type: string, format: date }
+    QueueEntry:
+      type: object
+      required: [id, appointmentId, facilityId, doctorId, civilDate, queueNumber, state, version]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        appointmentId: { $ref: '#/components/schemas/Uuid' }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        civilDate: { type: string, format: date }
+        queueNumber: { type: integer, minimum: 1 }
+        position: { type: integer, minimum: 1 }
+        estimatedServiceAt: { type: [string, 'null'], format: date-time }
+        state: { $ref: '#/components/schemas/QueueStatus' }
+        version: { $ref: '#/components/schemas/Version' }
+    ReorderRequest:
+      type: object
+      additionalProperties: false
+      required: [targetPosition, queueVersion, reason]
+      properties:
+        targetPosition: { type: integer, minimum: 1 }
+        queueVersion: { $ref: '#/components/schemas/Version' }
+        reason: { type: string, minLength: 1, maxLength: 500 }
+    DelayRequest:
+      type: object
+      additionalProperties: false
+      required: [civilDate, delayMinutes, templateCode, reason]
+      properties:
+        civilDate: { type: string, format: date }
+        delayMinutes: { type: integer, minimum: 1, maximum: 1440 }
+        templateCode: { type: string, minLength: 1, maxLength: 120 }
+        reason: { type: string, minLength: 1, maxLength: 500 }
+    DelayResult:
+      type: object
+      required: [delayId, facilityId, doctorId, civilDate, delayMinutes, version]
+      properties:
+        delayId: { $ref: '#/components/schemas/Uuid' }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        civilDate: { type: string, format: date }
+        delayMinutes: { type: integer, minimum: 1 }
+        version: { $ref: '#/components/schemas/Version' }
+        affectedAppointmentIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        outboxEventIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+    AbsenceRequest:
+      type: object
+      additionalProperties: false
+      required: [startsAt, endsAt, civilDate, reason]
+      properties:
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        civilDate: { type: string, format: date }
+        reason: { type: string, minLength: 1, maxLength: 500 }
+    ReplacementSuggestion:
+      type: object
+      required: [appointmentId, slots]
+      properties:
+        appointmentId: { $ref: '#/components/schemas/Uuid' }
+        slots: { type: array, items: { $ref: '#/components/schemas/Slot' } }
+        held: { type: boolean, const: false }
+    AbsenceResult:
+      type: object
+      required: [absenceId, affectedAppointmentIds, removedQueueEntryIds, replacementSuggestions]
+      properties:
+        absenceId: { $ref: '#/components/schemas/Uuid' }
+        affectedAppointmentIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        removedQueueEntryIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        replacementSuggestions:
+          { type: array, items: { $ref: '#/components/schemas/ReplacementSuggestion' } }
+    CheckInResult:
+      type: object
+      required: [appointment, queueEntry]
+      properties:
+        appointment: { $ref: '#/components/schemas/Appointment' }
+        queueEntry: { $ref: '#/components/schemas/QueueEntry' }
+    QueuePosition:
+      type: object
+      required: [appointmentId, state, queueNumber, queueVersion, updatedAt, stale]
+      properties:
+        appointmentId: { $ref: '#/components/schemas/Uuid' }
+        state: { $ref: '#/components/schemas/QueueStatus' }
+        queueNumber: { type: integer, minimum: 1 }
+        position: { type: [integer, 'null'], minimum: 1 }
+        estimatedServiceAt: { type: [string, 'null'], format: date-time }
+        queueVersion: { $ref: '#/components/schemas/Version' }
+        updatedAt: { type: string, format: date-time }
+        stale: { type: boolean }
+    Queue:
+      type: object
+      required: [facilityId, doctorId, civilDate, version, entries, nextCursor]
+      properties:
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        civilDate: { type: string, format: date }
+        version: { $ref: '#/components/schemas/Version' }
+        delayMinutes: { type: integer, minimum: 0 }
+        entries: { type: array, items: { $ref: '#/components/schemas/QueueEntry' } }
+        nextCursor: { type: [string, 'null'] }
+    PublicDoctorProjection:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          doctorId,
+          doctorDisplayName,
+          specialty,
+          professionalLicenseVerified,
+          facilityId,
+          facilityDisplayName,
+          facilityVerified,
+          feeMinorUnits,
+          currency,
+          paymentMethod,
+          nextAvailableSlot,
+          distanceMeters,
+          availabilityVersion,
+          updatedAt,
+          stale,
+        ]
+      properties:
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        doctorDisplayName: { type: string, minLength: 1, maxLength: 160 }
+        specialty: { type: string, minLength: 1, maxLength: 120 }
+        professionalLicenseVerified: { type: boolean, const: true }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        facilityDisplayName: { type: string, minLength: 1, maxLength: 160 }
+        facilityVerified: { type: boolean, const: true }
+        feeMinorUnits: { type: integer, minimum: 0 }
+        currency: { type: string, minLength: 3, maxLength: 3 }
+        paymentMethod: { type: string, const: cash_on_arrival }
+        nextAvailableSlot:
+          oneOf:
+            - { $ref: '#/components/schemas/Slot' }
+            - { type: 'null' }
+        distanceMeters: { type: [number, 'null'], minimum: 0 }
+        availabilityVersion: { $ref: '#/components/schemas/Version' }
+        updatedAt: { type: string, format: date-time }
+        stale: { type: boolean }
+    DoctorSearchPage:
+      type: object
+      additionalProperties: false
+      required: [items, nextCursor]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/PublicDoctorProjection' } }
+        nextCursor: { type: [string, 'null'] }
+    AvailabilityPage:
+      type: object
+      required: [items, version]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Slot' } }
+        nextCursor: { type: [string, 'null'] }
+        generatedAt: { type: string, format: date-time }
+        version: { $ref: '#/components/schemas/Version' }
+    AppointmentPage:
+      type: object
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Appointment' } }
+        nextCursor: { type: [string, 'null'] }
+    Problem:
+      type: object
+      required: [type, title, status]
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer, minimum: 400, maximum: 599 }
+        detail: { type: string }
+        instance: { type: string, format: uri-reference }
+        code: { type: string }
+        requestId: { type: string }

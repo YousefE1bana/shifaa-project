@@ -1,6 +1,12 @@
 import { catalogs, type Locale, type MessageKey } from './catalogs.ts';
 
 export { auditAdminArEG, auditAdminEnEG } from './audit-admin.ts';
+export {
+  clinicSchedulingArEG,
+  clinicSchedulingEnEG,
+  clinicSchedulingMessageKeys,
+  interpolateClinicScheduling,
+} from './clinic-scheduling.ts';
 export { arEG, catalogs, enEG, type Locale, type MessageKey } from './catalogs.ts';
 
 export const directionFor = (locale: Locale) => (locale === 'ar-EG' ? 'rtl' : 'ltr');
