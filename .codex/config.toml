@@ -1,0 +1,85 @@
+[agents]
+enabled = true
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "low"
+max_concurrent_threads_per_session = 2
+interrupt_message = false
+
+[agents.explorer]
+description = "Cheap read-only repo exploration, search, tracing, and context gathering."
+config_file = "agents/explorer.toml"
+
+[agents.worker]
+description = "Normal bounded non-UI implementation, mechanical edits, and simple fixes."
+config_file = "agents/worker.toml"
+
+[agents.deep-worker]
+description = "Difficult but bounded non-UI implementation requiring maximum worker reasoning."
+config_file = "agents/deep-worker.toml"
+
+[agents.tester]
+description = "Focused tests, verification, debugging, fixtures, and failure triage."
+config_file = "agents/tester.toml"
+
+[agents.ui-worker]
+description = "UI implementation and visual judgment against approved SHIFAA design contracts and baselines."
+config_file = "agents/ui-worker.toml"
+
+[features.multi_agent_v2]
+enabled = true
+expose_spawn_agent_model_overrides = true
+max_concurrent_threads_per_session = 3
+root_agent_usage_hint_text = """
+SHIFAA token-efficient orchestration:
+
+SpecKit phase routing:
+- specify, clarify, plan, tasks, analyze, taskstoissues, and post-implementation analysis stay owned by the Sol root.
+- Explorer may assist those phases only with bounded read-only repository reconnaissance.
+- During implementation, the root decomposes the approved checkpoint and delegates routine coding instead of implementing it itself.
+- Use worker (Luna High) for normal bounded non-UI implementation.
+- Use deep-worker (Luna Max) directly for already-bounded concurrency, transaction, RLS, or difficult state-machine work.
+- Use tester (Luna Medium) for focused verification, failure diagnosis, fixtures, and targeted debugging.
+- Use ui-worker (Sol Low) when UI work requires visual/design judgment; mechanical UI work may use worker.
+- Specialized spawns use fork_turns="none" and receive a small self-contained task packet. Explicitly name any required skill.
+- Keep at most two workers active, and only when their file/state ownership is independent.
+- Do not delegate tiny tasks when delegation overhead is larger than the work.
+- Do not run parallel workers against shared DB/test-harness state when they can interfere.
+- Workers do not edit specs, task ledgers, governance decisions, or lifecycle approvals unless explicitly assigned.
+- Root reviews worker diff/evidence rather than repeating the worker's entire exploration.
+- Root owns checkpoint acceptance, task-ledger updates after evidence, final verification decisions, commits, pushes, PRs, and integration.
+"""
+subagent_developer_instructions = """
+Stay inside the assigned bounded task.
+Do not spawn subagents.
+Do not commit, push, merge, create PRs, switch branches, or broaden scope.
+Return concise evidence to the parent.
+"""
+
+[plugins."warp@codex-warp"]
+enabled = false
+
+[plugins."agent-sdk-dev@claude-plugins-official"]
+enabled = false
+
+[plugins."ai-plugins@claude-plugins-official"]
+enabled = false
+
+[plugins."sites@openai-bundled"]
+enabled = false
+
+[plugins."superpowers@claude-plugins-official"]
+enabled = false
+
+[plugins."frontend-design@claude-plugins-official"]
+enabled = false
+
+
+
+
+[plugins."figma@claude-plugins-official"]
+enabled = false
+
+
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = false
