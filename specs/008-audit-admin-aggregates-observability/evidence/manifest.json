@@ -106,7 +106,7 @@
     },
     "performance_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json",
-      "sha256": "d1683d0465ec593f07555a6ea60b72d03b22af250e9ce5ebb48b869aeccf303a"
+      "sha256": "d1c56e3c041013edd4c4baacdccf1edeb32a8a13b4269c680ccd6317ea376515"
     },
     "restore_evidence": {
       "path": "specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md",

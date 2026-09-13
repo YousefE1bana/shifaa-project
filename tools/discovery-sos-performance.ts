@@ -12,6 +12,7 @@ import postgres from 'postgres';
 
 const samples = 100;
 const apiPoolConnections = 20;
+const postMutationWarmupQuiescenceMs = 5_000;
 // The canonical measurement excludes runtime optimization and transaction-path
 // cold start. Two measured-sample equivalents proved necessary to establish a
 // stable steady state for the globally serialized audit-chain mutation path.
@@ -173,7 +174,7 @@ async function main() {
     // Let its event-loop and database write pressure drain before opening the
     // measured window; the measured requests still include their complete
     // pool wait, transaction, audit-chain append, and commit lifecycle.
-    await new Promise((resolve) => setTimeout(resolve, 5_000));
+    await new Promise((resolve) => setTimeout(resolve, postMutationWarmupQuiescenceMs));
 
     const measuredPeople = people.slice(mutationWarmupSamples);
     const measuredPatients = patients.slice(mutationWarmupSamples);
@@ -324,6 +325,7 @@ async function main() {
         read_only_warmup_requests: warmupResponses.length,
         mutation_warmup_requests: mutationWarmupSamples,
         worker_warmup_claims: mutationWarmupSamples,
+        post_mutation_warmup_quiescence_ms: postMutationWarmupQuiescenceMs,
         observed_api_connections: pool.connections,
         warmup_excluded_from_samples: true,
         node: process.version,

@@ -234,7 +234,7 @@ async function warmDatabasePool(
     );
     return count;
   } finally {
-    for (const reserved of reservedConnections) reserved.release();
+    await Promise.all(reservedConnections.map((reserved) => reserved.release()));
   }
 }
 

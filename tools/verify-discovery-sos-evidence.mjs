@@ -141,15 +141,19 @@ try {
   if (
     performance.measurement_profile?.semantics !==
       'steady-state regional API latency; process and connection cold start excluded' ||
+    performance.samples?.warmup_sessions !== 200 ||
+    performance.samples?.warmup_sos_incidents !== 200 ||
+    performance.samples?.warmup_worker_claims !== 200 ||
     performance.measurement_profile?.api_pool_connections !== 20 ||
     performance.measurement_profile?.read_only_warmup_requests !== 20 ||
     performance.measurement_profile?.mutation_warmup_requests !== 200 ||
     performance.measurement_profile?.worker_warmup_claims !== 200 ||
+    performance.measurement_profile?.post_mutation_warmup_quiescence_ms !== 5_000 ||
     performance.measurement_profile?.observed_api_connections !== 20 ||
     performance.measurement_profile?.warmup_excluded_from_samples !== true
   )
     failures.push(
-      '006 performance evidence lacks the deterministic 20-connection and 200-operation warmup profile.',
+      '006 performance evidence lacks the deterministic 20-connection, 200-operation warmup, and 5000 ms post-mutation quiescence profile.',
     );
   for (const key of ['read_p95', 'mutation_p95', 'sos_matching_p95', 'worker_claim_p95']) {
     if (!Number.isFinite(performance.measured_ms?.[key]))
