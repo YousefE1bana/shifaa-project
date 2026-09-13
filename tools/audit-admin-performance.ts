@@ -204,22 +204,38 @@ async function warmDatabasePool(
   username: 'shifaa_api' | 'shifaa_worker',
   expectedConnections: number,
 ): Promise<number> {
-  const warming = Promise.all(
-    Array.from({ length: expectedConnections }, () => connection`SELECT pg_sleep(0.5)`),
-  );
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  const [{ count }] = await owner<{ count: number }[]>`
-    SELECT count(*)::int AS count
-    FROM pg_catalog.pg_stat_activity
-    WHERE datname=${database} AND usename=${username}
-  `;
-  await warming;
-  assert.equal(
-    count,
-    expectedConnections,
-    `all ${expectedConnections} ${username} connections must be warmed`,
-  );
-  return count;
+  const reservedConnections: Awaited<ReturnType<typeof connection.reserve>>[] = [];
+  try {
+    // Postgres.js pools grow lazily, so concurrent fast queries do not prove that
+    // every configured physical connection exists. Holding each reservation does.
+    for (let index = 0; index < expectedConnections; index += 1) {
+      reservedConnections.push(await connection.reserve());
+    }
+    const backendPids = await Promise.all(
+      reservedConnections.map(async (reserved) => {
+        const [{ pid }] = await reserved<{ pid: number }[]>`SELECT pg_backend_pid()::int AS pid`;
+        return pid;
+      }),
+    );
+    assert.equal(
+      new Set(backendPids).size,
+      expectedConnections,
+      `all ${expectedConnections} ${username} connections must be distinct`,
+    );
+    const [{ count }] = await owner<{ count: number }[]>`
+      SELECT count(*)::int AS count
+      FROM pg_catalog.pg_stat_activity
+      WHERE datname=${database} AND usename=${username}
+    `;
+    assert.equal(
+      count,
+      expectedConnections,
+      `all ${expectedConnections} ${username} connections must be warmed`,
+    );
+    return count;
+  } finally {
+    await Promise.all(reservedConnections.map((reserved) => reserved.release()));
+  }
 }
 
 async function withApiContext<T>(api: Sql, work: (sql: TransactionSql) => Promise<T>): Promise<T> {
@@ -457,6 +473,7 @@ async function main(): Promise<void> {
       topology: {
         warmed_api_database_connections: warmedApiConnections,
         warmed_worker_database_connections: warmedWorkerConnections,
+        connection_warmup: 'reserved_distinct_sessions',
         concurrent_export_requests: workerCount,
         concurrent_export_workers: workerCount,
         external_vendors: 0,
