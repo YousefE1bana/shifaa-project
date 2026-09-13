@@ -143,12 +143,14 @@ try {
       'steady-state regional API latency; process and connection cold start excluded' ||
     performance.measurement_profile?.api_pool_connections !== 20 ||
     performance.measurement_profile?.read_only_warmup_requests !== 20 ||
-    performance.measurement_profile?.mutation_warmup_requests !== 20 ||
-    performance.measurement_profile?.worker_warmup_claims !== 20 ||
+    performance.measurement_profile?.mutation_warmup_requests !== 200 ||
+    performance.measurement_profile?.worker_warmup_claims !== 200 ||
     performance.measurement_profile?.observed_api_connections !== 20 ||
     performance.measurement_profile?.warmup_excluded_from_samples !== true
   )
-    failures.push('006 performance evidence lacks the deterministic 20-connection warmup profile.');
+    failures.push(
+      '006 performance evidence lacks the deterministic 20-connection and 200-operation warmup profile.',
+    );
   for (const key of ['read_p95', 'mutation_p95', 'sos_matching_p95', 'worker_claim_p95']) {
     if (!Number.isFinite(performance.measured_ms?.[key]))
       failures.push(`${key} is not a finite numeric measurement.`);
@@ -242,7 +244,7 @@ for (const gate of [
   if (!openGateRegister.includes(gate)) failures.push(`Canonical OPEN gate is missing: ${gate}`);
 
 const specKit = JSON.parse(text(join(root, '.specify', 'integration.json')));
-if (specKit.version !== '1.0.2') failures.push('Spec Kit integration is not v1.0.2.');
+if (specKit.version !== '1.0.6') failures.push('Spec Kit integration is not v1.0.6.');
 
 try {
   const aclProbe = execFileSync(

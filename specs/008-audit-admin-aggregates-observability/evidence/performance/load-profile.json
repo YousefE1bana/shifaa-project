@@ -24,6 +24,7 @@
   "topology": {
     "warmed_api_database_connections": 20,
     "warmed_worker_database_connections": 25,
+    "connection_warmup": "reserved_distinct_sessions",
     "concurrent_export_requests": 25,
     "concurrent_export_workers": 25,
     "external_vendors": 0
@@ -44,12 +45,12 @@
     "mutation_p95": 800
   },
   "results_ms": {
-    "audit_read_p95": 89.43,
-    "aggregate_read_p95": 1.22,
-    "read_p95": 89.43,
-    "export_request_p95": 81.34,
-    "export_claim_p95": 66.87,
-    "mutation_p95": 81.34
+    "audit_read_p95": 99.73,
+    "aggregate_read_p95": 1.14,
+    "read_p95": 99.73,
+    "export_request_p95": 92.76,
+    "export_claim_p95": 79.27,
+    "mutation_p95": 92.76
   },
   "concurrency": {
     "requested_batches": 25,
