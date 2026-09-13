@@ -118,43 +118,43 @@ All Phase 2 tasks are serial because they share one migration and mutable databa
 
 ## Phase 3 — Portable recurrence, availability, state, queue, and telemetry policy
 
-- [ ] T023 [P] [FR-FAC-005, FR-CLINIC-001, NFR-DATA-001, NFR-PORT-001] Implement vendor-free weekly civil-time recurrence, inclusive-date boundaries, IANA timezone resolution, earlier-offset ambiguous time, nonexistent-time omission, and stable UTC slot identity/context — `packages/core/src/clinic-scheduling/recurrence.ts`, `packages/core/src/clinic-scheduling/types.ts`
+- [x] T023 [P] [FR-FAC-005, FR-CLINIC-001, NFR-DATA-001, NFR-PORT-001] Implement vendor-free weekly civil-time recurrence, inclusive-date boundaries, IANA timezone resolution, earlier-offset ambiguous time, nonexistent-time omission, and stable UTC slot identity/context — `packages/core/src/clinic-scheduling/recurrence.ts`, `packages/core/src/clinic-scheduling/types.ts`
   - Depends on: `T003`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- clinic-scheduling-recurrence` exits 0 and the module imports no framework, database, transport, or vendor package
 
-- [ ] T024 [FR-FAC-005, FR-CLINIC-001, NFR-DATA-001, NFR-QUALITY-001, NFR-PORT-001] Add property and deterministic tests for weekdays, half-open windows, inclusive end dates, timezone-rule boundaries, nonexistent times, ambiguous times, and stable slot identity — `packages/core/src/clinic-scheduling/recurrence.test.ts`
+- [x] T024 [FR-FAC-005, FR-CLINIC-001, NFR-DATA-001, NFR-QUALITY-001, NFR-PORT-001] Add property and deterministic tests for weekdays, half-open windows, inclusive end dates, timezone-rule boundaries, nonexistent times, ambiguous times, and stable slot identity — `packages/core/src/clinic-scheduling/recurrence.test.ts`
   - Depends on: `T023`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- clinic-scheduling-recurrence` exits 0 across every approved DST/civil-time fixture with no duplicate or nonexistent slot
 
-- [ ] T025 [FR-FAC-005, FR-CLINIC-001, FR-CLINIC-005, NFR-DATA-001, NFR-PORT-001] Implement pure availability derivation with `absence > blocked > added > base`, added-window restrictions, overlap/boundary rules, freshness qualification, earliest replacement suggestions, and delay kept outside slot creation — `packages/core/src/clinic-scheduling/availability.ts`
+- [x] T025 [FR-FAC-005, FR-CLINIC-001, FR-CLINIC-005, NFR-DATA-001, NFR-PORT-001] Implement pure availability derivation with `absence > blocked > added > base`, added-window restrictions, overlap/boundary rules, freshness qualification, earliest replacement suggestions, and delay kept outside slot creation — `packages/core/src/clinic-scheduling/availability.ts`
   - Depends on: `T023`, `T024`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- clinic-scheduling-availability` exits 0 with exact effective ranges and future same-facility/same-doctor unreserved suggestions ordered earliest-first without holds
 
-- [ ] T026 [FR-FAC-005, FR-CLINIC-001, FR-CLINIC-005, NFR-DATA-001, NFR-QUALITY-001] Add exhaustive base/added/blocked/absence/delay, same-type overlap, boundary-touch, freshness, and replacement-suggestion tests — `packages/core/src/clinic-scheduling/availability.test.ts`
+- [x] T026 [FR-FAC-005, FR-CLINIC-001, FR-CLINIC-005, NFR-DATA-001, NFR-QUALITY-001] Add exhaustive base/added/blocked/absence/delay, same-type overlap, boundary-touch, freshness, and replacement-suggestion tests — `packages/core/src/clinic-scheduling/availability.test.ts`
   - Depends on: `T025`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- clinic-scheduling-availability` exits 0 with delay never changing slots and ordinary exception create never coalescing
 
-- [ ] T027 [P] [FR-CLINIC-002, FR-CLINIC-003, FR-CLINIC-008, NFR-DATA-001, NFR-PORT-001] Implement pure appointment transition/payment policy for all nine states, current-time/version preconditions, cash-only consequences, and explicit Feature 009 producer allow-list — `packages/core/src/clinic-scheduling/appointment-policy.ts`
+- [x] T027 [P] [FR-CLINIC-002, FR-CLINIC-003, FR-CLINIC-008, NFR-DATA-001, NFR-PORT-001] Implement pure appointment transition/payment policy for all nine states, current-time/version preconditions, cash-only consequences, and explicit Feature 009 producer allow-list — `packages/core/src/clinic-scheduling/appointment-policy.ts`
   - Depends on: `T003`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- clinic-scheduling-appointment` exits 0 with only approved create/cancel/reschedule/check-in outcomes and no refund or producer for `requested|in_queue|in_consultation|completed|no_show`
 
-- [ ] T028 [FR-CLINIC-002, FR-CLINIC-003, FR-CLINIC-008, NFR-DATA-001, NFR-QUALITY-001] Add a complete nine-state operation matrix including pre-start, post-check-in, `reschedule_required`, invalid replacement, stale, conflict, and transaction-failure cases — `packages/core/src/clinic-scheduling/appointment-policy.test.ts`
+- [x] T028 [FR-CLINIC-002, FR-CLINIC-003, FR-CLINIC-008, NFR-DATA-001, NFR-QUALITY-001] Add a complete nine-state operation matrix including pre-start, post-check-in, `reschedule_required`, invalid replacement, stale, conflict, and transaction-failure cases — `packages/core/src/clinic-scheduling/appointment-policy.test.ts`
   - Depends on: `T027`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- clinic-scheduling-appointment` exits 0 with all unspecified transitions denied and failed reschedule preserving the original appointment/slot model
 
-- [ ] T029 [P] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-DATA-001, NFR-PORT-001] Implement pure queue transition, waiting-order, version, scoped-reorder reason, wait-estimate, delay-overlay, and absence-removal policy for all five states — `packages/core/src/clinic-scheduling/queue-policy.ts`
+- [x] T029 [P] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-DATA-001, NFR-PORT-001] Implement pure queue transition, waiting-order, version, scoped-reorder reason, wait-estimate, delay-overlay, and absence-removal policy for all five states — `packages/core/src/clinic-scheduling/queue-policy.ts`
   - Depends on: `T003`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- clinic-scheduling-queue` exits 0 with queue-only call/complete, waiting-only reorder, delay estimate-only behavior, absence-only removal, and no `in_service` producer
 
-- [ ] T030 [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-DATA-001, NFR-QUALITY-001] Add complete five-state, target-position, stale-version, reason, estimate, delay replay/supersession, and absence-removal tests — `packages/core/src/clinic-scheduling/queue-policy.test.ts`
+- [x] T030 [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-DATA-001, NFR-QUALITY-001] Add complete five-state, target-position, stale-version, reason, estimate, delay replay/supersession, and absence-removal tests — `packages/core/src/clinic-scheduling/queue-policy.test.ts`
   - Depends on: `T029`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/core test -- clinic-scheduling-queue` exits 0 with atomic expected reorder projections and no appointment-state mutation
 
-- [ ] T031 [P] [FR-CLINIC-002, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-007, NFR-PRIV-002, NFR-OBS-001, NFR-PORT-001] Implement default-deny Feature 009 telemetry/redaction helpers with bounded labels and request/event/aggregate correlation — `packages/observability/src/clinic-scheduling.ts`, `packages/observability/src/index.ts`
+- [x] T031 [P] [FR-CLINIC-002, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-007, NFR-PRIV-002, NFR-OBS-001, NFR-PORT-001] Implement default-deny Feature 009 telemetry/redaction helpers with bounded labels and request/event/aggregate correlation — `packages/observability/src/clinic-scheduling.ts`, `packages/observability/src/index.ts`
   - Depends on: `T004`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/observability test -- clinic-scheduling` exits 0 with no patient name/contact, raw reason, exact public coordinate, token, appointment details, or identifier-valued metric label
 
-- [ ] T032 [FR-CLINIC-002, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-007, NFR-PRIV-002, NFR-OBS-001, NFR-QUALITY-001] Add prohibited-sentinel, high-cardinality, malformed-context, conflict/replay, outbox, queue, and delay/absence telemetry tests — `packages/observability/src/clinic-scheduling.test.ts`
+- [x] T032 [FR-CLINIC-002, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-007, NFR-PRIV-002, NFR-OBS-001, NFR-QUALITY-001] Add prohibited-sentinel, high-cardinality, malformed-context, conflict/replay, outbox, queue, and delay/absence telemetry tests — `packages/observability/src/clinic-scheduling.test.ts`
   - Depends on: `T031`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/observability test -- clinic-scheduling` exits 0 with zero prohibited sentinel values and only approved low-cardinality result classes
 
