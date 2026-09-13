@@ -65,6 +65,7 @@ The Feature 008 migration must succeed on the clean empty legacy `audit.events` 
 ## Performance and restore profile
 
 - Load 250,000 synthetic events across three completed UTC months, 100-event pages, 50 test-only cells, 20 warmed API DB connections, and 25 concurrent export requests/workers.
+- Establish the API and worker pool topology by reserving and holding every distinct physical database session until the exact connection count is observed; fixed-time sampling of lazy pool growth is not sufficient evidence.
 - Require read p95 <=400 ms and mutation p95 <=800 ms inside the declared environment, excluding external vendors.
 - Restore the database plus immutable object bytes/digests/proof within RPO <=15 minutes and RTO <=60 minutes, then re-run every partition chain and object proof check.
 - A missing/invalid chain, digest, proof, or declared topology fails the evidence gate; it is not repaired or reported as passing.

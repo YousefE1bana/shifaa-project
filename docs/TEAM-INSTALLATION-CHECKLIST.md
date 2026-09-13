@@ -32,7 +32,7 @@ fnm default 24.18.0
 fnm use 24.18.0
 corepack enable
 corepack install --global pnpm@11.13.0
-uv tool install --force "git+https://github.com/github/spec-kit.git@v1.0.2"
+uv tool install --force "git+https://github.com/github/spec-kit.git@v1.0.6"
 $specifyPython = Join-Path (uv tool dir) 'specify-cli\Scripts\python.exe'
 if (-not (Test-Path -LiteralPath $specifyPython)) { throw 'SpecKit Python runtime was not installed' }
 [Environment]::SetEnvironmentVariable('SPECKIT_PYTHON', $specifyPython, 'User')
@@ -48,7 +48,7 @@ Open Docker Desktop and wait until the engine reports that it is running. Then v
 $ErrorActionPreference = 'Stop'
 if ((node --version) -ne 'v24.18.0') { throw 'Node must be v24.18.0' }
 if ((pnpm --version) -ne '11.13.0') { throw 'pnpm must be 11.13.0' }
-if ((specify --version) -ne 'specify 1.0.2') { throw 'SpecKit must be 1.0.2' }
+if ((specify --version) -ne 'specify 1.0.6') { throw 'SpecKit must be 1.0.6' }
 if (-not (Test-Path -LiteralPath $env:SPECKIT_PYTHON)) { throw 'SPECKIT_PYTHON must point to the SpecKit uv runtime' }
 if ((kimi --version) -ne '0.34.0') { throw 'Kimi Code must be 0.34.0' }
 git --version

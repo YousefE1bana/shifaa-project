@@ -343,6 +343,7 @@ function verifyPerformanceEvidence() {
   if (
     performance.topology?.warmed_api_database_connections !== 20 ||
     performance.topology?.warmed_worker_database_connections !== 25 ||
+    performance.topology?.connection_warmup !== 'reserved_distinct_sessions' ||
     performance.warmup?.export_requests !== 25 ||
     performance.warmup?.export_claims !== 25 ||
     performance.warmup?.excluded_from_samples !== true
