@@ -50,7 +50,7 @@ Appointment states are exactly `requested`, `confirmed`, `checked_in`, `in_queue
 
 All Phase 2 tasks are serial because they share one migration and mutable database harness.
 
-- [ ] T007 [FR-FAC-005, FR-CLINIC-001, NFR-DATA-001, NFR-DATA-002, NFR-PRIV-004] Add the fail-closed expand preflight plus `clinical.schedules` and `clinical.schedule_windows` tables, audit columns, classifications, and generated half-open validity/window ranges — `supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql`
+- [ ] T007 [FR-FAC-005, FR-CLINIC-001, NFR-DATA-001, NFR-DATA-002, NFR-PRIV-004] Create the shared serial PostgreSQL acceptance runner, then add the fail-closed expand preflight plus `clinical.schedules` and `clinical.schedule_windows` tables, audit columns, classifications, and generated half-open validity/window ranges — `tools/run-clinic-scheduling-postgres-test.mjs`, `supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql`
   - Depends on: `T003`, `T004`
   - Acceptance evidence: `corepack pnpm test:clinic-scheduling:db -- schema-schedules` exits 0 on clean and upgrade fixtures with inclusive civil dates represented by the next-local-day exclusive boundary and no fabricated legacy facts
 
@@ -94,7 +94,7 @@ All Phase 2 tasks are serial because they share one migration and mutable databa
   - Depends on: `T016`
   - Acceptance evidence: `corepack pnpm test:clinic-scheduling:rls` exits 0 with only approved actor/scope/action cells allowed and no existence, cross-patient, cross-facility, cross-doctor, cross-date, stale-context, raw-reason, or worker-table disclosure
 
-- [ ] T018 [FR-FAC-005, FR-CLINIC-001, FR-CLINIC-002, FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-AVAIL-001, NFR-AVAIL-002, NFR-DATA-001, NFR-DATA-002] Add default-off server/UI/dispatch flags and explicit expand→validate→activate sequencing with safe reads, independent mutation/dispatch kill switches, roll-forward after durable writes, and no destructive contract step — `supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql`
+- [ ] T018 [FR-FAC-005, FR-CLINIC-001, FR-CLINIC-002, FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-AVAIL-001, NFR-AVAIL-002, NFR-DATA-001, NFR-DATA-002] Create the migration acceptance runner, then add default-off server/UI/dispatch flags and explicit expand→validate→activate sequencing with safe reads, independent mutation/dispatch kill switches, roll-forward after durable writes, and no destructive contract step — `tools/run-clinic-scheduling-migration-test.mjs`, `supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql`
   - Depends on: `T017`
   - Acceptance evidence: `corepack pnpm test:clinic-scheduling:migration` exits 0 for clean, upgrade, flag-off, validation, local/test activation, disabled-mutation, disabled-dispatch, and roll-forward paths without deleting or reinterpreting clinical history
 
@@ -106,11 +106,11 @@ All Phase 2 tasks are serial because they share one migration and mutable databa
   - Depends on: `T017`, `T019`
   - Acceptance evidence: `corepack pnpm test:clinic-scheduling:rls` exits 0 with every authorized cell minimally projected and every unauthorized cell producing zero rows and zero effects
 
-- [ ] T021 [FR-CLINIC-002, FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001, NFR-QUALITY-001] Add serial PostgreSQL race/fault coverage for booking, reschedule, check-in, queue allocation/reorder, ordinary exception overlap, delay supersession, absence cascade, replay, and transaction rollback — `services/api/test/clinic-scheduling-postgres.integration.test.ts`, `tools/run-clinic-scheduling-postgres-test.mjs`
+- [ ] T021 [FR-CLINIC-002, FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001, NFR-QUALITY-001] Add serial PostgreSQL race/fault coverage for booking, reschedule, check-in, queue allocation/reorder, ordinary exception overlap, delay supersession, absence cascade, replay, and transaction rollback — `services/api/test/clinic-scheduling-postgres.integration.test.ts`
   - Depends on: `T019`, `T020`
   - Acceptance evidence: `node tools/run-clinic-scheduling-postgres-test.mjs` exits 0 with one winner per contested resource and zero partial effects, duplicate numbers, compounded delays, duplicate notices, or changed producer boundaries
 
-- [ ] T022 [FR-CLINIC-002, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-002, NFR-AVAIL-001, NFR-DATA-001, NFR-DATA-002, NFR-PRIV-004, NFR-QUALITY-001] Add synthetic migration and point-in-time restore fixtures covering schedules, exceptions, appointments, queues, idempotency, audit, and outbox as one consistent truth set — `infra/db/tests/clinic-scheduling-migration.sql`, `infra/db/fixtures/clinic-scheduling-restore.sql`
+- [ ] T022 [FR-CLINIC-002, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-002, NFR-AVAIL-001, NFR-DATA-001, NFR-DATA-002, NFR-PRIV-004, NFR-QUALITY-001] Create the restore acceptance runner, then add synthetic migration and point-in-time restore fixtures covering schedules, exceptions, appointments, queues, idempotency, audit, and outbox as one consistent truth set — `tools/run-clinic-scheduling-restore-test.mjs`, `infra/db/tests/clinic-scheduling-migration.sql`, `infra/db/fixtures/clinic-scheduling-restore.sql`
   - Depends on: `T021`
   - Acceptance evidence: `corepack pnpm test:clinic-scheduling:restore -- fixture` exits 0 with consistent references/versions/order after restore, no fabricated history, and retention duration left gated by `OPEN-LEGAL-002`
 
