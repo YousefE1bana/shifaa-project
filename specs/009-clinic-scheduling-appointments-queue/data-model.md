@@ -12,24 +12,26 @@
 
 ### `clinical.schedules`
 
-| Column                   | Type/constraint                                                            |
-| ------------------------ | -------------------------------------------------------------------------- |
-| `id`                     | `uuid primary key default gen_random_uuid()`                               |
-| `facility_id`            | `uuid not null references identity.facilities(id)`                         |
-| `doctor_person_id`       | `uuid not null references identity.people(id)`                             |
-| `timezone_name`          | `text not null`, validated against IANA timezone names by guarded function |
-| `valid_from`, `valid_to` | `date not null`, `valid_to >= valid_from`; inclusive civil dates           |
-| `valid_dates`            | generated `daterange(valid_from, valid_to + 1, '[)')`                      |
-| `slot_duration_minutes`  | `smallint not null`, positive and bounded to one civil day                 |
-| `status`                 | `text check in ('active','paused','retired')`                              |
-| `version`                | `integer not null default 1 check (version > 0)`                           |
-| audit columns            | `created_at`, `updated_at`, `created_by_person_id`, `updated_by_person_id` |
+| Column                   | Type/constraint                                                             |
+| ------------------------ | --------------------------------------------------------------------------- |
+| `id`                     | `uuid primary key default gen_random_uuid()`                                |
+| `facility_id`            | `uuid not null references identity.facilities(id)`                          |
+| `doctor_person_id`       | `uuid not null references identity.people(id)`                              |
+| `timezone_name`          | `text not null`, validated against IANA timezone names by guarded function  |
+| `valid_from`, `valid_to` | `date not null`, `valid_to >= valid_from`; inclusive civil dates            |
+| `valid_dates`            | generated `daterange(valid_from, valid_to + 1, '[)')`                       |
+| `slot_duration_minutes`  | `smallint not null`, positive and bounded to one civil day                  |
+| `fee_minor_units`        | `bigint not null`, non-negative versioned fee authority                     |
+| `currency_code`          | `char(3) not null`, server-owned fixed value `EGP`; never client-selectable |
+| `status`                 | `text check in ('active','paused','retired')`                               |
+| `version`                | `integer not null default 1 check (version > 0)`                            |
+| audit columns            | `created_at`, `updated_at`, `created_by_person_id`, `updated_by_person_id`  |
 
 Constraints/indexes:
 
 - Partial GiST exclusion `(facility_id WITH =, doctor_person_id WITH =, valid_dates WITH &&) WHERE status='active'`.
 - B-tree `(facility_id, doctor_person_id, status, valid_from, valid_to, id)` for scoped reads.
-- Trigger rejects every transition out of `retired`, validates doctor active membership/licence at write time, and increments version on effective update.
+- Trigger rejects every transition out of `retired`, validates doctor active membership/licence at write time, and increments version on every effective update, including a fee change. Schedule creation requires `fee_minor_units`; clients never provide `currency_code`, which is written as the fixed server-owned `EGP` value.
 
 ### `clinical.schedule_windows`
 
@@ -67,15 +69,15 @@ Constraints/indexes:
 
 ### `clinical.appointments`
 
-| Column         | Type/constraint                                                                                                                               |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| identity/scope | `id`, `patient_person_id`, `facility_id`, `doctor_person_id`, `schedule_id` FKs                                                               |
-| slot identity  | `starts_at`, `ends_at` timestamptz; generated half-open `occupied_range`; `timezone_name`, `civil_date`, `local_start`                        |
-| commerce       | `fee_minor_units bigint >= 0`, ISO currency code, `payment_method='cash_on_arrival'`                                                          |
-| status         | exact nine: `requested`, `confirmed`, `checked_in`, `in_queue`, `in_consultation`, `completed`, `cancelled`, `no_show`, `reschedule_required` |
-| source         | nullable opaque `source_referral_id`; storage compatibility only, with no Feature 010 validation, route, or producer                          |
-| cancellation   | nullable bounded restricted reason and actor/time                                                                                             |
-| control        | positive `version`, created/updated actor/time                                                                                                |
+| Column         | Type/constraint                                                                                                                                |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| identity/scope | `id`, `patient_person_id`, `facility_id`, `doctor_person_id`, `schedule_id` FKs                                                                |
+| slot identity  | `starts_at`, `ends_at` timestamptz; generated half-open `occupied_range`; `timezone_name`, `civil_date`, `local_start`                         |
+| commerce       | `fee_minor_units bigint >= 0` and `currency_code char(3) = 'EGP'` snapshot from the authoritative schedule, `payment_method='cash_on_arrival'` |
+| status         | exact nine: `requested`, `confirmed`, `checked_in`, `in_queue`, `in_consultation`, `completed`, `cancelled`, `no_show`, `reschedule_required`  |
+| source         | nullable opaque `source_referral_id`; storage compatibility only, with no Feature 010 validation, route, or producer                           |
+| cancellation   | nullable bounded restricted reason and actor/time                                                                                              |
+| control        | positive `version`, created/updated actor/time                                                                                                 |
 
 - Partial GiST exclusion `(doctor_person_id WITH =, occupied_range WITH &&) WHERE status IN ('confirmed','checked_in','in_queue','in_consultation')` is the final double-booking guard across facilities.
 - Indexes: patient status/time; facility/doctor/civil-date/status/time; doctor upcoming occupying; schedule/time; status/time.
@@ -113,30 +115,30 @@ Constraints/indexes:
 
 ## 3. Transaction boundaries
 
-| Use case               | Locked rows and atomic effects                                                                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Create/update schedule | facility/doctor active schedules, target schedule/windows; validate licence, active-range and window exclusions; audit/outbox/idempotency               |
-| Create exception       | schedule plus intersecting exceptions; validate precedence/overlap; audit/outbox/idempotency                                                            |
-| Book                   | schedule/slot plus candidate occupying appointments; insert confirmed appointment; audit/outbox/idempotency                                             |
-| Cancel                 | appointment; validate actor/state/pre-start rule; cancel and release occupancy; audit/outbox/idempotency                                                |
-| Reschedule             | appointment plus replacement schedule/slot; one-row update guarded by exclusion; audit/outbox/idempotency                                               |
-| Check in               | appointment plus queue scope; allocate immutable number, create exactly one waiting entry, set appointment checked_in; audit/outbox/idempotency         |
-| Call/complete          | queue scope and entry; exact state/version transition; appointment unchanged; audit/outbox/idempotency                                                  |
-| Reorder                | queue scope and affected waiting rows; validate reason/target/version, rewrite bounded order/estimates; appointment unchanged; audit/outbox/idempotency |
-| Delay                  | queue scope and active delay exception; supersede/insert/recalculate estimates and notification work; no order/time/state/slot change                   |
-| Absence                | schedule/scope, intersecting appointments and waiting/called entries; exception insert, appointment/queue effects, audit/outbox/idempotency             |
+| Use case               | Locked rows and atomic effects                                                                                                                                                                              |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Create/update schedule | facility/doctor active schedules, target schedule/windows; validate licence, active-range and window exclusions; audit/outbox/idempotency                                                                   |
+| Create exception       | schedule plus intersecting exceptions; validate precedence/overlap; audit/outbox/idempotency                                                                                                                |
+| Book                   | schedule fee authority/slot plus candidate occupying appointments; read and lock the schedule fee in the same transaction, snapshot fee plus `EGP` into the confirmed appointment; audit/outbox/idempotency |
+| Cancel                 | appointment; validate actor/state/pre-start rule; cancel and release occupancy; audit/outbox/idempotency                                                                                                    |
+| Reschedule             | appointment plus replacement schedule/slot; one-row update guarded by exclusion; audit/outbox/idempotency                                                                                                   |
+| Check in               | appointment plus queue scope; allocate immutable number, create exactly one waiting entry, set appointment checked_in; audit/outbox/idempotency                                                             |
+| Call/complete          | queue scope and entry; exact state/version transition; appointment unchanged; audit/outbox/idempotency                                                                                                      |
+| Reorder                | queue scope and affected waiting rows; validate reason/target/version, rewrite bounded order/estimates; appointment unchanged; audit/outbox/idempotency                                                     |
+| Delay                  | queue scope and active delay exception; supersede/insert/recalculate estimates and notification work; no order/time/state/slot change                                                                       |
+| Absence                | schedule/scope, intersecting appointments and waiting/called entries; exception insert, appointment/queue effects, audit/outbox/idempotency                                                                 |
 
 All idempotent use cases first lock/claim their canonical idempotency record. Unique/exclusion violations map to deterministic RFC 9457 conflicts; no retry loop may duplicate an effect.
 
 ## 4. RLS and disclosure matrix
 
-| Actor            | Read                                                                                            | Mutation                                                                          |
-| ---------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Public/anonymous | minimum verified doctor/facility/availability projection only                                   | none                                                                              |
-| Patient          | own appointments and minimum own queue position                                                 | book/cancel/reschedule/check-in only where catalog state/scope allows             |
-| GUA/DEL          | represented patient's minimum rows through active canonical relationship + `appointment.manage` | same bounded patient actions                                                      |
-| CLN              | exact active membership/licence facility/doctor/date worklist                                   | only operation/action/purpose-authorized schedule, appointment, and queue effects |
-| Worker           | published template and claimed outbox/minimum event projection only                             | receipts/delivery state through existing worker functions; no clinical mutation   |
+| Actor                            | Read                                                                                                                 | Mutation                                                                          |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Anonymous/public service context | minimum verified doctor/facility/availability/fee projection only; no bearer or patient-record authority is required | none                                                                              |
+| Patient                          | own appointments and minimum own queue position                                                                      | book/cancel/reschedule/check-in only where catalog state/scope allows             |
+| GUA/DEL                          | represented patient's minimum rows through active canonical relationship + `appointment.manage`                      | same bounded patient actions                                                      |
+| CLN                              | exact active membership/licence facility/doctor/date worklist                                                        | only operation/action/purpose-authorized schedule, appointment, and queue effects |
+| Worker                           | published template and claimed outbox/minimum event projection only                                                  | receipts/delivery state through existing worker functions; no clinical mutation   |
 
 Tests cover wrong patient, expired/revoked relationship, wrong permission, wrong facility/doctor/date, inactive membership/licence, missing purpose/AAL, stale version, and enumeration-safe not-found behavior.
 

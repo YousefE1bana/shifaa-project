@@ -300,12 +300,30 @@ function verifyShapes(api, operations) {
     availabilityPage.properties?.version?.$ref !== '#/components/schemas/Version'
   )
     fail('AvailabilityPage must expose the authoritative version.');
+  const readFreshness = schema(api, components.ReadFreshness);
+  if (JSON.stringify(readFreshness?.enum) !== JSON.stringify(['fresh', 'stale', 'unknown']))
+    fail('ReadFreshness must distinguish fresh, stale, and unknown.');
+  const doctorSearchPage = schema(api, components.DoctorSearchPage);
+  const appointmentPage = schema(api, components.AppointmentPage);
+  for (const [name, pageSchema] of [
+    ['DoctorSearchPage', doctorSearchPage],
+    ['AvailabilityPage', availabilityPage],
+    ['AppointmentPage', appointmentPage],
+  ]) {
+    if (
+      !pageSchema?.required?.includes('freshness') ||
+      pageSchema.properties?.freshness?.$ref !== '#/components/schemas/ReadFreshness'
+    )
+      fail(`${name} must require explicit read freshness.`);
+  }
   const queueSchema = schema(api, components.Queue);
   if (
     !queueSchema?.required?.includes('nextCursor') ||
     queueSchema.properties?.nextCursor?.type?.toString() !== 'string,null'
   )
     fail('Queue must expose nullable nextCursor pagination.');
+  if (queueSchema.properties?.freshness?.$ref !== '#/components/schemas/ReadFreshness')
+    fail('Queue reads must be able to expose explicit read freshness.');
   const queuePosition = schema(api, components.QueuePosition);
   if (
     !queuePosition?.required?.includes('updatedAt') ||

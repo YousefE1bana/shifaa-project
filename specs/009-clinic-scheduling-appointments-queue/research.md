@@ -54,7 +54,13 @@ Delay locks its facility/doctor/civil-date scope and supersedes the prior active
 
 **Decision:** expand/validate/activate/contract. Additive schema deploys with flag off; constraints/RLS/backfill validate before activation. After durable writes, disable and roll forward rather than drop data. Low-cardinality PHI-free metrics cover operations, conflicts, replay, queue, outbox, and restore. Restore recovers clinical, idempotency, audit, and outbox consistently.
 
-## R-011 — Binary evidence storage
+## R-011 — Versioned schedule fee authority and public reads
+
+**Decision:** `clinical.schedules` is the sole versioned fee authority for Feature 009. `createSchedule` requires non-negative `fee_minor_units`; `updateSchedule` may change that fee only under the current `If-Match` schedule version, and every effective fee change increments `schedule.version`. Currency is server-owned and fixed to `EGP`; no client request may select or override currency. `createAppointment` locks and reads the schedule fee in the same transaction that acquires the slot, then snapshots the fee and `EGP` into the appointment. Discovery and availability reads expose only the minimum verified projection, including the fee, through an anonymous/public service context with no patient-record authority; authentication is optional.
+
+**Rejected:** client-supplied appointment fee or currency, a separate pricing table/service, fee lookup outside the booking transaction, mutable appointment pricing after booking, and requiring a bearer token for the two public reads.
+
+## R-012 — Binary evidence storage
 
 **Finding:** PNG is binary in `.gitattributes`; no LFS pattern exists. Prior immutable visual evidence is committed directly; CI artifacts are transient SBOM/SARIF only. The unchanged approved set is 492 PNGs, 29,237,789 bytes (27.883 MiB), manifest SHA-256 `3ac755cc03c263826d1a07d53e08716e8390857249dbda1eb936833265ac0a4c`.
 

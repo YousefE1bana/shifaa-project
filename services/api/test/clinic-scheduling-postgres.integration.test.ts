@@ -1,10 +1,18 @@
-import postgres from 'postgres';
-import { beforeEach, describe, expect, it } from 'vitest';
+import postgres, { type Sql, type TransactionSql } from 'postgres';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-const database = process.env.SHIFAA_F009_DATABASE;
+import { buildApp } from '../src/app.js';
+import { loadConfig } from '../src/config.js';
+import { PostgresClinicSchedulingService } from '../src/adapters/postgres/clinic-scheduling-service.js';
+import { PostgresIdentityRepository } from '../src/adapters/postgres/identity-repository.js';
+import { ClinicSchedulingService } from '../src/modules/clinic-scheduling/service.js';
+
+type QueryClient = Sql | TransactionSql;
+
+const database = process.env['SHIFAA_F009_DATABASE'];
 const options = {
-  host: process.env.SHIFAA_PG_HOST ?? '127.0.0.1',
-  port: Number(process.env.SHIFAA_PG_PORT ?? 5432),
+  host: process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1',
+  port: Number(process.env['SHIFAA_PG_PORT'] ?? 5432),
   username: 'shifaa_owner',
   password: 'synthetic_owner_only',
   max: 1,
@@ -22,6 +30,143 @@ function client() {
   if (!database) throw new Error('SHIFAA_F009_DATABASE is required for PostgreSQL race tests');
   return postgres({ ...options, database });
 }
+const apiDatabaseUrl = database
+  ? `postgresql://shifaa_api:synthetic_api_only@${process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1'}:${process.env['SHIFAA_PG_PORT'] ?? 5432}/${database}`
+  : undefined;
+let apiHarness: Awaited<ReturnType<typeof buildApp>> | undefined;
+let apiIdentity: PostgresIdentityRepository | undefined;
+let testFailureOperation: string | undefined;
+
+async function apiRequest(
+  person: string,
+  request: {
+    method: 'POST' | 'PATCH';
+    url: string;
+    payload?: unknown;
+    key: string;
+    version?: number;
+  },
+) {
+  if (!apiHarness) throw new Error('The Feature 009 HTTP harness is not initialized.');
+  const response = await apiHarness.app.inject({
+    method: request.method,
+    url: request.url,
+    headers: {
+      authorization: `Bearer synthetic-person:${person}`,
+      'idempotency-key': request.key,
+      ...(request.version === undefined ? {} : { 'if-match': `"${request.version}"` }),
+    },
+    ...(request.payload === undefined ? {} : { payload: request.payload }),
+  });
+  if (response.statusCode >= 400) {
+    throw new Error(
+      `HTTP ${response.statusCode} ${request.method} ${request.url}: ${response.body}`,
+    );
+  }
+  return response.json() as Record<string, unknown>;
+}
+
+async function apiBook(patient: string, startsAt: string, endsAt: string, suffix: string) {
+  const response = await apiRequest(patient, {
+    method: 'POST',
+    url: '/v1/appointments',
+    key: `f009-http-book-${suffix}`,
+    payload: {
+      patientId: patient,
+      facilityId: ids.facility,
+      doctorId: ids.doctor,
+      startsAt,
+      endsAt,
+      timezone: 'Africa/Cairo',
+      civilDate: '2030-01-07',
+      paymentMethod: 'cash_on_arrival',
+    },
+  });
+  return String(response['id']);
+}
+
+async function apiCheckIn(patient: string, appointmentId: string, version: number, suffix: string) {
+  return apiRequest(patient, {
+    method: 'POST',
+    url: `/v1/appointments/${appointmentId}/check-in`,
+    key: `f009-http-checkin-${suffix}`,
+    version,
+  });
+}
+
+async function apiReschedule(
+  patient: string,
+  appointmentId: string,
+  version: number,
+  startsAt: string,
+  endsAt: string,
+  suffix: string,
+) {
+  return apiRequest(patient, {
+    method: 'POST',
+    url: `/v1/appointments/${appointmentId}/reschedule`,
+    key: `f009-http-reschedule-${suffix}`,
+    version,
+    payload: { startsAt, endsAt, timezone: 'Africa/Cairo', civilDate: '2030-01-07' },
+  });
+}
+
+async function apiReorder(
+  queueEntryId: string,
+  version: number,
+  targetPosition: number,
+  suffix: string,
+) {
+  return apiRequest(ids.owner, {
+    method: 'POST',
+    url: `/v1/queue-entries/${queueEntryId}/reorder`,
+    key: `f009-http-reorder-${suffix}`,
+    version,
+    payload: { targetPosition, queueVersion: version, reason: 'concurrent reorder' },
+  });
+}
+
+async function apiAbsence(
+  suffix: string,
+  startsAt = '2030-01-07T11:00:00Z',
+  endsAt = '2030-01-07T11:30:00Z',
+  reason = 'race absence',
+) {
+  return apiRequest(ids.owner, {
+    method: 'POST',
+    url: `/v1/clinics/${ids.facility}/doctors/${ids.doctor}/absence`,
+    key: `f009-http-absence-${suffix}`,
+    payload: {
+      startsAt,
+      endsAt,
+      civilDate: '2030-01-07',
+      reason,
+    },
+  });
+}
+
+async function apiDelay(minutes: number, suffix: string) {
+  return apiRequest(ids.owner, {
+    method: 'POST',
+    url: `/v1/clinics/${ids.facility}/doctors/${ids.doctor}/delay`,
+    key: `f009-http-delay-${suffix}`,
+    payload: {
+      civilDate: '2030-01-07',
+      delayMinutes: minutes,
+      templateCode: 'F009_DELAY_RACE',
+      reason: `delay ${minutes}`,
+    },
+  });
+}
+
+async function withFailure<T>(operation: string, action: () => Promise<T>): Promise<T> {
+  testFailureOperation = operation;
+  try {
+    return await action();
+  } finally {
+    testFailureOperation = undefined;
+  }
+}
 async function expectRejected(action: () => Promise<unknown>) {
   try {
     await action();
@@ -30,8 +175,13 @@ async function expectRejected(action: () => Promise<unknown>) {
     return true;
   }
 }
+function rowAt<T>(rows: readonly T[], index = 0): T {
+  const row = rows[index];
+  if (!row) throw new Error(`Expected PostgreSQL row at index ${index}.`);
+  return row;
+}
 async function context(
-  sql: ReturnType<typeof postgres>,
+  sql: QueryClient,
   person: string,
   action = 'appointment.manage',
   purposes = 'appointment.scheduling',
@@ -42,7 +192,7 @@ async function context(
   );
 }
 
-async function setup(sql: ReturnType<typeof postgres>) {
+async function setup(sql: Sql) {
   await sql.begin(async (tx) => {
     await tx.unsafe(
       "SELECT set_config('shifaa.person_id','f0090000-0000-4000-8c00-000000000001',true),set_config('shifaa.environment','local',true),set_config('shifaa.test_now','2026-09-12T08:00:00Z',true)",
@@ -55,50 +205,71 @@ async function setup(sql: ReturnType<typeof postgres>) {
       INSERT INTO identity.professional_licenses(id,person_id,profession,number_ciphertext,number_hash,issuer,expires_on,status) VALUES ('f0090000-0000-4000-8a00-000000000010','${ids.doctor}','doctor',decode(repeat('3',16),'hex'),decode(repeat('4',64),'hex'),'F009 race regulator','2099-12-31','verified');
       INSERT INTO identity.facility_memberships(facility_id,person_id,role_code,valid_from,membership_status,created_by_person_id) VALUES ('${ids.facility}','${ids.owner}','owner','2020-01-01','active','${ids.owner}');
       INSERT INTO identity.facility_memberships(facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id) VALUES ('${ids.facility}','${ids.doctor}','doctor','f0090000-0000-4000-8a00-000000000010','2020-01-01','active','${ids.owner}');
-      INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,status,created_by_person_id,updated_by_person_id) VALUES ('${ids.schedule}','${ids.facility}','${ids.doctor}','Africa/Cairo','2030-01-01','2030-01-31',30,'active','${ids.owner}','${ids.owner}');
+      INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,fee_minor_units,currency_code,status,created_by_person_id,updated_by_person_id) VALUES ('${ids.schedule}','${ids.facility}','${ids.doctor}','Africa/Cairo','2030-01-01','2030-01-31',30,10000,'EGP','active','${ids.owner}','${ids.owner}');
       INSERT INTO clinical.schedule_windows(schedule_id,iso_weekday,local_start,local_end) VALUES ('${ids.schedule}',2,'09:00','15:00');
     `);
   });
 }
 
-async function book(
-  sql: ReturnType<typeof postgres>,
-  patient: string,
-  starts: string,
-  ends: string,
-) {
-  const localStart = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Africa/Cairo',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-  }).format(new Date(starts));
-  const payload = {
-    patient_person_id: patient,
-    facility_id: ids.facility,
-    doctor_person_id: ids.doctor,
-    schedule_id: ids.schedule,
-    starts_at: starts,
-    ends_at: ends,
-    timezone_name: 'Africa/Cairo',
-    civil_date: '2030-01-07',
-    local_start: localStart,
-    fee_minor_units: 10000,
-    currency_code: 'EGP',
-  };
-  const rows = await sql.begin(async (tx) => {
-    await context(tx, patient);
-    return tx`SELECT clinical.create_appointment_v1(${tx.json(payload)}::jsonb) AS id`;
-  });
-  return String(rows[0].id);
-}
-async function snapshot(sql: ReturnType<typeof postgres>) {
+async function snapshot(sql: Sql) {
   const rows =
     await sql`SELECT (SELECT count(*) FROM clinical.schedules)::int AS schedules,(SELECT count(*) FROM clinical.appointments)::int AS appointments,(SELECT count(*) FROM clinical.queue_entries)::int AS queue_entries,(SELECT count(*) FROM clinical.schedule_exceptions)::int AS exceptions,(SELECT count(*) FROM audit.events)::int AS audit,(SELECT count(*) FROM platform.outbox_events)::int AS outbox,(SELECT count(*) FROM platform.idempotency_records)::int AS idempotency`;
-  return rows[0];
+  return rowAt(rows);
 }
 
 describe.skipIf(!database)('Feature 009 PostgreSQL races and fault boundaries', () => {
+  beforeAll(async () => {
+    if (!apiDatabaseUrl) throw new Error('SHIFAA_F009_DATABASE is required for the HTTP harness');
+    const identity = new PostgresIdentityRepository(apiDatabaseUrl);
+    apiIdentity = identity;
+    await identity.ready();
+    const base = loadConfig({ NODE_ENV: 'test' });
+    const adapter = new PostgresClinicSchedulingService(
+      {
+        withRawTransaction: <T>(work: (tx: TransactionSql) => Promise<T>) =>
+          identity.withRawTransaction(async (tx) => {
+            if (testFailureOperation !== undefined) {
+              await tx`select set_config('shifaa.test_fail_operation',${testFailureOperation},true)`;
+            }
+            return work(tx);
+          }),
+      },
+      'local',
+    );
+    apiHarness = await buildApp({
+      config: {
+        ...base,
+        repositoryAdapter: 'postgres',
+        databaseUrl: apiDatabaseUrl,
+        identityOnboardingEnabled: true,
+        syntheticMode: true,
+      },
+      clinicSchedulingService: new ClinicSchedulingService({
+        authorization: {
+          authorize: async (actor, action, target) => ({
+            action,
+            facilityId: target.facilityId ?? ids.facility,
+            ...(target.doctorId === undefined ? {} : { doctorId: target.doctorId }),
+            ...(target.patientId === undefined ? {} : { patientId: target.patientId }),
+            facilityVerified: true,
+            doctorLicenseVerified: true,
+            relationship: actor.personId === ids.owner ? 'owner' : 'self',
+          }),
+        },
+        featureFlags: { enabled: async () => true },
+        read: adapter,
+        clock: { now: () => new Date('2030-01-01T00:00:00.000Z') },
+        cache: { get: async () => undefined, set: async () => undefined },
+        repository: adapter,
+      }),
+    });
+  });
+
+  afterAll(async () => {
+    await apiHarness?.app.close();
+    await apiIdentity?.close();
+  });
+
   beforeEach(async () => {
     const sql = client();
     try {
@@ -132,24 +303,30 @@ describe.skipIf(!database)('Feature 009 PostgreSQL races and fault boundaries', 
 
   it('uses create_appointment_v1 for one-winner booking and reschedule race with loser original slot/version', async () => {
     const first = client();
-    const second = client();
     try {
       await setup(first);
       const booking = await Promise.allSettled([
-        book(first, ids.patientA, '2030-01-07T07:00:00Z', '2030-01-07T07:30:00Z'),
-        book(second, ids.patientB, '2030-01-07T07:00:00Z', '2030-01-07T07:30:00Z'),
+        apiBook(ids.patientA, '2030-01-07T07:00:00Z', '2030-01-07T07:30:00Z', 'race-a'),
+        apiBook(ids.patientB, '2030-01-07T07:00:00Z', '2030-01-07T07:30:00Z', 'race-b'),
       ]);
       expect(booking.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
-      const a = await book(first, ids.patientA, '2030-01-07T08:00:00Z', '2030-01-07T08:30:00Z');
-      const b = await book(second, ids.patientB, '2030-01-07T09:00:00Z', '2030-01-07T09:30:00Z');
-      const move = (sql: ReturnType<typeof postgres>, id: string, patient: string) =>
-        sql.begin(async (tx) => {
-          await context(tx, patient);
-          return tx`SELECT clinical.reschedule_appointment_v1(${id},1,'2030-01-07T10:00:00Z','2030-01-07T10:30:00Z','2030-01-07','12:00')`;
-        });
+      const a = await apiBook(
+        ids.patientA,
+        '2030-01-07T08:00:00Z',
+        '2030-01-07T08:30:00Z',
+        'move-a',
+      );
+      const b = await apiBook(
+        ids.patientB,
+        '2030-01-07T09:00:00Z',
+        '2030-01-07T09:30:00Z',
+        'move-b',
+      );
+      const move = (id: string, patient: string, suffix: string) =>
+        apiReschedule(patient, id, 1, '2030-01-07T10:00:00Z', '2030-01-07T10:30:00Z', suffix);
       const reschedules = await Promise.allSettled([
-        move(first, a, ids.patientA),
-        move(second, b, ids.patientB),
+        move(a, ids.patientA, 'move-a-race'),
+        move(b, ids.patientB, 'move-b-race'),
       ]);
       expect(reschedules.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
       const loserId = reschedules[0].status === 'rejected' ? a : b;
@@ -157,188 +334,182 @@ describe.skipIf(!database)('Feature 009 PostgreSQL races and fault boundaries', 
         await first`SELECT starts_at,ends_at,version FROM clinical.appointments WHERE id=${loserId}`;
       const expectedLoserStart =
         loserId === a ? '2030-01-07T08:00:00.000Z' : '2030-01-07T09:00:00.000Z';
-      expect(new Date(loser[0].starts_at).toISOString()).toBe(expectedLoserStart);
-      expect(Number(loser[0].version)).toBe(1);
+      const loserRow = rowAt(loser);
+      expect(new Date(loserRow['starts_at']).toISOString()).toBe(expectedLoserStart);
+      expect(Number(loserRow['version'])).toBe(1);
     } finally {
       await first.end({ timeout: 5 });
-      await second.end({ timeout: 5 });
     }
   });
 
   it('serializes same-appointment check-in retry to one queue number and one pair of effects', async () => {
     const first = client();
-    const second = client();
     try {
       await setup(first);
-      const appointmentId = await book(
-        first,
+      const appointmentId = await apiBook(
         ids.patientA,
         '2030-01-07T11:00:00Z',
         '2030-01-07T11:30:00Z',
+        'checkin-book',
       );
-      const checkIn = (sql: ReturnType<typeof postgres>) =>
-        sql.begin(async (tx) => {
-          await context(tx, ids.patientA);
-          return tx`SELECT clinical.check_in_appointment_v1(${appointmentId},1)`;
-        });
-      const outcomes = await Promise.allSettled([checkIn(first), checkIn(second)]);
+      const outcomes = await Promise.allSettled([
+        apiCheckIn(ids.patientA, appointmentId, 1, 'checkin-a'),
+        apiCheckIn(ids.patientA, appointmentId, 1, 'checkin-b'),
+      ]);
       expect(outcomes.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
       const counts =
         await first`SELECT count(*)::int AS entries, count(DISTINCT queue_number)::int AS numbers FROM clinical.queue_entries WHERE appointment_id=${appointmentId}`;
-      expect(counts[0]).toMatchObject({ entries: 1, numbers: 1 });
+      expect(rowAt(counts)).toMatchObject({ entries: 1, numbers: 1 });
       const effects =
         await first`SELECT count(*)::int AS count FROM audit.events WHERE resource_id=${appointmentId} AND action_code='appointment.checked_in'`;
-      expect(effects[0].count).toBe(1);
+      expect(rowAt(effects)['count']).toBe(1);
     } finally {
       await first.end({ timeout: 5 });
-      await second.end({ timeout: 5 });
     }
   });
 
   it('serializes concurrent queue reorders to one approved outcome with contiguous order and unchanged appointments', async () => {
     const first = client();
-    const second = client();
     try {
       await setup(first);
       const appointments = await Promise.all([
-        book(first, ids.patientA, '2030-01-07T07:00:00Z', '2030-01-07T07:30:00Z'),
-        book(first, ids.patientA, '2030-01-07T08:00:00Z', '2030-01-07T08:30:00Z'),
-        book(first, ids.patientA, '2030-01-07T09:00:00Z', '2030-01-07T09:30:00Z'),
+        apiBook(ids.patientA, '2030-01-07T07:00:00Z', '2030-01-07T07:30:00Z', 'queue-book-a'),
+        apiBook(ids.patientA, '2030-01-07T08:00:00Z', '2030-01-07T08:30:00Z', 'queue-book-b'),
+        apiBook(ids.patientA, '2030-01-07T09:00:00Z', '2030-01-07T09:30:00Z', 'queue-book-c'),
       ]);
-      for (const appointmentId of appointments) {
-        await first.begin(async (tx) => {
-          await context(tx, ids.patientA);
-          await tx`SELECT clinical.check_in_appointment_v1(${appointmentId},1)`;
-        });
-      }
-      const entries = await first`SELECT id FROM clinical.queue_entries ORDER BY waiting_order`;
-      const reorder = (sql: ReturnType<typeof postgres>) =>
-        sql.begin(async (tx) => {
-          await context(tx, ids.owner, 'queue.manage', 'queue.operation', 1);
-          return tx`SELECT clinical.reorder_queue_entry_v1(${entries[1].id},1,1,'concurrent reorder')`;
-        });
-      const outcomes = await Promise.allSettled([reorder(first), reorder(second)]);
+      for (const [index, appointmentId] of appointments.entries())
+        await apiCheckIn(ids.patientA, appointmentId, 1, `queue-checkin-${index}`);
+      const entries =
+        await first`SELECT id,version FROM clinical.queue_entries ORDER BY waiting_order`;
+      const queueEntryId = String(rowAt(entries, 1)['id']);
+      const queueEntryVersion = Number(rowAt(entries, 1)['version']);
+      const outcomes = await Promise.allSettled([
+        apiReorder(queueEntryId, queueEntryVersion, 1, 'queue-race-a'),
+        apiReorder(queueEntryId, queueEntryVersion, 1, 'queue-race-b'),
+      ]);
       expect(outcomes.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
       expect(outcomes.filter((result) => result.status === 'rejected')).toHaveLength(1);
       const order =
         await first`SELECT array_agg(waiting_order ORDER BY waiting_order)::int[] AS values FROM clinical.queue_entries WHERE state='waiting'`;
-      expect(order[0].values).toEqual([1, 2, 3]);
+      expect(rowAt(order)['values']).toEqual([1, 2, 3]);
       const states =
         await first`SELECT array_agg(status ORDER BY starts_at) AS values FROM clinical.appointments`;
-      expect(states[0].values).toEqual(['checked_in', 'checked_in', 'checked_in']);
+      expect(rowAt(states)['values']).toEqual(['checked_in', 'checked_in', 'checked_in']);
     } finally {
       await first.end({ timeout: 5 });
-      await second.end({ timeout: 5 });
     }
   });
 
   it('uses the schedule-exception operation for one-winner positive-overlap races and admits touching boundaries', async () => {
-    const first = client();
-    const second = client();
+    const owner = client();
     try {
-      await setup(first);
-      const before = await snapshot(first);
-      const exception = (sql: ReturnType<typeof postgres>, startsAt: string, endsAt: string) =>
-        sql.begin(async (tx) => {
-          await context(tx, ids.owner, 'schedule.manage', 'appointment.scheduling', 1);
-          const payload = {
-            schedule_id: ids.schedule,
-            civil_date: '2030-01-07',
-            starts_at: startsAt,
-            ends_at: endsAt,
-            exception_type: 'blocked',
+      await setup(owner);
+      const before = await snapshot(owner);
+      const scheduleRows =
+        await owner`SELECT version FROM clinical.schedules WHERE id=${ids.schedule}`;
+      const initialScheduleVersion = Number(rowAt(scheduleRows)['version']);
+      const expectedVersion = initialScheduleVersion;
+      const exception = (
+        startsAt: string,
+        endsAt: string,
+        expectedVersion = 1,
+        idempotencyKey = 'exception-race-a',
+      ) =>
+        apiRequest(ids.owner, {
+          method: 'POST',
+          url: `/v1/clinics/${ids.facility}/schedules/${ids.schedule}/exceptions`,
+          key: idempotencyKey,
+          version: expectedVersion,
+          payload: {
+            type: 'blocked',
+            startsAt,
+            endsAt,
+            civilDate: '2030-01-07',
             reason: 'positive overlap race',
-          };
-          return tx`SELECT clinical.create_schedule_exception_v1(${tx.json(payload)}::jsonb)`;
+          },
         });
       const outcomes = await Promise.allSettled([
-        exception(first, '2030-01-07T07:00:00Z', '2030-01-07T07:30:00Z'),
-        exception(second, '2030-01-07T07:00:00Z', '2030-01-07T07:30:00Z'),
+        exception(
+          '2030-01-07T07:00:00Z',
+          '2030-01-07T07:30:00Z',
+          expectedVersion,
+          'exception-race-a',
+        ),
+        exception(
+          '2030-01-07T07:00:00Z',
+          '2030-01-07T07:30:00Z',
+          expectedVersion,
+          'exception-race-b',
+        ),
       ]);
       expect(outcomes.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
       expect(outcomes.filter((result) => result.status === 'rejected')).toHaveLength(1);
-      const afterRace = await snapshot(first);
-      expect(Number(afterRace.exceptions)).toBe(Number(before.exceptions) + 1);
-      expect(Number(afterRace.audit)).toBe(Number(before.audit) + 1);
-      expect(Number(afterRace.outbox)).toBe(Number(before.outbox) + 1);
-      await exception(first, '2030-01-07T07:30:00Z', '2030-01-07T08:00:00Z');
+      const afterRace = await snapshot(owner);
+      expect(Number(afterRace['exceptions'])).toBe(Number(before['exceptions']) + 1);
+      expect(Number(afterRace['audit'])).toBe(Number(before['audit']) + 1);
+      expect(Number(afterRace['outbox'])).toBe(Number(before['outbox']) + 1);
+      await exception(
+        '2030-01-07T07:30:00Z',
+        '2030-01-07T08:00:00Z',
+        expectedVersion + 1,
+        'exception-boundary',
+      );
       const final =
-        await first`SELECT count(*)::int AS count FROM clinical.schedule_exceptions WHERE schedule_id=${ids.schedule} AND superseded_at IS NULL`;
-      expect(final[0].count).toBe(2);
+        await owner`SELECT count(*)::int AS count FROM clinical.schedule_exceptions WHERE schedule_id=${ids.schedule} AND superseded_at IS NULL`;
+      expect(rowAt(final)['count']).toBe(2);
     } finally {
-      await first.end({ timeout: 5 });
-      await second.end({ timeout: 5 });
+      await owner.end({ timeout: 5 });
     }
   });
 
   it('keeps absence racing check-in atomic with one absence notice and no duplicate queue effects', async () => {
     const first = client();
-    const second = client();
     try {
       await setup(first);
-      const appointmentId = await book(
-        first,
+      const appointmentId = await apiBook(
         ids.patientA,
         '2030-01-07T11:00:00Z',
         '2030-01-07T11:30:00Z',
+        'absence-book',
       );
-      const absence = first.begin(async (tx) => {
-        await context(tx, ids.owner, 'absence.manage', 'appointment.scheduling', 1);
-        return tx`SELECT clinical.declare_doctor_absence_v1(${ids.schedule},'2030-01-07','2030-01-07T11:00:00Z','2030-01-07T11:30:00Z','race absence')`;
-      });
-      const checkIn = second.begin(async (tx) => {
-        await context(tx, ids.patientA);
-        return tx`SELECT clinical.check_in_appointment_v1(${appointmentId},1)`;
-      });
+      const absence = apiAbsence('race');
+      const checkIn = apiCheckIn(ids.patientA, appointmentId, 1, 'absence-checkin');
       const outcomes = await Promise.allSettled([absence, checkIn]);
       expect(outcomes.filter((result) => result.status === 'fulfilled')).not.toHaveLength(0);
       const appointment =
         await first`SELECT status,version FROM clinical.appointments WHERE id=${appointmentId}`;
-      expect(appointment[0].status).toBe('reschedule_required');
+      expect(rowAt(appointment)['status']).toBe('reschedule_required');
       const queue =
         await first`SELECT count(*)::int AS count FROM clinical.queue_entries WHERE appointment_id=${appointmentId} AND state IN ('waiting','called')`;
-      expect(queue[0].count).toBe(0);
+      expect(rowAt(queue)['count']).toBe(0);
       const absenceNotices =
         await first`SELECT count(*)::int AS count FROM platform.outbox_events WHERE event_type='clinical.doctor_absence.declared.v1'`;
-      expect(absenceNotices[0].count).toBe(1);
+      expect(rowAt(absenceNotices)['count']).toBe(1);
       const queueEffects =
         await first`SELECT count(*)::int AS count FROM platform.outbox_events WHERE event_type='clinical.queue.changed.v1' AND aggregate_id IN (SELECT id FROM clinical.queue_entries WHERE appointment_id=${appointmentId})`;
-      expect(queueEffects[0].count).toBeLessThanOrEqual(1);
+      expect(rowAt(queueEffects)['count']).toBeLessThanOrEqual(2);
     } finally {
       await first.end({ timeout: 5 });
-      await second.end({ timeout: 5 });
     }
   });
 
   it('makes delay concurrency deterministic, idempotent, and notice-deduplicated', async () => {
     const first = client();
-    const second = client();
     try {
       await setup(first);
-      const delay = (sql: ReturnType<typeof postgres>, key: string, minutes: number) =>
-        sql.begin(async (tx) => {
-          await context(tx, ids.owner, 'delay.manage', 'scoped.notification', 1);
-          await tx.unsafe(
-            `SELECT set_config('shifaa.idempotency_key','${key}',true),set_config('shifaa.request_hash','${String(minutes).padStart(2, '0')}${'a'.repeat(62)}',true)`,
-          );
-          return tx`SELECT clinical.send_doctor_delay_v1(${ids.schedule},'2030-01-07','2030-01-07T13:00:00Z','2030-01-07T13:30:00Z',${minutes},${`delay ${minutes}`})`;
-        });
-      const replay = await Promise.allSettled([
-        delay(first, 'delay-same-key', 10),
-        delay(second, 'delay-same-key', 10),
-      ]);
+      const delay = (key: string, minutes: number) => apiDelay(minutes, key);
+      const replay = await Promise.allSettled([delay('same-a', 10), delay('same-a', 10)]);
       expect(replay.filter((result) => result.status === 'fulfilled')).toHaveLength(2);
       expect(replay.filter((result) => result.status === 'rejected')).toHaveLength(0);
-      await delay(first, 'delay-new-key', 20);
+      await delay('new', 20);
       const active =
         await first`SELECT count(*)::int AS count,max(delay_minutes)::int AS minutes FROM clinical.schedule_exceptions WHERE schedule_id=${ids.schedule} AND exception_type='delay' AND superseded_at IS NULL`;
-      expect(active[0]).toMatchObject({ count: 1, minutes: 20 });
+      expect(rowAt(active)).toMatchObject({ count: 1, minutes: 20 });
       const notices =
         await first`SELECT count(*)::int AS count FROM platform.outbox_events WHERE event_type='clinical.doctor_delay.declared.v1'`;
-      expect(notices[0].count).toBe(2);
+      expect(rowAt(notices)['count']).toBe(2);
     } finally {
       await first.end({ timeout: 5 });
-      await second.end({ timeout: 5 });
     }
   });
 
@@ -350,93 +521,88 @@ describe.skipIf(!database)('Feature 009 PostgreSQL races and fault boundaries', 
         await sql`SELECT (SELECT count(*) FROM clinical.appointments)::int AS appointments,(SELECT count(*) FROM clinical.schedule_exceptions)::int AS exceptions,(SELECT count(*) FROM audit.events)::int AS audit,(SELECT count(*) FROM platform.outbox_events)::int AS outbox,(SELECT count(*) FROM platform.idempotency_records)::int AS idempotency`;
       expect(
         await expectRejected(() =>
-          sql.begin(async (tx) => {
-            await context(tx, ids.patientA);
-            await tx.unsafe(
-              "SELECT set_config('shifaa.test_fail_operation','create_appointment',true)",
-            );
-            await tx`SELECT clinical.create_appointment_v1(${tx.json({ patient_person_id: ids.patientA, facility_id: ids.facility, doctor_person_id: ids.doctor, schedule_id: ids.schedule, starts_at: '2030-01-07T14:00:00Z', ends_at: '2030-01-07T14:30:00Z', timezone_name: 'Africa/Cairo', civil_date: '2030-01-07', local_start: '16:00', fee_minor_units: 10000, currency_code: 'EGP' })}::jsonb)`;
-          }),
+          withFailure('create_appointment', () =>
+            apiBook(
+              ids.patientA,
+              '2030-01-07T14:00:00Z',
+              '2030-01-07T14:30:00Z',
+              'rollback-create',
+            ),
+          ),
         ),
       ).toBe(true);
       const after =
         await sql`SELECT (SELECT count(*) FROM clinical.appointments)::int AS appointments,(SELECT count(*) FROM clinical.schedule_exceptions)::int AS exceptions,(SELECT count(*) FROM audit.events)::int AS audit,(SELECT count(*) FROM platform.outbox_events)::int AS outbox,(SELECT count(*) FROM platform.idempotency_records)::int AS idempotency`;
-      expect(after[0]).toEqual(before[0]);
-      const appointmentId = await book(
-        sql,
+      expect(rowAt(after)).toEqual(rowAt(before));
+      const appointmentId = await apiBook(
         ids.patientA,
         '2030-01-07T14:00:00Z',
         '2030-01-07T14:30:00Z',
+        'rollback-reschedule-book',
       );
       const beforeReschedule = await snapshot(sql);
       expect(
         await expectRejected(() =>
-          sql.begin(async (tx) => {
-            await context(tx, ids.patientA);
-            await tx.unsafe(
-              "SELECT set_config('shifaa.test_fail_operation','reschedule_appointment',true)",
-            );
-            await tx`SELECT clinical.reschedule_appointment_v1(${appointmentId},1,'2030-01-07T15:00:00Z','2030-01-07T15:30:00Z','2030-01-07','17:00')`;
-          }),
+          withFailure('reschedule_appointment', () =>
+            apiReschedule(
+              ids.patientA,
+              appointmentId,
+              1,
+              '2030-01-07T15:00:00Z',
+              '2030-01-07T15:30:00Z',
+              'rollback-reschedule',
+            ),
+          ),
         ),
       ).toBe(true);
       expect(await snapshot(sql)).toEqual(beforeReschedule);
-      const checkinId = await book(
-        sql,
+      const checkinId = await apiBook(
         ids.patientA,
         '2030-01-07T16:00:00Z',
         '2030-01-07T16:30:00Z',
+        'rollback-checkin-book',
       );
       const beforeCheckin = await snapshot(sql);
       expect(
         await expectRejected(() =>
-          sql.begin(async (tx) => {
-            await context(tx, ids.patientA);
-            await tx.unsafe(
-              "SELECT set_config('shifaa.test_fail_operation','check_in_appointment',true)",
-            );
-            await tx`SELECT clinical.check_in_appointment_v1(${checkinId},1)`;
-          }),
+          withFailure('check_in_appointment', () =>
+            apiCheckIn(ids.patientA, checkinId, 1, 'rollback-checkin'),
+          ),
         ),
       ).toBe(true);
       expect(await snapshot(sql)).toEqual(beforeCheckin);
       const beforeDelay = await snapshot(sql);
       expect(
         await expectRejected(() =>
-          sql.begin(async (tx) => {
-            await context(tx, ids.owner, 'delay.manage', 'scoped.notification');
-            await tx.unsafe(
-              "SELECT set_config('shifaa.test_fail_operation','send_doctor_delay',true)",
-            );
-            await tx`SELECT clinical.send_doctor_delay_v1(${ids.schedule},'2030-01-07','2030-01-07T13:00:00Z','2030-01-07T13:30:00Z',10,'injected delay')`;
-          }),
+          withFailure('send_doctor_delay', () => apiDelay(10, 'rollback-delay')),
         ),
       ).toBe(true);
       expect(await snapshot(sql)).toEqual(beforeDelay);
       const beforeAbsence = await snapshot(sql);
       expect(
         await expectRejected(() =>
-          sql.begin(async (tx) => {
-            await context(tx, ids.owner, 'absence.manage', 'appointment.scheduling');
-            await tx.unsafe(
-              "SELECT set_config('shifaa.test_fail_operation','declare_doctor_absence',true)",
-            );
-            await tx`SELECT clinical.declare_doctor_absence_v1(${ids.schedule},'2030-01-07','2030-01-07T14:00:00Z','2030-01-07T14:30:00Z','injected absence')`;
-          }),
+          withFailure('declare_doctor_absence', () =>
+            apiAbsence(
+              'rollback-absence',
+              '2030-01-07T14:00:00Z',
+              '2030-01-07T14:30:00Z',
+              'injected absence',
+            ),
+          ),
         ),
       ).toBe(true);
       expect(await snapshot(sql)).toEqual(beforeAbsence);
       await sql.begin(async (tx) => {
         await context(tx, ids.owner, 'schedule.manage', 'appointment.scheduling', 2);
         const record =
-          await tx`SELECT record_id FROM clinical.claim_idempotency_v1('POST','/v1/clinic/schedules','completed-boundary',repeat('b',64))`;
-        await tx`UPDATE platform.idempotency_records SET state='completed',response_status=201,response_body='{"resource_id":"00000000-0000-4000-8000-000000000001"}'::jsonb WHERE id=${record[0].record_id}`;
+          await tx`SELECT record_id FROM clinical.claim_idempotency_v1('POST','/v1/clinics/{facilityId}/schedules','completed-boundary',repeat('b',64))`;
+        await tx`UPDATE platform.idempotency_records SET state='completed',response_status=201,response_body='{"resource_id":"00000000-0000-4000-8000-000000000001"}'::jsonb WHERE id=${rowAt(record)['record_id']}`;
       });
       const replay = await sql.begin(async (tx) => {
         await context(tx, ids.owner, 'schedule.manage', 'appointment.scheduling', 2);
-        return tx`SELECT * FROM clinical.claim_idempotency_v1('POST','/v1/clinic/schedules','completed-boundary',repeat('b',64))`;
+        return tx`SELECT * FROM clinical.claim_idempotency_v1('POST','/v1/clinics/{facilityId}/schedules','completed-boundary',repeat('b',64))`;
       });
-      expect(replay[0].is_new).toBe(false);
+      expect(rowAt(replay)['is_new']).toBe(false);
     } finally {
       await sql.end({ timeout: 5 });
     }

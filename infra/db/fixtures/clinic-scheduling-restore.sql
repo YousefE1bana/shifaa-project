@@ -12,8 +12,8 @@ INSERT INTO identity.patients(id,person_id,medical_record_number,record_status)
 VALUES ('f0090000-0000-4000-8900-000000000002','f0090000-0000-4000-8800-000000000003','F009-RESTORE-MRN','active');
 INSERT INTO identity.facilities(id,facility_type,name_ar,name_en,facility_status,governorate_code,city,district,address_line,created_by_person_id)
 VALUES ('f0090000-0000-4000-8100-000000000002','clinic','عيادة استعادة','F009 restore clinic','draft','C','Cairo','Restore','Synthetic restore address','f0090000-0000-4000-8800-000000000001');
-INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,created_by_person_id,updated_by_person_id)
-VALUES ('f0090000-0000-4000-8200-000000000010','f0090000-0000-4000-8100-000000000002','f0090000-0000-4000-8800-000000000002','Africa/Cairo','2026-09-01','2026-09-30',30,'f0090000-0000-4000-8800-000000000001','f0090000-0000-4000-8800-000000000001');
+INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+VALUES ('f0090000-0000-4000-8200-000000000010','f0090000-0000-4000-8100-000000000002','f0090000-0000-4000-8800-000000000002','Africa/Cairo','2026-09-01','2026-09-30',30,10000,'EGP','f0090000-0000-4000-8800-000000000001','f0090000-0000-4000-8800-000000000001');
 INSERT INTO clinical.schedule_windows(schedule_id,iso_weekday,local_start,local_end)
 VALUES ('f0090000-0000-4000-8200-000000000010',7,'09:00','10:00');
 INSERT INTO clinical.schedule_exceptions(schedule_id,facility_id,doctor_person_id,timezone_name,civil_date,starts_at,ends_at,exception_type,reason,created_by_person_id,updated_by_person_id)
@@ -35,6 +35,10 @@ $idempotency_seed$;
 DO $restore_truth$
 BEGIN
   IF (SELECT version FROM clinical.schedules WHERE id='f0090000-0000-4000-8200-000000000010')<>2 THEN RAISE EXCEPTION 'restored schedule version mismatch'; END IF;
+  IF NOT EXISTS (SELECT 1 FROM clinical.schedules s JOIN clinical.appointments a ON a.schedule_id=s.id
+    WHERE s.id='f0090000-0000-4000-8200-000000000010' AND s.fee_minor_units=10000 AND s.currency_code='EGP'
+      AND a.fee_minor_units=s.fee_minor_units AND a.currency_code=s.currency_code)
+  THEN RAISE EXCEPTION 'restored schedule fee and appointment snapshot mismatch'; END IF;
   IF NOT EXISTS (SELECT 1 FROM clinical.schedule_exceptions WHERE schedule_id='f0090000-0000-4000-8200-000000000010' AND exception_type='blocked') THEN RAISE EXCEPTION 'restored exception missing'; END IF;
   IF NOT EXISTS (SELECT 1 FROM clinical.queue_entries WHERE appointment_id='f0090000-0000-4000-8300-000000000010' AND queue_number=1 AND waiting_order=1) THEN RAISE EXCEPTION 'restored queue order mismatch'; END IF;
   IF NOT EXISTS (SELECT 1 FROM audit.events WHERE resource_id='f0090000-0000-4000-8200-000000000010' AND action_code='schedule.restore.seed') THEN RAISE EXCEPTION 'restored audit event missing'; END IF;

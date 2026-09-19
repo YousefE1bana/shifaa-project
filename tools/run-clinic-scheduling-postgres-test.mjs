@@ -2,9 +2,16 @@ import { spawnSync } from 'node:child_process';
 import process from 'node:process';
 
 const root = process.cwd();
-const requestedMode = process.argv.slice(2).find((arg) => !arg.startsWith('--')) ?? 'all';
+const requestedMode = process.argv.includes('--adapter')
+  ? 'adapter'
+  : process.argv.includes('--api')
+    ? 'api'
+    : (process.argv.slice(2).find((arg) => !arg.startsWith('--')) ?? 'all');
 const modes = new Set([
   'all',
+  'adapter',
+  'api',
+  'atomic-api',
   'schema-schedules',
   'schedule-constraints',
   'exception-constraints',
@@ -159,6 +166,44 @@ function runRaceTests(database) {
   if (result.status !== 0)
     throw new Error(`Feature 009 race tests failed with status ${result.status}`);
 }
+function runAdapterTests(database) {
+  const result = spawnSync(
+    process.execPath,
+    [
+      'node_modules/vitest/vitest.mjs',
+      'run',
+      'services/api/test/clinic-scheduling-adapter.integration.test.ts',
+    ],
+    {
+      cwd: root,
+      env: { ...process.env, SHIFAA_F009_DATABASE: database },
+      encoding: 'utf8',
+      stdio: 'inherit',
+    },
+  );
+  if (result.error) throw result.error;
+  if (result.status !== 0)
+    throw new Error(`Feature 009 adapter tests failed with status ${result.status}`);
+}
+function runAtomicApiTests(database) {
+  const result = spawnSync(
+    process.execPath,
+    [
+      'node_modules/vitest/vitest.mjs',
+      'run',
+      'services/api/test/clinic-scheduling-atomic-effects.integration.test.ts',
+    ],
+    {
+      cwd: root,
+      env: { ...process.env, SHIFAA_F009_DATABASE: database },
+      encoding: 'utf8',
+      stdio: 'inherit',
+    },
+  );
+  if (result.error) throw result.error;
+  if (result.status !== 0)
+    throw new Error(`Feature 009 atomic API tests failed with status ${result.status}`);
+}
 for (const database of databases) recreateDatabase(database);
 try {
   for (const database of databases) {
@@ -182,7 +227,9 @@ try {
       apply(database, 'infra/db/fixtures/clinic-scheduling-restore.sql');
     else if (requestedMode !== 'all') apply(database, fixture);
     else apply(database, fixture);
-    if (requestedMode === 'all') runRaceTests(database);
+    if (requestedMode === 'all' || requestedMode === 'api') runRaceTests(database);
+    if (requestedMode === 'adapter') runAdapterTests(database);
+    if (requestedMode === 'atomic-api') runAtomicApiTests(database);
   }
   console.log(
     `clinic-scheduling postgres: PASS mode=${requestedMode} databases=${databases.length}`,

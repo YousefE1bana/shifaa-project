@@ -41,14 +41,14 @@ INSERT INTO identity.facility_memberships(facility_id,person_id,role_code,employ
 VALUES ('f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000001','owner',NULL,'2020-01-01','active','f0090000-0000-4000-8000-000000000001');
 INSERT INTO identity.facility_memberships(facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id)
 VALUES ('f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','doctor','f0090000-0000-4000-8a00-000000000001','2020-01-01','active','f0090000-0000-4000-8000-000000000001');
-INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,created_by_person_id,updated_by_person_id)
-VALUES ('f0090000-0000-4000-8200-000000000001','f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','Africa/Cairo','2026-09-01','2026-09-30',30,'f0090000-0000-4000-8000-000000000001','f0090000-0000-4000-8000-000000000001');
+INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+VALUES ('f0090000-0000-4000-8200-000000000001','f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','Africa/Cairo','2026-09-01','2026-09-30',30,10000,'EGP','f0090000-0000-4000-8000-000000000001','f0090000-0000-4000-8000-000000000001');
 INSERT INTO clinical.schedule_windows(schedule_id,iso_weekday,local_start,local_end) VALUES ('f0090000-0000-4000-8200-000000000001',7,'09:00','10:00');
-INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,created_by_person_id,updated_by_person_id)
-VALUES ('f0090000-0000-4000-8200-000000000005','f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','America/New_York','2026-03-01','2026-03-31',60,'f0090000-0000-4000-8000-000000000001','f0090000-0000-4000-8000-000000000001');
+INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+VALUES ('f0090000-0000-4000-8200-000000000005','f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','America/New_York','2026-03-01','2026-03-31',60,10000,'EGP','f0090000-0000-4000-8000-000000000001','f0090000-0000-4000-8000-000000000001');
 INSERT INTO clinical.schedule_windows(schedule_id,iso_weekday,local_start,local_end) VALUES ('f0090000-0000-4000-8200-000000000005',7,'01:00','04:00');
-INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,created_by_person_id,updated_by_person_id)
-VALUES ('f0090000-0000-4000-8200-000000000006','f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','America/New_York','2026-11-01','2026-11-30',60,'f0090000-0000-4000-8000-000000000001','f0090000-0000-4000-8000-000000000001');
+INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+VALUES ('f0090000-0000-4000-8200-000000000006','f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','America/New_York','2026-11-01','2026-11-30',60,10000,'EGP','f0090000-0000-4000-8000-000000000001','f0090000-0000-4000-8000-000000000001');
 INSERT INTO clinical.schedule_windows(schedule_id,iso_weekday,local_start,local_end) VALUES ('f0090000-0000-4000-8200-000000000006',7,'00:00','03:00');
 DO $vectors$
 BEGIN
@@ -58,8 +58,8 @@ BEGIN
   EXCEPTION WHEN exclusion_violation THEN NULL;
   END;
   BEGIN
-    INSERT INTO clinical.schedules(facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,created_by_person_id,updated_by_person_id)
-    VALUES ('f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','Africa/Cairo','2026-09-15','2026-09-20',30,'f0090000-0000-4000-8000-000000000001','f0090000-0000-4000-8000-000000000001');
+    INSERT INTO clinical.schedules(facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+    VALUES ('f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','Africa/Cairo','2026-09-15','2026-09-20',30,10000,'EGP','f0090000-0000-4000-8000-000000000001','f0090000-0000-4000-8000-000000000001');
     RAISE EXCEPTION 'overlapping active schedule was accepted';
   EXCEPTION WHEN exclusion_violation THEN NULL;
   END;
@@ -124,6 +124,13 @@ VALUES ('f0090000-0000-4000-8300-000000000001','f0090000-0000-4000-8000-00000000
 DO $appointment_vectors$
 BEGIN
   BEGIN
+    UPDATE clinical.appointments
+    SET currency_code='USD'
+    WHERE id='f0090000-0000-4000-8300-000000000001';
+    RAISE EXCEPTION 'non-EGP appointment currency was accepted';
+  EXCEPTION WHEN check_violation THEN NULL;
+  END;
+  BEGIN
     INSERT INTO clinical.appointments(patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,civil_date,local_start,fee_minor_units,currency_code,payment_method,status,created_by_person_id,updated_by_person_id)
     VALUES ('f0090000-0000-4000-8000-000000000003','f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','f0090000-0000-4000-8200-000000000001','2026-09-13T11:15:00Z','2026-09-13T11:45:00Z','Africa/Cairo','2026-09-13','13:15',10000,'EGP','cash_on_arrival','confirmed','f0090000-0000-4000-8000-000000000003','f0090000-0000-4000-8000-000000000003');
     RAISE EXCEPTION 'double booking was accepted';
@@ -149,39 +156,47 @@ BEGIN
   SELECT version INTO schedule_version FROM clinical.schedules WHERE id='f0090000-0000-4000-8200-000000000001';
   PERFORM clinical.update_schedule_v1('f0090000-0000-4000-8200-000000000001',schedule_version,'{"valid_to":"2026-09-30"}'::jsonb);
   IF (SELECT version FROM clinical.schedules WHERE id='f0090000-0000-4000-8200-000000000001')<>schedule_version+1 THEN RAISE EXCEPTION 'schedule update did not advance version'; END IF;
-  SELECT clinical.create_schedule_v1(jsonb_build_object(
+  SELECT (clinical.create_schedule_v1(jsonb_build_object(
     'facility_id','f0090000-0000-4000-8100-000000000001','doctor_person_id','f0090000-0000-4000-8000-000000000002',
-    'timezone_name','Africa/Cairo','valid_from','2026-10-01','valid_to','2026-10-05','slot_duration_minutes',30
-  )) INTO retired_id;
+    'timezone_name','Africa/Cairo','valid_from','2026-10-01','valid_to','2026-10-05','slot_duration_minutes',30,'fee_minor_units',10000,
+    'windows','[{"isoWeekday":1,"localStart":"09:00","localEnd":"10:00"}]'::jsonb
+  )) ->> 'id')::uuid INTO retired_id;
   PERFORM clinical.update_schedule_v1(retired_id,1,'{"status":"retired"}'::jsonb);
   BEGIN
     PERFORM clinical.update_schedule_v1(retired_id,2,'{"status":"active"}'::jsonb);
     RAISE EXCEPTION 'retired schedule was reactivated';
   EXCEPTION WHEN SQLSTATE '55000' THEN NULL;
   END;
-  SELECT clinical.create_schedule_v1(jsonb_build_object(
+  PERFORM pg_catalog.set_config('shifaa.idempotency_key','schedule-same-key',true);
+  PERFORM pg_catalog.set_config('shifaa.request_hash',repeat('d',64),true);
+  SELECT (clinical.create_schedule_v1(jsonb_build_object(
     'facility_id','f0090000-0000-4000-8100-000000000001','doctor_person_id','f0090000-0000-4000-8000-000000000002',
-    'timezone_name','Africa/Cairo','valid_from','2027-01-01','valid_to','2027-01-05','slot_duration_minutes',30,
+    'timezone_name','Africa/Cairo','valid_from','2027-01-01','valid_to','2027-01-05','slot_duration_minutes',30,'fee_minor_units',10000,
+    'windows','[{"isoWeekday":1,"localStart":"09:00","localEnd":"10:00"}]'::jsonb,
     'idempotency_key','schedule-same-key','request_hash',repeat('d',64)
-  )) INTO first_id;
-  SELECT clinical.create_schedule_v1(jsonb_build_object(
+  )) ->> 'id')::uuid INTO first_id;
+  SELECT (clinical.create_schedule_v1(jsonb_build_object(
     'facility_id','f0090000-0000-4000-8100-000000000001','doctor_person_id','f0090000-0000-4000-8000-000000000002',
-    'timezone_name','Africa/Cairo','valid_from','2027-01-01','valid_to','2027-01-05','slot_duration_minutes',30,
+    'timezone_name','Africa/Cairo','valid_from','2027-01-01','valid_to','2027-01-05','slot_duration_minutes',30,'fee_minor_units',10000,
+    'windows','[{"isoWeekday":1,"localStart":"09:00","localEnd":"10:00"}]'::jsonb,
     'idempotency_key','schedule-same-key','request_hash',repeat('d',64)
-  )) INTO replay_id;
+  )) ->> 'id')::uuid INTO replay_id;
   IF first_id<>replay_id OR (SELECT count(*) FROM clinical.schedules WHERE id=first_id)<>1 THEN RAISE EXCEPTION 'idempotent schedule replay created a duplicate'; END IF;
+  PERFORM pg_catalog.set_config('shifaa.idempotency_key','',true);
+  PERFORM pg_catalog.set_config('shifaa.request_hash','',true);
 END
 $schedule_mutation_vectors$;
 SELECT pg_catalog.set_config('shifaa.person_id','f0090000-0000-4000-8000-000000000003',true);
 DO $appointment_mutation_vectors$
 DECLARE created_id uuid; replacement_status text; replacement_version integer;
 BEGIN
-  SELECT clinical.create_appointment_v1(jsonb_build_object(
+  SELECT (clinical.create_appointment_v1(jsonb_build_object(
     'patient_person_id','f0090000-0000-4000-8000-000000000003','facility_id','f0090000-0000-4000-8100-000000000001',
     'doctor_person_id','f0090000-0000-4000-8000-000000000002','schedule_id','f0090000-0000-4000-8200-000000000001',
     'starts_at','2026-09-13T15:00:00Z','ends_at','2026-09-13T15:30:00Z','timezone_name','Africa/Cairo',
-    'civil_date','2026-09-13','local_start','18:00','fee_minor_units',10000,'currency_code','EGP'
-  )) INTO created_id;
+    'civil_date','2026-09-13','local_start','18:00',
+    'payment_method','cash_on_arrival'
+  )) ->> 'id')::uuid INTO created_id;
   PERFORM clinical.reschedule_appointment_v1(created_id,1,'2026-09-13T15:30:00Z','2026-09-13T16:00:00Z','2026-09-13','18:30');
   SELECT status,version INTO replacement_status,replacement_version FROM clinical.appointments WHERE id=created_id;
   IF replacement_status<>'confirmed' OR replacement_version<>2 THEN RAISE EXCEPTION 'reschedule did not atomically replace same row'; END IF;
@@ -225,14 +240,14 @@ BEGIN
   IF target_order<>1 OR displaced_order<>2 THEN RAISE EXCEPTION 'reorder did not atomically shift occupied position'; END IF;
 END
 $reorder_vectors$;
-SELECT clinical.send_doctor_delay_v1('f0090000-0000-4000-8200-000000000001','2026-09-13','2026-09-13T14:00:00Z','2026-09-13T14:30:00Z',10,'synthetic delay');
-SELECT clinical.send_doctor_delay_v1('f0090000-0000-4000-8200-000000000001','2026-09-13','2026-09-13T14:00:00Z','2026-09-13T14:30:00Z',20,'synthetic revised delay');
+SELECT clinical.send_doctor_delay_v1('f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','2026-09-13',10,'synthetic delay');
+SELECT clinical.send_doctor_delay_v1('f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','2026-09-13',20,'synthetic revised delay');
 DO $delay_absence_vectors$
 DECLARE active_delays integer; current_delay integer; affected integer; appointment_status text; queue_state text;
 BEGIN
   SELECT count(*)::integer,max(delay_minutes) INTO active_delays,current_delay FROM clinical.schedule_exceptions WHERE exception_type='delay' AND superseded_at IS NULL;
   IF active_delays<>1 OR current_delay<>20 THEN RAISE EXCEPTION 'delay supersession accumulated or duplicated'; END IF;
-  SELECT clinical.declare_doctor_absence_v1('f0090000-0000-4000-8200-000000000001','2026-09-13','2026-09-13T12:00:00Z','2026-09-13T12:30:00Z','synthetic absence') INTO affected;
+  SELECT jsonb_array_length((clinical.declare_doctor_absence_v1('f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','2026-09-13','2026-09-13T12:00:00Z','2026-09-13T12:30:00Z','synthetic absence')->'affectedAppointmentIds')) INTO affected;
   SELECT status INTO appointment_status FROM clinical.appointments WHERE id='f0090000-0000-4000-8300-000000000002';
   SELECT state INTO queue_state FROM clinical.queue_entries WHERE appointment_id='f0090000-0000-4000-8300-000000000002';
   IF affected<>1 OR appointment_status<>'reschedule_required' OR queue_state<>'removed' THEN RAISE EXCEPTION 'absence cascade was not atomic'; END IF;
@@ -263,7 +278,7 @@ BEGIN
   SELECT count(*) INTO before_outbox FROM platform.outbox_events;
   BEGIN
     PERFORM pg_catalog.set_config('shifaa.person_id','f0090000-0000-4000-8000-000000000003',true);
-    PERFORM clinical.create_appointment_v1(jsonb_build_object('patient_person_id','f0090000-0000-4000-8000-000000000003','facility_id','f0090000-0000-4000-8100-000000000001','doctor_person_id','f0090000-0000-4000-8000-000000000002','schedule_id','f0090000-0000-4000-8200-000000000001','starts_at','2026-09-13T14:00:00Z','ends_at','2026-09-13T14:30:00Z','timezone_name','Africa/Cairo','civil_date','2026-09-13','local_start','17:00','fee_minor_units',10000,'currency_code','EGP'));
+    PERFORM clinical.create_appointment_v1(jsonb_build_object('patient_person_id','f0090000-0000-4000-8000-000000000003','facility_id','f0090000-0000-4000-8100-000000000001','doctor_person_id','f0090000-0000-4000-8000-000000000002','schedule_id','f0090000-0000-4000-8200-000000000001','starts_at','2026-09-13T14:00:00Z','ends_at','2026-09-13T14:30:00Z','timezone_name','Africa/Cairo','civil_date','2026-09-13','local_start','17:00','payment_method','cash_on_arrival'));
     RAISE EXCEPTION 'injected rollback boundary was not reached';
   EXCEPTION WHEN raise_exception THEN NULL;
   END;
@@ -276,14 +291,14 @@ DO $effect_vectors$
 DECLARE idem_id uuid; idem_new boolean; idem_body jsonb; replay_id uuid; replay_new boolean; replay_body jsonb;
 BEGIN
   SELECT record_id,is_new,response_body INTO idem_id,idem_new,idem_body
-    FROM clinical.claim_idempotency_v1('POST','/v1/clinic/appointments','same-key',repeat('a',64));
+    FROM clinical.claim_idempotency_v1('POST','/v1/appointments','same-key',repeat('a',64));
   IF NOT idem_new OR idem_id IS NULL THEN RAISE EXCEPTION 'first idempotency claim was not stored'; END IF;
   UPDATE platform.idempotency_records SET state='completed',response_status=201,response_body='{"resource_id":"f0090000-0000-4000-8300-000000000001"}'::jsonb WHERE id=idem_id;
   SELECT record_id,is_new,response_body INTO replay_id,replay_new,replay_body
-    FROM clinical.claim_idempotency_v1('POST','/v1/clinic/appointments','same-key',repeat('a',64));
+    FROM clinical.claim_idempotency_v1('POST','/v1/appointments','same-key',repeat('a',64));
   IF replay_id<>idem_id OR replay_new OR replay_body->>'resource_id' IS DISTINCT FROM 'f0090000-0000-4000-8300-000000000001' THEN RAISE EXCEPTION 'same-key replay was not canonical'; END IF;
   BEGIN
-    PERFORM clinical.claim_idempotency_v1('POST','/v1/clinic/appointments','same-key',repeat('b',64));
+    PERFORM clinical.claim_idempotency_v1('POST','/v1/appointments','same-key',repeat('b',64));
     RAISE EXCEPTION 'changed-body idempotency key was accepted';
   EXCEPTION WHEN unique_violation THEN NULL;
   END;

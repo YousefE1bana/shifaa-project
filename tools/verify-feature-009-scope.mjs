@@ -259,6 +259,7 @@ function backtickValues(line) {
 }
 
 function verifyStates(dataModelText, specText, planText) {
+  const normalizedStateText = `${specText}\n${planText}`.replace(/[ \t]*\|[ \t]*/g, ' | ');
   const appointmentLine = dataModelText.split(/\r?\n/).find((line) => /exact nine:/.test(line));
   const queueLine = dataModelText.split(/\r?\n/).find((line) => /exact five:/.test(line));
   const actualAppointments = appointmentLine ? backtickValues(appointmentLine) : [];
@@ -278,7 +279,7 @@ function verifyStates(dataModelText, specText, planText) {
     '`waiting` → `called`',
     '`called` → `completed`',
   ]) {
-    if (!specText.includes(marker) && !planText.includes(marker))
+    if (!normalizedStateText.includes(marker))
       failures.push(`State producer marker is missing: ${marker}.`);
   }
 }

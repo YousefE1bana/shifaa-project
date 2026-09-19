@@ -17,6 +17,7 @@ paths:
     get:
       tags: [Discovery]
       operationId: searchDoctors
+      description: Anonymous/public service-context read; authentication is optional and no patient-record authority is required.
       security: []
       parameters:
         - $ref: '#/components/parameters/Locale'
@@ -33,6 +34,7 @@ paths:
     get:
       tags: [Discovery]
       operationId: listDoctorAvailability
+      description: Anonymous/public service-context read; authentication is optional and no patient-record authority is required.
       security: []
       parameters:
         - $ref: '#/components/parameters/FacilityId'
@@ -360,7 +362,9 @@ components:
       }
     AvailabilityPage:
       {
-        description: Effective slots and delay projection,
+        description: Effective slots,
+        current server-derived EGP fee,
+        and delay projection,
         content:
           { application/json: { schema: { $ref: '#/components/schemas/AvailabilityPage' } } },
       }
@@ -418,6 +422,8 @@ components:
   schemas:
     Uuid: { type: string, format: uuid }
     Version: { type: integer, minimum: 1 }
+    ReadFreshness: { type: string, enum: [fresh, stale, unknown] }
+    CurrencyCode: { type: string, const: EGP }
     AppointmentStatus:
       type: string
       enum:
@@ -460,13 +466,24 @@ components:
     CreateScheduleRequest:
       type: object
       additionalProperties: false
-      required: [doctorId, timezone, validFrom, validTo, slotDurationMinutes, status, windows]
+      required:
+        [
+          doctorId,
+          timezone,
+          validFrom,
+          validTo,
+          slotDurationMinutes,
+          feeMinorUnits,
+          status,
+          windows,
+        ]
       properties:
         doctorId: { $ref: '#/components/schemas/Uuid' }
         timezone: { type: string, minLength: 1, maxLength: 100 }
         validFrom: { type: string, format: date }
         validTo: { type: string, format: date }
         slotDurationMinutes: { type: integer, minimum: 1, maximum: 1440 }
+        feeMinorUnits: { type: integer, minimum: 0 }
         status: { $ref: '#/components/schemas/ScheduleStatus' }
         windows:
           {
@@ -484,6 +501,12 @@ components:
         validFrom: { type: string, format: date }
         validTo: { type: string, format: date }
         slotDurationMinutes: { type: integer, minimum: 1, maximum: 1440 }
+        feeMinorUnits:
+          {
+            type: integer,
+            minimum: 0,
+            description: Server-authorized fee update; currency is fixed to EGP and cannot be supplied by the client.,
+          }
         status: { $ref: '#/components/schemas/ScheduleStatus' }
         windows:
           {
@@ -496,10 +519,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/CreateScheduleRequest'
         - type: object
-          required: [id, facilityId, version]
+          required: [id, facilityId, feeMinorUnits, currency, version]
           properties:
             id: { $ref: '#/components/schemas/Uuid' }
             facilityId: { $ref: '#/components/schemas/Uuid' }
+            currency: { $ref: '#/components/schemas/CurrencyCode' }
             version: { $ref: '#/components/schemas/Version' }
     CreateScheduleExceptionRequest:
       type: object
@@ -531,6 +555,7 @@ components:
     CreateAppointmentRequest:
       type: object
       additionalProperties: false
+      description: Fee and currency are server-derived from the versioned schedule in the booking transaction and are forbidden client inputs.
       required:
         [patientId, facilityId, doctorId, startsAt, endsAt, timezone, civilDate, paymentMethod]
       properties:
@@ -572,7 +597,7 @@ components:
         civilDate: { type: string, format: date }
         status: { $ref: '#/components/schemas/AppointmentStatus' }
         feeMinorUnits: { type: integer, minimum: 0 }
-        currency: { type: string, minLength: 3, maxLength: 3 }
+        currency: { $ref: '#/components/schemas/CurrencyCode' }
         paymentMethod: { type: string, const: cash_on_arrival }
         version: { $ref: '#/components/schemas/Version' }
     RescheduleRequest:
@@ -681,6 +706,7 @@ components:
         delayMinutes: { type: integer, minimum: 0 }
         entries: { type: array, items: { $ref: '#/components/schemas/QueueEntry' } }
         nextCursor: { type: [string, 'null'] }
+        freshness: { $ref: '#/components/schemas/ReadFreshness' }
     PublicDoctorProjection:
       type: object
       additionalProperties: false
@@ -711,7 +737,7 @@ components:
         facilityDisplayName: { type: string, minLength: 1, maxLength: 160 }
         facilityVerified: { type: boolean, const: true }
         feeMinorUnits: { type: integer, minimum: 0 }
-        currency: { type: string, minLength: 3, maxLength: 3 }
+        currency: { $ref: '#/components/schemas/CurrencyCode' }
         paymentMethod: { type: string, const: cash_on_arrival }
         nextAvailableSlot:
           oneOf:
@@ -724,24 +750,30 @@ components:
     DoctorSearchPage:
       type: object
       additionalProperties: false
-      required: [items, nextCursor]
+      required: [items, nextCursor, freshness]
       properties:
         items: { type: array, items: { $ref: '#/components/schemas/PublicDoctorProjection' } }
         nextCursor: { type: [string, 'null'] }
+        freshness: { $ref: '#/components/schemas/ReadFreshness' }
     AvailabilityPage:
       type: object
-      required: [items, version]
+      required: [items, feeMinorUnits, currency, paymentMethod, version, freshness]
       properties:
         items: { type: array, items: { $ref: '#/components/schemas/Slot' } }
+        feeMinorUnits: { type: integer, minimum: 0 }
+        currency: { $ref: '#/components/schemas/CurrencyCode' }
+        paymentMethod: { type: string, const: cash_on_arrival }
         nextCursor: { type: [string, 'null'] }
         generatedAt: { type: string, format: date-time }
         version: { $ref: '#/components/schemas/Version' }
+        freshness: { $ref: '#/components/schemas/ReadFreshness' }
     AppointmentPage:
       type: object
-      required: [items]
+      required: [items, freshness]
       properties:
         items: { type: array, items: { $ref: '#/components/schemas/Appointment' } }
         nextCursor: { type: [string, 'null'] }
+        freshness: { $ref: '#/components/schemas/ReadFreshness' }
     Problem:
       type: object
       required: [type, title, status]

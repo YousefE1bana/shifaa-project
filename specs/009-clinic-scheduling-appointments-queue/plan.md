@@ -2,7 +2,7 @@
 
 > **Feature:** `009-clinic-scheduling-appointments-queue` · **Spec:** `0.5.0 / SPEC_APPROVED + planning-only PLAN_APPROVED`
 >
-> **Scope:** `FR-FAC-005`, `FR-CLINIC-001..005`, `FR-CLINIC-008`, doctor-search slice of `FR-DISC-001`, PATIENT NFR profile, `NFR-AVAIL-001` · **Owner:** Yousef Osama, Product Owner · **Updated:** 2026-09-12
+> **Scope:** `FR-FAC-005`, `FR-CLINIC-001..005`, `FR-CLINIC-008`, doctor-search slice of `FR-DISC-001`, PATIENT NFR profile, `NFR-AVAIL-001` · **Owner:** Yousef Osama, Product Owner · **Updated:** 2026-09-14
 
 ## 1. Approved inputs
 
@@ -63,21 +63,21 @@ flowchart LR
   WORKER -. production disabled .-> SMS[SMS adapter]
 ```
 
-The API owns authorization and transaction orchestration. Pure core modules own civil-time slot derivation, state-policy decisions, queue ordering, and wait estimates. PostgreSQL constraints are the final concurrency guard. Apps use only the generated client and shared UI/i18n packages. Delivery failures cannot reverse committed clinical operations.
+The API owns authorization and transaction orchestration. Pure core modules own civil-time slot derivation, state-policy decisions, queue ordering, and wait estimates. PostgreSQL constraints are the final concurrency guard. `clinical.schedules` is the versioned fee authority: schedule creation requires `fee_minor_units`, schedule fee updates require `If-Match` and increment `schedule.version`, currency is server-owned fixed `EGP`, and booking reads/snapshots fee plus `EGP` from the schedule in the same transaction as slot acquisition. Apps use only the generated client and shared UI/i18n packages. Delivery failures cannot reverse committed clinical operations.
 
 ## 5. Work products
 
 ### Data and migration
 
-- Add `clinical.schedules`, `clinical.schedule_windows`, `clinical.schedule_exceptions`, `clinical.appointments`, `clinical.queue_scopes`, and `clinical.queue_entries`; exact columns and indexes are in `data-model.md`.
+- Add `clinical.schedules` (including the versioned fee authority and server-owned fixed `EGP` currency), `clinical.schedule_windows`, `clinical.schedule_exceptions`, `clinical.appointments` (fee/`EGP` booking snapshot), `clinical.queue_scopes`, and `clinical.queue_entries`; exact columns and indexes are in `data-model.md`.
 - Normalize weekly windows; validate IANA timezones; represent inclusive civil validity as generated half-open date ranges; use GiST exclusions for active validity, local-window overlap, ordinary same-type exception overlap, and appointment occupancy.
 - Use row/scope locks plus constraints for exception precedence, slot acquisition, atomic same-row reschedule, queue number allocation/reorder, delay supersession, and absence cascades.
-- Force RLS everywhere. Minimum public/patient projections use SECURITY DEFINER functions with `search_path=''`, explicit ownership, narrow EXECUTE grants, and negative tests.
+- Force RLS everywhere. Minimum anonymous/public service-context and patient projections use SECURITY DEFINER functions with `search_path=''`, explicit ownership, narrow EXECUTE grants, and negative tests; the two discovery reads require no patient-record authority and authentication is optional.
 - Sequence expand → validate/backfill → feature-flag activate → later contract. No destructive contract step occurs during initial activation; after durable writes, incidents disable and roll forward.
 
 ### API and generated clients
 
-- `contracts/openapi.yaml` contains exactly the approved 18 operation IDs and paths. Mutations preserve catalog idempotency/version requirements; responses use typed schemas and localized RFC 9457 failures.
+- `contracts/openapi.yaml` contains exactly the approved 18 operation IDs and paths. Mutations preserve catalog idempotency/version requirements; responses use typed schemas and localized RFC 9457 failures. `CreateScheduleRequest` requires `feeMinorUnits`; `UpdateScheduleRequest` may change it under `If-Match`; response currency is fixed server-owned `EGP`; `CreateAppointmentRequest` has no fee/currency fields and booking derives both from the schedule.
 - CI compares roadmap/catalog ↔ OpenAPI ↔ generated TypeScript exports and fails on added, renamed, or missing operations.
 - `createAppointment` returns `confirmed`; check-in ends at appointment `checked_in` and creates queue `waiting`; complete changes queue `called` → `completed`. Appointment `requested`, `in_queue`, `in_consultation`, `completed`, `no_show`, and queue `in_service` have no Feature 009 producer.
 - Use bounded opaque cursors, private/no-store sensitive responses, request correlation, scoped throttles, deterministic conflicts, canonical idempotent replay, audit, and transactional outbox.
@@ -104,25 +104,26 @@ The API owns authorization and transaction orchestration. Pure core modules own 
 
 ## 6. Test and evidence plan
 
-| Family                     | Level and vectors                                                        | Required evidence                                                            |
-| -------------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| Exact scope                | static/contract; frozen inventory                                        | 18/18 operations, zero extras, generated-client parity                       |
-| Recurrence/DST             | unit/property/integration; normal, nonexistent, ambiguous, inclusive end | deterministic UTC identity; no nonexistent/duplicate slot                    |
-| Availability               | unit/integration; all exception combinations                             | `absence > blocked > added > base`; delay affects estimates only             |
-| Schedule/exception overlap | DB/race; boundary, overlap, same/different key                           | boundary allowed; overlap conflicts; replay identical; no partial effect     |
-| Appointment transitions    | unit/contract/DB; all nine states                                        | only approved producers; producerless states remain producerless             |
-| Slot/reschedule race       | DB race; competing create/reschedule and failed replacement              | one winner; original unchanged unless replacement acquired atomically        |
-| Queue                      | unit/DB race; check-in/call/reorder/complete/stale version               | unique number/entry; waiting-only reorder; atomic positions/estimates        |
-| Absence                    | integration/race; intersecting/nonintersecting rows                      | exact reschedule-required/removed effects and no-hold suggestions            |
-| Delay                      | integration/race; replay and concurrent distinct declarations            | sole latest overlay; no compound minutes or duplicate work                   |
-| RLS/auth                   | DB negative; PAT/GUA/DEL/CLN and wrong scope/action/AAL/purpose          | default deny, no existence leak, no side effect                              |
-| Idempotency/audit/outbox   | integration; success/conflict/crash/retry                                | one durable effect/audit/event and ordered deduped replay                    |
-| Eight routes               | component/E2E; approved state inventory                                  | evidence mapped to every `F009-P0-*` family                                  |
-| AR/EN/a11y                 | E2E/manual; canonical viewports and assistive modes                      | structural parity, focus/results, zero critical violations                   |
-| Offline/stale/conflict     | component/E2E; disconnect/reconnect/version conflict                     | no queued writes; authoritative refresh and safe recovery                    |
-| Performance/DR             | load/chaos/restore; recorded synthetic scale                             | percentiles/error budget, outbox recovery, consistent restore/RPO/RTO        |
-| Privacy/security           | static/dynamic/negative                                                  | minimum disclosure, redaction, throttling, no production PHI/vendor delivery |
-| Migration                  | clean/upgrade/flag off-on/restore                                        | expand/validate/activate evidence and irreversible boundary                  |
+| Family                         | Level and vectors                                                                           | Required evidence                                                                                                 |
+| ------------------------------ | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Exact scope                    | static/contract; frozen inventory                                                           | 18/18 operations, zero extras, generated-client parity                                                            |
+| Recurrence/DST                 | unit/property/integration; normal, nonexistent, ambiguous, inclusive end                    | deterministic UTC identity; no nonexistent/duplicate slot                                                         |
+| Availability                   | unit/integration; all exception combinations                                                | `absence > blocked > added > base`; delay affects estimates only                                                  |
+| Schedule/exception overlap     | DB/race; boundary, overlap, same/different key                                              | boundary allowed; overlap conflicts; replay identical; no partial effect                                          |
+| Fee authority/booking snapshot | DB/contract/race; schedule create/update, stale `If-Match`, booking during fee change       | schedule versioned fee authority; fixed `EGP`; one same-transaction fee/slot snapshot; client fee/currency denied |
+| Appointment transitions        | unit/contract/DB; all nine states                                                           | only approved producers; producerless states remain producerless                                                  |
+| Slot/reschedule race           | DB race; competing create/reschedule and failed replacement                                 | one winner; original unchanged unless replacement acquired atomically                                             |
+| Queue                          | unit/DB race; check-in/call/reorder/complete/stale version                                  | unique number/entry; waiting-only reorder; atomic positions/estimates                                             |
+| Absence                        | integration/race; intersecting/nonintersecting rows                                         | exact reschedule-required/removed effects and no-hold suggestions                                                 |
+| Delay                          | integration/race; replay and concurrent distinct declarations                               | sole latest overlay; no compound minutes or duplicate work                                                        |
+| RLS/auth                       | DB negative; anonymous/public reads plus PAT/GUA/DEL/CLN and wrong scope/action/AAL/purpose | public reads use minimum verified projection only; default deny for mutations, no existence leak, no side effect  |
+| Idempotency/audit/outbox       | integration; success/conflict/crash/retry                                                   | one durable effect/audit/event and ordered deduped replay                                                         |
+| Eight routes                   | component/E2E; approved state inventory                                                     | evidence mapped to every `F009-P0-*` family                                                                       |
+| AR/EN/a11y                     | E2E/manual; canonical viewports and assistive modes                                         | structural parity, focus/results, zero critical violations                                                        |
+| Offline/stale/conflict         | component/E2E; disconnect/reconnect/version conflict                                        | no queued writes; authoritative refresh and safe recovery                                                         |
+| Performance/DR                 | load/chaos/restore; recorded synthetic scale                                                | percentiles/error budget, outbox recovery, consistent restore/RPO/RTO                                             |
+| Privacy/security               | static/dynamic/negative                                                                     | minimum disclosure, redaction, throttling, no production PHI/vendor delivery                                      |
+| Migration                      | clean/upgrade/flag off-on/restore                                                           | expand/validate/activate evidence and irreversible boundary                                                       |
 
 Every acceptance criterion and deterministic vector in `spec.md` must map to a later task and evidence path.
 

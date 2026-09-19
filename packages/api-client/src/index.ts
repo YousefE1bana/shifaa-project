@@ -5,3 +5,4 @@ export * from './family-care.js';
 export * from './privacy-dsr-notifications.js';
 export * from './discovery-sos.js';
 export * from './audit-admin.js';
+export * from './clinic-scheduling.js';
