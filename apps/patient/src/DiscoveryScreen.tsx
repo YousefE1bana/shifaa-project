@@ -19,6 +19,7 @@ import {
   type FacilityProjection,
 } from './discovery-sos-api';
 import { DiscoverySosShell } from './DiscoverySosShell';
+import { DoctorDiscovery } from './DoctorDiscovery';
 import { usePatientLocaleController } from './locale-context';
 
 type DiscoveryState =
@@ -212,6 +213,7 @@ export function DiscoveryScreen({ mapMode = false }: { mapMode?: boolean }) {
         hint={translate(locale, 'sos.call123Hint')}
         direction={direction}
       />
+      {!mapMode ? <DoctorDiscovery /> : null}
     </DiscoverySosShell>
   );
 }

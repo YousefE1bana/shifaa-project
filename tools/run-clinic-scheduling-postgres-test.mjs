@@ -25,6 +25,7 @@ const modes = new Set([
   'rls',
   'migration',
   'restore',
+  'discovery-booking',
 ]);
 if (!modes.has(requestedMode))
   throw new Error(`Unsupported clinic scheduling database test mode: ${requestedMode}`);
@@ -204,6 +205,25 @@ function runAtomicApiTests(database) {
   if (result.status !== 0)
     throw new Error(`Feature 009 atomic API tests failed with status ${result.status}`);
 }
+function runDiscoveryBookingE2e(database) {
+  const result = spawnSync(
+    process.execPath,
+    [
+      'node_modules/tsx/dist/cli.mjs',
+      '--test',
+      'tests/e2e/clinic-scheduling-discovery-booking.spec.ts',
+    ],
+    {
+      cwd: root,
+      env: { ...process.env, SHIFAA_F009_DATABASE: database, SHIFAA_F009_PROVISIONED: '1' },
+      encoding: 'utf8',
+      stdio: 'inherit',
+    },
+  );
+  if (result.error) throw result.error;
+  if (result.status !== 0)
+    throw new Error(`Feature 009 discovery-booking E2E failed with status ${result.status}`);
+}
 for (const database of databases) recreateDatabase(database);
 try {
   for (const database of databases) {
@@ -230,6 +250,7 @@ try {
     if (requestedMode === 'all' || requestedMode === 'api') runRaceTests(database);
     if (requestedMode === 'adapter') runAdapterTests(database);
     if (requestedMode === 'atomic-api') runAtomicApiTests(database);
+    if (requestedMode === 'discovery-booking') runDiscoveryBookingE2e(database);
   }
   console.log(
     `clinic-scheduling postgres: PASS mode=${requestedMode} databases=${databases.length}`,

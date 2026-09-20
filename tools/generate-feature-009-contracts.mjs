@@ -437,14 +437,22 @@ export interface ClinicSchedulingRequestOptions {
   signal?: AbortSignal;
 }
 export class ClinicSchedulingApiError extends Error {
-  public constructor(public readonly status: number, public readonly problem: unknown) {
+  public readonly status: number;
+  public readonly problem: unknown;
+
+  public constructor(status: number, problem: unknown) {
     super(\`SHIFAA clinic scheduling API failed with status \${status}.\`);
     this.name = 'ClinicSchedulingApiError';
+    this.status = status;
+    this.problem = problem;
   }
 }
 export class ClinicSchedulingClient {
   private readonly fetcher: typeof globalThis.fetch;
-  public constructor(private readonly options: ClinicSchedulingClientOptions) {
+  private readonly options: ClinicSchedulingClientOptions;
+
+  public constructor(options: ClinicSchedulingClientOptions) {
+    this.options = options;
     this.fetcher = (options.fetch ?? globalThis.fetch).bind(globalThis);
   }
   private queryPath(path: string, query: object): string {
