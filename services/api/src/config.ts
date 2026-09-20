@@ -12,6 +12,7 @@ export interface ApiConfig {
   privacyDsrNotificationsEnabled: boolean;
   discoverySosEnabled: boolean;
   identityContinuityEnabled: boolean;
+  clinicSchedulingNotificationsEnabled: boolean;
   discoveryRadiusM: number;
   sosMatchRadiusM: number;
   capacitySourceCode: string;
@@ -157,6 +158,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
         'Production startup denied: Identity continuity remains seeded-synthetic only.',
       );
     }
+    if (readBoolean(env['CLINIC_SCHEDULING_NOTIFICATIONS_ENABLED'], false)) {
+      throw new ConfigurationError(
+        'Production startup denied: Feature 009 messaging remains disabled by OPEN-VENDOR-002.',
+      );
+    }
     const forbidden = [
       syntheticMode && 'SHIFAA_SYNTHETIC_MODE',
       syntheticProofingEnabled && 'SYNTHETIC_PROOFING_ENABLED',
@@ -268,6 +274,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
     discoverySosEnabled: readBoolean(env['DISCOVERY_SOS_ENABLED'], environment !== 'production'),
     identityContinuityEnabled: readBoolean(
       env['IDENTITY_CONTINUITY_ENABLED'],
+      environment !== 'production',
+    ),
+    clinicSchedulingNotificationsEnabled: readBoolean(
+      env['CLINIC_SCHEDULING_NOTIFICATIONS_ENABLED'],
       environment !== 'production',
     ),
     discoveryRadiusM: readBoundedInteger(

@@ -1746,4 +1746,232 @@ CREATE UNIQUE INDEX outbox_aggregate_version_uq
     'clinical.schedule.changed.v1','clinical.appointment.changed.v1','clinical.queue.changed.v1','clinical.doctor_delay.declared.v1','clinical.doctor_absence.declared.v1'
   );
 
+-- Feature 009 notification workers never receive clinical table privileges.
+-- These fixed SECURITY DEFINER seams claim only the two notification event
+-- families and project the minimum current recipient fields.  Reasons,
+-- contact destinations, tokens, credentials, and arbitrary event payloads
+-- remain inside the database boundary.
+CREATE OR REPLACE FUNCTION platform.claim_next_clinic_scheduling_notification_event(
+  p_worker_id text,p_lease_seconds integer DEFAULT 30
+)
+RETURNS TABLE(
+  event_id uuid,event_type text,aggregate_id uuid,aggregate_version integer,
+  attempt_count integer,lease_expires_at timestamptz
+)
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform AS $$
+BEGIN
+  IF platform.context_environment() NOT IN ('local','ci')
+     OR NOT platform.feature_enabled('clinic_scheduling.dispatch',platform.context_environment())
+     OR p_worker_id IS NULL OR p_worker_id !~ '^[a-zA-Z0-9._:-]{1,96}$'
+     OR p_lease_seconds NOT BETWEEN 5 AND 300 THEN
+    RETURN;
+  END IF;
+  RETURN QUERY
+  WITH candidate AS MATERIALIZED (
+    SELECT e.id,e.event_type,e.aggregate_id,e.aggregate_version
+    FROM platform.outbox_events e
+    WHERE e.event_type IN ('clinical.doctor_delay.declared.v1','clinical.doctor_absence.declared.v1')
+      AND (e.state='pending' OR (e.state='processing' AND e.lease_expires_at<statement_timestamp()))
+      AND e.available_at<=statement_timestamp()
+      AND NOT EXISTS (
+        SELECT 1 FROM platform.outbox_events earlier
+        WHERE earlier.aggregate_type=e.aggregate_type AND earlier.aggregate_id=e.aggregate_id
+          AND earlier.aggregate_version<e.aggregate_version
+          AND earlier.event_type IN ('clinical.doctor_delay.declared.v1','clinical.doctor_absence.declared.v1')
+          AND earlier.state NOT IN ('delivered','dead_letter')
+      )
+    ORDER BY e.available_at,e.created_at,e.id
+    FOR UPDATE OF e SKIP LOCKED LIMIT 1
+  ), claimed AS (
+    UPDATE platform.outbox_events e
+    SET state='processing',attempt_count=e.attempt_count+1,lease_owner=p_worker_id,
+      lease_expires_at=statement_timestamp()+make_interval(secs=>p_lease_seconds),updated_at=statement_timestamp()
+    FROM candidate c WHERE e.id=c.id
+    RETURNING e.id,e.event_type,e.aggregate_id,e.aggregate_version,e.attempt_count,e.lease_expires_at
+  )
+  SELECT c.id,c.event_type,c.aggregate_id,c.aggregate_version,c.attempt_count,c.lease_expires_at
+  FROM claimed c;
+END $$;
+
+CREATE OR REPLACE FUNCTION platform.clinic_scheduling_notification_recipients(
+  p_event_id uuid,p_worker_id text
+)
+RETURNS TABLE(recipient_person_id uuid,locale text,field_values jsonb)
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform,clinical,identity AS $$
+DECLARE event_row platform.outbox_events%ROWTYPE; exception_row clinical.schedule_exceptions%ROWTYPE;
+BEGIN
+  IF platform.context_environment() NOT IN ('local','ci')
+     OR NOT platform.feature_enabled('clinic_scheduling.dispatch',platform.context_environment())
+     OR p_worker_id IS NULL OR p_worker_id !~ '^[a-zA-Z0-9._:-]{1,96}$' THEN RETURN; END IF;
+  SELECT * INTO event_row FROM platform.outbox_events
+  WHERE id=p_event_id AND event_type IN ('clinical.doctor_delay.declared.v1','clinical.doctor_absence.declared.v1')
+    AND state='processing' AND lease_owner=p_worker_id AND lease_expires_at>statement_timestamp();
+  IF NOT FOUND THEN RETURN; END IF;
+  SELECT e.* INTO exception_row FROM clinical.schedule_exceptions e
+  WHERE e.id=event_row.aggregate_id AND e.superseded_at IS NULL
+    AND e.version=event_row.aggregate_version;
+  IF NOT FOUND THEN RETURN; END IF;
+  IF event_row.event_type='clinical.doctor_delay.declared.v1' AND exception_row.exception_type<>'delay' THEN RETURN; END IF;
+  IF event_row.event_type='clinical.doctor_absence.declared.v1' AND exception_row.exception_type<>'absence' THEN RETURN; END IF;
+  RETURN QUERY
+  SELECT a.patient_person_id,patient.preferred_locale,
+    CASE WHEN event_row.event_type='clinical.doctor_delay.declared.v1' THEN
+      pg_catalog.jsonb_build_object(
+        'action_reference', 'appointment',
+        'appointment_reference', a.id::text,
+        'delay_date_label', exception_row.civil_date::text,
+        'delay_minutes_label', exception_row.delay_minutes::text,
+        'doctor_display_name', doctor.display_name,
+        'facility_display_name', facility.name_en
+      )
+    ELSE
+      pg_catalog.jsonb_build_object(
+        'affected_interval_label',
+          pg_catalog.to_char(exception_row.starts_at AT TIME ZONE exception_row.timezone_name,'YYYY-MM-DD HH24:MI')||' - '||
+          pg_catalog.to_char(exception_row.ends_at AT TIME ZONE exception_row.timezone_name,'YYYY-MM-DD HH24:MI'),
+        'appointment_reference', a.id::text,
+        'doctor_display_name', doctor.display_name,
+        'facility_display_name', facility.name_en,
+        'replacement_instruction', CASE WHEN patient.preferred_locale='ar-EG'
+          THEN 'راجع شاشة الموعد لاختيار موعد بديل.' ELSE 'Use the appointment screen to choose a replacement.' END
+      )
+    END
+  FROM clinical.appointments a
+  JOIN identity.people patient ON patient.id=a.patient_person_id AND patient.profile_status='active'
+  JOIN identity.people doctor ON doctor.id=a.doctor_person_id AND doctor.profile_status='active'
+  JOIN identity.facilities facility ON facility.id=a.facility_id AND facility.facility_status='active'
+  WHERE a.schedule_id=exception_row.schedule_id
+    AND a.facility_id=exception_row.facility_id
+    AND a.doctor_person_id=exception_row.doctor_person_id
+    AND a.civil_date=exception_row.civil_date
+    AND (
+      (event_row.event_type='clinical.doctor_delay.declared.v1' AND a.status IN ('confirmed','checked_in'))
+      OR (event_row.event_type='clinical.doctor_absence.declared.v1' AND a.status='reschedule_required'
+          AND a.occupied_range && exception_row.effective_range)
+    )
+  ORDER BY a.starts_at,a.id;
+END $$;
+
+CREATE OR REPLACE FUNCTION platform.complete_clinic_scheduling_notification_event(
+  p_event_id uuid,p_worker_id text,p_outcome text,p_safe_error_code text DEFAULT NULL,p_retry_at timestamptz DEFAULT NULL
+)
+RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform AS $$
+DECLARE changed integer; next_state text;
+BEGIN
+  IF p_outcome NOT IN ('delivered','retry','dead_letter') THEN
+    RAISE EXCEPTION 'invalid clinic notification outcome' USING ERRCODE='22023';
+  END IF;
+  IF p_safe_error_code IS NOT NULL AND p_safe_error_code !~ '^[a-z0-9._-]{1,64}$' THEN
+    RAISE EXCEPTION 'invalid clinic notification error code' USING ERRCODE='22023';
+  END IF;
+  IF p_outcome='retry' AND (p_retry_at IS NULL OR p_retry_at<=statement_timestamp()
+     OR p_retry_at>statement_timestamp()+interval '1 day') THEN
+    RAISE EXCEPTION 'invalid clinic notification retry time' USING ERRCODE='22023';
+  END IF;
+  IF p_outcome IN ('delivered','dead_letter') AND p_retry_at IS NOT NULL THEN
+    RAISE EXCEPTION 'terminal clinic notification cannot carry retry time' USING ERRCODE='22023';
+  END IF;
+  next_state:=CASE p_outcome WHEN 'delivered' THEN 'delivered' WHEN 'retry' THEN 'pending' ELSE 'dead_letter' END;
+  UPDATE platform.outbox_events e
+  SET state=next_state,available_at=COALESCE(p_retry_at,e.available_at),last_error_code=p_safe_error_code,
+    lease_owner=NULL,lease_expires_at=NULL,updated_at=statement_timestamp()
+  WHERE e.id=p_event_id
+    AND e.event_type IN ('clinical.doctor_delay.declared.v1','clinical.doctor_absence.declared.v1')
+    AND e.state='processing' AND e.lease_owner=p_worker_id AND e.lease_expires_at>statement_timestamp();
+  GET DIAGNOSTICS changed=ROW_COUNT;
+  IF changed=1 AND p_outcome IN ('delivered','dead_letter') THEN
+    INSERT INTO platform.event_receipts(event_id,consumer,result_code)
+    VALUES(p_event_id,'clinic-scheduling-notifications',p_outcome)
+    ON CONFLICT(event_id,consumer) DO NOTHING;
+  END IF;
+  RETURN changed=1;
+END $$;
+
+-- Feature 009 uses the shared keyed synthetic receipt registry, but has its
+-- own feature gate.  It must not call the Feature 006 SOS delivery seam:
+-- clinic dispatch remains independently switchable in local/CI and is never
+-- a production provider boundary.
+CREATE OR REPLACE FUNCTION platform.deliver_clinic_scheduling_local_synthetic_message(
+  p_provider_key text,p_destination_alias_digest text,p_rendered_digest text
+) RETURNS text
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform AS $$
+DECLARE receipt platform.synthetic_message_receipts;
+BEGIN
+  IF platform.context_environment() NOT IN ('local','ci')
+     OR NOT platform.feature_enabled('clinic_scheduling.dispatch',platform.context_environment()) THEN
+    RAISE EXCEPTION 'clinic scheduling local synthetic messaging is disabled' USING ERRCODE='42501';
+  END IF;
+  IF p_provider_key !~ '^[a-f0-9]{64}$'
+     OR p_destination_alias_digest !~ '^[a-f0-9]{64}$'
+     OR p_rendered_digest !~ '^[a-f0-9]{64}$' THEN
+    RAISE EXCEPTION 'invalid clinic synthetic message digest' USING ERRCODE='22023';
+  END IF;
+  INSERT INTO platform.synthetic_message_receipts(
+    provider_idempotency_key,destination_alias_digest,rendered_digest
+  ) VALUES(p_provider_key,p_destination_alias_digest,p_rendered_digest)
+  ON CONFLICT(provider_idempotency_key) DO NOTHING;
+  SELECT * INTO receipt FROM platform.synthetic_message_receipts
+  WHERE provider_idempotency_key=p_provider_key;
+  IF receipt.destination_alias_digest<>p_destination_alias_digest
+     OR receipt.rendered_digest<>p_rendered_digest THEN
+    RAISE EXCEPTION 'clinic synthetic provider dedup payload mismatch' USING ERRCODE='23505';
+  END IF;
+  RETURN 'synthetic-receipt-'||substr(encode(public.digest(p_provider_key,'sha256'),'hex'),1,16);
+END $$;
+
+-- Feature 009 notifications are one-per-affected-appointment.  Preserve the
+-- Feature 005 recipient/event uniqueness for every notification without an
+-- appointment reference, while allowing distinct appointment projections for
+-- one exception event and retaining replay dedup for the same appointment.
+ALTER TABLE platform.notifications
+  ADD COLUMN IF NOT EXISTS delivery_scope_key text NOT NULL DEFAULT ''
+    CHECK (length(delivery_scope_key)<=128);
+CREATE OR REPLACE FUNCTION platform.guard_notification_delivery_scope()
+RETURNS trigger
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform AS $$
+DECLARE source_type text;
+BEGIN
+  SELECT event_type INTO source_type FROM platform.outbox_events WHERE id=NEW.source_event_id;
+  IF source_type IN ('clinical.doctor_delay.declared.v1','clinical.doctor_absence.declared.v1') THEN
+    IF NEW.delivery_scope_key !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+       OR NEW.delivery_scope_key<>COALESCE(NEW.field_values->>'appointment_reference','') THEN
+      RAISE EXCEPTION 'invalid clinic notification delivery scope' USING ERRCODE='22023';
+    END IF;
+  ELSIF NEW.delivery_scope_key<>'' THEN
+    RAISE EXCEPTION 'non-clinic notification delivery scope is not permitted' USING ERRCODE='42501';
+  END IF;
+  RETURN NEW;
+END $$;
+DROP TRIGGER IF EXISTS notification_delivery_scope_guard ON platform.notifications;
+CREATE TRIGGER notification_delivery_scope_guard
+  BEFORE INSERT OR UPDATE OF delivery_scope_key,field_values,source_event_id ON platform.notifications
+  FOR EACH ROW EXECUTE FUNCTION platform.guard_notification_delivery_scope();
+REVOKE ALL ON FUNCTION platform.guard_notification_delivery_scope() FROM PUBLIC,shifaa_api,shifaa_worker;
+DO $$
+DECLARE constraint_name text;
+BEGIN
+  SELECT c.conname INTO constraint_name
+  FROM pg_constraint c
+  WHERE c.conrelid='platform.notifications'::regclass
+    AND c.contype='u'
+    AND pg_get_constraintdef(c.oid) LIKE '%template_release_id, source_event_id, recipient_type, recipient_person_id, channel%';
+  IF constraint_name IS NOT NULL THEN
+    EXECUTE format('ALTER TABLE platform.notifications DROP CONSTRAINT %I',constraint_name);
+  END IF;
+END $$;
+DROP INDEX IF EXISTS platform.notifications_patient_dedup_uq;
+CREATE UNIQUE INDEX IF NOT EXISTS notifications_patient_dedup_uq
+  ON platform.notifications(
+    template_release_id,source_event_id,recipient_type,recipient_person_id,channel,delivery_scope_key
+  );
+
+REVOKE ALL ON FUNCTION platform.claim_next_clinic_scheduling_notification_event(text,integer),
+  platform.clinic_scheduling_notification_recipients(uuid,text),
+  platform.complete_clinic_scheduling_notification_event(uuid,text,text,text,timestamptz),
+  platform.deliver_clinic_scheduling_local_synthetic_message(text,text,text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION platform.claim_next_clinic_scheduling_notification_event(text,integer),
+  platform.clinic_scheduling_notification_recipients(uuid,text),
+  platform.complete_clinic_scheduling_notification_event(uuid,text,text,text,timestamptz),
+  platform.deliver_clinic_scheduling_local_synthetic_message(text,text,text) TO shifaa_worker;
+
 COMMIT;

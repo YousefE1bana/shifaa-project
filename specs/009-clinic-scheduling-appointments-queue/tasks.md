@@ -218,31 +218,31 @@ All Phase 2 tasks are serial because they share one migration and mutable databa
 
 ## Phase 5 — Notification candidate lifecycle and local/test worker
 
-- [ ] T046 [P] [FR-CLINIC-005, NFR-SEC-002, NFR-PRIV-001, NFR-PRIV-002, NFR-I18N-001, NFR-QUALITY-001] Author versioned Arabic/English doctor-delay and doctor-absence candidate bodies, exact placeholder schemas, minimum recipient projections, and digests as unpublished Feature 005 lifecycle inputs — `specs/009-clinic-scheduling-appointments-queue/contracts/notification-template-candidates.json`
+- [x] T046 [P] [FR-CLINIC-005, NFR-SEC-002, NFR-PRIV-001, NFR-PRIV-002, NFR-I18N-001, NFR-QUALITY-001] Author versioned Arabic/English doctor-delay and doctor-absence candidate bodies, exact placeholder schemas, minimum recipient projections, and digests as unpublished Feature 005 lifecycle inputs — `specs/009-clinic-scheduling-appointments-queue/contracts/notification-template-candidates.json`
   - Depends on: `T005`, `T016`
   - Acceptance evidence: `corepack pnpm test:clinic-scheduling:notifications -- candidates` exits 0 with locale placeholder equality, no diagnosis/raw reason/contact destination, status `candidate`, and no fabricated publisher or publication evidence
 
-- [ ] T047 [FR-CLINIC-005, NFR-SEC-002, NFR-PRIV-001, NFR-PRIV-002, NFR-PORT-001] Define minimum delay/absence outbox claim, current recipient resolution, published-release resolution, delivery receipt, retry, dead-letter, clock, and telemetry ports — `services/worker/src/clinic-scheduling-notifications.ts`
+- [x] T047 [FR-CLINIC-005, NFR-SEC-002, NFR-PRIV-001, NFR-PRIV-002, NFR-PORT-001] Define minimum delay/absence outbox claim, current recipient resolution, published-release resolution, delivery receipt, retry, dead-letter, clock, and telemetry ports — `services/worker/src/clinic-scheduling-notifications.ts`
   - Depends on: `T035`, `T045`, `T046`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/worker typecheck` exits 0 and ports expose no general appointment table, raw reason, contact destination, token, credential, or production-provider contract
 
-- [ ] T048 [FR-CLINIC-005, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PRIV-001, NFR-PRIV-002, NFR-OBS-001] Implement ordered claims, current governed recipient/template resolution, aggregate/event/version deduplication, bounded lease/backoff, immutable receipts, and dead letter without reversing domain transactions — `services/worker/src/postgres-clinic-scheduling-notification-processor.ts`
+- [x] T048 [FR-CLINIC-005, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PRIV-001, NFR-PRIV-002, NFR-OBS-001] Implement ordered claims, current governed recipient/template resolution, aggregate/event/version deduplication, bounded lease/backoff, immutable receipts, and dead letter without reversing domain transactions — `services/worker/src/postgres-clinic-scheduling-notification-processor.ts`
   - Depends on: `T032`, `T047`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/worker test -- clinic-scheduling-notifications` exits 0 with ordered one-time delivery eligibility, superseded-delay suppression, absence deduplication, bounded retry, and no dispatch for an unpublished/mismatched release
 
-- [ ] T049 [FR-CLINIC-005, NFR-SEC-002, NFR-SEC-007, NFR-PRIV-002, NFR-PORT-001] Wire Feature 009 only to the existing local synthetic adapter and enforce startup/runtime denial for production SMS configuration while `OPEN-VENDOR-002` is open — `services/worker/src/adapters/local-synthetic-messaging.ts`, `services/worker/src/clinic-scheduling-runner.ts`, `services/api/src/config.ts`
+- [x] T049 [FR-CLINIC-005, NFR-SEC-002, NFR-SEC-007, NFR-PRIV-002, NFR-PORT-001] Wire Feature 009 only to the existing local synthetic adapter and enforce startup/runtime denial for production SMS configuration while `OPEN-VENDOR-002` is open — `services/worker/src/adapters/local-synthetic-messaging.ts`, `services/worker/src/clinic-scheduling-runner.ts`, `services/api/src/config.ts`
   - Depends on: `T048`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/worker test -- clinic-scheduling-production-disabled` exits 0 with synthetic receipts locally and production SMS startup/dispatch rejected without logging destinations or credentials
 
-- [ ] T050 [FR-CLINIC-005, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-SEC-007, NFR-PRIV-001, NFR-PRIV-002, NFR-I18N-001, NFR-OBS-001, NFR-QUALITY-001] Add candidate/unpublished/published-fixture, separation, locale, schema, recipient, replay, supersession, lease, transient, permanent, DLQ, redaction, and production-disabled worker tests — `services/worker/src/clinic-scheduling-notifications.test.ts`
+- [x] T050 [FR-CLINIC-005, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-SEC-007, NFR-PRIV-001, NFR-PRIV-002, NFR-I18N-001, NFR-OBS-001, NFR-QUALITY-001] Add candidate/unpublished/published-fixture, separation, locale, schema, recipient, replay, supersession, lease, transient, permanent, DLQ, redaction, and production-disabled worker tests — `services/worker/src/clinic-scheduling-notifications.test.ts`
   - Depends on: `T048`, `T049`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/worker test -- clinic-scheduling-notifications` exits 0 with truthful pending/retrying/failed receipts, no duplicate work, and no production delivery claim
 
-- [ ] T051 [FR-CLINIC-005, NFR-SEC-001, NFR-SEC-002, NFR-SEC-005, NFR-SEC-007, NFR-PRIV-002, NFR-OBS-001, NFR-QUALITY-001] Add serial end-to-end delay/absence commit-to-worker tests using synthetic recipients, approved test fixtures, adapter failure, superseded overlay, reconnect, and prohibited-sentinel cases — `tests/e2e/clinic-scheduling-notifications.spec.ts`
+- [x] T051 [FR-CLINIC-005, NFR-SEC-001, NFR-SEC-002, NFR-SEC-005, NFR-SEC-007, NFR-PRIV-002, NFR-OBS-001, NFR-QUALITY-001] Add serial end-to-end delay/absence commit-to-worker tests using synthetic recipients, approved test fixtures, adapter failure, superseded overlay, reconnect, and prohibited-sentinel cases — `tests/e2e/clinic-scheduling-notifications.spec.ts`
   - Depends on: `T045`, `T050`
   - Acceptance evidence: `corepack pnpm test:clinic-scheduling:e2e -- notifications` exits 0 with authoritative appointment/queue state preserved and one minimum notification result per eligible aggregate/event/version
 
-- [ ] T052 [FR-CLINIC-005, NFR-SEC-002, NFR-SEC-005, NFR-PRIV-002, NFR-I18N-001, NFR-OBS-001] Record the candidate-template and local/test worker checkpoint without asserting independent publication or production SMS — `specs/009-clinic-scheduling-appointments-queue/evidence/notifications/checkpoint.md`
+- [x] T052 [FR-CLINIC-005, NFR-SEC-002, NFR-SEC-005, NFR-PRIV-002, NFR-I18N-001, NFR-OBS-001] Record the candidate-template and local/test worker checkpoint without asserting independent publication or production SMS — `specs/009-clinic-scheduling-appointments-queue/evidence/notifications/checkpoint.md`
   - Depends on: `T006`, `T046`, `T051`
   - Acceptance evidence: `node tools/verify-feature-009-evidence.mjs --checkpoint notifications` exits 0 with candidate digests, test-fixture provenance, production kill-switch evidence, and retained `OPEN-VENDOR-002`
 
