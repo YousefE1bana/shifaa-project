@@ -101,13 +101,20 @@ async function apiReschedule(
   startsAt: string,
   endsAt: string,
   suffix: string,
+  reason = 'Synthetic reschedule request',
 ) {
   return apiRequest(patient, {
     method: 'POST',
     url: `/v1/appointments/${appointmentId}/reschedule`,
     key: `f009-http-reschedule-${suffix}`,
     version,
-    payload: { startsAt, endsAt, timezone: 'Africa/Cairo', civilDate: '2030-01-07' },
+    payload: {
+      startsAt,
+      endsAt,
+      timezone: 'Africa/Cairo',
+      civilDate: '2030-01-07',
+      reason,
+    },
   });
 }
 
@@ -339,6 +346,68 @@ describe.skipIf(!database)('Feature 009 PostgreSQL races and fault boundaries', 
       expect(Number(loserRow['version'])).toBe(1);
     } finally {
       await first.end({ timeout: 5 });
+    }
+  });
+
+  it('binds reschedule reasons to idempotency while keeping them out of audit and outbox records', async () => {
+    const sql = client();
+    try {
+      await setup(sql);
+      const appointmentId = await apiBook(
+        ids.patientA,
+        '2030-01-07T07:00:00Z',
+        '2030-01-07T07:30:00Z',
+        'reason-idempotency-book',
+      );
+      const reason = 'Feature009-reschedule-reason-sentinel';
+      await apiReschedule(
+        ids.patientA,
+        appointmentId,
+        1,
+        '2030-01-07T08:00:00Z',
+        '2030-01-07T08:30:00Z',
+        'reason-idempotency',
+        reason,
+      );
+      await expect(
+        apiReschedule(
+          ids.patientA,
+          appointmentId,
+          1,
+          '2030-01-07T08:00:00Z',
+          '2030-01-07T08:30:00Z',
+          'reason-idempotency',
+          'Feature009-reschedule-reason-changed',
+        ),
+      ).rejects.toThrow(/HTTP 409.*idempotency-key-reused/);
+
+      const appointment = await sql`
+        SELECT reschedule_reason,version FROM clinical.appointments WHERE id=${appointmentId}`;
+      expect(rowAt(appointment)).toMatchObject({ reschedule_reason: reason, version: 2 });
+      const privacy = await sql`
+        SELECT
+          EXISTS (
+            SELECT 1 FROM audit.events AS event
+            WHERE event.resource_id=${appointmentId}
+              AND pg_catalog.to_jsonb(event)::text LIKE '%' || ${reason} || '%'
+          ) AS audit_leaked,
+          EXISTS (
+            SELECT 1 FROM platform.outbox_events AS event
+            WHERE event.aggregate_id=${appointmentId}
+              AND pg_catalog.to_jsonb(event)::text LIKE '%' || ${reason} || '%'
+          ) AS outbox_leaked,
+          EXISTS (
+            SELECT 1 FROM platform.idempotency_records AS record
+            WHERE record.resource_id=${appointmentId}
+              AND pg_catalog.to_jsonb(record)::text LIKE '%' || ${reason} || '%'
+          ) AS idempotency_leaked`;
+      expect(rowAt(privacy)).toMatchObject({
+        audit_leaked: false,
+        outbox_leaked: false,
+        idempotency_leaked: false,
+      });
+    } finally {
+      await sql.end({ timeout: 5 });
     }
   });
 

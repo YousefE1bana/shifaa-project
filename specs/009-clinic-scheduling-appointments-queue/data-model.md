@@ -69,20 +69,21 @@ Constraints/indexes:
 
 ### `clinical.appointments`
 
-| Column         | Type/constraint                                                                                                                                |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| identity/scope | `id`, `patient_person_id`, `facility_id`, `doctor_person_id`, `schedule_id` FKs                                                                |
-| slot identity  | `starts_at`, `ends_at` timestamptz; generated half-open `occupied_range`; `timezone_name`, `civil_date`, `local_start`                         |
-| commerce       | `fee_minor_units bigint >= 0` and `currency_code char(3) = 'EGP'` snapshot from the authoritative schedule, `payment_method='cash_on_arrival'` |
-| status         | exact nine: `requested`, `confirmed`, `checked_in`, `in_queue`, `in_consultation`, `completed`, `cancelled`, `no_show`, `reschedule_required`  |
-| source         | nullable opaque `source_referral_id`; storage compatibility only, with no Feature 010 validation, route, or producer                           |
-| cancellation   | nullable bounded restricted reason and actor/time                                                                                              |
-| control        | positive `version`, created/updated actor/time                                                                                                 |
+| Column         | Type/constraint                                                                                                                                                   |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| identity/scope | `id`, `patient_person_id`, `facility_id`, `doctor_person_id`, `schedule_id` FKs                                                                                   |
+| slot identity  | `starts_at`, `ends_at` timestamptz; generated half-open `occupied_range`; `timezone_name`, `civil_date`, `local_start`                                            |
+| commerce       | `fee_minor_units bigint >= 0` and `currency_code char(3) = 'EGP'` snapshot from the authoritative schedule, `payment_method='cash_on_arrival'`                    |
+| status         | exact nine: `requested`, `confirmed`, `checked_in`, `in_queue`, `in_consultation`, `completed`, `cancelled`, `no_show`, `reschedule_required`                     |
+| source         | nullable opaque `source_referral_id`; storage compatibility only, with no Feature 010 validation, route, or producer                                              |
+| cancellation   | nullable bounded restricted reason and actor/time                                                                                                                 |
+| reschedule     | nullable restricted `reschedule_reason` text, 1–500 characters, rejecting CR/LF/tab; excluded from responses, projections, audit, outbox, logs, and metric labels |
+| control        | positive `version`, created/updated actor/time                                                                                                                    |
 
 - Partial GiST exclusion `(doctor_person_id WITH =, occupied_range WITH &&) WHERE status IN ('confirmed','checked_in','in_queue','in_consultation')` is the final double-booking guard across facilities.
 - Indexes: patient status/time; facility/doctor/civil-date/status/time; doctor upcoming occupying; schedule/time; status/time.
 - State guard permits only Feature 009-produced transitions documented in the approved matrix. It explicitly has no Feature 009 transition into `requested`, `in_queue`, `in_consultation`, `completed`, or `no_show`.
-- Reschedule changes this row in one transaction. A failed replacement constraint/validation rolls back every field and retains the original occupancy.
+- Reschedule changes this row, including `reschedule_reason`, in one transaction. A failed replacement constraint/validation rolls back every field and retains the original occupancy.
 
 ### `clinical.queue_scopes`
 

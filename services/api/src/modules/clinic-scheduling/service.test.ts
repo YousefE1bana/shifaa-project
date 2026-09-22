@@ -211,6 +211,7 @@ describe('clinic-scheduling-mutations', () => {
       endsAt: '2030-01-07T07:30:00.000Z',
       timezone: 'Africa/Cairo',
       civilDate: '2030-01-07',
+      reason: 'Patient requested a different time',
     };
 
     await new ClinicSchedulingService(deps).rescheduleAppointment(
@@ -227,6 +228,33 @@ describe('clinic-scheduling-mutations', () => {
       input,
     );
   });
+
+  it.each([
+    ['missing', undefined],
+    ['empty', ''],
+    ['oversized', 'x'.repeat(501)],
+    ['carriage return', 'unsafe\rreason'],
+    ['line feed', 'unsafe\nreason'],
+    ['tab', 'unsafe\treason'],
+  ])(
+    'rejects a %s reschedule reason before authorization or persistence',
+    async (_label, reason) => {
+      const deps = dependencies();
+
+      await expect(
+        new ClinicSchedulingService(deps).rescheduleAppointment(request, 'appointment-1', 4, {
+          startsAt: '2030-01-07T07:00:00.000Z',
+          endsAt: '2030-01-07T07:30:00.000Z',
+          timezone: 'Africa/Cairo',
+          civilDate: '2030-01-07',
+          reason,
+        } as never),
+      ).rejects.toMatchObject({ code: 'reason-invalid' });
+      expect(deps.featureFlags.enabled).not.toHaveBeenCalled();
+      expect(deps.authorization.authorize).not.toHaveBeenCalled();
+      expect(deps.repository.rescheduleAppointment).not.toHaveBeenCalled();
+    },
+  );
 
   it('keeps queue mutations in the queue repository and does not transition appointments', async () => {
     const deps = dependencies();

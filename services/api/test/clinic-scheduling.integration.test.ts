@@ -328,6 +328,7 @@ describe('Feature 009 HTTP contract and authorization', () => {
           endsAt: '2030-01-07T08:30:00.000Z',
           timezone: 'Africa/Cairo',
           civilDate: '2030-01-07',
+          reason: 'Synthetic reschedule request',
         },
         headers: { ...auth, 'idempotency-key': key('reschedule'), 'if-match': '"1"' },
       },
@@ -477,6 +478,7 @@ describe('Feature 009 HTTP contract and authorization', () => {
           endsAt: '2030-01-07T08:30:00.000Z',
           timezone: 'Africa/Cairo',
           civilDate: '2030-01-07',
+          reason: 'Synthetic reschedule request',
         },
         headers: { 'idempotency-key': key('missing-reschedule'), 'if-match': '"1"' },
       },
@@ -788,6 +790,39 @@ describe('Feature 009 HTTP contract and authorization', () => {
     });
     expect(changed.statusCode).toBe(409);
     expect(changed.json()).toMatchObject({ code: 'idempotency-key-reused', status: 409 });
+  });
+
+  it('includes the reschedule reason in the idempotency fingerprint without retaining it in context', async () => {
+    const reschedule = (reason: string) =>
+      app.inject({
+        method: 'POST',
+        url: `/v1/appointments/${ids.appointment}/reschedule`,
+        headers: {
+          ...auth,
+          'idempotency-key': key('reschedule-reason-replay'),
+          'if-match': '"1"',
+        },
+        payload: {
+          startsAt: '2030-01-07T08:00:00.000Z',
+          endsAt: '2030-01-07T08:30:00.000Z',
+          timezone: 'Africa/Cairo',
+          civilDate: '2030-01-07',
+          reason,
+        },
+      });
+
+    const reason = 'Feature009-reschedule-reason-sentinel';
+    const first = await reschedule(reason);
+    const changed = await reschedule('Feature009-reschedule-reason-changed');
+    expect(first.statusCode).toBe(200);
+    expect(changed.statusCode).toBe(200);
+
+    const contexts = (calls.rescheduleAppointment as ReturnType<typeof vi.fn>).mock.calls.map(
+      (call) => call[0] as { requestHash: string },
+    );
+    expect(contexts).toHaveLength(2);
+    expect(contexts[0]?.requestHash).not.toBe(contexts[1]?.requestHash);
+    expect(JSON.stringify(contexts)).not.toContain(reason);
   });
 
   it('maps stale versions and authorization failures to deterministic problems', async () => {

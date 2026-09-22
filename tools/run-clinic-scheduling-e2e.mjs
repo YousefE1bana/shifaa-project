@@ -13,7 +13,7 @@ const allSpecs = [
 ];
 const userArgs = process.argv.slice(2).filter((arg) => arg !== '--');
 const selector = userArgs[0];
-const allowedSelectors = new Set(['notifications', 'discovery-booking']);
+const allowedSelectors = new Set(['notifications', 'discovery-booking', 'appointments']);
 if (selector !== undefined && !allowedSelectors.has(selector)) {
   throw new Error(`Unknown clinic-scheduling E2E selector: ${selector}`);
 }
@@ -31,8 +31,30 @@ if (selector === 'discovery-booking' && process.env['SHIFAA_F009_PROVISIONED'] !
   if (result.error) throw result.error;
   process.exit(result.status ?? 1);
 }
+if (selector === 'appointments' && process.env['SHIFAA_F009_PROVISIONED'] !== '1') {
+  const result = spawnSync(
+    process.execPath,
+    ['tools/run-clinic-scheduling-postgres-test.mjs', 'appointments'],
+    {
+      cwd: root,
+      env: process.env,
+      encoding: 'utf8',
+      stdio: 'inherit',
+    },
+  );
+  if (result.error) throw result.error;
+  process.exit(result.status ?? 1);
+}
 const selectedIndex =
-  selector === undefined ? -1 : ['notifications', 'discovery-booking'].indexOf(selector);
+  selector === undefined
+    ? -1
+    : allSpecs.indexOf(
+        selector === 'notifications'
+          ? 'tests/e2e/clinic-scheduling-notifications.spec.ts'
+          : selector === 'discovery-booking'
+            ? 'tests/e2e/clinic-scheduling-discovery-booking.spec.ts'
+            : 'tests/e2e/clinic-scheduling-appointments.spec.ts',
+      );
 const specs = selectedIndex >= 0 ? [allSpecs[selectedIndex]] : allSpecs;
 const tsx = fileURLToPath(new URL('../node_modules/tsx/dist/cli.mjs', import.meta.url));
 const result = spawnSync(

@@ -22,14 +22,17 @@ const filter = {
 
 function fakeRepository(response: unknown) {
   const calls: unknown[][] = [];
+  const statements: string[] = [];
   let transactionCount = 0;
   const sql = ((strings: TemplateStringsArray, ...values: unknown[]) => {
     calls.push(values);
+    statements.push(strings.join(''));
     if (calls.length === 1) return Promise.resolve([]);
     return Promise.resolve(Array.isArray(response) ? response : [{ response }]);
   }) as unknown as TransactionSql;
   return {
     calls,
+    statements,
     get transactionCount() {
       return transactionCount;
     },
@@ -77,6 +80,51 @@ describe('Feature 009 PostgreSQL adapter boundary', () => {
     expect(
       parseClinicSchedulingMutationResponse('createAppointment', JSON.stringify(appointment)),
     ).toEqual(appointment);
+  });
+
+  it('binds the required reason but rejects it if it leaks into the appointment projection', async () => {
+    const reason = 'Feature009-reschedule-reason-sentinel';
+    const appointment = {
+      id: 'f0090000-0000-4000-8300-000000000001',
+      patientId: 'f0090000-0000-4000-8000-000000000003',
+      facilityId: 'f0090000-0000-4000-8100-000000000001',
+      doctorId: 'f0090000-0000-4000-8000-000000000002',
+      startsAt: '2030-01-07T07:00:00.000Z',
+      endsAt: '2030-01-07T07:30:00.000Z',
+      timezone: 'Africa/Cairo',
+      civilDate: '2030-01-07',
+      status: 'confirmed',
+      feeMinorUnits: 10000,
+      currency: 'EGP',
+      paymentMethod: 'cash_on_arrival',
+      version: 2,
+      reason,
+    } as const;
+    const fake = fakeRepository(appointment);
+    const adapter = new PostgresClinicSchedulingService(fake.repository);
+
+    await expect(
+      adapter.rescheduleAppointment(
+        {
+          actor,
+          idempotencyKey: 'reschedule-reason-test-key',
+          requestHash: 'a'.repeat(64),
+        },
+        appointment.id,
+        1,
+        {
+          startsAt: appointment.startsAt,
+          endsAt: appointment.endsAt,
+          timezone: appointment.timezone,
+          civilDate: appointment.civilDate,
+          reason,
+        },
+      ),
+    ).rejects.toThrow('invalid response DTO');
+
+    expect(fake.statements.at(-1)).toContain('clinical.reschedule_appointment_v1');
+    expect(fake.statements.at(-1)).not.toContain(reason);
+    expect(fake.calls.at(-1)?.at(-1)).toBe(reason);
   });
 
   it('rejects malformed discovery and queue cursors before issuing a database read', async () => {

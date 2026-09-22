@@ -257,27 +257,31 @@ export const CreateAppointmentRequestSchema = Type.Object(
   },
   { additionalProperties: false },
 );
-export const AppointmentSchema = Type.Object({
-  id: UuidSchema,
-  patientId: UuidSchema,
-  facilityId: UuidSchema,
-  doctorId: UuidSchema,
-  startsAt: Type.String({ format: 'date-time' }),
-  endsAt: Type.String({ format: 'date-time' }),
-  timezone: Type.String({}),
-  civilDate: Type.String({ format: 'date' }),
-  status: AppointmentStatusSchema,
-  feeMinorUnits: Type.Integer({ minimum: 0 }),
-  currency: CurrencyCodeSchema,
-  paymentMethod: Type.Literal('cash_on_arrival'),
-  version: VersionSchema,
-});
+export const AppointmentSchema = Type.Object(
+  {
+    id: UuidSchema,
+    patientId: UuidSchema,
+    facilityId: UuidSchema,
+    doctorId: UuidSchema,
+    startsAt: Type.String({ format: 'date-time' }),
+    endsAt: Type.String({ format: 'date-time' }),
+    timezone: Type.String({}),
+    civilDate: Type.String({ format: 'date' }),
+    status: AppointmentStatusSchema,
+    feeMinorUnits: Type.Integer({ minimum: 0 }),
+    currency: CurrencyCodeSchema,
+    paymentMethod: Type.Literal('cash_on_arrival'),
+    version: VersionSchema,
+  },
+  { additionalProperties: false },
+);
 export const RescheduleRequestSchema = Type.Object(
   {
     startsAt: Type.String({ format: 'date-time' }),
     endsAt: Type.String({ format: 'date-time' }),
     timezone: Type.String({}),
     civilDate: Type.String({ format: 'date' }),
+    reason: Type.String({ pattern: '^(?!.*[\\r\\n\\t]).+$', minLength: 1, maxLength: 500 }),
   },
   { additionalProperties: false },
 );

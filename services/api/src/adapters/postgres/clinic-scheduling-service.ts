@@ -340,7 +340,7 @@ export class PostgresClinicSchedulingService
         select clinical.reschedule_appointment_v1(
           ${appointmentId}::uuid,${expectedVersion},${input['startsAt']}::timestamptz,
           ${input['endsAt']}::timestamptz,${input['civilDate']}::date,
-          ${this.localStart(input['startsAt'], input['timezone'])}::time
+          ${this.localStart(input['startsAt'], input['timezone'])}::time,${input['reason']}
         ) as response`;
         return parseClinicSchedulingMutationResponse('rescheduleAppointment', row?.response);
       },

@@ -188,7 +188,7 @@ END
 $schedule_mutation_vectors$;
 SELECT pg_catalog.set_config('shifaa.person_id','f0090000-0000-4000-8000-000000000003',true);
 DO $appointment_mutation_vectors$
-DECLARE created_id uuid; replacement_status text; replacement_version integer;
+DECLARE created_id uuid; replacement_status text; replacement_version integer; stored_reason text; public_projection jsonb;
 BEGIN
   SELECT (clinical.create_appointment_v1(jsonb_build_object(
     'patient_person_id','f0090000-0000-4000-8000-000000000003','facility_id','f0090000-0000-4000-8100-000000000001',
@@ -197,11 +197,32 @@ BEGIN
     'civil_date','2026-09-13','local_start','18:00',
     'payment_method','cash_on_arrival'
   )) ->> 'id')::uuid INTO created_id;
-  PERFORM clinical.reschedule_appointment_v1(created_id,1,'2026-09-13T15:30:00Z','2026-09-13T16:00:00Z','2026-09-13','18:30');
-  SELECT status,version INTO replacement_status,replacement_version FROM clinical.appointments WHERE id=created_id;
-  IF replacement_status<>'confirmed' OR replacement_version<>2 THEN RAISE EXCEPTION 'reschedule did not atomically replace same row'; END IF;
+  PERFORM clinical.reschedule_appointment_v1(created_id,1,'2026-09-13T15:30:00Z','2026-09-13T16:00:00Z','2026-09-13','18:30','Feature009-reschedule-reason-sentinel');
+  SELECT status,version,reschedule_reason INTO replacement_status,replacement_version,stored_reason FROM clinical.appointments WHERE id=created_id;
+  public_projection:=clinical.project_appointment_v1(created_id);
+  IF replacement_status<>'confirmed' OR replacement_version<>2 OR stored_reason<>'Feature009-reschedule-reason-sentinel' THEN RAISE EXCEPTION 'reschedule did not atomically replace same row and persist its reason'; END IF;
+  IF public_projection ? 'rescheduleReason' OR public_projection ? 'reschedule_reason' OR public_projection ? 'reason' THEN RAISE EXCEPTION 'appointment projection disclosed the restricted reschedule reason'; END IF;
+  IF EXISTS (
+    SELECT 1 FROM audit.events AS event
+    WHERE event.resource_id=created_id
+      AND pg_catalog.to_jsonb(event)::text LIKE '%Feature009-reschedule-reason-sentinel%'
+  ) OR EXISTS (
+    SELECT 1 FROM platform.outbox_events AS event
+    WHERE event.aggregate_id=created_id
+      AND pg_catalog.to_jsonb(event)::text LIKE '%Feature009-reschedule-reason-sentinel%'
+  ) THEN RAISE EXCEPTION 'reschedule reason leaked into audit or outbox'; END IF;
+  FOREACH stored_reason IN ARRAY ARRAY[
+    '',repeat('x',501),'line'||chr(10)||'break','carriage'||chr(13)||'return','tab'||chr(9)||'character'
+  ] LOOP
+    BEGIN
+      PERFORM clinical.reschedule_appointment_v1(created_id,2,'2026-09-13T15:30:00Z','2026-09-13T16:00:00Z','2026-09-13','18:30',stored_reason);
+      RAISE EXCEPTION 'invalid reschedule reason was accepted';
+    EXCEPTION WHEN invalid_parameter_value THEN NULL;
+    END;
+  END LOOP;
+  IF (SELECT reschedule_reason FROM clinical.appointments WHERE id=created_id)<>'Feature009-reschedule-reason-sentinel' THEN RAISE EXCEPTION 'rejected reschedule reason changed the stored reason'; END IF;
   BEGIN
-    PERFORM clinical.reschedule_appointment_v1(created_id,2,'2026-09-13T11:00:00Z','2026-09-13T11:30:00Z','2026-09-13','14:00');
+    PERFORM clinical.reschedule_appointment_v1(created_id,2,'2026-09-13T11:00:00Z','2026-09-13T11:30:00Z','2026-09-13','14:00','Synthetic conflicting reschedule');
     RAISE EXCEPTION 'conflicting reschedule was accepted';
   EXCEPTION WHEN exclusion_violation THEN NULL;
   END;

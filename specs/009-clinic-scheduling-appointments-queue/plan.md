@@ -69,7 +69,7 @@ The API owns authorization and transaction orchestration. Pure core modules own 
 
 ### Data and migration
 
-- Add `clinical.schedules` (including the versioned fee authority and server-owned fixed `EGP` currency), `clinical.schedule_windows`, `clinical.schedule_exceptions`, `clinical.appointments` (fee/`EGP` booking snapshot), `clinical.queue_scopes`, and `clinical.queue_entries`; exact columns and indexes are in `data-model.md`.
+- Add `clinical.schedules` (including the versioned fee authority and server-owned fixed `EGP` currency), `clinical.schedule_windows`, `clinical.schedule_exceptions`, `clinical.appointments` (fee/`EGP` booking snapshot and nullable restricted `reschedule_reason`), `clinical.queue_scopes`, and `clinical.queue_entries`; exact columns and indexes are in `data-model.md`.
 - Normalize weekly windows; validate IANA timezones; represent inclusive civil validity as generated half-open date ranges; use GiST exclusions for active validity, local-window overlap, ordinary same-type exception overlap, and appointment occupancy.
 - Use row/scope locks plus constraints for exception precedence, slot acquisition, atomic same-row reschedule, queue number allocation/reorder, delay supersession, and absence cascades.
 - Force RLS everywhere. Minimum anonymous/public service-context and patient projections use SECURITY DEFINER functions with `search_path=''`, explicit ownership, narrow EXECUTE grants, and negative tests; the two discovery reads require no patient-record authority and authentication is optional.
@@ -77,7 +77,7 @@ The API owns authorization and transaction orchestration. Pure core modules own 
 
 ### API and generated clients
 
-- `contracts/openapi.yaml` contains exactly the approved 18 operation IDs and paths. Mutations preserve catalog idempotency/version requirements; responses use typed schemas and localized RFC 9457 failures. `CreateScheduleRequest` requires `feeMinorUnits`; `UpdateScheduleRequest` may change it under `If-Match`; response currency is fixed server-owned `EGP`; `CreateAppointmentRequest` has no fee/currency fields and booking derives both from the schedule.
+- `contracts/openapi.yaml` contains exactly the approved 18 operation IDs and paths. Mutations preserve catalog idempotency/version requirements; responses use typed schemas and localized RFC 9457 failures. `RescheduleRequest` requires a restricted 1–500 character `reason` without CR/LF/tab; it is persisted only in the atomic reschedule transaction and is not returned. `CreateScheduleRequest` requires `feeMinorUnits`; `UpdateScheduleRequest` may change it under `If-Match`; response currency is fixed server-owned `EGP`; `CreateAppointmentRequest` has no fee/currency fields and booking derives both from the schedule.
 - CI compares roadmap/catalog ↔ OpenAPI ↔ generated TypeScript exports and fails on added, renamed, or missing operations.
 - `createAppointment` returns `confirmed`; check-in ends at appointment `checked_in` and creates queue `waiting`; complete changes queue `called` → `completed`. Appointment `requested`, `in_queue`, `in_consultation`, `completed`, `no_show`, and queue `in_service` have no Feature 009 producer.
 - Use bounded opaque cursors, private/no-store sensitive responses, request correlation, scoped throttles, deterministic conflicts, canonical idempotent replay, audit, and transactional outbox.
@@ -99,7 +99,7 @@ The API owns authorization and transaction orchestration. Pure core modules own 
 ### Security, privacy, and abuse controls
 
 - Cover horizontal/vertical authorization, forged scope, stale versions, slot/queue races, duplicate keys, enumeration, reason injection, oversized cursors, mass booking/reorder/delay abuse, and outbox replay.
-- Cancellation/reorder/absence reasons are restricted: governed retention/encryption, no logs/events/analytics, and only scoped authorized reads.
+- Cancellation/reorder/absence/reschedule reasons are restricted: governed retention/encryption, no logs/events/analytics, and only scoped authorized reads; the reschedule reason is not in the appointment response projection.
 - Telemetry uses request/event/aggregate IDs, result class, latency, and redacted scope; never patient names, contacts, raw reasons, precise public location, or appointment details.
 
 ## 6. Test and evidence plan

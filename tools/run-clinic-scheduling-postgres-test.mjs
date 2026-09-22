@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import path from 'node:path';
 import process from 'node:process';
 
 const root = process.cwd();
@@ -26,6 +27,7 @@ const modes = new Set([
   'migration',
   'restore',
   'discovery-booking',
+  'appointments',
 ]);
 if (!modes.has(requestedMode))
   throw new Error(`Unsupported clinic scheduling database test mode: ${requestedMode}`);
@@ -224,6 +226,36 @@ function runDiscoveryBookingE2e(database) {
   if (result.status !== 0)
     throw new Error(`Feature 009 discovery-booking E2E failed with status ${result.status}`);
 }
+function runAppointmentsE2e(database) {
+  const result = spawnSync(
+    process.execPath,
+    [
+      'node_modules/tsx/dist/cli.mjs',
+      '--test',
+      '--test-concurrency=1',
+      'tests/e2e/clinic-scheduling-appointments.spec.ts',
+    ],
+    {
+      cwd: root,
+      env: {
+        ...process.env,
+        NODE_PATH: [
+          path.join(root, 'node_modules', '.pnpm', 'node_modules'),
+          process.env['NODE_PATH'],
+        ]
+          .filter(Boolean)
+          .join(path.delimiter),
+        SHIFAA_F009_DATABASE: database,
+        SHIFAA_F009_PROVISIONED: '1',
+      },
+      encoding: 'utf8',
+      stdio: 'inherit',
+    },
+  );
+  if (result.error) throw result.error;
+  if (result.status !== 0)
+    throw new Error(`Feature 009 appointments E2E failed with status ${result.status}`);
+}
 for (const database of databases) recreateDatabase(database);
 try {
   for (const database of databases) {
@@ -251,6 +283,7 @@ try {
     if (requestedMode === 'adapter') runAdapterTests(database);
     if (requestedMode === 'atomic-api') runAtomicApiTests(database);
     if (requestedMode === 'discovery-booking') runDiscoveryBookingE2e(database);
+    if (requestedMode === 'appointments') runAppointmentsE2e(database);
   }
   console.log(
     `clinic-scheduling postgres: PASS mode=${requestedMode} databases=${databases.length}`,

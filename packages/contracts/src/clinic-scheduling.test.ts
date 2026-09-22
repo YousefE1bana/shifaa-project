@@ -229,4 +229,30 @@ describe('generated Feature 009 contracts', () => {
       }),
     ).toBe(true);
   });
+
+  it('requires a bounded reschedule reason and rejects line breaks and tabs', () => {
+    const replacement = {
+      startsAt: '2030-01-07T07:00:00.000Z',
+      endsAt: '2030-01-07T07:30:00.000Z',
+      timezone: 'Africa/Cairo',
+      civilDate: '2030-01-07',
+    };
+    const schema = clinicSchedulingSchemas.RescheduleRequest;
+
+    expect(Value.Check(schema, { ...replacement, reason: 'Patient requested a new time' })).toBe(
+      true,
+    );
+    expect(Value.Check(schema, replacement)).toBe(false);
+    expect(Value.Check(schema, { ...replacement, reason: '' })).toBe(false);
+    expect(Value.Check(schema, { ...replacement, reason: 'a'.repeat(501) })).toBe(false);
+    expect(Value.Check(schema, { ...replacement, reason: 'a'.repeat(500) })).toBe(true);
+    for (const reason of ['line\nbreak', 'carriage\rreturn', 'tab\tcharacter'])
+      expect(Value.Check(schema, { ...replacement, reason })).toBe(false);
+  });
+
+  it('keeps reschedule reasons outside the closed public appointment DTO', () => {
+    expect(clinicSchedulingSchemas.Appointment.additionalProperties).toBe(false);
+    for (const privateField of ['reason', 'rescheduleReason', 'reschedule_reason'])
+      expect(clinicSchedulingSchemas.Appointment.properties).not.toHaveProperty(privateField);
+  });
 });

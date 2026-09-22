@@ -355,6 +355,27 @@ function verifyShapes(api, operations) {
   if (publicDoctor.properties?.availabilityVersion?.$ref !== '#/components/schemas/Version')
     fail('PublicDoctorProjection must expose availabilityVersion.');
 
+  const appointment = schema(api, components.Appointment);
+  if (
+    appointment?.additionalProperties !== false ||
+    ['reason', 'rescheduleReason', 'reschedule_reason'].some((field) =>
+      Object.hasOwn(appointment?.properties ?? {}, field),
+    )
+  )
+    fail(
+      'Appointment must be a closed public projection without the restricted reschedule reason.',
+    );
+  const rescheduleRequest = resolvedSchema(api, operations.get('rescheduleAppointment')?.operation);
+  if (
+    rescheduleRequest?.additionalProperties !== false ||
+    !rescheduleRequest?.required?.includes('reason') ||
+    rescheduleRequest?.properties?.reason?.type !== 'string' ||
+    rescheduleRequest?.properties?.reason?.minLength !== 1 ||
+    rescheduleRequest?.properties?.reason?.maxLength !== 500 ||
+    rescheduleRequest?.properties?.reason?.pattern !== '^(?!.*[\\r\\n\\t]).+$'
+  )
+    fail('RescheduleRequest must require a 1..500 character reason without CR, LF, or tab.');
+
   const exceptionOperation = operations.get('createScheduleException')?.operation;
   const exceptionRequest = resolvedSchema(api, exceptionOperation);
   if (

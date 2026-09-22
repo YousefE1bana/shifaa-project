@@ -251,6 +251,7 @@ export class ClinicSchedulingService {
     input: Parameters<ClinicSchedulingRepository['rescheduleAppointment']>[3],
   ) {
     this.validateExpectedVersion(expectedVersion);
+    this.validateReason(input.reason);
     await this.prepareMutation(request, 'appointment.manage', { appointmentId });
     return this.repositoryOrThrow().rescheduleAppointment(
       request,
@@ -551,7 +552,12 @@ export class ClinicSchedulingService {
   }
 
   private validateReason(reason: string): void {
-    if (reason.length < 1 || reason.length > 500 || /[\r\n\t]/.test(reason)) {
+    if (
+      typeof reason !== 'string' ||
+      reason.length < 1 ||
+      reason.length > 500 ||
+      /[\r\n\t]/.test(reason)
+    ) {
       throw new ClinicSchedulingServiceError(
         'reason-invalid',
         'A bounded restricted reason is required.',

@@ -201,6 +201,7 @@ describe('Feature 009 telemetry redaction at the atomic-effects boundary', () =>
       'Synthetic Patient Name',
       'patient@example.test',
       'raw reason',
+      'Feature009-reschedule-reason-sentinel',
       'token-secret',
     ];
     const telemetry = clinicSchedulingTelemetry({

@@ -88,10 +88,7 @@ const plannedScripts = new Map([
     'test:clinic-scheduling:notifications',
     'pnpm --filter @shifaa/worker test -- clinic-scheduling-notifications',
   ],
-  [
-    'test:clinic-scheduling:e2e',
-    'tsx --test --test-concurrency=1 tests/e2e/clinic-scheduling-notifications.spec.ts tests/e2e/clinic-scheduling-discovery-booking.spec.ts tests/e2e/clinic-scheduling-appointments.spec.ts tests/e2e/clinic-scheduling-queue.spec.ts tests/e2e/clinic-scheduling-schedule-delay-absence.spec.ts',
-  ],
+  ['test:clinic-scheduling:e2e', 'node tools/run-clinic-scheduling-e2e.mjs'],
   [
     'test:clinic-scheduling:stack',
     'pnpm test:clinic-scheduling:db && pnpm test:clinic-scheduling:rls && pnpm test:clinic-scheduling:migration && pnpm test:clinic-scheduling:scope && pnpm test:clinic-scheduling:contract && pnpm test:clinic-scheduling:notifications && pnpm test:clinic-scheduling:e2e',
@@ -352,7 +349,7 @@ function verifyFeature010Exclusions(specText, roadmapText, planText) {
     failures.push('Plan scope exclusion boundary is missing.');
 }
 
-function verifyPlannedScripts(packageText) {
+function verifyPlannedScripts(packageText, e2eRunnerText) {
   const packageJson = parseJson('package.json', packageText);
   const scripts = packageJson?.scripts ?? {};
   for (const [name, expected] of plannedScripts) {
@@ -365,8 +362,8 @@ function verifyPlannedScripts(packageText) {
     )
   )
     failures.push('Feature 009 stack alias must remain serial.');
-  if (!/--test-concurrency=1\b/.test(scripts['test:clinic-scheduling:e2e'] ?? ''))
-    failures.push('Feature 009 E2E alias must force test concurrency 1.');
+  if (!/['"]--test-concurrency=1['"]/.test(e2eRunnerText))
+    failures.push('Feature 009 E2E runner must force test concurrency 1.');
 }
 
 const specText = readText(`${featureRoot}/spec.md`);
@@ -377,6 +374,7 @@ const openApiText = readText(`${featureRoot}/contracts/openapi.yaml`);
 const roadmapText = readText('docs/governance/SHIFAA-Remaining-Specs-Roadmap.md');
 const catalogText = readText('docs/architecture/SHIFAA-API-Catalog.md');
 const packageText = readText('package.json');
+const e2eRunnerText = readText('tools/run-clinic-scheduling-e2e.mjs');
 
 verifyRequirements(specText, roadmapText, planText);
 verifyOperations(specText, openApiText, catalogText);
@@ -385,7 +383,7 @@ verifyStates(dataModelText, specText, planText);
 verifyPaymentAndNotifications(specText, planText, tasksText);
 verifyGates(specText, planText, tasksText);
 verifyFeature010Exclusions(specText, roadmapText, planText);
-verifyPlannedScripts(packageText);
+verifyPlannedScripts(packageText, e2eRunnerText);
 
 if (failures.length > 0) {
   console.error('Feature 009 scope verification failed:');

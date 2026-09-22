@@ -570,6 +570,7 @@ components:
         sourceReferralId: { oneOf: [{ $ref: '#/components/schemas/Uuid' }, { type: 'null' }] }
     Appointment:
       type: object
+      additionalProperties: false
       required:
         [
           id,
@@ -603,12 +604,13 @@ components:
     RescheduleRequest:
       type: object
       additionalProperties: false
-      required: [startsAt, endsAt, timezone, civilDate]
+      required: [startsAt, endsAt, timezone, civilDate, reason]
       properties:
         startsAt: { type: string, format: date-time }
         endsAt: { type: string, format: date-time }
         timezone: { type: string }
         civilDate: { type: string, format: date }
+        reason: { type: string, minLength: 1, maxLength: 500, pattern: '^(?!.*[\r\n\t]).+$' }
     QueueEntry:
       type: object
       required: [id, appointmentId, facilityId, doctorId, civilDate, queueNumber, state, version]

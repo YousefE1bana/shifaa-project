@@ -4,6 +4,10 @@ import type {
   AppointmentListQuery,
   AvailabilityPage,
   AvailabilityQuery,
+  CancelAppointmentInput,
+  RescheduleInput,
+  CheckInResult,
+  QueuePosition,
   CreateAppointmentInput,
   DoctorSearchPage,
   DoctorSearchQuery,
@@ -75,6 +79,39 @@ export class PatientClinicSchedulingApi {
   public getMyAppointment(appointmentId: string): Promise<Appointment> {
     this.requirePatientContext();
     return this.privateClient().getAppointment(appointmentId);
+  }
+
+  public getMyQueuePosition(appointmentId: string): Promise<QueuePosition> {
+    this.requirePatientContext();
+    return this.privateClient().getMyQueuePosition(appointmentId);
+  }
+
+  public cancelMyAppointment(
+    id: string,
+    body: CancelAppointmentInput,
+    version: number,
+    key: string,
+  ): Promise<Appointment> {
+    assertClinicSchedulingOnline();
+    this.requirePatientContext();
+    return this.privateClient().cancelAppointment(id, body, version, key);
+  }
+
+  public rescheduleMyAppointment(
+    id: string,
+    body: RescheduleInput,
+    version: number,
+    key: string,
+  ): Promise<Appointment> {
+    assertClinicSchedulingOnline();
+    this.requirePatientContext();
+    return this.privateClient().rescheduleAppointment(id, body, version, key);
+  }
+
+  public checkInMyAppointment(id: string, version: number, key: string): Promise<CheckInResult> {
+    assertClinicSchedulingOnline();
+    this.requirePatientContext();
+    return this.privateClient().checkInAppointment(id, version, key);
   }
 
   public async createAppointment(

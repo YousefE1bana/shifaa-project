@@ -115,6 +115,7 @@ CREATE TABLE clinical.appointments (
   status text NOT NULL DEFAULT 'confirmed' CHECK (status IN ('requested','confirmed','checked_in','in_queue','in_consultation','completed','cancelled','no_show','reschedule_required')),
   source_referral_id uuid,
   cancellation_reason text CHECK (cancellation_reason IS NULL OR (octet_length(cancellation_reason) BETWEEN 1 AND 512 AND cancellation_reason !~ E'[\\r\\n\\t]')),
+  reschedule_reason text CHECK (reschedule_reason IS NULL OR (char_length(reschedule_reason) BETWEEN 1 AND 500 AND reschedule_reason !~ E'[\\r\\n\\t]')),
   cancelled_by_person_id uuid REFERENCES identity.people(id),
   cancelled_at timestamptz,
   version integer NOT NULL DEFAULT 1 CHECK (version > 0),
@@ -126,6 +127,7 @@ CREATE TABLE clinical.appointments (
   CONSTRAINT appointments_payment_method_check CHECK (payment_method='cash_on_arrival')
 );
 COMMENT ON TABLE clinical.appointments IS 'retention_class=CLINICAL_SCHEDULING; cash_on_arrival only; Feature 010 referral validation excluded';
+COMMENT ON COLUMN clinical.appointments.reschedule_reason IS 'restricted input retained only for the reschedule mutation; excluded from responses, projections, audit, outbox, logs, and metrics';
 ALTER TABLE clinical.appointments ADD CONSTRAINT appointments_occupied_excl EXCLUDE USING gist
   (doctor_person_id WITH =, occupied_range WITH &&) WHERE (status IN ('confirmed','checked_in','in_queue','in_consultation'));
 CREATE INDEX clinical_appointments_patient_idx ON clinical.appointments(patient_person_id,status,starts_at DESC,id);
@@ -490,13 +492,16 @@ END $$;
 
 CREATE OR REPLACE FUNCTION clinical.reschedule_appointment_v1(
   p_appointment_id uuid,p_expected_version integer,p_starts_at timestamptz,p_ends_at timestamptz,
-  p_civil_date date,p_local_start time
+  p_civil_date date,p_local_start time,p_reason text
 )
 RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
 DECLARE appointment_id uuid; actor uuid := platform.context_person_id();
   original clinical.appointments%ROWTYPE; schedule_row clinical.schedules%ROWTYPE;
 BEGIN
   IF actor IS NULL THEN RAISE EXCEPTION 'authenticated actor required' USING ERRCODE='42501'; END IF;
+  IF p_reason IS NULL OR char_length(p_reason) NOT BETWEEN 1 AND 500 OR p_reason ~ E'[\\r\\n\\t]' THEN
+    RAISE EXCEPTION 'invalid reschedule reason' USING ERRCODE='22023';
+  END IF;
   SELECT * INTO original FROM clinical.appointments WHERE id=p_appointment_id FOR UPDATE;
   IF NOT FOUND THEN RAISE EXCEPTION 'appointment is stale, unauthorized, or not reschedulable' USING ERRCODE='40001'; END IF;
   PERFORM clinical.assert_current_patient_scope_v1(original.patient_person_id);
@@ -510,6 +515,7 @@ BEGIN
   PERFORM pg_catalog.set_config('shifaa.clinic_internal_transition','allowed',true);
   UPDATE clinical.appointments
   SET starts_at=p_starts_at,ends_at=p_ends_at,civil_date=p_civil_date,local_start=p_local_start,
+      reschedule_reason=p_reason,
       status='confirmed',updated_by_person_id=actor
   WHERE id=p_appointment_id AND version=p_expected_version
     AND patient_person_id=actor AND status IN ('confirmed','reschedule_required')
@@ -1056,7 +1062,7 @@ DROP FUNCTION clinical.create_schedule_v1(jsonb);
 DROP FUNCTION clinical.update_schedule_v1(uuid,integer,jsonb);
 DROP FUNCTION clinical.create_schedule_exception_v1(jsonb);
 DROP FUNCTION clinical.create_appointment_v1(jsonb);
-DROP FUNCTION clinical.reschedule_appointment_v1(uuid,integer,timestamptz,timestamptz,date,time);
+DROP FUNCTION clinical.reschedule_appointment_v1(uuid,integer,timestamptz,timestamptz,date,time,text);
 DROP FUNCTION clinical.cancel_appointment_v1(uuid,integer,text);
 DROP FUNCTION clinical.check_in_appointment_v1(uuid,integer);
 DROP FUNCTION clinical.call_queue_entry_v1(uuid,integer);
@@ -1253,13 +1259,14 @@ BEGIN
 END $$;
 
 CREATE FUNCTION clinical.reschedule_appointment_v1(
-  p_appointment_id uuid,p_expected_version integer,p_starts_at timestamptz,p_ends_at timestamptz,p_civil_date date,p_local_start time
+  p_appointment_id uuid,p_expected_version integer,p_starts_at timestamptz,p_ends_at timestamptz,p_civil_date date,p_local_start time,p_reason text
 )
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
 DECLARE appointment_id uuid; actor uuid := platform.context_person_id(); original clinical.appointments%ROWTYPE; schedule_row clinical.schedules%ROWTYPE;
   result jsonb; idem_id uuid; idem_new boolean; idem_response jsonb;
 BEGIN
   IF actor IS NULL OR p_appointment_id IS NULL OR p_expected_version IS NULL OR p_expected_version<1 OR p_starts_at IS NULL OR p_ends_at IS NULL OR p_civil_date IS NULL OR p_local_start IS NULL
+     OR p_reason IS NULL OR char_length(p_reason) NOT BETWEEN 1 AND 500 OR p_reason ~ E'[\\r\\n\\t]'
   THEN RAISE EXCEPTION 'invalid appointment replacement request' USING ERRCODE='22023'; END IF;
   SELECT * INTO original FROM clinical.appointments WHERE id=p_appointment_id FOR UPDATE;
   IF NOT FOUND THEN RAISE EXCEPTION 'appointment is stale, unauthorized, or not reschedulable' USING ERRCODE='40001'; END IF;
@@ -1274,7 +1281,8 @@ BEGIN
     FROM clinical.begin_mutation_v1('POST','/v1/appointments/{appointmentId}/reschedule');
   IF NOT idem_new THEN RETURN idem_response; END IF;
   PERFORM pg_catalog.set_config('shifaa.clinic_internal_transition','allowed',true);
-  UPDATE clinical.appointments SET starts_at=p_starts_at,ends_at=p_ends_at,civil_date=p_civil_date,local_start=p_local_start,status='confirmed',updated_by_person_id=actor
+  UPDATE clinical.appointments SET starts_at=p_starts_at,ends_at=p_ends_at,civil_date=p_civil_date,local_start=p_local_start,
+    reschedule_reason=p_reason,status='confirmed',updated_by_person_id=actor
   WHERE id=p_appointment_id AND version=p_expected_version AND status IN ('confirmed','reschedule_required')
     AND (status='reschedule_required' OR starts_at>platform.context_now());
   IF NOT FOUND THEN RAISE EXCEPTION 'appointment is stale, unauthorized, or not reschedulable' USING ERRCODE='40001'; END IF;
@@ -1705,9 +1713,9 @@ RETURNS jsonb LANGUAGE sql STABLE SECURITY DEFINER SET search_path='' AS $$
   FROM clinical.read_my_queue_position_v1(p_appointment_id) q
 $$;
 
-REVOKE ALL ON FUNCTION clinical.create_schedule_v1(jsonb),clinical.update_schedule_v1(uuid,integer,jsonb),clinical.create_schedule_exception_v1(jsonb),clinical.create_appointment_v1(jsonb),clinical.reschedule_appointment_v1(uuid,integer,timestamptz,timestamptz,date,time),clinical.cancel_appointment_v1(uuid,integer,text),clinical.check_in_appointment_v1(uuid,integer),clinical.call_queue_entry_v1(uuid,integer),clinical.complete_queue_entry_v1(uuid,integer),clinical.reorder_queue_entry_v1(uuid,integer,integer,text),clinical.send_doctor_delay_v1(uuid,uuid,date,integer,text),clinical.declare_doctor_absence_v1(uuid,uuid,date,timestamptz,timestamptz,text),clinical.claim_idempotency_v1(text,text,text,text),clinical.record_mutation_effect_v1(text,text,text,uuid,integer,uuid,uuid,text),clinical.search_doctors_v1(text,uuid,double precision,double precision,integer,date,double precision,uuid,uuid,integer),clinical.list_doctor_availability_v1(uuid,uuid,date,date,timestamptz,integer),clinical.read_schedule_public_pricing_v1(uuid,uuid,date,date),clinical.read_appointment_projection_v1(uuid),clinical.list_appointments_v1(uuid,uuid,uuid,text,date,timestamptz,integer),clinical.read_queue_projection_v1(uuid,uuid,date,integer,integer,bigint,uuid,integer,integer),clinical.read_queue_position_v1(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION clinical.create_schedule_v1(jsonb),clinical.update_schedule_v1(uuid,integer,jsonb),clinical.create_schedule_exception_v1(jsonb),clinical.create_appointment_v1(jsonb),clinical.reschedule_appointment_v1(uuid,integer,timestamptz,timestamptz,date,time,text),clinical.cancel_appointment_v1(uuid,integer,text),clinical.check_in_appointment_v1(uuid,integer),clinical.call_queue_entry_v1(uuid,integer),clinical.complete_queue_entry_v1(uuid,integer),clinical.reorder_queue_entry_v1(uuid,integer,integer,text),clinical.send_doctor_delay_v1(uuid,uuid,date,integer,text),clinical.declare_doctor_absence_v1(uuid,uuid,date,timestamptz,timestamptz,text),clinical.claim_idempotency_v1(text,text,text,text),clinical.record_mutation_effect_v1(text,text,text,uuid,integer,uuid,uuid,text),clinical.search_doctors_v1(text,uuid,double precision,double precision,integer,date,double precision,uuid,uuid,integer),clinical.list_doctor_availability_v1(uuid,uuid,date,date,timestamptz,integer),clinical.read_schedule_public_pricing_v1(uuid,uuid,date,date),clinical.read_appointment_projection_v1(uuid),clinical.list_appointments_v1(uuid,uuid,uuid,text,date,timestamptz,integer),clinical.read_queue_projection_v1(uuid,uuid,date,integer,integer,bigint,uuid,integer,integer),clinical.read_queue_position_v1(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION clinical.project_schedule_v1(uuid),clinical.project_schedule_exception_v1(uuid),clinical.project_appointment_v1(uuid),clinical.project_queue_entry_v1(uuid),clinical.project_queue_v1(uuid,uuid,date),clinical.project_check_in_v1(uuid,uuid),clinical.project_delay_result_v1(uuid,uuid),clinical.project_absence_result_v1(uuid,uuid[],uuid[]),clinical.begin_mutation_v1(text,text),clinical.complete_mutation_v1(uuid,integer,text,uuid,jsonb),clinical.record_mutation_effect_v2(text,text,text,uuid,integer,uuid,uuid),clinical.schedule_window_parent_version_v1() FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION clinical.create_schedule_v1(jsonb),clinical.update_schedule_v1(uuid,integer,jsonb),clinical.create_schedule_exception_v1(jsonb),clinical.create_appointment_v1(jsonb),clinical.reschedule_appointment_v1(uuid,integer,timestamptz,timestamptz,date,time),clinical.list_availability_v1(uuid,date),clinical.cancel_appointment_v1(uuid,integer,text),clinical.check_in_appointment_v1(uuid,integer),clinical.call_queue_entry_v1(uuid,integer),clinical.complete_queue_entry_v1(uuid,integer),clinical.reorder_queue_entry_v1(uuid,integer,integer,text),clinical.send_doctor_delay_v1(uuid,uuid,date,integer,text),clinical.declare_doctor_absence_v1(uuid,uuid,date,timestamptz,timestamptz,text),clinical.search_doctors_v1(text,uuid,double precision,double precision,integer,date,double precision,uuid,uuid,integer),clinical.list_doctor_availability_v1(uuid,uuid,date,date,timestamptz,integer),clinical.read_schedule_public_pricing_v1(uuid,uuid,date,date),clinical.read_appointment_projection_v1(uuid),clinical.list_appointments_v1(uuid,uuid,uuid,text,date,timestamptz,integer),clinical.read_queue_projection_v1(uuid,uuid,date,integer,integer,bigint,uuid,integer,integer),clinical.read_queue_position_v1(uuid) TO shifaa_api;
+GRANT EXECUTE ON FUNCTION clinical.create_schedule_v1(jsonb),clinical.update_schedule_v1(uuid,integer,jsonb),clinical.create_schedule_exception_v1(jsonb),clinical.create_appointment_v1(jsonb),clinical.reschedule_appointment_v1(uuid,integer,timestamptz,timestamptz,date,time,text),clinical.list_availability_v1(uuid,date),clinical.cancel_appointment_v1(uuid,integer,text),clinical.check_in_appointment_v1(uuid,integer),clinical.call_queue_entry_v1(uuid,integer),clinical.complete_queue_entry_v1(uuid,integer),clinical.reorder_queue_entry_v1(uuid,integer,integer,text),clinical.send_doctor_delay_v1(uuid,uuid,date,integer,text),clinical.declare_doctor_absence_v1(uuid,uuid,date,timestamptz,timestamptz,text),clinical.search_doctors_v1(text,uuid,double precision,double precision,integer,date,double precision,uuid,uuid,integer),clinical.list_doctor_availability_v1(uuid,uuid,date,date,timestamptz,integer),clinical.read_schedule_public_pricing_v1(uuid,uuid,date,date),clinical.read_appointment_projection_v1(uuid),clinical.list_appointments_v1(uuid,uuid,uuid,text,date,timestamptz,integer),clinical.read_queue_projection_v1(uuid,uuid,date,integer,integer,bigint,uuid,integer,integer),clinical.read_queue_position_v1(uuid) TO shifaa_api;
 
 -- Expand-phase flags: all are explicitly off; later activation is local/test
 -- only and keeps mutation and dispatch kill switches independent.
