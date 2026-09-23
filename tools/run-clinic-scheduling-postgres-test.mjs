@@ -29,6 +29,7 @@ const modes = new Set([
   'discovery-booking',
   'appointments',
   'queue',
+  'schedule-delay-absence',
 ]);
 if (!modes.has(requestedMode))
   throw new Error(`Unsupported clinic scheduling database test mode: ${requestedMode}`);
@@ -287,6 +288,36 @@ function runQueueE2e(database) {
   if (result.status !== 0)
     throw new Error(`Feature 009 queue E2E failed with status ${result.status}`);
 }
+function runScheduleDelayAbsenceE2e(database) {
+  const result = spawnSync(
+    process.execPath,
+    [
+      'node_modules/tsx/dist/cli.mjs',
+      '--test',
+      '--test-concurrency=1',
+      'tests/e2e/clinic-scheduling-schedule-delay-absence.spec.ts',
+    ],
+    {
+      cwd: root,
+      env: {
+        ...process.env,
+        NODE_PATH: [
+          path.join(root, 'node_modules', '.pnpm', 'node_modules'),
+          process.env['NODE_PATH'],
+        ]
+          .filter(Boolean)
+          .join(path.delimiter),
+        SHIFAA_F009_DATABASE: database,
+        SHIFAA_F009_PROVISIONED: '1',
+      },
+      encoding: 'utf8',
+      stdio: 'inherit',
+    },
+  );
+  if (result.error) throw result.error;
+  if (result.status !== 0)
+    throw new Error(`Feature 009 schedule-delay-absence E2E failed with status ${result.status}`);
+}
 for (const database of databases) recreateDatabase(database);
 try {
   for (const database of databases) {
@@ -298,6 +329,7 @@ try {
       assertUpgradeSeed(database, 'before upgrade');
     }
     apply(database, featureMigration);
+    apply(database, 'supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql');
     if (isUpgradePath) {
       assertUpgradeSeed(database, 'after upgrade');
       assertUpgradeObjectsAndFlags(database);
@@ -316,6 +348,7 @@ try {
     if (requestedMode === 'discovery-booking') runDiscoveryBookingE2e(database);
     if (requestedMode === 'appointments') runAppointmentsE2e(database);
     if (requestedMode === 'queue') runQueueE2e(database);
+    if (requestedMode === 'schedule-delay-absence') runScheduleDelayAbsenceE2e(database);
   }
   console.log(
     `clinic-scheduling postgres: PASS mode=${requestedMode} databases=${databases.length}`,
