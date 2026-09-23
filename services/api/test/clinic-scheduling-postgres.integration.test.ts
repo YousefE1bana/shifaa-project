@@ -120,7 +120,8 @@ async function apiReschedule(
 
 async function apiReorder(
   queueEntryId: string,
-  version: number,
+  entryVersion: number,
+  queueVersion: number,
   targetPosition: number,
   suffix: string,
 ) {
@@ -128,8 +129,8 @@ async function apiReorder(
     method: 'POST',
     url: `/v1/queue-entries/${queueEntryId}/reorder`,
     key: `f009-http-reorder-${suffix}`,
-    version,
-    payload: { targetPosition, queueVersion: version, reason: 'concurrent reorder' },
+    version: entryVersion,
+    payload: { targetPosition, queueVersion, reason: 'concurrent reorder' },
   });
 }
 
@@ -452,9 +453,12 @@ describe.skipIf(!database)('Feature 009 PostgreSQL races and fault boundaries', 
         await first`SELECT id,version FROM clinical.queue_entries ORDER BY waiting_order`;
       const queueEntryId = String(rowAt(entries, 1)['id']);
       const queueEntryVersion = Number(rowAt(entries, 1)['version']);
+      const scope =
+        await first`SELECT s.version FROM clinical.queue_scopes s JOIN clinical.queue_entries q ON q.queue_scope_id=s.id WHERE q.id=${queueEntryId}`;
+      const queueVersion = Number(rowAt(scope)['version']);
       const outcomes = await Promise.allSettled([
-        apiReorder(queueEntryId, queueEntryVersion, 1, 'queue-race-a'),
-        apiReorder(queueEntryId, queueEntryVersion, 1, 'queue-race-b'),
+        apiReorder(queueEntryId, queueEntryVersion, queueVersion, 1, 'queue-race-a'),
+        apiReorder(queueEntryId, queueEntryVersion, queueVersion, 1, 'queue-race-b'),
       ]);
       expect(outcomes.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
       expect(outcomes.filter((result) => result.status === 'rejected')).toHaveLength(1);

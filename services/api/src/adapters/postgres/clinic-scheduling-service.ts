@@ -380,12 +380,13 @@ export class PostgresClinicSchedulingService
     request: ClinicSchedulingMutationContext,
     queueEntryId: string,
     expectedVersion: number,
+    expectedQueueVersion: number,
     targetPosition: number,
     reason: string,
   ): Promise<Queue> {
     return this.withRequest(request, 'queue.manage', ['queue.operation'], async (sql) => {
       const [row] = await sql<{ response: unknown }[]>`
-        select clinical.reorder_queue_entry_v1(${queueEntryId}::uuid,${expectedVersion},${targetPosition},${reason}) as response`;
+        select clinical.reorder_queue_entry_v1(${queueEntryId}::uuid,${expectedVersion},${expectedQueueVersion},${targetPosition},${reason}) as response`;
       return parseClinicSchedulingMutationResponse('reorderQueueEntry', row?.response);
     });
   }

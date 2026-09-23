@@ -252,10 +252,11 @@ INSERT INTO clinical.appointments(id,patient_person_id,facility_id,doctor_person
 VALUES ('f0090000-0000-4000-8300-000000000004','f0090000-0000-4000-8000-000000000003','f0090000-0000-4000-8100-000000000001','f0090000-0000-4000-8000-000000000002','f0090000-0000-4000-8200-000000000001','2026-09-13T13:00:00Z','2026-09-13T13:30:00Z','Africa/Cairo','2026-09-13','15:00',10000,'EGP','confirmed','f0090000-0000-4000-8000-000000000003','f0090000-0000-4000-8000-000000000003');
 SELECT clinical.check_in_appointment_v1('f0090000-0000-4000-8300-000000000004',1);
 DO $reorder_vectors$
-DECLARE target_id uuid; displaced_order integer; target_order integer;
+DECLARE target_id uuid; displaced_order integer; target_order integer; queue_version integer;
 BEGIN
   SELECT id INTO target_id FROM clinical.queue_entries WHERE appointment_id='f0090000-0000-4000-8300-000000000004';
-  PERFORM clinical.reorder_queue_entry_v1(target_id,1,1,'synthetic priority');
+  SELECT s.version INTO queue_version FROM clinical.queue_scopes s JOIN clinical.queue_entries q ON q.queue_scope_id=s.id WHERE q.id=target_id;
+  PERFORM clinical.reorder_queue_entry_v1(target_id,1,queue_version,1,'synthetic priority');
   SELECT waiting_order INTO target_order FROM clinical.queue_entries WHERE appointment_id='f0090000-0000-4000-8300-000000000004';
   SELECT waiting_order INTO displaced_order FROM clinical.queue_entries WHERE appointment_id='f0090000-0000-4000-8300-000000000002';
   IF target_order<>1 OR displaced_order<>2 THEN RAISE EXCEPTION 'reorder did not atomically shift occupied position'; END IF;

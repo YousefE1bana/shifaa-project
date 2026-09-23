@@ -672,18 +672,12 @@ export async function registerClinicSchedulingRoutes(
       const { queueEntryId } = request.params as { queueEntryId: string };
       const body = request.body as ReorderInput;
       const expectedVersion = resourceVersion(request);
-      if (body.queueVersion !== expectedVersion) {
-        throw new ApiPolicyError(
-          'version-conflict',
-          409,
-          'The queueVersion body value must match If-Match.',
-        );
-      }
       return mutate(request, reply, dependencies, 'reorderQueueEntry', 200, (context) =>
         dependencies.service.reorderQueueEntry(
           context,
           queueEntryId,
           expectedVersion,
+          body.queueVersion,
           body.targetPosition,
           body.reason,
         ),

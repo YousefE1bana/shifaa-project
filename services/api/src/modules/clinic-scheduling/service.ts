@@ -285,10 +285,12 @@ export class ClinicSchedulingService {
     request: ClinicSchedulingRequestContext,
     queueEntryId: string,
     expectedVersion: number,
+    expectedQueueVersion: number,
     targetPosition: number,
     reason: string,
   ) {
     this.validateExpectedVersion(expectedVersion);
+    this.validateExpectedVersion(expectedQueueVersion);
     this.validateReason(reason);
     if (!Number.isSafeInteger(targetPosition) || targetPosition < 1) {
       throw new ClinicSchedulingServiceError(
@@ -301,6 +303,7 @@ export class ClinicSchedulingService {
       request,
       queueEntryId,
       expectedVersion,
+      expectedQueueVersion,
       targetPosition,
       reason,
     );
@@ -554,9 +557,9 @@ export class ClinicSchedulingService {
   private validateReason(reason: string): void {
     if (
       typeof reason !== 'string' ||
-      reason.length < 1 ||
-      reason.length > 500 ||
-      /[\r\n\t]/.test(reason)
+      reason.trim().length < 1 ||
+      [...reason].length > 500 ||
+      /[\p{Cc}]/u.test(reason)
     ) {
       throw new ClinicSchedulingServiceError(
         'reason-invalid',

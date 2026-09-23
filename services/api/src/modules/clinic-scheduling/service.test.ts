@@ -260,7 +260,7 @@ describe('clinic-scheduling-mutations', () => {
     const deps = dependencies();
     const service = new ClinicSchedulingService(deps);
     await service.callQueueEntry(request, 'entry-1', 3);
-    await service.reorderQueueEntry(request, 'entry-1', 3, 2, 'operational reason');
+    await service.reorderQueueEntry(request, 'entry-1', 3, 4, 2, 'operational reason');
     await service.completeQueueEntry(request, 'entry-1', 4);
     expect(deps.repository.callQueueEntry).toHaveBeenCalled();
     expect(deps.repository.reorderQueueEntry).toHaveBeenCalled();

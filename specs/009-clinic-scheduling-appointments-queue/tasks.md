@@ -308,19 +308,19 @@ All Phase 2 tasks are serial because they share one migration and mutable databa
 
 **Independent outcome:** An authorized clinic actor can inspect today's exact scope and call, reorder, or complete only eligible queue entries while patients see only their own queue projection.
 
-- [ ] T064 [US3] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-001, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Implement clinic `/today` facility/role/AAL/environment, doctor/date worklist, empty/delay/absence/stale/offline/error states and `/queue` five-state projections, freshness, delay overlay, call/reorder/complete controls, restricted reason, conflict refresh, and result regions — `apps/clinic/src/app/today/page.tsx`, `apps/clinic/src/app/queue/page.tsx`, `apps/clinic/src/components/clinic-scheduling/QueueWorkspace.tsx`
+- [x] T064 [US3] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-001, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Implement clinic `/today` facility/role/AAL/environment, doctor/date worklist, empty/delay/absence/stale/offline/error states and `/queue` five-state projections, freshness, delay overlay, call/reorder/complete controls, restricted reason, conflict refresh, and result regions — `apps/clinic/src/app/today/page.tsx`, `apps/clinic/src/app/queue/page.tsx`, `apps/clinic/src/components/clinic-scheduling/QueueWorkspace.tsx`
   - Depends on: `T037`, `T040`, `T041`, `T059`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/clinic test -- clinic-scheduling-queue` exits 0 with `F009-P0-CLN-TODAY-001` and `F009-P0-CLN-QUEUE-001`, exact scope, stable order, waiting-only reorder, polite announcements, and no local authoritative transition
 
-- [ ] T065 [US3] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002, NFR-QUALITY-001] Add clinic today/queue component tests for all queue states, empty/delay/absence, permission, stale/offline/error, call/reorder/complete, reason validation, version conflict, focus return, RTL/LTR, reflow, contrast, targets, and reduced motion — `apps/clinic/test/clinic-scheduling-queue.test.ts`
+- [x] T065 [US3] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002, NFR-QUALITY-001] Add clinic today/queue component tests for all queue states, empty/delay/absence, permission, stale/offline/error, call/reorder/complete, reason validation, version conflict, focus return, RTL/LTR, reflow, contrast, targets, and reduced motion — `apps/clinic/test/clinic-scheduling-queue.test.ts`
   - Depends on: `T064`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/clinic test -- clinic-scheduling-queue` exits 0 at both clinic viewports with no reorder for called/later states, no `in_service` producer, and no appointment-state change
 
-- [ ] T066 [US3] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-001, NFR-SEC-004, NFR-SEC-005, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002, NFR-QUALITY-001] Add serial end-to-end check-in-to-waiting, concurrent number allocation, own-position privacy, clinic projection, call, reorder race/reason, complete, absence removal, stale/offline/reconnect, and cross-scope denial tests — `tests/e2e/clinic-scheduling-queue.spec.ts`
+- [x] T066 [US3] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-SEC-001, NFR-SEC-004, NFR-SEC-005, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002, NFR-QUALITY-001] Add serial end-to-end check-in-to-waiting, concurrent number allocation, own-position privacy, clinic projection, call, reorder race/reason, complete, absence removal, stale/offline/reconnect, and cross-scope denial tests — `tests/e2e/clinic-scheduling-queue.spec.ts`
   - Depends on: `T044`, `T045`, `T062`, `T065`
   - Acceptance evidence: `corepack pnpm test:clinic-scheduling:e2e -- queue` exits 0 with AC-08 through AC-10, AC-12, AC-15, and AC-16 passing without shared-harness parallelism
 
-- [ ] T067 [US3] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Record the independently demonstrable today/queue checkpoint — `specs/009-clinic-scheduling-appointments-queue/evidence/queue/checkpoint.md`
+- [x] T067 [US3] [FR-CLINIC-003, FR-CLINIC-004, FR-CLINIC-005, NFR-I18N-001, NFR-A11Y-001, NFR-AVAIL-002] Record the independently demonstrable today/queue checkpoint — `specs/009-clinic-scheduling-appointments-queue/evidence/queue/checkpoint.md`
   - Depends on: `T006`, `T066`
   - Acceptance evidence: `node tools/verify-feature-009-evidence.mjs --story US3` exits 0 with both clinic baseline families, exact actor/scope/state/race evidence, own-position privacy, and AR/EN accessibility results
 

@@ -350,6 +350,7 @@ export interface ClinicSchedulingRepository extends ClinicSchedulingProjectionPo
     request: ClinicSchedulingMutationContext,
     queueEntryId: string,
     expectedVersion: number,
+    expectedQueueVersion: number,
     targetPosition: number,
     reason: string,
   ): Promise<Queue>;
