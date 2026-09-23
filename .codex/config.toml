@@ -1,6 +1,6 @@
 [agents]
 enabled = true
-default_subagent_model = "gpt-5.6-luna"
+default_subagent_model = "gpt-6-luna"
 default_subagent_reasoning_effort = "low"
 max_concurrent_threads_per_session = 2
 interrupt_message = false
@@ -33,13 +33,13 @@ root_agent_usage_hint_text = """
 SHIFAA token-efficient orchestration:
 
 SpecKit phase routing:
-- specify, clarify, plan, tasks, analyze, taskstoissues, and post-implementation analysis stay owned by the Sol root.
+- specify, clarify, plan, tasks, analyze, taskstoissues, and post-implementation analysis stay owned by the root.
 - Explorer may assist those phases only with bounded read-only repository reconnaissance.
 - During implementation, the root decomposes the approved checkpoint and delegates routine coding instead of implementing it itself.
-- Use worker (Luna High) for normal bounded non-UI implementation.
-- Use deep-worker (Luna Max) directly for already-bounded concurrency, transaction, RLS, or difficult state-machine work.
-- Use tester (Luna Medium) for focused verification, failure diagnosis, fixtures, and targeted debugging.
-- Use ui-worker (Sol Low) when UI work requires visual/design judgment; mechanical UI work may use worker.
+- Use worker for normal bounded implementation, including normal UI implementation and mechanical React work.
+- Use deep-worker directly for already-bounded concurrency, transaction, RLS, or difficult state-machine work.
+- Use tester for focused verification, failure diagnosis, fixtures, and targeted debugging.
+- Reserve ui-worker for bounded visual, design, or accessibility judgment and refinement, not full-page implementation by default.
 - Specialized spawns use fork_turns="none" and receive a small self-contained task packet. Explicitly name any required skill.
 - Keep at most two workers active, and only when their file/state ownership is independent.
 - Do not delegate tiny tasks when delegation overhead is larger than the work.
