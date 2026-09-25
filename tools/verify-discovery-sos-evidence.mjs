@@ -248,7 +248,7 @@ for (const gate of [
   if (!openGateRegister.includes(gate)) failures.push(`Canonical OPEN gate is missing: ${gate}`);
 
 const specKit = JSON.parse(text(join(root, '.specify', 'integration.json')));
-if (specKit.version !== '1.0.6') failures.push('Spec Kit integration is not v1.0.6.');
+if (specKit.version !== '1.0.12') failures.push('Spec Kit integration is not v1.0.12.');
 
 try {
   const aclProbe = execFileSync(
