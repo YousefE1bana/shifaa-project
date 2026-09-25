@@ -18,7 +18,7 @@ type Queue = Awaited<ReturnType<Client['getQueue']>>;
 type Entry = Queue['entries'][number];
 type Appointment = Awaited<ReturnType<Client['listAppointments']>>['items'][number];
 type Mode = 'today' | 'queue';
-type Failure = 'denied' | 'missing' | 'conflict' | 'recoverable' | 'terminal';
+type Failure = 'denied' | 'missing' | 'conflict' | 'read-conflict' | 'recoverable' | 'terminal';
 const states = ['waiting', 'called', 'in_service', 'completed', 'removed'] as const;
 const stateText: Record<Entry['state'], [string, string]> = {
   waiting: ['ينتظر', 'Waiting'],
@@ -43,6 +43,8 @@ const words = {
     date: 'التاريخ الميلادي',
     load: 'اعرض النطاق',
     refresh: 'تحديث من الخادم',
+    refreshSuccessToday: 'تم تحديث قائمة عمل اليوم من الخادم. نسخة قائمة الانتظار:',
+    refreshSuccessQueue: 'تم تحديث قائمة الانتظار من الخادم. النسخة:',
     filters: 'اختيار الطبيب والتاريخ',
     worklist: 'قائمة المواعيد',
     details: 'تفاصيل الموعد',
@@ -71,6 +73,8 @@ const words = {
     terminal: 'الاستجابة الحالية غير متسقة مع النطاق. أعد اختيار النطاق وحاول مجددًا.',
     conflict:
       'تغيّرت نسخة القائمة. أُعيد تحميل القائمة كاملة من الخادم؛ راجع الترتيب قبل إجراء جديد.',
+    readConflict:
+      'تعذّر على الخادم إرجاع قائمة العمل بسبب تعارض في النطاق الحالي. حدّث النطاق وراجع الاستجابة الحالية.',
     call: 'نداء',
     reorder: 'إعادة ترتيب',
     complete: 'إكمال',
@@ -105,6 +109,8 @@ const words = {
     date: 'Civil date',
     load: 'Show scope',
     refresh: 'Refresh from server',
+    refreshSuccessToday: "Today's worklist refreshed from the server. Queue version:",
+    refreshSuccessQueue: 'Queue refreshed from the server. Version:',
     filters: 'Doctor and date selection',
     worklist: 'Appointments',
     details: 'Appointment details',
@@ -135,6 +141,8 @@ const words = {
     terminal: 'The response does not match this scope. Choose the scope again and retry.',
     conflict:
       'Queue version changed. The full queue was reloaded from the server; review its order before acting again.',
+    readConflict:
+      'The server could not return this worklist because the current scope conflicts. Refresh the scope and review its current response.',
     call: 'Call',
     reorder: 'Reorder',
     complete: 'Complete',
@@ -222,6 +230,7 @@ export function QueueWorkspace({
   const [result, setResult] = useState<{ reference: string; status: string; at: string } | null>(
     null,
   );
+  const [refreshResult, setRefreshResult] = useState<{ version: number; at: string } | null>(null);
   const [uncertain, setUncertain] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const summary = useRef<HTMLDivElement>(null);
@@ -234,11 +243,15 @@ export function QueueWorkspace({
       : null;
 
   const reload = useCallback(
-    async (selected: { facility: string; doctor: string; date: string }) => {
+    async (
+      selected: { facility: string; doctor: string; date: string },
+      announceRefresh = false,
+    ) => {
       if (!client || !navigator.onLine) return false;
       const sequence = ++loadSequence.current;
       setBusy(true);
       setFailure(null);
+      setRefreshResult(null);
       setQueue(null);
       setAppointments([]);
       try {
@@ -318,14 +331,17 @@ export function QueueWorkspace({
         setAppointments(items);
         setAppointmentFresh(fresh);
         setUncertain(false);
+        if (announceRefresh && queueFresh && fresh)
+          setRefreshResult({ version: first.version, at: new Date().toISOString() });
         return true;
       } catch (error) {
-        if (sequence === loadSequence.current)
-          setFailure(
+        if (sequence === loadSequence.current) {
+          const failure =
             error instanceof Error && /scope|pagination|missing/.test(error.message)
               ? 'terminal'
-              : schedulingFailure(error),
-          );
+              : schedulingFailure(error);
+          setFailure(failure === 'conflict' ? 'read-conflict' : failure);
+        }
         return false;
       } finally {
         if (sequence === loadSequence.current) setBusy(false);
@@ -348,8 +364,8 @@ export function QueueWorkspace({
     if (!offline && scope) void reload(scope);
   }, [offline]);
   useEffect(() => {
-    if (failure || result || uncertain) summary.current?.focus();
-  }, [failure, result, uncertain]);
+    if (failure || result || refreshResult || uncertain) summary.current?.focus();
+  }, [failure, result, refreshResult, uncertain]);
   useEffect(() => {
     if (!pending) return;
     const node = dialog.current;
@@ -392,6 +408,7 @@ export function QueueWorkspace({
     }
     setScope(selected);
     setResult(null);
+    setRefreshResult(null);
     setPending(null);
     void reload(selected);
     requestAnimationFrame(() => heading.current?.focus());
@@ -488,6 +505,7 @@ export function QueueWorkspace({
         color: color.ink,
         background: color.canvas,
         ...localizedType(locale, 'body'),
+        fontFamily: locale === 'ar-EG' ? 'IBM Plex Sans Arabic' : 'Inter',
         lineHeight: 1.5,
       }}
     >
@@ -557,7 +575,7 @@ export function QueueWorkspace({
           <button
             style={button}
             disabled={!client || offline || busy || !scope}
-            onClick={() => void reload(scope!)}
+            onClick={() => void reload(scope!, true)}
           >
             {t.refresh}
           </button>
@@ -573,9 +591,11 @@ export function QueueWorkspace({
               ? t.denied
               : failure === 'conflict'
                 ? t.conflict
-                : failure === 'terminal'
-                  ? t.terminal
-                  : t.error}
+                : failure === 'read-conflict'
+                  ? t.readConflict
+                  : failure === 'terminal'
+                    ? t.terminal
+                    : t.error}
           </p>
         )}
         {uncertain && <p>{t.actionUncertain}</p>}
@@ -583,6 +603,13 @@ export function QueueWorkspace({
           <p>
             {t.result}: {result.status}. {t.reference}: {ltr(result.reference)}. {t.observed}:{' '}
             {ltr(result.at)}. {t.next}
+          </p>
+        )}
+        {refreshResult && (
+          <p>
+            {mode === 'today' ? t.refreshSuccessToday : t.refreshSuccessQueue}{' '}
+            <bdi dir="ltr">{refreshResult.version}</bdi>. {t.observed}:{' '}
+            <bdi dir="ltr">{refreshResult.at}</bdi>.
           </p>
         )}
       </div>

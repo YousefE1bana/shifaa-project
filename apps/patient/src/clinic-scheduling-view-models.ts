@@ -23,6 +23,8 @@ type ReadDataState<T> = {
 type ReadUnavailableState =
   | { status: 'loading' }
   | { status: 'offline'; error: unknown }
+  | { status: 'permission'; error: unknown }
+  | { status: 'terminal'; error: unknown }
   | { status: 'error'; error: unknown };
 
 export type DiscoveryViewState = ReadDataState<DoctorSearchPage> | ReadUnavailableState;
@@ -40,9 +42,23 @@ export const discoveryLoadingState = (): DiscoveryViewState => ({ status: 'loadi
 export const availabilityLoadingState = (): AvailabilityViewState => ({ status: 'loading' });
 
 export function readFailureState(error: unknown): ReadUnavailableState {
-  return error instanceof Error && error.message === 'offline-no-queue'
-    ? { status: 'offline', error }
-    : { status: 'error', error };
+  if (error instanceof Error && error.message === 'offline-no-queue')
+    return { status: 'offline', error };
+  if (
+    error &&
+    typeof error === 'object' &&
+    'status' in error &&
+    [401, 403].includes(Number((error as { status?: unknown }).status))
+  )
+    return { status: 'permission', error };
+  if (
+    error &&
+    typeof error === 'object' &&
+    'status' in error &&
+    (error as { status?: unknown }).status === 404
+  )
+    return { status: 'terminal', error };
+  return { status: 'error', error };
 }
 
 function readStatus(

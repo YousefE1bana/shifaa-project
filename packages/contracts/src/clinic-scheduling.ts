@@ -271,6 +271,7 @@ export const AppointmentSchema = Type.Object(
     feeMinorUnits: Type.Integer({ minimum: 0 }),
     currency: CurrencyCodeSchema,
     paymentMethod: Type.Literal('cash_on_arrival'),
+    delayMinutes: Type.Optional(Type.Integer({ minimum: 1 })),
     version: VersionSchema,
   },
   { additionalProperties: false },
@@ -358,6 +359,7 @@ export const QueuePositionSchema = Type.Object({
   estimatedServiceAt: Type.Optional(
     Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
   ),
+  delayMinutes: Type.Optional(Type.Integer({ minimum: 1 })),
   queueVersion: VersionSchema,
   updatedAt: Type.String({ format: 'date-time' }),
   stale: Type.Boolean(),

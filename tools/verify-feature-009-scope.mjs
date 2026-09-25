@@ -95,12 +95,12 @@ const plannedScripts = new Map([
   ],
   [
     'test:clinic-scheduling:security',
-    'pnpm secrets:check && pnpm architecture:check && node tools/verify-feature-009-evidence.mjs --security',
+    'pnpm test:clinic-scheduling:rls && pnpm secrets:check && pnpm architecture:check && node tools/verify-feature-009-evidence.mjs --security',
   ],
   ['test:clinic-scheduling:performance', 'tsx tools/clinic-scheduling-performance.ts'],
   [
     'test:clinic-scheduling:privacy',
-    'pnpm secrets:check && pnpm architecture:check && node tools/verify-feature-009-evidence.mjs --privacy',
+    'pnpm --filter @shifaa/observability exec node --test src/clinic-scheduling.test.ts && pnpm secrets:check && pnpm architecture:check && node tools/verify-feature-009-evidence.mjs --privacy',
   ],
 ]);
 

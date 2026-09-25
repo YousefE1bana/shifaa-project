@@ -112,6 +112,7 @@ export type SubjectQueueProjection = Readonly<
     | 'position'
     | 'state'
     | 'estimatedServiceAt'
+    | 'delayMinutes'
     | 'queueVersion'
     | 'updatedAt'
     | 'stale'

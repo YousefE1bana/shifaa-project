@@ -215,6 +215,7 @@ function runDiscoveryBookingE2e(database) {
     [
       'node_modules/tsx/dist/cli.mjs',
       '--test',
+      '--test-concurrency=1',
       'tests/e2e/clinic-scheduling-discovery-booking.spec.ts',
     ],
     {
@@ -330,6 +331,7 @@ try {
     }
     apply(database, featureMigration);
     apply(database, 'supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql');
+    apply(database, 'supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql');
     if (isUpgradePath) {
       assertUpgradeSeed(database, 'after upgrade');
       assertUpgradeObjectsAndFlags(database);

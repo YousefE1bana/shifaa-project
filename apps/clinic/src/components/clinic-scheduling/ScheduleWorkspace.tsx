@@ -888,11 +888,15 @@ export function ScheduleWorkspace({
 
   return (
     <main
+      lang={locale}
+      dir={ar ? 'rtl' : 'ltr'}
       style={{
         maxWidth: 1200,
         marginInline: 'auto',
         padding: spacing.lg,
         ...localizedType(locale, 'body'),
+        lineHeight: `${localizedType(locale, 'body').lineHeight}px`,
+        fontFamily: locale === 'ar-EG' ? 'IBM Plex Sans Arabic' : 'Inter',
       }}
     >
       <h1 ref={heading} tabIndex={-1}>
@@ -1602,7 +1606,7 @@ export function ScheduleWorkspace({
           {t.loading}
         </p>
       )}
-      {result && (
+      {result && !pending && (
         <section
           ref={resultRegion}
           tabIndex={-1}

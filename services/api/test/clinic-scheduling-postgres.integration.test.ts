@@ -167,6 +167,24 @@ async function apiDelay(minutes: number, suffix: string) {
   });
 }
 
+async function apiQueuePosition(person: string, appointmentId: string) {
+  if (!apiHarness) throw new Error('The Feature 009 HTTP harness is not initialized.');
+  return apiHarness.app.inject({
+    method: 'GET',
+    url: `/v1/appointments/${appointmentId}/queue-position`,
+    headers: { authorization: `Bearer synthetic-person:${person}` },
+  });
+}
+
+async function apiAppointment(person: string, appointmentId: string) {
+  if (!apiHarness) throw new Error('The Feature 009 HTTP harness is not initialized.');
+  return apiHarness.app.inject({
+    method: 'GET',
+    url: `/v1/appointments/${appointmentId}`,
+    headers: { authorization: `Bearer synthetic-person:${person}` },
+  });
+}
+
 async function withFailure<T>(operation: string, action: () => Promise<T>): Promise<T> {
   testFailureOperation = operation;
   try {
@@ -583,6 +601,57 @@ describe.skipIf(!database)('Feature 009 PostgreSQL races and fault boundaries', 
       expect(rowAt(notices)['count']).toBe(2);
     } finally {
       await first.end({ timeout: 5 });
+    }
+  });
+
+  it('projects only the latest scoped delay to the authorized patient queue position', async () => {
+    const owner = client();
+    try {
+      await setup(owner);
+      const appointmentId = await apiBook(
+        ids.patientA,
+        '2030-01-07T07:00:00Z',
+        '2030-01-07T07:30:00Z',
+        'delay-position',
+      );
+      const confirmed = await apiAppointment(ids.patientA, appointmentId);
+      expect(confirmed.statusCode).toBe(200);
+      expect(confirmed.json()).toMatchObject({ id: appointmentId, status: 'confirmed' });
+      expect(confirmed.json()).not.toHaveProperty('delayMinutes');
+      expect((await apiQueuePosition(ids.patientA, appointmentId)).statusCode).toBe(404);
+
+      await apiDelay(10, 'position-first');
+      const delayedConfirmed = await apiAppointment(ids.patientA, appointmentId);
+      expect(delayedConfirmed.statusCode).toBe(200);
+      expect(delayedConfirmed.json()).toMatchObject({ id: appointmentId, delayMinutes: 10 });
+      await apiCheckIn(ids.patientA, appointmentId, 1, 'delay-position');
+      const before = await apiQueuePosition(ids.patientA, appointmentId);
+      expect(before.statusCode).toBe(200);
+      expect(before.json()).toMatchObject({ delayMinutes: 10 });
+      const first = await apiQueuePosition(ids.patientA, appointmentId);
+      expect(first.statusCode).toBe(200);
+      expect(first.json()).toMatchObject({ appointmentId, delayMinutes: 10 });
+      expect(first.json().position).toBe(before.json().position);
+      await apiDelay(10, 'position-first');
+      expect((await apiQueuePosition(ids.patientA, appointmentId)).json().delayMinutes).toBe(10);
+
+      await apiDelay(25, 'position-supersede');
+      const current = await apiQueuePosition(ids.patientA, appointmentId);
+      expect(current.statusCode).toBe(200);
+      expect(current.json()).toMatchObject({ appointmentId, delayMinutes: 25 });
+      expect(current.json().position).toBe(before.json().position);
+      expect((await apiAppointment(ids.patientA, appointmentId)).json().delayMinutes).toBe(25);
+
+      const unrelated = await apiQueuePosition(ids.patientB, appointmentId);
+      expect(unrelated.statusCode).toBe(404);
+      expect((await apiAppointment(ids.patientB, appointmentId)).statusCode).toBe(404);
+      const active = await owner`
+        SELECT count(*)::int AS count,max(delay_minutes)::int AS minutes
+        FROM clinical.schedule_exceptions
+        WHERE schedule_id=${ids.schedule} AND exception_type='delay' AND superseded_at IS NULL`;
+      expect(rowAt(active)).toMatchObject({ count: 1, minutes: 25 });
+    } finally {
+      await owner.end({ timeout: 5 });
     }
   });
 

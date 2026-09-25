@@ -29,6 +29,7 @@ import {
 } from '../../src/clinic-scheduling-view-models';
 import {
   ClinicSchedulingShell,
+  ClinicTechnicalTimestamp,
   schedulingCopy,
   type SchedulingCopyKey,
 } from '../../src/ClinicSchedulingShell';
@@ -220,6 +221,9 @@ export default function DoctorRoute() {
           {state?.status === 'offline' && (
             <OfflineNoQueueBanner text={copy('clinic.state.offline')} direction={direction} />
           )}
+          {state?.status === 'permission' && (
+            <RouteStatePanel title={copy('clinic.state.permission')} direction={direction} />
+          )}
           {state?.status === 'permission-denied' && (
             <RouteStatePanel title={copy('clinic.state.permission')} direction={direction} />
           )}
@@ -228,6 +232,15 @@ export default function DoctorRoute() {
               title={copy('clinic.state.error')}
               actionLabel={copy('clinic.state.retry')}
               onAction={() => void load()}
+              direction={direction}
+            />
+          )}
+          {state?.status === 'terminal' && (
+            <RouteStatePanel
+              title={copy('clinic.state.errorTerminal')}
+              detail={copy('clinic.state.errorTerminalHelp')}
+              actionLabel={copy('clinic.state.returnHome')}
+              onAction={() => router.push('/profile')}
               direction={direction}
             />
           )}
@@ -248,6 +261,7 @@ export default function DoctorRoute() {
                 updatedLabel={copy('clinic.discover.updated')}
                 updatedAt={state.data.generatedAt}
                 direction={direction}
+                separateUpdatedAt
               />
               <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
                 {copy('clinic.discover.fee')}: {state.data.feeMinorUnits / 100} EGP
@@ -270,7 +284,16 @@ export default function DoctorRoute() {
                     onPress={() => setSelected(slot)}
                     style={{ ...semanticStyles.card, minHeight: 48, justifyContent: 'center' }}
                   >
-                    <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
+                    <Text
+                      style={{
+                        ...localizedType(locale, 'body'),
+                        color: color.ink,
+                        direction: 'ltr',
+                        writingDirection: 'ltr',
+                        textAlign: 'left',
+                        fontVariant: ['tabular-nums'],
+                      }}
+                    >
                       {slot.startsAt}
                     </Text>
                   </FocusVisiblePressable>
@@ -278,12 +301,13 @@ export default function DoctorRoute() {
             </>
           )}
           {selected && (
-            <Text
-              accessibilityLiveRegion="polite"
-              style={{ ...localizedType(locale, 'body'), color: color.ink }}
-            >
-              {copy('clinic.doctor.selected')}: {selected.startsAt}
-            </Text>
+            <View accessibilityLiveRegion="polite">
+              <ClinicTechnicalTimestamp
+                label={`${copy('clinic.doctor.selected')}:`}
+                value={selected.startsAt}
+                locale={locale}
+              />
+            </View>
           )}
           {(state?.status === 'stale' || state?.status === 'unknown') && (
             <RouteStatePanel

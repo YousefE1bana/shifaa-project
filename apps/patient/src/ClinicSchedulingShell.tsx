@@ -16,6 +16,35 @@ export function schedulingCopy(locale: Locale, key: SchedulingCopyKey): string {
   return (locale === 'ar-EG' ? clinicSchedulingArEG : clinicSchedulingEnEG)[key];
 }
 
+export function ClinicTechnicalTimestamp({
+  label,
+  value,
+  locale,
+}: {
+  label: string;
+  value: string;
+  locale: Locale;
+}) {
+  return (
+    <View style={{ gap: spacing.xs }}>
+      <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>{label}</Text>
+      <Text
+        selectable
+        style={{
+          ...localizedType(locale, 'body'),
+          color: color.ink,
+          direction: 'ltr',
+          writingDirection: 'ltr',
+          textAlign: 'left',
+          fontVariant: ['tabular-nums'],
+        }}
+      >
+        {value}
+      </Text>
+    </View>
+  );
+}
+
 export function ClinicSchedulingShell({
   title,
   children,
@@ -23,6 +52,7 @@ export function ClinicSchedulingShell({
   const { locale, setLocale } = usePatientLocaleController();
   return (
     <ScrollView
+      role="main"
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         ...semanticStyles.screen,

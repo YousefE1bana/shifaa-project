@@ -125,6 +125,8 @@ const copy = {
     noActions: 'لا توجد إجراءات عادية متاحة في هذه الحالة.',
     required: 'يلزم موعد بديل مستقبلي لإعادة الجدولة؛ يمكنك الإلغاء دون بديل.',
     queue: 'قائمة الانتظار',
+    delay: 'التأخير الحالي',
+    delayDetail: 'دقيقة إضافية في تقدير الخدمة فقط؛ وقت الموعد وترتيب القائمة لم يتغيرا.',
     queueLoading: 'جارٍ تحميل حالة قائمة الانتظار…',
     queueEmpty: 'لا يوجد إدخال لهذا الموعد في قائمة الانتظار.',
     queueDenied: 'لا تملك صلاحية عرض قائمة الانتظار.',
@@ -185,6 +187,9 @@ const copy = {
     required:
       'A future replacement slot is required to reschedule; cancellation needs no replacement.',
     queue: 'Queue',
+    delay: 'Current delay',
+    delayDetail:
+      'additional minutes in service estimates only; appointment time and queue order are unchanged.',
     queueLoading: 'Loading queue status…',
     queueEmpty: 'No queue entry exists for this appointment.',
     queueDenied: 'You are not authorized to view the queue.',
@@ -323,6 +328,10 @@ export function ClinicAppointment({
   const canReschedule = canChange || appointment?.status === 'reschedule_required';
   const canCheckIn = appointment?.status === 'confirmed';
   const available = !offline && !busy && !failure && Boolean(client);
+  const projectedDelayMinutes =
+    queue && (queue.kind === 'found' || queue.kind === 'empty') && !queue.stale
+      ? queue.delayMinutes
+      : appointment?.delayMinutes;
   const civilDateAt = (instant: Date, timezone: string) => {
     const parts = new Intl.DateTimeFormat('en-US', {
       timeZone: timezone,
@@ -447,6 +456,7 @@ export function ClinicAppointment({
         backgroundColor: color.canvas,
         color: color.ink,
         ...localizedType(locale, 'body'),
+        fontFamily: locale === 'ar-EG' ? 'IBM Plex Sans Arabic' : 'Inter',
         // Native typography tokens use pixel line heights; CSS numbers are unitless multipliers.
         lineHeight: `${localizedType(locale, 'body').lineHeight}px`,
       }}
@@ -497,6 +507,15 @@ export function ClinicAppointment({
               <p>
                 {t.status}: {statusLabels[appointment.status][locale === 'ar-EG' ? 0 : 1]}
               </p>
+              {projectedDelayMinutes !== undefined && projectedDelayMinutes > 0 && (
+                <section aria-label={t.delay}>
+                  <p>
+                    <strong>{t.delay}</strong>:{' '}
+                    {label(new Intl.NumberFormat(locale).format(projectedDelayMinutes))}{' '}
+                    {t.delayDetail}
+                  </p>
+                </section>
+              )}
               <p>
                 {t.doctor}: {label(appointment.doctorId)}
               </p>
@@ -821,6 +840,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         backgroundColor: color.canvas,
         color: color.ink,
         ...localizedType(locale, 'body'),
+        fontFamily: locale === 'ar-EG' ? 'IBM Plex Sans Arabic' : 'Inter',
         lineHeight: `${localizedType(locale, 'body').lineHeight}px`,
       }}
     >

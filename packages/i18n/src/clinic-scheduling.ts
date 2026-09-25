@@ -108,6 +108,9 @@ export const clinicSchedulingArEG = {
   'clinic.state.success': 'اكتمل الإجراء وتظهر النتيجة الحالية من الخادم.',
   'clinic.state.permission': 'ليس لديك الصلاحية أو النطاق الحالي لهذا الإجراء.',
   'clinic.state.unavailable': 'الخدمة غير متاحة الآن. لم يتم تأكيد أي نتيجة جديدة.',
+  'clinic.state.errorTerminal': 'لا يمكن متابعة المهمة',
+  'clinic.state.errorTerminalHelp': 'ارجع بأمان أو تواصل مع مسؤول العيادة.',
+  'clinic.state.returnHome': 'العودة إلى ملف المريض',
   'clinic.state.retry': 'حاول مرة أخرى',
   'clinic.state.refresh': 'تحديث البيانات الحالية',
 
@@ -115,6 +118,8 @@ export const clinicSchedulingArEG = {
   'clinic.queue.estimate': 'التقدير الحالي: {timestamp}',
   'clinic.queue.lastUpdated': 'آخر تحديث: {timestamp}',
   'clinic.queue.mayBeOutdated': 'قد تكون هذه المعلومات قديمة.',
+  'clinic.queue.activeDelay': 'تأخير حالي: {minutes} دقيقة',
+  'clinic.queue.delayImpact': 'تغير وقت الانتظار المتوقع فقط؛ لم يتغير ترتيب الدور أو وقت الموعد.',
   'clinic.queue.reorderReason': 'سبب إعادة الترتيب',
   'clinic.queue.reorderRestricted': 'لا يمكن إعادة ترتيب إلا عنصر انتظار مصرحًا به وبسبب محدد.',
   'clinic.schedule.overlap': 'يتعارض الوقت مع فترة أخرى؛ يلامس الحد الزمني دون تداخل مسموح.',
@@ -245,6 +250,9 @@ export const clinicSchedulingEnEG: Record<keyof typeof clinicSchedulingArEG, str
   'clinic.state.success': 'The action completed; the current server result is shown.',
   'clinic.state.permission': 'You do not have permission or the current scope for this action.',
   'clinic.state.unavailable': 'The service is unavailable. No new outcome was confirmed.',
+  'clinic.state.errorTerminal': 'This task cannot continue',
+  'clinic.state.errorTerminalHelp': 'Return safely or contact the clinic administrator.',
+  'clinic.state.returnHome': 'Return to patient profile',
   'clinic.state.retry': 'Try again',
   'clinic.state.refresh': 'Refresh current data',
 
@@ -252,6 +260,9 @@ export const clinicSchedulingEnEG: Record<keyof typeof clinicSchedulingArEG, str
   'clinic.queue.estimate': 'Current estimate: {timestamp}',
   'clinic.queue.lastUpdated': 'Last updated: {timestamp}',
   'clinic.queue.mayBeOutdated': 'This information may be outdated.',
+  'clinic.queue.activeDelay': 'Current delay: {minutes} minutes',
+  'clinic.queue.delayImpact':
+    'Only the wait estimate changed; queue order and appointment time did not.',
   'clinic.queue.reorderReason': 'Reason for reorder',
   'clinic.queue.reorderRestricted':
     'Only an authorized waiting entry with a stated reason can be reordered.',

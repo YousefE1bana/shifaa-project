@@ -169,7 +169,7 @@ test('cancel, reschedule, and check-in enforce current-state eligibility and saf
   assert.match(route, /appointment\?\.status === 'confirmed'/);
   assert.match(route, /Date\.parse\(appointment\.startsAt\) > Date\.now\(\)/);
   assert.match(route, /const canCheckIn = appointment\?\.status === 'confirmed'/);
-  assert.match(route, /action !== 'check-in' && \(!reason\.trim\(\)/);
+  assert.match(route, /action !== 'check-in'\s*&&\s*\(!reason\.trim\(\)/);
   assert.match(route, /reason\.trim\(\)\.length > 500/);
   assert.match(route, /\[\\r\\n\\t\]\/\.test\(reason\)/);
   assert.match(route, /reasonFocus\.current\?\.focus\(\)/);

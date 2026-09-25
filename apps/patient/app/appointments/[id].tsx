@@ -8,7 +8,8 @@ import {
   spacing,
 } from '@shifaa/design-system';
 import type { Appointment, QueuePosition, Slot } from '@shifaa/contracts';
-import { useLocalSearchParams } from 'expo-router';
+import { interpolateClinicScheduling } from '@shifaa/i18n';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 
@@ -76,6 +77,7 @@ function displayTime(value: string, locale: 'ar-EG' | 'en-EG', timezone: string)
 }
 
 export default function PatientAppointmentRoute() {
+  const router = useRouter();
   const { id, patientId: managedPatientId } = useLocalSearchParams<{
     id?: string;
     patientId?: string;
@@ -164,6 +166,9 @@ export default function PatientAppointmentRoute() {
       if (
         item.status === 'checked_in' ||
         item.status === 'in_queue' ||
+        item.status === 'in_consultation' ||
+        item.status === 'completed' ||
+        item.status === 'no_show' ||
         item.status === 'reschedule_required'
       ) {
         try {
@@ -217,6 +222,8 @@ export default function PatientAppointmentRoute() {
     appointment?.status === 'reschedule_required' ||
     (appointment?.status === 'confirmed' && Date.parse(appointment.startsAt) > Date.now());
   const canCheckIn = appointment?.status === 'confirmed';
+  const activeDelayMinutes =
+    queue && !queue.stale ? queue.delayMinutes : (appointment?.delayMinutes ?? queue?.delayMinutes);
   const getSlots = async () => {
     if (!appointment || !canEdit || isOffline()) {
       setState('offline');
@@ -399,6 +406,16 @@ export default function PatientAppointmentRoute() {
             `${copy('clinic.discover.fee')}: ${(appointment.feeMinorUnits / 100).toFixed(2)} EGP`,
           )}
           {label(copy('clinic.payment.cashInstruction'))}
+          {activeDelayMinutes !== undefined && (
+            <>
+              <Text style={{ ...localizedType(locale, 'label'), color: color.warning }}>
+                {interpolateClinicScheduling(copy('clinic.queue.activeDelay'), {
+                  minutes: activeDelayMinutes,
+                })}
+              </Text>
+              {label(copy('clinic.queue.delayImpact'))}
+            </>
+          )}
           {queue && (
             <View accessibilityLiveRegion="polite" style={{ gap: spacing.sm }}>
               {label(copy(`clinic.queue.status.${queue.state}` as SchedulingCopyKey))}
@@ -438,7 +455,13 @@ export default function PatientAppointmentRoute() {
         <RouteStatePanel title={copy('clinic.state.permission')} direction={direction} />
       )}
       {state === 'terminal' && (
-        <RouteStatePanel title={copy('clinic.state.unavailable')} direction={direction} />
+        <RouteStatePanel
+          title={copy('clinic.state.errorTerminal')}
+          detail={copy('clinic.state.errorTerminalHelp')}
+          actionLabel={copy('clinic.state.returnHome')}
+          onAction={() => router.push('/profile')}
+          direction={direction}
+        />
       )}
       {state === 'stale' && (
         <RouteStatePanel
@@ -476,6 +499,7 @@ export default function PatientAppointmentRoute() {
               style={{ ...semanticStyles.card, gap: spacing.sm }}
             >
               {label(copy('clinic.confirm.cancelHelp'))}
+              {label(locale === 'ar-EG' ? 'سبب الإلغاء' : 'Cancellation reason')}
               <TextInput
                 ref={reasonFocus}
                 accessibilityLabel={locale === 'ar-EG' ? 'سبب الإلغاء' : 'Cancellation reason'}
@@ -497,6 +521,7 @@ export default function PatientAppointmentRoute() {
               style={{ ...semanticStyles.card, gap: spacing.sm }}
             >
               {label(copy('clinic.confirm.rescheduleHelp'))}
+              {label(locale === 'ar-EG' ? 'سبب إعادة الجدولة' : 'Rescheduling reason')}
               <TextInput
                 ref={reasonFocus}
                 accessibilityLabel={

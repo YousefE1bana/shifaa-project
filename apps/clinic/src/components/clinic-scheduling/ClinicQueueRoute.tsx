@@ -92,6 +92,7 @@ export function ClinicQueueRoute({ mode }: { mode: 'today' | 'queue' }) {
         color: color.ink,
         minHeight: '100vh',
         ...localizedType(locale, 'body'),
+        fontFamily: locale === 'ar-EG' ? 'IBM Plex Sans Arabic' : 'Inter',
       }}
     >
       <div style={{ padding: spacing.md }}>

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from 'playwright/test';
+import { captureFeature009Ui } from '../../../tests/e2e/feature009-ui-capture';
 
 const facilityId = '90000000-0000-4000-8000-000000000001';
 const doctorId = '91000000-0000-4000-8000-000000000001';
@@ -18,6 +19,9 @@ async function installSyntheticApi(page: Page) {
   const seen: SeenRequest[] = [];
   let scheduleStatus: 'active' | 'paused' | 'retired' = 'active';
   let scheduleVersion = 1;
+  let scheduleConflict = false;
+  let holdNextScheduleResponse = false;
+  let releaseHeldScheduleResponse: (() => void) | null = null;
   let exceptionConflict = false;
   let nextExceptionFailure: 400 | 403 | 404 | null = null;
   let exceptionScopeMismatch = false;
@@ -53,6 +57,13 @@ async function installSyntheticApi(page: Page) {
       return;
     }
     if (path === `/clinics/${facilityId}/schedules` && request.method() === 'POST') {
+      if (holdNextScheduleResponse) {
+        holdNextScheduleResponse = false;
+        await new Promise<void>((resolve) => {
+          releaseHeldScheduleResponse = resolve;
+        });
+        releaseHeldScheduleResponse = null;
+      }
       scheduleStatus = (body?.status as typeof scheduleStatus) ?? 'active';
       scheduleVersion = 1;
       await route.fulfill({
@@ -76,6 +87,20 @@ async function installSyntheticApi(page: Page) {
       return;
     }
     if (path === `/clinics/${facilityId}/schedules/${scheduleId}` && request.method() === 'PATCH') {
+      if (scheduleConflict) {
+        scheduleConflict = false;
+        await route.fulfill({
+          status: 409,
+          contentType: 'application/problem+json',
+          body: JSON.stringify({
+            type: 'about:blank',
+            title: 'Conflict',
+            status: 409,
+            code: 'schedule-version-conflict',
+          }),
+        });
+        return;
+      }
       scheduleStatus = (body?.status as typeof scheduleStatus) ?? scheduleStatus;
       scheduleVersion += 1;
       await route.fulfill({
@@ -194,6 +219,16 @@ async function installSyntheticApi(page: Page) {
   });
   return {
     seen,
+    setScheduleConflict(value: boolean) {
+      scheduleConflict = value;
+    },
+    holdNextScheduleResponse() {
+      holdNextScheduleResponse = true;
+    },
+    releaseScheduleResponse() {
+      if (!releaseHeldScheduleResponse) throw new Error('No held schedule response is pending');
+      releaseHeldScheduleResponse();
+    },
     setExceptionConflict(value: boolean) {
       exceptionConflict = value;
     },
@@ -243,7 +278,7 @@ async function login(page: Page, locale: 'ar-EG' | 'en-EG') {
   await expect(page.getByRole('main')).toBeVisible();
 }
 
-async function enterSchedule(page: Page, locale: 'ar-EG' | 'en-EG') {
+async function enterSchedule(page: Page, locale: 'ar-EG' | 'en-EG', waitForSuccess = true) {
   const words =
     locale === 'en-EG'
       ? {
@@ -277,9 +312,80 @@ async function enterSchedule(page: Page, locale: 'ar-EG' | 'en-EG') {
   await day.getByLabel(locale === 'en-EG' ? 'From' : 'من').fill('09:00');
   await day.getByLabel(locale === 'en-EG' ? 'To' : 'إلى').fill('10:00');
   await page.getByRole('button', { name: words.save }).click();
-  await expect(
-    page.getByRole('heading', { name: locale === 'en-EG' ? 'Action result' : 'نتيجة الإجراء' }),
-  ).toBeVisible();
+  if (waitForSuccess)
+    await expect(
+      page.getByRole('heading', { name: locale === 'en-EG' ? 'Action result' : 'نتيجة الإجراء' }),
+    ).toBeVisible();
+}
+
+async function fillExceptionForm(
+  page: Page,
+  locale: 'ar-EG' | 'en-EG',
+  reason = 'synthetic exception',
+) {
+  const en = locale === 'en-EG';
+  await page
+    .getByLabel(
+      en ? 'Civil date in the schedule time zone' : 'التاريخ المدني في المنطقة الزمنية للجدول',
+    )
+    .nth(0)
+    .fill('2030-01-07');
+  await page
+    .getByLabel(en ? 'Start (RFC 3339 with offset)' : 'البداية (RFC 3339 مع إزاحة زمنية)')
+    .nth(0)
+    .fill('2030-01-07T10:00:00+02:00');
+  await page
+    .getByLabel(
+      en ? 'End (RFC 3339 with offset, exclusive)' : 'النهاية (RFC 3339 مع إزاحة زمنية، غير شاملة)',
+    )
+    .nth(0)
+    .fill('2030-01-07T11:00:00+02:00');
+  await page
+    .getByLabel(en ? 'Restricted operational reason' : 'السبب التشغيلي المقيد')
+    .nth(0)
+    .fill(reason);
+}
+
+async function fillDelayForm(page: Page, locale: 'ar-EG' | 'en-EG') {
+  const en = locale === 'en-EG';
+  await page
+    .getByLabel(
+      en ? 'Civil date in the schedule time zone' : 'التاريخ المدني في المنطقة الزمنية للجدول',
+    )
+    .nth(1)
+    .fill('2030-01-07');
+  await page.getByLabel(en ? 'Delay minutes (1–1440)' : 'دقائق التأخير (1–1440)').fill('15');
+  await page
+    .getByLabel(en ? 'Published, approved template code' : 'رمز قالب منشور ومعتمد')
+    .fill('approved-candidate');
+  await page
+    .getByLabel(en ? 'Restricted operational reason' : 'السبب التشغيلي المقيد')
+    .nth(1)
+    .fill('synthetic delay');
+}
+
+async function fillAbsenceForm(page: Page, locale: 'ar-EG' | 'en-EG') {
+  const en = locale === 'en-EG';
+  await page
+    .getByLabel(
+      en ? 'Civil date in the schedule time zone' : 'التاريخ المدني في المنطقة الزمنية للجدول',
+    )
+    .nth(2)
+    .fill('2030-01-07');
+  await page
+    .getByLabel(en ? 'Start (RFC 3339 with offset)' : 'البداية (RFC 3339 مع إزاحة زمنية)')
+    .nth(1)
+    .fill('2030-01-07T10:00:00+02:00');
+  await page
+    .getByLabel(
+      en ? 'End (RFC 3339 with offset, exclusive)' : 'النهاية (RFC 3339 مع إزاحة زمنية، غير شاملة)',
+    )
+    .nth(1)
+    .fill('2030-01-07T11:00:00+02:00');
+  await page
+    .getByLabel(en ? 'Restricted operational reason' : 'السبب التشغيلي المقيد')
+    .nth(2)
+    .fill('synthetic absence');
 }
 
 test('clinic schedule behavior stays truthful, bilingual, responsive, and keyboard accessible', async ({
@@ -289,13 +395,20 @@ test('clinic schedule behavior stays truthful, bilingual, responsive, and keyboa
   const observedDefects: string[] = [];
   await page.setViewportSize({ width: 768, height: 1024 });
   await login(page, 'en-EG');
-  await expect(page.locator('[lang="en-EG"][dir="ltr"]')).toBeVisible();
+  await expect(page.locator('main')).toHaveAttribute('lang', 'en-EG');
+  await expect(page.locator('main')).toHaveAttribute('dir', 'ltr');
+  await expect(page.locator('main[lang="en-EG"][dir="ltr"]')).toBeVisible();
   await expect(
     page.getByText(
       /weekly civil time.*daylight-saving changes.*nonexistent local times.*earlier offset/s,
     ),
   ).toBeVisible();
   await enterSchedule(page, 'en-EG');
+  const englishResult = page.getByRole('heading', { name: 'Action result' });
+  await captureFeature009Ui(page, 'F009-P0-CLN-SCHEDULE-001', 'en-EG', 'success', englishResult);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await captureFeature009Ui(page, 'F009-P0-CLN-SCHEDULE-001', 'en-EG', 'success', englishResult);
+  await page.setViewportSize({ width: 768, height: 1024 });
   await expect(page.getByLabel('Status').locator('option')).toHaveText([
     'Active',
     'Paused',
@@ -329,31 +442,46 @@ test('clinic schedule behavior stays truthful, bilingual, responsive, and keyboa
   ).toBe(true);
   const undersized = await page
     .locator(
-      'button:visible:not([aria-label="Open Next.js Dev Tools"]), input:not([type="radio"]):visible, select:visible, textarea:visible',
+      'button:visible:not([aria-label="Open Next.js Dev Tools"]), a[href]:visible, input:not([type="radio"]):visible, select:visible, textarea:visible, [role="button"]:visible, [tabindex]:not([tabindex="-1"]):visible',
     )
     .evaluateAll((items) =>
       items
-        .filter((item) => item.getBoundingClientRect().height < 44)
+        .filter((item) => {
+          const bounds = item.getBoundingClientRect();
+          return bounds.height < 44 || bounds.width < 44;
+        })
         .map((item) => ({
           tag: item.tagName,
           text: item.textContent,
           ariaLabel: item.getAttribute('aria-label'),
           title: item.getAttribute('title'),
           height: item.getBoundingClientRect().height,
+          width: item.getBoundingClientRect().width,
         })),
     );
   expect(undersized).toEqual([]);
-  const undersizedRadioLabels = await page
+  const invalidRadioTargets = await page
     .locator('input[type="radio"]:visible')
-    .evaluateAll(
-      (items) =>
-        items.filter((item) => (item.closest('label')?.getBoundingClientRect().height ?? 0) < 44)
-          .length,
+    .evaluateAll((items) =>
+      items
+        .filter((item) => {
+          const label = item.closest('label');
+          const bounds = label?.getBoundingClientRect();
+          return (
+            !label ||
+            label.querySelector('input[type="radio"]') !== item ||
+            !bounds ||
+            bounds.height < 44 ||
+            bounds.width < 44
+          );
+        })
+        .map((item) => ({
+          label: item.closest('label')?.textContent?.trim(),
+          width: item.closest('label')?.getBoundingClientRect().width,
+          height: item.closest('label')?.getBoundingClientRect().height,
+        })),
     );
-  if (undersizedRadioLabels > 0)
-    observedDefects.push(
-      `${undersizedRadioLabels} schedule mode radio label target(s) are below 44 CSS pixels`,
-    );
+  expect(invalidRadioTargets).toEqual([]);
   const contrastFailures = await page
     .locator(
       'h1:visible, h2:visible, h3:visible, p:visible, label:visible, button:visible:not([aria-label="Open Next.js Dev Tools"])',
@@ -564,7 +692,12 @@ test('clinic schedule behavior stays truthful, bilingual, responsive, and keyboa
       /The server will identify affected appointments.*count is unknown before submission/,
     ),
   ).toBeVisible();
+  await expect(englishResult).toHaveCount(0);
   await expect(page.getByText(/Affected appointments in authoritative result/)).toHaveCount(0);
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(englishResult).toBeVisible();
+  await reviewAbsence.click();
+  await expect(englishResult).toHaveCount(0);
   await dialog.getByRole('button', { name: 'Confirm absence declaration' }).click();
   await expect(page.getByText(/Affected appointments in authoritative result: 2/)).toBeVisible();
   await expect(page.getByText(/Queue entries removed in authoritative result: 1/)).toBeVisible();
@@ -585,6 +718,12 @@ test('clinic schedule behavior stays truthful, bilingual, responsive, and keyboa
   const retire = page.getByRole('button', { name: 'Retire permanently' });
   await retire.click();
   await expect(dialog.getByRole('heading', { name: 'Confirm permanent retirement' })).toBeVisible();
+  await expect(englishResult).toHaveCount(0);
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(englishResult).toBeVisible();
+  await expect(page.getByText(/Affected appointments in authoritative result: 2/)).toBeVisible();
+  await retire.click();
+  await expect(englishResult).toHaveCount(0);
   await dialog.getByRole('button', { name: 'Retire permanently' }).click();
   await expect(page.getByText('Retired permanently — read only', { exact: true })).toBeVisible();
   await expect(page.getByLabel('Status')).toBeDisabled();
@@ -608,13 +747,20 @@ test('clinic schedule behavior stays truthful, bilingual, responsive, and keyboa
   await arPage.setViewportSize({ width: 768, height: 1024 });
   const arApi = await installSyntheticApi(arPage);
   await login(arPage, 'ar-EG');
-  await expect(arPage.locator('[lang="ar-EG"][dir="rtl"]')).toBeVisible();
+  await expect(arPage.locator('main')).toHaveAttribute('lang', 'ar-EG');
+  await expect(arPage.locator('main')).toHaveAttribute('dir', 'rtl');
+  await expect(arPage.locator('main[lang="ar-EG"][dir="rtl"]')).toBeVisible();
   const arabicRecurrenceHelp = arPage.locator('p').filter({ hasText: 'التكرار أسبوعي بوقت مدني' });
   await expect(arabicRecurrenceHelp).toBeVisible();
   await expect(arabicRecurrenceHelp).toContainText('التوقيت الصيفي');
   await expect(arabicRecurrenceHelp).toContainText('غير موجودة');
   await expect(arabicRecurrenceHelp).toContainText('للوقت الملتبس');
   await enterSchedule(arPage, 'ar-EG');
+  const arabicResult = arPage.getByRole('heading', { name: 'نتيجة الإجراء' });
+  await captureFeature009Ui(arPage, 'F009-P0-CLN-SCHEDULE-001', 'ar-EG', 'success', arabicResult);
+  await arPage.setViewportSize({ width: 1440, height: 900 });
+  await captureFeature009Ui(arPage, 'F009-P0-CLN-SCHEDULE-001', 'ar-EG', 'success', arabicResult);
+  await arPage.setViewportSize({ width: 768, height: 1024 });
   await arPage.getByLabel('التاريخ المدني في المنطقة الزمنية للجدول').nth(0).fill('2030-01-07');
   await arPage
     .getByLabel('البداية (RFC 3339 مع إزاحة زمنية)')
@@ -770,4 +916,306 @@ test('schedule baseline states remain truthful without reads or offline writes',
     'You are not authorized for this scope or action.',
   );
   await expect(page.getByRole('button', { name: 'Retry the same request' })).toHaveCount(0);
+});
+
+test('schedule approved states render in Arabic and English at both canonical viewports', async ({
+  page,
+}) => {
+  test.setTimeout(600_000);
+  const states = [
+    'loading',
+    'empty',
+    'active',
+    'paused',
+    'retired-readonly',
+    'exception-list',
+    'delay-active',
+    'absence-review',
+    'absence-confirmation',
+    'retire-confirmation',
+    'overlap-conflict',
+    'stale',
+    'offline',
+    'conflict',
+    'error-recoverable',
+    'error-terminal',
+    'permission-denied',
+    'submitting',
+    'success',
+  ] as const;
+  for (const locale of ['ar-EG', 'en-EG'] as const) {
+    const en = locale === 'en-EG';
+    const words = en
+      ? {
+          update: 'Update existing schedule',
+          status: 'Status',
+          updateSubmit: 'Submit update',
+          retire: 'Retire permanently',
+          exception: 'Create exception',
+          submit: 'Submit',
+          delay: 'Declare delay',
+          review: 'Review absence declaration',
+          confirmAbsence: 'Confirm absence declaration',
+        }
+      : {
+          update: 'تحديث جدول موجود',
+          status: 'الحالة',
+          updateSubmit: 'إرسال التحديث',
+          retire: 'تقاعد نهائي',
+          exception: 'إنشاء الاستثناء',
+          submit: 'إرسال',
+          delay: 'إعلان التأخير',
+          review: 'مراجعة إعلان الغياب',
+          confirmAbsence: 'تأكيد إعلان الغياب',
+        };
+    for (const state of states) {
+      await page.unrouteAll({ behavior: 'ignoreErrors' });
+      await page.context().setOffline(false);
+      await page.setViewportSize({ width: 768, height: 1024 });
+      const api = await installSyntheticApi(page);
+      await login(page, locale);
+      let anchor: import('playwright/test').Locator;
+      let dialogContent: import('playwright/test').Locator[] = [];
+
+      if (state === 'empty') {
+        anchor = page.getByText(en ? /No mutation result is loaded/ : /لا توجد نتيجة إجراء محملة/);
+      } else if (state === 'stale') {
+        anchor = page
+          .getByRole('status')
+          .filter({ hasText: en ? /freshness is unknown/i : /الحداثة غير مؤكدة/ });
+      } else if (state === 'offline') {
+        await page.context().setOffline(true);
+        anchor = page
+          .getByRole('status')
+          .filter({ hasText: en ? /You are offline/ : /لا يوجد اتصال/ });
+      } else if (state === 'loading') {
+        api.holdNextScheduleResponse();
+        await enterSchedule(page, locale, false);
+        anchor = page
+          .getByRole('status')
+          .filter({ hasText: en ? /Submitting action/ : /جارٍ إرسال الإجراء/ });
+      } else if (state === 'success' || state === 'active') {
+        await enterSchedule(page, locale);
+        anchor =
+          state === 'success'
+            ? page.getByRole('heading', { name: en ? 'Action result' : 'نتيجة الإجراء' })
+            : page.locator('[aria-labelledby="last-result-heading"] p').filter({
+                hasText: en ? /Status:\s*Active/ : /الحالة:\s*نشط/,
+              });
+      } else {
+        await enterSchedule(page, locale);
+        if (
+          state === 'paused' ||
+          state === 'conflict' ||
+          state === 'retired-readonly' ||
+          state === 'retire-confirmation'
+        ) {
+          await page.getByRole('radio', { name: words.update }).click();
+          await page
+            .getByLabel(words.status)
+            .selectOption(
+              state === 'retired-readonly' || state === 'retire-confirmation'
+                ? 'retired'
+                : 'paused',
+            );
+          if (state === 'retired-readonly' || state === 'retire-confirmation') {
+            await page.getByRole('button', { name: words.retire }).click();
+            const dialog = page.getByRole('dialog');
+            await expect(dialog).toHaveAttribute('aria-modal', 'true');
+            anchor = dialog.getByRole('heading');
+            if (state === 'retire-confirmation') {
+              await expect(dialog.locator('#confirm-copy')).toContainText(
+                en ? 'permanently read only' : 'نهائيًا للقراءة فقط',
+              );
+              await expect(dialog).toContainText('92000000-0000-4000-8000-000000000001');
+              dialogContent = [
+                anchor,
+                dialog.locator('#confirm-copy'),
+                dialog.getByText('92000000-0000-4000-8000-000000000001'),
+                dialog.getByRole('button', { name: words.retire }),
+                dialog.getByRole('button', { name: en ? 'Cancel' : 'إلغاء' }),
+              ];
+            }
+            if (state === 'retired-readonly') {
+              await dialog.getByRole('button', { name: words.retire }).click();
+              anchor = page.locator('[aria-labelledby="last-result-heading"] p').filter({
+                hasText: en
+                  ? /Status:\s*Retired permanently — read only/
+                  : /الحالة:\s*متقاعد نهائيًا — للعرض فقط/,
+              });
+            }
+          } else {
+            if (state === 'conflict') api.setScheduleConflict(true);
+            await page.getByRole('button', { name: words.updateSubmit }).click();
+            anchor =
+              state === 'conflict'
+                ? page.locator('#failure-summary p')
+                : page
+                    .locator('[aria-labelledby="last-result-heading"] p')
+                    .filter({ hasText: en ? /Status:\s*Paused/ : /الحالة:\s*متوقف مؤقتًا/ });
+          }
+        } else if (
+          state === 'exception-list' ||
+          state === 'overlap-conflict' ||
+          state === 'error-recoverable' ||
+          state === 'error-terminal' ||
+          state === 'permission-denied' ||
+          state === 'submitting'
+        ) {
+          await fillExceptionForm(page, locale);
+          if (state === 'overlap-conflict') api.setExceptionConflict(true);
+          if (state === 'error-recoverable') api.dropNextExceptionAfterReceipt();
+          if (state === 'error-terminal') api.mismatchNextExceptionScope();
+          if (state === 'permission-denied') api.rejectNextException(403);
+          if (state === 'submitting') api.holdNextExceptionResponse();
+          await page.getByRole('button', { name: words.exception }).click();
+          const dialog = page.getByRole('dialog');
+          await dialog.getByRole('button', { name: words.submit }).click();
+          if (state === 'submitting')
+            anchor = page
+              .getByRole('status')
+              .filter({ hasText: en ? /Submitting action/ : /جارٍ إرسال الإجراء/ });
+          else if (state === 'exception-list')
+            anchor = page.locator('[aria-labelledby="exception-result-heading"] p').first();
+          else anchor = page.locator('#failure-summary p');
+        } else if (state === 'delay-active') {
+          await fillDelayForm(page, locale);
+          await page.getByRole('button', { name: words.delay }).click();
+          await page.getByRole('dialog').getByRole('button', { name: words.submit }).click();
+          anchor = page.locator('[aria-labelledby="delay-result-heading"] p').nth(3);
+        } else if (state === 'absence-review' || state === 'absence-confirmation') {
+          await fillAbsenceForm(page, locale);
+          if (state === 'absence-review') {
+            anchor = page.getByRole('button', { name: words.review });
+            await expect(
+              page
+                .locator('[aria-labelledby="absence-heading"]')
+                .getByLabel(en ? 'Restricted operational reason' : 'السبب التشغيلي المقيد'),
+            ).toHaveValue('synthetic absence');
+          } else {
+            await page.getByRole('button', { name: words.review }).click();
+            const dialog = page.getByRole('dialog');
+            await expect(dialog).toHaveAttribute('aria-modal', 'true');
+            anchor = dialog.getByRole('heading');
+            await expect(dialog.locator('#confirm-copy')).toContainText(
+              en
+                ? 'The server will identify affected appointments'
+                : 'سيحدد الخادم المواعيد المتأثرة',
+            );
+            await expect(dialog).toContainText('2030-01-07');
+            await expect(dialog).toContainText('90000000-0000-4000-8000-000000000001');
+            await expect(dialog).toContainText('91000000-0000-4000-8000-000000000001');
+            await expect(dialog.getByRole('button', { name: words.confirmAbsence })).toBeVisible();
+            await expect(
+              dialog.getByRole('button', { name: en ? 'Cancel' : 'إلغاء' }),
+            ).toBeVisible();
+            dialogContent = [
+              anchor,
+              dialog.locator('#confirm-copy'),
+              dialog.getByText('90000000-0000-4000-8000-000000000001'),
+              dialog.getByText('91000000-0000-4000-8000-000000000001'),
+              dialog.getByText('2030-01-07'),
+              dialog.getByRole('button', { name: words.confirmAbsence }),
+              dialog.getByRole('button', { name: en ? 'Cancel' : 'إلغاء' }),
+            ];
+          }
+        } else {
+          throw new Error(`Unmapped approved schedule state: ${state}`);
+        }
+      }
+      await expect(anchor, `${locale} schedule ${state}`).toBeVisible();
+      if (state === 'exception-list')
+        await expect(anchor).toContainText(en ? 'Blocked interval' : 'حظر فترة');
+      if (state === 'delay-active') await expect(anchor).toContainText('15');
+      if (state === 'loading' || state === 'submitting' || state === 'stale' || state === 'offline')
+        await expect(anchor).toHaveAttribute('aria-live', 'polite');
+      if (
+        [
+          'conflict',
+          'overlap-conflict',
+          'error-recoverable',
+          'error-terminal',
+          'permission-denied',
+        ].includes(state)
+      )
+        await expect(page.locator('#failure-summary')).toHaveAttribute('role', 'alert');
+      if (state === 'absence-confirmation' || state === 'retire-confirmation') {
+        await expect(page.getByRole('dialog')).toHaveAttribute('aria-modal', 'true');
+        await expect(
+          page.getByRole('heading', { name: en ? 'Action result' : 'نتيجة الإجراء' }),
+        ).toHaveCount(0);
+      }
+      if (state === 'success')
+        await expect(page.locator('[aria-labelledby="result-heading"]')).toHaveAttribute(
+          'aria-live',
+          'polite',
+        );
+      for (const [width, height] of [
+        [768, 1024],
+        [1440, 900],
+      ] as const) {
+        await page.setViewportSize({ width, height });
+        if (dialogContent.length) {
+          await anchor.evaluate((element) =>
+            element.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'instant' }),
+          );
+        } else await anchor.scrollIntoViewIfNeeded();
+        for (const [contentIndex, content] of dialogContent.entries()) {
+          const bounds = await content.boundingBox();
+          expect(
+            bounds !== null &&
+              bounds.x >= 0 &&
+              bounds.y >= 0 &&
+              bounds.x + bounds.width <= width &&
+              bounds.y + bounds.height <= height,
+            `${locale} schedule ${state} confirmation content ${contentIndex} bounds ${JSON.stringify(bounds)} remain inside ${width}x${height}`,
+          ).toBe(true);
+        }
+        await captureFeature009Ui(
+          page,
+          'F009-P0-CLN-SCHEDULE-001',
+          locale,
+          state,
+          anchor,
+          dialogContent.length ? 'start' : 'center',
+        );
+      }
+      if (state === 'loading') api.releaseScheduleResponse();
+      if (state === 'submitting') api.releaseExceptionResponse();
+    }
+  }
+});
+
+test('schedule route remains readable at 200 percent text and reflows at the 320px 400 percent equivalent', async ({
+  page,
+}) => {
+  for (const locale of ['ar-EG', 'en-EG'] as const) {
+    const en = locale === 'en-EG';
+    await page.unrouteAll({ behavior: 'ignoreErrors' });
+    await installSyntheticApi(page);
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await login(page, locale);
+    await expect(page.locator('main')).toHaveAttribute('lang', locale);
+    const textScale = await page.addStyleTag({
+      content:
+        'main :is(h1,h2,h3,p,label,li,button,a,input,select,textarea){font-size:2rem!important}',
+    });
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      `${locale} schedule 200% text scaling layout proxy`,
+    ).toBe(true);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await textScale.evaluate((element) => element.parentNode?.removeChild(element));
+
+    await page.setViewportSize({ width: 320, height: 800 });
+    expect(1280 / 4).toBe(320);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      `${locale} schedule 400% equivalent compact reflow proxy`,
+    ).toBe(true);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(
+      page.getByRole('radio', { name: en ? 'Create schedule' : 'إنشاء جدول' }),
+    ).toBeVisible();
+  }
 });

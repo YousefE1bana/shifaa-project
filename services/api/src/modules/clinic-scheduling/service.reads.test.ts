@@ -94,10 +94,61 @@ describe('clinic-scheduling-reads', () => {
     const cacheKeys = vi.mocked(deps.cache.set).mock.calls.map(([key]) => key);
     expect(cacheKeys[0]).toContain('clinic-scheduling:public:searchDoctors:');
     expect(cacheKeys[1]).toContain('clinic-scheduling:public:listDoctorAvailability:');
+    expect(cacheKeys[0]).not.toContain('dentistry');
+    expect(cacheKeys[0]).not.toContain(page.cursor);
+    expect(cacheKeys[1]).not.toContain('facility-1');
+    expect(cacheKeys[1]).not.toContain('doctor-1');
     expect(vi.mocked(deps.cache.set).mock.calls[0]?.[2]).toEqual({
       ttlMs: 30_000,
       private: false,
     });
+  });
+
+  it('uses opaque deterministic keys that isolate private actors and distinct read inputs', async () => {
+    const deps = dependencies();
+    const service = new ClinicSchedulingService(deps);
+    const otherActor = { ...actor, personId: 'f0090000-0000-4000-8000-000000000099' };
+
+    await service.getAppointment(actor, 'appointment-1');
+    await new ClinicSchedulingService(deps).getAppointment(actor, 'appointment-1');
+    await service.getAppointment(otherActor, 'appointment-1');
+    await service.getAppointment(actor, 'appointment-2');
+    const privateKeys = vi.mocked(deps.cache.set).mock.calls.map(([key]) => key);
+    expect(privateKeys[0]).toMatch(/^clinic-scheduling:private:getAppointment:[a-f0-9]{64}$/);
+    expect(privateKeys[1]).toBe(privateKeys[0]);
+    expect(privateKeys[2]).not.toBe(privateKeys[0]);
+    expect(privateKeys[3]).not.toBe(privateKeys[0]);
+    for (const key of privateKeys) {
+      expect(key).not.toContain(actor.personId);
+      expect(key).not.toContain(otherActor.personId);
+      expect(key).not.toContain('appointment-1');
+      expect(key).not.toContain('appointment-2');
+    }
+
+    await service.searchDoctors(actor, { specialty: 'private-search-term' }, page);
+    await service.searchDoctors(otherActor, { specialty: 'private-search-term' }, page);
+    await service.searchDoctors(actor, { specialty: 'other-search-term' }, page);
+    await service.searchDoctors(
+      actor,
+      { specialty: 'private-search-term' },
+      {
+        ...page,
+        cursor: 'other-cursor',
+      },
+    );
+    const publicKeys = vi
+      .mocked(deps.cache.set)
+      .mock.calls.slice(4)
+      .map(([key]) => key);
+    expect(publicKeys[0]).toBe(publicKeys[1]);
+    expect(publicKeys[2]).not.toBe(publicKeys[0]);
+    expect(publicKeys[3]).not.toBe(publicKeys[0]);
+    for (const key of publicKeys) {
+      expect(key).not.toContain('private-search-term');
+      expect(key).not.toContain('other-search-term');
+      expect(key).not.toContain('other-cursor');
+      expect(key).not.toContain(page.cursor);
+    }
   });
 
   it('keeps reads safe when the mutation kill switch is off and preserves bounded cursors', async () => {
@@ -165,6 +216,7 @@ describe('clinic-scheduling-reads', () => {
   it('serves only an actor-scoped private cached projection after a read failure', async () => {
     const deps = dependencies();
     await new ClinicSchedulingService(deps).getAppointment(actor, 'appointment-1');
+    const cachedKey = vi.mocked(deps.cache.set).mock.calls[0]?.[0];
     vi.mocked(deps.read.getAppointment).mockRejectedValueOnce(new Error('read unavailable'));
     vi.mocked(deps.cache.get).mockResolvedValueOnce({
       value: { id: 'appointment-1' },
@@ -178,7 +230,9 @@ describe('clinic-scheduling-reads', () => {
       freshness: 'stale',
       degraded: true,
     });
-    expect(deps.cache.get).toHaveBeenCalledWith(expect.stringContaining(actor.personId));
+    expect(deps.cache.get).toHaveBeenCalledWith(cachedKey);
+    expect(cachedKey).not.toContain(actor.personId);
+    expect(cachedKey).not.toContain('appointment-1');
     expect(vi.mocked(deps.cache.set).mock.calls[0]?.[2]).toEqual({
       ttlMs: 30_000,
       private: true,

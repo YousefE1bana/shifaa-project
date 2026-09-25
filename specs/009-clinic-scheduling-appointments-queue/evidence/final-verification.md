@@ -1,0 +1,24 @@
+# Feature 009 final integration verification — T080
+
+Date: 2026-09-25 (Africa/Cairo). Baseline: `71de2422de922b218fdf1922d6ae712694ba1406`. Environment: local Windows, Node 24.18.0, pnpm 11.13.0, synthetic PostgreSQL and headless browser fixtures. This is implementation-stage local/test evidence, not production or field-device acceptance.
+
+## Executed gate
+
+| Command                                                        | Result       | Independently checkable observation                                                                                                                                                                         |
+| -------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `corepack pnpm verify` with `SUPABASE_TELEMETRY_DISABLED=true` | PASS, exit 0 | Full repository chain completed after clean shared `db:reset`, native Supabase migration resets, serial Feature 009 PostgreSQL and E2E suites, security, performance, restore, privacy and evidence checks. |
+| `node tools/generate-feature-009-contracts.mjs --check`        | PASS, exit 0 | Generated artifacts current; zero contract regeneration diff.                                                                                                                                               |
+| `node tools/verify-feature-009-scope.mjs`                      | PASS, exit 0 | Exactly 18 operations, nine appointment states, five queue states, `cash_on_arrival` only, production SMS disabled, Feature 010 excluded, and retained gates reported.                                      |
+| `node tools/verify-feature-009-ui-baselines.mjs`               | PASS, exit 0 | Metadata/source digest, 492 references, recorded byte count 29,237,789, Arabic/English and canonical viewport inventory. `png_io=none`: this does not freshly read or hash reference PNG bytes.             |
+| `git diff --check`                                             | PASS, exit 0 | No whitespace errors in the working diff.                                                                                                                                                                   |
+
+The full run reported `clinic-scheduling postgres: PASS` for `all`, `rls`, `migration`, `discovery-booking`, `appointments`, `queue`, and `schedule-delay-absence`. The migration mode exercised two isolated database paths. Feature 009 performance returned `outcome: PASS`; restore returned `PASS` with three matching synthetic snapshots, one replay receipt, mutation gate `mutations-disabled`, observed RPO 0.0240 minutes and RTO 0.0969 minutes. Privacy verification scanned 217 source files, 564 evidence files, and all 492 mapped actual captures with zero sentinel hits; image OCR was not performed. The final manifest check reported 18 acceptance criteria, ten success criteria, 492 actual tuples, all four user stories, and privacy/security/UI reports. The checked manifest binds the captured performance and restore reports by SHA-256.
+
+## Corrected integration findings
+
+1. The Feature 009 migration now calls `pg_catalog.gen_random_uuid()` in its trusted function/table defaults so clean native Supabase migration resets complete. Its outbox event-type check retains the earlier Feature 007 identity and Feature 008 audit events while adding the five Feature 009 event types.
+2. The shared `db:migrate` chain now applies all three Feature 009 migrations in order. Before this correction, the notification E2E connected to a reset database without `clinical.schedules`; after correction, the focused notification E2E passed 2/2 and the serial suite passed in full verification.
+3. Synthetic performance and restore runners write SHA-bound reports only with `FEATURE_009_CAPTURE_EVIDENCE=1`. The recorded captures were rerun and rehashed before the full gate; ordinary verification measures and asserts without mutating those reports.
+4. Earlier full attempts encountered variable timing in existing Feature 006, Feature 007, and Feature 008 performance checks. Focused reruns passed under unchanged thresholds. Feature 006–008 generated performance/restore artifacts were restored to their previously clean committed bytes after the passing full gate; no Feature 006–008 implementation, test, or threshold changed.
+
+This gate establishes synthetic local/test implementation readiness only. Approved reference PNGs were not modified. Formal visual, device/network, product, vendor, legal, template-publication, production SMS, production PHI, and production restore evidence remain subject to the retained `OPEN-*` gates in the manifest and checklist.

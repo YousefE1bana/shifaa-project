@@ -1,16 +1,24 @@
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+@import '@fontsource/ibm-plex-sans-arabic/700.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+
 * {
   box-sizing: border-box;
 }
 body {
   margin: 0;
+  font-family: 'IBM Plex Sans Arabic', Inter, system-ui, sans-serif;
 }
 button,
 input {
   min-height: 44px;
 }
 :focus-visible {
-  outline: 3px solid #a13d00;
-  outline-offset: 3px;
+  outline: 3px solid var(--shifaa-focus-color);
+  outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
   *,

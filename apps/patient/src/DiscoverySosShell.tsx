@@ -19,6 +19,7 @@ export function DiscoverySosShell({
   const { locale, setLocale } = usePatientLocaleController();
   return (
     <ScrollView
+      role="main"
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         ...semanticStyles.screen,

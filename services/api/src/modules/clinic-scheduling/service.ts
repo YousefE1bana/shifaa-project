@@ -1,3 +1,5 @@
+import { createHmac, randomBytes } from 'node:crypto';
+
 import type {
   AppointmentFilter,
   AppointmentListRow,
@@ -27,6 +29,9 @@ const MAX_PAGE_SIZE = 100;
 const MAX_CURSOR_SIZE = 512;
 const CACHE_TTL_MS = 30_000;
 const PUBLIC_READ_OPERATIONS = new Set(['searchDoctors', 'listDoctorAvailability']);
+// Cache entries expire quickly. A process-local secret keeps identifiers and
+// search inputs out of cache metadata; a different process simply misses them.
+const CACHE_KEY_SECRET = randomBytes(32);
 
 export class ClinicSchedulingServiceError extends Error {
   public constructor(
@@ -489,10 +494,14 @@ export class ClinicSchedulingService {
   }
 
   private cacheKey(actor: ClinicSchedulingPublicActor, operation: string, input: unknown): string {
-    const scope = PUBLIC_READ_OPERATIONS.has(operation)
-      ? 'public'
-      : `actor:${actor?.personId ?? 'anonymous'}`;
-    return `clinic-scheduling:${scope}:${operation}:${JSON.stringify(input)}`;
+    const isPublic = PUBLIC_READ_OPERATIONS.has(operation);
+    const scope = isPublic ? 'public' : 'private';
+    const digest = createHmac('sha256', CACHE_KEY_SECRET)
+      .update(
+        JSON.stringify([scope, isPublic ? null : (actor?.personId ?? null), operation, input]),
+      )
+      .digest('hex');
+    return `clinic-scheduling:${scope}:${operation}:${digest}`;
   }
 
   private appointmentScope(filter: AppointmentFilter): RequestedScope {

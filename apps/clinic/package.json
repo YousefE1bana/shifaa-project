@@ -11,6 +11,8 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-sans-arabic": "5.3.0",
+    "@fontsource/inter": "5.3.0",
     "@shifaa/api-client": "workspace:*",
     "@shifaa/design-system": "workspace:*",
     "@shifaa/i18n": "workspace:*",

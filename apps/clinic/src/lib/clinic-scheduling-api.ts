@@ -29,8 +29,10 @@ export async function appointmentQueueProjection(
       kind: 'found';
       entry: Pick<QueueEntry, 'state' | 'queueNumber' | 'position' | 'estimatedServiceAt'>;
       stale: boolean;
+      delayMinutes?: number;
     }
-  | { kind: 'empty' | 'unavailable' | 'denied' }
+  | { kind: 'empty'; stale: boolean; delayMinutes?: number }
+  | { kind: 'unavailable' | 'denied' }
 > {
   const date = appointment.civilDate;
   const seen = new Set<string>();
@@ -65,9 +67,15 @@ export async function appointmentQueueProjection(
             estimatedServiceAt: entry.estimatedServiceAt,
           },
           stale: page.freshness !== 'fresh',
+          ...(page.delayMinutes === undefined ? {} : { delayMinutes: page.delayMinutes }),
         };
       }
-      if (!page.nextCursor) return { kind: 'empty' };
+      if (!page.nextCursor)
+        return {
+          kind: 'empty',
+          stale: page.freshness !== 'fresh',
+          ...(page.delayMinutes === undefined ? {} : { delayMinutes: page.delayMinutes }),
+        };
       if (seen.has(page.nextCursor)) return { kind: 'unavailable' };
       seen.add(page.nextCursor);
       cursor = page.nextCursor;

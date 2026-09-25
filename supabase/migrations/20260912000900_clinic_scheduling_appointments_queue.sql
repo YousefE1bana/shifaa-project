@@ -19,7 +19,7 @@ END
 $preflight$;
 
 CREATE TABLE clinical.schedules (
-  id uuid PRIMARY KEY DEFAULT public.gen_random_uuid(),
+  id uuid PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(),
   facility_id uuid NOT NULL REFERENCES identity.facilities(id),
   doctor_person_id uuid NOT NULL REFERENCES identity.people(id),
   timezone_name text NOT NULL,
@@ -47,7 +47,7 @@ ALTER TABLE clinical.schedules ADD CONSTRAINT schedules_active_validity_excl EXC
   (facility_id WITH =, doctor_person_id WITH =, valid_dates WITH &&) WHERE (status='active');
 
 CREATE TABLE clinical.schedule_windows (
-  id uuid PRIMARY KEY DEFAULT public.gen_random_uuid(),
+  id uuid PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(),
   schedule_id uuid NOT NULL REFERENCES clinical.schedules(id) ON DELETE CASCADE,
   iso_weekday smallint NOT NULL CHECK (iso_weekday BETWEEN 1 AND 7),
   local_start time(0) without time zone NOT NULL,
@@ -68,7 +68,7 @@ ALTER TABLE clinical.schedule_windows ADD CONSTRAINT schedule_windows_local_over
 CREATE INDEX clinical_schedule_windows_lookup_idx ON clinical.schedule_windows(schedule_id,iso_weekday,local_start,local_end,id);
 
 CREATE TABLE clinical.schedule_exceptions (
-  id uuid PRIMARY KEY DEFAULT public.gen_random_uuid(),
+  id uuid PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(),
   schedule_id uuid NOT NULL REFERENCES clinical.schedules(id),
   facility_id uuid NOT NULL REFERENCES identity.facilities(id),
   doctor_person_id uuid NOT NULL REFERENCES identity.people(id),
@@ -98,7 +98,7 @@ CREATE INDEX clinical_schedule_exceptions_scope_idx ON clinical.schedule_excepti
 CREATE INDEX clinical_schedule_exceptions_schedule_idx ON clinical.schedule_exceptions(schedule_id,civil_date,exception_type,starts_at,ends_at,id);
 
 CREATE TABLE clinical.appointments (
-  id uuid PRIMARY KEY DEFAULT public.gen_random_uuid(),
+  id uuid PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(),
   patient_person_id uuid NOT NULL REFERENCES identity.people(id),
   facility_id uuid NOT NULL REFERENCES identity.facilities(id),
   doctor_person_id uuid NOT NULL REFERENCES identity.people(id),
@@ -137,7 +137,7 @@ CREATE INDEX clinical_appointments_schedule_idx ON clinical.appointments(schedul
 CREATE INDEX clinical_appointments_status_idx ON clinical.appointments(status,starts_at,id);
 
 CREATE TABLE clinical.queue_scopes (
-  id uuid PRIMARY KEY DEFAULT public.gen_random_uuid(),
+  id uuid PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(),
   facility_id uuid NOT NULL REFERENCES identity.facilities(id),
   doctor_person_id uuid NOT NULL REFERENCES identity.people(id),
   civil_date date NOT NULL,
@@ -152,7 +152,7 @@ COMMENT ON TABLE clinical.queue_scopes IS 'retention_class=CLINICAL_SCHEDULING; 
 CREATE INDEX clinical_queue_scopes_doctor_date_idx ON clinical.queue_scopes(doctor_person_id,civil_date,id);
 
 CREATE TABLE clinical.queue_entries (
-  id uuid PRIMARY KEY DEFAULT public.gen_random_uuid(),
+  id uuid PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(),
   queue_scope_id uuid NOT NULL REFERENCES clinical.queue_scopes(id),
   appointment_id uuid NOT NULL UNIQUE REFERENCES clinical.appointments(id),
   facility_id uuid NOT NULL REFERENCES identity.facilities(id),
@@ -743,7 +743,7 @@ CREATE OR REPLACE FUNCTION clinical.record_mutation_effect_v1(
   p_facility_id uuid DEFAULT NULL,p_patient_id uuid DEFAULT NULL,p_reason_code text DEFAULT NULL
 )
 RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
-DECLARE request_id uuid := public.gen_random_uuid(); audit_event_id uuid; patient_record_id uuid;
+DECLARE request_id uuid := pg_catalog.gen_random_uuid(); audit_event_id uuid; patient_record_id uuid;
 BEGIN
   IF p_resource_id IS NULL OR p_resource_version IS NULL OR p_resource_version<1 THEN RAISE EXCEPTION 'effect resource is invalid' USING ERRCODE='22023'; END IF;
   IF p_patient_id IS NOT NULL THEN SELECT p.id INTO patient_record_id FROM identity.patients p WHERE p.person_id=p_patient_id; END IF;
@@ -1017,7 +1017,7 @@ CREATE OR REPLACE FUNCTION clinical.record_mutation_effect_v2(
 )
 RETURNS TABLE(audit_event_id uuid,outbox_event_id uuid)
 LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
-DECLARE request_id uuid := COALESCE(NULLIF(current_setting('shifaa.request_id',true),'')::uuid,public.gen_random_uuid());
+DECLARE request_id uuid := COALESCE(NULLIF(current_setting('shifaa.request_id',true),'')::uuid,pg_catalog.gen_random_uuid());
   trace_id text := NULLIF(current_setting('shifaa.trace_id',true),''); patient_record_id uuid;
 BEGIN
   IF p_resource_id IS NULL OR p_resource_version IS NULL OR p_resource_version<1
@@ -1739,10 +1739,11 @@ ALTER TABLE platform.outbox_events DROP CONSTRAINT IF EXISTS outbox_events_event
 ALTER TABLE platform.outbox_events ADD CONSTRAINT outbox_events_event_type_check CHECK(event_type IN (
  'identity.verification.changed','identity.manual_review.requested','consent.changed','facility.changed','professional_license.changed','membership.changed','admin_role.changed',
  'relationship.guardianship.changed','relationship.guardianship.created','relationship.guardianship.active','relationship.guardianship.rejected','relationship.guardianship.revoked','relationship.delegation.changed','relationship.delegation.created','relationship.delegation.accepted','relationship.delegation.updated','relationship.delegation.revoked','emergency_contact.changed','emergency_contact.created','emergency_contact.confirmed','emergency_contact.declined','emergency_contact.revoked','sos.emergency_contact.requested','sos.emergency_contact.denied','sos.incident.created','sos.incident.accepted','sos.incident.closed','sos.share.created','sos.share.revoked','sos.share.viewed','privacy.dsr.submitted','privacy.dsr.status_changed','privacy.dsr.export_ready','privacy.dsr.export_consumed','privacy.dsr.identity_required','notification.template.drafted','notification.template.published','notification.delivery.requested','notification.delivery.receipt_recorded','notification.delivery.replay_requested',
+ 'identity.factor.changed','identity.recovery.completed','identity.transition.submitted','identity.transition.decided','audit.export.requested',
  'clinical.schedule.changed.v1','clinical.appointment.changed.v1','clinical.queue.changed.v1','clinical.doctor_delay.declared.v1','clinical.doctor_absence.declared.v1'
 ));
 
--- Extend the existing aggregate-version uniqueness boundary to the six
+-- Extend the existing aggregate-version uniqueness boundary to the five
 -- Feature 009 event types so retries cannot enqueue a second effect.
 DROP INDEX IF EXISTS platform.outbox_aggregate_version_uq;
 CREATE UNIQUE INDEX outbox_aggregate_version_uq

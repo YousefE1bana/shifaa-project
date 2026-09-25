@@ -100,6 +100,28 @@ describe('generated Feature 009 contracts', () => {
         feeMinorUnits: undefined,
       }),
     ).toBe(false);
+    const appointment = {
+      id: '91000000-0000-4000-8000-000000000003',
+      patientId: '91000000-0000-4000-8000-000000000003',
+      facilityId: '91000000-0000-4000-8000-000000000001',
+      doctorId: '91000000-0000-4000-8000-000000000002',
+      startsAt: '2030-01-07T07:00:00Z',
+      endsAt: '2030-01-07T07:30:00Z',
+      timezone: 'Africa/Cairo',
+      civilDate: '2030-01-07',
+      status: 'confirmed',
+      feeMinorUnits: 10000,
+      currency: 'EGP',
+      paymentMethod: 'cash_on_arrival',
+      version: 1,
+    };
+    expect(Value.Check(clinicSchedulingSchemas.Appointment, appointment)).toBe(true);
+    expect(
+      Value.Check(clinicSchedulingSchemas.Appointment, { ...appointment, delayMinutes: 20 }),
+    ).toBe(true);
+    expect(
+      Value.Check(clinicSchedulingSchemas.Appointment, { ...appointment, delayMinutes: 0 }),
+    ).toBe(false);
     expect(clinicSchedulingSchemas.Queue.required).toContain('nextCursor');
     expect(clinicSchedulingSchemas.QueuePosition.required).toEqual([
       'appointmentId',
@@ -109,6 +131,21 @@ describe('generated Feature 009 contracts', () => {
       'updatedAt',
       'stale',
     ]);
+    const queuePosition = {
+      appointmentId: '91000000-0000-4000-8000-000000000003',
+      state: 'waiting',
+      queueNumber: 1,
+      queueVersion: 1,
+      updatedAt: '2030-01-07T07:00:00Z',
+      stale: false,
+    };
+    expect(Value.Check(clinicSchedulingSchemas.QueuePosition, queuePosition)).toBe(true);
+    expect(
+      Value.Check(clinicSchedulingSchemas.QueuePosition, { ...queuePosition, delayMinutes: 20 }),
+    ).toBe(true);
+    expect(
+      Value.Check(clinicSchedulingSchemas.QueuePosition, { ...queuePosition, delayMinutes: 0 }),
+    ).toBe(false);
     expect(clinicSchedulingSchemas.Problem.required).toEqual(['type', 'title', 'status']);
   });
 

@@ -28,6 +28,7 @@ import { findCurrentDoctorIdentity } from '../../src/clinic-scheduling-discovery
 import { bookingFailureState, reconcileBooking } from '../../src/clinic-scheduling-view-models';
 import {
   ClinicSchedulingShell,
+  ClinicTechnicalTimestamp,
   schedulingCopy,
   type SchedulingCopyKey,
 } from '../../src/ClinicSchedulingShell';
@@ -283,9 +284,11 @@ export default function NewAppointmentRoute() {
                 {copy('clinic.book.facility')}: {doctor.facilityDisplayName}
               </Text>
             )}
-            <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
-              {copy('clinic.book.slot')}: {selected.startsAt}
-            </Text>
+            <ClinicTechnicalTimestamp
+              label={`${copy('clinic.book.slot')}:`}
+              value={selected.startsAt}
+              locale={locale}
+            />
             {state !== 'success' && fee !== null && (
               <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
                 {copy('clinic.discover.fee')}: {fee / 100} EGP
@@ -375,7 +378,13 @@ export default function NewAppointmentRoute() {
             />
           )}
           {state === 'error-terminal' && (
-            <RouteStatePanel title={copy('clinic.state.unavailable')} direction={direction} />
+            <RouteStatePanel
+              title={copy('clinic.state.errorTerminal')}
+              detail={copy('clinic.state.errorTerminalHelp')}
+              actionLabel={copy('clinic.state.returnHome')}
+              onAction={() => router.push('/profile')}
+              direction={direction}
+            />
           )}
           <View ref={resultFocus} focusable accessibilityLiveRegion="polite">
             {state === 'validation' && (
@@ -421,9 +430,11 @@ export default function NewAppointmentRoute() {
                 <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
                   {copy('clinic.result.reference').replace('{reference}', result.id)}
                 </Text>
-                <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
-                  {copy('clinic.result.time').replace('{timestamp}', result.startsAt)}
-                </Text>
+                <ClinicTechnicalTimestamp
+                  label={copy('clinic.result.time').replace('{timestamp}', '').trim()}
+                  value={result.startsAt}
+                  locale={locale}
+                />
                 <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
                   {bookingSuccessSnapshot(result, locale).nextStep}
                 </Text>

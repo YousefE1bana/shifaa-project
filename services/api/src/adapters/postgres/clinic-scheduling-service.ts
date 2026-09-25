@@ -176,15 +176,6 @@ type SubjectAppointmentDbRow = {
   version: number | string;
 };
 
-type SubjectQueueDbRow = {
-  queue_number: number | string;
-  waiting_order: number | string | null;
-  state: SubjectQueueProjection['state'];
-  estimated_service_at: Date | string | null;
-  version: number | string;
-  updated_at: Date | string;
-};
-
 /**
  * Non-owner adapter for the fixed Feature 009 PostgreSQL functions.
  *
@@ -691,24 +682,7 @@ export class PostgresClinicSchedulingService
     actor: ClinicSchedulingActor,
     appointmentId: string,
   ): Promise<SubjectQueueProjection | null> {
-    return this.withActor(actor, 'appointment.manage', ['appointment.scheduling'], async (sql) => {
-      const [row] = await sql<SubjectQueueDbRow[]>`
-        select queue_number,waiting_order,state,estimated_service_at,version,updated_at
-        from clinical.read_my_queue_position_v1(${appointmentId}::uuid)`;
-      return row
-        ? {
-            appointmentId,
-            queueNumber: Number(row.queue_number),
-            position: row.waiting_order === null ? null : Number(row.waiting_order),
-            state: row.state,
-            estimatedServiceAt:
-              row.estimated_service_at === null ? null : this.iso(row.estimated_service_at),
-            queueVersion: Number(row.version),
-            updatedAt: this.iso(row.updated_at),
-            stale: false,
-          }
-        : null;
-    });
+    return this.getMyQueuePosition(actor, appointmentId);
   }
 
   private withRequest<T>(

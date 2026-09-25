@@ -27,7 +27,11 @@ import {
   readFailureState,
   type DiscoveryViewState,
 } from './clinic-scheduling-view-models';
-import { schedulingCopy, type SchedulingCopyKey } from './ClinicSchedulingShell';
+import {
+  ClinicTechnicalTimestamp,
+  schedulingCopy,
+  type SchedulingCopyKey,
+} from './ClinicSchedulingShell';
 import { usePatientLocaleController } from './locale-context';
 
 export function DoctorDiscovery() {
@@ -178,11 +182,23 @@ export function DoctorDiscovery() {
       {state?.status === 'offline' && (
         <OfflineNoQueueBanner text={copy('clinic.state.offline')} direction={direction} />
       )}
+      {state?.status === 'permission' && (
+        <RouteStatePanel title={copy('clinic.state.permission')} direction={direction} />
+      )}
       {state?.status === 'error' && (
         <RouteStatePanel
           title={copy('clinic.state.error')}
           actionLabel={copy('clinic.state.retry')}
           onAction={() => void search()}
+          direction={direction}
+        />
+      )}
+      {state?.status === 'terminal' && (
+        <RouteStatePanel
+          title={copy('clinic.state.errorTerminal')}
+          detail={copy('clinic.state.errorTerminalHelp')}
+          actionLabel={copy('clinic.state.returnHome')}
+          onAction={() => router.push('/profile')}
           direction={direction}
         />
       )}
@@ -230,9 +246,17 @@ export function DoctorDiscovery() {
               <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
                 {presentation.paymentLabel}
               </Text>
-              <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
-                {presentation.availabilityLabel}
-              </Text>
+              {result === 'available' && doctor.nextAvailableSlot ? (
+                <ClinicTechnicalTimestamp
+                  label={`${copy('clinic.discover.available')}:`}
+                  value={doctor.nextAvailableSlot.startsAt}
+                  locale={locale}
+                />
+              ) : (
+                <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
+                  {presentation.availabilityLabel}
+                </Text>
+              )}
               <StalenessIndicator
                 state={doctor.stale ? 'stale' : state.freshness}
                 label={copy(
@@ -247,6 +271,7 @@ export function DoctorDiscovery() {
                 updatedLabel={copy('clinic.discover.updated')}
                 updatedAt={doctor.updatedAt}
                 direction={direction}
+                separateUpdatedAt
               />
               <FocusVisiblePressable
                 accessibilityRole="link"

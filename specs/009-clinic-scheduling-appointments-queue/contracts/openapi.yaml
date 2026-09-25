@@ -600,6 +600,7 @@ components:
         feeMinorUnits: { type: integer, minimum: 0 }
         currency: { $ref: '#/components/schemas/CurrencyCode' }
         paymentMethod: { type: string, const: cash_on_arrival }
+        delayMinutes: { type: integer, minimum: 1 }
         version: { $ref: '#/components/schemas/Version' }
     RescheduleRequest:
       type: object
@@ -694,6 +695,7 @@ components:
         queueNumber: { type: integer, minimum: 1 }
         position: { type: [integer, 'null'], minimum: 1 }
         estimatedServiceAt: { type: [string, 'null'], format: date-time }
+        delayMinutes: { type: integer, minimum: 1 }
         queueVersion: { $ref: '#/components/schemas/Version' }
         updatedAt: { type: string, format: date-time }
         stale: { type: boolean }
