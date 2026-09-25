@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./audit-admin": "./src/audit-admin.ts"
+    "./audit-admin": "./src/audit-admin.ts",
+    "./clinic-scheduling": "./src/clinic-scheduling.ts"
   },
   "scripts": {
     "test": "node --test src/*.test.ts",

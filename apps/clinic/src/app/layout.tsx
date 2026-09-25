@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import React from 'react';
+import { color } from '@shifaa/design-system/tokens';
 import { AppSecurityStepUpBoundary as SecurityStepUpShell } from './SecurityStepUpShell';
 import './globals.css';
 export const metadata: Metadata = {
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl">
-      <body>
+      <body style={{ '--shifaa-focus-color': color.focus } as React.CSSProperties}>
         <SecurityStepUpShell>{children}</SecurityStepUpShell>
       </body>
     </html>

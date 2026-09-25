@@ -46,6 +46,12 @@ import {
 } from './modules/discovery-sos/index.js';
 import { registerDiscoverySosRoutes } from './routes/discovery-sos.js';
 import {
+  registerClinicSchedulingRoutes,
+  type ClinicSchedulingRouteService,
+} from './routes/clinic-scheduling.js';
+import { ClinicSchedulingService } from './modules/clinic-scheduling/service.js';
+import type { ClinicSchedulingReadPort } from './modules/clinic-scheduling/types.js';
+import {
   FailClosedIdentityContinuityService,
   IdentityContinuityService,
   type IdentityContinuityServicePort,
@@ -71,6 +77,7 @@ export interface AppHarness {
   privacyService: PrivacyDsrNotificationService | PostgresPrivacyDsrNotificationService;
   discoverySosService: DiscoverySosServicePort;
   identityContinuityService: IdentityContinuityServicePort;
+  clinicSchedulingService: ClinicSchedulingRouteService;
 }
 
 export async function buildApp(
@@ -79,6 +86,7 @@ export async function buildApp(
     proofing?: LocalProofingProvider;
     clock?: { now(): Date };
     identityContinuityService?: IdentityContinuityServicePort;
+    clinicSchedulingService?: ClinicSchedulingRouteService;
     recoveryProofGrants?: RecoveryProofGrantAuthority;
   } = {},
 ): Promise<AppHarness> {
@@ -198,6 +206,8 @@ export async function buildApp(
           now: () => options.clock?.now() ?? new Date(),
         })
       : new FailClosedIdentityContinuityService());
+  const clinicSchedulingService =
+    options.clinicSchedulingService ?? failClosedClinicSchedulingService();
   await app.register(cors, {
     origin: config.corsOrigins,
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -234,6 +244,10 @@ export async function buildApp(
   });
   installIdentityErrorHandler(app);
   app.get('/v1/health', async () => ({ status: 'ok', feature: 'identity-onboarding' }));
+  await registerClinicSchedulingRoutes(app, {
+    service: clinicSchedulingService,
+    syntheticMode: config.syntheticMode,
+  });
   await registerIdentityOnboardingRoutes(app, {
     config,
     service,
@@ -362,7 +376,32 @@ export async function buildApp(
     privacyService,
     discoverySosService,
     identityContinuityService,
+    clinicSchedulingService,
   };
+}
+
+function failClosedClinicSchedulingService(): ClinicSchedulingService {
+  const unavailable = async (): Promise<never> => {
+    throw new ApiPolicyError('open-sec-001', 503, 'Clinic scheduling is unavailable.');
+  };
+  const read = {
+    searchDoctors: unavailable,
+    listAvailabilityPage: unavailable,
+    getAppointment: unavailable,
+    listAppointments: unavailable,
+    getQueue: unavailable,
+    getMyQueuePosition: unavailable,
+  } as unknown as ClinicSchedulingReadPort;
+  return new ClinicSchedulingService({
+    authorization: { authorize: unavailable },
+    featureFlags: { enabled: async () => false },
+    read,
+    clock: { now: () => new Date() },
+    cache: {
+      get: async () => undefined,
+      set: async () => undefined,
+    },
+  });
 }
 
 function failClosedAuditRepository(): import('./modules/audit-admin/types.js').AuditAdminRepository {

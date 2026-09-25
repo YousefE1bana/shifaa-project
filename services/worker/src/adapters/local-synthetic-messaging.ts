@@ -79,6 +79,48 @@ export class DurableLocalSyntheticMessagingAdapter implements MessagingAdapter {
   }
 }
 
+/**
+ * Feature 009's durable local seam is deliberately separate from the
+ * Feature 006 SOS seam.  Both persist keyed digests in the shared synthetic
+ * receipt registry, but clinic dispatch is governed only by its own flag.
+ */
+export class DurableClinicSchedulingSyntheticMessagingAdapter implements MessagingAdapter {
+  public readonly code = 'local-synthetic' as const;
+  private readonly sql: Sql;
+  private readonly environment: 'local' | 'ci';
+
+  public constructor(databaseUrl: string, environment: 'local' | 'ci' = 'local') {
+    this.sql = postgres(databaseUrl, { max: 1, prepare: true });
+    this.environment = environment;
+  }
+
+  public close() {
+    return this.sql.end({ timeout: 5 });
+  }
+
+  public async send(input: {
+    idempotencyKey: string;
+    destinationAlias: string;
+    renderedBody: string;
+  }): Promise<MessagingResult> {
+    if (!input.destinationAlias.startsWith('SYNTHETIC-')) {
+      throw new Error('production-messaging-disabled');
+    }
+    const destinationDigest = createHash('sha256').update(input.destinationAlias).digest('hex');
+    const renderedDigest = createHash('sha256').update(input.renderedBody).digest('hex');
+    const receipt = await this.sql.begin(async (sql) => {
+      await sql`select set_config('shifaa.environment',${this.environment},true)`;
+      const [row] = await sql<{ receipt: string }[]>`
+        select platform.deliver_clinic_scheduling_local_synthetic_message(
+          ${input.idempotencyKey},${destinationDigest},${renderedDigest}
+        ) receipt`;
+      if (!row) throw new Error('synthetic-provider-receipt-missing');
+      return row.receipt;
+    });
+    return { outcome: 'delivered', providerReceiptReference: receipt };
+  }
+}
+
 export class ProductionMessagingAdapterDisabled {
   public async send(): Promise<never> {
     throw new Error('OPEN-VENDOR-002: production SMS adapter is disabled');

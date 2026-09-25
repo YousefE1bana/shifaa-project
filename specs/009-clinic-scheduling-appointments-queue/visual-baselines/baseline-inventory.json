@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "sourceVersion": "SHIFAA-F009-P0-SOURCE@1.0.0-candidate",
+  "recordedAt": "2026-09-10T00:00:00+03:00",
+  "locales": ["ar-EG", "en-EG"],
+  "routes": [
+    {
+      "baselineId": "F009-P0-PAT-DISCOVER-001",
+      "app": "patient",
+      "route": "/discover",
+      "viewports": ["360x800", "412x915"],
+      "states": ["loading", "empty", "location-denied", "results", "stale", "error-recoverable", "error-terminal", "offline"]
+    },
+    {
+      "baselineId": "F009-P0-PAT-DOCTOR-001",
+      "app": "patient",
+      "route": "/doctors/:id",
+      "viewports": ["360x800", "412x915"],
+      "states": ["loading", "available", "no-slots", "stale", "offline", "error-recoverable", "error-terminal", "permission-denied"]
+    },
+    {
+      "baselineId": "F009-P0-PAT-BOOK-001",
+      "app": "patient",
+      "route": "/appointments/new",
+      "viewports": ["360x800", "412x915"],
+      "states": ["loading", "ready", "submitting", "conflict", "offline", "error-recoverable", "error-terminal", "permission-denied", "success"]
+    },
+    {
+      "baselineId": "F009-P0-PAT-APPOINTMENT-001",
+      "app": "patient",
+      "route": "/appointments/:id",
+      "viewports": ["360x800", "412x915"],
+      "states": ["loading", "confirmed", "checked-in", "cancelled", "reschedule-required", "requested-readonly", "in-queue-readonly", "in-consultation-readonly", "completed-readonly", "no-show-readonly", "queue-waiting", "queue-called", "queue-in-service-readonly", "queue-completed", "queue-removed", "delay-active", "cancel-confirmation", "stale", "offline", "conflict", "error-recoverable", "error-terminal", "permission-denied", "submitting", "success"]
+    },
+    {
+      "baselineId": "F009-P0-CLN-TODAY-001",
+      "app": "clinic",
+      "route": "/today",
+      "viewports": ["768x1024", "1440x900"],
+      "states": ["loading", "empty", "worklist", "delay-active", "absence-active", "stale", "offline", "conflict", "error-recoverable", "error-terminal", "permission-denied", "success"]
+    },
+    {
+      "baselineId": "F009-P0-CLN-QUEUE-001",
+      "app": "clinic",
+      "route": "/queue",
+      "viewports": ["768x1024", "1440x900"],
+      "states": ["loading", "empty", "waiting", "called", "in-service-readonly", "completed", "removed", "delay-active", "reorder-review", "stale", "offline", "conflict", "error-recoverable", "error-terminal", "permission-denied", "submitting", "success"]
+    },
+    {
+      "baselineId": "F009-P0-CLN-SCHEDULE-001",
+      "app": "clinic",
+      "route": "/schedule",
+      "viewports": ["768x1024", "1440x900"],
+      "states": ["loading", "empty", "active", "paused", "retired-readonly", "exception-list", "delay-active", "absence-review", "absence-confirmation", "retire-confirmation", "overlap-conflict", "stale", "offline", "conflict", "error-recoverable", "error-terminal", "permission-denied", "submitting", "success"]
+    },
+    {
+      "baselineId": "F009-P0-CLN-APPOINTMENT-001",
+      "app": "clinic",
+      "route": "/appointments/:id",
+      "viewports": ["768x1024", "1440x900"],
+      "states": ["loading", "confirmed", "checked-in", "cancelled", "reschedule-required", "requested-readonly", "in-queue-readonly", "in-consultation-readonly", "completed-readonly", "no-show-readonly", "queue-waiting", "queue-called", "queue-in-service-readonly", "queue-completed", "queue-removed", "delay-active", "cancel-confirmation", "stale", "offline", "conflict", "error-recoverable", "error-terminal", "permission-denied", "submitting", "success"]
+    }
+  ]
+}

@@ -18,3 +18,14 @@ specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/codex-secu
 specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/codex-security-report.md
 specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/codex-security-scan-manifest.json
 specs/007-identity-continuity-sessions-mfa-recovery/evidence/security/repository-sbom.cdx.json
+
+# Feature 009 approved visual source/metadata and approval records are byte-bound.
+specs/009-clinic-scheduling-appointments-queue/decisions/OPEN-UX-001-test-only-p0-baselines.md
+specs/009-clinic-scheduling-appointments-queue/visual-baselines/approval-review.md
+specs/009-clinic-scheduling-appointments-queue/visual-baselines/baseline-inventory.json
+specs/009-clinic-scheduling-appointments-queue/visual-baselines/source/capture-reference-baselines.mjs
+specs/009-clinic-scheduling-appointments-queue/visual-baselines/source/composition.html
+
+# Feature 009 generated, SHA-bound synthetic evidence is verified by its manifest.
+specs/009-clinic-scheduling-appointments-queue/evidence/performance/report.md
+specs/009-clinic-scheduling-appointments-queue/evidence/security/security-report.md

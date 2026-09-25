@@ -1,0 +1,457 @@
+{
+  "schemaVersion": "1.0.0",
+  "feature": "009-clinic-scheduling-appointments-queue",
+  "evidenceClass": "synthetic_graduation_engineering",
+  "productionApproved": false,
+  "implementationBaselineCommit": "71de2422de922b218fdf1922d6ae712694ba1406",
+  "environment": {
+    "os": "win32/x64",
+    "node": "v24.18.0",
+    "pnpm": "11.13.0",
+    "postgres": "PostgreSQL 17.11 (isolated local test databases)",
+    "browser": "Chromium 153.0.8010.12 (headless, loopback Expo web)",
+    "source": "evidence/performance/report.md and local version commands"
+  },
+  "baseline": {
+    "sourceVersion": "SHIFAA-F009-P0-SOURCE@1.0.0-candidate",
+    "manifestDigest": "3ac755cc03c263826d1a07d53e08716e8390857249dbda1eb936833265ac0a4c",
+    "referenceCount": 492,
+    "recordedBytes": 29237789,
+    "referencePngIo": "none"
+  },
+  "uiActuals": {
+    "captureIndex": "ui_actual_index",
+    "tupleCount": 492,
+    "routeFamilies": 8,
+    "locales": ["ar-EG", "en-EG"]
+  },
+  "scope": {
+    "operations": [
+      "searchDoctors",
+      "listDoctorAvailability",
+      "createSchedule",
+      "updateSchedule",
+      "createScheduleException",
+      "createAppointment",
+      "getAppointment",
+      "listAppointments",
+      "cancelAppointment",
+      "rescheduleAppointment",
+      "checkInAppointment",
+      "getQueue",
+      "getMyQueuePosition",
+      "callQueueEntry",
+      "reorderQueueEntry",
+      "completeQueueEntry",
+      "sendDoctorDelay",
+      "declareDoctorAbsence"
+    ],
+    "appointmentStates": [
+      "requested",
+      "confirmed",
+      "checked_in",
+      "in_queue",
+      "in_consultation",
+      "completed",
+      "cancelled",
+      "no_show",
+      "reschedule_required"
+    ],
+    "queueStates": ["waiting", "called", "in_service", "completed", "removed"],
+    "paymentMethods": ["cash_on_arrival"],
+    "productionSmsEnabled": false
+  },
+  "retainedGates": [
+    "OPEN-UX-002",
+    "OPEN-TECH-002",
+    "OPEN-TECH-003",
+    "OPEN-PRODUCT-001",
+    "OPEN-VENDOR-002",
+    "OPEN-LEGAL-001",
+    "OPEN-LEGAL-002",
+    "OPEN-LEGAL-007"
+  ],
+  "limitations": [
+    "Synthetic local engineering evidence only; no production approval or production-PHI processing.",
+    "Approved reference PNG bytes were not read, written, or re-hashed; only metadata and actual capture bytes were checked.",
+    "Visual comparisons are structural/manual; OPEN-UX-002 formal visual acceptance remains open.",
+    "No physical-device or constrained-network proof; OPEN-TECH-003 remains open.",
+    "No vendor delivery or production SMS success; OPEN-VENDOR-002 remains open.",
+    "No live dashboard/alert or production restore observation is claimed."
+  ],
+  "artifacts": {
+    "contract": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/contracts/openapi.yaml",
+      "sha256": "c4e148105c82d8b4e46c3433da5a6b906c4dddda66906ee559200e0cc4e5dbdb"
+    },
+    "fixture_domain": {
+      "path": "packages/test-kit/src/clinic-scheduling-fixtures.ts",
+      "sha256": "8d96aaed4a5a808a75ce1b62cc4dc475cd1f9b97e660f9cc71430bfdc7170550"
+    },
+    "fixture_security": {
+      "path": "packages/test-kit/src/clinic-scheduling-security-fixtures.ts",
+      "sha256": "d18fe5b96e809bafea17084927e6d93dec9b163716608541a88d58dfc31d0a0b"
+    },
+    "fixture_schema": {
+      "path": "infra/db/tests/clinic-scheduling-schema.sql",
+      "sha256": "2b5b40f522500ba6c56d75e2c9be85e2239f0371b907f95953f660d8807a5209"
+    },
+    "fixture_restore": {
+      "path": "infra/db/fixtures/clinic-scheduling-restore.sql",
+      "sha256": "70ac5d3dd51fe42cd3dc95d3d32dd2fdd895e81966b2cea645b019c2d939ad34"
+    },
+    "migration_current": {
+      "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+      "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc"
+    },
+    "patient_checkpoint": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/patient/discovery-booking-checkpoint.md",
+      "sha256": "add2963a40ccd854d134883ae6a0d8a50ff5cdda2ee406876e352df42934b44e"
+    },
+    "appointment_checkpoint": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/appointments/checkpoint.md",
+      "sha256": "35a32dd1e122f24ae09eadcb49c004a08e4eb8486fd4c9e53a6326c03f176f11"
+    },
+    "queue_checkpoint": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/queue/checkpoint.md",
+      "sha256": "00ea2f6d56b2d2d54453c378c8ecd1462ca8a4f9196b9673ac6d3c5f5480d6f5"
+    },
+    "schedule_checkpoint": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/schedule/checkpoint.md",
+      "sha256": "088a0038d1661a662f50c056ab42e25f1cfe1c9d5023bae06c80525ec84d96eb"
+    },
+    "notification_checkpoint": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/notifications/checkpoint.md",
+      "sha256": "c9cac7ed1275f380c9eba9a92ac08b967fe510aeb4e6feb9c5da02a15187d22b"
+    },
+    "security_report": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/security/security-report.md",
+      "sha256": "1e2adf4c449a92a0464b9f6e167ead236b5d4c28b442964ce1ed96a0d6cf658b"
+    },
+    "performance_report": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/performance/report.md",
+      "sha256": "39e919963b072430ed0d86a41cd5f0f3818f763b56a9b5fdcac3548d15190b53"
+    },
+    "restore_report": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/operations/restore-report.md",
+      "sha256": "15b169fb06ef6a953d21981ebddff6a694f4f16f65ddcecb9cd313f52e371b26"
+    },
+    "privacy_report": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/observability/redaction-report.md",
+      "sha256": "548ee18c8acff0e126074d07b93f05272669a0d84686128707772cf626c849f8"
+    },
+    "ui_acceptance": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/ui/acceptance.md",
+      "sha256": "9de6b9352b406283e9536d8fddce4f332b57c131d57a323e48be0147b9ada2e2"
+    },
+    "ui_actual_index": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/evidence/ui/actual/capture-manifest.json",
+      "sha256": "5b8b3b705613e972ec8786b8b5d4d0ad7d0bbf1f6688e1533263fdba54d3df09"
+    },
+    "ui_reference_metadata": {
+      "path": "specs/009-clinic-scheduling-appointments-queue/visual-baselines/reference-manifest.json",
+      "sha256": "3ac755cc03c263826d1a07d53e08716e8390857249dbda1eb936833265ac0a4c"
+    }
+  },
+  "commands": {
+    "contract": {
+      "command": "corepack pnpm test:clinic-scheduling:contract",
+      "status": "passed",
+      "fixtures": ["contract"],
+      "outputs": ["contract", "appointment_checkpoint"]
+    },
+    "scope": {
+      "command": "node tools/verify-feature-009-scope.mjs",
+      "status": "passed",
+      "fixtures": ["contract"],
+      "outputs": ["contract", "appointment_checkpoint", "queue_checkpoint"]
+    },
+    "db": {
+      "command": "corepack pnpm test:clinic-scheduling:db",
+      "status": "passed",
+      "fixtures": ["fixture_schema", "migration_current"],
+      "outputs": ["security_report"]
+    },
+    "e2e": {
+      "command": "corepack pnpm test:clinic-scheduling:e2e",
+      "status": "passed",
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["security_report"]
+    },
+    "e2e_schedule": {
+      "command": "corepack pnpm test:clinic-scheduling:e2e -- schedule-delay-absence",
+      "status": "passed",
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["schedule_checkpoint"]
+    },
+    "e2e_queue": {
+      "command": "corepack pnpm test:clinic-scheduling:e2e -- queue",
+      "status": "passed",
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["queue_checkpoint"]
+    },
+    "e2e_appointments": {
+      "command": "corepack pnpm test:clinic-scheduling:e2e -- appointments",
+      "status": "passed",
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["appointment_checkpoint"]
+    },
+    "e2e_discovery": {
+      "command": "corepack pnpm test:clinic-scheduling:e2e -- discovery-booking",
+      "status": "passed",
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["patient_checkpoint"]
+    },
+    "e2e_notifications": {
+      "command": "corepack pnpm test:clinic-scheduling:e2e -- notifications",
+      "status": "passed",
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["notification_checkpoint"]
+    },
+    "notifications": {
+      "command": "corepack pnpm test:clinic-scheduling:notifications",
+      "status": "passed",
+      "fixtures": ["fixture_domain"],
+      "outputs": ["security_report", "notification_checkpoint"]
+    },
+    "security": {
+      "command": "corepack pnpm test:clinic-scheduling:security",
+      "status": "passed",
+      "fixtures": ["fixture_security", "fixture_schema"],
+      "outputs": ["security_report"]
+    },
+    "performance": {
+      "command": "corepack pnpm test:clinic-scheduling:performance",
+      "status": "passed",
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["performance_report"]
+    },
+    "restore": {
+      "command": "corepack pnpm test:clinic-scheduling:restore",
+      "status": "passed",
+      "fixtures": ["fixture_restore", "migration_current"],
+      "outputs": ["restore_report"]
+    },
+    "privacy": {
+      "command": "corepack pnpm test:clinic-scheduling:privacy",
+      "status": "passed",
+      "fixtures": ["fixture_domain", "ui_actual_index"],
+      "outputs": ["privacy_report"]
+    },
+    "ui": {
+      "command": "node tools/verify-feature-009-evidence.mjs --ui",
+      "status": "passed",
+      "fixtures": ["ui_reference_metadata", "ui_actual_index"],
+      "outputs": ["ui_acceptance", "ui_actual_index"]
+    },
+    "patient_browser": {
+      "command": "corepack pnpm test:clinic-scheduling:patient-browser",
+      "status": "passed",
+      "fixtures": ["fixture_domain"],
+      "outputs": ["patient_checkpoint", "ui_acceptance"]
+    },
+    "patient_booking_browser": {
+      "command": "corepack pnpm exec playwright test --config tools/clinic-scheduling-playwright.config.ts --grep \"Booking validation, conflict, uncertain, and confirmed result\"",
+      "status": "passed",
+      "fixtures": ["fixture_domain"],
+      "outputs": ["ui_acceptance"]
+    },
+    "appointment_browser": {
+      "command": "corepack pnpm exec playwright test --config tools/clinic-scheduling-appointment-playwright.config.ts",
+      "status": "passed",
+      "fixtures": ["fixture_domain"],
+      "outputs": ["appointment_checkpoint", "ui_acceptance"]
+    },
+    "queue_browser": {
+      "command": "corepack pnpm exec playwright test --config tools/clinic-scheduling-queue-playwright.config.ts",
+      "status": "passed",
+      "fixtures": ["fixture_domain"],
+      "outputs": ["queue_checkpoint", "ui_acceptance"]
+    },
+    "schedule_browser": {
+      "command": "corepack pnpm exec playwright test --config tools/clinic-scheduling-schedule-playwright.config.ts",
+      "status": "passed",
+      "fixtures": ["fixture_domain"],
+      "outputs": ["schedule_checkpoint", "ui_acceptance"]
+    }
+  },
+  "coverage": {
+    "AC-01": {
+      "commands": ["contract", "e2e_discovery", "patient_browser"],
+      "fixtures": ["contract", "fixture_domain", "fixture_schema"],
+      "outputs": ["contract", "appointment_checkpoint", "patient_checkpoint", "ui_acceptance"]
+    },
+    "AC-02": {
+      "commands": ["e2e_discovery", "e2e_schedule", "patient_browser"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["patient_checkpoint", "schedule_checkpoint", "ui_acceptance"]
+    },
+    "AC-03": {
+      "commands": ["contract", "e2e_discovery", "patient_booking_browser"],
+      "fixtures": ["contract", "fixture_domain", "fixture_schema"],
+      "outputs": ["contract", "appointment_checkpoint", "patient_checkpoint", "ui_acceptance"]
+    },
+    "AC-04": {
+      "commands": ["contract", "e2e_schedule", "schedule_browser"],
+      "fixtures": ["contract", "fixture_domain", "fixture_schema"],
+      "outputs": ["contract", "appointment_checkpoint", "schedule_checkpoint", "ui_acceptance"]
+    },
+    "AC-05": {
+      "commands": ["db", "e2e", "performance"],
+      "fixtures": ["fixture_schema", "migration_current", "fixture_domain"],
+      "outputs": ["security_report", "performance_report"]
+    },
+    "AC-06": {
+      "commands": ["contract", "e2e_appointments", "scope"],
+      "fixtures": ["contract", "fixture_domain", "fixture_schema"],
+      "outputs": ["contract", "appointment_checkpoint", "queue_checkpoint"]
+    },
+    "AC-07": {
+      "commands": ["e2e_appointments", "appointment_browser"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["appointment_checkpoint", "ui_acceptance"]
+    },
+    "AC-08": {
+      "commands": ["e2e_queue", "e2e_appointments"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["queue_checkpoint", "appointment_checkpoint"]
+    },
+    "AC-09": {
+      "commands": ["security", "e2e_queue", "queue_browser"],
+      "fixtures": ["fixture_security", "fixture_schema", "fixture_domain"],
+      "outputs": ["security_report", "queue_checkpoint", "ui_acceptance"]
+    },
+    "AC-10": {
+      "commands": ["e2e_queue", "queue_browser"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["queue_checkpoint", "ui_acceptance"]
+    },
+    "AC-11": {
+      "commands": ["e2e_schedule", "notifications", "schedule_browser"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": [
+        "schedule_checkpoint",
+        "security_report",
+        "notification_checkpoint",
+        "ui_acceptance"
+      ]
+    },
+    "AC-12": {
+      "commands": ["e2e_schedule", "notifications", "schedule_browser"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": [
+        "schedule_checkpoint",
+        "security_report",
+        "notification_checkpoint",
+        "ui_acceptance"
+      ]
+    },
+    "AC-13": {
+      "commands": ["e2e_notifications", "notifications", "restore"],
+      "fixtures": ["fixture_domain", "fixture_schema", "fixture_restore", "migration_current"],
+      "outputs": ["notification_checkpoint", "security_report", "restore_report"]
+    },
+    "AC-14": {
+      "commands": ["contract", "e2e_discovery", "appointment_browser"],
+      "fixtures": ["contract", "fixture_domain", "fixture_schema"],
+      "outputs": ["contract", "appointment_checkpoint", "patient_checkpoint", "ui_acceptance"]
+    },
+    "AC-15": {
+      "commands": ["security", "e2e"],
+      "fixtures": ["fixture_security", "fixture_schema", "fixture_domain"],
+      "outputs": ["security_report"]
+    },
+    "AC-16": {
+      "commands": [
+        "ui",
+        "patient_browser",
+        "patient_booking_browser",
+        "appointment_browser",
+        "queue_browser",
+        "schedule_browser"
+      ],
+      "fixtures": ["ui_reference_metadata", "ui_actual_index", "fixture_domain"],
+      "outputs": [
+        "ui_acceptance",
+        "ui_actual_index",
+        "patient_checkpoint",
+        "appointment_checkpoint",
+        "queue_checkpoint",
+        "schedule_checkpoint"
+      ]
+    },
+    "AC-17": {
+      "commands": ["restore"],
+      "fixtures": ["fixture_restore", "migration_current"],
+      "outputs": ["restore_report"]
+    },
+    "AC-18": {
+      "commands": ["contract", "scope"],
+      "fixtures": ["contract"],
+      "outputs": ["contract", "appointment_checkpoint", "queue_checkpoint"]
+    },
+    "SC-001": {
+      "commands": ["e2e_discovery", "patient_browser"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["patient_checkpoint", "ui_acceptance"]
+    },
+    "SC-002": {
+      "commands": ["e2e", "performance"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["security_report", "performance_report"]
+    },
+    "SC-003": {
+      "commands": ["db", "e2e"],
+      "fixtures": ["fixture_schema", "migration_current", "fixture_domain"],
+      "outputs": ["security_report"]
+    },
+    "SC-004": {
+      "commands": ["security", "e2e_queue"],
+      "fixtures": ["fixture_security", "fixture_schema", "fixture_domain"],
+      "outputs": ["security_report", "queue_checkpoint"]
+    },
+    "SC-005": {
+      "commands": ["e2e_schedule", "notifications"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["schedule_checkpoint", "security_report", "notification_checkpoint"]
+    },
+    "SC-006": {
+      "commands": ["e2e", "ui"],
+      "fixtures": ["fixture_domain", "fixture_schema", "ui_reference_metadata", "ui_actual_index"],
+      "outputs": ["security_report", "ui_acceptance", "ui_actual_index"]
+    },
+    "SC-007": {
+      "commands": [
+        "ui",
+        "patient_browser",
+        "appointment_browser",
+        "queue_browser",
+        "schedule_browser"
+      ],
+      "fixtures": ["ui_reference_metadata", "ui_actual_index", "fixture_domain"],
+      "outputs": [
+        "ui_acceptance",
+        "ui_actual_index",
+        "patient_checkpoint",
+        "appointment_checkpoint",
+        "queue_checkpoint",
+        "schedule_checkpoint"
+      ]
+    },
+    "SC-008": {
+      "commands": ["performance"],
+      "fixtures": ["fixture_domain", "fixture_schema"],
+      "outputs": ["performance_report"]
+    },
+    "SC-009": {
+      "commands": ["restore", "performance"],
+      "fixtures": ["fixture_restore", "migration_current", "fixture_domain", "fixture_schema"],
+      "outputs": ["restore_report", "performance_report"]
+    },
+    "SC-010": {
+      "commands": ["contract", "scope"],
+      "fixtures": ["contract"],
+      "outputs": ["contract", "appointment_checkpoint", "queue_checkpoint"]
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "feature": "009-clinic-scheduling-appointments-queue",
+  "contract_version": 1,
+  "channel": "sms",
+  "status": "candidate",
+  "lifecycle": "feature-005-notification-template-release",
+  "publication": null,
+  "templates": [
+    {
+      "template_code": "CLINIC_DOCTOR_DELAY",
+      "release_version": 1,
+      "channel": "sms",
+      "arabic_body": "تحديث للموعد {{appointment_reference}}: حدث تأخير للطبيب {{doctor_display_name}} في {{facility_display_name}} بتاريخ {{delay_date_label}} ({{delay_minutes_label}}). راجع {{action_reference}}.",
+      "english_body": "Appointment update {{appointment_reference}}: doctor {{doctor_display_name}} is delayed at {{facility_display_name}} on {{delay_date_label}} ({{delay_minutes_label}}). Review {{action_reference}}.",
+      "allowed_recipient_types": ["patient"],
+      "allowed_field_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "action_reference": { "type": "string" },
+          "appointment_reference": { "type": "string" },
+          "delay_date_label": { "type": "string" },
+          "delay_minutes_label": { "type": "string" },
+          "doctor_display_name": { "type": "string" },
+          "facility_display_name": { "type": "string" }
+        },
+        "required": [
+          "action_reference",
+          "appointment_reference",
+          "delay_date_label",
+          "delay_minutes_label",
+          "doctor_display_name",
+          "facility_display_name"
+        ]
+      },
+      "placeholder_names": [
+        "action_reference",
+        "appointment_reference",
+        "delay_date_label",
+        "delay_minutes_label",
+        "doctor_display_name",
+        "facility_display_name"
+      ],
+      "content_digest": "b7dea5cb6aba15b4a492f9a1bd23d1af3da40d768eaf491f65154b273200d657",
+      "status": "candidate",
+      "publisher_person_id": null,
+      "published_at": null
+    },
+    {
+      "template_code": "CLINIC_DOCTOR_ABSENCE",
+      "release_version": 1,
+      "channel": "sms",
+      "arabic_body": "تحديث للموعد {{appointment_reference}}: الطبيب {{doctor_display_name}} غير متاح في {{facility_display_name}} خلال {{affected_interval_label}}. راجع {{replacement_instruction}}.",
+      "english_body": "Appointment update {{appointment_reference}}: doctor {{doctor_display_name}} is unavailable at {{facility_display_name}} during {{affected_interval_label}}. Review {{replacement_instruction}}.",
+      "allowed_recipient_types": ["patient"],
+      "allowed_field_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "affected_interval_label": { "type": "string" },
+          "appointment_reference": { "type": "string" },
+          "doctor_display_name": { "type": "string" },
+          "facility_display_name": { "type": "string" },
+          "replacement_instruction": { "type": "string" }
+        },
+        "required": [
+          "affected_interval_label",
+          "appointment_reference",
+          "doctor_display_name",
+          "facility_display_name",
+          "replacement_instruction"
+        ]
+      },
+      "placeholder_names": [
+        "affected_interval_label",
+        "appointment_reference",
+        "doctor_display_name",
+        "facility_display_name",
+        "replacement_instruction"
+      ],
+      "content_digest": "c7dc3df3901e9429068632e250292b10371619cb89a0ae34da6162e3d6f9a157",
+      "status": "candidate",
+      "publisher_person_id": null,
+      "published_at": null
+    }
+  ]
+}

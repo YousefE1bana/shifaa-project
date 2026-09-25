@@ -32,12 +32,14 @@ export function StalenessIndicator({
   updatedLabel,
   updatedAt,
   direction,
+  separateUpdatedAt = false,
 }: {
   state: FreshnessState;
   label: string;
   updatedLabel: string;
   updatedAt?: string;
   direction: 'rtl' | 'ltr';
+  separateUpdatedAt?: boolean;
 }) {
   const tone =
     state === 'fresh' ? color.positive : state === 'stale' ? color.warning : color.mutedInk;
@@ -59,7 +61,30 @@ export function StalenessIndicator({
       >
         {label}
       </Text>
-      {updatedAt ? (
+      {updatedAt && separateUpdatedAt ? (
+        <>
+          <Text
+            style={{
+              ...localizedType(direction === 'rtl' ? 'ar-EG' : 'en-EG', 'body'),
+              color: color.mutedInk,
+            }}
+          >
+            {updatedLabel}:
+          </Text>
+          <Text
+            style={{
+              ...localizedType(direction === 'rtl' ? 'ar-EG' : 'en-EG', 'body'),
+              color: color.mutedInk,
+              direction: 'ltr',
+              writingDirection: 'ltr',
+              textAlign: 'left',
+              fontVariant: ['tabular-nums'],
+            }}
+          >
+            {updatedAt}
+          </Text>
+        </>
+      ) : updatedAt ? (
         <Text
           style={{
             ...localizedType(direction === 'rtl' ? 'ar-EG' : 'en-EG', 'body'),

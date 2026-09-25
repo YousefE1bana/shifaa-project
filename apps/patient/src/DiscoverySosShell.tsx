@@ -19,6 +19,7 @@ export function DiscoverySosShell({
   const { locale, setLocale } = usePatientLocaleController();
   return (
     <ScrollView
+      role="main"
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         ...semanticStyles.screen,
@@ -35,7 +36,7 @@ export function DiscoverySosShell({
         accessibilityRole="button"
         accessibilityLabel={translate(locale, 'locale.switch')}
         onPress={() => setLocale(locale === 'ar-EG' ? 'en-EG' : 'ar-EG')}
-        style={{ minHeight: 44, justifyContent: 'center', alignSelf: 'flex-start' }}
+        style={{ minWidth: 44, minHeight: 44, justifyContent: 'center', alignSelf: 'flex-start' }}
       >
         <Text style={{ ...localizedType(locale, 'label'), color: color.brand }}>
           {translate(locale, 'locale.switch')}
