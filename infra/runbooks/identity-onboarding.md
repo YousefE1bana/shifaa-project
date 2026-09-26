@@ -27,6 +27,12 @@ pnpm supabase:test
 pnpm verify
 ```
 
+The checked-in `pnpm supabase:start` command excludes the optional local
+Vector Docker-log collector on Windows. Its CLI-generated source requires an
+unavailable unauthenticated Docker TCP endpoint on port 2375; local container
+logs therefore do not flow into Logflare. Native Auth and database tests do
+not depend on that collector. Do not enable the Docker TCP daemon to run it.
+
 Start the three application processes in separate PowerShell windows with `pnpm dev:supabase:api`, `pnpm dev:patient:web`, and `pnpm dev:admin:web`.
 
 ## Verification and evidence
@@ -55,11 +61,14 @@ The run is passing only when the evidence records read p95 at or below 400 ms an
 
 ## Local database reset
 
-`pnpm supabase:reset` destroys this repository's named local Supabase database. It is forbidden against shared, staging, or production databases.
+`pnpm supabase:reset` resets the active checkout's `shifaa-local-supabase` local
+database from checked-in migrations and seed. It does not target the separate
+`shifaa-local-postgres` Compose runtime or retained retired-project volumes.
+It is forbidden against shared, staging, or production databases.
 
 ```powershell
-$confirmation = Read-Host 'Type RESET-SHIFAA-LOCAL to delete the local database volume'
-if ($confirmation -ne 'RESET-SHIFAA-LOCAL') { throw 'Reset cancelled' }
+$confirmation = Read-Host 'Type RESET-SHIFAA-LOCAL-SUPABASE to reset the named local Supabase database'
+if ($confirmation -ne 'RESET-SHIFAA-LOCAL-SUPABASE') { throw 'Reset cancelled' }
 pnpm supabase:reset
 pnpm supabase:test
 ```

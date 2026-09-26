@@ -22,10 +22,12 @@ function runPnpm(args, capture = false, extraEnv = {}) {
 
 const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-// A database reset does not recreate Auth, Kong, or Mailpit. Recreate the project so those
-// containers always load this checkout's templates instead of retaining another worktree's config.
-runPnpm(['exec', 'supabase', 'stop', '--no-backup']);
-runPnpm(['exec', 'supabase', 'start'], true);
+// A database reset does not recreate Auth, Kong, or Mailpit. Recreate the current
+// local project with the repository's safe startup profile so those containers
+// load this checkout's templates without deleting its volumes on stop. The
+// reset below rebuilds this project's synthetic database from checked-in files.
+runPnpm(['supabase:stop']);
+runPnpm(['supabase:start'], true);
 runPnpm(['exec', 'supabase', 'db', 'reset', '--local']);
 const status = JSON.parse(runPnpm(['exec', 'supabase', 'status', '-o', 'json'], true));
 const client = createClient(status.API_URL, status.ANON_KEY, {

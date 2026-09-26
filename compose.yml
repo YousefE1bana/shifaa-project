@@ -1,4 +1,4 @@
-name: shifaa-local
+name: shifaa-local-postgres
 services:
   postgres:
     build:

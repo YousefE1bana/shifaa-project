@@ -92,6 +92,20 @@ skills are managed separately by each user.
 
 ## 4. Create the synthetic-only Supabase environment
 
+The local runtimes are separate: standalone Compose project `shifaa-local-postgres`
+uses PostgreSQL on `127.0.0.1:5432`; Supabase project `shifaa-local-supabase`
+uses its checked-in `supabase/config.toml` ports (`54321` API, `54322` database,
+`54323` Studio, `54324` mail, `54327` analytics, `54329` pooler). Run commands
+from the active repository checkout. The `pnpm db:*` scripts target standalone
+Compose; `pnpm supabase:*` targets local Supabase. Their volumes are distinct.
+On this Windows local runtime, `pnpm supabase:start` excludes the optional
+Vector Docker-log collector. Supabase CLI 2.113.0 otherwise generates a
+`host.docker.internal:2375` Docker-log source without a socket mount; this
+host does not expose an unauthenticated Docker daemon. Database, Auth, API,
+Mailpit and the Logflare service remain available on their configured ports,
+but Docker container logs are not forwarded into local Logflare. Keep the
+Docker TCP daemon disabled; this startup choice does not change production.
+
 ```powershell
 $ErrorActionPreference = 'Stop'
 pnpm supabase:start
@@ -166,11 +180,13 @@ Get-Content 'specs/001-identity-onboarding/evidence/performance.json'
 pnpm supabase:stop
 ```
 
-To deliberately delete only this repository's local PostgreSQL volume and rebuild its synthetic data:
+To deliberately reset only the active checkout's local Supabase database from
+checked-in migrations and seed (this does not reset the standalone Compose
+database or the retained volumes of retired projects):
 
 ```powershell
-$confirmation = Read-Host 'Type RESET-SHIFAA-LOCAL to reset the named local Supabase database'
-if ($confirmation -ne 'RESET-SHIFAA-LOCAL') { throw 'Reset cancelled' }
+$confirmation = Read-Host 'Type RESET-SHIFAA-LOCAL-SUPABASE to reset the named local Supabase database'
+if ($confirmation -ne 'RESET-SHIFAA-LOCAL-SUPABASE') { throw 'Reset cancelled' }
 pnpm supabase:reset
 pnpm supabase:test
 ```
