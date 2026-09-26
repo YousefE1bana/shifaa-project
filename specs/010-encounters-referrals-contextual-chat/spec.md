@@ -1,19 +1,19 @@
 # Feature Specification: Encounters, Referrals, and Contextual Chat
 
-> `SPEC_APPROVED` by Yousef Osama as Product Owner / Architecture Lead on 2026-09-26 for the Feature 010 specification only. Feature 010's separate TEST-ONLY functional `OPEN-UX-001` baseline was approved on 2026-09-26 by Yousef Osama as Product Owner + Acting Design Lead for this feature only. A separate dated Plan Gate record now grants `PLAN_APPROVED` under the approved pre-implementation operating model. None of these decisions grants implementation, clinical, Legal/DPO, `OPEN-UX-002` formal visual acceptance, final visual identity, production health data, release, or Feature 011 authority. The roadmap gate IDs and their remaining effects are recorded in section 14.
+> `SPEC_APPROVED` by Yousef Osama as Product Owner / Architecture Lead on 2026-09-26 for the Feature 010 specification only. Feature 010's separate TEST-ONLY functional `OPEN-UX-001` baseline was approved on 2026-09-26 by Yousef Osama as Product Owner + Acting Design Lead for this feature only. A separate dated Plan Gate record grants `PLAN_APPROVED` under the approved pre-implementation operating model. The dated Tasks Gate record grants `TASKS_APPROVED` and advances the Master Plan lifecycle to `TASKED`. None of these decisions grants implementation, clinical, Legal/DPO, `OPEN-UX-002` formal visual acceptance, final visual identity, production health data, release, or Feature 011 authority. The roadmap gate IDs and their remaining effects are recorded in section 14.
 
 ## 0. Metadata and traceability
 
 | Field | Value |
 |---|---|
 | SpecKit feature ID | `010-encounters-referrals-contextual-chat` |
-| Status | `PLAN_APPROVED — 2026-09-26 by Yousef Osama, Product Owner / Architecture Lead and current pre-implementation engineering decision authority; SPEC_APPROVED retained` |
+| Status | `TASKED — TASKS_APPROVED 2026-09-26 by Yousef Osama, Product Owner / Architecture Lead and current pre-implementation engineering decision authority; SPEC_APPROVED and PLAN_APPROVED retained` |
 | Target FR IDs | `FR-FAC-006`, `FR-CLINIC-006`, `FR-CLINIC-007` |
 | Target NFR IDs | `NFR-SEC-001`, `NFR-SEC-002`, `NFR-SEC-003`, `NFR-SEC-004`, `NFR-SEC-005`, `NFR-SEC-006`, `NFR-SEC-007`, `NFR-PRIV-001`, `NFR-PRIV-002`, `NFR-PRIV-004`, `NFR-I18N-001`, `NFR-A11Y-001`, `NFR-PERF-001`, `NFR-PERF-002`, `NFR-AVAIL-001`, `NFR-AVAIL-002`, `NFR-DATA-001`, `NFR-DATA-002`, `NFR-API-001`, `NFR-API-002`, `NFR-OBS-001`, `NFR-QUALITY-001`, `NFR-PORT-001` (23 IDs: PATIENT ∪ REALTIME) |
 | Scope eligibility | `ACTIVE — shifaa-prd.md v2.1.3 and docs/governance/SHIFAA-Remaining-Specs-Roadmap.md, Feature 010; baseline main 0a5b3b413ed1302e60dba929a5e320d78f8496ac` |
 | Target app/service/package | Patient `/records`, `/encounters/:id`; clinic `/patients/:id/summary`, `/encounters/:id`, `/referrals`, `/messages`; API and realtime/outbox worker. This is a surface inventory, not an implementation plan. |
 | Owner | Product Owner Yousef Osama; feature delivery owner to be assigned |
-| Reviewers | Product Owner / Architecture Lead Yousef Osama `[SPEC_APPROVED and PLAN_APPROVED 2026-09-26]`; Yousef Osama as Product Owner + Acting Design Lead for Feature 010 `[TEST-ONLY functional OPEN-UX-001 baseline approved 2026-09-26]`; QA and affected clinical domain lead review evidence `[pending]`; Security, DPO/Legal, formal visual/accessibility verification `[pending]` |
+| Reviewers | Product Owner / Architecture Lead Yousef Osama `[SPEC_APPROVED, PLAN_APPROVED and TASKS_APPROVED 2026-09-26]`; Yousef Osama as Product Owner + Acting Design Lead for Feature 010 `[TEST-ONLY functional OPEN-UX-001 baseline approved 2026-09-26]`; QA and affected clinical domain lead review evidence `[pending]`; Security, DPO/Legal, formal visual/accessibility verification `[pending]` |
 | Risk class | Sensitive-data; clinical record and referral disclosure |
 | Regulatory domains | Egyptian personal-data and healthcare confidentiality; article-level legal validation remains open |
 | Clinical sign-off required | Clinical record and referral workflow review by licensed clinical owner; prescription/safety-content dual approval is outside Feature 010 |
@@ -404,6 +404,8 @@ Accepted encounter creation/completion, participant-interval change, signed-note
 
 The `OPEN-F010-*` decisions and specification-gate addendum are recorded in `docs/governance/SHIFAA-Feature-010-Reconciliation-2026-09-26.md` with Product Owner/Architecture approval. The addendum resolves referral representative authority/placement, chat membership and interval ownership, optional clinical references/structural completion, booking safeguards, and Master §11.2 semantics without waiving later generated-contract evidence. The separate 2026-09-26 Product Owner / Architecture Lead approval set this specification to `SPEC_APPROVED`. The later Product Owner + Acting Design Lead decision satisfies only Feature 010's functional `OPEN-UX-001` baseline prerequisite; all seven other Feature 010 gate IDs and program-wide `OPEN-UX-001` effects outside this feature remain. The dated Feature 010 Plan Gate record grants `PLAN_APPROVED` under the approved solo pre-implementation model. QA, clinical, Legal/DPO, `OPEN-UX-002` formal visual, production and release approval are not claimed.
 
+The 2026-09-26 `SHIFAA-Feature-010-Tasks-Gate-2026-09-26.md` records Yousef Osama's `TASKS_APPROVED` decision for the unchanged 86-task/29-checkpoint ledger following `ANALYZE_PASS`; the canonical lifecycle is now `TASKED`. This approval authorizes task-to-issue conversion, not implementation or any later gate closure.
+
 | Date | Version | Change and affected FR/NFR/contracts |
 |---|---|---|
 | 2026-09-25 | 0.1.0 draft | Specify-stage Feature 010 boundary from main `0a5b3b4`; no plan, task, implementation, approval, commit or push. |
@@ -413,3 +415,4 @@ The `OPEN-F010-*` decisions and specification-gate addendum are recorded in `doc
 | 2026-09-26 | 0.4.0 spec approved | Yousef Osama, Product Owner / Architecture Lead, explicitly approved Feature 010 for `SPEC_APPROVED`; QA and affected clinical domain lead review evidence and all eight roadmap `OPEN-*` gates remain pending. No plan, tasks, implementation, commit, push, or PR. |
 | 2026-09-26 | 0.4.0 UX baseline decision | Yousef Osama as Product Owner + Acting Design Lead for Feature 010 approved the TEST-ONLY functional 87-state/408-reference baseline, manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`. Requirements and spec version are unchanged; the separate Plan Gate and later evidence remain pending. |
 | 2026-09-26 | 0.4.0 plan gate decision | Yousef Osama approved the final Feature 010 plan under the v2.1.2 pre-implementation operating model; the dated Plan Gate record supersedes the earlier pending-Plan-Gate status. Requirement and contract scope is unchanged; no QA, clinical, Legal/DPO, implementation or release sign-off is inferred. |
+| 2026-09-26 | 0.4.0 tasks gate decision | Yousef Osama approved the unchanged 86-task/29-checkpoint ledger after `ANALYZE_PASS`; the lifecycle advances to `TASKED` under the dated Tasks Gate record. No implementation or later-stage approval is inferred. |
