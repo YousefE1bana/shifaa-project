@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C03 accepted; T001–T009 complete, T010–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C04 accepted; T001–T012 complete, T013–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -80,15 +80,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Additive F010 schema is migration-safe in both local runtimes.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T010 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-DATA-001, NFR-DATA-002] Write red schema checks for six canonical areas, UUID/FK/nullability, UTC/version, open|completed, pending|accepted, partial unique open appointment, and zero-or-more references — `infra/db/tests/feature-010-schema.sql`
+- [X] T010 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-DATA-001, NFR-DATA-002] Write red schema checks for six canonical areas, UUID/FK/nullability, UTC/version, open|completed, pending|accepted, partial unique open appointment, and zero-or-more references — `infra/db/tests/feature-010-schema.sql`
   - Depends on: `T009`
   - Acceptance evidence: `new schema assertions fail on missing F010 objects only`
 
-- [ ] T011 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-DATA-001, NFR-DATA-002, NFR-PERF-002] Create forward additive tables/indexes in a new F010 migration; require linked appointment on F010 insert while general appointment_id remains nullable; leave F009 migrations untouched — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
+- [X] T011 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-DATA-001, NFR-DATA-002, NFR-PERF-002] Create forward additive tables/indexes in a new F010 migration; require linked appointment on F010 insert while general appointment_id remains nullable; leave F009 migrations untouched — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
   - Depends on: `T010`
   - Acceptance evidence: `schema test passes on fresh shifaa-local-postgres and shifaa-local-supabase`
 
-- [ ] T012 [NFR-DATA-001, NFR-DATA-002, NFR-QUALITY-001] Add F010 migration to the standalone reset chain and run fresh schema/replay checks in both named local runtimes — `package.json; tools/run-feature-010-postgres-test.mjs; specs/010-encounters-referrals-contextual-chat/evidence/C04-schema.md`
+- [X] T012 [NFR-DATA-001, NFR-DATA-002, NFR-QUALITY-001] Add F010 migration to the standalone reset chain and run fresh schema/replay checks in both named local runtimes — `package.json; tools/run-feature-010-postgres-test.mjs; specs/010-encounters-referrals-contextual-chat/evidence/C04-schema.md`
   - Depends on: `T011`
   - Acceptance evidence: `fresh migration and repeat application pass without changing F009 schema/evidence`
 
