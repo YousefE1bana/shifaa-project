@@ -597,4 +597,98 @@ COMMENT ON FUNCTION clinical.create_encounter_v1(jsonb) IS
 COMMENT ON FUNCTION clinical.complete_encounter_v1(uuid,integer,jsonb) IS
   'F010 producer: current responsible CLN context required; API execute grant is deferred until C07 binds approved care purpose and RLS policy.';
 
+-- C06 storage guards. Clinical ciphertext is supplied by the approved API
+-- encryption adapter; this migration does not introduce cryptography or keys.
+CREATE OR REPLACE FUNCTION clinical.reject_signed_note_mutation_v1()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog AS $$
+BEGIN
+  RAISE EXCEPTION 'signed clinical notes are append-only' USING ERRCODE='55000';
+END $$;
+REVOKE ALL ON FUNCTION clinical.reject_signed_note_mutation_v1() FROM PUBLIC;
+DO $feature_010_note_guard$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgrelid='clinical.clinical_notes'::regclass
+      AND tgname='clinical_notes_signed_immutable_guard'
+  ) THEN
+    CREATE TRIGGER clinical_notes_signed_immutable_guard
+      BEFORE UPDATE OR DELETE ON clinical.clinical_notes
+      FOR EACH ROW EXECUTE FUNCTION clinical.reject_signed_note_mutation_v1();
+  END IF;
+END
+$feature_010_note_guard$;
+
+-- Validate only structural links and the already approved disclosure shape.
+-- Actor authorization, target reads, and acceptance transactions remain in
+-- their later checkpoints.
+CREATE OR REPLACE FUNCTION clinical.guard_referral_storage_v1()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog AS $$
+DECLARE
+  source_patient_person_id uuid;
+  source_encounter_type text;
+  referral_patient_person_id uuid;
+  appointment_patient_person_id uuid;
+  appointment_facility_id uuid;
+  appointment_doctor_person_id uuid;
+BEGIN
+  IF TG_OP='UPDATE' AND OLD.status='accepted' AND (
+    NEW.status IS DISTINCT FROM OLD.status
+    OR NEW.source_encounter_id IS DISTINCT FROM OLD.source_encounter_id
+    OR NEW.patient_id IS DISTINCT FROM OLD.patient_id
+    OR NEW.reason_summary IS DISTINCT FROM OLD.reason_summary
+    OR NEW.encounter_type IS DISTINCT FROM OLD.encounter_type
+    OR NEW.accepted_field_codes IS DISTINCT FROM OLD.accepted_field_codes
+    OR NEW.resulting_appointment_id IS DISTINCT FROM OLD.resulting_appointment_id
+    OR NEW.accepted_by_person_id IS DISTINCT FROM OLD.accepted_by_person_id
+    OR NEW.accepted_at IS DISTINCT FROM OLD.accepted_at
+    OR NEW.target_specialty IS DISTINCT FROM OLD.target_specialty
+    OR NEW.target_facility_id IS DISTINCT FROM OLD.target_facility_id
+    OR NEW.target_doctor_person_id IS DISTINCT FROM OLD.target_doctor_person_id
+  ) THEN
+    RAISE EXCEPTION 'accepted referral linkage and disclosure are immutable' USING ERRCODE='55000';
+  END IF;
+
+  SELECT e.patient_person_id,e.encounter_type
+    INTO source_patient_person_id,source_encounter_type
+    FROM clinical.encounters e WHERE e.id=NEW.source_encounter_id;
+  SELECT p.person_id INTO referral_patient_person_id
+    FROM identity.patients p WHERE p.id=NEW.patient_id;
+  IF source_patient_person_id IS NULL OR referral_patient_person_id IS NULL
+     OR source_patient_person_id<>referral_patient_person_id
+     OR (NEW.encounter_type IS NOT NULL
+       AND NEW.encounter_type IS DISTINCT FROM source_encounter_type) THEN
+    RAISE EXCEPTION 'referral source encounter, patient, or selected encounter type is inconsistent'
+      USING ERRCODE='23514';
+  END IF;
+
+  IF NEW.status='accepted' THEN
+    SELECT a.patient_person_id,a.facility_id,a.doctor_person_id
+      INTO appointment_patient_person_id,appointment_facility_id,appointment_doctor_person_id
+      FROM clinical.appointments a WHERE a.id=NEW.resulting_appointment_id;
+    IF appointment_patient_person_id IS NULL
+       OR appointment_patient_person_id<>referral_patient_person_id
+       OR appointment_facility_id IS DISTINCT FROM NEW.target_facility_id
+       OR appointment_doctor_person_id IS DISTINCT FROM NEW.target_doctor_person_id THEN
+      RAISE EXCEPTION 'accepted referral appointment link is inconsistent'
+        USING ERRCODE='23514';
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$;
+REVOKE ALL ON FUNCTION clinical.guard_referral_storage_v1() FROM PUBLIC;
+DO $feature_010_referral_guard$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgrelid='clinical.referrals'::regclass
+      AND tgname='referrals_storage_integrity_guard'
+  ) THEN
+    CREATE TRIGGER referrals_storage_integrity_guard
+      BEFORE INSERT OR UPDATE ON clinical.referrals
+      FOR EACH ROW EXECUTE FUNCTION clinical.guard_referral_storage_v1();
+  END IF;
+END
+$feature_010_referral_guard$;
+
 COMMIT;

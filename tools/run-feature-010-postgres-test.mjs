@@ -7,6 +7,7 @@ const featureMigration =
   'supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
 const lifecycleTest = 'infra/db/tests/feature-010-lifecycle.sql';
+const storageTest = 'infra/db/tests/feature-010-storage-invariants.sql';
 const f009RegressionTest = 'infra/db/tests/clinic-scheduling-schema.sql';
 const defaultDenySnapshotSql = `SELECT format(
   'C04 default-deny snapshot: forced_rls=%s/6; policies=%s; direct_online_acl_entries=%s',
@@ -171,6 +172,11 @@ function checkLifecycle(runtime, database, phase) {
   runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${lifecycleTest}`);
 }
 
+function checkStorage(runtime, database, phase) {
+  const sql = readFileSync(resolve(root, storageTest), 'utf8');
+  runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${storageTest}`);
+}
+
 function checkF009Regression(runtime, database, phase) {
   let sql = readFileSync(resolve(root, f009RegressionTest), 'utf8');
   if (runtime.name === 'shifaa-local-supabase') {
@@ -225,9 +231,11 @@ function verifyFreshAndReplay(runtime, database) {
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
+  checkStorage(runtime, database, 'fresh F010 storage vectors');
   checkF009Regression(runtime, database, 'F009 check-in and queue regression after F010');
   runMigration(runtime, database, featureMigration, 'F010 migration replay');
   checkSchema(runtime, database, 'replayed F010 schema assertions');
+  checkStorage(runtime, database, 'replayed F010 storage vectors');
 
   const f009SchemaAfter = runPgDump(
     runtime,

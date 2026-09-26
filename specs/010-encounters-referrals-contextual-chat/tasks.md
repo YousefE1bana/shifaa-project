@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C05 accepted; T001–T015 complete, T016–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C06 accepted; T001–T018 complete, T019–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -114,15 +114,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Storage prevents mutable signed notes, premature referral disclosure and attachments.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T016 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-002, NFR-PRIV-004] Write red SQL checks for private|patient_visible signed append-only same-encounter supersession, pending|accepted referral link/field selection, and appointment-only messages with attachment SQL NULL — `infra/db/tests/feature-010-storage-invariants.sql`
+- [x] T016 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-002, NFR-PRIV-004] Write red SQL checks for private|patient_visible signed append-only same-encounter supersession, pending|accepted referral link/field selection, and appointment-only messages with attachment SQL NULL — `infra/db/tests/feature-010-storage-invariants.sql`
   - Depends on: `T015`
   - Acceptance evidence: `missing check/constraint/supersession rules fail deterministically`
 
-- [ ] T017 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-002, NFR-PRIV-004, NFR-DATA-002] Add narrow encryption-backed inserts, signed-note no-update/no-delete guards, referral uniqueness, and body-only message constraints without retention durations — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
+- [x] T017 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-002, NFR-PRIV-004, NFR-DATA-002] Add narrow encryption-backed inserts, signed-note no-update/no-delete guards, referral uniqueness, and body-only message constraints without retention durations — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
   - Depends on: `T016`
   - Acceptance evidence: `signed prior versions persist; pending target sees nothing; valid message attachment is SQL NULL`
 
-- [ ] T018 [NFR-SEC-002, NFR-PRIV-004, NFR-QUALITY-001] Run the storage invariant and migration replay checks with synthetic data — `specs/010-encounters-referrals-contextual-chat/evidence/C06-storage.md`
+- [x] T018 [NFR-SEC-002, NFR-PRIV-004, NFR-QUALITY-001] Run the storage invariant and migration replay checks with synthetic data — `specs/010-encounters-referrals-contextual-chat/evidence/C06-storage.md`
   - Depends on: `T017`
   - Acceptance evidence: `all note/referral/message negative constraints pass`
 
