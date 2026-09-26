@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C04 accepted; T001–T012 complete, T013–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C05 accepted; T001–T015 complete, T016–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -97,15 +97,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Only F010 starts and completes the linked appointment/queue triple.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T013 [FR-CLINIC-006, NFR-DATA-001, NFR-SEC-005] Write red real-Postgres vectors for checked_in/called creation, missing/mismatched queue, duplicate open, and atomic completion with zero optional references — `infra/db/tests/feature-010-lifecycle.sql`
+- [X] T013 [FR-CLINIC-006, NFR-DATA-001, NFR-SEC-005] Write red real-Postgres vectors for checked_in/called creation, missing/mismatched queue, duplicate open, and atomic completion with zero optional references — `infra/db/tests/feature-010-lifecycle.sql`
   - Depends on: `T012`
   - Acceptance evidence: `test fails for missing F010 producer guards, not fixture setup`
 
-- [ ] T014 [FR-CLINIC-006, NFR-DATA-001, NFR-SEC-005] Extend F009 appointment/queue transition guards only for createEncounter and completeEncounter; lock in stable order, derive one responsible interval, reject client workforce IDs, require nonblank summary plus explicit confirmation — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
+- [X] T014 [FR-CLINIC-006, NFR-DATA-001, NFR-SEC-005] Extend F009 appointment/queue transition guards only for createEncounter and completeEncounter; lock in stable order, derive one responsible interval, reject client workforce IDs, require nonblank summary plus explicit confirmation — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
   - Depends on: `T013`
   - Acceptance evidence: `invalid source state or stale version rolls back all three states and effects`
 
-- [ ] T015 [FR-CLINIC-006, NFR-DATA-001, NFR-QUALITY-001] Run lifecycle/schema tests and F009 transition regression after the forward migration — `specs/010-encounters-referrals-contextual-chat/evidence/C05-lifecycle.md`
+- [X] T015 [FR-CLINIC-006, NFR-DATA-001, NFR-QUALITY-001] Run lifecycle/schema tests and F009 transition regression after the forward migration — `specs/010-encounters-referrals-contextual-chat/evidence/C05-lifecycle.md`
   - Depends on: `T014`
   - Acceptance evidence: `F010 atomic vectors and existing F009 check-in/queue tests pass`
 

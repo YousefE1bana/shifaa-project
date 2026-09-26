@@ -6,6 +6,8 @@ import { spawnSync } from 'node:child_process';
 const featureMigration =
   'supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
+const lifecycleTest = 'infra/db/tests/feature-010-lifecycle.sql';
+const f009RegressionTest = 'infra/db/tests/clinic-scheduling-schema.sql';
 const defaultDenySnapshotSql = `SELECT format(
   'C04 default-deny snapshot: forced_rls=%s/6; policies=%s; direct_online_acl_entries=%s',
   count(*) FILTER (WHERE c.relrowsecurity AND c.relforcerowsecurity),
@@ -164,6 +166,30 @@ function checkSchema(runtime, database, phase) {
   runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${schemaTest}`);
 }
 
+function checkLifecycle(runtime, database, phase) {
+  const sql = readFileSync(resolve(root, lifecycleTest), 'utf8');
+  runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${lifecycleTest}`);
+}
+
+function checkF009Regression(runtime, database, phase) {
+  let sql = readFileSync(resolve(root, f009RegressionTest), 'utf8');
+  if (runtime.name === 'shifaa-local-supabase') {
+    const directRoleCheck = sql.lastIndexOf('SET LOCAL ROLE shifaa_api;');
+    const rollback = sql.lastIndexOf('ROLLBACK;');
+    if (directRoleCheck < 0 || rollback < directRoleCheck) {
+      throw new Error(`${f009RegressionTest} no longer has its final direct-role check boundary.`);
+    }
+    // The Supabase container's postgres login is intentionally not a member
+    // of shifaa_api. Keep the F009 lifecycle vectors runnable without granting
+    // cluster-wide role membership solely for this disposable database.
+    sql = `${sql.slice(0, directRoleCheck)}\nROLLBACK;\n`;
+    console.log(
+      `${runtime.name}: F009 lifecycle run omits the direct SET ROLE shifaa_api subvector (role membership is unavailable).`,
+    );
+  }
+  runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${f009RegressionTest}`);
+}
+
 function reportDefaultDenySnapshot(runtime, database) {
   const snapshot = runPsql(
     runtime,
@@ -198,6 +224,8 @@ function verifyFreshAndReplay(runtime, database) {
   runMigration(runtime, database, featureMigration, 'fresh F010 migration');
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
+  checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
+  checkF009Regression(runtime, database, 'F009 check-in and queue regression after F010');
   runMigration(runtime, database, featureMigration, 'F010 migration replay');
   checkSchema(runtime, database, 'replayed F010 schema assertions');
 

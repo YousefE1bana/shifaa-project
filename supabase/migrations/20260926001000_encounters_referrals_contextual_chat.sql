@@ -238,4 +238,363 @@ BEGIN
 END
 $feature_010_default_deny$;
 
+-- Feature 010 owns only the two encounter lifecycle edges. The legacy F009
+-- marker remains bounded to F009 state transitions; it cannot open or finish
+-- an encounter lifecycle. These markers are set only inside the corresponding
+-- producer after current named-clinician authorization has been rechecked.
+CREATE OR REPLACE FUNCTION clinical.appointment_transition_guard_v1()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  internal_transition text := current_setting('shifaa.clinic_internal_transition',true);
+  allowed_f009 boolean;
+BEGIN
+  IF TG_OP='INSERT' THEN
+    IF NEW.status<>'confirmed' THEN
+      RAISE EXCEPTION 'Feature 009 create produces confirmed only' USING ERRCODE='42501';
+    END IF;
+  ELSE
+    IF NEW.payment_method<>'cash_on_arrival' THEN
+      RAISE EXCEPTION 'cash_on_arrival is the only payment method' USING ERRCODE='23514';
+    END IF;
+
+    IF internal_transition='f010_create_encounter' THEN
+      IF OLD.status<>'checked_in' OR NEW.status<>'in_consultation' THEN
+        RAISE EXCEPTION 'invalid Feature 010 encounter-create appointment transition' USING ERRCODE='42501';
+      END IF;
+    ELSIF internal_transition='f010_complete_encounter' THEN
+      IF OLD.status<>'in_consultation' OR NEW.status<>'completed' THEN
+        RAISE EXCEPTION 'invalid Feature 010 encounter-complete appointment transition' USING ERRCODE='42501';
+      END IF;
+    ELSE
+      allowed_f009 :=
+        (OLD.status='confirmed' AND NEW.status IN ('checked_in','cancelled','reschedule_required'))
+        OR (OLD.status='reschedule_required' AND NEW.status IN ('confirmed','cancelled'))
+        OR (internal_transition='allowed' AND (
+          (OLD.status='checked_in' AND NEW.status='reschedule_required')
+          OR OLD.status=NEW.status
+        ));
+      IF NOT allowed_f009 THEN
+        RAISE EXCEPTION 'invalid Feature 009 appointment transition' USING ERRCODE='42501';
+      END IF;
+    END IF;
+    NEW.version=OLD.version+1;
+  END IF;
+  NEW.updated_at=statement_timestamp();
+  RETURN NEW;
+END $$;
+
+CREATE OR REPLACE FUNCTION clinical.queue_scope_guard_v1()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  appointment clinical.appointments%ROWTYPE;
+  scope clinical.queue_scopes%ROWTYPE;
+  internal_transition text := current_setting('shifaa.clinic_internal_transition',true);
+  allowed_f009 boolean;
+BEGIN
+  SELECT * INTO scope FROM clinical.queue_scopes WHERE id=NEW.queue_scope_id;
+  SELECT * INTO appointment FROM clinical.appointments WHERE id=NEW.appointment_id;
+  IF NOT FOUND OR NEW.facility_id<>scope.facility_id OR NEW.doctor_person_id<>scope.doctor_person_id
+     OR NEW.civil_date<>scope.civil_date OR NEW.facility_id<>appointment.facility_id
+     OR NEW.doctor_person_id<>appointment.doctor_person_id OR NEW.civil_date<>appointment.civil_date THEN
+    RAISE EXCEPTION 'queue scope mismatch' USING ERRCODE='23514';
+  END IF;
+  IF TG_OP='INSERT' AND NEW.state<>'waiting' THEN
+    RAISE EXCEPTION 'check-in produces waiting only' USING ERRCODE='42501';
+  END IF;
+  IF TG_OP='UPDATE' THEN
+    IF internal_transition='f010_create_encounter' THEN
+      IF OLD.state<>'called' OR NEW.state<>'in_service' THEN
+        RAISE EXCEPTION 'invalid Feature 010 encounter-create queue transition' USING ERRCODE='42501';
+      END IF;
+    ELSIF internal_transition='f010_complete_encounter' THEN
+      IF OLD.state<>'in_service' OR NEW.state<>'completed' THEN
+        RAISE EXCEPTION 'invalid Feature 010 encounter-complete queue transition' USING ERRCODE='42501';
+      END IF;
+    ELSE
+      allowed_f009 :=
+        (OLD.state='waiting' AND NEW.state='called')
+        OR (OLD.state='called' AND NEW.state='completed')
+        OR (internal_transition='allowed' AND (
+          (OLD.state IN ('waiting','called') AND NEW.state='removed')
+          OR OLD.state=NEW.state
+        ));
+      IF NOT allowed_f009 THEN
+        RAISE EXCEPTION 'invalid Feature 009 queue transition' USING ERRCODE='42501';
+      END IF;
+    END IF;
+    NEW.version=OLD.version+1;
+  END IF;
+  NEW.updated_at=statement_timestamp();
+  RETURN NEW;
+END $$;
+
+-- The API action IDs are the canonical operation action names. C05 has no
+-- approved clinical-purpose code to bind here and therefore requires a
+-- nonempty trusted purpose context without inventing one. Later mutation
+-- checkpoints wrap these producers with idempotency, audit, and outbox writes
+-- in the same transaction. These functions are deliberately not granted to
+-- shifaa_api; C07 must bind the approved care purpose and independent current-
+-- care RLS rules before any online grant.
+CREATE OR REPLACE FUNCTION clinical.create_encounter_v1(p_input jsonb)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  actor uuid := platform.context_person_id();
+  requested_appointment_id uuid;
+  requested_patient_id uuid;
+  encounter_type_value text;
+  appointment_row clinical.appointments%ROWTYPE;
+  queue_row clinical.queue_entries%ROWTYPE;
+  encounter_id uuid;
+  started_at_value timestamptz := statement_timestamp();
+  old_transition text := current_setting('shifaa.clinic_internal_transition',true);
+  response_value jsonb;
+  authorized boolean;
+BEGIN
+  IF p_input IS NULL OR jsonb_typeof(p_input)<>'object'
+     OR NOT (p_input ?& ARRAY['appointmentId','patientId','encounterType']::text[])
+     OR (p_input-ARRAY['appointmentId','patientId','encounterType']::text[])<>'{}'::jsonb
+     OR NULLIF(p_input->>'appointmentId','') IS NULL
+     OR NULLIF(p_input->>'patientId','') IS NULL
+     OR NULLIF(btrim(p_input->>'encounterType'),'') IS NULL
+     OR pg_catalog.octet_length(p_input->>'encounterType')>120 THEN
+    RAISE EXCEPTION 'createEncounter request is invalid' USING ERRCODE='22023';
+  END IF;
+  BEGIN
+    requested_appointment_id := (p_input->>'appointmentId')::uuid;
+    requested_patient_id := (p_input->>'patientId')::uuid;
+  EXCEPTION WHEN invalid_text_representation THEN
+    RAISE EXCEPTION 'createEncounter identifiers are invalid' USING ERRCODE='22023';
+  END;
+  encounter_type_value := btrim(p_input->>'encounterType');
+
+  IF actor IS NULL OR platform.context_role() IS DISTINCT FROM 'CLN'
+     OR platform.context_action() IS DISTINCT FROM 'createEncounter'
+     OR COALESCE(platform.context_aal(),0)<2
+     OR COALESCE(pg_catalog.cardinality(platform.context_purposes()),0)<1 THEN
+    RAISE EXCEPTION 'current treating-clinician context is required' USING ERRCODE='42501';
+  END IF;
+
+  -- Read immutable appointment scope before locking; all writes below then
+  -- follow the stable appointment -> queue -> encounter order.
+  SELECT * INTO appointment_row FROM clinical.appointments a WHERE a.id=requested_appointment_id;
+  IF NOT FOUND OR appointment_row.patient_person_id<>requested_patient_id
+     OR appointment_row.doctor_person_id<>actor THEN
+    RAISE EXCEPTION 'current treating appointment scope denied' USING ERRCODE='42501';
+  END IF;
+  SELECT * INTO appointment_row FROM clinical.appointments a WHERE a.id=requested_appointment_id FOR UPDATE;
+  IF NOT FOUND OR appointment_row.status<>'checked_in'
+     OR appointment_row.patient_person_id<>requested_patient_id
+     OR appointment_row.doctor_person_id<>actor THEN
+    RAISE EXCEPTION 'appointment is no longer eligible for encounter creation' USING ERRCODE='40001';
+  END IF;
+  SELECT * INTO queue_row FROM clinical.queue_entries q
+   WHERE q.appointment_id=requested_appointment_id FOR UPDATE;
+  IF NOT FOUND OR queue_row.state<>'called'
+     OR queue_row.facility_id<>appointment_row.facility_id
+     OR queue_row.doctor_person_id<>appointment_row.doctor_person_id
+     OR queue_row.civil_date<>appointment_row.civil_date
+     OR NOT EXISTS (
+       SELECT 1 FROM clinical.queue_scopes s
+       WHERE s.id=queue_row.queue_scope_id
+         AND s.facility_id=appointment_row.facility_id
+         AND s.doctor_person_id=appointment_row.doctor_person_id
+         AND s.civil_date=appointment_row.civil_date
+         AND s.timezone_name=appointment_row.timezone_name
+     ) THEN
+    RAISE EXCEPTION 'matching called queue entry is required' USING ERRCODE='40001';
+  END IF;
+  IF EXISTS (SELECT 1 FROM clinical.encounters e WHERE e.appointment_id=requested_appointment_id AND e.status='open') THEN
+    RAISE EXCEPTION 'appointment already has an open encounter' USING ERRCODE='40001';
+  END IF;
+
+  -- Recheck live clinical authority only after the appointment and matching
+  -- queue are locked, so the scope used by the insert is current and stable.
+  SELECT EXISTS (
+    SELECT 1
+    FROM identity.facilities f
+    JOIN identity.facility_memberships m ON m.facility_id=f.id
+      AND m.person_id=actor AND m.role_code='doctor' AND m.membership_status='active'
+      AND m.valid_from<=platform.context_now()
+      AND (m.valid_until IS NULL OR m.valid_until>platform.context_now())
+    JOIN identity.professional_licenses l ON l.id=m.employment_license_id
+      AND l.person_id=actor AND l.profession='doctor' AND l.status='verified'
+      AND l.expires_on>=(platform.context_now() AT TIME ZONE 'UTC')::date
+    JOIN identity.patients p ON p.person_id=appointment_row.patient_person_id
+      AND p.record_status='active'
+    WHERE f.id=appointment_row.facility_id AND f.facility_status='active'
+  ) INTO authorized;
+  IF NOT authorized THEN
+    RAISE EXCEPTION 'current treating membership or licence scope denied' USING ERRCODE='42501';
+  END IF;
+
+  INSERT INTO clinical.encounters(
+    patient_person_id,facility_id,appointment_id,responsible_clinician_id,
+    encounter_type,status,started_at,version
+  ) VALUES (
+    appointment_row.patient_person_id,appointment_row.facility_id,appointment_row.id,
+    appointment_row.doctor_person_id,encounter_type_value,'open',started_at_value,1
+  ) RETURNING id INTO encounter_id;
+  INSERT INTO clinical.encounter_participants(encounter_id,person_id,role_code,started_at)
+  VALUES (encounter_id,appointment_row.doctor_person_id,'responsible_clinician',started_at_value);
+
+  PERFORM pg_catalog.set_config('shifaa.clinic_internal_transition','f010_create_encounter',true);
+  UPDATE clinical.appointments SET status='in_consultation',updated_by_person_id=actor WHERE id=requested_appointment_id;
+  UPDATE clinical.queue_entries SET state='in_service' WHERE id=queue_row.id;
+  PERFORM pg_catalog.set_config('shifaa.clinic_internal_transition',COALESCE(old_transition,''),true);
+
+  response_value := pg_catalog.jsonb_build_object(
+    'encounter',pg_catalog.jsonb_build_object(
+      'id',encounter_id,'patientId',appointment_row.patient_person_id,
+      'facilityId',appointment_row.facility_id,'appointmentId',requested_appointment_id,
+      'encounterType',encounter_type_value,'responsibleClinicianId',appointment_row.doctor_person_id,
+      'status','open','startedAt',started_at_value,'version',1,
+      'conditionIds','[]'::jsonb,'observationIds','[]'::jsonb,'orderIds','[]'::jsonb,
+      'participants',pg_catalog.jsonb_build_array(pg_catalog.jsonb_build_object(
+        'personId',appointment_row.doctor_person_id,'roleCode','responsible_clinician','startedAt',started_at_value
+      ))
+    ),
+    'appointmentStatus','in_consultation','queueStatus','in_service','queueEntryId',queue_row.id
+  );
+  RETURN response_value;
+END $$;
+
+CREATE OR REPLACE FUNCTION clinical.complete_encounter_v1(
+  p_encounter_id uuid,p_expected_version integer,p_input jsonb
+)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  actor uuid := platform.context_person_id();
+  encounter_row clinical.encounters%ROWTYPE;
+  appointment_row clinical.appointments%ROWTYPE;
+  queue_row clinical.queue_entries%ROWTYPE;
+  completion_summary_value text;
+  completed_at_value timestamptz;
+  old_transition text := current_setting('shifaa.clinic_internal_transition',true);
+  response_value jsonb;
+  authorized boolean;
+BEGIN
+  IF p_encounter_id IS NULL OR p_expected_version IS NULL OR p_expected_version<1
+     OR p_input IS NULL OR jsonb_typeof(p_input)<>'object'
+     OR NOT (p_input ?& ARRAY['summary','structuralConfirmation']::text[])
+     OR (p_input-ARRAY['summary','structuralConfirmation']::text[])<>'{}'::jsonb
+     OR NULLIF(btrim(p_input->>'summary'),'') IS NULL
+     OR pg_catalog.octet_length(p_input->>'summary')>4000
+     OR p_input->'structuralConfirmation'<>'true'::jsonb THEN
+    RAISE EXCEPTION 'completeEncounter requires a nonblank responsible-clinician summary and explicit confirmation' USING ERRCODE='22023';
+  END IF;
+  completion_summary_value := btrim(p_input->>'summary');
+  IF actor IS NULL OR platform.context_role() IS DISTINCT FROM 'CLN'
+     OR platform.context_action() IS DISTINCT FROM 'completeEncounter'
+     OR COALESCE(platform.context_aal(),0)<2
+     OR COALESCE(pg_catalog.cardinality(platform.context_purposes()),0)<1 THEN
+    RAISE EXCEPTION 'current responsible-clinician context is required' USING ERRCODE='42501';
+  END IF;
+
+  -- Appointment -> queue -> encounter is the common lock order for both
+  -- lifecycle producers. The initial lookup is read-only and is rechecked
+  -- after all three locks are held.
+  SELECT * INTO encounter_row FROM clinical.encounters e WHERE e.id=p_encounter_id;
+  IF NOT FOUND OR encounter_row.appointment_id IS NULL THEN
+    RAISE EXCEPTION 'linked encounter was not found' USING ERRCODE='40001';
+  END IF;
+  SELECT * INTO appointment_row FROM clinical.appointments a
+   WHERE a.id=encounter_row.appointment_id FOR UPDATE;
+  IF NOT FOUND THEN RAISE EXCEPTION 'linked appointment was not found' USING ERRCODE='40001'; END IF;
+  SELECT * INTO queue_row FROM clinical.queue_entries q
+   WHERE q.appointment_id=appointment_row.id FOR UPDATE;
+  SELECT * INTO encounter_row FROM clinical.encounters e WHERE e.id=p_encounter_id FOR UPDATE;
+  IF NOT FOUND OR queue_row.id IS NULL OR encounter_row.appointment_id<>appointment_row.id
+     OR encounter_row.patient_person_id<>appointment_row.patient_person_id
+     OR encounter_row.facility_id<>appointment_row.facility_id
+     OR encounter_row.responsible_clinician_id<>appointment_row.doctor_person_id
+     OR encounter_row.responsible_clinician_id<>actor
+     OR encounter_row.version<>p_expected_version
+     OR encounter_row.status<>'open' OR appointment_row.status<>'in_consultation'
+     OR queue_row.state<>'in_service'
+     OR queue_row.facility_id<>appointment_row.facility_id
+     OR queue_row.doctor_person_id<>appointment_row.doctor_person_id
+     OR queue_row.civil_date<>appointment_row.civil_date
+     OR NOT EXISTS (
+       SELECT 1 FROM clinical.queue_scopes s
+       WHERE s.id=queue_row.queue_scope_id
+         AND s.facility_id=appointment_row.facility_id
+         AND s.doctor_person_id=appointment_row.doctor_person_id
+         AND s.civil_date=appointment_row.civil_date
+         AND s.timezone_name=appointment_row.timezone_name
+     )
+     OR NOT EXISTS (
+       SELECT 1 FROM clinical.encounter_participants p
+       WHERE p.encounter_id=encounter_row.id
+         AND p.person_id=actor AND p.role_code='responsible_clinician'
+         AND p.ended_at IS NULL
+     ) THEN
+    RAISE EXCEPTION 'encounter completion state, version, queue, or responsible-clinician scope is stale' USING ERRCODE='40001';
+  END IF;
+  SELECT EXISTS (
+    SELECT 1
+    FROM identity.facilities f
+    JOIN identity.facility_memberships m ON m.facility_id=f.id
+      AND m.person_id=actor AND m.role_code='doctor' AND m.membership_status='active'
+      AND m.valid_from<=platform.context_now()
+      AND (m.valid_until IS NULL OR m.valid_until>platform.context_now())
+    JOIN identity.professional_licenses l ON l.id=m.employment_license_id
+      AND l.person_id=actor AND l.profession='doctor' AND l.status='verified'
+      AND l.expires_on>=(platform.context_now() AT TIME ZONE 'UTC')::date
+    WHERE f.id=appointment_row.facility_id AND f.facility_status='active'
+  ) INTO authorized;
+  IF NOT authorized THEN
+    RAISE EXCEPTION 'current responsible-clinician membership or licence scope denied' USING ERRCODE='42501';
+  END IF;
+
+  completed_at_value := GREATEST(clock_timestamp(),encounter_row.started_at+interval '1 microsecond');
+  UPDATE clinical.encounters SET status='completed',ended_at=completed_at_value,
+    completion_summary=completion_summary_value,version=version+1,updated_at=completed_at_value
+  WHERE id=encounter_row.id AND status='open' AND version=p_expected_version;
+  IF NOT FOUND THEN RAISE EXCEPTION 'encounter version changed' USING ERRCODE='40001'; END IF;
+
+  PERFORM pg_catalog.set_config('shifaa.clinic_internal_transition','f010_complete_encounter',true);
+  UPDATE clinical.appointments SET status='completed',updated_by_person_id=actor WHERE id=appointment_row.id;
+  UPDATE clinical.queue_entries SET state='completed',completed_at=completed_at_value WHERE id=queue_row.id;
+  PERFORM pg_catalog.set_config('shifaa.clinic_internal_transition',COALESCE(old_transition,''),true);
+
+  response_value := pg_catalog.jsonb_build_object(
+    'encounter',pg_catalog.jsonb_build_object(
+      'id',encounter_row.id,'patientId',encounter_row.patient_person_id,
+      'facilityId',encounter_row.facility_id,'appointmentId',appointment_row.id,
+      'encounterType',encounter_row.encounter_type,
+      'responsibleClinicianId',encounter_row.responsible_clinician_id,'status','completed',
+      'startedAt',encounter_row.started_at,'endedAt',completed_at_value,
+      'completionSummary',completion_summary_value,'version',encounter_row.version+1,
+      'conditionIds',to_jsonb(encounter_row.condition_ids),
+      'observationIds',to_jsonb(encounter_row.observation_ids),
+      'orderIds',to_jsonb(encounter_row.order_ids)
+    ),
+    'appointmentId',appointment_row.id,'appointmentVersion',appointment_row.version+1,
+    'appointmentStatus','completed','queueEntryId',queue_row.id,
+    'queueVersion',queue_row.version+1,'queueStatus','completed','completedAt',completed_at_value
+  );
+  RETURN response_value;
+END $$;
+
+REVOKE ALL ON FUNCTION clinical.create_encounter_v1(jsonb),
+  clinical.complete_encounter_v1(uuid,integer,jsonb) FROM PUBLIC;
+DO $feature_010_producer_execute_deny$
+DECLARE role_name text;
+BEGIN
+  FOREACH role_name IN ARRAY ARRAY['shifaa_api','shifaa_worker','anon','authenticated','service_role'] LOOP
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname=role_name) THEN
+      EXECUTE format(
+        'REVOKE ALL ON FUNCTION clinical.create_encounter_v1(jsonb), clinical.complete_encounter_v1(uuid,integer,jsonb) FROM %I',
+        role_name
+      );
+    END IF;
+  END LOOP;
+END
+$feature_010_producer_execute_deny$;
+
+COMMENT ON FUNCTION clinical.create_encounter_v1(jsonb) IS
+  'F010 producer: current CLN context required; API execute grant is deferred until C07 binds approved care purpose and RLS policy.';
+COMMENT ON FUNCTION clinical.complete_encounter_v1(uuid,integer,jsonb) IS
+  'F010 producer: current responsible CLN context required; API execute grant is deferred until C07 binds approved care purpose and RLS policy.';
+
 COMMIT;
