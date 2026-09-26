@@ -1,12 +1,12 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** generated, all boxes open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01 accepted; T001–T003 complete, T004–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
 
 - Exactly `FR-CLINIC-006`, `FR-CLINIC-007`, `FR-FAC-006`; exactly 23 PATIENT ∪ REALTIME NFRs; exactly ten approved operation IDs. `PLAN_APPROVED` authorizes this ledger, not implementation or later gate closure.
-- All tasks are unchecked. Each checkpoint has a red test, one bounded implementation step, and a focused green check/evidence step, except the final two-task full-verification checkpoint. A task's completion requires its own acceptance evidence. Test-first means the red test must fail for the intended missing behavior, not broken fixtures or syntax.
+- Tasks are checked only after their checkpoint acceptance evidence passes. Each checkpoint has a red test, one bounded implementation step, and a focused green check/evidence step, except the final two-task full-verification checkpoint. A task's completion requires its own acceptance evidence. Test-first means the red test must fail for the intended missing behavior, not broken fixtures or syntax.
 - The dependency chain is intentionally serial across checkpoints because migration, F009 booking, authorization and shared DB/test state can interfere. No `[P]` tasks are declared; code-only work may be separately reapproved for parallel ownership after its predecessor is complete.
 - Use current standalone `shifaa-local-postgres` and local Supabase `shifaa-local-supabase`; tests use synthetic data. Do not reset/delete retired rollback volumes. Preserve F009 migrations, F009 external `createAppointment` behavior, and all approved Feature 010 reference PNGs.
 - No arbitrary workforce IDs on create; exactly one server-derived responsible-clinician interval initially. No participant-add API/picker. `updateEncounter` may end only a current non-responsible interval. Chat is body-only, appointment-context and open/in-consultation only; no attachment property, patient inbox, general consultation, offline write, Feature 011, prescription/safety or post-026 Polish work.
@@ -24,15 +24,15 @@ Semantic dependency order: `C01→C02→C03→C04→C05→C06→C07→C08→C09�
 **Independent outcome:** Machine checks reject scope drift before implementation.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T001 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-QUALITY-001] Write failing inventory tests for 3 FRs, 23 NFRs, 10 operation IDs, exactly AC-01–AC-14, eight gate IDs, approved baseline digest, and the F009 producer boundary; reject missing/duplicate ACs in the approved spec or checkpoint closure table — `tools/verify-feature-010-scope.test.mjs`
+- [X] T001 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-QUALITY-001] Write failing inventory tests for 3 FRs, 23 NFRs, 10 operation IDs, exactly AC-01–AC-14, eight gate IDs, approved baseline digest, and the F009 producer boundary; reject missing/duplicate ACs in the approved spec or checkpoint closure table — `tools/verify-feature-010-scope.test.mjs`
   - Depends on: `none`
   - Acceptance evidence: `node --test tools/verify-feature-010-scope.test.mjs fails only for the missing verifier`
 
-- [ ] T002 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-QUALITY-001] Implement the read-only scope verifier using the approved spec, plan, catalog, tasks AC-01–AC-14 closure table and manifest; add a focused test script without changing those authorities — `tools/verify-feature-010-scope.mjs; package.json`
+- [X] T002 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-QUALITY-001] Implement the read-only scope verifier using the approved spec, plan, catalog, tasks AC-01–AC-14 closure table and manifest; add a focused test script without changing those authorities — `tools/verify-feature-010-scope.mjs; package.json`
   - Depends on: `T001`
   - Acceptance evidence: `node tools/verify-feature-010-scope.mjs exits 0 on the frozen inventory and rejects injected drift`
 
-- [ ] T003 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-QUALITY-001] Run scope including the 14 AC inventory/closure mapping, baseline, and existing F009 scope/contract checks; record exact command results before DB work — `specs/010-encounters-referrals-contextual-chat/evidence/C01-scope.md`
+- [X] T003 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-QUALITY-001] Run scope including the 14 AC inventory/closure mapping, baseline, and existing F009 scope/contract checks; record exact command results before DB work — `specs/010-encounters-referrals-contextual-chat/evidence/C01-scope.md`
   - Depends on: `T002`
   - Acceptance evidence: `scope verifier, baseline validator, test:clinic-scheduling:scope and :contract pass`
 
