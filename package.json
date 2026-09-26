@@ -78,7 +78,7 @@
     "test:clinic-scheduling:privacy": "pnpm --filter @shifaa/observability exec node --test src/clinic-scheduling.test.ts && pnpm secrets:check && pnpm architecture:check && node tools/verify-feature-009-evidence.mjs --privacy",
     "test:clinic-scheduling:evidence": "node tools/verify-feature-009-evidence.mjs --all",
     "db:reset": "docker compose down -v && docker compose up -d --wait postgres && pnpm db:migrate",
-    "supabase:start": "supabase start",
+    "supabase:start": "supabase start --exclude vector",
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
     "supabase:reset": "supabase db reset --local",
