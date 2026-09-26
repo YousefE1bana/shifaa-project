@@ -75,6 +75,11 @@ const auditAdminOpenApiPath = path.join(
 const auditAdminContractModulePath = path.join(repoRoot, 'packages/contracts/src/audit-admin.ts');
 const auditAdminClientPath = path.join(repoRoot, 'packages/api-client/src/audit-admin.ts');
 const auditAdminRoutesPath = path.join(repoRoot, 'services/api/src/routes/audit-admin.ts');
+const feature010OpenApiPath = path.join(
+  repoRoot,
+  'specs/010-encounters-referrals-contextual-chat/contracts/openapi.yaml',
+);
+const feature010ContractModulePath = path.join(repoRoot, 'packages/contracts/src/feature-010.ts');
 const failures = [];
 
 function mustRead(file) {
@@ -476,6 +481,61 @@ for (const [operationId, operation] of auditAdminOpenApi) {
 if (!/@generated\b/i.test(auditAdminContractModule) || !/@generated\b/i.test(auditAdminClient))
   failures.push('Feature 008 contracts and client must both be generated artifacts.');
 
+const feature010OpenApiText = mustRead(feature010OpenApiPath);
+const feature010ContractModule = mustRead(feature010ContractModulePath);
+const feature010OpenApi = parseOpenApi(feature010OpenApiText);
+const feature010Operations = new Map([
+  ['createEncounter', { method: 'POST', path: '/encounters' }],
+  ['getEncounter', { method: 'GET', path: '/encounters/{encounterId}' }],
+  ['updateEncounter', { method: 'PATCH', path: '/encounters/{encounterId}' }],
+  ['signEncounterNote', { method: 'POST', path: '/encounters/{encounterId}/notes' }],
+  ['completeEncounter', { method: 'POST', path: '/encounters/{encounterId}/complete' }],
+  ['createReferral', { method: 'POST', path: '/encounters/{encounterId}/referrals' }],
+  ['listReferrals', { method: 'GET', path: '/referrals' }],
+  ['acceptReferral', { method: 'POST', path: '/referrals/{referralId}/accept' }],
+  ['listContextMessages', { method: 'GET', path: '/contexts/{contextType}/{contextId}/messages' }],
+  ['sendContextMessage', { method: 'POST', path: '/contexts/{contextType}/{contextId}/messages' }],
+]);
+if (!/^openapi:\s*3\.1\.1\s*$/m.test(feature010OpenApiText))
+  failures.push('Feature 010 planning contract must declare OpenAPI 3.1.1.');
+if (feature010OpenApi.size !== feature010Operations.size)
+  failures.push(
+    `Feature 010 OpenAPI must contain exactly 10 operations; found ${feature010OpenApi.size}.`,
+  );
+for (const [operationId, expectedOperation] of feature010Operations) {
+  const operation = feature010OpenApi.get(operationId);
+  if (!operation) {
+    failures.push(`Feature 010 operation is missing: ${operationId}.`);
+    continue;
+  }
+  if (operation.method !== expectedOperation.method || operation.path !== expectedOperation.path)
+    failures.push(
+      `${operationId} drift: Feature 010 OpenAPI ${operation.method} ${operation.path}; approved ${expectedOperation.method} ${expectedOperation.path}.`,
+    );
+}
+for (const [operationId, operation] of feature010OpenApi) {
+  if (!feature010Operations.has(operationId))
+    failures.push(`Feature 010 contains an unapproved operation: ${operationId}.`);
+  const canonical = catalog.get(operationId);
+  if (!canonical) {
+    failures.push(`Feature 010 operation ${operationId} is absent from the canonical API catalog.`);
+    continue;
+  }
+  if (canonical.method !== operation.method || canonical.path !== operation.path)
+    failures.push(
+      `${operationId} drift: Feature 010 OpenAPI ${operation.method} ${operation.path}; catalog ${canonical.method} ${canonical.path}.`,
+    );
+  for (const requirement of canonical.requirements)
+    if (!operation.requirements.includes(requirement))
+      failures.push(
+        `${operationId} is missing catalog requirement ${requirement} in Feature 010 x-shifaa-requirements.`,
+      );
+  if (!new RegExp(`\\b${operationId}\\b`).test(feature010ContractModule))
+    failures.push(`Feature 010 generated contract module is missing ${operationId}.`);
+}
+if (!/@generated\b/i.test(feature010ContractModule))
+  failures.push('Feature 010 contract module is missing its generated artifact marker.');
+
 if (failures.length > 0) {
   console.error('Contract verification failed:');
   for (const failure of failures.sort()) console.error(`- ${failure}`);
@@ -483,5 +543,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  'Contract verification passed: 87 OpenAPI operations match the catalog, generated contracts, generated clients, and registered feature routes.',
+  'Contract verification passed: 97 OpenAPI operations match the catalog and generated contracts; implemented clients and routes match where registered.',
 );

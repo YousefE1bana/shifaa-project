@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01 accepted; T001–T003 complete, T004–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C02 accepted; T001–T006 complete, T007–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -41,15 +41,15 @@ Semantic dependency order: `C01→C02→C03→C04→C05→C06→C07→C08→C09�
 **Independent outcome:** Typed source matches the ten approved planning operations.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T004 [NFR-API-001, NFR-API-002, NFR-SEC-005] Write red tests for closed request schemas, role projections, RFC 9457 problems, seven Idempotency-Key mutations, three If-Match mutations, and 25/100 cursor limits — `packages/contracts/src/feature-010.test.ts`
+- [X] T004 [NFR-API-001, NFR-API-002, NFR-SEC-005] Write red tests for closed request schemas, role projections, RFC 9457 problems, seven Idempotency-Key mutations, three If-Match mutations, and 25/100 cursor limits — `packages/contracts/src/feature-010.test.ts`
   - Depends on: `T003`
   - Acceptance evidence: `focused contract test fails only for missing generated Feature 010 schemas`
 
-- [ ] T005 [NFR-API-001, NFR-API-002, NFR-SEC-005] Add a deterministic generator from the approved OpenAPI 3.1.1 planning source and generate the typed contract module; preserve exactly ten operation IDs — `tools/generate-feature-010-contract.mjs; packages/contracts/src/feature-010.ts; packages/contracts/src/index.ts`
+- [X] T005 [NFR-API-001, NFR-API-002, NFR-SEC-005] Add a deterministic generator from the approved OpenAPI 3.1.1 planning source and generate the typed contract module; preserve exactly ten operation IDs — `tools/generate-feature-010-contract.mjs; packages/contracts/src/feature-010.ts; packages/contracts/src/index.ts`
   - Depends on: `T004`
   - Acceptance evidence: `regeneration has zero diff and focused contract tests pass`
 
-- [ ] T006 [NFR-API-001, NFR-API-002, NFR-QUALITY-001] Register contract parity in the existing verifier and run the focused generated-schema check — `tools/verify-contracts.mjs; specs/010-encounters-referrals-contextual-chat/evidence/C02-contract.md`
+- [X] T006 [NFR-API-001, NFR-API-002, NFR-QUALITY-001] Register contract parity in the existing verifier and run the focused generated-schema check — `tools/verify-contracts.mjs; specs/010-encounters-referrals-contextual-chat/evidence/C02-contract.md`
   - Depends on: `T005`
   - Acceptance evidence: `corepack pnpm contracts:check passes with 10 Feature 010 IDs and no extra route`
 

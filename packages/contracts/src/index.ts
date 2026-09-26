@@ -6,3 +6,4 @@ export * from './discovery-sos.js';
 export * from './identity-continuity.js';
 export * from './audit-admin.js';
 export * from './clinic-scheduling.js';
+export * from './feature-010.js';
