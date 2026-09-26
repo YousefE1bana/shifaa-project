@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C02 accepted; T001–T006 complete, T007–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C03 accepted; T001–T009 complete, T010–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -60,15 +60,15 @@ Semantic dependency order: `C01→C02→C03→C04→C05→C06→C07→C08→C09�
 
 C03 intentionally precedes DB/API implementation: its stable typed boundary is consumed by later checkpoints. Generating and testing this client does not imply a Feature 010 backend exists yet.
 
-- [ ] T007 [NFR-API-001, NFR-SEC-003, NFR-SEC-004] Write red client tests for headers, actor context, no-store responses, 401/403/409/422 problems, and absence of direct PostgREST clinical writes — `packages/api-client/src/feature-010.test.ts`
+- [X] T007 [NFR-API-001, NFR-SEC-003, NFR-SEC-004] Write red client tests for headers, actor context, no-store responses, 401/403/409/422 problems, and absence of direct PostgREST clinical writes — `packages/api-client/src/feature-010.test.ts`
   - Depends on: `T006`
   - Acceptance evidence: `focused client test fails only for absent Feature 010 client`
 
-- [ ] T008 [NFR-API-001, NFR-SEC-003, NFR-SEC-004] Generate the contract-only Feature 010 API client directly from the approved OpenAPI source and export it; reuse current bearer/AAL session handling without assuming implemented backend routes — `packages/api-client/src/feature-010.ts; packages/api-client/src/index.ts; packages/api-client/package.json`
+- [X] T008 [NFR-API-001, NFR-SEC-003, NFR-SEC-004] Generate the contract-only Feature 010 API client directly from the approved OpenAPI source and export it; reuse current bearer/AAL session handling without assuming implemented backend routes — `packages/api-client/src/feature-010.ts; packages/api-client/src/index.ts; packages/api-client/package.json`
   - Depends on: `T007`
   - Acceptance evidence: `client regeneration is stable; no handwritten endpoint or shadow session`
 
-- [ ] T009 [NFR-API-001, NFR-SEC-003, NFR-QUALITY-001] Run contract/client tests and prove the operation inventory and generated markers — `specs/010-encounters-referrals-contextual-chat/evidence/C03-client.md`
+- [X] T009 [NFR-API-001, NFR-SEC-003, NFR-QUALITY-001] Run contract/client tests and prove the operation inventory and generated markers — `specs/010-encounters-referrals-contextual-chat/evidence/C03-client.md`
   - Depends on: `T008`
   - Acceptance evidence: `corepack pnpm --filter @shifaa/api-client test and contracts:check pass`
 

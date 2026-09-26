@@ -12,13 +12,16 @@
     "./discovery-sos": "./src/discovery-sos.ts",
     "./identity-continuity": "./src/identity-continuity.ts",
     "./audit-admin": "./src/audit-admin.ts",
-    "./clinic-scheduling": "./src/clinic-scheduling.ts"
+    "./clinic-scheduling": "./src/clinic-scheduling.ts",
+    "./feature-010": "./src/feature-010.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "tsc -p tsconfig.json --noEmit",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --exclude='dist/**'"
+    "test": "vitest run --exclude='dist/**'",
+    "generate:feature-010": "node ../../tools/generate-feature-010-client.mjs",
+    "generate:feature-010:check": "node ../../tools/generate-feature-010-client.mjs --check"
   },
   "dependencies": {
     "@shifaa/contracts": "workspace:*"

@@ -80,6 +80,7 @@ const feature010OpenApiPath = path.join(
   'specs/010-encounters-referrals-contextual-chat/contracts/openapi.yaml',
 );
 const feature010ContractModulePath = path.join(repoRoot, 'packages/contracts/src/feature-010.ts');
+const feature010ClientPath = path.join(repoRoot, 'packages/api-client/src/feature-010.ts');
 const failures = [];
 
 function mustRead(file) {
@@ -483,6 +484,7 @@ if (!/@generated\b/i.test(auditAdminContractModule) || !/@generated\b/i.test(aud
 
 const feature010OpenApiText = mustRead(feature010OpenApiPath);
 const feature010ContractModule = mustRead(feature010ContractModulePath);
+const feature010Client = mustRead(feature010ClientPath);
 const feature010OpenApi = parseOpenApi(feature010OpenApiText);
 const feature010Operations = new Map([
   ['createEncounter', { method: 'POST', path: '/encounters' }],
@@ -532,9 +534,27 @@ for (const [operationId, operation] of feature010OpenApi) {
       );
   if (!new RegExp(`\\b${operationId}\\b`).test(feature010ContractModule))
     failures.push(`Feature 010 generated contract module is missing ${operationId}.`);
+  if (!new RegExp(`\\b${operationId}\\b`).test(feature010Client))
+    failures.push(`Feature 010 generated client is missing ${operationId}.`);
 }
 if (!/@generated\b/i.test(feature010ContractModule))
   failures.push('Feature 010 contract module is missing its generated artifact marker.');
+if (!/@generated\b/i.test(feature010Client))
+  failures.push('Feature 010 API client is missing its generated artifact marker.');
+const feature010ClientInventoryMatch = feature010Client.match(
+  /export const generatedFeature010OperationIds = \[([\s\S]*?)\] as const;/,
+);
+if (!feature010ClientInventoryMatch) {
+  failures.push('Feature 010 API client is missing its generated operation inventory.');
+} else {
+  const feature010ClientOperations = [
+    ...feature010ClientInventoryMatch[1].matchAll(/'([^']+)'/g),
+  ].map(([, operationId]) => operationId);
+  if (
+    JSON.stringify(feature010ClientOperations) !== JSON.stringify([...feature010Operations.keys()])
+  )
+    failures.push('Feature 010 API client must contain exactly the ten approved operations.');
+}
 
 if (failures.length > 0) {
   console.error('Contract verification failed:');
