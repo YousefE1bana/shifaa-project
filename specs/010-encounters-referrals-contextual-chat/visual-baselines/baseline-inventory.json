@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "sourceVersion": "SHIFAA-F010-P0-SOURCE@0.3.0-test-only",
+  "recordedAt": "2026-09-26T00:00:00+03:00",
+  "locales": ["ar-EG", "en-EG"],
+  "routes": [
+    {
+      "baselineId": "F010-P0-PAT-RECORDS-001",
+      "app": "patient",
+      "route": "/records",
+      "viewports": ["360x800", "412x915", "768x1024"],
+      "states": ["loading", "empty", "pending", "referral-preview", "acceptance-review", "representative-acceptance-review", "submitting", "accepted", "permission-denied", "authority-lost", "stale", "offline", "conflict", "error-recoverable", "error-terminal"]
+    },
+    {
+      "baselineId": "F010-P0-PAT-ENCOUNTER-001",
+      "app": "patient",
+      "route": "/encounters/:id",
+      "viewports": ["360x800", "412x915", "768x1024"],
+      "states": ["loading", "empty", "open", "patient-visible-note", "private-note-excluded", "chat-stale", "reconnecting", "access-ended", "completed", "permission-denied", "offline", "conflict", "message-success", "error-recoverable", "error-terminal"]
+    },
+    {
+      "baselineId": "F010-P0-CLN-SUMMARY-001",
+      "app": "clinic",
+      "route": "/patients/:id/summary",
+      "viewports": ["768x1024", "1440x900"],
+      "states": ["loading", "empty", "active", "start-eligible", "start-review", "start-stale", "private-note", "patient-visible-note", "permission-denied", "stale", "offline", "error-recoverable", "error-terminal"]
+    },
+    {
+      "baselineId": "F010-P0-CLN-ENCOUNTER-001",
+      "app": "clinic",
+      "route": "/encounters/:id",
+      "viewports": ["768x1024", "1440x900"],
+      "states": ["loading", "empty", "created", "open", "note-draft-edit", "note-sign-review", "note-signed", "participant-edit", "participant-end-review", "participant-removed", "completion-review", "completed", "permission-denied", "stale", "offline", "conflict", "error-recoverable", "error-terminal"]
+    },
+    {
+      "baselineId": "F010-P0-CLN-REFERRALS-001",
+      "app": "clinic",
+      "route": "/referrals",
+      "viewports": ["768x1024", "1440x900"],
+      "states": ["loading", "empty", "pending", "accepted", "create-review", "create-success", "permission-denied", "stale", "offline", "conflict", "error-recoverable", "error-terminal"]
+    },
+    {
+      "baselineId": "F010-P0-CLN-MESSAGES-001",
+      "app": "clinic",
+      "route": "/messages",
+      "viewports": ["768x1024", "1440x900"],
+      "states": ["loading", "empty", "active", "send-success", "participant-removed", "access-ended", "chat-unavailable", "reconnecting", "stale", "offline", "permission-denied", "conflict", "error-recoverable", "error-terminal"]
+    }
+  ]
+}

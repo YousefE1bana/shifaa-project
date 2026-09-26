@@ -1,0 +1,689 @@
+openapi: 3.1.1
+info:
+  title: SHIFAA Feature 010 API planning contract
+  version: 0.1.0-plan
+  description: >-
+    Exactly ten existing Feature 010 operations. This planning contract is not
+    generated implementation/client or physical RLS evidence for OPEN-TECH-002.
+    All clinical requests require current authorization; responses are role-projected.
+servers:
+  - url: /v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Encounters
+  - name: Referrals
+  - name: ContextMessages
+paths:
+  /encounters:
+    post:
+      tags: [Encounters]
+      operationId: createEncounter
+      x-shifaa-requirements: [FR-CLINIC-006]
+      description: >-
+        Current licensed treating CLN only. Atomically lock checked_in appointment
+        and matching called queue; derive the responsible clinician from the linked
+        appointment and current authorized treating-clinician context, create open
+        encounter and only that clinician's active workforce interval, then set
+        appointment in_consultation and queue in_service. Client workforce IDs,
+        missing queue, mismatched scope, or existing open encounter fail closed.
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateEncounterRequest' }
+      responses:
+        '201': { $ref: '#/components/responses/EncounterCreated' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, validation-failed, state-transition-invalid, version-conflict, idempotency-key-reused, idempotency-in-progress, rate-limited]
+  /encounters/{encounterId}:
+    get:
+      tags: [Encounters]
+      operationId: getEncounter
+      x-shifaa-requirements: [FR-CLINIC-006]
+      description: >-
+        PAT self, current authorized GUA/DEL record projection, or current treating
+        CLN. Private notes are visible only to the current treating care team;
+        patient_visible notes require current subject record authority.
+      parameters:
+        - $ref: '#/components/parameters/EncounterId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - name: fields
+          in: query
+          description: Optional projection selector; cannot expand current authorization.
+          schema:
+            type: array
+            uniqueItems: true
+            items: { type: string, enum: [notes, conditions, observations, orders, participants] }
+          style: form
+          explode: false
+      responses:
+        '200': { $ref: '#/components/responses/Encounter' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, rate-limited]
+    patch:
+      tags: [Encounters]
+      operationId: updateEncounter
+      x-shifaa-requirements: [FR-CLINIC-006]
+      description: >-
+        Treating CLN may update an open encounter's permitted structured facts
+        and optional existing same-subject references. It may end an active
+        non-responsible workforce participant interval after explicit clinic UI
+        confirmation; it cannot add a participant or end the responsible
+        clinician's interval while the encounter is open.
+      parameters:
+        - $ref: '#/components/parameters/EncounterId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateEncounterRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/Encounter' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, validation-failed, state-transition-invalid, version-conflict, idempotency-key-reused, idempotency-in-progress, rate-limited]
+  /encounters/{encounterId}/notes:
+    post:
+      tags: [Encounters]
+      operationId: signEncounterNote
+      x-shifaa-requirements: [FR-CLINIC-006]
+      description: >-
+        Append encrypted signed note. Correction is a new same-encounter signed
+        version by the original author or current responsible clinician, under
+        current treating authority. No prior signed body/visibility is overwritten.
+      parameters:
+        - $ref: '#/components/parameters/EncounterId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SignEncounterNoteRequest' }
+      responses:
+        '201': { $ref: '#/components/responses/SignedNote' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, validation-failed, state-transition-invalid, idempotency-key-reused, idempotency-in-progress, rate-limited]
+  /encounters/{encounterId}/complete:
+    post:
+      tags: [Encounters]
+      operationId: completeEncounter
+      x-shifaa-requirements: [FR-CLINIC-006]
+      description: >-
+        Responsible clinician only. Nonblank authored summary plus true structural
+        confirmation atomically completes open encounter, in_consultation appointment
+        and in_service queue. Zero condition/observation/order references is valid;
+        completion immediately ends all context message access.
+      parameters:
+        - $ref: '#/components/parameters/EncounterId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CompleteEncounterRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/EncounterCompleted' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, validation-failed, state-transition-invalid, version-conflict, idempotency-key-reused, idempotency-in-progress, rate-limited]
+  /encounters/{encounterId}/referrals:
+    post:
+      tags: [Referrals]
+      operationId: createReferral
+      x-shifaa-requirements: [FR-CLINIC-007]
+      description: >-
+        Current treating CLN creates pending internal referral. Target receives
+        no content before explicit subject acceptance. No clinical-note body copied.
+      parameters:
+        - $ref: '#/components/parameters/EncounterId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateReferralRequest' }
+      responses:
+        '201': { $ref: '#/components/responses/Referral' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, validation-failed, state-transition-invalid, idempotency-key-reused, idempotency-in-progress, rate-limited]
+  /referrals:
+    get:
+      tags: [Referrals]
+      operationId: listReferrals
+      x-shifaa-requirements: [FR-CLINIC-007]
+      description: >-
+        Every page rechecks PAT self, active approved GUA guardianship, DEL with
+        both current record.view and appointment.manage, source treating CLN, or
+        accepted-target CLN with linked target appointment/current facility authority.
+        Result is role-projected; target never sees pending or unselected content.
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - { name: patientId, in: query, schema: { $ref: '#/components/schemas/Uuid' } }
+        - { name: facilityId, in: query, schema: { $ref: '#/components/schemas/Uuid' } }
+        - { name: specialty, in: query, schema: { type: string, minLength: 1, maxLength: 120 } }
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/ReferralStatus' } }
+        - { name: date, in: query, schema: { type: string, format: date } }
+      responses:
+        '200': { $ref: '#/components/responses/ReferralPage' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, validation-failed, rate-limited]
+  /referrals/{referralId}/accept:
+    post:
+      tags: [Referrals]
+      operationId: acceptReferral
+      x-shifaa-requirements: [FR-CLINIC-007]
+      description: >-
+        PAT self, current approved GUA, or DEL with current record.view AND
+        appointment.manage explicitly authorizes exact displayed fields. Recheck
+        authority and pending version. The selected slot must match the referral
+        specialty and each specified target doctor/facility using authoritative
+        Feature 009 eligibility data; mismatch fails before booking. Atomically
+        book one Feature 009-safe confirmed appointment, mark referral accepted,
+        record selected fields, and disclose only those fields. The server derives
+        the fee and fixes EGP/cash_on_arrival. Failure creates no booking/disclosure.
+      parameters:
+        - $ref: '#/components/parameters/ReferralId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AcceptReferralRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/ReferralAccepted' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, validation-failed, state-transition-invalid, version-conflict, slot-no-longer-available, idempotency-key-reused, idempotency-in-progress, rate-limited]
+  /contexts/{contextType}/{contextId}/messages:
+    get:
+      tags: [ContextMessages]
+      operationId: listContextMessages
+      x-shifaa-requirements: [FR-FAC-006]
+      description: >-
+        Appointment linked to open encounter/in_consultation only. Subject PAT
+        or CLN with active encounter_participants interval; GUA/DEL denied.
+        Reauthorize each page and after reconnect; ended contexts deny history.
+      parameters:
+        - $ref: '#/components/parameters/ContextType'
+        - $ref: '#/components/parameters/ContextId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200': { $ref: '#/components/responses/MessagePage' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, state-transition-invalid, rate-limited]
+    post:
+      tags: [ContextMessages]
+      operationId: sendContextMessage
+      x-shifaa-requirements: [FR-FAC-006]
+      description: >-
+        Same live appointment context/participant checks as list. Body only;
+        presence of attachment, including JSON null, is invalid and storage
+        attachment stays SQL NULL. Offline clinical sends are not queued.
+      parameters:
+        - $ref: '#/components/parameters/ContextType'
+        - $ref: '#/components/parameters/ContextId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SendContextMessageRequest' }
+      responses:
+        '201': { $ref: '#/components/responses/Message' }
+        default: { $ref: '#/components/responses/Problem' }
+      x-shifaa-problem-codes: [authentication-required, mfa-required, purpose-required, forbidden, not-found, validation-failed, state-transition-invalid, idempotency-key-reused, idempotency-in-progress, rate-limited]
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer }
+  parameters:
+    Locale:
+      name: Accept-Language
+      in: header
+      schema: { type: string, enum: [ar-EG, en-EG], default: ar-EG }
+    RequestId:
+      name: X-Request-Id
+      in: header
+      schema: { $ref: '#/components/schemas/Uuid' }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, minLength: 16, maxLength: 128 }
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      description: Quoted current positive version, e.g. "3".
+      schema: { type: string, pattern: '^"[1-9][0-9]*"$' }
+    EncounterId: { name: encounterId, in: path, required: true, schema: { $ref: '#/components/schemas/Uuid' } }
+    ReferralId: { name: referralId, in: path, required: true, schema: { $ref: '#/components/schemas/Uuid' } }
+    ContextType: { name: contextType, in: path, required: true, schema: { type: string, const: appointment } }
+    ContextId: { name: contextId, in: path, required: true, schema: { $ref: '#/components/schemas/Uuid' } }
+    Cursor: { name: cursor, in: query, schema: { type: string, maxLength: 512 } }
+    Limit: { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 25 } }
+  responses:
+    Problem:
+      description: >-
+        RFC 9457 problem. Applicable stable codes are listed on each operation.
+        authentication-required=401; forbidden/mfa-required/purpose-required=403;
+        hidden or missing not-found=404; validation-failed=422;
+        state-transition-invalid/version-conflict/slot-no-longer-available/
+        idempotency-key-reused/idempotency-in-progress=409; rate-limited=429.
+      headers:
+        Cache-Control: { schema: { type: string, const: 'private, no-store' } }
+        X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }
+        Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    EncounterCreated: { description: Atomic encounter/appointment/queue start, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/EncounterStartResult' } } } }
+    Encounter: { description: Currently authorized encounter projection, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/EncounterProjection' } } } }
+    SignedNote: { description: Immutable signed version returned only to the authorized signing CLN, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/CareTeamNoteProjection' } } } }
+    EncounterCompleted: { description: Atomic triple completion, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/EncounterCompleteResult' } } } }
+    Referral: { description: Internal pending referral to authorized source care, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/PendingSourceReferralProjection' } } } }
+    ReferralPage: { description: Current-authority role-projected referrals, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/ReferralPage' } } } }
+    ReferralAccepted: { description: Accepted referral with linked Feature 009 booking, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/ReferralAcceptanceResult' } } } }
+    MessagePage: { description: Currently authorized context messages, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/MessagePage' } } } }
+    Message: { description: Body-only message, headers: { Cache-Control: { schema: { type: string, const: 'private, no-store' } }, X-Request-Id: { schema: { $ref: '#/components/schemas/Uuid' } }, Content-Language: { schema: { type: string, enum: [ar-EG, en-EG] } } }, content: { application/json: { schema: { $ref: '#/components/schemas/MessageProjection' } } } }
+  schemas:
+    Uuid: { type: string, format: uuid }
+    Version: { type: integer, minimum: 1 }
+    EncounterStatus: { type: string, enum: [open, completed] }
+    ReferralStatus: { type: string, enum: [pending, accepted] }
+    NoteVisibility: { type: string, enum: [private, patient_visible] }
+    AcceptedFieldCodes:
+      oneOf:
+        - { type: array, const: [reason_summary] }
+        - { type: array, const: [reason_summary, encounter_type] }
+    ParticipantIntervalEnd:
+      type: object
+      additionalProperties: false
+      description: Identifies an existing active non-responsible interval returned in the authorized encounter projection; the server rechecks exact interval identity and current authority under lock. Arbitrary person IDs cannot create membership.
+      required: [personId, roleCode, startedAt]
+      properties:
+        personId: { $ref: '#/components/schemas/Uuid' }
+        roleCode: { type: string, minLength: 1, maxLength: 80 }
+        startedAt: { type: string, format: date-time }
+    CreateEncounterRequest:
+      type: object
+      additionalProperties: false
+      required: [appointmentId, patientId, encounterType]
+      properties:
+        appointmentId: { $ref: '#/components/schemas/Uuid' }
+        patientId: { $ref: '#/components/schemas/Uuid' }
+        encounterType: { type: string, minLength: 1, maxLength: 120 }
+    UpdateEncounterRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        conditionIds: { type: array, uniqueItems: true, items: { $ref: '#/components/schemas/Uuid' } }
+        observationIds: { type: array, uniqueItems: true, items: { $ref: '#/components/schemas/Uuid' } }
+        orderIds: { type: array, uniqueItems: true, items: { $ref: '#/components/schemas/Uuid' } }
+        participantIntervalsEnd: { type: array, minItems: 1, uniqueItems: true, items: { $ref: '#/components/schemas/ParticipantIntervalEnd' } }
+    SignEncounterNoteRequest:
+      type: object
+      additionalProperties: false
+      required: [noteType, body, visibility]
+      properties:
+        noteType: { type: string, minLength: 1, maxLength: 120 }
+        body: { type: string, minLength: 1 }
+        visibility: { $ref: '#/components/schemas/NoteVisibility' }
+        supersedesId: { $ref: '#/components/schemas/Uuid' }
+    CompleteEncounterRequest:
+      type: object
+      additionalProperties: false
+      required: [summary, structuralConfirmation]
+      properties:
+        summary: { type: string, minLength: 1, description: Nonblank after whitespace trim; clinician authored, no medical-content sufficiency threshold. }
+        structuralConfirmation: { type: boolean, const: true }
+    CreateReferralRequest:
+      type: object
+      additionalProperties: false
+      required: [targetSpecialty, reasonSummary]
+      properties:
+        targetSpecialty: { type: string, minLength: 1, maxLength: 120 }
+        targetFacilityId: { $ref: '#/components/schemas/Uuid' }
+        targetDoctorId: { $ref: '#/components/schemas/Uuid' }
+        reasonSummary: { type: string, minLength: 1 }
+        encounterType: { type: string, description: Optional source-encounter value; server validates equality with the locked source. }
+    TargetSlot:
+      type: object
+      additionalProperties: false
+      description: Client supplies slot identity/version only; server derives fee and currency and fixes EGP/cash_on_arrival.
+      required: [facilityId, doctorId, startsAt, endsAt, timezone, civilDate, availabilityVersion]
+      properties:
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        timezone: { type: string, minLength: 1 }
+        civilDate: { type: string, format: date }
+        availabilityVersion: { $ref: '#/components/schemas/Version' }
+    AcceptReferralRequest:
+      type: object
+      additionalProperties: false
+      required: [authorizedFieldCodes, targetSlot]
+      properties:
+        authorizedFieldCodes: { $ref: '#/components/schemas/AcceptedFieldCodes' }
+        targetSlot: { $ref: '#/components/schemas/TargetSlot' }
+    SendContextMessageRequest:
+      type: object
+      additionalProperties: false
+      required: [body]
+      description: Any attachment property, even null, is rejected; stored attachment is SQL NULL.
+      properties:
+        body: { type: string, minLength: 1 }
+    CareTeamNoteProjection:
+      type: object
+      additionalProperties: false
+      description: CLN only under current treating authority; includes private and patient_visible signed notes.
+      required: [id, encounterId, authorId, noteType, visibility, signedAt, body]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        encounterId: { $ref: '#/components/schemas/Uuid' }
+        authorId: { $ref: '#/components/schemas/Uuid' }
+        noteType: { type: string }
+        visibility: { $ref: '#/components/schemas/NoteVisibility' }
+        signedAt: { type: string, format: date-time }
+        supersedesId: { $ref: '#/components/schemas/Uuid' }
+        body: { type: string }
+    SubjectNoteProjection:
+      type: object
+      additionalProperties: false
+      description: PAT or currently authorized GUA/DEL record projection; private notes are structurally excluded.
+      required: [id, encounterId, authorId, noteType, visibility, signedAt, body]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        encounterId: { $ref: '#/components/schemas/Uuid' }
+        authorId: { $ref: '#/components/schemas/Uuid' }
+        noteType: { type: string }
+        visibility: { type: string, const: patient_visible }
+        signedAt: { type: string, format: date-time }
+        supersedesId: { $ref: '#/components/schemas/Uuid' }
+        body: { type: string }
+    ParticipantProjection:
+      type: object
+      additionalProperties: false
+      description: Authorized active and historical workforce intervals; absence of endedAt means active. The responsible clinician remains non-removable while the encounter is open.
+      required: [personId, roleCode, startedAt]
+      properties:
+        personId: { $ref: '#/components/schemas/Uuid' }
+        roleCode: { type: string }
+        startedAt: { type: string, format: date-time }
+        endedAt: { type: string, format: date-time }
+    EncounterProjection:
+      description: Server selects care-team or subject branch from current authority; requested fields cannot widen it.
+      anyOf:
+        - { $ref: '#/components/schemas/CareTeamEncounterProjection' }
+        - { $ref: '#/components/schemas/SubjectEncounterProjection' }
+    CareTeamEncounterProjection:
+      type: object
+      additionalProperties: false
+      description: Current treating CLN only.
+      required: [id, patientId, facilityId, appointmentId, encounterType, responsibleClinicianId, status, startedAt, version]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        patientId: { $ref: '#/components/schemas/Uuid' }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        appointmentId: { $ref: '#/components/schemas/Uuid' }
+        encounterType: { type: string }
+        responsibleClinicianId: { $ref: '#/components/schemas/Uuid' }
+        status: { $ref: '#/components/schemas/EncounterStatus' }
+        startedAt: { type: string, format: date-time }
+        endedAt: { type: string, format: date-time }
+        completionSummary: { type: string, description: Only in a currently authorized record projection. }
+        version: { $ref: '#/components/schemas/Version' }
+        conditionIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        observationIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        orderIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        notes: { type: array, items: { $ref: '#/components/schemas/CareTeamNoteProjection' } }
+        participants: { type: array, items: { $ref: '#/components/schemas/ParticipantProjection' } }
+    SubjectEncounterProjection:
+      type: object
+      additionalProperties: false
+      description: PAT or currently authorized GUA/DEL record projection; notes are patient_visible only.
+      required: [id, patientId, facilityId, appointmentId, encounterType, responsibleClinicianId, status, startedAt, version]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        patientId: { $ref: '#/components/schemas/Uuid' }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        appointmentId: { $ref: '#/components/schemas/Uuid' }
+        encounterType: { type: string }
+        responsibleClinicianId: { $ref: '#/components/schemas/Uuid' }
+        status: { $ref: '#/components/schemas/EncounterStatus' }
+        startedAt: { type: string, format: date-time }
+        endedAt: { type: string, format: date-time }
+        completionSummary: { type: string, description: Only under current subject record authority. }
+        version: { $ref: '#/components/schemas/Version' }
+        conditionIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        observationIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        orderIds: { type: array, items: { $ref: '#/components/schemas/Uuid' } }
+        notes: { type: array, items: { $ref: '#/components/schemas/SubjectNoteProjection' } }
+        participants: { type: array, items: { $ref: '#/components/schemas/ParticipantProjection' } }
+    EncounterStartResult:
+      type: object
+      additionalProperties: false
+      required: [encounter, appointmentStatus, queueStatus, queueEntryId]
+      properties:
+        encounter: { $ref: '#/components/schemas/CareTeamEncounterProjection' }
+        appointmentStatus: { type: string, const: in_consultation }
+        queueStatus: { type: string, const: in_service }
+        queueEntryId: { $ref: '#/components/schemas/Uuid' }
+    EncounterCompleteResult:
+      type: object
+      additionalProperties: false
+      required: [encounter, appointmentId, appointmentVersion, appointmentStatus, queueEntryId, queueVersion, queueStatus, completedAt]
+      properties:
+        encounter: { $ref: '#/components/schemas/CareTeamEncounterProjection' }
+        appointmentId: { $ref: '#/components/schemas/Uuid' }
+        appointmentVersion: { $ref: '#/components/schemas/Version' }
+        appointmentStatus: { type: string, const: completed }
+        queueStatus: { type: string, const: completed }
+        queueEntryId: { $ref: '#/components/schemas/Uuid' }
+        queueVersion: { $ref: '#/components/schemas/Version' }
+        completedAt: { type: string, format: date-time }
+    ReferralProjection:
+      description: >-
+        Server selects the actor/status/accepted-field branch under current authority.
+        Target CLN receives accepted linked referrals only; no pending target branch exists.
+      anyOf:
+        - { $ref: '#/components/schemas/PendingSourceReferralProjection' }
+        - { $ref: '#/components/schemas/PendingSubjectReferralProjection' }
+        - { $ref: '#/components/schemas/AcceptedSourceReferralProjection' }
+        - { $ref: '#/components/schemas/AcceptedSubjectReferralProjection' }
+        - { $ref: '#/components/schemas/AcceptedTargetReasonReferralProjection' }
+        - { $ref: '#/components/schemas/AcceptedTargetReasonAndTypeReferralProjection' }
+    PendingSourceReferralProjection:
+      type: object
+      additionalProperties: false
+      description: Pending internal preview for currently authorized source treating CLN only.
+      required: [id, sourceEncounterId, status, version, targetSpecialty, reasonSummary]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        sourceEncounterId: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, const: pending }
+        version: { $ref: '#/components/schemas/Version' }
+        targetSpecialty: { type: string }
+        targetFacilityId: { $ref: '#/components/schemas/Uuid' }
+        targetDoctorId: { $ref: '#/components/schemas/Uuid' }
+        reasonSummary: { type: string }
+        encounterType: { type: string, description: Optional source encounter value proposed for disclosure. }
+    PendingSubjectReferralProjection:
+      type: object
+      additionalProperties: false
+      description: Pending preview for PAT or live-authorized GUA/DEL; target CLN cannot read it.
+      required: [id, sourceEncounterId, status, version, targetSpecialty, reasonSummary]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        sourceEncounterId: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, const: pending }
+        version: { $ref: '#/components/schemas/Version' }
+        targetSpecialty: { type: string }
+        targetFacilityId: { $ref: '#/components/schemas/Uuid' }
+        targetDoctorId: { $ref: '#/components/schemas/Uuid' }
+        reasonSummary: { type: string }
+        encounterType: { type: string, description: Optional source encounter value proposed for explicit selection. }
+    AcceptedSourceReferralProjection:
+      type: object
+      additionalProperties: false
+      description: Accepted referral tracking for currently authorized source treating CLN.
+      required: [id, sourceEncounterId, status, version, targetSpecialty, reasonSummary, acceptedFieldCodes, resultingAppointmentId]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        sourceEncounterId: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, const: accepted }
+        version: { $ref: '#/components/schemas/Version' }
+        targetSpecialty: { type: string }
+        targetFacilityId: { $ref: '#/components/schemas/Uuid' }
+        targetDoctorId: { $ref: '#/components/schemas/Uuid' }
+        reasonSummary: { type: string }
+        encounterType: { type: string, description: Optional original source value; target gets it only if selected. }
+        acceptedFieldCodes: { $ref: '#/components/schemas/AcceptedFieldCodes' }
+        resultingAppointmentId: { $ref: '#/components/schemas/Uuid' }
+    AcceptedSubjectReferralProjection:
+      type: object
+      additionalProperties: false
+      description: Accepted referral for PAT or live-authorized GUA/DEL; later grant loss denies future reads.
+      required: [id, sourceEncounterId, status, version, targetSpecialty, reasonSummary, acceptedFieldCodes, resultingAppointmentId]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        sourceEncounterId: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, const: accepted }
+        version: { $ref: '#/components/schemas/Version' }
+        targetSpecialty: { type: string }
+        targetFacilityId: { $ref: '#/components/schemas/Uuid' }
+        targetDoctorId: { $ref: '#/components/schemas/Uuid' }
+        reasonSummary: { type: string }
+        encounterType: { type: string, description: Optional original source value; target gets it only if selected. }
+        acceptedFieldCodes: { $ref: '#/components/schemas/AcceptedFieldCodes' }
+        resultingAppointmentId: { $ref: '#/components/schemas/Uuid' }
+    AcceptedTargetReasonReferralProjection:
+      type: object
+      additionalProperties: false
+      description: Target CLN with current linked-appointment/facility authority; only selected reason_summary content.
+      required: [id, status, version, acceptedFieldCodes, resultingAppointmentId, reasonSummary]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, const: accepted }
+        version: { $ref: '#/components/schemas/Version' }
+        acceptedFieldCodes: { type: array, const: [reason_summary] }
+        resultingAppointmentId: { $ref: '#/components/schemas/Uuid' }
+        reasonSummary: { type: string }
+    AcceptedTargetReasonAndTypeReferralProjection:
+      type: object
+      additionalProperties: false
+      description: Target CLN with current linked-appointment/facility authority; both selected content fields only.
+      required: [id, status, version, acceptedFieldCodes, resultingAppointmentId, reasonSummary, encounterType]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, const: accepted }
+        version: { $ref: '#/components/schemas/Version' }
+        acceptedFieldCodes: { type: array, const: [reason_summary, encounter_type] }
+        resultingAppointmentId: { $ref: '#/components/schemas/Uuid' }
+        reasonSummary: { type: string }
+        encounterType: { type: string }
+    ReferralPage:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data: { type: array, items: { $ref: '#/components/schemas/ReferralProjection' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    ReferralAcceptanceResult:
+      type: object
+      additionalProperties: false
+      required: [referral, appointment]
+      properties:
+        referral: { $ref: '#/components/schemas/AcceptedSubjectReferralProjection' }
+        appointment: { $ref: '#/components/schemas/BookedAppointment' }
+    BookedAppointment:
+      type: object
+      additionalProperties: false
+      required: [id, sourceReferralId, status, facilityId, doctorId, startsAt, endsAt, feeMinorUnits, currency, paymentMethod, version]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        sourceReferralId: { $ref: '#/components/schemas/Uuid' }
+        status: { type: string, const: confirmed }
+        facilityId: { $ref: '#/components/schemas/Uuid' }
+        doctorId: { $ref: '#/components/schemas/Uuid' }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        feeMinorUnits: { type: integer, minimum: 0 }
+        currency: { type: string, const: EGP }
+        paymentMethod: { type: string, const: cash_on_arrival }
+        version: { $ref: '#/components/schemas/Version' }
+    MessageProjection:
+      type: object
+      additionalProperties: false
+      required: [id, contextType, contextId, senderId, body, sentAt]
+      properties:
+        id: { $ref: '#/components/schemas/Uuid' }
+        contextType: { type: string, const: appointment }
+        contextId: { $ref: '#/components/schemas/Uuid' }
+        senderId: { $ref: '#/components/schemas/Uuid' }
+        body: { type: string }
+        sentAt: { type: string, format: date-time }
+    MessagePage:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data: { type: array, items: { $ref: '#/components/schemas/MessageProjection' } }
+        meta: { $ref: '#/components/schemas/PageMeta' }
+    PageMeta:
+      type: object
+      additionalProperties: false
+      required: [nextCursor, lastUpdatedAt, stale]
+      properties:
+        nextCursor: { type: ['string', 'null'] }
+        lastUpdatedAt: { type: string, format: date-time }
+        stale: { type: boolean }
+    Problem:
+      type: object
+      additionalProperties: false
+      required: [type, title, status, detail, instance, code, request_id]
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer, minimum: 400, maximum: 599 }
+        detail: { type: string, description: Localized and redacted; no hidden resource or clinical body. }
+        instance: { type: string, format: uri-reference }
+        code: { type: string }
+        request_id: { $ref: '#/components/schemas/Uuid' }
+        errors:
+          type: array
+          description: Safe field paths and localized codes only; no rejected clinical value is echoed.
+          items:
+            type: object
+            additionalProperties: false
+            required: [pointer, code]
+            properties:
+              pointer: { type: string, description: JSON Pointer to the rejected field. }
+              code: { type: string, description: Stable validation code. }
+        retry_after_seconds: { type: integer, minimum: 0 }
