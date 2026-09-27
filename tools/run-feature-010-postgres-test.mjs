@@ -8,6 +8,7 @@ const featureMigration =
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
 const lifecycleTest = 'infra/db/tests/feature-010-lifecycle.sql';
 const storageTest = 'infra/db/tests/feature-010-storage-invariants.sql';
+const rlsTest = 'infra/db/tests/feature-010-rls.sql';
 const f009RegressionTest = 'infra/db/tests/clinic-scheduling-schema.sql';
 const defaultDenySnapshotSql = `SELECT format(
   'C04 default-deny snapshot: forced_rls=%s/6; policies=%s; direct_online_acl_entries=%s',
@@ -69,7 +70,7 @@ const runtimes = [
   {
     name: 'shifaa-local-supabase',
     container: 'supabase_db_shifaa-local-supabase',
-    user: 'postgres',
+    user: 'supabase_admin',
     adminDatabase: 'postgres',
   },
 ];
@@ -177,6 +178,11 @@ function checkStorage(runtime, database, phase) {
   runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${storageTest}`);
 }
 
+function checkRls(runtime, database, phase) {
+  const sql = readFileSync(resolve(root, rlsTest), 'utf8');
+  runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${rlsTest}`);
+}
+
 function checkF009Regression(runtime, database, phase) {
   let sql = readFileSync(resolve(root, f009RegressionTest), 'utf8');
   if (runtime.name === 'shifaa-local-supabase') {
@@ -232,6 +238,7 @@ function verifyFreshAndReplay(runtime, database) {
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
   checkStorage(runtime, database, 'fresh F010 storage vectors');
+  checkRls(runtime, database, 'fresh F010 non-owner RLS matrix');
   checkF009Regression(runtime, database, 'F009 check-in and queue regression after F010');
   runMigration(runtime, database, featureMigration, 'F010 migration replay');
   checkSchema(runtime, database, 'replayed F010 schema assertions');

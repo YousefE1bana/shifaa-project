@@ -691,4 +691,550 @@ BEGIN
 END
 $feature_010_referral_guard$;
 
+-- C07 authorization helpers are private implementation details. They use
+-- trusted request context and live source rows; no caller-supplied role,
+-- facility, patient, purpose, or permission claim is accepted as an argument.
+CREATE OR REPLACE FUNCTION clinical.feature_010_current_clinician_v1(
+  p_person_id uuid,p_facility_id uuid
+) RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path='' AS $$
+  SELECT p_person_id IS NOT NULL AND p_facility_id IS NOT NULL AND EXISTS (
+    SELECT 1
+    FROM identity.facilities f
+    JOIN identity.facility_memberships m ON m.facility_id=f.id
+      AND m.person_id=p_person_id AND m.role_code='doctor'
+      AND m.membership_status='active' AND m.valid_from<=platform.context_now()
+      AND (m.valid_until IS NULL OR m.valid_until>platform.context_now())
+    JOIN identity.professional_licenses l ON l.id=m.employment_license_id
+      AND l.person_id=p_person_id AND l.profession='doctor' AND l.status='verified'
+      AND l.expires_on>=(platform.context_now() AT TIME ZONE 'UTC')::date
+    JOIN identity.people person ON person.id=p_person_id AND person.profile_status='active'
+    WHERE f.id=p_facility_id AND f.facility_status='active'
+  )
+$$;
+
+CREATE OR REPLACE FUNCTION clinical.feature_010_family_authority_v1(
+  p_patient_person_id uuid,p_actor_person_id uuid,p_relationship_type text,
+  p_require_record boolean,p_require_appointment boolean
+) RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path='' AS $$
+  SELECT p_patient_person_id IS NOT NULL AND p_actor_person_id IS NOT NULL
+    AND p_relationship_type IN ('guardianship','delegation')
+    AND COALESCE(pg_catalog.cardinality(platform.context_purposes()),0)>0
+    AND EXISTS (
+      SELECT 1
+      FROM identity.patients patient
+      JOIN identity.care_relationships relation
+        ON relation.subject_patient_id=patient.id
+       AND relation.actor_person_id=p_actor_person_id
+       AND relation.relationship_type=p_relationship_type
+       AND relation.status='active'
+       AND relation.valid_from<=platform.context_now()
+       AND (relation.valid_until IS NULL OR relation.valid_until>platform.context_now())
+       AND relation.purpose_code=ANY(platform.context_purposes())
+      WHERE patient.person_id=p_patient_person_id AND patient.record_status='active'
+        AND (
+          (p_relationship_type='guardianship'
+            AND relation.evidence_object_id IS NOT NULL
+            AND relation.reviewed_by_person_id IS NOT NULL
+            AND relation.reviewed_at IS NOT NULL
+            AND relation.decision_reason_code IS NOT NULL
+            AND EXISTS (
+              SELECT 1 FROM identity.private_evidence_objects evidence
+              WHERE evidence.id=relation.evidence_object_id
+                AND evidence.bucket_code='guardianship-evidence'
+                AND evidence.owner_person_id=relation.actor_person_id
+                AND evidence.resource_patient_id=relation.subject_patient_id
+                AND evidence.scan_status='released'
+            ))
+          OR (p_relationship_type='delegation'
+            AND relation.evidence_object_id IS NULL
+            AND relation.invite_token_digest IS NULL
+            AND relation.invite_consumed_at IS NOT NULL)
+        )
+        AND (NOT p_require_record OR EXISTS (
+          SELECT 1 FROM identity.care_relationship_permissions permission
+          WHERE permission.relationship_id=relation.id
+            AND permission.permission_code='record.view' AND permission.revoked_at IS NULL
+        ))
+        AND (NOT p_require_appointment OR EXISTS (
+          SELECT 1 FROM identity.care_relationship_permissions permission
+          WHERE permission.relationship_id=relation.id
+            AND permission.permission_code='appointment.manage' AND permission.revoked_at IS NULL
+        ))
+    )
+$$;
+
+CREATE OR REPLACE FUNCTION clinical.feature_010_current_encounter_clinician_v1(
+  p_encounter_id uuid,p_require_responsible boolean DEFAULT false
+) RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path='' AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM clinical.encounters encounter
+    JOIN clinical.appointments appointment
+      ON appointment.id=encounter.appointment_id
+     AND appointment.patient_person_id=encounter.patient_person_id
+     AND appointment.facility_id=encounter.facility_id
+    JOIN clinical.encounter_participants participant
+      ON participant.encounter_id=encounter.id
+     AND participant.person_id=platform.context_person_id()
+     AND participant.started_at<=platform.context_now()
+     AND participant.ended_at IS NULL
+     AND (NOT p_require_responsible OR participant.role_code='responsible_clinician')
+    WHERE encounter.id=p_encounter_id
+      AND (NOT p_require_responsible OR encounter.responsible_clinician_id=platform.context_person_id())
+      AND clinical.feature_010_current_clinician_v1(platform.context_person_id(),encounter.facility_id)
+  )
+$$;
+
+CREATE OR REPLACE FUNCTION clinical.feature_010_authorize_v1(
+  p_operation_id text,p_resource_id uuid
+) RETURNS boolean
+LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  actor uuid := platform.context_person_id();
+  actor_role text := platform.context_role();
+  requested_action text := platform.context_action();
+  current_purposes text[] := platform.context_purposes();
+  current_aal integer := COALESCE(platform.context_aal(),0);
+  encounter_row clinical.encounters%ROWTYPE;
+  appointment_row clinical.appointments%ROWTYPE;
+  referral_row clinical.referrals%ROWTYPE;
+  target_appointment clinical.appointments%ROWTYPE;
+  patient_self boolean;
+BEGIN
+  IF p_operation_id IS NULL OR p_resource_id IS NULL OR actor IS NULL OR actor_role IS NULL
+     OR requested_action IS DISTINCT FROM p_operation_id
+     OR COALESCE(pg_catalog.cardinality(current_purposes),0)<1
+     OR p_operation_id NOT IN (
+       'createEncounter','getEncounter','updateEncounter','signEncounterNote',
+       'completeEncounter','createReferral','listReferrals','acceptReferral',
+       'listContextMessages','sendContextMessage'
+     ) THEN
+    RETURN false;
+  END IF;
+  IF current_aal<1 THEN RETURN false; END IF;
+
+  IF p_operation_id='createEncounter' THEN
+    IF actor_role<>'CLN' OR current_aal<2 THEN RETURN false; END IF;
+    SELECT * INTO appointment_row FROM clinical.appointments appointment
+      WHERE appointment.id=p_resource_id;
+    IF NOT FOUND OR appointment_row.status<>'checked_in'
+       OR appointment_row.doctor_person_id<>actor
+       OR NOT clinical.feature_010_current_clinician_v1(actor,appointment_row.facility_id)
+       OR NOT EXISTS (
+         SELECT 1 FROM identity.people patient
+         JOIN identity.patients patient_record ON patient_record.person_id=patient.id
+           AND patient_record.record_status='active'
+         WHERE patient.id=appointment_row.patient_person_id AND patient.profile_status='active'
+       )
+       OR NOT EXISTS (
+         SELECT 1 FROM clinical.queue_entries queue
+         JOIN clinical.queue_scopes scope ON scope.id=queue.queue_scope_id
+         WHERE queue.appointment_id=appointment_row.id AND queue.state='called'
+           AND queue.facility_id=appointment_row.facility_id
+           AND queue.doctor_person_id=appointment_row.doctor_person_id
+           AND queue.civil_date=appointment_row.civil_date
+           AND scope.facility_id=appointment_row.facility_id
+           AND scope.doctor_person_id=appointment_row.doctor_person_id
+           AND scope.civil_date=appointment_row.civil_date
+           AND scope.timezone_name=appointment_row.timezone_name
+       )
+       OR EXISTS (SELECT 1 FROM clinical.encounters existing
+          WHERE existing.appointment_id=appointment_row.id AND existing.status='open') THEN
+      RETURN false;
+    END IF;
+    RETURN true;
+  END IF;
+
+  IF p_operation_id IN ('getEncounter','updateEncounter','signEncounterNote','completeEncounter','createReferral') THEN
+    SELECT * INTO encounter_row FROM clinical.encounters encounter WHERE encounter.id=p_resource_id;
+    IF NOT FOUND THEN RETURN false; END IF;
+    SELECT EXISTS (
+      SELECT 1 FROM identity.people patient
+      JOIN identity.patients patient_record ON patient_record.person_id=patient.id
+        AND patient_record.record_status='active'
+      WHERE patient.id=encounter_row.patient_person_id AND patient.profile_status='active'
+    ) INTO patient_self;
+    IF NOT patient_self THEN RETURN false; END IF;
+
+    IF p_operation_id='getEncounter' THEN
+      IF actor_role='PAT' THEN
+        RETURN encounter_row.patient_person_id=actor;
+      ELSIF actor_role='GUA' THEN
+        RETURN clinical.feature_010_family_authority_v1(
+          encounter_row.patient_person_id,actor,'guardianship',true,false
+        );
+      ELSIF actor_role='DEL' THEN
+        RETURN clinical.feature_010_family_authority_v1(
+          encounter_row.patient_person_id,actor,'delegation',true,false
+        );
+      ELSIF actor_role='CLN' THEN
+        RETURN clinical.feature_010_current_encounter_clinician_v1(p_resource_id,false);
+      END IF;
+      RETURN false;
+    END IF;
+
+    IF actor_role<>'CLN' OR current_aal<2 THEN RETURN false; END IF;
+    IF p_operation_id='completeEncounter' THEN
+      RETURN encounter_row.status='open'
+        AND clinical.feature_010_current_encounter_clinician_v1(p_resource_id,true)
+        AND EXISTS (
+          SELECT 1 FROM clinical.appointments appointment
+          JOIN clinical.queue_entries queue ON queue.appointment_id=appointment.id
+          JOIN clinical.queue_scopes scope ON scope.id=queue.queue_scope_id
+          WHERE appointment.id=encounter_row.appointment_id
+            AND appointment.status='in_consultation'
+            AND queue.state='in_service'
+            AND queue.facility_id=appointment.facility_id
+            AND queue.doctor_person_id=appointment.doctor_person_id
+            AND queue.civil_date=appointment.civil_date
+            AND scope.facility_id=appointment.facility_id
+            AND scope.doctor_person_id=appointment.doctor_person_id
+            AND scope.civil_date=appointment.civil_date
+            AND scope.timezone_name=appointment.timezone_name
+      );
+    END IF;
+    IF p_operation_id IN ('updateEncounter','signEncounterNote','createReferral') THEN
+      SELECT * INTO appointment_row FROM clinical.appointments appointment
+        WHERE appointment.id=encounter_row.appointment_id;
+      IF NOT FOUND OR encounter_row.status<>'open'
+         OR appointment_row.status<>'in_consultation' THEN RETURN false; END IF;
+    END IF;
+    RETURN clinical.feature_010_current_encounter_clinician_v1(p_resource_id,false);
+  END IF;
+
+  IF p_operation_id IN ('listReferrals','acceptReferral') THEN
+    SELECT * INTO referral_row FROM clinical.referrals referral WHERE referral.id=p_resource_id;
+    IF NOT FOUND THEN RETURN false; END IF;
+    SELECT * INTO encounter_row FROM clinical.encounters encounter
+      WHERE encounter.id=referral_row.source_encounter_id;
+    IF NOT FOUND OR encounter_row.patient_person_id IS DISTINCT FROM (
+      SELECT patient.person_id FROM identity.patients patient WHERE patient.id=referral_row.patient_id
+    ) THEN RETURN false; END IF;
+
+    SELECT EXISTS (SELECT 1 FROM identity.people patient
+      JOIN identity.patients patient_record ON patient_record.person_id=patient.id
+        AND patient_record.record_status='active'
+      WHERE patient.id=encounter_row.patient_person_id AND patient.profile_status='active')
+      AND encounter_row.patient_person_id=actor INTO patient_self;
+
+    IF p_operation_id='acceptReferral' THEN
+      IF current_aal<2 OR referral_row.status<>'pending' THEN RETURN false; END IF;
+      IF actor_role='PAT' THEN RETURN patient_self; END IF;
+      IF actor_role='GUA' THEN
+        RETURN clinical.feature_010_family_authority_v1(encounter_row.patient_person_id,actor,'guardianship',false,false);
+      ELSIF actor_role='DEL' THEN
+        RETURN clinical.feature_010_family_authority_v1(encounter_row.patient_person_id,actor,'delegation',true,true);
+      END IF;
+      RETURN false;
+    END IF;
+
+    IF actor_role='PAT' THEN RETURN patient_self; END IF;
+    IF actor_role='GUA' THEN
+      RETURN clinical.feature_010_family_authority_v1(encounter_row.patient_person_id,actor,'guardianship',false,false);
+    ELSIF actor_role='DEL' THEN
+      RETURN clinical.feature_010_family_authority_v1(encounter_row.patient_person_id,actor,'delegation',true,true);
+    ELSIF actor_role='CLN' THEN
+      IF referral_row.status='accepted' AND referral_row.resulting_appointment_id IS NOT NULL THEN
+        SELECT * INTO target_appointment FROM clinical.appointments appointment
+          WHERE appointment.id=referral_row.resulting_appointment_id;
+        IF FOUND AND target_appointment.patient_person_id=encounter_row.patient_person_id
+           AND target_appointment.facility_id=referral_row.target_facility_id
+           AND clinical.feature_010_current_clinician_v1(actor,referral_row.target_facility_id) THEN
+          RETURN true;
+        END IF;
+      END IF;
+      RETURN clinical.feature_010_current_encounter_clinician_v1(encounter_row.id,false);
+    END IF;
+    RETURN false;
+  END IF;
+
+  IF p_operation_id IN ('listContextMessages','sendContextMessage') THEN
+    IF p_operation_id='sendContextMessage' AND current_aal<2 THEN RETURN false; END IF;
+    SELECT * INTO appointment_row FROM clinical.appointments appointment
+      WHERE appointment.id=p_resource_id;
+    IF NOT FOUND OR appointment_row.status<>'in_consultation' THEN RETURN false; END IF;
+    SELECT * INTO encounter_row FROM clinical.encounters encounter
+      WHERE encounter.appointment_id=appointment_row.id AND encounter.status='open';
+    IF NOT FOUND OR encounter_row.patient_person_id<>appointment_row.patient_person_id
+       OR encounter_row.facility_id<>appointment_row.facility_id THEN RETURN false; END IF;
+    IF actor_role='PAT' THEN
+      RETURN actor=appointment_row.patient_person_id AND EXISTS (
+        SELECT 1 FROM identity.patients patient
+        WHERE patient.person_id=actor AND patient.record_status='active'
+      );
+    ELSIF actor_role='CLN' THEN
+      RETURN EXISTS (
+        SELECT 1 FROM clinical.encounter_participants participant
+        WHERE participant.encounter_id=encounter_row.id
+          AND participant.person_id=actor
+          AND participant.started_at<=platform.context_now()
+          AND participant.ended_at IS NULL
+      ) AND clinical.feature_010_current_clinician_v1(actor,appointment_row.facility_id);
+    END IF;
+    RETURN false;
+  END IF;
+  RETURN false;
+END
+$$;
+
+CREATE OR REPLACE FUNCTION clinical.feature_010_participant_row_visible_v1(
+  p_encounter_id uuid
+) RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path='' AS $$
+  SELECT clinical.feature_010_authorize_v1('getEncounter',p_encounter_id)
+    OR EXISTS (
+      SELECT 1 FROM clinical.encounters encounter
+      WHERE encounter.id=p_encounter_id
+        AND encounter.appointment_id IS NOT NULL
+        AND clinical.feature_010_authorize_v1('listContextMessages',encounter.appointment_id)
+    )
+$$;
+
+CREATE OR REPLACE FUNCTION clinical.feature_010_note_row_visible_v1(
+  p_encounter_id uuid,p_visibility_code text
+) RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path='' AS $$
+  SELECT (p_visibility_code='patient_visible' OR platform.context_role()='CLN')
+    AND clinical.feature_010_authorize_v1('getEncounter',p_encounter_id)
+$$;
+
+CREATE OR REPLACE FUNCTION clinical.feature_010_condition_row_visible_v1(
+  p_condition_id uuid,p_patient_id uuid
+) RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path='' AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM clinical.encounters encounter
+    JOIN identity.patients patient ON patient.person_id=encounter.patient_person_id
+      AND patient.record_status='active'
+    WHERE p_condition_id=ANY(encounter.condition_ids)
+      AND patient.id=p_patient_id
+      AND clinical.feature_010_authorize_v1('getEncounter',encounter.id)
+  )
+$$;
+
+-- These values are internal, currently authorized metadata envelopes. They are
+-- not complete OpenAPI responses: later API handlers add only separately
+-- authorized decrypted note/message bodies while preserving these boundaries.
+CREATE OR REPLACE FUNCTION clinical.feature_010_get_encounter_projection_v1(
+  p_encounter_id uuid
+) RETURNS jsonb
+LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  projection jsonb;
+BEGIN
+  IF NOT clinical.feature_010_authorize_v1('getEncounter',p_encounter_id) THEN
+    RETURN NULL;
+  END IF;
+  SELECT pg_catalog.jsonb_build_object(
+    'id',encounter.id,
+    'patientId',encounter.patient_person_id,
+    'facilityId',encounter.facility_id,
+    'appointmentId',encounter.appointment_id,
+    'encounterType',encounter.encounter_type,
+    'responsibleClinicianId',encounter.responsible_clinician_id,
+    'status',encounter.status,
+    'startedAt',encounter.started_at,
+    'endedAt',encounter.ended_at,
+    'version',encounter.version,
+    'conditionIds',pg_catalog.to_jsonb(encounter.condition_ids),
+    'observationIds',pg_catalog.to_jsonb(encounter.observation_ids),
+    'orderIds',pg_catalog.to_jsonb(encounter.order_ids),
+    'notes',COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+        'id',note.id,'authorId',note.author_person_id,'noteType',note.note_type,
+        'visibility',note.visibility_code,'signedAt',note.signed_at,'supersedesId',note.supersedes_id
+      ) ORDER BY note.signed_at,note.id)
+      FROM clinical.clinical_notes note
+      WHERE note.encounter_id=encounter.id
+        AND (note.visibility_code='patient_visible' OR platform.context_role()='CLN')
+    ),'[]'::jsonb)
+  ) INTO projection
+  FROM clinical.encounters encounter
+  WHERE encounter.id=p_encounter_id;
+  RETURN projection;
+END
+$$;
+
+CREATE OR REPLACE FUNCTION clinical.feature_010_referral_projection_v1(
+  p_referral_id uuid
+) RETURNS jsonb
+LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  referral clinical.referrals%ROWTYPE;
+  source_encounter clinical.encounters%ROWTYPE;
+  target_appointment clinical.appointments%ROWTYPE;
+  projection jsonb;
+  is_target_clinician boolean;
+BEGIN
+  IF NOT clinical.feature_010_authorize_v1('listReferrals',p_referral_id) THEN
+    RETURN NULL;
+  END IF;
+  SELECT * INTO referral FROM clinical.referrals WHERE id=p_referral_id;
+  IF NOT FOUND THEN RETURN NULL; END IF;
+  SELECT * INTO source_encounter FROM clinical.encounters WHERE id=referral.source_encounter_id;
+  is_target_clinician := platform.context_role()='CLN'
+    AND referral.status='accepted'
+    AND referral.resulting_appointment_id IS NOT NULL
+    AND clinical.feature_010_current_clinician_v1(
+      platform.context_person_id(),referral.target_facility_id
+    );
+  IF is_target_clinician THEN
+    SELECT * INTO target_appointment FROM clinical.appointments
+      WHERE id=referral.resulting_appointment_id;
+    IF NOT FOUND OR target_appointment.patient_person_id<>source_encounter.patient_person_id
+       OR target_appointment.facility_id<>referral.target_facility_id THEN
+      RETURN NULL;
+    END IF;
+    projection := pg_catalog.jsonb_build_object(
+      'id',referral.id,
+      'status','accepted',
+      'version',referral.version,
+      'acceptedFieldCodes',pg_catalog.to_jsonb(referral.accepted_field_codes),
+      'resultingAppointmentId',referral.resulting_appointment_id,
+      'reasonSummary',referral.reason_summary
+    );
+    IF 'encounter_type'=ANY(referral.accepted_field_codes) THEN
+      projection := projection || pg_catalog.jsonb_build_object('encounterType',referral.encounter_type);
+    END IF;
+    RETURN projection;
+  END IF;
+  projection := pg_catalog.jsonb_build_object(
+    'id',referral.id,
+    'sourceEncounterId',referral.source_encounter_id,
+    'status',referral.status,
+    'version',referral.version,
+    'targetSpecialty',referral.target_specialty
+  );
+  IF referral.target_facility_id IS NOT NULL THEN
+    projection := projection || pg_catalog.jsonb_build_object('targetFacilityId',referral.target_facility_id);
+  END IF;
+  IF referral.target_doctor_person_id IS NOT NULL THEN
+    projection := projection || pg_catalog.jsonb_build_object('targetDoctorId',referral.target_doctor_person_id);
+  END IF;
+  IF referral.status='accepted' THEN
+    SELECT * INTO target_appointment FROM clinical.appointments
+      WHERE id=referral.resulting_appointment_id;
+    IF NOT FOUND OR target_appointment.patient_person_id<>source_encounter.patient_person_id
+       OR target_appointment.facility_id<>referral.target_facility_id THEN
+      RETURN NULL;
+    END IF;
+    projection := projection || pg_catalog.jsonb_build_object(
+      'targetFacilityId',referral.target_facility_id,
+      'targetDoctorId',referral.target_doctor_person_id,
+      'resultingAppointmentId',referral.resulting_appointment_id,
+      'acceptedFieldCodes',pg_catalog.to_jsonb(referral.accepted_field_codes)
+    );
+  END IF;
+  projection := projection || pg_catalog.jsonb_build_object('reasonSummary',referral.reason_summary);
+  IF referral.encounter_type IS NOT NULL THEN
+    projection := projection || pg_catalog.jsonb_build_object('encounterType',referral.encounter_type);
+  END IF;
+  RETURN projection;
+END
+$$;
+
+CREATE OR REPLACE FUNCTION trust.feature_010_context_messages_projection_v1(
+  p_appointment_id uuid
+) RETURNS jsonb
+LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  projection jsonb;
+BEGIN
+  IF NOT clinical.feature_010_authorize_v1('listContextMessages',p_appointment_id) THEN
+    RETURN NULL;
+  END IF;
+  SELECT COALESCE(pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+    'id',message.id,'contextType',message.context_type,'contextId',message.context_id,
+    'senderPersonId',message.sender_person_id,'sentAt',message.sent_at
+  ) ORDER BY message.sent_at,message.id),'[]'::jsonb)
+  INTO projection
+  FROM trust.messages message
+  WHERE message.context_type='appointment' AND message.context_id=p_appointment_id
+    AND message.deleted_at IS NULL;
+  RETURN projection;
+END
+$$;
+
+-- RLS policies are intentionally independent from privileges. C07 grants no
+-- domain-table access; entry functions above are the only API read path.
+ALTER TABLE clinical.encounters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE clinical.encounters FORCE ROW LEVEL SECURITY;
+ALTER TABLE clinical.encounter_participants ENABLE ROW LEVEL SECURITY;
+ALTER TABLE clinical.encounter_participants FORCE ROW LEVEL SECURITY;
+ALTER TABLE clinical.clinical_notes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE clinical.clinical_notes FORCE ROW LEVEL SECURITY;
+ALTER TABLE clinical.conditions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE clinical.conditions FORCE ROW LEVEL SECURITY;
+ALTER TABLE clinical.referrals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE clinical.referrals FORCE ROW LEVEL SECURITY;
+ALTER TABLE trust.messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE trust.messages FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS f010_c07_encounters_select ON clinical.encounters;
+CREATE POLICY f010_c07_encounters_select ON clinical.encounters
+  FOR SELECT TO shifaa_api
+  USING (clinical.feature_010_authorize_v1('getEncounter',id));
+DROP POLICY IF EXISTS f010_c07_participants_select ON clinical.encounter_participants;
+CREATE POLICY f010_c07_participants_select ON clinical.encounter_participants
+  FOR SELECT TO shifaa_api
+  USING (clinical.feature_010_participant_row_visible_v1(encounter_id));
+DROP POLICY IF EXISTS f010_c07_notes_select ON clinical.clinical_notes;
+CREATE POLICY f010_c07_notes_select ON clinical.clinical_notes
+  FOR SELECT TO shifaa_api
+  USING (clinical.feature_010_note_row_visible_v1(encounter_id,visibility_code));
+DROP POLICY IF EXISTS f010_c07_conditions_select ON clinical.conditions;
+CREATE POLICY f010_c07_conditions_select ON clinical.conditions
+  FOR SELECT TO shifaa_api
+  USING (clinical.feature_010_condition_row_visible_v1(id,patient_id));
+DROP POLICY IF EXISTS f010_c07_referrals_select ON clinical.referrals;
+CREATE POLICY f010_c07_referrals_select ON clinical.referrals
+  FOR SELECT TO shifaa_api
+  USING (clinical.feature_010_authorize_v1('listReferrals',id));
+DROP POLICY IF EXISTS f010_c07_messages_select ON trust.messages;
+CREATE POLICY f010_c07_messages_select ON trust.messages
+  FOR SELECT TO shifaa_api
+  USING (context_type='appointment'
+    AND clinical.feature_010_authorize_v1('listContextMessages',context_id));
+
+REVOKE ALL ON FUNCTION clinical.feature_010_current_clinician_v1(uuid,uuid),
+  clinical.feature_010_family_authority_v1(uuid,uuid,text,boolean,boolean),
+  clinical.feature_010_current_encounter_clinician_v1(uuid,boolean),
+  clinical.feature_010_participant_row_visible_v1(uuid),
+  clinical.feature_010_note_row_visible_v1(uuid,text),
+  clinical.feature_010_condition_row_visible_v1(uuid,uuid)
+FROM PUBLIC;
+REVOKE ALL ON FUNCTION clinical.feature_010_authorize_v1(text,uuid),
+  clinical.feature_010_get_encounter_projection_v1(uuid),
+  clinical.feature_010_referral_projection_v1(uuid),
+  trust.feature_010_context_messages_projection_v1(uuid)
+FROM PUBLIC;
+
+DO $feature_010_c07_execute_grants$
+DECLARE role_name text;
+BEGIN
+  FOREACH role_name IN ARRAY ARRAY['shifaa_api','shifaa_worker','anon','authenticated','service_role'] LOOP
+    IF EXISTS (SELECT 1 FROM pg_catalog.pg_roles WHERE rolname=role_name) THEN
+      EXECUTE pg_catalog.format(
+        'REVOKE ALL ON FUNCTION clinical.feature_010_current_clinician_v1(uuid,uuid), clinical.feature_010_family_authority_v1(uuid,uuid,text,boolean,boolean), clinical.feature_010_current_encounter_clinician_v1(uuid,boolean), clinical.feature_010_participant_row_visible_v1(uuid), clinical.feature_010_note_row_visible_v1(uuid,text), clinical.feature_010_condition_row_visible_v1(uuid,uuid), clinical.feature_010_authorize_v1(text,uuid), clinical.feature_010_get_encounter_projection_v1(uuid), clinical.feature_010_referral_projection_v1(uuid), trust.feature_010_context_messages_projection_v1(uuid) FROM %I',
+        role_name
+      );
+    END IF;
+  END LOOP;
+  -- The online role needs schema name-resolution to call the one approved
+  -- trust projection function. This grants no table access in trust.
+  GRANT USAGE ON SCHEMA trust TO shifaa_api;
+  GRANT EXECUTE ON FUNCTION clinical.feature_010_authorize_v1(text,uuid),
+    clinical.feature_010_get_encounter_projection_v1(uuid),
+    clinical.feature_010_referral_projection_v1(uuid),
+    trust.feature_010_context_messages_projection_v1(uuid),
+    clinical.feature_010_participant_row_visible_v1(uuid),
+    clinical.feature_010_note_row_visible_v1(uuid,text),
+    clinical.feature_010_condition_row_visible_v1(uuid,uuid)
+  TO shifaa_api;
+END
+$feature_010_c07_execute_grants$;
+
 COMMIT;

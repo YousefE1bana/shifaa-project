@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C06 accepted; T001–T018 complete, T019–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C07 accepted; T001–T021 complete, T022–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -131,15 +131,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Every action has independent fail-closed SQL policy.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T019 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-001, NFR-SEC-004, NFR-PRIV-002] Write red non-owner matrix for all ten operations: PAT/GUA/DEL/CLN, live grants, facility/purpose/AAL, private note exclusion, pending target denial, and ended participant denial — `infra/db/tests/feature-010-rls.sql`
+- [x] T019 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-001, NFR-SEC-004, NFR-PRIV-002] Write red non-owner matrix for all ten operations: PAT/GUA/DEL/CLN, live grants, facility/purpose/AAL, private note exclusion, pending target denial, and ended participant denial — `infra/db/tests/feature-010-rls.sql`
   - Depends on: `T018`
   - Acceptance evidence: `each denied actor/action returns no clinical row and no write`
 
-- [ ] T020 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-001, NFR-SEC-004, NFR-PRIV-002] ENABLE/FORCE RLS on new tables, default deny, fixed-search-path narrow helpers, non-owner EXECUTE grants and current-authority projections; no owner/service-role online bypass — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
+- [x] T020 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-001, NFR-SEC-004, NFR-PRIV-002] ENABLE/FORCE RLS on new tables, default deny, fixed-search-path narrow helpers, non-owner EXECUTE grants and current-authority projections; no owner/service-role online bypass — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
   - Depends on: `T019`
   - Acceptance evidence: `SQL matrix passes under shifaa_api without BYPASSRLS`
 
-- [ ] T021 [NFR-SEC-001, NFR-SEC-004, NFR-QUALITY-001] Run full F010 SQL RLS matrix and relevant F009 forced-RLS regression — `specs/010-encounters-referrals-contextual-chat/evidence/C07-rls.md`
+- [x] T021 [NFR-SEC-001, NFR-SEC-004, NFR-QUALITY-001] Run full F010 SQL RLS matrix and relevant F009 forced-RLS regression — `specs/010-encounters-referrals-contextual-chat/evidence/C07-rls.md`
   - Depends on: `T020`
   - Acceptance evidence: `all current-authority allow/deny rows and F009 negatives pass`
 
