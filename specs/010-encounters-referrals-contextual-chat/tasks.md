@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C07 accepted; T001–T021 complete, T022–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C08 accepted; T001–T024 complete, T025–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -148,15 +148,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Both wrappers preserve one-winner booking without a new API operation.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T022 [FR-CLINIC-007, NFR-SEC-005, NFR-DATA-001] Write red regression for existing createAppointment fee/EGP/cash, request/result/problems, replay and slot race, plus primitive with optional expected schedule version and exact effective slot tuple — `infra/db/tests/feature-010-booking-seam.sql`
+- [x] T022 [FR-CLINIC-007, NFR-SEC-005, NFR-DATA-001] Write red regression for existing createAppointment fee/EGP/cash, request/result/problems, replay and slot race, plus primitive with optional expected schedule version and exact effective slot tuple — `infra/db/tests/feature-010-booking-seam.sql`
   - Depends on: `T021`
   - Acceptance evidence: `tests expose missing primitive without weakening F009 wrapper behavior`
 
-- [ ] T023 [FR-CLINIC-007, NFR-SEC-005, NFR-DATA-001] In the forward F010 migration extract one internal booking primitive with authoritative schedule/time/fee/exclusion checks and no operation records; keep create_appointment_v1 wrapper externally identical — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
+- [x] T023 [FR-CLINIC-007, NFR-SEC-005, NFR-DATA-001] In the forward F010 migration extract one internal booking primitive with authoritative schedule/time/fee/exclusion checks and no operation records; keep create_appointment_v1 wrapper externally identical — `supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql`
   - Depends on: `T022`
   - Acceptance evidence: `primitive writes no idempotency/audit/outbox/response record; F009 wrapper still does`
 
-- [ ] T024 [FR-CLINIC-007, NFR-SEC-005, NFR-QUALITY-001] Run serial/concurrent booking-seam tests and existing F009 booking contract/DB suite — `specs/010-encounters-referrals-contextual-chat/evidence/C08-booking.md`
+- [x] T024 [FR-CLINIC-007, NFR-SEC-005, NFR-QUALITY-001] Run serial/concurrent booking-seam tests and existing F009 booking contract/DB suite — `specs/010-encounters-referrals-contextual-chat/evidence/C08-booking.md`
   - Depends on: `T023`
   - Acceptance evidence: `one winner, unchanged F009 behavior and no partial effect pass`
 

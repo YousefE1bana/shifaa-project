@@ -1237,4 +1237,175 @@ BEGIN
 END
 $feature_010_c07_execute_grants$;
 
+-- C08: separate booking mechanics from an operation's idempotency, audit,
+-- outbox, and canonical-response boundary. Feature 009 keeps those records in
+-- its existing createAppointment wrapper; Feature 010 can compose the same
+-- authoritative booking checks into its own transaction.
+CREATE OR REPLACE FUNCTION clinical.book_appointment_internal_v1(
+  p_input jsonb,
+  p_expected_schedule_version integer DEFAULT NULL,
+  p_expected_slot jsonb DEFAULT NULL
+)
+RETURNS uuid
+LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  actor uuid := platform.context_person_id();
+  patient uuid := (p_input->>'patient_person_id')::uuid;
+  schedule_id uuid := NULLIF(p_input->>'schedule_id','')::uuid;
+  schedule_row clinical.schedules%ROWTYPE;
+  starts_at_value timestamptz := (p_input->>'starts_at')::timestamptz;
+  ends_at_value timestamptz := (p_input->>'ends_at')::timestamptz;
+  civil_date_value date := (p_input->>'civil_date')::date;
+  local_start_value time := (p_input->>'local_start')::time;
+  appointment_id uuid;
+BEGIN
+  IF p_input IS NULL OR patient IS NULL
+     OR (p_input->>'facility_id')::uuid IS NULL
+     OR (p_input->>'doctor_person_id')::uuid IS NULL
+     OR starts_at_value IS NULL OR ends_at_value IS NULL OR ends_at_value<=starts_at_value
+     OR civil_date_value IS NULL OR local_start_value IS NULL THEN
+    RAISE EXCEPTION 'invalid appointment request' USING ERRCODE='22023';
+  END IF;
+  IF p_expected_schedule_version IS NOT NULL AND p_expected_schedule_version<1 THEN
+    RAISE EXCEPTION 'invalid expected schedule version' USING ERRCODE='22023';
+  END IF;
+  IF p_expected_slot IS NOT NULL AND pg_catalog.jsonb_typeof(p_expected_slot)<>'object' THEN
+    RAISE EXCEPTION 'invalid selected appointment slot' USING ERRCODE='22023';
+  END IF;
+
+  -- Keep F009's schedule selection and lock order. F010 adds only the
+  -- optional version and exact effective-slot predicates below.
+  IF schedule_id IS NULL THEN
+    SELECT * INTO schedule_row
+    FROM clinical.schedules
+    WHERE facility_id=(p_input->>'facility_id')::uuid
+      AND doctor_person_id=(p_input->>'doctor_person_id')::uuid
+      AND status='active'
+      AND civil_date_value <@ valid_dates
+    ORDER BY valid_from,id
+    LIMIT 1
+    FOR UPDATE;
+  ELSE
+    SELECT * INTO schedule_row
+    FROM clinical.schedules
+    WHERE id=schedule_id
+    FOR UPDATE;
+  END IF;
+
+  IF NOT FOUND OR schedule_row.status<>'active'
+     OR schedule_row.facility_id IS DISTINCT FROM (p_input->>'facility_id')::uuid
+     OR schedule_row.doctor_person_id IS DISTINCT FROM (p_input->>'doctor_person_id')::uuid
+     OR schedule_row.timezone_name IS DISTINCT FROM (p_input->>'timezone_name')
+     OR NOT (civil_date_value <@ schedule_row.valid_dates)
+     OR (starts_at_value AT TIME ZONE schedule_row.timezone_name)::date IS DISTINCT FROM civil_date_value
+     OR (starts_at_value AT TIME ZONE schedule_row.timezone_name)::time IS DISTINCT FROM local_start_value THEN
+    RAISE EXCEPTION 'appointment schedule scope denied' USING ERRCODE='42501';
+  END IF;
+
+  IF p_expected_schedule_version IS NOT NULL
+     AND schedule_row.version IS DISTINCT FROM p_expected_schedule_version THEN
+    RAISE EXCEPTION 'appointment schedule is stale or missing' USING ERRCODE='40001';
+  END IF;
+
+  IF p_expected_slot IS NOT NULL THEN
+    IF (p_expected_slot->>'starts_at')::timestamptz IS DISTINCT FROM starts_at_value
+       OR (p_expected_slot->>'ends_at')::timestamptz IS DISTINCT FROM ends_at_value
+       OR p_expected_slot->>'timezone_name' IS DISTINCT FROM schedule_row.timezone_name
+       OR (p_expected_slot->>'civil_date')::date IS DISTINCT FROM civil_date_value
+       OR (p_expected_slot->>'local_start')::time IS DISTINCT FROM local_start_value
+       OR NOT EXISTS (
+         SELECT 1
+         FROM clinical.list_availability_v1(schedule_row.id,civil_date_value) available
+         WHERE available.starts_at=starts_at_value
+           AND available.ends_at=ends_at_value
+           AND available.timezone_name=schedule_row.timezone_name
+           AND available.civil_date=civil_date_value
+           AND available.local_start=local_start_value
+       ) THEN
+      RAISE EXCEPTION 'appointment selected slot is stale or unavailable' USING ERRCODE='40001';
+    END IF;
+  END IF;
+
+  INSERT INTO clinical.appointments(
+    patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,
+    timezone_name,civil_date,local_start,fee_minor_units,currency_code,
+    payment_method,status,source_referral_id,created_by_person_id,updated_by_person_id
+  ) VALUES (
+    patient,schedule_row.facility_id,schedule_row.doctor_person_id,schedule_row.id,
+    starts_at_value,ends_at_value,schedule_row.timezone_name,civil_date_value,local_start_value,
+    schedule_row.fee_minor_units,'EGP','cash_on_arrival','confirmed',
+    (p_input->>'source_referral_id')::uuid,actor,actor
+  ) RETURNING id INTO appointment_id;
+
+  RETURN appointment_id;
+END
+$$;
+
+REVOKE ALL ON FUNCTION clinical.book_appointment_internal_v1(jsonb,integer,jsonb) FROM PUBLIC;
+
+DO $feature_010_c08_internal_booking_privileges$
+DECLARE
+  role_name text;
+BEGIN
+  FOREACH role_name IN ARRAY ARRAY['shifaa_api','shifaa_worker','anon','authenticated','service_role'] LOOP
+    IF EXISTS (SELECT 1 FROM pg_catalog.pg_roles WHERE rolname=role_name) THEN
+      EXECUTE pg_catalog.format(
+        'REVOKE ALL ON FUNCTION clinical.book_appointment_internal_v1(jsonb,integer,jsonb) FROM %I',
+        role_name
+      );
+    END IF;
+  END LOOP;
+END
+$feature_010_c08_internal_booking_privileges$;
+
+-- The public F009 operation retains request validation, patient authorization,
+-- idempotency, stable results, audit/outbox, and failure-injection ordering.
+CREATE OR REPLACE FUNCTION clinical.create_appointment_v1(p_input jsonb)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
+DECLARE
+  appointment_id uuid;
+  actor uuid := platform.context_person_id();
+  patient uuid := (p_input->>'patient_person_id')::uuid;
+  schedule_id uuid;
+  result jsonb;
+  idem_id uuid;
+  idem_new boolean;
+  idem_response jsonb;
+BEGIN
+  schedule_id:=NULLIF(p_input->>'schedule_id','')::uuid;
+  IF p_input IS NULL OR patient IS NULL
+     OR (p_input->>'facility_id')::uuid IS NULL
+     OR (p_input->>'doctor_person_id')::uuid IS NULL
+     OR (p_input->>'starts_at')::timestamptz IS NULL
+     OR (p_input->>'ends_at')::timestamptz IS NULL
+     OR (p_input->>'ends_at')::timestamptz<=(p_input->>'starts_at')::timestamptz
+     OR (p_input->>'civil_date')::date IS NULL
+     OR (p_input->>'local_start')::time IS NULL
+     OR p_input->>'payment_method' IS DISTINCT FROM 'cash_on_arrival' THEN
+    RAISE EXCEPTION 'invalid appointment request' USING ERRCODE='22023';
+  END IF;
+  IF p_input ? 'fee_minor_units' OR p_input ? 'feeMinorUnits'
+     OR p_input ? 'currency_code' OR p_input ? 'currency' OR p_input ? 'currencyCode' THEN
+    RAISE EXCEPTION 'appointment fee and currency are server-owned' USING ERRCODE='22023';
+  END IF;
+
+  PERFORM clinical.assert_current_patient_scope_v1(patient);
+  SELECT record_id,is_new,response_body
+  INTO idem_id,idem_new,idem_response
+  FROM clinical.begin_mutation_v1('POST','/v1/appointments');
+  IF NOT idem_new THEN RETURN idem_response; END IF;
+
+  appointment_id:=clinical.book_appointment_internal_v1(p_input,NULL,NULL);
+  result:=clinical.project_appointment_v1(appointment_id);
+  IF result IS NULL THEN RAISE EXCEPTION 'appointment projection unavailable' USING ERRCODE='55000'; END IF;
+  PERFORM clinical.record_mutation_effect_v2(
+    'clinical.appointment.changed.v1','appointment.created','appointment',
+    appointment_id,(result->>'version')::integer,(p_input->>'facility_id')::uuid,patient
+  );
+  PERFORM clinical.maybe_inject_failure_v1('create_appointment');
+  PERFORM clinical.complete_mutation_v1(idem_id,201,'appointment',appointment_id,result);
+  RETURN result;
+END
+$$;
+
 COMMIT;
