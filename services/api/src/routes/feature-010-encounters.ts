@@ -7,11 +7,13 @@ import {
   EncounterProjectionSchema,
   EncounterStartResultSchema,
   GetEncounterQuerySchema,
+  UpdateEncounterRequestSchema,
   feature010Operations,
   type CreateEncounterRequest,
   type EncounterProjection,
   type Feature010Uuid,
   type GetEncounterQuery,
+  type UpdateEncounterRequest,
 } from '@shifaa/contracts';
 
 import { ApiPolicyError } from '../modules/identity-onboarding/errors.js';
@@ -20,7 +22,7 @@ import type { Feature010EncounterService } from '../modules/feature-010/encounte
 
 export type Feature010EncounterRouteService = Pick<
   Feature010EncounterService,
-  'createEncounter' | 'getEncounter'
+  'createEncounter' | 'getEncounter' | 'updateEncounter'
 >;
 
 export interface Feature010EncounterRouteDependencies {
@@ -31,6 +33,7 @@ export interface Feature010EncounterRouteDependencies {
 export const registeredFeature010EncounterOperationIds = [
   'createEncounter',
   'getEncounter',
+  'updateEncounter',
 ] satisfies readonly (typeof feature010Operations)[number]['operationId'][];
 
 const noStore = { 'cache-control': 'private, no-store', pragma: 'no-cache' } as const;
@@ -38,6 +41,26 @@ const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}
 const syntheticModes = new WeakMap<FastifyInstance, boolean>();
 
 type RequestActor = Parameters<Feature010EncounterRouteService['getEncounter']>[0];
+
+function resourceVersion(request: FastifyRequest): number {
+  const value = request.headers['if-match'];
+  if (typeof value !== 'string' || !/^\"[1-9][0-9]*\"$/.test(value)) {
+    throw new ApiPolicyError(
+      'validation-failed',
+      422,
+      'A current quoted If-Match version is required.',
+    );
+  }
+  const version = Number(value.slice(1, -1));
+  if (!Number.isSafeInteger(version)) {
+    throw new ApiPolicyError(
+      'validation-failed',
+      422,
+      'A current quoted If-Match version is required.',
+    );
+  }
+  return version;
+}
 
 function requireClosed<T>(schema: unknown, value: unknown): T {
   if (!Value.Check(schema as never, value)) {
@@ -182,6 +205,17 @@ async function invoke<T>(work: () => Promise<T>): Promise<T> {
       );
     }
     if (
+      code === '55000' &&
+      (message.includes('encounter is no longer open') ||
+        message.includes('participant interval is no longer active'))
+    ) {
+      throw new ApiPolicyError(
+        'state-transition-invalid',
+        409,
+        'The encounter or participant interval is no longer active.',
+      );
+    }
+    if (
       code === '40001' &&
       (message.includes('matching called queue entry is required') ||
         message.includes('appointment is no longer eligible for encounter creation') ||
@@ -265,6 +299,46 @@ async function getEncounter(
   return reply.status(200).headers(responseHeaders(request)).send(value);
 }
 
+async function updateEncounter(
+  request: FastifyRequest,
+  reply: FastifyReply,
+  deps: Feature010EncounterRouteDependencies,
+) {
+  const actor = actorFor(request);
+  if (actor.aal < 2)
+    throw new ApiPolicyError('mfa-required', 403, 'AAL2 is required for encounter updates.');
+  if (actor.purposes.length === 0)
+    throw new ApiPolicyError('purpose-required', 403, 'A current purpose is required.');
+  const { encounterId } = request.params as { encounterId?: unknown };
+  if (typeof encounterId !== 'string' || !uuidPattern.test(encounterId)) {
+    throw new ApiPolicyError('validation-failed', 422, 'The encounter identifier is invalid.');
+  }
+  const body = requireClosed<UpdateEncounterRequest>(UpdateEncounterRequestSchema, request.body);
+  const key = idempotencyKey(request);
+  const expectedVersion = resourceVersion(request);
+  const value = await invoke(() =>
+    deps.service.updateEncounter(
+      {
+        actor,
+        idempotencyKey: key,
+        // The approved C10 replay contract binds a key to the canonical request body;
+        // an exact retry replays before checking its now-stale If-Match version.
+        requestHash: hashRequest(body),
+        expectedVersion,
+      },
+      encounterId as Feature010Uuid,
+      body,
+    ),
+  );
+  if (!Value.Check(EncounterProjectionSchema, value)) {
+    throw new ApiPolicyError('internal-error', 500, 'The encounter response is unavailable.');
+  }
+  return reply
+    .status(200)
+    .headers(responseHeaders(request))
+    .send(selectEncounterProjection(value, undefined));
+}
+
 export async function registerFeature010EncounterRoutes(
   app: FastifyInstance,
   deps: Feature010EncounterRouteDependencies,
@@ -272,4 +346,7 @@ export async function registerFeature010EncounterRoutes(
   syntheticModes.set(app, deps.syntheticMode);
   app.post('/v1/encounters', (request, reply) => createEncounter(request, reply, deps));
   app.get('/v1/encounters/:encounterId', (request, reply) => getEncounter(request, reply, deps));
+  app.patch('/v1/encounters/:encounterId', (request, reply) =>
+    updateEncounter(request, reply, deps),
+  );
 }

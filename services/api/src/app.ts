@@ -407,7 +407,7 @@ function failClosedFeature010EncounterService(): Feature010EncounterRouteService
   const unavailable = async (): Promise<never> => {
     throw new ApiPolicyError('open-sec-001', 503, 'Feature 010 encounters are unavailable.');
   };
-  return { createEncounter: unavailable, getEncounter: unavailable };
+  return { createEncounter: unavailable, getEncounter: unavailable, updateEncounter: unavailable };
 }
 
 function failClosedClinicSchedulingService(): ClinicSchedulingService {

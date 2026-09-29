@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C10 accepted; T001–T030 complete, T031–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C11 accepted; T001–T033 complete, T034–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -202,15 +202,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Only same-subject facts and confirmed non-responsible interval end can mutate.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T031 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001] Write red updateEncounter tests for If-Match, 0..n same-patient references, participant-add/responsible-end denial and immediate chat cutoff; assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success writes domain/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-update.integration.test.ts`
+- [x] T031 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001] Write red updateEncounter tests for If-Match, 0..n same-patient references, participant-add/responsible-end denial and immediate chat cutoff; assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success writes domain/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-update.integration.test.ts`
   - Depends on: `T030`
   - Acceptance evidence: `focused test fails on missing update guard only`
 
-- [ ] T032 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001] Implement updateEncounter through Core API and locked SQL for approved structured fields and confirmed non-responsible interval end; atomically write domain/audit/outbox/canonical stored response once, return it on identical-key/body replay without duplicate effects, and reject changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/encounters.ts; services/api/src/adapters/postgres/feature-010-encounters.ts; services/api/src/routes/feature-010-encounters.ts`
+- [x] T032 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001] Implement updateEncounter through Core API and locked SQL for approved structured fields and confirmed non-responsible interval end; atomically write domain/audit/outbox/canonical stored response once, return it on identical-key/body replay without duplicate effects, and reject changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/encounters.ts; services/api/src/adapters/postgres/feature-010-encounters.ts; services/api/src/routes/feature-010-encounters.ts`
   - Depends on: `T031`
   - Acceptance evidence: `identical same-key replay returns the stored response without another effect; stale/invalid/unauthorized/changed-body replay conflict leaves no duplicate or partial domain/audit/outbox/idempotent-response effect`
 
-- [ ] T033 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006] Run update transaction, interval-revocation and RLS tests; verify identical-key/body replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one domain/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths cause no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C11-update.md`
+- [x] T033 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-004, NFR-SEC-005, NFR-SEC-006] Run update transaction, interval-revocation and RLS tests; verify identical-key/body replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one domain/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths cause no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C11-update.md`
   - Depends on: `T032`
   - Acceptance evidence: `all update cases pass with immediate chat denial, exactly-once successful effect/response and no partial negative-path effects`
 

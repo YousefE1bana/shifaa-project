@@ -59,6 +59,7 @@ function serviceStub() {
   return {
     createEncounter: vi.fn(async () => response),
     getEncounter: vi.fn(async () => response.encounter),
+    updateEncounter: vi.fn(async () => response.encounter),
   };
 }
 
@@ -66,7 +67,7 @@ describe('Feature 010 encounter HTTP contract', () => {
   const apps: ReturnType<typeof Fastify>[] = [];
   afterEach(async () => Promise.all(apps.splice(0).map((app) => app.close())));
 
-  it('registers only createEncounter and getEncounter from the approved contract', async () => {
+  it('registers the approved create, read, and update operations', async () => {
     const service = serviceStub();
     const app = Fastify({ logger: false });
     apps.push(app);
@@ -75,12 +76,14 @@ describe('Feature 010 encounter HTTP contract', () => {
 
     expect(registeredFeature010EncounterOperationIds).toEqual(
       feature010Operations
-        .filter(({ operationId }) => ['createEncounter', 'getEncounter'].includes(operationId))
+        .filter(({ operationId }) =>
+          ['createEncounter', 'getEncounter', 'updateEncounter'].includes(operationId),
+        )
         .map(({ operationId }) => operationId),
     );
     expect(app.hasRoute({ method: 'POST', url: '/v1/encounters' })).toBe(true);
     expect(app.hasRoute({ method: 'GET', url: '/v1/encounters/:encounterId' })).toBe(true);
-    expect(app.hasRoute({ method: 'PATCH', url: '/v1/encounters/:encounterId' })).toBe(false);
+    expect(app.hasRoute({ method: 'PATCH', url: '/v1/encounters/:encounterId' })).toBe(true);
   });
 
   it('rejects client-supplied workforce identity fields before calling the service', async () => {
@@ -185,6 +188,7 @@ describe('Feature 010 encounter HTTP contract', () => {
         return response;
       }),
       getEncounter: vi.fn(async () => response.encounter),
+      updateEncounter: vi.fn(async () => response.encounter),
     };
     const app = Fastify({ logger: false });
     apps.push(app);

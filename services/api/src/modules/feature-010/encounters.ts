@@ -4,6 +4,7 @@ import type {
   EncounterStartResult,
   Feature010Uuid,
   GetEncounterQuery,
+  UpdateEncounterRequest,
 } from '@shifaa/contracts';
 
 export interface Feature010EncounterActor {
@@ -22,6 +23,10 @@ export interface Feature010EncounterMutationContext {
   readonly requestHash: string;
 }
 
+export interface Feature010EncounterUpdateContext extends Feature010EncounterMutationContext {
+  readonly expectedVersion: number;
+}
+
 export type EncounterFields = NonNullable<GetEncounterQuery['fields']>;
 
 export interface Feature010EncounterRepository {
@@ -34,9 +39,14 @@ export interface Feature010EncounterRepository {
     encounterId: Feature010Uuid,
     fields?: EncounterFields,
   ): Promise<EncounterProjection | null>;
+  updateEncounter(
+    context: Feature010EncounterUpdateContext,
+    encounterId: Feature010Uuid,
+    input: UpdateEncounterRequest,
+  ): Promise<EncounterProjection>;
 }
 
-/** Core API boundary for the two C10 operations; all clinical policy is rechecked by SQL. */
+/** Core API boundary; all clinical policy is rechecked by the locked SQL entrypoints. */
 export class Feature010EncounterService {
   public constructor(private readonly repository: Feature010EncounterRepository) {}
 
@@ -53,5 +63,13 @@ export class Feature010EncounterService {
     fields?: EncounterFields,
   ): Promise<EncounterProjection | null> {
     return this.repository.getEncounter(actor, encounterId, fields);
+  }
+
+  public updateEncounter(
+    context: Feature010EncounterUpdateContext,
+    encounterId: Feature010Uuid,
+    input: UpdateEncounterRequest,
+  ): Promise<EncounterProjection> {
+    return this.repository.updateEncounter(context, encounterId, input);
   }
 }
