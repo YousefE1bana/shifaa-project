@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C11 accepted; T001–T033 complete, T034–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C12 accepted; T001–T036 complete, T037–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -219,15 +219,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** A signed correction appends a version without sharing private text.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T034 [US1] [FR-CLINIC-006, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PRIV-004] Write red signEncounterNote tests for nonblank body/type/visibility, encrypted immutable supersession and authorized signer; assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success inserts a signed version/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-notes.integration.test.ts`
+- [x] T034 [US1] [FR-CLINIC-006, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PRIV-004] Write red signEncounterNote tests for nonblank body/type/visibility, encrypted immutable supersession and authorized signer; assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success inserts a signed version/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-notes.integration.test.ts`
   - Depends on: `T033`
   - Acceptance evidence: `missing note signer/supersession behavior is the only failing assertion`
 
-- [ ] T035 [US1] [FR-CLINIC-006, NFR-SEC-002, NFR-SEC-005, NFR-PRIV-004, NFR-SEC-006] Implement signEncounterNote in Core API/PostgreSQL with append-only signed versions and private|patient_visible projection; atomically write domain/audit/outbox/canonical stored response once, return it on identical-key/body replay without duplicates, and reject changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/notes.ts; services/api/src/adapters/postgres/feature-010-notes.ts; services/api/src/routes/feature-010-encounters.ts`
+- [x] T035 [US1] [FR-CLINIC-006, NFR-SEC-002, NFR-SEC-005, NFR-PRIV-004, NFR-SEC-006] Implement signEncounterNote in Core API/PostgreSQL with append-only signed versions and private|patient_visible projection; atomically write domain/audit/outbox/canonical stored response once, return it on identical-key/body replay without duplicates, and reject changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/notes.ts; services/api/src/adapters/postgres/feature-010-notes.ts; services/api/src/routes/feature-010-encounters.ts`
   - Depends on: `T034`
   - Acceptance evidence: `private bodies never enter patient/referral/audit/outbox; unauthorized, stale, invalid and changed-body replay conflicts deny without duplicate or partial effects`
 
-- [ ] T036 [US1] [FR-CLINIC-006, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PRIV-004] Run note API, SQL append-only and private-projection checks; verify identical-key/body signing replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one signed-version/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths have no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C12-notes.md`
+- [x] T036 [US1] [FR-CLINIC-006, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006, NFR-PRIV-004] Run note API, SQL append-only and private-projection checks; verify identical-key/body signing replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one signed-version/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths have no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C12-notes.md`
   - Depends on: `T035`
   - Acceptance evidence: `signed history remains immutable; role projection and exactly-once domain/audit/outbox/stored-response tests pass, with no partial negative-path effects`
 

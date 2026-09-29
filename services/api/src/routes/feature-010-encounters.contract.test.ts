@@ -59,6 +59,7 @@ function serviceStub() {
   return {
     createEncounter: vi.fn(async () => response),
     getEncounter: vi.fn(async () => response.encounter),
+    signEncounterNote: vi.fn(),
     updateEncounter: vi.fn(async () => response.encounter),
   };
 }
@@ -67,7 +68,7 @@ describe('Feature 010 encounter HTTP contract', () => {
   const apps: ReturnType<typeof Fastify>[] = [];
   afterEach(async () => Promise.all(apps.splice(0).map((app) => app.close())));
 
-  it('registers the approved create, read, and update operations', async () => {
+  it('registers the approved create, read, update, and note signing operations', async () => {
     const service = serviceStub();
     const app = Fastify({ logger: false });
     apps.push(app);
@@ -77,13 +78,16 @@ describe('Feature 010 encounter HTTP contract', () => {
     expect(registeredFeature010EncounterOperationIds).toEqual(
       feature010Operations
         .filter(({ operationId }) =>
-          ['createEncounter', 'getEncounter', 'updateEncounter'].includes(operationId),
+          ['createEncounter', 'getEncounter', 'updateEncounter', 'signEncounterNote'].includes(
+            operationId,
+          ),
         )
         .map(({ operationId }) => operationId),
     );
     expect(app.hasRoute({ method: 'POST', url: '/v1/encounters' })).toBe(true);
     expect(app.hasRoute({ method: 'GET', url: '/v1/encounters/:encounterId' })).toBe(true);
     expect(app.hasRoute({ method: 'PATCH', url: '/v1/encounters/:encounterId' })).toBe(true);
+    expect(app.hasRoute({ method: 'POST', url: '/v1/encounters/:encounterId/notes' })).toBe(true);
   });
 
   it('rejects client-supplied workforce identity fields before calling the service', async () => {
@@ -188,6 +192,7 @@ describe('Feature 010 encounter HTTP contract', () => {
         return response;
       }),
       getEncounter: vi.fn(async () => response.encounter),
+      signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(async () => response.encounter),
     };
     const app = Fastify({ logger: false });
@@ -260,8 +265,9 @@ describe('Feature 010 encounter HTTP contract', () => {
     expect(unknown.json().code).toBe('validation-failed');
   });
 
-  it('fails closed when note bodies are explicitly requested before the authorized decrypting projection exists', async () => {
+  it('returns the authorized note projection when note bodies are explicitly requested', async () => {
     const service = serviceStub();
+    service.getEncounter.mockResolvedValue({ ...response.encounter, notes: [] });
     const app = Fastify({ logger: false });
     apps.push(app);
     await registerFeature010EncounterRoutes(app, { service, syntheticMode: true });
@@ -272,10 +278,9 @@ describe('Feature 010 encounter HTTP contract', () => {
       headers: headers(),
     });
 
-    expect(result.statusCode).toBe(503);
-    expect(result.json().code).toBe('dependency-unavailable');
-    expect(result.body).not.toContain('private');
-    expect(service.getEncounter).not.toHaveBeenCalled();
+    expect(result.statusCode).toBe(200);
+    expect(result.json()).toHaveProperty('notes', []);
+    expect(service.getEncounter).toHaveBeenCalledWith(expect.any(Object), encounter, ['notes']);
   });
 
   it('maps a stale checked-in/called transition to the catalogued conflict code', async () => {

@@ -1,11 +1,14 @@
 import type {
   CreateEncounterRequest,
+  CareTeamNoteProjection,
   EncounterProjection,
   EncounterStartResult,
   Feature010Uuid,
   GetEncounterQuery,
+  SignEncounterNoteRequest,
   UpdateEncounterRequest,
 } from '@shifaa/contracts';
+import type { Feature010NotesService } from './notes.js';
 
 export interface Feature010EncounterActor {
   readonly personId: Feature010Uuid;
@@ -48,7 +51,10 @@ export interface Feature010EncounterRepository {
 
 /** Core API boundary; all clinical policy is rechecked by the locked SQL entrypoints. */
 export class Feature010EncounterService {
-  public constructor(private readonly repository: Feature010EncounterRepository) {}
+  public constructor(
+    private readonly repository: Feature010EncounterRepository,
+    private readonly notes: Feature010NotesService,
+  ) {}
 
   public createEncounter(
     context: Feature010EncounterMutationContext,
@@ -71,5 +77,13 @@ export class Feature010EncounterService {
     input: UpdateEncounterRequest,
   ): Promise<EncounterProjection> {
     return this.repository.updateEncounter(context, encounterId, input);
+  }
+
+  public signEncounterNote(
+    context: Feature010EncounterMutationContext,
+    encounterId: Feature010Uuid,
+    input: SignEncounterNoteRequest,
+  ): Promise<CareTeamNoteProjection> {
+    return this.notes.signEncounterNote(context, encounterId, input);
   }
 }

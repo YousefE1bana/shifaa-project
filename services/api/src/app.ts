@@ -21,6 +21,7 @@ import {
   PostgresAuditExportOrchestrationRepository,
   LocalSyntheticAuditObjectStore,
   PostgresFeature010EncounterRepository,
+  PostgresFeature010NotesRepository,
 } from './adapters/index.js';
 import { loadConfig, type ApiConfig } from './config.js';
 import {
@@ -66,6 +67,7 @@ import type { AuditAdminActor, AuditExportServiceActor } from './modules/audit-a
 import { registerAuditAdminRoutes } from './routes/audit-admin.js';
 import { ApiPolicyError } from './modules/identity-onboarding/errors.js';
 import { Feature010EncounterService } from './modules/feature-010/encounters.js';
+import { Feature010NotesService } from './modules/feature-010/notes.js';
 import {
   registerFeature010EncounterRoutes,
   type Feature010EncounterRouteService,
@@ -219,12 +221,21 @@ export async function buildApp(
   const feature010EncounterService =
     options.feature010EncounterService ??
     (repository instanceof PostgresIdentityRepository
-      ? new Feature010EncounterService(
-          new PostgresFeature010EncounterRepository(
+      ? (() => {
+          const notesRepository = new PostgresFeature010NotesRepository(
             repository,
             auditEnvironment(config.environment),
-          ),
-        )
+            config.identityEncryptionKey,
+          );
+          return new Feature010EncounterService(
+            new PostgresFeature010EncounterRepository(
+              repository,
+              auditEnvironment(config.environment),
+              notesRepository,
+            ),
+            new Feature010NotesService(notesRepository),
+          );
+        })()
       : failClosedFeature010EncounterService());
   await app.register(cors, {
     origin: config.corsOrigins,
@@ -407,7 +418,12 @@ function failClosedFeature010EncounterService(): Feature010EncounterRouteService
   const unavailable = async (): Promise<never> => {
     throw new ApiPolicyError('open-sec-001', 503, 'Feature 010 encounters are unavailable.');
   };
-  return { createEncounter: unavailable, getEncounter: unavailable, updateEncounter: unavailable };
+  return {
+    createEncounter: unavailable,
+    getEncounter: unavailable,
+    updateEncounter: unavailable,
+    signEncounterNote: unavailable,
+  };
 }
 
 function failClosedClinicSchedulingService(): ClinicSchedulingService {

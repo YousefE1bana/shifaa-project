@@ -64,6 +64,7 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
     const service = {
       createEncounter: vi.fn(),
       getEncounter: vi.fn(),
+      signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(
         async (context: { expectedVersion: number; requestHash: string }) => updatedEncounter,
       ),
@@ -100,6 +101,7 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
     const service = {
       createEncounter: vi.fn(),
       getEncounter: vi.fn(),
+      signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(async () => updatedEncounter),
     };
     const app = Fastify({ logger: false });
@@ -129,6 +131,7 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
     const service = {
       createEncounter: vi.fn(),
       getEncounter: vi.fn(),
+      signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(
         async (context: { expectedVersion: number; requestHash: string }) => updatedEncounter,
       ),
@@ -174,6 +177,7 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
     const service = {
       createEncounter: vi.fn(),
       getEncounter: vi.fn(),
+      signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(async () => ({
         ...updatedEncounter,
         notes: [
@@ -217,6 +221,7 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
     const service = {
       createEncounter: vi.fn(),
       getEncounter: vi.fn(),
+      signEncounterNote: vi.fn(),
       updateEncounter,
     };
     const app = Fastify({ logger: false });
@@ -247,6 +252,7 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
     const service = {
       createEncounter: vi.fn(),
       getEncounter: vi.fn(),
+      signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(async () => updatedEncounter),
     };
     const app = Fastify({ logger: false });

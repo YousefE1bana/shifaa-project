@@ -4,15 +4,19 @@ import { Value } from '@sinclair/typebox/value';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import {
   CreateEncounterRequestSchema,
+  CareTeamNoteProjectionSchema,
   EncounterProjectionSchema,
   EncounterStartResultSchema,
   GetEncounterQuerySchema,
+  SignEncounterNoteRequestSchema,
   UpdateEncounterRequestSchema,
   feature010Operations,
   type CreateEncounterRequest,
+  type CareTeamNoteProjection,
   type EncounterProjection,
   type Feature010Uuid,
   type GetEncounterQuery,
+  type SignEncounterNoteRequest,
   type UpdateEncounterRequest,
 } from '@shifaa/contracts';
 
@@ -22,7 +26,7 @@ import type { Feature010EncounterService } from '../modules/feature-010/encounte
 
 export type Feature010EncounterRouteService = Pick<
   Feature010EncounterService,
-  'createEncounter' | 'getEncounter' | 'updateEncounter'
+  'createEncounter' | 'getEncounter' | 'updateEncounter' | 'signEncounterNote'
 >;
 
 export interface Feature010EncounterRouteDependencies {
@@ -34,6 +38,7 @@ export const registeredFeature010EncounterOperationIds = [
   'createEncounter',
   'getEncounter',
   'updateEncounter',
+  'signEncounterNote',
 ] satisfies readonly (typeof feature010Operations)[number]['operationId'][];
 
 const noStore = { 'cache-control': 'private, no-store', pragma: 'no-cache' } as const;
@@ -169,7 +174,7 @@ function selectEncounterProjection(
   fields: GetEncounterQuery['fields'],
 ): EncounterProjection {
   const selectedProjection = { ...projection } as unknown as Record<string, unknown>;
-  delete selectedProjection['notes'];
+  if (!fields?.includes('notes')) delete selectedProjection['notes'];
   if (fields !== undefined) {
     const selectedFields = new Set(fields);
     if (!selectedFields.has('conditions')) delete selectedProjection['conditionIds'];
@@ -280,13 +285,6 @@ async function getEncounter(
     throw new ApiPolicyError('validation-failed', 422, 'The encounter identifier is invalid.');
   }
   const fields = parseFields(request);
-  if (fields?.includes('notes')) {
-    throw new ApiPolicyError(
-      'dependency-unavailable',
-      503,
-      'The authorized encounter note body projection is unavailable in this checkpoint.',
-    );
-  }
   const projection = await invoke(() =>
     deps.service.getEncounter(actor, encounterId as Feature010Uuid, fields),
   );
@@ -297,6 +295,41 @@ async function getEncounter(
     throw new ApiPolicyError('internal-error', 500, 'The encounter projection is unavailable.');
   }
   return reply.status(200).headers(responseHeaders(request)).send(value);
+}
+
+async function signEncounterNote(
+  request: FastifyRequest,
+  reply: FastifyReply,
+  deps: Feature010EncounterRouteDependencies,
+) {
+  const actor = actorFor(request);
+  if (actor.aal < 2)
+    throw new ApiPolicyError('mfa-required', 403, 'AAL2 is required to sign encounter notes.');
+  if (actor.purposes.length === 0)
+    throw new ApiPolicyError('purpose-required', 403, 'A current purpose is required.');
+  const { encounterId } = request.params as { encounterId?: unknown };
+  if (typeof encounterId !== 'string' || !uuidPattern.test(encounterId)) {
+    throw new ApiPolicyError('validation-failed', 422, 'The encounter identifier is invalid.');
+  }
+  const body = requireClosed<SignEncounterNoteRequest>(
+    SignEncounterNoteRequestSchema,
+    request.body,
+  );
+  if (body.noteType.trim().length === 0 || body.body.trim().length === 0) {
+    throw new ApiPolicyError('validation-failed', 422, 'A note type and body are required.');
+  }
+  const key = idempotencyKey(request);
+  const value = await invoke(() =>
+    deps.service.signEncounterNote(
+      { actor, idempotencyKey: key, requestHash: hashRequest(body) },
+      encounterId as Feature010Uuid,
+      { ...body, noteType: body.noteType.trim() },
+    ),
+  );
+  if (!Value.Check(CareTeamNoteProjectionSchema, value)) {
+    throw new ApiPolicyError('internal-error', 500, 'The signed note response is unavailable.');
+  }
+  return reply.status(201).headers(responseHeaders(request)).send(value);
 }
 
 async function updateEncounter(
@@ -348,5 +381,8 @@ export async function registerFeature010EncounterRoutes(
   app.get('/v1/encounters/:encounterId', (request, reply) => getEncounter(request, reply, deps));
   app.patch('/v1/encounters/:encounterId', (request, reply) =>
     updateEncounter(request, reply, deps),
+  );
+  app.post('/v1/encounters/:encounterId/notes', (request, reply) =>
+    signEncounterNote(request, reply, deps),
   );
 }

@@ -18,6 +18,7 @@ import type {
   Feature010EncounterRepository,
 } from '../../modules/feature-010/encounters.js';
 import type { PostgresIdentityRepository } from './identity-repository.js';
+import type { PostgresFeature010NotesRepository } from './feature-010-notes.js';
 
 type RawTransactionRepository = Pick<PostgresIdentityRepository, 'withRawTransaction'>;
 
@@ -56,6 +57,7 @@ export class PostgresFeature010EncounterRepository implements Feature010Encounte
   public constructor(
     private readonly repository: RawTransactionRepository,
     private readonly environment: 'local' | 'ci' | 'production' = 'local',
+    private readonly notes: PostgresFeature010NotesRepository,
   ) {}
 
   public async createEncounter(
@@ -94,9 +96,10 @@ export class PostgresFeature010EncounterRepository implements Feature010Encounte
             typeof row.projection === 'string'
               ? (JSON.parse(row.projection) as Record<string, unknown>)
               : (row.projection as Record<string, unknown>);
-          // C07 currently exposes note metadata, not authorized decrypted bodies. Keep this
-          // response within the current metadata-only boundary until the note API checkpoint.
           delete value['notes'];
+          if (fields?.includes('notes')) {
+            value['notes'] = await this.notes.projectAuthorizedNotes(sql, encounterId, role);
+          }
           if (fields !== undefined) {
             const selected = new Set(fields);
             if (!selected.has('conditions')) delete value['conditionIds'];
