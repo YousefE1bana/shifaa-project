@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C14 accepted; T001–T042 complete, T043–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C15 accepted; T001–T045 complete, T046–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -270,15 +270,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Clinician can review facts, sign notes, end intervals and confirm completion.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T043 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-A11Y-001] Write red UI tests for created empty content, private/patient-visible note draft and sign review, active/historical intervals, confirmed end, and distinct completion effects — `apps/clinic/test/feature-010-encounter.test.tsx`
+- [X] T043 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-A11Y-001] Write red UI tests for created empty content, private/patient-visible note draft and sign review, active/historical intervals, confirmed end, and distinct completion effects — `apps/clinic/test/feature-010-encounter.test.tsx`
   - Depends on: `T042`
   - Acceptance evidence: `fixture prevents a second initial participant or pre-existing signed note`
 
-- [ ] T044 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-A11Y-001, NFR-I18N-001] Implement existing clinic /encounters/:id with note sign, interval end modal/drawer and completion review; responsible is non-removable, no add picker, completed participants are historical — `apps/clinic/src/app/encounters/[id]/page.tsx; apps/clinic/src/components/feature-010/EncounterWorkspace.tsx`
+- [X] T044 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-A11Y-001, NFR-I18N-001] Implement existing clinic /encounters/:id with note sign, interval end modal/drawer and completion review; responsible is non-removable, no add picker, completed participants are historical — `apps/clinic/src/app/encounters/[id]/page.tsx; apps/clinic/src/components/feature-010/EncounterWorkspace.tsx`
   - Depends on: `T043`
   - Acceptance evidence: `no offline write or participant-add control; actions use generated Core API client`
 
-- [ ] T045 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-A11Y-001] Run clinic encounter state/keyboard/RTL tests against approved family baselines — `specs/010-encounters-referrals-contextual-chat/evidence/C15-clinic-encounter-ui.md`
+- [X] T045 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-A11Y-001] Run clinic encounter state/keyboard/RTL tests against approved family baselines — `specs/010-encounters-referrals-contextual-chat/evidence/C15-clinic-encounter-ui.md`
   - Depends on: `T044`
   - Acceptance evidence: `created/note/participant/completion/completed states pass at 768 and 1440`
 
