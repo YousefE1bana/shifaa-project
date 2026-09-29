@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C22 accepted; T001–T066 complete, T067–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C23 accepted; T001–T069 complete, T070–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -412,15 +412,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Event delivery is body-free and never grants authority.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T067 [US3] [FR-FAC-006, NFR-OBS-001, NFR-AVAIL-001] Write red worker tests for minimum-ID context marker, aggregate ordering/dedup/retry/DLQ, revoked participant and duplicate/missed hint followed by REST reauthorization — `services/worker/src/feature-010-realtime.test.ts`
+- [X] T067 [US3] [FR-FAC-006, NFR-OBS-001, NFR-AVAIL-001] Write red worker tests for minimum-ID context marker, aggregate ordering/dedup/retry/DLQ, revoked participant and duplicate/missed hint followed by REST reauthorization — `services/worker/src/feature-010-realtime.test.ts`
   - Depends on: `T066`
   - Acceptance evidence: `no PHI body reaches event payload or retry log`
 
-- [ ] T068 [US3] [FR-FAC-006, NFR-OBS-001, NFR-AVAIL-001] Implement Feature 010 outbox marker consumer as a realtime refresh hint using existing worker pipeline; add no notification template/channel or Feature 009 runner change — `services/worker/src/feature-010-realtime.ts; services/worker/src/feature-010-runner.ts; package.json`
+- [X] T068 [US3] [FR-FAC-006, NFR-OBS-001, NFR-AVAIL-001] Implement Feature 010 outbox marker consumer as a realtime refresh hint using existing worker pipeline; add no notification template/channel or Feature 009 runner change — `services/worker/src/feature-010-realtime.ts; services/worker/src/feature-010-runner.ts; package.json`
   - Depends on: `T067`
   - Acceptance evidence: `client must re-fetch REST; hint never authorizes read/send`
 
-- [ ] T069 [US3] [FR-FAC-006, NFR-OBS-001, NFR-AVAIL-001] Run worker ordering/redaction/retry tests and message API revocation test — `specs/010-encounters-referrals-contextual-chat/evidence/C23-realtime.md`
+- [X] T069 [US3] [FR-FAC-006, NFR-OBS-001, NFR-AVAIL-001] Run worker ordering/redaction/retry tests and message API revocation test — `specs/010-encounters-referrals-contextual-chat/evidence/C23-realtime.md`
   - Depends on: `T068`
   - Acceptance evidence: `one accepted marker, body-free payload and REST reauth pass`
 

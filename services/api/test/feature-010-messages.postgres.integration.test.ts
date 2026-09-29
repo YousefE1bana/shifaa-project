@@ -18,6 +18,12 @@ const appointmentId = 'f0101000-0000-4000-8500-000000000004';
 const encounterId = 'f0101000-0000-4000-8800-000000000002';
 let harness: Awaited<ReturnType<typeof buildApp>> | undefined;
 
+type RefreshHintFixture = Readonly<{
+  eventId: string;
+  contextId: string;
+  version: number;
+}>;
+
 function headers(personId: string, key: string) {
   return {
     authorization: `Bearer synthetic-person:${personId}`,
@@ -54,6 +60,20 @@ async function list(personId: string, query = '', contextId = appointmentId) {
     url: `/v1/contexts/appointment/${contextId}/messages${query}`,
     headers: headers(personId, 'f010-c22-list-key-0001'),
   });
+}
+
+async function observeRefreshHintAndRefetch(
+  hint: RefreshHintFixture,
+  personId: string,
+  key: string,
+  query = '',
+) {
+  // The hint carries only a context marker and ordering value. Authority comes from
+  // the real REST request made after observing it, never from the hint fixture.
+  return {
+    history: await list(personId, query, hint.contextId),
+    send: await send(personId, key, 'C23 refresh-hint authorization probe.'),
+  };
 }
 
 describe.skipIf(!database)('Feature 010 message API against PostgreSQL', () => {
@@ -175,6 +195,26 @@ describe.skipIf(!database)('Feature 010 message API against PostgreSQL', () => {
       expect(deniedSend.body).not.toContain('Forbidden synthetic message.');
     }
 
+    // Deliberately observe a duplicate and out-of-order marker IDs at version
+    // 1, omitting a third marker. Each observation is followed by REST auth.
+    const endedHintEvents = [
+      'f0101000-0000-4000-8a00-000000000002',
+      'f0101000-0000-4000-8a00-000000000001',
+      'f0101000-0000-4000-8a00-000000000002',
+    ];
+    for (const [index, eventId] of endedHintEvents.entries()) {
+      const observed = await observeRefreshHintAndRefetch(
+        { eventId, contextId: appointmentId, version: 1 },
+        endedClinicianId,
+        `f010-c23-ended-hint-${String(index).padStart(2, '0')}`,
+      );
+      expect(observed.history.statusCode).toBe(403);
+      expect(observed.history.body).not.toContain(patientBody);
+      expect(observed.history.body).not.toContain(clinicianBody);
+      expect(observed.send.statusCode).toBe(403);
+      expect(observed.send.body).not.toContain('C23 refresh-hint authorization probe.');
+    }
+
     if (!harness) throw new Error('The C22 PostgreSQL API harness is unavailable.');
     const completed = await harness.app.inject({
       method: 'POST',
@@ -205,5 +245,26 @@ describe.skipIf(!database)('Feature 010 message API against PostgreSQL', () => {
     expect(completedReplay.body).not.toContain(patientBody);
     expect(completedSend.statusCode).toBe(403);
     expect(completedSend.json().code).toBe('forbidden');
+
+    // A stale page cursor and duplicate/out-of-order hints cannot revive the
+    // completed context. History, paging, and sending still go through REST.
+    const completedHintEvents = [
+      'f0101000-0000-4000-8a00-000000000004',
+      'f0101000-0000-4000-8a00-000000000003',
+      'f0101000-0000-4000-8a00-000000000004',
+    ];
+    for (const [index, eventId] of completedHintEvents.entries()) {
+      const observed = await observeRefreshHintAndRefetch(
+        { eventId, contextId: appointmentId, version: 1 },
+        patientId,
+        `f010-c23-completed-hint-${String(index).padStart(2, '0')}`,
+        `?limit=1&cursor=${encodeURIComponent(cursor)}`,
+      );
+      expect(observed.history.statusCode).toBe(403);
+      expect(observed.history.body).not.toContain(patientBody);
+      expect(observed.history.body).not.toContain(clinicianBody);
+      expect(observed.send.statusCode).toBe(403);
+      expect(observed.send.body).not.toContain('C23 refresh-hint authorization probe.');
+    }
   }, 30_000);
 });

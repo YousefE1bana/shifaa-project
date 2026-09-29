@@ -1841,6 +1841,14 @@ async function testRuntime(runtime) {
         c22ContextMessagesMigration,
         'focused C22 context messages API migration',
       );
+      if (process.env['SHIFAA_TEST_F010_C23_REGRESSION'] === 'true') {
+        runMigration(
+          runtime,
+          database,
+          'supabase/migrations/20260930001000_f010_c23_realtime_hint.sql',
+          'C23 compatibility migration before C22 authorization regressions',
+        );
+      }
       checkStorage(runtime, database, 'focused C06 storage regression before C22 vectors');
       checkRls(runtime, database, 'focused C07 forced-RLS regression before C22 vectors');
       checkUpdate(runtime, database, 'focused C11 update regression before C22 vectors');
