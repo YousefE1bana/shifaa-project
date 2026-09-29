@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C19 accepted; T001–T057 complete, T058–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C20 accepted; T001–T060 complete, T061–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -358,15 +358,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** PAT/GUA/DEL review exact disclosure and accept on existing route.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T058 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-I18N-001, NFR-A11Y-001] Write red bilingual patient tests for pending preview, affirmative encounter_type opt-in/out, representative acting role+patient context, authority-lost blank state, accepted appointment/target and 360px action reachability — `apps/patient/test/feature-010-records.test.tsx`
+- [x] T058 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-I18N-001, NFR-A11Y-001] Write red bilingual patient tests for pending preview, affirmative encounter_type opt-in/out, representative acting role+patient context, authority-lost blank state, accepted appointment/target and 360px action reachability — `apps/patient/test/feature-010-records.test.tsx`
   - Depends on: `T057`
   - Acceptance evidence: `no acceptance without explicit selection or live authority`
 
-- [ ] T059 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-I18N-001, NFR-A11Y-001] Implement approved /records referral list/review/acceptance using generated client; show linked appointment, doctor/facility/slot and View appointment after success — `apps/patient/app/records.tsx; apps/patient/src/feature-010-referrals.ts`
+- [x] T059 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-I18N-001, NFR-A11Y-001] Implement approved /records referral list/review/acceptance using generated client; show linked appointment, doctor/facility/slot and View appointment after success — `apps/patient/app/records.tsx; apps/patient/src/feature-010-referrals.ts`
   - Depends on: `T058`
   - Acceptance evidence: `GUA/DEL context explicit; stale/denied/offline/conflict states fail closed`
 
-- [ ] T060 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-A11Y-001] Run ar-EG RTL/en-EG LTR referral flow at 360, 412 and 768 against approved references — `specs/010-encounters-referrals-contextual-chat/evidence/C20-records-ui.md`
+- [x] T060 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-A11Y-001] Run ar-EG RTL/en-EG LTR referral flow at 360, 412 and 768 against approved references — `specs/010-encounters-referrals-contextual-chat/evidence/C20-records-ui.md`
   - Depends on: `T059`
   - Acceptance evidence: `acceptance actions reachable, role context and authorized fields visible`
 
