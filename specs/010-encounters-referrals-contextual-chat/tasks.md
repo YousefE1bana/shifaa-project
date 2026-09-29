@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C13 accepted; T001–T039 complete, T040–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C14 accepted; T001–T042 complete, T043–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -253,15 +253,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Eligible clinic summary starts only the linked encounter.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T040 [US1] [FR-CLINIC-006, NFR-I18N-001, NFR-A11Y-001] Write red AR/EN clinic summary tests for checked_in+called start action, review, stale denial, API recheck and success navigation to existing encounter route — `apps/clinic/test/feature-010-start.test.tsx`
+- [X] T040 [US1] [FR-CLINIC-006, NFR-I18N-001, NFR-A11Y-001] Write red AR/EN clinic summary tests for checked_in+called start action, review, stale denial, API recheck and success navigation to existing encounter route — `apps/clinic/test/feature-010-start.test.tsx`
   - Depends on: `T039`
   - Acceptance evidence: `no successful start is rendered for absent or stale eligibility`
 
-- [ ] T041 [US1] [FR-CLINIC-006, NFR-I18N-001, NFR-A11Y-001] Implement Start encounter on existing clinic /patients/:id/summary using generated client, bilingual labels/focus and reviewed TEST-ONLY composition; no new route beyond contract — `apps/clinic/src/app/patients/[id]/summary/page.tsx; apps/clinic/src/lib/feature-010-api.ts`
+- [X] T041 [US1] [FR-CLINIC-006, NFR-I18N-001, NFR-A11Y-001] Implement Start encounter on existing clinic /patients/:id/summary using generated client, bilingual labels/focus and reviewed TEST-ONLY composition; no new route beyond contract — `apps/clinic/src/app/patients/[id]/summary/page.tsx; apps/clinic/src/lib/feature-010-api.ts`
   - Depends on: `T040`
   - Acceptance evidence: `success uses createEncounter then /encounters/:id; stale/denied never claim success`
 
-- [ ] T042 [US1] [FR-CLINIC-006, NFR-I18N-001, NFR-A11Y-001] Run clinic start route tests at ar-EG RTL and en-EG LTR canonical viewports — `specs/010-encounters-referrals-contextual-chat/evidence/C14-start-ui.md`
+- [X] T042 [US1] [FR-CLINIC-006, NFR-I18N-001, NFR-A11Y-001] Run clinic start route tests at ar-EG RTL and en-EG LTR canonical viewports — `specs/010-encounters-referrals-contextual-chat/evidence/C14-start-ui.md`
   - Depends on: `T041`
   - Acceptance evidence: `eligible/review/stale states and keyboard focus pass`
 
