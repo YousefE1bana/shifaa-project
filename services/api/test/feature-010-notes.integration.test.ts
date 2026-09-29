@@ -50,6 +50,9 @@ function serviceStub() {
     getEncounter: vi.fn(async () => encounter),
     updateEncounter: vi.fn(),
     signEncounterNote: vi.fn(async () => note),
+    completeEncounter: vi.fn(async () => {
+      throw new Error('Unexpected completion request in the C12 integration fixture.');
+    }),
   };
 }
 

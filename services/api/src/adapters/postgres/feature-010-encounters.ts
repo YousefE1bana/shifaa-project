@@ -1,9 +1,12 @@
 import type { TransactionSql } from 'postgres';
 import { Value } from '@sinclair/typebox/value';
 import {
+  EncounterCompleteResultSchema,
   EncounterProjectionSchema,
   EncounterStartResultSchema,
+  type CompleteEncounterRequest,
   type CreateEncounterRequest,
+  type EncounterCompleteResult,
   type EncounterProjection,
   type EncounterStartResult,
   type Feature010Uuid,
@@ -50,6 +53,15 @@ function parseUpdateResponse(raw: unknown): EncounterProjection {
     delete (value as Record<string, unknown>)['notes'];
   }
   return parseProjection(value);
+}
+
+function parseCompleteResponse(raw: unknown): EncounterCompleteResult {
+  let value = raw;
+  if (typeof value === 'string') value = JSON.parse(value) as unknown;
+  if (!Value.Check(EncounterCompleteResultSchema, value)) {
+    throw new Error('Feature 010 completeEncounter returned an invalid canonical response.');
+  }
+  return value as EncounterCompleteResult;
 }
 
 /** Online access crosses only the fixed F010 SQL entrypoints; this adapter has no table DML. */
@@ -132,9 +144,28 @@ export class PostgresFeature010EncounterRepository implements Feature010Encounte
     });
   }
 
+  public async completeEncounter(
+    context: Feature010EncounterUpdateContext,
+    encounterId: Feature010Uuid,
+    input: CompleteEncounterRequest,
+  ): Promise<EncounterCompleteResult> {
+    return this.withActor(context.actor, 'completeEncounter', 'CLN', async (sql) => {
+      await sql`
+        select set_config('shifaa.idempotency_key',${context.idempotencyKey},true),
+          set_config('shifaa.request_hash',${context.requestHash},true)
+      `;
+      const [row] = await sql<{ response: unknown }[]>`
+        select clinical.complete_encounter_api_v1(
+          ${encounterId}::uuid,${context.expectedVersion},${sql.json(input)}::jsonb
+        ) as response
+      `;
+      return parseCompleteResponse(row?.response);
+    });
+  }
+
   private withActor<T>(
     actor: Feature010EncounterActor,
-    action: 'createEncounter' | 'updateEncounter',
+    action: 'createEncounter' | 'updateEncounter' | 'completeEncounter',
     role: 'CLN',
     work: (sql: TransactionSql) => Promise<T>,
   ): Promise<T> {
@@ -151,7 +182,7 @@ export class PostgresFeature010EncounterRepository implements Feature010Encounte
   private setActor(
     sql: TransactionSql,
     actor: Feature010EncounterActor,
-    action: 'createEncounter' | 'getEncounter' | 'updateEncounter',
+    action: 'createEncounter' | 'getEncounter' | 'updateEncounter' | 'completeEncounter',
     role: 'CLN' | 'PAT' | 'GUA' | 'DEL',
   ) {
     return sql`

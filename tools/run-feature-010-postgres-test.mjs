@@ -8,6 +8,10 @@ const featureMigration =
 const c10ApiMigration = 'supabase/migrations/20260929001001_f010_c10_encounter_api.sql';
 const c11UpdateMigration = 'supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql';
 const c12NoteMigration = 'supabase/migrations/20260929001003_f010_c12_note_signing.sql';
+const c13CompletionMigration =
+  'supabase/migrations/20260929001004_f010_c13_encounter_completion.sql';
+const c13CompletionRedTest = 'infra/db/tests/feature-010-completion-red.sql';
+const c13CompletionTest = 'infra/db/tests/feature-010-completion.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
 const lifecycleTest = 'infra/db/tests/feature-010-lifecycle.sql';
 const storageTest = 'infra/db/tests/feature-010-storage-invariants.sql';
@@ -63,6 +67,8 @@ const featureMigrationIndex = migrations.indexOf(featureMigration);
 const c10ApiMigrationIndex = migrations.indexOf(c10ApiMigration);
 const c11UpdateMigrationIndex = migrations.indexOf(c11UpdateMigration);
 const c12NoteMigrationIndex = migrations.indexOf(c12NoteMigration);
+const c13CompletionMigrationIndex = migrations.indexOf(c13CompletionMigration);
+const c13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
 if (
   featureMigrationIndex < 0 ||
   migrations.lastIndexOf(featureMigration) !== featureMigrationIndex ||
@@ -71,10 +77,13 @@ if (
   c11UpdateMigrationIndex !== c10ApiMigrationIndex + 1 ||
   migrations.lastIndexOf(c11UpdateMigration) !== c11UpdateMigrationIndex ||
   c12NoteMigrationIndex !== c11UpdateMigrationIndex + 1 ||
-  migrations.lastIndexOf(c12NoteMigration) !== c12NoteMigrationIndex
+  migrations.lastIndexOf(c12NoteMigration) !== c12NoteMigrationIndex ||
+  (!c13Red &&
+    (c13CompletionMigrationIndex !== c12NoteMigrationIndex + 1 ||
+      migrations.lastIndexOf(c13CompletionMigration) !== c13CompletionMigrationIndex))
 ) {
   throw new Error(
-    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, then ${c12NoteMigration}, each exactly once.`,
+    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, then ${c12NoteMigration}, each exactly once, followed by ${c13CompletionMigration} except during the focused C13 RED probe.`,
   );
 }
 
@@ -455,6 +464,134 @@ async function checkConcurrentVersionStale(runtime, database) {
   }
 }
 
+function completionRaceSql(applicationName, key, hash) {
+  return `SET application_name='${applicationName}';
+SET SESSION AUTHORIZATION shifaa_api;
+BEGIN;
+SELECT pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000001',true);
+SELECT pg_catalog.set_config('shifaa.environment','local',true);
+SELECT pg_catalog.set_config('shifaa.test_now','2030-04-05T08:00:00Z',true);
+SELECT pg_catalog.set_config('shifaa.actor_role','CLN',true);
+SELECT pg_catalog.set_config('shifaa.action','completeEncounter',true);
+SELECT pg_catalog.set_config('shifaa.aal','2',true);
+SELECT pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
+SELECT pg_catalog.set_config('shifaa.idempotency_key','${key}',true);
+SELECT pg_catalog.set_config('shifaa.request_hash','${hash}',true);
+SELECT clinical.complete_encounter_api_v1(
+  'f0101000-0000-4000-8800-000000000002',5,
+  jsonb_build_object('summary','C13 concurrent completion winner','structuralConfirmation',true)
+);
+COMMIT;
+`;
+}
+
+async function checkConcurrentCompletionWinner(runtime, templateDatabase) {
+  const database = `f010_c13_race_${process.pid}_${randomBytes(5).toString('hex')}`;
+  let databaseCreated = false;
+  try {
+    runPsql(
+      runtime,
+      runtime.adminDatabase,
+      `CREATE DATABASE "${database}" TEMPLATE "${templateDatabase}";`,
+      `${runtime.name} clone isolated completion-race database`,
+    );
+    databaseCreated = true;
+
+    const fixture = readFileSync(resolve(root, updateTest), 'utf8');
+    const rollbackIndex = fixture.lastIndexOf('\nROLLBACK;');
+    if (rollbackIndex < 0 || fixture.slice(rollbackIndex).trim() !== 'ROLLBACK;') {
+      throw new Error(`${updateTest} no longer ends at its expected rollback boundary.`);
+    }
+    runPsql(
+      runtime,
+      database,
+      `${fixture.slice(0, rollbackIndex)}\nCOMMIT;\n`,
+      `${runtime.name} commit C11 fixture in isolated C13 race database`,
+    );
+
+    const appointmentId = 'f0101000-0000-4000-8500-000000000004';
+    const holder = startPsqlSession(
+      runtime,
+      database,
+      `${runtime.name} C13 completion lock holder`,
+    );
+    let contenders = [];
+    try {
+      await holder.write(
+        `SET application_name='f010_c13_completion_holder';\nBEGIN;\nSELECT id::text || '|F010_C13_LOCK_HELD' FROM clinical.appointments WHERE id='${appointmentId}' FOR UPDATE;\n`,
+      );
+      await waitForSessionText(
+        holder,
+        'F010_C13_LOCK_HELD',
+        `${runtime.name} C13 completion lock holder`,
+      );
+
+      const candidates = [
+        ['f010_c13_complete_a', 'f010-c13-race-a', 'a'.repeat(64)],
+        ['f010_c13_complete_b', 'f010-c13-race-b', 'b'.repeat(64)],
+      ];
+      contenders = candidates.map(([name]) =>
+        startPsqlSession(runtime, database, `${runtime.name} ${name}`),
+      );
+      contenders.forEach((session, index) => session.end(completionRaceSql(...candidates[index])));
+      await waitForLockWaiters(
+        runtime,
+        database,
+        candidates.map(([name]) => name),
+        `${runtime.name} C13 single-winner completion race`,
+      );
+      await holder.write('COMMIT;\n');
+      holder.end();
+      const holderResult = await holder.closed;
+      if (holderResult.code !== 0) {
+        throw new Error(
+          `${runtime.name} C13 completion lock holder failed (exit ${holderResult.code}):\n${holder.output}`,
+        );
+      }
+
+      const results = await Promise.all(contenders.map((session) => session.closed));
+      const outputs = contenders.map((session) => session.output);
+      const successes = results.filter((result) => result.code === 0).length;
+      const staleConflicts = outputs.filter((output) => output.includes('40001')).length;
+      if (
+        successes !== 1 ||
+        staleConflicts !== 1 ||
+        results.some((result, index) => result.code !== 0 && !outputs[index].includes('40001'))
+      ) {
+        throw new Error(
+          `${runtime.name} C13 completion race must produce one success and one 40001 loser; results=${JSON.stringify(results)}, outputs:\n${outputs.join('\n---\n')}`,
+        );
+      }
+
+      const state = runPsqlTuples(
+        runtime,
+        database,
+        `SELECT
+          (SELECT count(*) FROM clinical.encounters WHERE id='f0101000-0000-4000-8800-000000000002' AND status='completed')::text || '|' ||
+          (SELECT version FROM clinical.encounters WHERE id='f0101000-0000-4000-8800-000000000002')::text || '|' ||
+          (SELECT status FROM clinical.appointments WHERE id='${appointmentId}') || '|' ||
+          (SELECT state FROM clinical.queue_entries WHERE id='f0101000-0000-4000-8700-000000000004') || '|' ||
+          (SELECT count(*) FROM platform.idempotency_records WHERE method='POST' AND route_template='/v1/encounters/{encounterId}/complete' AND state='completed')::text || '|' ||
+          (SELECT count(*) FROM audit.events WHERE resource_type='encounter' AND action_code='encounter.completed' AND resource_id='f0101000-0000-4000-8800-000000000002')::text || '|' ||
+          (SELECT count(*) FROM platform.outbox_events WHERE aggregate_type='encounter' AND event_type='clinical.encounter.completed.v1' AND aggregate_id='f0101000-0000-4000-8800-000000000002');`,
+        `${runtime.name} C13 concurrent completion effects`,
+      );
+      if (state !== '1|6|completed|completed|1|1|1') {
+        throw new Error(
+          `${runtime.name} C13 race effects must be completed triple/idempotency/audit/outbox=1 each, saw ${state}.`,
+        );
+      }
+      console.log(
+        `${runtime.name}: C13 PostgreSQL race blocked both callers, then produced one completion and one 40001 loser with exactly-once effects.`,
+      );
+    } finally {
+      await finishSessions([holder, ...contenders], { release: true });
+    }
+  } finally {
+    if (databaseCreated) dropScratchDatabase(runtime, database);
+  }
+}
+
 function runPgDump(runtime, database, label) {
   const dump = runDocker(
     runtime,
@@ -582,6 +719,21 @@ function checkNotes(runtime, database, phase) {
   );
 }
 
+function checkCompletion(runtime, database, phase) {
+  const fixture = readFileSync(resolve(root, updateTest), 'utf8');
+  const rollbackIndex = fixture.lastIndexOf('\nROLLBACK;');
+  if (rollbackIndex < 0 || fixture.slice(rollbackIndex).trim() !== 'ROLLBACK;') {
+    throw new Error(`${updateTest} no longer ends at its expected rollback boundary.`);
+  }
+  const vectors = readFileSync(resolve(root, c13CompletionTest), 'utf8');
+  runPsql(
+    runtime,
+    database,
+    `${fixture.slice(0, rollbackIndex)}\n${vectors}\nROLLBACK;\n`,
+    `${runtime.name} ${phase}: C11 encounter fixture plus C13 completion vectors`,
+  );
+}
+
 function checkExpectedNotesRed(runtime, database) {
   const sql = readFileSync(resolve(root, notesTest), 'utf8');
   try {
@@ -597,6 +749,28 @@ function checkExpectedNotesRed(runtime, database) {
     return;
   }
   throw new Error('F010_C12 RED was not observed: the note signer API already exists.');
+}
+
+function checkExpectedCompletionRed(runtime, database) {
+  const sql = readFileSync(resolve(root, c13CompletionRedTest), 'utf8');
+  try {
+    runPsql(runtime, database, sql, `${runtime.name} expected C13 RED: ${c13CompletionRedTest}`);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    if (
+      !detail.includes(
+        'F010_C13_MISSING_API: clinical.complete_encounter_api_v1(uuid,integer,jsonb)',
+      )
+    ) {
+      throw error;
+    }
+    console.log(`${runtime.name}: expected C13 RED: ${detail}`);
+    return;
+  }
+
+  throw new Error(
+    'F010 C13 RED was not observed: the completion API wrapper already exists after C05–C12.',
+  );
 }
 
 function checkExpectedBookingPrimitiveRed(runtime, database) {
@@ -659,6 +833,12 @@ async function verifyFreshAndReplay(runtime, database) {
   runMigration(runtime, database, c10ApiMigration, 'fresh C10 API migration');
   runMigration(runtime, database, c11UpdateMigration, 'fresh C11 update API migration');
   runMigration(runtime, database, c12NoteMigration, 'fresh C12 note signing API migration');
+  runMigration(
+    runtime,
+    database,
+    c13CompletionMigration,
+    'fresh C13 encounter completion API migration',
+  );
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
@@ -669,17 +849,26 @@ async function verifyFreshAndReplay(runtime, database) {
   checkApi(runtime, database, 'C10 create/read API vectors');
   checkUpdate(runtime, database, 'C11 update API vectors');
   checkNotes(runtime, database, 'C12 note signing and projection API vectors');
+  checkCompletion(runtime, database, 'C13 completion API vectors');
+  await checkConcurrentCompletionWinner(runtime, database);
   await checkConcurrentBookingWinner(runtime, database);
   await checkConcurrentVersionStale(runtime, database);
   runMigration(runtime, database, featureMigration, 'F010 migration replay');
   runMigration(runtime, database, c10ApiMigration, 'C10 API migration replay');
   runMigration(runtime, database, c11UpdateMigration, 'C11 update API migration replay');
   runMigration(runtime, database, c12NoteMigration, 'C12 note signing API migration replay');
+  runMigration(
+    runtime,
+    database,
+    c13CompletionMigration,
+    'C13 encounter completion API migration replay',
+  );
   checkSchema(runtime, database, 'replayed F010 schema assertions');
   checkStorage(runtime, database, 'replayed F010 storage vectors');
   checkApi(runtime, database, 'replayed C10 create/read API vectors');
   checkUpdate(runtime, database, 'replayed C11 update API vectors');
   checkNotes(runtime, database, 'replayed C12 note signing and projection API vectors');
+  checkCompletion(runtime, database, 'replayed C13 completion API vectors');
 
   const f009SchemaAfter = runPgDump(
     runtime,
@@ -713,10 +902,12 @@ async function testRuntime(runtime) {
   const c11Only = process.env['SHIFAA_TEST_F010_C11_ONLY'] === 'true';
   const c12Red = process.env['SHIFAA_TEST_F010_C12_RED'] === 'true';
   const c12Only = process.env['SHIFAA_TEST_F010_C12_ONLY'] === 'true';
+  const c13Only = process.env['SHIFAA_TEST_F010_C13_ONLY'] === 'true';
+  const runC13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
   const redDatabase = `f010_c08_red_${process.pid}_${randomBytes(8).toString('hex')}`;
   let redDatabaseCreated = false;
   try {
-    if (!c10Only && !c11Only && !c12Red && !c12Only) {
+    if (!c10Only && !c11Only && !c12Red && !c12Only && !c13Only && !runC13Red) {
       createScratchDatabase(runtime, redDatabase);
       redDatabaseCreated = true;
       applyBaselineMigrations(runtime, redDatabase);
@@ -728,6 +919,30 @@ async function testRuntime(runtime) {
     createScratchDatabase(runtime, database);
     scratchDatabaseCreated = true;
     applyBaselineMigrations(runtime, database);
+    if (runC13Red) {
+      runMigration(runtime, database, featureMigration, 'focused C13 RED base F010 migration');
+      runMigration(
+        runtime,
+        database,
+        c10ApiMigration,
+        'focused C13 RED prerequisite C10 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c11UpdateMigration,
+        'focused C13 RED prerequisite C11 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c12NoteMigration,
+        'focused C13 RED prerequisite C12 API migration',
+      );
+      checkExpectedCompletionRed(runtime, database);
+      console.log(`${runtime.name}: focused C13 RED PostgreSQL probe passed.`);
+      return;
+    }
     if (c12Red) {
       runMigration(runtime, database, featureMigration, 'focused C12 RED base F010 migration');
       runMigration(
@@ -771,6 +986,40 @@ async function testRuntime(runtime) {
       checkNotes(runtime, database, 'focused C12 replayed migration signing/projection vectors');
       console.log(
         `${runtime.name}: focused C12 note signing and projection PostgreSQL vectors passed.`,
+      );
+      return;
+    }
+    if (c13Only) {
+      runMigration(runtime, database, featureMigration, 'focused C13 base F010 migration');
+      runMigration(
+        runtime,
+        database,
+        c10ApiMigration,
+        'focused C13 prerequisite C10 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c11UpdateMigration,
+        'focused C13 prerequisite C11 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c12NoteMigration,
+        'focused C13 prerequisite C12 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c13CompletionMigration,
+        'focused C13 completion API migration',
+      );
+      checkRls(runtime, database, 'focused C07 RLS regression before C13 vectors');
+      checkCompletion(runtime, database, 'focused C13 real-PostgreSQL completion vectors');
+      await checkConcurrentCompletionWinner(runtime, database);
+      console.log(
+        `${runtime.name}: focused C13 completion, chat cutoff, and concurrency vectors passed.`,
       );
       return;
     }

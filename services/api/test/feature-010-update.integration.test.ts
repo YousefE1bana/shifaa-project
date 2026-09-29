@@ -68,6 +68,9 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
       updateEncounter: vi.fn(
         async (context: { expectedVersion: number; requestHash: string }) => updatedEncounter,
       ),
+      completeEncounter: vi.fn(async () => {
+        throw new Error('Unexpected completion request in the C11 integration fixture.');
+      }),
     };
     const app = Fastify({ logger: false });
     apps.push(app);
@@ -103,6 +106,9 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
       getEncounter: vi.fn(),
       signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(async () => updatedEncounter),
+      completeEncounter: vi.fn(async () => {
+        throw new Error('Unexpected completion request in the C11 integration fixture.');
+      }),
     };
     const app = Fastify({ logger: false });
     apps.push(app);
@@ -135,6 +141,9 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
       updateEncounter: vi.fn(
         async (context: { expectedVersion: number; requestHash: string }) => updatedEncounter,
       ),
+      completeEncounter: vi.fn(async () => {
+        throw new Error('Unexpected completion request in the C11 integration fixture.');
+      }),
     };
     const app = Fastify({ logger: false });
     apps.push(app);
@@ -192,6 +201,9 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
           },
         ],
       })),
+      completeEncounter: vi.fn(async () => {
+        throw new Error('Unexpected completion request in the C11 integration fixture.');
+      }),
     };
     const app = Fastify({ logger: false });
     apps.push(app);
@@ -223,6 +235,9 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
       getEncounter: vi.fn(),
       signEncounterNote: vi.fn(),
       updateEncounter,
+      completeEncounter: vi.fn(async () => {
+        throw new Error('Unexpected completion request in the C11 integration fixture.');
+      }),
     };
     const app = Fastify({ logger: false });
     apps.push(app);
@@ -254,6 +269,9 @@ describe('Feature 010 updateEncounter HTTP contract', () => {
       getEncounter: vi.fn(),
       signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(async () => updatedEncounter),
+      completeEncounter: vi.fn(async () => {
+        throw new Error('Unexpected completion request in the C11 integration fixture.');
+      }),
     };
     const app = Fastify({ logger: false });
     apps.push(app);

@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C12 accepted; T001–T036 complete, T037–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C13 accepted; T001–T039 complete, T040–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -236,15 +236,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Completion ends all three linked states and chat access.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T037 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001] Write red completeEncounter race tests for nonblank responsible summary, true confirmation, If-Match and atomic completed triple with zero optional refs; assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success writes domain/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-completion.integration.test.ts`
+- [X] T037 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-005, NFR-SEC-006, NFR-DATA-001] Write red completeEncounter race tests for nonblank responsible summary, true confirmation, If-Match and atomic completed triple with zero optional refs; assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success writes domain/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-completion.integration.test.ts`
   - Depends on: `T036`
   - Acceptance evidence: `tests fail only for missing completion behavior`
 
-- [ ] T038 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-005, NFR-DATA-001, NFR-SEC-006] Implement completeEncounter locked triple transition with encounter/appointment/queue IDs and versions; atomically write domain/audit/outbox/canonical stored response once, return it on identical-key/body replay without duplicates, and reject changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/encounters.ts; services/api/src/adapters/postgres/feature-010-encounters.ts; services/api/src/routes/feature-010-encounters.ts`
+- [X] T038 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-005, NFR-DATA-001, NFR-SEC-006] Implement completeEncounter locked triple transition with encounter/appointment/queue IDs and versions; atomically write domain/audit/outbox/canonical stored response once, return it on identical-key/body replay without duplicates, and reject changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/encounters.ts; services/api/src/adapters/postgres/feature-010-encounters.ts; services/api/src/routes/feature-010-encounters.ts`
   - Depends on: `T037`
   - Acceptance evidence: `blank/false/stale/invalid state has zero partial effects; completed context denies messages`
 
-- [ ] T039 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-005, NFR-SEC-006] Run completion concurrency and SQL state tests; verify identical-key/body replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one completed triple/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths have no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C13-complete.md`
+- [X] T039 [US1] [FR-CLINIC-006, FR-FAC-006, NFR-SEC-005, NFR-SEC-006] Run completion concurrency and SQL state tests; verify identical-key/body replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one completed triple/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths have no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C13-complete.md`
   - Depends on: `T038`
   - Acceptance evidence: `one completed triple and no post-completion chat pass`
 

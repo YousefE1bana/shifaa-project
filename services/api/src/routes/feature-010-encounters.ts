@@ -5,6 +5,8 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import {
   CreateEncounterRequestSchema,
   CareTeamNoteProjectionSchema,
+  CompleteEncounterRequestSchema,
+  EncounterCompleteResultSchema,
   EncounterProjectionSchema,
   EncounterStartResultSchema,
   GetEncounterQuerySchema,
@@ -12,6 +14,7 @@ import {
   UpdateEncounterRequestSchema,
   feature010Operations,
   type CreateEncounterRequest,
+  type CompleteEncounterRequest,
   type CareTeamNoteProjection,
   type EncounterProjection,
   type Feature010Uuid,
@@ -26,7 +29,7 @@ import type { Feature010EncounterService } from '../modules/feature-010/encounte
 
 export type Feature010EncounterRouteService = Pick<
   Feature010EncounterService,
-  'createEncounter' | 'getEncounter' | 'updateEncounter' | 'signEncounterNote'
+  'createEncounter' | 'getEncounter' | 'updateEncounter' | 'signEncounterNote' | 'completeEncounter'
 >;
 
 export interface Feature010EncounterRouteDependencies {
@@ -39,6 +42,7 @@ export const registeredFeature010EncounterOperationIds = [
   'getEncounter',
   'updateEncounter',
   'signEncounterNote',
+  'completeEncounter',
 ] satisfies readonly (typeof feature010Operations)[number]['operationId'][];
 
 const noStore = { 'cache-control': 'private, no-store', pragma: 'no-cache' } as const;
@@ -372,6 +376,46 @@ async function updateEncounter(
     .send(selectEncounterProjection(value, undefined));
 }
 
+async function completeEncounter(
+  request: FastifyRequest,
+  reply: FastifyReply,
+  deps: Feature010EncounterRouteDependencies,
+) {
+  const actor = actorFor(request);
+  if (actor.aal < 2)
+    throw new ApiPolicyError('mfa-required', 403, 'AAL2 is required to complete an encounter.');
+  if (actor.purposes.length === 0)
+    throw new ApiPolicyError('purpose-required', 403, 'A current purpose is required.');
+  const { encounterId } = request.params as { encounterId?: unknown };
+  if (typeof encounterId !== 'string' || !uuidPattern.test(encounterId)) {
+    throw new ApiPolicyError('validation-failed', 422, 'The encounter identifier is invalid.');
+  }
+  const body = requireClosed<CompleteEncounterRequest>(
+    CompleteEncounterRequestSchema,
+    request.body,
+  );
+  if (body.summary.trim().length === 0) {
+    throw new ApiPolicyError(
+      'validation-failed',
+      422,
+      'A nonblank responsible-clinician completion summary is required.',
+    );
+  }
+  const key = idempotencyKey(request);
+  const expectedVersion = resourceVersion(request);
+  const value = await invoke(() =>
+    deps.service.completeEncounter(
+      { actor, idempotencyKey: key, requestHash: hashRequest(body), expectedVersion },
+      encounterId as Feature010Uuid,
+      body,
+    ),
+  );
+  if (!Value.Check(EncounterCompleteResultSchema, value)) {
+    throw new ApiPolicyError('internal-error', 500, 'The completion response is unavailable.');
+  }
+  return reply.status(200).headers(responseHeaders(request)).send(value);
+}
+
 export async function registerFeature010EncounterRoutes(
   app: FastifyInstance,
   deps: Feature010EncounterRouteDependencies,
@@ -384,5 +428,8 @@ export async function registerFeature010EncounterRoutes(
   );
   app.post('/v1/encounters/:encounterId/notes', (request, reply) =>
     signEncounterNote(request, reply, deps),
+  );
+  app.post('/v1/encounters/:encounterId/complete', (request, reply) =>
+    completeEncounter(request, reply, deps),
   );
 }

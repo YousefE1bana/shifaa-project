@@ -61,6 +61,9 @@ function serviceStub() {
     getEncounter: vi.fn(async () => response.encounter),
     signEncounterNote: vi.fn(),
     updateEncounter: vi.fn(async () => response.encounter),
+    completeEncounter: vi.fn(async () => {
+      throw new Error('Unexpected completion request in the C10 contract fixture.');
+    }),
   };
 }
 
@@ -78,9 +81,13 @@ describe('Feature 010 encounter HTTP contract', () => {
     expect(registeredFeature010EncounterOperationIds).toEqual(
       feature010Operations
         .filter(({ operationId }) =>
-          ['createEncounter', 'getEncounter', 'updateEncounter', 'signEncounterNote'].includes(
-            operationId,
-          ),
+          [
+            'createEncounter',
+            'getEncounter',
+            'updateEncounter',
+            'signEncounterNote',
+            'completeEncounter',
+          ].includes(operationId),
         )
         .map(({ operationId }) => operationId),
     );
@@ -88,6 +95,9 @@ describe('Feature 010 encounter HTTP contract', () => {
     expect(app.hasRoute({ method: 'GET', url: '/v1/encounters/:encounterId' })).toBe(true);
     expect(app.hasRoute({ method: 'PATCH', url: '/v1/encounters/:encounterId' })).toBe(true);
     expect(app.hasRoute({ method: 'POST', url: '/v1/encounters/:encounterId/notes' })).toBe(true);
+    expect(app.hasRoute({ method: 'POST', url: '/v1/encounters/:encounterId/complete' })).toBe(
+      true,
+    );
   });
 
   it('rejects client-supplied workforce identity fields before calling the service', async () => {
@@ -194,6 +204,9 @@ describe('Feature 010 encounter HTTP contract', () => {
       getEncounter: vi.fn(async () => response.encounter),
       signEncounterNote: vi.fn(),
       updateEncounter: vi.fn(async () => response.encounter),
+      completeEncounter: vi.fn(async () => {
+        throw new Error('Unexpected completion request in the C10 contract fixture.');
+      }),
     };
     const app = Fastify({ logger: false });
     apps.push(app);

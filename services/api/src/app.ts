@@ -423,6 +423,7 @@ function failClosedFeature010EncounterService(): Feature010EncounterRouteService
     getEncounter: unavailable,
     updateEncounter: unavailable,
     signEncounterNote: unavailable,
+    completeEncounter: unavailable,
   };
 }
 

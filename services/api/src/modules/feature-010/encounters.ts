@@ -1,6 +1,8 @@
 import type {
   CreateEncounterRequest,
   CareTeamNoteProjection,
+  CompleteEncounterRequest,
+  EncounterCompleteResult,
   EncounterProjection,
   EncounterStartResult,
   Feature010Uuid,
@@ -37,6 +39,11 @@ export interface Feature010EncounterRepository {
     context: Feature010EncounterMutationContext,
     input: CreateEncounterRequest,
   ): Promise<EncounterStartResult>;
+  completeEncounter(
+    context: Feature010EncounterUpdateContext,
+    encounterId: Feature010Uuid,
+    input: CompleteEncounterRequest,
+  ): Promise<EncounterCompleteResult>;
   getEncounter(
     actor: Feature010EncounterActor,
     encounterId: Feature010Uuid,
@@ -69,6 +76,14 @@ export class Feature010EncounterService {
     fields?: EncounterFields,
   ): Promise<EncounterProjection | null> {
     return this.repository.getEncounter(actor, encounterId, fields);
+  }
+
+  public completeEncounter(
+    context: Feature010EncounterUpdateContext,
+    encounterId: Feature010Uuid,
+    input: CompleteEncounterRequest,
+  ): Promise<EncounterCompleteResult> {
+    return this.repository.completeEncounter(context, encounterId, input);
   }
 
   public updateEncounter(
