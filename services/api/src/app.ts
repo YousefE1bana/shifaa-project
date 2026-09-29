@@ -72,6 +72,12 @@ import {
   registerFeature010EncounterRoutes,
   type Feature010EncounterRouteService,
 } from './routes/feature-010-encounters.js';
+import { Feature010ReferralService } from './modules/feature-010/referrals.js';
+import { PostgresFeature010ReferralRepository } from './adapters/postgres/feature-010-referrals.js';
+import {
+  registerFeature010ReferralRoutes,
+  type Feature010ReferralRouteService,
+} from './routes/feature-010-referrals.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -87,6 +93,7 @@ export interface AppHarness {
   identityContinuityService: IdentityContinuityServicePort;
   clinicSchedulingService: ClinicSchedulingRouteService;
   feature010EncounterService: Feature010EncounterRouteService;
+  feature010ReferralService: Feature010ReferralRouteService;
 }
 
 export async function buildApp(
@@ -97,6 +104,7 @@ export async function buildApp(
     identityContinuityService?: IdentityContinuityServicePort;
     clinicSchedulingService?: ClinicSchedulingRouteService;
     feature010EncounterService?: Feature010EncounterRouteService;
+    feature010ReferralService?: Feature010ReferralRouteService;
     recoveryProofGrants?: RecoveryProofGrantAuthority;
   } = {},
 ): Promise<AppHarness> {
@@ -237,6 +245,17 @@ export async function buildApp(
           );
         })()
       : failClosedFeature010EncounterService());
+  const feature010ReferralService =
+    options.feature010ReferralService ??
+    (repository instanceof PostgresIdentityRepository
+      ? new Feature010ReferralService(
+          new PostgresFeature010ReferralRepository(
+            repository,
+            auditEnvironment(config.environment),
+            Buffer.from(config.identityEncryptionKey).toString('base64url'),
+          ),
+        )
+      : failClosedFeature010ReferralService());
   await app.register(cors, {
     origin: config.corsOrigins,
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -275,6 +294,10 @@ export async function buildApp(
   app.get('/v1/health', async () => ({ status: 'ok', feature: 'identity-onboarding' }));
   await registerFeature010EncounterRoutes(app, {
     service: feature010EncounterService,
+    syntheticMode: config.syntheticMode,
+  });
+  await registerFeature010ReferralRoutes(app, {
+    service: feature010ReferralService,
     syntheticMode: config.syntheticMode,
   });
   await registerClinicSchedulingRoutes(app, {
@@ -411,6 +434,7 @@ export async function buildApp(
     identityContinuityService,
     clinicSchedulingService,
     feature010EncounterService,
+    feature010ReferralService,
   };
 }
 
@@ -424,6 +448,16 @@ function failClosedFeature010EncounterService(): Feature010EncounterRouteService
     updateEncounter: unavailable,
     signEncounterNote: unavailable,
     completeEncounter: unavailable,
+  };
+}
+
+function failClosedFeature010ReferralService(): Feature010ReferralRouteService {
+  const unavailable = async (): Promise<never> => {
+    throw new ApiPolicyError('open-sec-001', 503, 'Feature 010 referrals are unavailable.');
+  };
+  return {
+    createReferral: unavailable,
+    listReferrals: unavailable,
   };
 }
 

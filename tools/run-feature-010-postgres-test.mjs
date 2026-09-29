@@ -10,6 +10,7 @@ const c11UpdateMigration = 'supabase/migrations/20260929001002_f010_c11_encounte
 const c12NoteMigration = 'supabase/migrations/20260929001003_f010_c12_note_signing.sql';
 const c13CompletionMigration =
   'supabase/migrations/20260929001004_f010_c13_encounter_completion.sql';
+const c17ReferralsMigration = 'supabase/migrations/20260929001005_f010_c17_referrals_api.sql';
 const c13CompletionRedTest = 'infra/db/tests/feature-010-completion-red.sql';
 const c13CompletionTest = 'infra/db/tests/feature-010-completion.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
@@ -21,6 +22,7 @@ const bookingSeamTest = 'infra/db/tests/feature-010-booking-seam.sql';
 const apiTest = 'infra/db/tests/feature-010-api.sql';
 const updateTest = 'infra/db/tests/feature-010-update.sql';
 const notesTest = 'infra/db/tests/feature-010-notes.sql';
+const referralsTest = 'infra/db/tests/feature-010-referrals.sql';
 const defaultDenySnapshotSql = `SELECT format(
   'C04 default-deny snapshot: forced_rls=%s/6; policies=%s; direct_online_acl_entries=%s',
   count(*) FILTER (WHERE c.relrowsecurity AND c.relforcerowsecurity),
@@ -68,6 +70,7 @@ const c10ApiMigrationIndex = migrations.indexOf(c10ApiMigration);
 const c11UpdateMigrationIndex = migrations.indexOf(c11UpdateMigration);
 const c12NoteMigrationIndex = migrations.indexOf(c12NoteMigration);
 const c13CompletionMigrationIndex = migrations.indexOf(c13CompletionMigration);
+const c17ReferralsMigrationIndex = migrations.indexOf(c17ReferralsMigration);
 const c13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
 if (
   featureMigrationIndex < 0 ||
@@ -80,10 +83,12 @@ if (
   migrations.lastIndexOf(c12NoteMigration) !== c12NoteMigrationIndex ||
   (!c13Red &&
     (c13CompletionMigrationIndex !== c12NoteMigrationIndex + 1 ||
-      migrations.lastIndexOf(c13CompletionMigration) !== c13CompletionMigrationIndex))
+      migrations.lastIndexOf(c13CompletionMigration) !== c13CompletionMigrationIndex)) ||
+  c17ReferralsMigrationIndex !== c13CompletionMigrationIndex + 1 ||
+  migrations.lastIndexOf(c17ReferralsMigration) !== c17ReferralsMigrationIndex
 ) {
   throw new Error(
-    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, then ${c12NoteMigration}, each exactly once, followed by ${c13CompletionMigration} except during the focused C13 RED probe.`,
+    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, and ${c17ReferralsMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
   );
 }
 
@@ -734,6 +739,21 @@ function checkCompletion(runtime, database, phase) {
   );
 }
 
+function checkReferrals(runtime, database, phase) {
+  const fixture = readFileSync(resolve(root, apiTest), 'utf8');
+  const rollbackIndex = fixture.lastIndexOf('\nROLLBACK;');
+  if (rollbackIndex < 0 || fixture.slice(rollbackIndex).trim() !== 'ROLLBACK;') {
+    throw new Error(`${apiTest} no longer ends at its expected rollback boundary.`);
+  }
+  const vectors = readFileSync(resolve(root, referralsTest), 'utf8');
+  runPsql(
+    runtime,
+    database,
+    `${fixture.slice(0, rollbackIndex)}\n${vectors}\nROLLBACK;\n`,
+    `${runtime.name} ${phase}: C10 encounter fixture plus C17 real-PostgreSQL referral vectors`,
+  );
+}
+
 function checkExpectedNotesRed(runtime, database) {
   const sql = readFileSync(resolve(root, notesTest), 'utf8');
   try {
@@ -839,6 +859,7 @@ async function verifyFreshAndReplay(runtime, database) {
     c13CompletionMigration,
     'fresh C13 encounter completion API migration',
   );
+  runMigration(runtime, database, c17ReferralsMigration, 'fresh C17 referral API migration');
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
@@ -850,6 +871,7 @@ async function verifyFreshAndReplay(runtime, database) {
   checkUpdate(runtime, database, 'C11 update API vectors');
   checkNotes(runtime, database, 'C12 note signing and projection API vectors');
   checkCompletion(runtime, database, 'C13 completion API vectors');
+  checkReferrals(runtime, database, 'C17 create/list API vectors');
   await checkConcurrentCompletionWinner(runtime, database);
   await checkConcurrentBookingWinner(runtime, database);
   await checkConcurrentVersionStale(runtime, database);
@@ -863,12 +885,14 @@ async function verifyFreshAndReplay(runtime, database) {
     c13CompletionMigration,
     'C13 encounter completion API migration replay',
   );
+  runMigration(runtime, database, c17ReferralsMigration, 'C17 referral API migration replay');
   checkSchema(runtime, database, 'replayed F010 schema assertions');
   checkStorage(runtime, database, 'replayed F010 storage vectors');
   checkApi(runtime, database, 'replayed C10 create/read API vectors');
   checkUpdate(runtime, database, 'replayed C11 update API vectors');
   checkNotes(runtime, database, 'replayed C12 note signing and projection API vectors');
   checkCompletion(runtime, database, 'replayed C13 completion API vectors');
+  checkReferrals(runtime, database, 'replayed C17 create/list API vectors');
 
   const f009SchemaAfter = runPgDump(
     runtime,
@@ -903,11 +927,12 @@ async function testRuntime(runtime) {
   const c12Red = process.env['SHIFAA_TEST_F010_C12_RED'] === 'true';
   const c12Only = process.env['SHIFAA_TEST_F010_C12_ONLY'] === 'true';
   const c13Only = process.env['SHIFAA_TEST_F010_C13_ONLY'] === 'true';
+  const c17Only = process.env['SHIFAA_TEST_F010_C17_ONLY'] === 'true';
   const runC13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
   const redDatabase = `f010_c08_red_${process.pid}_${randomBytes(8).toString('hex')}`;
   let redDatabaseCreated = false;
   try {
-    if (!c10Only && !c11Only && !c12Red && !c12Only && !c13Only && !runC13Red) {
+    if (!c10Only && !c11Only && !c12Red && !c12Only && !c13Only && !c17Only && !runC13Red) {
       createScratchDatabase(runtime, redDatabase);
       redDatabaseCreated = true;
       applyBaselineMigrations(runtime, redDatabase);
@@ -1020,6 +1045,48 @@ async function testRuntime(runtime) {
       await checkConcurrentCompletionWinner(runtime, database);
       console.log(
         `${runtime.name}: focused C13 completion, chat cutoff, and concurrency vectors passed.`,
+      );
+      return;
+    }
+    if (c17Only) {
+      runMigration(runtime, database, featureMigration, 'focused C17 base F010 migration');
+      runMigration(
+        runtime,
+        database,
+        c10ApiMigration,
+        'focused C17 prerequisite C10 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c11UpdateMigration,
+        'focused C17 prerequisite C11 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c12NoteMigration,
+        'focused C17 prerequisite C12 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c13CompletionMigration,
+        'focused C17 prerequisite C13 API migration',
+      );
+      runMigration(runtime, database, c17ReferralsMigration, 'focused C17 referral API migration');
+      checkStorage(runtime, database, 'focused C06 storage invariants before C17 vectors');
+      checkRls(runtime, database, 'focused C07 RLS regression before C17 vectors');
+      checkReferrals(runtime, database, 'focused C17 real-PostgreSQL API vectors');
+      runMigration(
+        runtime,
+        database,
+        c17ReferralsMigration,
+        'focused C17 referral API migration replay',
+      );
+      checkReferrals(runtime, database, 'focused C17 replayed real-PostgreSQL API vectors');
+      console.log(
+        `${runtime.name}: focused C17 create/list, atomic effects, idempotency, and C07 authorization vectors passed.`,
       );
       return;
     }

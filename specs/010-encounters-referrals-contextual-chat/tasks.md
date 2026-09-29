@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C16 accepted; T001–T048 complete, T049–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C17 accepted; T001–T051 complete, T052–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -307,15 +307,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Creation remains pending and internal.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T049 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Write red createReferral/listReferrals tests for required specialty+reason_summary, optional encounter_type, pending-only source and target denial; for createReferral assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success writes domain/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-referral-create.integration.test.ts`
+- [X] T049 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Write red createReferral/listReferrals tests for required specialty+reason_summary, optional encounter_type, pending-only source and target denial; for createReferral assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success writes domain/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-referral-create.integration.test.ts`
   - Depends on: `T048`
   - Acceptance evidence: `target sees no pending referral or note body`
 
-- [ ] T050 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Implement pending source-clinician createReferral and role-projected cursor list through Core API; atomically write one referral/audit/outbox/canonical stored response, return it on identical-key/body replay without duplicates, and deny changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/referrals.ts; services/api/src/adapters/postgres/feature-010-referrals.ts; services/api/src/routes/feature-010-referrals.ts; services/api/src/app.ts`
+- [X] T050 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Implement pending source-clinician createReferral and role-projected cursor list through Core API; atomically write one referral/audit/outbox/canonical stored response, return it on identical-key/body replay without duplicates, and deny changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/referrals.ts; services/api/src/adapters/postgres/feature-010-referrals.ts; services/api/src/routes/feature-010-referrals.ts; services/api/src/app.ts`
   - Depends on: `T049`
   - Acceptance evidence: `pending referral has null appointment and no target disclosure`
 
-- [ ] T051 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Run create/list contract and real-Postgres pending-target denial tests; verify identical-key/body createReferral replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one pending referral/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths have no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C17-referral-create.md`
+- [X] T051 [US2] [FR-CLINIC-007, NFR-PRIV-001, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Run create/list contract and real-Postgres pending-target denial tests; verify identical-key/body createReferral replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one pending referral/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths have no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C17-referral-create.md`
   - Depends on: `T050`
   - Acceptance evidence: `source list and pending target negatives pass`
 
