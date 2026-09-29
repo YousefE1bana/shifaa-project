@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C21 accepted; T001–T063 complete, T064–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C22 accepted; T001–T066 complete, T067–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -395,15 +395,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Only linked open appointment context permits body-only reads/sends.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T064 [US3] [FR-FAC-006, NFR-SEC-001, NFR-SEC-002, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Write red sendContextMessage/listContextMessages tests for appointment-only context, PAT/active workforce, GUA/DEL and ended/completed denial, cursor and any attachment property rejection; for send assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success writes message/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-messages.integration.test.ts`
+- [x] T064 [US3] [FR-FAC-006, NFR-SEC-001, NFR-SEC-002, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Write red sendContextMessage/listContextMessages tests for appointment-only context, PAT/active workforce, GUA/DEL and ended/completed denial, cursor and any attachment property rejection; for send assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success writes message/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting paths leave no duplicate or partial effects — `services/api/test/feature-010-messages.integration.test.ts`
   - Depends on: `T048`
   - Acceptance evidence: `no message inserted for forbidden context or attachment`
 
-- [ ] T065 [US3] [FR-FAC-006, NFR-SEC-001, NFR-SEC-002, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Implement listContextMessages/sendContextMessage through Core API and locked PostgreSQL checks; encrypt nonblank body, persist SQL-null attachment, atomically write one message/audit/outbox/canonical stored response, return it on identical-key/body replay without duplicates, and deny changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/messages.ts; services/api/src/adapters/postgres/feature-010-messages.ts; services/api/src/routes/feature-010-messages.ts; services/api/src/app.ts`
+- [x] T065 [US3] [FR-FAC-006, NFR-SEC-001, NFR-SEC-002, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Implement listContextMessages/sendContextMessage through Core API and locked PostgreSQL checks; encrypt nonblank body, persist SQL-null attachment, atomically write one message/audit/outbox/canonical stored response, return it on identical-key/body replay without duplicates, and deny changed-body key reuse plus stale/invalid/unauthorized/conflicting requests without partial effects — `services/api/src/modules/feature-010/messages.ts; services/api/src/adapters/postgres/feature-010-messages.ts; services/api/src/routes/feature-010-messages.ts; services/api/src/app.ts`
   - Depends on: `T064`
   - Acceptance evidence: `read/send reauthorize each call and completed/ended context denies old history`
 
-- [ ] T066 [US3] [FR-FAC-006, NFR-SEC-001, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006] Run message contract, SQL RLS and send/completion race tests; verify identical-key/body sendContextMessage replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one message/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths have no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C22-messages-api.md`
+- [x] T066 [US3] [FR-FAC-006, NFR-SEC-001, NFR-SEC-002, NFR-SEC-005, NFR-SEC-006] Run message contract, SQL RLS and send/completion race tests; verify identical-key/body sendContextMessage replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one message/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths have no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C22-messages-api.md`
   - Depends on: `T065`
   - Acceptance evidence: `body-only PAT/active CLN pass; GUA/DEL/ended/completed deny`
 

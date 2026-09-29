@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { Buffer } from 'node:buffer';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
@@ -15,6 +16,8 @@ const c18ReferralAcceptanceMigration =
   'supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql';
 const c19ReferralProjectionMigration =
   'supabase/migrations/20260929001007_f010_c19_referral_projections.sql';
+const c22ContextMessagesMigration =
+  'supabase/migrations/20260929001008_f010_c22_context_messages.sql';
 const c13CompletionRedTest = 'infra/db/tests/feature-010-completion-red.sql';
 const c13CompletionTest = 'infra/db/tests/feature-010-completion.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
@@ -29,6 +32,8 @@ const notesTest = 'infra/db/tests/feature-010-notes.sql';
 const referralsTest = 'infra/db/tests/feature-010-referrals.sql';
 const referralAcceptanceTest = 'infra/db/tests/feature-010-referral-accept.sql';
 const referralProjectionsTest = 'infra/db/tests/feature-010-referral-projections.sql';
+const messagesTest = 'infra/db/tests/feature-010-messages.sql';
+const messagesRaceRedTest = 'infra/db/tests/feature-010-messages-race-red.sql';
 const defaultDenySnapshotSql = `SELECT format(
   'C04 default-deny snapshot: forced_rls=%s/6; policies=%s; direct_online_acl_entries=%s',
   count(*) FILTER (WHERE c.relrowsecurity AND c.relforcerowsecurity),
@@ -79,6 +84,7 @@ const c13CompletionMigrationIndex = migrations.indexOf(c13CompletionMigration);
 const c17ReferralsMigrationIndex = migrations.indexOf(c17ReferralsMigration);
 const c18ReferralAcceptanceMigrationIndex = migrations.indexOf(c18ReferralAcceptanceMigration);
 const c19ReferralProjectionMigrationIndex = migrations.indexOf(c19ReferralProjectionMigration);
+const c22ContextMessagesMigrationIndex = migrations.indexOf(c22ContextMessagesMigration);
 const c13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
 if (
   featureMigrationIndex < 0 ||
@@ -97,10 +103,12 @@ if (
   c18ReferralAcceptanceMigrationIndex !== c17ReferralsMigrationIndex + 1 ||
   migrations.lastIndexOf(c18ReferralAcceptanceMigration) !== c18ReferralAcceptanceMigrationIndex ||
   c19ReferralProjectionMigrationIndex !== c18ReferralAcceptanceMigrationIndex + 1 ||
-  migrations.lastIndexOf(c19ReferralProjectionMigration) !== c19ReferralProjectionMigrationIndex
+  migrations.lastIndexOf(c19ReferralProjectionMigration) !== c19ReferralProjectionMigrationIndex ||
+  c22ContextMessagesMigrationIndex !== c19ReferralProjectionMigrationIndex + 1 ||
+  migrations.lastIndexOf(c22ContextMessagesMigration) !== c22ContextMessagesMigrationIndex
 ) {
   throw new Error(
-    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, ${c17ReferralsMigration}, ${c18ReferralAcceptanceMigration}, and ${c19ReferralProjectionMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
+    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, ${c17ReferralsMigration}, ${c18ReferralAcceptanceMigration}, ${c19ReferralProjectionMigration}, and ${c22ContextMessagesMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
   );
 }
 
@@ -751,6 +759,329 @@ function checkCompletion(runtime, database, phase) {
   );
 }
 
+function checkMessages(runtime, database, phase) {
+  const fixture = readFileSync(resolve(root, updateTest), 'utf8');
+  const rollbackIndex = fixture.lastIndexOf('\nROLLBACK;');
+  if (rollbackIndex < 0 || fixture.slice(rollbackIndex).trim() !== 'ROLLBACK;') {
+    throw new Error(`${updateTest} no longer ends at its expected rollback boundary.`);
+  }
+  const vectors = readFileSync(resolve(root, messagesTest), 'utf8');
+  runPsql(
+    runtime,
+    database,
+    `${fixture.slice(0, rollbackIndex)}\n${vectors}\nROLLBACK;\n`,
+    `${runtime.name} ${phase}: C11 encounter fixture plus C22 message vectors`,
+  );
+}
+
+function commitMessagesFixture(runtime, database) {
+  const fixture = readFileSync(resolve(root, updateTest), 'utf8');
+  const rollbackIndex = fixture.lastIndexOf('\nROLLBACK;');
+  if (rollbackIndex < 0 || fixture.slice(rollbackIndex).trim() !== 'ROLLBACK;') {
+    throw new Error(`${updateTest} no longer ends at its expected rollback boundary.`);
+  }
+  runPsql(
+    runtime,
+    database,
+    `${fixture.slice(0, rollbackIndex)}\nCOMMIT;\n`,
+    `${runtime.name}: provision committed synthetic C11 fixture for C22 API smoke`,
+  );
+}
+
+function runMessageApiPostgresTest(runtime, database) {
+  const dockerPort = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
+    cwd: root,
+    encoding: 'utf8',
+    windowsHide: true,
+  });
+  if (dockerPort.error || dockerPort.status !== 0) {
+    throw new Error(
+      `${runtime.name} PostgreSQL host port lookup failed: ${dockerPort.stderr ?? dockerPort.error?.message ?? ''}`,
+    );
+  }
+  const port = dockerPort.stdout.trim().split(/\r?\n/)[0]?.split(':').at(-1);
+  if (!port || !/^\d+$/.test(port)) {
+    throw new Error(`${runtime.name} has no usable host-mapped PostgreSQL port.`);
+  }
+  const result = spawnSync(
+    process.execPath,
+    [
+      'node_modules/vitest/vitest.mjs',
+      'run',
+      'services/api/test/feature-010-messages.postgres.integration.test.ts',
+    ],
+    {
+      cwd: root,
+      env: {
+        ...process.env,
+        SHIFAA_F010_C22_DATABASE: database,
+        SHIFAA_PG_HOST: '127.0.0.1',
+        SHIFAA_PG_PORT: port,
+      },
+      encoding: 'utf8',
+      stdio: 'inherit',
+      windowsHide: true,
+    },
+  );
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    throw new Error(
+      `${runtime.name} C22 real-PostgreSQL API smoke failed with status ${result.status}.`,
+    );
+  }
+}
+
+const c22RaceCiphertext = Buffer.from(
+  `01${'d1'.repeat(12)}${'e2'.repeat(16)}${'f3'.repeat(96)}`,
+  'hex',
+).toString('base64');
+
+function c22SendHeldSql(applicationName, key, hash) {
+  return `SET application_name='${applicationName}';
+BEGIN;
+SET SESSION AUTHORIZATION shifaa_api;
+SELECT pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000002',true);
+SELECT pg_catalog.set_config('shifaa.environment','local',true);
+SELECT pg_catalog.set_config('shifaa.test_now','2030-04-05T08:00:00Z',true);
+SELECT pg_catalog.set_config('shifaa.actor_role','PAT',true);
+SELECT pg_catalog.set_config('shifaa.action','sendContextMessage',true);
+SELECT pg_catalog.set_config('shifaa.aal','2',true);
+SELECT pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
+SELECT pg_catalog.set_config('shifaa.idempotency_key','${key}',true);
+SELECT pg_catalog.set_config('shifaa.request_hash','${hash}',true);
+SELECT trust.send_context_message_api_v1(
+  'f0101000-0000-4000-8500-000000000004'::uuid,
+  pg_catalog.jsonb_build_object('bodyCiphertext','${c22RaceCiphertext}')
+)->>'id' || '|F010_C22_SEND_HELD';
+`;
+}
+
+function c22SendContenderSql(applicationName, key, hash) {
+  return `SET application_name='${applicationName}';
+BEGIN;
+SET SESSION AUTHORIZATION shifaa_api;
+SELECT pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000002',true);
+SELECT pg_catalog.set_config('shifaa.environment','local',true);
+SELECT pg_catalog.set_config('shifaa.test_now','2030-04-05T08:00:00Z',true);
+SELECT pg_catalog.set_config('shifaa.actor_role','PAT',true);
+SELECT pg_catalog.set_config('shifaa.action','sendContextMessage',true);
+SELECT pg_catalog.set_config('shifaa.aal','2',true);
+SELECT pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
+SELECT pg_catalog.set_config('shifaa.idempotency_key','${key}',true);
+SELECT pg_catalog.set_config('shifaa.request_hash','${hash}',true);
+DO $c22_send_after_completion$
+DECLARE denied boolean := false;
+BEGIN
+  BEGIN
+    PERFORM trust.send_context_message_api_v1(
+      'f0101000-0000-4000-8500-000000000004'::uuid,
+      pg_catalog.jsonb_build_object('bodyCiphertext','${c22RaceCiphertext}')
+    );
+  EXCEPTION WHEN insufficient_privilege THEN denied := true;
+  END;
+  IF NOT denied THEN RAISE EXCEPTION 'C22 send succeeded after completion won the lock'; END IF;
+END
+$c22_send_after_completion$;
+SELECT 'F010_C22_SEND_DENIED_AFTER_COMPLETION';
+COMMIT;
+`;
+}
+
+function c22CompletionHeldSql(applicationName) {
+  return `SET application_name='${applicationName}';
+BEGIN;
+SET SESSION AUTHORIZATION shifaa_api;
+SELECT pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000001',true);
+SELECT pg_catalog.set_config('shifaa.environment','local',true);
+SELECT pg_catalog.set_config('shifaa.test_now','2030-04-05T08:00:00Z',true);
+SELECT pg_catalog.set_config('shifaa.actor_role','CLN',true);
+SELECT pg_catalog.set_config('shifaa.action','completeEncounter',true);
+SELECT pg_catalog.set_config('shifaa.aal','2',true);
+SELECT pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
+SELECT pg_catalog.set_config('shifaa.idempotency_key','f010-c22-race-complete-01',true);
+SELECT pg_catalog.set_config('shifaa.request_hash','${'c'.repeat(64)}',true);
+DO $c22_complete_lifecycle$
+BEGIN
+  PERFORM clinical.complete_encounter_api_v1(
+  'f0101000-0000-4000-8800-000000000002',5,
+  pg_catalog.jsonb_build_object('summary','C22 deterministic lifecycle race','structuralConfirmation',true)
+  );
+END
+$c22_complete_lifecycle$;
+SELECT 'F010_C22_COMPLETION_HELD';
+`;
+}
+
+function c22CompletionContenderSql(applicationName) {
+  return `${c22CompletionHeldSql(applicationName)}COMMIT;\n`;
+}
+
+function c22RaceState(runtime, database, expected, label) {
+  const state = runPsqlTuples(
+    runtime,
+    database,
+    `SELECT
+      (SELECT count(*) FROM trust.messages WHERE context_type='appointment' AND context_id='f0101000-0000-4000-8500-000000000004' AND deleted_at IS NULL)::text || '|' ||
+      (SELECT count(*) FROM platform.idempotency_records WHERE route_template='/v1/contexts/{contextType}/{contextId}/messages')::text || '|' ||
+      (SELECT count(*) FROM audit.events WHERE resource_type='context_message' AND action_code='context_message.created')::text || '|' ||
+      (SELECT count(*) FROM platform.outbox_events WHERE aggregate_type='context_message' AND event_type='clinical.context_message.created.v1')::text || '|' ||
+      (SELECT count(*) FROM clinical.encounters WHERE id='f0101000-0000-4000-8800-000000000002' AND status='completed')::text || '|' ||
+      (SELECT status FROM clinical.appointments WHERE id='f0101000-0000-4000-8500-000000000004') || '|' ||
+      (SELECT state FROM clinical.queue_entries WHERE appointment_id='f0101000-0000-4000-8500-000000000004') || '|' ||
+      (SELECT version FROM clinical.encounters WHERE id='f0101000-0000-4000-8800-000000000002')::text || '|' ||
+      (SELECT count(*) FROM platform.idempotency_records WHERE route_template='/v1/encounters/{encounterId}/complete' AND state='completed')::text || '|' ||
+      (SELECT count(*) FROM audit.events WHERE resource_type='encounter' AND action_code='encounter.completed' AND resource_id='f0101000-0000-4000-8800-000000000002')::text || '|' ||
+      (SELECT count(*) FROM platform.outbox_events WHERE aggregate_type='encounter' AND event_type='clinical.encounter.completed.v1' AND aggregate_id='f0101000-0000-4000-8800-000000000002')::text;`,
+    label,
+  );
+  if (state !== expected) throw new Error(`${label}: expected state ${expected}, saw ${state}.`);
+}
+
+async function checkC22LifecycleRace(runtime, templateDatabase, order) {
+  const database = `f010_c22_${order}_${process.pid}_${randomBytes(5).toString('hex')}`;
+  let databaseCreated = false;
+  let holder;
+  let contender;
+  try {
+    runPsql(
+      runtime,
+      runtime.adminDatabase,
+      `CREATE DATABASE "${database}" TEMPLATE "${templateDatabase}";`,
+      `${runtime.name} clone isolated C22 ${order} race database`,
+    );
+    databaseCreated = true;
+    if (order === 'send_first') {
+      holder = startPsqlSession(runtime, database, `${runtime.name} C22 send-first holder`);
+      await holder.write(
+        c22SendHeldSql('f010_c22_send_first_holder', 'f010-c22-race-send-first', 'a'.repeat(64)),
+      );
+      await waitForSessionText(
+        holder,
+        'F010_C22_SEND_HELD',
+        `${runtime.name} C22 send-first holder`,
+      );
+      contender = startPsqlSession(runtime, database, `${runtime.name} C22 completion contender`);
+      contender.end(c22CompletionContenderSql('f010_c22_completion_contender'));
+      await waitForLockWaiters(
+        runtime,
+        database,
+        ['f010_c22_completion_contender'],
+        `${runtime.name} C22 send-first completion barrier`,
+      );
+      await holder.write('COMMIT;\n');
+      holder.end();
+      const holderResult = await holder.closed;
+      const contenderResult = await contender.closed;
+      if (
+        holderResult.code !== 0 ||
+        contenderResult.code !== 0 ||
+        !contender.output.includes('F010_C22_COMPLETION_HELD')
+      ) {
+        throw new Error(
+          `${runtime.name} C22 send-first barrier failed; holder=${holder.output}; contender=${contender.output}`,
+        );
+      }
+      c22RaceState(
+        runtime,
+        database,
+        '1|1|1|1|1|completed|completed|6|1|1|1',
+        `${runtime.name} C22 send-first committed lifecycle state`,
+      );
+      console.log(
+        `${runtime.name}: C22 send-first lock barrier committed one message before completion; one set of effects remained.`,
+      );
+    } else {
+      holder = startPsqlSession(runtime, database, `${runtime.name} C22 completion-first holder`);
+      await holder.write(c22CompletionHeldSql('f010_c22_completion_first_holder'));
+      await waitForSessionText(
+        holder,
+        'F010_C22_COMPLETION_HELD',
+        `${runtime.name} C22 completion-first holder`,
+      );
+      contender = startPsqlSession(runtime, database, `${runtime.name} C22 send contender`);
+      contender.end(
+        c22SendContenderSql(
+          'f010_c22_send_contender',
+          'f010-c22-race-send-after-completion',
+          'b'.repeat(64),
+        ),
+      );
+      await waitForLockWaiters(
+        runtime,
+        database,
+        ['f010_c22_send_contender'],
+        `${runtime.name} C22 completion-first send barrier`,
+      );
+      await holder.write('COMMIT;\n');
+      holder.end();
+      const holderResult = await holder.closed;
+      const contenderResult = await contender.closed;
+      if (
+        holderResult.code !== 0 ||
+        contenderResult.code !== 0 ||
+        !contender.output.includes('F010_C22_SEND_DENIED_AFTER_COMPLETION')
+      ) {
+        throw new Error(
+          `${runtime.name} C22 completion-first barrier failed; holder=${holder.output}; contender=${contender.output}`,
+        );
+      }
+      c22RaceState(
+        runtime,
+        database,
+        '0|0|0|0|1|completed|completed|6|1|1|1',
+        `${runtime.name} C22 completion-first committed lifecycle state`,
+      );
+      console.log(
+        `${runtime.name}: C22 completion-first lock barrier denied the waiting send with zero message effects.`,
+      );
+    }
+  } finally {
+    await finishSessions([holder, contender].filter(Boolean), { release: true });
+    if (databaseCreated) dropScratchDatabase(runtime, database);
+  }
+}
+
+async function checkC22LifecycleRaces(runtime, templateDatabase) {
+  await checkC22LifecycleRace(runtime, templateDatabase, 'send_first');
+  await checkC22LifecycleRace(runtime, templateDatabase, 'completion_first');
+}
+
+function setC22ApiSmokeClock(runtime, database) {
+  runPsql(
+    runtime,
+    database,
+    `ALTER ROLE shifaa_api IN DATABASE "${database}" SET shifaa.test_now TO '2030-04-05T08:00:00Z';`,
+    `${runtime.name} configure disposable C22 API smoke clock`,
+  );
+}
+
+function checkC22ApiSmokeEffects(runtime, database) {
+  const result = runPsqlTuples(
+    runtime,
+    database,
+    `SELECT
+      (SELECT count(*) FROM trust.messages WHERE context_id='f0101000-0000-4000-8500-000000000004' AND deleted_at IS NULL)::text || '|' ||
+      (SELECT count(*) FROM trust.messages WHERE context_id='f0101000-0000-4000-8500-000000000004' AND pg_catalog.octet_length(body_ciphertext)>=30 AND pg_catalog.get_byte(body_ciphertext,0)=1 AND position(pg_catalog.convert_to('C22 synthetic','UTF8') in body_ciphertext)=0)::text || '|' ||
+      (SELECT count(*) FROM trust.messages WHERE context_id='f0101000-0000-4000-8500-000000000004' AND attachment IS NULL)::text || '|' ||
+      (SELECT count(*) FROM platform.idempotency_records WHERE method='POST' AND route_template='/v1/contexts/{contextType}/{contextId}/messages')::text || '|' ||
+      (SELECT count(*) FROM platform.idempotency_records WHERE method='POST' AND route_template='/v1/contexts/{contextType}/{contextId}/messages' AND response_body->>'bodyCiphertext' IS NOT NULL AND NOT (response_body ? 'body') AND response_body::text NOT LIKE '%C22 synthetic%')::text || '|' ||
+      (SELECT count(*) FROM audit.events WHERE resource_type='context_message' AND action_code='context_message.created')::text || '|' ||
+      (SELECT count(*) FROM audit.events event WHERE resource_type='context_message' AND action_code='context_message.created' AND pg_catalog.to_jsonb(event)::text NOT LIKE '%C22 synthetic%')::text || '|' ||
+      (SELECT count(*) FROM platform.outbox_events WHERE aggregate_type='context_message' AND event_type='clinical.context_message.created.v1')::text || '|' ||
+      (SELECT count(*) FROM platform.outbox_events event WHERE aggregate_type='context_message' AND event_type='clinical.context_message.created.v1' AND (SELECT pg_catalog.count(*) FROM pg_catalog.jsonb_object_keys(event.payload))=2 AND event.payload->>'aggregateId'=event.aggregate_id::text AND event.payload->>'version'='1' AND pg_catalog.to_jsonb(event)::text NOT LIKE '%C22 synthetic%')::text || '|' ||
+      (SELECT count(*) FROM platform.idempotency_records record WHERE method='POST' AND route_template='/v1/contexts/{contextType}/{contextId}/messages' AND pg_catalog.to_jsonb(record)::text NOT LIKE '%C22 synthetic%')::text;`,
+    `${runtime.name} C22 encrypted API effects and plaintext-metadata inspection`,
+  );
+  if (result !== '2|2|2|2|2|2|2|2|2|2') {
+    throw new Error(
+      `${runtime.name} C22 API owner inspection expected two encrypted sends with ciphertext-only idempotency and body-free balanced effects, saw ${result}.`,
+    );
+  }
+  console.log(
+    `${runtime.name}: C22 API smoke round-tripped decrypted bodies; owner inspection confirmed two encrypted rows and no plaintext in idempotency, audit, or outbox metadata.`,
+  );
+}
+
 function checkReferrals(runtime, database, phase) {
   const fixture = readFileSync(resolve(root, apiTest), 'utf8');
   const rollbackIndex = fixture.lastIndexOf('\nROLLBACK;');
@@ -1021,6 +1352,93 @@ function checkExpectedReferralAcceptanceRed(runtime, database) {
   );
 }
 
+function checkExpectedMessagesRed(runtime, database) {
+  const messagesRedTest = 'infra/db/tests/feature-010-messages-red.sql';
+  const sql = readFileSync(resolve(root, messagesRedTest), 'utf8');
+  try {
+    runPsql(runtime, database, sql, `${runtime.name} expected C22 RED: ${messagesRedTest}`);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    if (
+      !detail.includes(
+        'F010_C22_MISSING_API: trust.list_context_messages_api_v1(uuid,timestamptz,uuid,integer)',
+      ) ||
+      !detail.includes('F010_C22_MISSING_API: trust.send_context_message_api_v1(uuid,jsonb)')
+    ) {
+      throw error;
+    }
+    console.log(`${runtime.name}: expected C22 RED: ${detail}`);
+    return;
+  }
+
+  throw new Error(
+    `${runtime.name} C22 RED was not observed: both C22 API functions already exist after C19.`,
+  );
+}
+
+function checkExpectedMessageRaceRed(runtime, database) {
+  const sql = readFileSync(resolve(root, messagesRaceRedTest), 'utf8');
+  try {
+    runPsql(runtime, database, sql, `${runtime.name} supplemental C22 lifecycle-race seam RED`);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    if (
+      !detail.includes(
+        'F010_C22_RACE_BOUNDARY_MISSING: trust.send_context_message_api_v1(uuid,jsonb)',
+      )
+    ) {
+      throw error;
+    }
+    console.log(`${runtime.name}: supplemental C22 race-boundary omission probe: ${detail}`);
+    return;
+  }
+  throw new Error(
+    'Supplemental C22 race-boundary omission was not observed: the send API already exists after C19.',
+  );
+}
+
+function checkActualMessageRaceRed(runtime, database) {
+  try {
+    runPsql(
+      runtime,
+      database,
+      c22SendHeldSql('f010_c22_red_send_first', 'f010-c22-race-red-send', 'd'.repeat(64)),
+      `${runtime.name} supplemental C22 send-first race probe against committed C11 fixture`,
+    );
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    if (
+      !detail.includes('function trust.send_context_message_api_v1(uuid, jsonb) does not exist')
+    ) {
+      throw error;
+    }
+    const state = runPsqlTuples(
+      runtime,
+      database,
+      `SELECT
+        (SELECT count(*) FROM trust.messages WHERE context_id='f0101000-0000-4000-8500-000000000004')::text || '|' ||
+        (SELECT count(*) FROM platform.idempotency_records WHERE route_template='/v1/contexts/{contextType}/{contextId}/messages')::text || '|' ||
+        (SELECT count(*) FROM audit.events WHERE resource_type='context_message' AND action_code='context_message.created')::text || '|' ||
+        (SELECT count(*) FROM platform.outbox_events WHERE aggregate_type='context_message' AND event_type='clinical.context_message.created.v1')::text || '|' ||
+        (SELECT status FROM clinical.encounters WHERE id='f0101000-0000-4000-8800-000000000002') || '|' ||
+        (SELECT version FROM clinical.encounters WHERE id='f0101000-0000-4000-8800-000000000002')::text;`,
+      `${runtime.name} C22 race RED committed-fixture effect check`,
+    );
+    if (state !== '0|0|0|0|open|5') {
+      throw new Error(
+        `${runtime.name} C22 race RED encountered an invalid fixture/effect state: ${state}.`,
+      );
+    }
+    console.log(
+      `${runtime.name}: supplemental post-implementation C22 race RED used the committed C11 fixture; the actual send-first invocation stopped at the missing SQL boundary with zero C22 effects. ${detail}`,
+    );
+    return;
+  }
+  throw new Error(
+    'Supplemental C22 send-first omission was not observed: the send boundary returned.',
+  );
+}
+
 function checkExpectedBookingPrimitiveRed(runtime, database) {
   const sql = readFileSync(resolve(root, bookingSeamTest), 'utf8');
   try {
@@ -1100,6 +1518,12 @@ async function verifyFreshAndReplay(runtime, database) {
     c19ReferralProjectionMigration,
     'fresh C19 referral projection correction migration',
   );
+  runMigration(
+    runtime,
+    database,
+    c22ContextMessagesMigration,
+    'fresh C22 context messages API migration',
+  );
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
@@ -1111,6 +1535,7 @@ async function verifyFreshAndReplay(runtime, database) {
   checkUpdate(runtime, database, 'C11 update API vectors');
   checkNotes(runtime, database, 'C12 note signing and projection API vectors');
   checkCompletion(runtime, database, 'C13 completion API vectors');
+  checkMessages(runtime, database, 'C22 context messages API vectors');
   checkReferrals(runtime, database, 'C17 create/list API vectors');
   checkReferralAcceptance(runtime, database, 'C18 acceptance API vectors');
   await checkConcurrentCompletionWinner(runtime, database);
@@ -1139,12 +1564,19 @@ async function verifyFreshAndReplay(runtime, database) {
     c19ReferralProjectionMigration,
     'C19 referral projection correction migration replay',
   );
+  runMigration(
+    runtime,
+    database,
+    c22ContextMessagesMigration,
+    'C22 context messages API migration replay',
+  );
   checkSchema(runtime, database, 'replayed F010 schema assertions');
   checkStorage(runtime, database, 'replayed F010 storage vectors');
   checkApi(runtime, database, 'replayed C10 create/read API vectors');
   checkUpdate(runtime, database, 'replayed C11 update API vectors');
   checkNotes(runtime, database, 'replayed C12 note signing and projection API vectors');
   checkCompletion(runtime, database, 'replayed C13 completion API vectors');
+  checkMessages(runtime, database, 'replayed C22 context messages API vectors');
   checkReferrals(runtime, database, 'replayed C17 create/list API vectors');
   checkReferralAcceptance(runtime, database, 'replayed C18 acceptance API vectors');
 
@@ -1184,8 +1616,11 @@ async function testRuntime(runtime) {
   const c17Only = process.env['SHIFAA_TEST_F010_C17_ONLY'] === 'true';
   const c18Only = process.env['SHIFAA_TEST_F010_C18_ONLY'] === 'true';
   const c19Only = process.env['SHIFAA_TEST_F010_C19_ONLY'] === 'true';
+  const c22Only = process.env['SHIFAA_TEST_F010_C22_ONLY'] === 'true';
   const runC13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
   const runC18Red = process.env['SHIFAA_TEST_F010_C18_RED'] === 'true';
+  const runC22Red = process.env['SHIFAA_TEST_F010_C22_RED'] === 'true';
+  const runC22RaceRed = process.env['SHIFAA_TEST_F010_C22_RACE_RED'] === 'true';
   const redDatabase = `f010_c08_red_${process.pid}_${randomBytes(8).toString('hex')}`;
   let redDatabaseCreated = false;
   try {
@@ -1198,8 +1633,11 @@ async function testRuntime(runtime) {
       !c17Only &&
       !c18Only &&
       !c19Only &&
+      !c22Only &&
       !runC13Red &&
-      !runC18Red
+      !runC18Red &&
+      !runC22Red &&
+      !runC22RaceRed
     ) {
       createScratchDatabase(runtime, redDatabase);
       redDatabaseCreated = true;
@@ -1212,6 +1650,111 @@ async function testRuntime(runtime) {
     createScratchDatabase(runtime, database);
     scratchDatabaseCreated = true;
     applyBaselineMigrations(runtime, database);
+    if (runC22Red) {
+      runMigration(runtime, database, featureMigration, 'focused C22 RED base F010 migration');
+      runMigration(
+        runtime,
+        database,
+        c10ApiMigration,
+        'focused C22 RED prerequisite C10 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c11UpdateMigration,
+        'focused C22 RED prerequisite C11 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c12NoteMigration,
+        'focused C22 RED prerequisite C12 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c13CompletionMigration,
+        'focused C22 RED prerequisite C13 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c17ReferralsMigration,
+        'focused C22 RED prerequisite C17 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c18ReferralAcceptanceMigration,
+        'focused C22 RED prerequisite C18 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c19ReferralProjectionMigration,
+        'focused C22 RED prerequisite C19 API migration',
+      );
+      checkStorage(runtime, database, 'focused C06 storage regression before C22 RED');
+      checkRls(runtime, database, 'focused C07 forced-RLS regression before C22 RED');
+      checkExpectedMessagesRed(runtime, database);
+      console.log(`${runtime.name}: focused C22 RED PostgreSQL probe passed.`);
+      return;
+    }
+    if (runC22RaceRed) {
+      runMigration(
+        runtime,
+        database,
+        featureMigration,
+        'supplemental C22 race RED base F010 migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c10ApiMigration,
+        'supplemental C22 race RED prerequisite C10 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c11UpdateMigration,
+        'supplemental C22 race RED prerequisite C11 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c12NoteMigration,
+        'supplemental C22 race RED prerequisite C12 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c13CompletionMigration,
+        'supplemental C22 race RED prerequisite C13 completion boundary',
+      );
+      runMigration(
+        runtime,
+        database,
+        c17ReferralsMigration,
+        'supplemental C22 race RED prerequisite C17 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c18ReferralAcceptanceMigration,
+        'supplemental C22 race RED prerequisite C18 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c19ReferralProjectionMigration,
+        'supplemental C22 race RED C19 message baseline',
+      );
+      checkExpectedMessageRaceRed(runtime, database);
+      commitMessagesFixture(runtime, database);
+      checkActualMessageRaceRed(runtime, database);
+      console.log(`${runtime.name}: supplemental C22 lifecycle-race seam RED passed after C19.`);
+      return;
+    }
     if (runC18Red) {
       runMigration(runtime, database, featureMigration, 'focused C18 RED base F010 migration');
       runMigration(
@@ -1246,6 +1789,73 @@ async function testRuntime(runtime) {
       );
       checkExpectedReferralAcceptanceRed(runtime, database);
       console.log(`${runtime.name}: focused C18 RED PostgreSQL probe passed.`);
+      return;
+    }
+    if (c22Only) {
+      runMigration(runtime, database, featureMigration, 'focused C22 base F010 migration');
+      runMigration(
+        runtime,
+        database,
+        c10ApiMigration,
+        'focused C22 prerequisite C10 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c11UpdateMigration,
+        'focused C22 prerequisite C11 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c12NoteMigration,
+        'focused C22 prerequisite C12 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c13CompletionMigration,
+        'focused C22 prerequisite C13 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c17ReferralsMigration,
+        'focused C22 prerequisite C17 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c18ReferralAcceptanceMigration,
+        'focused C22 prerequisite C18 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c19ReferralProjectionMigration,
+        'focused C22 prerequisite C19 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c22ContextMessagesMigration,
+        'focused C22 context messages API migration',
+      );
+      checkStorage(runtime, database, 'focused C06 storage regression before C22 vectors');
+      checkRls(runtime, database, 'focused C07 forced-RLS regression before C22 vectors');
+      checkUpdate(runtime, database, 'focused C11 update regression before C22 vectors');
+      checkCompletion(runtime, database, 'focused C13 completion regression before C22 vectors');
+      checkMessages(runtime, database, 'focused C22 real-PostgreSQL message vectors');
+      runMigration(runtime, database, c22ContextMessagesMigration, 'focused C22 migration replay');
+      checkMessages(runtime, database, 'focused C22 replayed message vectors');
+      commitMessagesFixture(runtime, database);
+      await checkC22LifecycleRaces(runtime, database);
+      setC22ApiSmokeClock(runtime, database);
+      runMessageApiPostgresTest(runtime, database);
+      checkC22ApiSmokeEffects(runtime, database);
+      console.log(
+        `${runtime.name}: focused C22 SQL/API message, live authorization, and replay vectors passed.`,
+      );
       return;
     }
     if (c18Only || c19Only) {

@@ -78,6 +78,12 @@ import {
   registerFeature010ReferralRoutes,
   type Feature010ReferralRouteService,
 } from './routes/feature-010-referrals.js';
+import { Feature010MessagesService } from './modules/feature-010/messages.js';
+import { PostgresFeature010MessagesRepository } from './adapters/postgres/feature-010-messages.js';
+import {
+  registerFeature010MessagesRoutes,
+  type Feature010MessagesRouteService,
+} from './routes/feature-010-messages.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -94,6 +100,7 @@ export interface AppHarness {
   clinicSchedulingService: ClinicSchedulingRouteService;
   feature010EncounterService: Feature010EncounterRouteService;
   feature010ReferralService: Feature010ReferralRouteService;
+  feature010MessageService: Feature010MessagesRouteService;
 }
 
 export async function buildApp(
@@ -105,6 +112,7 @@ export async function buildApp(
     clinicSchedulingService?: ClinicSchedulingRouteService;
     feature010EncounterService?: Feature010EncounterRouteService;
     feature010ReferralService?: Feature010ReferralRouteService;
+    feature010MessageService?: Feature010MessagesRouteService;
     recoveryProofGrants?: RecoveryProofGrantAuthority;
   } = {},
 ): Promise<AppHarness> {
@@ -256,6 +264,17 @@ export async function buildApp(
           ),
         )
       : failClosedFeature010ReferralService());
+  const feature010MessageService =
+    options.feature010MessageService ??
+    (repository instanceof PostgresIdentityRepository
+      ? new Feature010MessagesService(
+          new PostgresFeature010MessagesRepository(
+            repository,
+            auditEnvironment(config.environment),
+            config.identityEncryptionKey,
+          ),
+        )
+      : failClosedFeature010MessageService());
   await app.register(cors, {
     origin: config.corsOrigins,
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -298,6 +317,10 @@ export async function buildApp(
   });
   await registerFeature010ReferralRoutes(app, {
     service: feature010ReferralService,
+    syntheticMode: config.syntheticMode,
+  });
+  await registerFeature010MessagesRoutes(app, {
+    service: feature010MessageService,
     syntheticMode: config.syntheticMode,
   });
   await registerClinicSchedulingRoutes(app, {
@@ -435,6 +458,7 @@ export async function buildApp(
     clinicSchedulingService,
     feature010EncounterService,
     feature010ReferralService,
+    feature010MessageService,
   };
 }
 
@@ -460,6 +484,13 @@ function failClosedFeature010ReferralService(): Feature010ReferralRouteService {
     listReferrals: unavailable,
     acceptReferral: unavailable,
   };
+}
+
+function failClosedFeature010MessageService(): Feature010MessagesRouteService {
+  const unavailable = async (): Promise<never> => {
+    throw new ApiPolicyError('open-sec-001', 503, 'Feature 010 messages are unavailable.');
+  };
+  return { listContextMessages: unavailable, sendContextMessage: unavailable };
 }
 
 function failClosedClinicSchedulingService(): ClinicSchedulingService {
