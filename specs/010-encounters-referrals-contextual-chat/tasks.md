@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C18 accepted; T001–T054 complete, T055–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C19 accepted; T001–T057 complete, T058–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -341,15 +341,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Each page rechecks live representative and target authority.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T055 [US2] [FR-CLINIC-007, NFR-SEC-001, NFR-PRIV-004, NFR-API-002] Write red pagination matrix for PAT self, active approved GUA, DEL requiring both record.view and appointment.manage, source CLN and accepted-linked target CLN; revoke between pages — `services/api/test/feature-010-referral-projections.integration.test.ts`
+- [X] T055 [US2] [FR-CLINIC-007, NFR-SEC-001, NFR-PRIV-004, NFR-API-002] Write red pagination matrix for PAT self, active approved GUA, DEL requiring both record.view and appointment.manage, source CLN and accepted-linked target CLN; revoke between pages — `services/api/test/feature-010-referral-projections.integration.test.ts`
   - Depends on: `T054`
   - Acceptance evidence: `one-grant DEL and pending target receive no content`
 
-- [ ] T056 [US2] [FR-CLINIC-007, NFR-SEC-001, NFR-PRIV-004, NFR-API-002] Implement per-action live list projection and cursor filtering; target receives only accepted authorized reason_summary and optional encounter_type, never note bodies — `services/api/src/modules/feature-010/referrals.ts; services/api/src/adapters/postgres/feature-010-referrals.ts`
+- [X] T056 [US2] [FR-CLINIC-007, NFR-SEC-001, NFR-PRIV-004, NFR-API-002] Implement per-action live list projection and cursor filtering; target receives only accepted authorized reason_summary and optional encounter_type, never note bodies — `services/api/src/modules/feature-010/referrals.ts; services/api/src/adapters/postgres/feature-010-referrals.ts`
   - Depends on: `T055`
   - Acceptance evidence: `no stale grant or query filter can broaden returned fields`
 
-- [ ] T057 [US2] [FR-CLINIC-007, NFR-SEC-001, NFR-PRIV-004] Run role/pagination negatives under non-owner forced RLS — `specs/010-encounters-referrals-contextual-chat/evidence/C19-referral-projection.md`
+- [X] T057 [US2] [FR-CLINIC-007, NFR-SEC-001, NFR-PRIV-004] Run role/pagination negatives under non-owner forced RLS — `specs/010-encounters-referrals-contextual-chat/evidence/C19-referral-projection.md`
   - Depends on: `T056`
   - Acceptance evidence: `revoked next page denies and target projection is two-field maximum`
 

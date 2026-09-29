@@ -100,6 +100,8 @@ DECLARE
   availability_version integer;
   denied boolean;
   target_projection jsonb;
+  list_projection jsonb;
+  visible_count integer;
   hidden_error_text text;
   absent_error_text text;
   expected_reason_only jsonb := pg_catalog.jsonb_build_array('reason_summary');
@@ -185,6 +187,22 @@ BEGIN
      OR target_projection ? 'sourceEncounterId'
      OR target_projection ? 'targetFacilityId' THEN
     RAISE EXCEPTION 'C18 target clinician did not receive only the selected accepted projection: %',target_projection;
+  END IF;
+  SELECT count(*),(pg_catalog.array_agg(result.projection))[1]
+    INTO visible_count,list_projection
+  FROM clinical.list_referrals_api_v1(NULL,NULL,101,NULL,NULL,NULL,NULL,NULL) result
+  WHERE result.referral_id='f0101000-0000-4000-8a00-000000000001';
+  IF visible_count<>1
+     OR list_projection IS DISTINCT FROM pg_catalog.jsonb_build_object(
+       'id','f0101000-0000-4000-8a00-000000000001',
+       'status','accepted',
+       'version',2,
+       'acceptedFieldCodes',expected_reason_and_type,
+       'resultingAppointmentId',target_projection->'resultingAppointmentId',
+       'reasonSummary','C18 PAT reason',
+       'encounterType','consultation'
+     ) THEN
+    RAISE EXCEPTION 'C19 listReferrals target projection exceeded the two accepted fields: %',list_projection;
   END IF;
   PERFORM pg_catalog.set_config('shifaa.action','acceptReferral',true);
   PERFORM pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000002',true);
@@ -485,12 +503,18 @@ SET SESSION AUTHORIZATION shifaa_api;
 DO $feature_010_c18_expired_authority_vector$
 DECLARE
   denied boolean := false;
+  visible_count integer;
 BEGIN
   PERFORM pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000005',true);
   PERFORM pg_catalog.set_config('shifaa.actor_role','DEL',true);
-  PERFORM pg_catalog.set_config('shifaa.action','acceptReferral',true);
+  PERFORM pg_catalog.set_config('shifaa.action','listReferrals',true);
   PERFORM pg_catalog.set_config('shifaa.aal','2',true);
   PERFORM pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
+  SELECT count(*) INTO visible_count
+  FROM clinical.list_referrals_api_v1(NULL,NULL,101,NULL,NULL,NULL,NULL,NULL) result
+  WHERE result.referral_id='f0101000-0000-4000-8a00-000000000001';
+  IF visible_count<>0 THEN RAISE EXCEPTION 'C19 expired DEL authority still listed referrals'; END IF;
+  PERFORM pg_catalog.set_config('shifaa.action','acceptReferral',true);
   PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c18-expired-del-001',true);
   PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('7',64),true);
   BEGIN

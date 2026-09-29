@@ -13,6 +13,8 @@ const c13CompletionMigration =
 const c17ReferralsMigration = 'supabase/migrations/20260929001005_f010_c17_referrals_api.sql';
 const c18ReferralAcceptanceMigration =
   'supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql';
+const c19ReferralProjectionMigration =
+  'supabase/migrations/20260929001007_f010_c19_referral_projections.sql';
 const c13CompletionRedTest = 'infra/db/tests/feature-010-completion-red.sql';
 const c13CompletionTest = 'infra/db/tests/feature-010-completion.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
@@ -26,6 +28,7 @@ const updateTest = 'infra/db/tests/feature-010-update.sql';
 const notesTest = 'infra/db/tests/feature-010-notes.sql';
 const referralsTest = 'infra/db/tests/feature-010-referrals.sql';
 const referralAcceptanceTest = 'infra/db/tests/feature-010-referral-accept.sql';
+const referralProjectionsTest = 'infra/db/tests/feature-010-referral-projections.sql';
 const defaultDenySnapshotSql = `SELECT format(
   'C04 default-deny snapshot: forced_rls=%s/6; policies=%s; direct_online_acl_entries=%s',
   count(*) FILTER (WHERE c.relrowsecurity AND c.relforcerowsecurity),
@@ -75,6 +78,7 @@ const c12NoteMigrationIndex = migrations.indexOf(c12NoteMigration);
 const c13CompletionMigrationIndex = migrations.indexOf(c13CompletionMigration);
 const c17ReferralsMigrationIndex = migrations.indexOf(c17ReferralsMigration);
 const c18ReferralAcceptanceMigrationIndex = migrations.indexOf(c18ReferralAcceptanceMigration);
+const c19ReferralProjectionMigrationIndex = migrations.indexOf(c19ReferralProjectionMigration);
 const c13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
 if (
   featureMigrationIndex < 0 ||
@@ -91,10 +95,12 @@ if (
   c17ReferralsMigrationIndex !== c13CompletionMigrationIndex + 1 ||
   migrations.lastIndexOf(c17ReferralsMigration) !== c17ReferralsMigrationIndex ||
   c18ReferralAcceptanceMigrationIndex !== c17ReferralsMigrationIndex + 1 ||
-  migrations.lastIndexOf(c18ReferralAcceptanceMigration) !== c18ReferralAcceptanceMigrationIndex
+  migrations.lastIndexOf(c18ReferralAcceptanceMigration) !== c18ReferralAcceptanceMigrationIndex ||
+  c19ReferralProjectionMigrationIndex !== c18ReferralAcceptanceMigrationIndex + 1 ||
+  migrations.lastIndexOf(c19ReferralProjectionMigration) !== c19ReferralProjectionMigrationIndex
 ) {
   throw new Error(
-    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, ${c17ReferralsMigration}, and ${c18ReferralAcceptanceMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
+    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, ${c17ReferralsMigration}, ${c18ReferralAcceptanceMigration}, and ${c19ReferralProjectionMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
   );
 }
 
@@ -768,7 +774,30 @@ function referralAcceptanceSql() {
   }
   const referralVectors = readFileSync(resolve(root, referralsTest), 'utf8');
   const acceptanceVectors = readFileSync(resolve(root, referralAcceptanceTest), 'utf8');
-  return `${fixture.slice(0, rollbackIndex)}\n${referralVectors}\n${acceptanceVectors}\nROLLBACK;\n`;
+  const projectionVectors = readFileSync(resolve(root, referralProjectionsTest), 'utf8');
+  const postAcceptanceMarker = '-- C19_POST_ACCEPTANCE_VECTORS';
+  const postAcceptanceIndex = projectionVectors.indexOf(postAcceptanceMarker);
+  const acceptanceMarker = 'DO $feature_010_c18_acceptance_vectors$';
+  if (
+    postAcceptanceIndex < 0 ||
+    projectionVectors.indexOf(postAcceptanceMarker, postAcceptanceIndex + 1) >= 0 ||
+    acceptanceVectors.indexOf(acceptanceMarker) < 0 ||
+    acceptanceVectors.indexOf(acceptanceMarker, acceptanceVectors.indexOf(acceptanceMarker) + 1) >=
+      0
+  ) {
+    throw new Error(
+      'C19 projection vectors must have one pre-acceptance insertion point and one post-acceptance marker.',
+    );
+  }
+  const preAcceptanceVectors = projectionVectors.slice(0, postAcceptanceIndex);
+  const postAcceptanceVectors = projectionVectors.slice(
+    postAcceptanceIndex + postAcceptanceMarker.length,
+  );
+  const acceptanceWithC19Precheck = acceptanceVectors.replace(
+    acceptanceMarker,
+    `${preAcceptanceVectors}\n${acceptanceMarker}`,
+  );
+  return `${fixture.slice(0, rollbackIndex)}\n${referralVectors}\n${acceptanceWithC19Precheck}\n${postAcceptanceVectors}\nROLLBACK;\n`;
 }
 
 function checkReferralAcceptance(runtime, database, phase) {
@@ -1065,6 +1094,12 @@ async function verifyFreshAndReplay(runtime, database) {
     c18ReferralAcceptanceMigration,
     'fresh C18 referral acceptance API migration',
   );
+  runMigration(
+    runtime,
+    database,
+    c19ReferralProjectionMigration,
+    'fresh C19 referral projection correction migration',
+  );
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
@@ -1097,6 +1132,12 @@ async function verifyFreshAndReplay(runtime, database) {
     database,
     c18ReferralAcceptanceMigration,
     'C18 referral acceptance API migration replay',
+  );
+  runMigration(
+    runtime,
+    database,
+    c19ReferralProjectionMigration,
+    'C19 referral projection correction migration replay',
   );
   checkSchema(runtime, database, 'replayed F010 schema assertions');
   checkStorage(runtime, database, 'replayed F010 storage vectors');
@@ -1142,6 +1183,7 @@ async function testRuntime(runtime) {
   const c13Only = process.env['SHIFAA_TEST_F010_C13_ONLY'] === 'true';
   const c17Only = process.env['SHIFAA_TEST_F010_C17_ONLY'] === 'true';
   const c18Only = process.env['SHIFAA_TEST_F010_C18_ONLY'] === 'true';
+  const c19Only = process.env['SHIFAA_TEST_F010_C19_ONLY'] === 'true';
   const runC13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
   const runC18Red = process.env['SHIFAA_TEST_F010_C18_RED'] === 'true';
   const redDatabase = `f010_c08_red_${process.pid}_${randomBytes(8).toString('hex')}`;
@@ -1155,6 +1197,7 @@ async function testRuntime(runtime) {
       !c13Only &&
       !c17Only &&
       !c18Only &&
+      !c19Only &&
       !runC13Red &&
       !runC18Red
     ) {
@@ -1205,7 +1248,7 @@ async function testRuntime(runtime) {
       console.log(`${runtime.name}: focused C18 RED PostgreSQL probe passed.`);
       return;
     }
-    if (c18Only) {
+    if (c18Only || c19Only) {
       runMigration(runtime, database, featureMigration, 'focused C18 base F010 migration');
       runMigration(
         runtime,
@@ -1243,6 +1286,12 @@ async function testRuntime(runtime) {
         c18ReferralAcceptanceMigration,
         'focused C18 referral acceptance API migration',
       );
+      runMigration(
+        runtime,
+        database,
+        c19ReferralProjectionMigration,
+        'focused C19 referral projection correction migration',
+      );
       checkStorage(runtime, database, 'focused C06 storage invariants before C18 vectors');
       checkRls(runtime, database, 'focused C07 RLS regression before C18 vectors');
       checkBookingSeam(runtime, database, 'focused C08 F009 parity before C18 vectors');
@@ -1253,6 +1302,12 @@ async function testRuntime(runtime) {
         c18ReferralAcceptanceMigration,
         'focused C18 migration replay',
       );
+      runMigration(
+        runtime,
+        database,
+        c19ReferralProjectionMigration,
+        'focused C19 migration replay',
+      );
       checkReferralAcceptance(
         runtime,
         database,
@@ -1260,7 +1315,7 @@ async function testRuntime(runtime) {
       );
       await checkConcurrentReferralAcceptanceWinner(runtime, database);
       console.log(
-        `${runtime.name}: focused C18 acceptance, migration replay, F009 parity, and concurrency vectors passed.`,
+        `${runtime.name}: focused ${c19Only ? 'C19 projection plus C18 acceptance' : 'C18 acceptance'}, migration replay, F009 parity, and concurrency vectors passed.`,
       );
       return;
     }
