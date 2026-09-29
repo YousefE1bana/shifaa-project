@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C08 accepted; T001–T024 complete, T025–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C09 accepted; T001–T027 complete, T028–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -168,15 +168,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Portable policy enforces exact state and signer rules.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T025 [US1] [FR-CLINIC-006, NFR-PORT-001, NFR-DATA-001] Write red pure-policy tests for checked_in/called handoff, one responsible interval, optional 0..n references, note signer/supersession and structural completion — `packages/core/src/feature-010/encounter-policy.test.ts`
+- [x] T025 [US1] [FR-CLINIC-006, NFR-PORT-001, NFR-DATA-001] Write red pure-policy tests for checked_in/called handoff, one responsible interval, optional 0..n references, note signer/supersession and structural completion — `packages/core/src/feature-010/encounter-policy.test.ts`
   - Depends on: `T024`
   - Acceptance evidence: `tests fail for missing policy decisions only`
 
-- [ ] T026 [US1] [FR-CLINIC-006, NFR-PORT-001, NFR-DATA-001] Implement pure encounter and note decision functions with no DB/framework/vendor imports — `packages/core/src/feature-010/encounter-policy.ts; packages/core/src/index.ts`
+- [x] T026 [US1] [FR-CLINIC-006, NFR-PORT-001, NFR-DATA-001] Implement pure encounter and note decision functions with no DB/framework/vendor imports — `packages/core/src/feature-010/encounter-policy.ts; packages/core/src/index.ts`
   - Depends on: `T025`
   - Acceptance evidence: `policy returns approved transitions and rejects all unspecified ones`
 
-- [ ] T027 [US1] [FR-CLINIC-006, NFR-PORT-001, NFR-QUALITY-001] Run focused core policy tests and dependency-boundary check — `specs/010-encounters-referrals-contextual-chat/evidence/C09-core.md`
+- [x] T027 [US1] [FR-CLINIC-006, NFR-PORT-001, NFR-QUALITY-001] Run focused core policy tests and dependency-boundary check — `specs/010-encounters-referrals-contextual-chat/evidence/C09-core.md`
   - Depends on: `T026`
   - Acceptance evidence: `core tests and architecture:check pass`
 
