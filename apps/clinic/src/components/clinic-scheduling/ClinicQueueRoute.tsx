@@ -99,6 +99,18 @@ export function ClinicQueueRoute({ mode }: { mode: 'today' | 'queue' }) {
         <button style={button} onClick={() => setLocale(ar ? 'en-EG' : 'ar-EG')}>
           {ar ? 'English' : 'العربية'}
         </button>
+        <a
+          href="/referrals"
+          style={{
+            color: color.brand,
+            minHeight: minimumTargetSize,
+            display: 'inline-flex',
+            alignItems: 'center',
+            marginInlineStart: spacing.md,
+          }}
+        >
+          {ar ? 'الإحالات' : 'Referrals'}
+        </a>
       </div>
       {token ? (
         <QueueWorkspace mode={mode} accessToken={token} sessionAal={sessionAal} locale={locale} />

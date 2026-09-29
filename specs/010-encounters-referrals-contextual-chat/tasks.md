@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C20 accepted; T001–T060 complete, T061–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C21 accepted; T001–T063 complete, T064–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -375,15 +375,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Clinic never accepts on a patient's behalf.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T061 [US2] [FR-CLINIC-007, NFR-I18N-001, NFR-A11Y-001] Write red clinic tests for create review without precommitted REF ID, source encounter confirmation, pending/accepted tracking and resolved linked appointment/target — `apps/clinic/test/feature-010-referrals.test.tsx`
+- [x] T061 [US2] [FR-CLINIC-007, NFR-I18N-001, NFR-A11Y-001] Write red clinic tests for create review without precommitted REF ID, source encounter confirmation, pending/accepted tracking and resolved linked appointment/target — `apps/clinic/test/feature-010-referrals.test.tsx`
   - Depends on: `T060`
   - Acceptance evidence: `review does not show a committed worklist row before success`
 
-- [ ] T062 [US2] [FR-CLINIC-007, NFR-I18N-001, NFR-A11Y-001] Implement approved clinician /referrals page and generated client calls; no PAT/GUA/DEL acceptance control or private-note preview — `apps/clinic/src/app/referrals/page.tsx; apps/clinic/src/components/feature-010/ReferralWorkspace.tsx`
+- [x] T062 [US2] [FR-CLINIC-007, NFR-I18N-001, NFR-A11Y-001] Implement approved clinician /referrals page and generated client calls; no PAT/GUA/DEL acceptance control or private-note preview — `apps/clinic/src/app/referrals/page.tsx; apps/clinic/src/components/feature-010/ReferralWorkspace.tsx`
   - Depends on: `T061`
   - Acceptance evidence: `pending and accepted states show only clinician-allowed fields`
 
-- [ ] T063 [US2] [FR-CLINIC-007, NFR-I18N-001, NFR-A11Y-001] Run clinic referral route tests at 768 and 1440 with discoverable navigation and localized ar-EG dates — `specs/010-encounters-referrals-contextual-chat/evidence/C21-clinic-referrals-ui.md`
+- [x] T063 [US2] [FR-CLINIC-007, NFR-I18N-001, NFR-A11Y-001] Run clinic referral route tests at 768 and 1440 with discoverable navigation and localized ar-EG dates — `specs/010-encounters-referrals-contextual-chat/evidence/C21-clinic-referrals-ui.md`
   - Depends on: `T062`
   - Acceptance evidence: `review/success/pending/accepted/denied/offline pass`
 
