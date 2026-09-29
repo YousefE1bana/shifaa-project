@@ -79,8 +79,8 @@ VALUES ('f0100700-0000-4000-8c00-000000000001','guardianship-evidence','f010-c07
 SELECT pg_catalog.set_config('shifaa.person_id','f0100700-0000-4000-8000-000000000003',true);
 SELECT pg_catalog.set_config('shifaa.actor_role','PAT',true);
 SELECT pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
-INSERT INTO identity.care_relationships(id,subject_patient_id,actor_person_id,relationship_type,status,purpose_code,created_by_person_id,evidence_object_id)
-VALUES ('f0100700-0000-4000-8d00-000000000001','f0100700-0000-4000-8100-000000000001','f0100700-0000-4000-8000-000000000003','guardianship','pending','appointment.scheduling','f0100700-0000-4000-8000-000000000003','f0100700-0000-4000-8c00-000000000001');
+INSERT INTO identity.care_relationships(id,subject_patient_id,actor_person_id,relationship_type,status,valid_from,purpose_code,created_by_person_id,evidence_object_id)
+VALUES ('f0100700-0000-4000-8d00-000000000001','f0100700-0000-4000-8100-000000000001','f0100700-0000-4000-8000-000000000003','guardianship','pending','2020-01-01','appointment.scheduling','f0100700-0000-4000-8000-000000000003','f0100700-0000-4000-8c00-000000000001');
 INSERT INTO identity.care_relationship_permissions(relationship_id,permission_code,created_by_person_id)
 VALUES ('f0100700-0000-4000-8d00-000000000001','record.view','f0100700-0000-4000-8000-000000000003');
 SELECT pg_catalog.set_config('shifaa.person_id','f0100700-0000-4000-8000-000000000007',true);
@@ -92,8 +92,8 @@ WHERE id='f0100700-0000-4000-8d00-000000000001';
 SELECT pg_catalog.set_config('shifaa.person_id','f0100700-0000-4000-8000-000000000002',true);
 SELECT pg_catalog.set_config('shifaa.actor_role','PAT',true);
 SELECT pg_catalog.set_config('shifaa.aal','2',true);
-INSERT INTO identity.care_relationships(id,subject_patient_id,actor_person_id,relationship_type,status,purpose_code,created_by_person_id,invite_token_digest,invite_key_version,invite_expires_at)
-VALUES ('f0100700-0000-4000-8d00-000000000002','f0100700-0000-4000-8100-000000000001','f0100700-0000-4000-8000-000000000004','delegation','pending','appointment.scheduling','f0100700-0000-4000-8000-000000000002',decode(repeat('b',64),'hex'),1,'2026-09-28T00:00:00Z');
+INSERT INTO identity.care_relationships(id,subject_patient_id,actor_person_id,relationship_type,status,valid_from,purpose_code,created_by_person_id,invite_token_digest,invite_key_version,invite_expires_at)
+VALUES ('f0100700-0000-4000-8d00-000000000002','f0100700-0000-4000-8100-000000000001','f0100700-0000-4000-8000-000000000004','delegation','pending','2020-01-01','appointment.scheduling','f0100700-0000-4000-8000-000000000002',decode(repeat('b',64),'hex'),1,statement_timestamp()+interval '1 day');
 INSERT INTO identity.care_relationship_permissions(relationship_id,permission_code,created_by_person_id) VALUES
  ('f0100700-0000-4000-8d00-000000000002','record.view','f0100700-0000-4000-8000-000000000002'),
  ('f0100700-0000-4000-8d00-000000000002','appointment.manage','f0100700-0000-4000-8000-000000000002');

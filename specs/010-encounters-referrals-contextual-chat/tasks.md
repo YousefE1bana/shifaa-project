@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C09 accepted; T001–T027 complete, T028–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C10 accepted; T001–T030 complete, T031–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -185,15 +185,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** API exposes authoritative start and role-projected read.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T028 [US1] [FR-CLINIC-006, NFR-SEC-001, NFR-API-002, NFR-SEC-003, NFR-SEC-005, NFR-SEC-006] Write red createEncounter/getEncounter API and real-Postgres tests for closed input, session/AAL/purpose, private-note exclusion, missing queue and no client workforce IDs; for createEncounter assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success stores domain/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting requests leave no duplicate or partial effects — `services/api/src/routes/feature-010-encounters.contract.test.ts`
+- [X] T028 [US1] [FR-CLINIC-006, NFR-SEC-001, NFR-API-002, NFR-SEC-003, NFR-SEC-005, NFR-SEC-006] Write red createEncounter/getEncounter API and real-Postgres tests for closed input, session/AAL/purpose, private-note exclusion, missing queue and no client workforce IDs; for createEncounter assert identical-key/body replay returns the canonical stored response, changed-body reuse returns `idempotency-key-reused`, one success stores domain/audit/outbox/response once, and replay or stale/invalid/unauthorized/conflicting requests leave no duplicate or partial effects — `services/api/src/routes/feature-010-encounters.contract.test.ts`
   - Depends on: `T027`
   - Acceptance evidence: `red route/persistence tests fail on missing create/read and replay/effects behavior, not fixture errors`
 
-- [ ] T029 [US1] [FR-CLINIC-006, NFR-SEC-001, NFR-API-002, NFR-SEC-003, NFR-SEC-005, NFR-SEC-006] Implement create/read Core API and PostgreSQL adapter with locked F010 SQL entry and role projection; createEncounter atomically commits one domain/audit/outbox/canonical stored response, returns that response on identical-key/body replay without duplicate effects, and denies changed-body key reuse or stale/invalid/unauthorized/conflicting requests without partial effects; register only two approved routes — `services/api/src/modules/feature-010/encounters.ts; services/api/src/adapters/postgres/feature-010-encounters.ts; services/api/src/routes/feature-010-encounters.ts; services/api/src/app.ts`
+- [X] T029 [US1] [FR-CLINIC-006, NFR-SEC-001, NFR-API-002, NFR-SEC-003, NFR-SEC-005, NFR-SEC-006] Implement create/read Core API and PostgreSQL adapter with locked F010 SQL entry and role projection; createEncounter atomically commits one domain/audit/outbox/canonical stored response, returns that response on identical-key/body replay without duplicate effects, and denies changed-body key reuse or stale/invalid/unauthorized/conflicting requests without partial effects; register only two approved routes — `services/api/src/modules/feature-010/encounters.ts; services/api/src/adapters/postgres/feature-010-encounters.ts; services/api/src/routes/feature-010-encounters.ts; services/api/src/app.ts`
   - Depends on: `T028`
   - Acceptance evidence: `one open/consultation/service triple and stored response; replay is canonical and effect-free; changed-body conflict/negative paths are partial-effect-free; private note never leaks`
 
-- [ ] T030 [US1] [FR-CLINIC-006, NFR-SEC-001, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Run create/read route and non-owner real-Postgres tests; verify identical-key/body createEncounter replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one domain/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths create no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C10-encounter-api.md`
+- [X] T030 [US1] [FR-CLINIC-006, NFR-SEC-001, NFR-API-002, NFR-SEC-005, NFR-SEC-006] Run create/read route and non-owner real-Postgres tests; verify identical-key/body createEncounter replay returns the canonical stored response, changed-body reuse conflicts, one success has exactly one domain/audit/outbox/stored response, and replay/stale/invalid/unauthorized/conflicting paths create no duplicate or partial effects — `specs/010-encounters-referrals-contextual-chat/evidence/C10-encounter-api.md`
   - Depends on: `T029`
   - Acceptance evidence: `authorized/denied and AC-01 identical replay plus AC-09 changed-body/effects matrix pass`
 

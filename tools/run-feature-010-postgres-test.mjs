@@ -5,12 +5,14 @@ import { spawn, spawnSync } from 'node:child_process';
 
 const featureMigration =
   'supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql';
+const c10ApiMigration = 'supabase/migrations/20260929001001_f010_c10_encounter_api.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
 const lifecycleTest = 'infra/db/tests/feature-010-lifecycle.sql';
 const storageTest = 'infra/db/tests/feature-010-storage-invariants.sql';
 const rlsTest = 'infra/db/tests/feature-010-rls.sql';
 const f009RegressionTest = 'infra/db/tests/clinic-scheduling-schema.sql';
 const bookingSeamTest = 'infra/db/tests/feature-010-booking-seam.sql';
+const apiTest = 'infra/db/tests/feature-010-api.sql';
 const defaultDenySnapshotSql = `SELECT format(
   'C04 default-deny snapshot: forced_rls=%s/6; policies=%s; direct_online_acl_entries=%s',
   count(*) FILTER (WHERE c.relrowsecurity AND c.relforcerowsecurity),
@@ -54,14 +56,19 @@ const migrations = [...migrateCommand.matchAll(/-f \/workspace\/([^\s]+\.sql)/g)
   match[1].replaceAll('\\', '/'),
 );
 const featureMigrationIndex = migrations.indexOf(featureMigration);
+const c10ApiMigrationIndex = migrations.indexOf(c10ApiMigration);
 if (
   featureMigrationIndex < 0 ||
-  migrations.lastIndexOf(featureMigration) !== featureMigrationIndex
+  migrations.lastIndexOf(featureMigration) !== featureMigrationIndex ||
+  c10ApiMigrationIndex <= featureMigrationIndex ||
+  migrations.lastIndexOf(c10ApiMigration) !== c10ApiMigrationIndex
 ) {
-  throw new Error(`The standalone db:migrate chain must include ${featureMigration} exactly once.`);
+  throw new Error(
+    `The standalone db:migrate chain must include ${featureMigration} followed by ${c10ApiMigration}, each exactly once.`,
+  );
 }
 
-const runtimes = [
+const configuredRuntimes = [
   {
     name: 'shifaa-local-postgres',
     container: 'shifaa-local-postgres-postgres-1',
@@ -75,6 +82,13 @@ const runtimes = [
     adminDatabase: 'postgres',
   },
 ];
+const requestedRuntime = process.env['SHIFAA_TEST_POSTGRES_RUNTIME'];
+const runtimes = requestedRuntime
+  ? configuredRuntimes.filter((runtime) => runtime.name === requestedRuntime)
+  : configuredRuntimes;
+if (runtimes.length === 0) {
+  throw new Error(`Unknown SHIFAA_TEST_POSTGRES_RUNTIME: ${requestedRuntime}`);
+}
 
 function runDocker(runtime, args, { input, label }) {
   const dockerArgs = ['exec'];
@@ -533,6 +547,11 @@ function checkBookingSeam(runtime, database, phase) {
   runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${bookingSeamTest}`);
 }
 
+function checkApi(runtime, database, phase) {
+  const sql = readFileSync(resolve(root, apiTest), 'utf8');
+  runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${apiTest}`);
+}
+
 function checkExpectedBookingPrimitiveRed(runtime, database) {
   const sql = readFileSync(resolve(root, bookingSeamTest), 'utf8');
   try {
@@ -590,6 +609,7 @@ async function verifyFreshAndReplay(runtime, database) {
     `${runtime.name} capture F009 schema baseline`,
   );
   runMigration(runtime, database, featureMigration, 'fresh F010 migration');
+  runMigration(runtime, database, c10ApiMigration, 'fresh C10 API migration');
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
@@ -597,11 +617,14 @@ async function verifyFreshAndReplay(runtime, database) {
   checkRls(runtime, database, 'fresh F010 non-owner RLS matrix');
   checkF009Regression(runtime, database, 'F009 check-in and queue regression after F010');
   checkBookingSeam(runtime, database, 'C08 F009 parity and F010 primitive vectors');
+  checkApi(runtime, database, 'C10 create/read API vectors');
   await checkConcurrentBookingWinner(runtime, database);
   await checkConcurrentVersionStale(runtime, database);
   runMigration(runtime, database, featureMigration, 'F010 migration replay');
+  runMigration(runtime, database, c10ApiMigration, 'C10 API migration replay');
   checkSchema(runtime, database, 'replayed F010 schema assertions');
   checkStorage(runtime, database, 'replayed F010 storage vectors');
+  checkApi(runtime, database, 'replayed C10 create/read API vectors');
 
   const f009SchemaAfter = runPgDump(
     runtime,
@@ -631,19 +654,29 @@ function dropScratchDatabase(runtime, database) {
 async function testRuntime(runtime) {
   const database = `f010_c04_${process.pid}_${randomBytes(8).toString('hex')}`;
   let scratchDatabaseCreated = false;
+  const c10Only = process.env['SHIFAA_TEST_F010_C10_ONLY'] === 'true';
   const redDatabase = `f010_c08_red_${process.pid}_${randomBytes(8).toString('hex')}`;
   let redDatabaseCreated = false;
   try {
-    createScratchDatabase(runtime, redDatabase);
-    redDatabaseCreated = true;
-    applyBaselineMigrations(runtime, redDatabase);
-    checkExpectedBookingPrimitiveRed(runtime, redDatabase);
-    dropScratchDatabase(runtime, redDatabase);
-    redDatabaseCreated = false;
+    if (!c10Only) {
+      createScratchDatabase(runtime, redDatabase);
+      redDatabaseCreated = true;
+      applyBaselineMigrations(runtime, redDatabase);
+      checkExpectedBookingPrimitiveRed(runtime, redDatabase);
+      dropScratchDatabase(runtime, redDatabase);
+      redDatabaseCreated = false;
+    }
 
     createScratchDatabase(runtime, database);
     scratchDatabaseCreated = true;
     applyBaselineMigrations(runtime, database);
+    if (c10Only) {
+      runMigration(runtime, database, featureMigration, 'focused C10 base F010 migration');
+      runMigration(runtime, database, c10ApiMigration, 'focused C10 API migration');
+      checkApi(runtime, database, 'focused C10 create/read API vectors');
+      console.log(`${runtime.name}: focused C10 PostgreSQL vectors passed.`);
+      return;
+    }
     await verifyFreshAndReplay(runtime, database);
   } finally {
     if (scratchDatabaseCreated) dropScratchDatabase(runtime, database);

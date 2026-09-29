@@ -20,6 +20,7 @@ import {
   PostgresAuditAdminRepository,
   PostgresAuditExportOrchestrationRepository,
   LocalSyntheticAuditObjectStore,
+  PostgresFeature010EncounterRepository,
 } from './adapters/index.js';
 import { loadConfig, type ApiConfig } from './config.js';
 import {
@@ -64,6 +65,11 @@ import { approvedInactiveAggregatePolicy } from './modules/audit-admin/approved-
 import type { AuditAdminActor, AuditExportServiceActor } from './modules/audit-admin/types.js';
 import { registerAuditAdminRoutes } from './routes/audit-admin.js';
 import { ApiPolicyError } from './modules/identity-onboarding/errors.js';
+import { Feature010EncounterService } from './modules/feature-010/encounters.js';
+import {
+  registerFeature010EncounterRoutes,
+  type Feature010EncounterRouteService,
+} from './routes/feature-010-encounters.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -78,6 +84,7 @@ export interface AppHarness {
   discoverySosService: DiscoverySosServicePort;
   identityContinuityService: IdentityContinuityServicePort;
   clinicSchedulingService: ClinicSchedulingRouteService;
+  feature010EncounterService: Feature010EncounterRouteService;
 }
 
 export async function buildApp(
@@ -87,6 +94,7 @@ export async function buildApp(
     clock?: { now(): Date };
     identityContinuityService?: IdentityContinuityServicePort;
     clinicSchedulingService?: ClinicSchedulingRouteService;
+    feature010EncounterService?: Feature010EncounterRouteService;
     recoveryProofGrants?: RecoveryProofGrantAuthority;
   } = {},
 ): Promise<AppHarness> {
@@ -208,6 +216,16 @@ export async function buildApp(
       : new FailClosedIdentityContinuityService());
   const clinicSchedulingService =
     options.clinicSchedulingService ?? failClosedClinicSchedulingService();
+  const feature010EncounterService =
+    options.feature010EncounterService ??
+    (repository instanceof PostgresIdentityRepository
+      ? new Feature010EncounterService(
+          new PostgresFeature010EncounterRepository(
+            repository,
+            auditEnvironment(config.environment),
+          ),
+        )
+      : failClosedFeature010EncounterService());
   await app.register(cors, {
     origin: config.corsOrigins,
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -244,6 +262,10 @@ export async function buildApp(
   });
   installIdentityErrorHandler(app);
   app.get('/v1/health', async () => ({ status: 'ok', feature: 'identity-onboarding' }));
+  await registerFeature010EncounterRoutes(app, {
+    service: feature010EncounterService,
+    syntheticMode: config.syntheticMode,
+  });
   await registerClinicSchedulingRoutes(app, {
     service: clinicSchedulingService,
     syntheticMode: config.syntheticMode,
@@ -377,7 +399,15 @@ export async function buildApp(
     discoverySosService,
     identityContinuityService,
     clinicSchedulingService,
+    feature010EncounterService,
   };
+}
+
+function failClosedFeature010EncounterService(): Feature010EncounterRouteService {
+  const unavailable = async (): Promise<never> => {
+    throw new ApiPolicyError('open-sec-001', 503, 'Feature 010 encounters are unavailable.');
+  };
+  return { createEncounter: unavailable, getEncounter: unavailable };
 }
 
 function failClosedClinicSchedulingService(): ClinicSchedulingService {
