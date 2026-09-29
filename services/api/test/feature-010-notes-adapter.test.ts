@@ -1,3 +1,4 @@
+import { createCipheriv } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import type { TransactionSql } from 'postgres';
 
@@ -43,7 +44,63 @@ function signingSql(
   return Object.assign(query, { json: (value: unknown) => value }) as unknown as TransactionSql;
 }
 
+function notesProjectionSql(notes: unknown[]): TransactionSql {
+  const query = async (strings: TemplateStringsArray) => {
+    return strings.join(' ').includes('feature_010_get_encounter_notes_projection_v1')
+      ? [{ notes }]
+      : [];
+  };
+  return Object.assign(query, { json: (value: unknown) => value }) as unknown as TransactionSql;
+}
+
+function protectedBody(plaintext: string): string {
+  const iv = Buffer.alloc(12, 7);
+  const cipher = createCipheriv('aes-256-gcm', encryptionKey, iv);
+  const ciphertext = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+  return Buffer.concat([Buffer.from([1]), iv, cipher.getAuthTag(), ciphertext]).toString('base64');
+}
+
 describe('Feature 010 note encryption adapter', () => {
+  it('omits private predecessor identity from PAT/GUA/DEL projections but retains it for CLN', async () => {
+    const privatePredecessorId = 'f0100000-0000-4000-8900-000000000099';
+    const note = {
+      id: 'f0100000-0000-4000-8900-000000000098',
+      encounterId,
+      authorId: actor.personId,
+      noteType: 'assessment',
+      visibility: 'patient_visible',
+      signedAt: '2030-04-05T08:10:00.000Z',
+      supersedesId: privatePredecessorId,
+      bodyCiphertext: protectedBody('released synthetic note'),
+    };
+    const repository = new PostgresFeature010NotesRepository(
+      transactionRepository(notesProjectionSql([note])),
+      'local',
+      encryptionKey,
+    );
+    for (const role of ['PAT', 'GUA', 'DEL'] as const) {
+      const [subjectNote] = await repository.projectAuthorizedNotes(
+        notesProjectionSql([note]),
+        encounterId,
+        role,
+      );
+      expect(subjectNote).toMatchObject({
+        id: note.id,
+        visibility: 'patient_visible',
+        body: 'released synthetic note',
+      });
+      expect(subjectNote).not.toHaveProperty('supersedesId');
+      expect(JSON.stringify(subjectNote)).not.toContain(privatePredecessorId);
+    }
+
+    const [careTeamNote] = await repository.projectAuthorizedNotes(
+      notesProjectionSql([note]),
+      encounterId,
+      'CLN',
+    );
+    expect(careTeamNote).toHaveProperty('supersedesId', privatePredecessorId);
+  });
+
   it('sends only ciphertext to SQL and decrypts the stored canonical response on replay', async () => {
     let storedResponse: Record<string, unknown> | undefined;
     const captured: unknown[][] = [];

@@ -51,6 +51,7 @@ function parseProtectedNote(
   const projection = { ...(value as Record<string, unknown>) };
   projection['body'] = decryptBody(projection['bodyCiphertext'], key);
   delete projection['bodyCiphertext'];
+  if (subjectProjection) delete projection['supersedesId'];
   const schema = subjectProjection ? SubjectNoteProjectionSchema : CareTeamNoteProjectionSchema;
   if (!Value.Check(schema, projection)) {
     throw new Error('Feature 010 signed note response is invalid.');

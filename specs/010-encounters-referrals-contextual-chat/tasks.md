@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C15 accepted; T001–T045 complete, T046–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C16 accepted; T001–T048 complete, T049–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -287,15 +287,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Patient sees released encounter and patient-visible notes only.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T046 [US1] [FR-CLINIC-006, NFR-PRIV-004, NFR-I18N-001] Write red patient /encounters/:id tests for current PAT/GUA/DEL record authority, indistinguishable private-note exclusion, completed state and offline/stale read — `apps/patient/test/feature-010-encounter.test.tsx`
+- [X] T046 [US1] [FR-CLINIC-006, NFR-PRIV-004, NFR-I18N-001] Write red patient /encounters/:id tests for current PAT/GUA/DEL record authority, indistinguishable private-note exclusion, completed state and offline/stale read — `apps/patient/test/feature-010-encounter.test.tsx`
   - Depends on: `T045`
   - Acceptance evidence: `private note body and its existence cue never render for subject projection`
 
-- [ ] T047 [US1] [FR-CLINIC-006, NFR-PRIV-004, NFR-I18N-001] Implement released encounter projection on existing approved patient /encounters/:id using generated client and bilingual state copy; do not add representative chat — `apps/patient/app/encounters/[id].tsx; apps/patient/src/feature-010-encounter.ts`
+- [X] T047 [US1] [FR-CLINIC-006, NFR-PRIV-004, NFR-I18N-001] Implement released encounter projection on existing approved patient /encounters/:id using generated client and bilingual state copy; do not add representative chat — `apps/patient/app/encounters/[id].tsx; apps/patient/src/feature-010-encounter.ts`
   - Depends on: `T046`
   - Acceptance evidence: `only authorized released fields display; private-note state equals no-private-note view`
 
-- [ ] T048 [US1] [FR-CLINIC-006, NFR-PRIV-004, NFR-A11Y-001] Run patient record projection tests in ar-EG/en-EG and three approved viewports — `specs/010-encounters-referrals-contextual-chat/evidence/C16-patient-encounter-ui.md`
+- [X] T048 [US1] [FR-CLINIC-006, NFR-PRIV-004, NFR-A11Y-001] Run patient record projection tests in ar-EG/en-EG and three approved viewports — `specs/010-encounters-referrals-contextual-chat/evidence/C16-patient-encounter-ui.md`
   - Depends on: `T047`
   - Acceptance evidence: `denied/empty/visible-note/completed/offline states pass`
 
