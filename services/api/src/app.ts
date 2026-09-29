@@ -458,6 +458,7 @@ function failClosedFeature010ReferralService(): Feature010ReferralRouteService {
   return {
     createReferral: unavailable,
     listReferrals: unavailable,
+    acceptReferral: unavailable,
   };
 }
 

@@ -3,6 +3,9 @@ import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import { Value } from '@sinclair/typebox/value';
 import type { TransactionSql } from 'postgres';
 import {
+  ReferralAcceptanceResultSchema,
+  type AcceptReferralRequest,
+  type ReferralAcceptanceResult,
   PendingSourceReferralProjectionSchema,
   ReferralProjectionSchema,
   ReferralPageSchema,
@@ -49,6 +52,14 @@ function parseCreateResponse(raw: unknown): PendingSourceReferralProjection {
     throw new Error('Feature 010 createReferral returned an invalid canonical response.');
   }
   return value as PendingSourceReferralProjection;
+}
+
+function parseAcceptanceResponse(raw: unknown): ReferralAcceptanceResult {
+  const value = parseJson(raw);
+  if (!Value.Check(ReferralAcceptanceResultSchema, value)) {
+    throw new Error('Feature 010 acceptReferral returned an invalid canonical response.');
+  }
+  return value as ReferralAcceptanceResult;
 }
 
 function parseProjection(raw: unknown): ReferralProjection {
@@ -237,10 +248,31 @@ export class PostgresFeature010ReferralRepository implements Feature010ReferralR
     });
   }
 
+  public acceptReferral(
+    context: Feature010ReferralMutationContext,
+    referralId: Feature010Uuid,
+    expectedVersion: number,
+    input: AcceptReferralRequest,
+  ): Promise<ReferralAcceptanceResult> {
+    return this.repository.withRawTransaction(async (sql) => {
+      await this.setActor(sql, context.actor, 'acceptReferral', 'PAT');
+      await sql`
+        select set_config('shifaa.idempotency_key',${context.idempotencyKey},true),
+          set_config('shifaa.request_hash',${context.requestHash},true)
+      `;
+      const [row] = await sql<{ response: unknown }[]>`
+        select clinical.accept_referral_api_v1(
+          ${referralId}::uuid,${expectedVersion}::integer,${sql.json(input)}::jsonb
+        ) as response
+      `;
+      return parseAcceptanceResponse(row?.response);
+    });
+  }
+
   private setActor(
     sql: TransactionSql,
     actor: Feature010EncounterActor,
-    action: 'createReferral' | 'listReferrals',
+    action: 'createReferral' | 'listReferrals' | 'acceptReferral',
     role: ReferralRole,
   ) {
     return sql`

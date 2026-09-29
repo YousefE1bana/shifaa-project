@@ -4,11 +4,14 @@ import { Value } from '@sinclair/typebox/value';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import {
   CreateReferralRequestSchema,
+  AcceptReferralRequestSchema,
   PendingSourceReferralProjectionSchema,
+  ReferralAcceptanceResultSchema,
   ReferralPageSchema,
   ListReferralsQuerySchema,
   feature010Operations,
   type CreateReferralRequest,
+  type AcceptReferralRequest,
   type Feature010Uuid,
   type ListReferralsQuery,
 } from '@shifaa/contracts';
@@ -19,7 +22,7 @@ import type { Feature010ReferralService } from '../modules/feature-010/referrals
 
 export type Feature010ReferralRouteService = Pick<
   Feature010ReferralService,
-  'createReferral' | 'listReferrals'
+  'createReferral' | 'listReferrals' | 'acceptReferral'
 >;
 
 export interface Feature010ReferralRouteDependencies {
@@ -30,6 +33,7 @@ export interface Feature010ReferralRouteDependencies {
 export const registeredFeature010ReferralOperationIds = [
   'createReferral',
   'listReferrals',
+  'acceptReferral',
 ] satisfies readonly (typeof feature010Operations)[number]['operationId'][];
 
 const noStore = { 'cache-control': 'private, no-store', pragma: 'no-cache' } as const;
@@ -107,6 +111,26 @@ function idempotencyKey(request: FastifyRequest): string {
   return key;
 }
 
+function resourceVersion(request: FastifyRequest): number {
+  const value = request.headers['if-match'];
+  if (typeof value !== 'string' || !/^\"[1-9][0-9]*\"$/.test(value)) {
+    throw new ApiPolicyError(
+      'validation-failed',
+      422,
+      'A current quoted If-Match version is required.',
+    );
+  }
+  const version = Number(value.slice(1, -1));
+  if (!Number.isSafeInteger(version)) {
+    throw new ApiPolicyError(
+      'validation-failed',
+      422,
+      'A current quoted If-Match version is required.',
+    );
+  }
+  return version;
+}
+
 function parseListQuery(request: FastifyRequest): ListReferralsQuery {
   const raw = request.query;
   if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) {
@@ -161,6 +185,19 @@ async function invoke<T>(work: () => Promise<T>): Promise<T> {
         'The source encounter is no longer eligible for a referral.',
       );
     }
+    if (
+      (code === '40001' || code === '23P01') &&
+      (message.includes('schedule') || message.includes('selected slot'))
+    ) {
+      throw new ApiPolicyError(
+        'slot-no-longer-available',
+        409,
+        'The selected appointment slot is no longer available.',
+      );
+    }
+    if (code === '40001') {
+      throw new ApiPolicyError('version-conflict', 409, 'Refresh the referral context and retry.');
+    }
     if (code === '42501') {
       throw new ApiPolicyError(
         'forbidden',
@@ -171,11 +208,48 @@ async function invoke<T>(work: () => Promise<T>): Promise<T> {
     if (code === 'P0002') {
       throw new ApiPolicyError('not-found', 404, 'The requested resource is unavailable.');
     }
-    if (code === '22023' || code === '22P02' || code === '23503') {
+    if (['22023', '22007', '22008', '22P02', '23503'].includes(code)) {
       throw new ApiPolicyError('validation-failed', 422, 'The referral request is invalid.');
     }
     throw error;
   }
+}
+
+async function acceptReferral(
+  request: FastifyRequest,
+  reply: FastifyReply,
+  deps: Feature010ReferralRouteDependencies,
+) {
+  const actor = actorFor(request);
+  if (actor.aal < 2)
+    throw new ApiPolicyError('mfa-required', 403, 'AAL2 is required to accept a referral.');
+  if (actor.purposes.length === 0)
+    throw new ApiPolicyError('purpose-required', 403, 'A current purpose is required.');
+  const { referralId } = request.params as { referralId?: unknown };
+  if (typeof referralId !== 'string' || !uuidPattern.test(referralId)) {
+    throw new ApiPolicyError('validation-failed', 422, 'The referral identifier is invalid.');
+  }
+  const version = resourceVersion(request);
+  const body = requireClosed<AcceptReferralRequest>(AcceptReferralRequestSchema, request.body);
+  const value = await invoke(() =>
+    deps.service.acceptReferral(
+      { actor, idempotencyKey: idempotencyKey(request), requestHash: hashRequest(body) },
+      referralId as Feature010Uuid,
+      version,
+      body,
+    ),
+  );
+  if (!Value.Check(ReferralAcceptanceResultSchema, value)) {
+    throw new ApiPolicyError(
+      'internal-error',
+      500,
+      'The referral acceptance response is unavailable.',
+    );
+  }
+  return reply
+    .status(200)
+    .headers({ ...noStore, 'content-language': actor.locale })
+    .send(value);
 }
 
 async function createReferral(
@@ -253,4 +327,7 @@ export async function registerFeature010ReferralRoutes(
     createReferral(request, reply, deps),
   );
   app.get('/v1/referrals', (request, reply) => listReferrals(request, reply, deps));
+  app.post('/v1/referrals/:referralId/accept', (request, reply) =>
+    acceptReferral(request, reply, deps),
+  );
 }

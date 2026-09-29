@@ -1,6 +1,8 @@
 import type {
   CreateReferralRequest,
+  AcceptReferralRequest,
   Feature010Uuid,
+  ReferralAcceptanceResult,
   ListReferralsQuery,
   PendingSourceReferralProjection,
   ReferralPage,
@@ -21,6 +23,12 @@ export interface Feature010ReferralRepository {
     input: CreateReferralRequest,
   ): Promise<PendingSourceReferralProjection>;
   listReferrals(actor: Feature010EncounterActor, query: ListReferralsQuery): Promise<ReferralPage>;
+  acceptReferral(
+    context: Feature010ReferralMutationContext,
+    referralId: Feature010Uuid,
+    expectedVersion: number,
+    input: AcceptReferralRequest,
+  ): Promise<ReferralAcceptanceResult>;
 }
 
 /** Core API boundary; the repository rechecks source and subject authority in locked SQL. */
@@ -40,5 +48,14 @@ export class Feature010ReferralService {
     query: ListReferralsQuery,
   ): Promise<ReferralPage> {
     return this.repository.listReferrals(actor, query);
+  }
+
+  public acceptReferral(
+    context: Feature010ReferralMutationContext,
+    referralId: Feature010Uuid,
+    expectedVersion: number,
+    input: AcceptReferralRequest,
+  ): Promise<ReferralAcceptanceResult> {
+    return this.repository.acceptReferral(context, referralId, expectedVersion, input);
   }
 }

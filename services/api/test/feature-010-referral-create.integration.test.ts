@@ -103,6 +103,9 @@ function referralService() {
   return {
     createReferral,
     listReferrals,
+    acceptReferral: vi.fn(async () => {
+      throw new Error('C18 acceptance is not exercised by the C17 route vectors.');
+    }),
     writeCount: () => writeCount,
   };
 }
@@ -132,7 +135,11 @@ describe('Feature 010 createReferral/listReferrals HTTP integration', () => {
     });
 
     expect(result.statusCode).toBe(201);
-    expect(registeredFeature010ReferralOperationIds).toEqual(['createReferral', 'listReferrals']);
+    expect(registeredFeature010ReferralOperationIds).toEqual([
+      'createReferral',
+      'listReferrals',
+      'acceptReferral',
+    ]);
     expect(app.hasRoute({ method: 'POST', url: '/v1/encounters/:encounterId/referrals' })).toBe(
       true,
     );

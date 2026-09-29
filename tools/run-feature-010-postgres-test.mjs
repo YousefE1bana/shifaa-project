@@ -11,6 +11,8 @@ const c12NoteMigration = 'supabase/migrations/20260929001003_f010_c12_note_signi
 const c13CompletionMigration =
   'supabase/migrations/20260929001004_f010_c13_encounter_completion.sql';
 const c17ReferralsMigration = 'supabase/migrations/20260929001005_f010_c17_referrals_api.sql';
+const c18ReferralAcceptanceMigration =
+  'supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql';
 const c13CompletionRedTest = 'infra/db/tests/feature-010-completion-red.sql';
 const c13CompletionTest = 'infra/db/tests/feature-010-completion.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
@@ -23,6 +25,7 @@ const apiTest = 'infra/db/tests/feature-010-api.sql';
 const updateTest = 'infra/db/tests/feature-010-update.sql';
 const notesTest = 'infra/db/tests/feature-010-notes.sql';
 const referralsTest = 'infra/db/tests/feature-010-referrals.sql';
+const referralAcceptanceTest = 'infra/db/tests/feature-010-referral-accept.sql';
 const defaultDenySnapshotSql = `SELECT format(
   'C04 default-deny snapshot: forced_rls=%s/6; policies=%s; direct_online_acl_entries=%s',
   count(*) FILTER (WHERE c.relrowsecurity AND c.relforcerowsecurity),
@@ -71,6 +74,7 @@ const c11UpdateMigrationIndex = migrations.indexOf(c11UpdateMigration);
 const c12NoteMigrationIndex = migrations.indexOf(c12NoteMigration);
 const c13CompletionMigrationIndex = migrations.indexOf(c13CompletionMigration);
 const c17ReferralsMigrationIndex = migrations.indexOf(c17ReferralsMigration);
+const c18ReferralAcceptanceMigrationIndex = migrations.indexOf(c18ReferralAcceptanceMigration);
 const c13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
 if (
   featureMigrationIndex < 0 ||
@@ -85,10 +89,12 @@ if (
     (c13CompletionMigrationIndex !== c12NoteMigrationIndex + 1 ||
       migrations.lastIndexOf(c13CompletionMigration) !== c13CompletionMigrationIndex)) ||
   c17ReferralsMigrationIndex !== c13CompletionMigrationIndex + 1 ||
-  migrations.lastIndexOf(c17ReferralsMigration) !== c17ReferralsMigrationIndex
+  migrations.lastIndexOf(c17ReferralsMigration) !== c17ReferralsMigrationIndex ||
+  c18ReferralAcceptanceMigrationIndex !== c17ReferralsMigrationIndex + 1 ||
+  migrations.lastIndexOf(c18ReferralAcceptanceMigration) !== c18ReferralAcceptanceMigrationIndex
 ) {
   throw new Error(
-    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, and ${c17ReferralsMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
+    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, ${c17ReferralsMigration}, and ${c18ReferralAcceptanceMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
   );
 }
 
@@ -754,6 +760,179 @@ function checkReferrals(runtime, database, phase) {
   );
 }
 
+function referralAcceptanceSql() {
+  const fixture = readFileSync(resolve(root, apiTest), 'utf8');
+  const rollbackIndex = fixture.lastIndexOf('\nROLLBACK;');
+  if (rollbackIndex < 0 || fixture.slice(rollbackIndex).trim() !== 'ROLLBACK;') {
+    throw new Error(`${apiTest} no longer ends at its expected rollback boundary.`);
+  }
+  const referralVectors = readFileSync(resolve(root, referralsTest), 'utf8');
+  const acceptanceVectors = readFileSync(resolve(root, referralAcceptanceTest), 'utf8');
+  return `${fixture.slice(0, rollbackIndex)}\n${referralVectors}\n${acceptanceVectors}\nROLLBACK;\n`;
+}
+
+function checkReferralAcceptance(runtime, database, phase) {
+  runPsql(
+    runtime,
+    database,
+    referralAcceptanceSql(),
+    `${runtime.name} ${phase}: C10 encounter fixture plus C17/C18 real-PostgreSQL acceptance vectors`,
+  );
+}
+
+function referralAcceptanceRaceFixtureSql() {
+  const fixture = readFileSync(resolve(root, apiTest), 'utf8');
+  const rollbackIndex = fixture.lastIndexOf('\nROLLBACK;');
+  const acceptance = readFileSync(resolve(root, referralAcceptanceTest), 'utf8');
+  const apiBoundaryIndex = acceptance.indexOf('\nSET SESSION AUTHORIZATION shifaa_api;');
+  if (
+    rollbackIndex < 0 ||
+    fixture.slice(rollbackIndex).trim() !== 'ROLLBACK;' ||
+    apiBoundaryIndex < 0
+  ) {
+    throw new Error('C18 concurrent fixture setup boundaries changed unexpectedly.');
+  }
+  return `${fixture.slice(0, rollbackIndex)}\n${acceptance.slice(0, apiBoundaryIndex)}\nCOMMIT;\n`;
+}
+
+function referralAcceptanceRaceSql(applicationName, key, hash, scheduleVersion) {
+  const targetSlot = `jsonb_build_object(
+  'facilityId','f0101000-0000-4000-8200-000000000001',
+  'doctorId','f0101000-0000-4000-8000-000000000003',
+  'startsAt','2030-04-05T12:30:00Z','endsAt','2030-04-05T13:00:00Z',
+  'timezone','Africa/Cairo','civilDate','2030-04-05','availabilityVersion',${scheduleVersion}
+)`;
+  return `SET application_name='${applicationName}';
+SET SESSION AUTHORIZATION shifaa_api;
+BEGIN;
+SELECT pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000002',true);
+SELECT pg_catalog.set_config('shifaa.environment','local',true);
+SELECT pg_catalog.set_config('shifaa.test_now','2030-04-05T08:00:00Z',true);
+SELECT pg_catalog.set_config('shifaa.actor_role','PAT',true);
+SELECT pg_catalog.set_config('shifaa.action','acceptReferral',true);
+SELECT pg_catalog.set_config('shifaa.aal','2',true);
+SELECT pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
+SELECT pg_catalog.set_config('shifaa.request_id','f0101000-0000-4000-9000-000000000081',true);
+SELECT pg_catalog.set_config('shifaa.trace_id','f0101000-0000-4000-9000-000000000081',true);
+SELECT pg_catalog.set_config('shifaa.idempotency_key','${key}',true);
+SELECT pg_catalog.set_config('shifaa.request_hash','${hash}',true);
+SELECT clinical.accept_referral_api_v1(
+  'f0101000-0000-4000-8a00-00000000000f',1,
+  jsonb_build_object('authorizedFieldCodes',jsonb_build_array('reason_summary'),'targetSlot',${targetSlot})
+);
+COMMIT;
+`;
+}
+
+async function checkConcurrentReferralAcceptanceWinner(runtime, templateDatabase) {
+  const database = `f010_c18_race_${process.pid}_${randomBytes(5).toString('hex')}`;
+  let databaseCreated = false;
+  try {
+    runPsql(
+      runtime,
+      runtime.adminDatabase,
+      `CREATE DATABASE "${database}" TEMPLATE "${templateDatabase}";`,
+      `${runtime.name} clone isolated C18 acceptance-race database`,
+    );
+    databaseCreated = true;
+    runPsql(
+      runtime,
+      database,
+      referralAcceptanceRaceFixtureSql(),
+      `${runtime.name} commit C18 concurrency fixture`,
+    );
+    const scheduleVersion = Number(
+      runPsqlTuples(
+        runtime,
+        database,
+        `SELECT version FROM clinical.schedules WHERE id='f0101000-0000-4000-8400-000000000002';`,
+        `${runtime.name} C18 acceptance race schedule version`,
+      ),
+    );
+    if (!Number.isInteger(scheduleVersion) || scheduleVersion < 1) {
+      throw new Error(
+        `${runtime.name} C18 target schedule version is invalid: ${scheduleVersion}.`,
+      );
+    }
+
+    const holder = startPsqlSession(
+      runtime,
+      database,
+      `${runtime.name} C18 acceptance lock holder`,
+    );
+    let contenders = [];
+    try {
+      await holder.write(
+        `SET application_name='f010_c18_acceptance_holder';\nBEGIN;\nSELECT id::text || '|F010_C18_LOCK_HELD' FROM clinical.referrals WHERE id='f0101000-0000-4000-8a00-00000000000f' FOR UPDATE;\n`,
+      );
+      await waitForSessionText(holder, 'F010_C18_LOCK_HELD', `${runtime.name} C18 referral lock`);
+
+      const candidates = [
+        ['f010_c18_accept_a', 'f010-c18-race-a', 'a'.repeat(64)],
+        ['f010_c18_accept_b', 'f010-c18-race-b', 'b'.repeat(64)],
+      ];
+      contenders = candidates.map(([name]) =>
+        startPsqlSession(runtime, database, `${runtime.name} ${name}`),
+      );
+      contenders.forEach((session, index) =>
+        session.end(referralAcceptanceRaceSql(...candidates[index], scheduleVersion)),
+      );
+      await waitForLockWaiters(
+        runtime,
+        database,
+        candidates.map(([name]) => name),
+        `${runtime.name} C18 one-winner referral acceptance`,
+      );
+      await holder.write('COMMIT;\n');
+      holder.end();
+      const holderResult = await holder.closed;
+      if (holderResult.code !== 0) {
+        throw new Error(
+          `${runtime.name} C18 lock holder failed (exit ${holderResult.code}):\n${holder.output}`,
+        );
+      }
+      const results = await Promise.all(contenders.map((session) => session.closed));
+      const outputs = contenders.map((session) => session.output);
+      const successes = results.filter((result) => result.code === 0).length;
+      const conflicts = outputs.filter((output) => output.includes('40001')).length;
+      if (
+        successes !== 1 ||
+        conflicts !== 1 ||
+        results.some((result, index) => result.code !== 0 && !outputs[index].includes('40001'))
+      ) {
+        throw new Error(
+          `${runtime.name} C18 acceptance race must produce one success and one 40001 loser; results=${JSON.stringify(results)}, outputs:\n${outputs.join('\n---\n')}`,
+        );
+      }
+
+      const state = runPsqlTuples(
+        runtime,
+        database,
+        `SELECT
+          (SELECT status || '|' || version::text FROM clinical.referrals WHERE id='f0101000-0000-4000-8a00-00000000000f') || '|' ||
+          (SELECT count(*) FROM clinical.appointments WHERE source_referral_id='f0101000-0000-4000-8a00-00000000000f')::text || '|' ||
+          (SELECT count(*) FROM platform.idempotency_records WHERE route_template='/v1/referrals/{referralId}/accept' AND resource_id='f0101000-0000-4000-8a00-00000000000f' AND state='completed' AND response_status=200 AND response_body IS NOT NULL)::text || '|' ||
+          (SELECT count(*) FROM platform.idempotency_records WHERE method='POST' AND route_template='/v1/referrals/{referralId}/accept' AND request_hash IN ('${'a'.repeat(64)}','${'b'.repeat(64)}'))::text || '|' ||
+          (SELECT count(*) FROM audit.events WHERE resource_type='referral' AND action_code='referral.accepted' AND resource_id='f0101000-0000-4000-8a00-00000000000f')::text || '|' ||
+          (SELECT count(*) FROM platform.outbox_events WHERE aggregate_type='referral' AND event_type='clinical.referral.accepted.v1' AND aggregate_id='f0101000-0000-4000-8a00-00000000000f');`,
+        `${runtime.name} C18 acceptance race effect counts`,
+      );
+      if (state !== 'accepted|2|1|1|1|1|1') {
+        throw new Error(
+          `${runtime.name} C18 one-winner race must leave referral/appointment/completed response/idempotency/audit/outbox counts 1/1/1/1/1/1; saw ${state}.`,
+        );
+      }
+      console.log(
+        `${runtime.name}: C18 concurrent acceptance blocked both callers then committed one referral/appointment/response/audit/outbox; loser returned 40001.`,
+      );
+    } finally {
+      await finishSessions([holder, ...contenders], { release: true });
+    }
+  } finally {
+    if (databaseCreated) dropScratchDatabase(runtime, database);
+  }
+}
+
 function checkExpectedNotesRed(runtime, database) {
   const sql = readFileSync(resolve(root, notesTest), 'utf8');
   try {
@@ -790,6 +969,26 @@ function checkExpectedCompletionRed(runtime, database) {
 
   throw new Error(
     'F010 C13 RED was not observed: the completion API wrapper already exists after C05–C12.',
+  );
+}
+
+function checkExpectedReferralAcceptanceRed(runtime, database) {
+  const sql = referralAcceptanceSql();
+  try {
+    runPsql(runtime, database, sql, `${runtime.name} expected C18 RED: ${referralAcceptanceTest}`);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    if (
+      !detail.includes('F010_C18_MISSING_API: clinical.accept_referral_api_v1(uuid,integer,jsonb)')
+    ) {
+      throw error;
+    }
+    console.log(`${runtime.name}: expected C18 RED: ${detail}`);
+    return;
+  }
+
+  throw new Error(
+    'F010 C18 RED was not observed: accept_referral_api_v1 already exists after C10-C17.',
   );
 }
 
@@ -860,6 +1059,12 @@ async function verifyFreshAndReplay(runtime, database) {
     'fresh C13 encounter completion API migration',
   );
   runMigration(runtime, database, c17ReferralsMigration, 'fresh C17 referral API migration');
+  runMigration(
+    runtime,
+    database,
+    c18ReferralAcceptanceMigration,
+    'fresh C18 referral acceptance API migration',
+  );
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
@@ -872,6 +1077,7 @@ async function verifyFreshAndReplay(runtime, database) {
   checkNotes(runtime, database, 'C12 note signing and projection API vectors');
   checkCompletion(runtime, database, 'C13 completion API vectors');
   checkReferrals(runtime, database, 'C17 create/list API vectors');
+  checkReferralAcceptance(runtime, database, 'C18 acceptance API vectors');
   await checkConcurrentCompletionWinner(runtime, database);
   await checkConcurrentBookingWinner(runtime, database);
   await checkConcurrentVersionStale(runtime, database);
@@ -886,6 +1092,12 @@ async function verifyFreshAndReplay(runtime, database) {
     'C13 encounter completion API migration replay',
   );
   runMigration(runtime, database, c17ReferralsMigration, 'C17 referral API migration replay');
+  runMigration(
+    runtime,
+    database,
+    c18ReferralAcceptanceMigration,
+    'C18 referral acceptance API migration replay',
+  );
   checkSchema(runtime, database, 'replayed F010 schema assertions');
   checkStorage(runtime, database, 'replayed F010 storage vectors');
   checkApi(runtime, database, 'replayed C10 create/read API vectors');
@@ -893,6 +1105,7 @@ async function verifyFreshAndReplay(runtime, database) {
   checkNotes(runtime, database, 'replayed C12 note signing and projection API vectors');
   checkCompletion(runtime, database, 'replayed C13 completion API vectors');
   checkReferrals(runtime, database, 'replayed C17 create/list API vectors');
+  checkReferralAcceptance(runtime, database, 'replayed C18 acceptance API vectors');
 
   const f009SchemaAfter = runPgDump(
     runtime,
@@ -928,11 +1141,23 @@ async function testRuntime(runtime) {
   const c12Only = process.env['SHIFAA_TEST_F010_C12_ONLY'] === 'true';
   const c13Only = process.env['SHIFAA_TEST_F010_C13_ONLY'] === 'true';
   const c17Only = process.env['SHIFAA_TEST_F010_C17_ONLY'] === 'true';
+  const c18Only = process.env['SHIFAA_TEST_F010_C18_ONLY'] === 'true';
   const runC13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
+  const runC18Red = process.env['SHIFAA_TEST_F010_C18_RED'] === 'true';
   const redDatabase = `f010_c08_red_${process.pid}_${randomBytes(8).toString('hex')}`;
   let redDatabaseCreated = false;
   try {
-    if (!c10Only && !c11Only && !c12Red && !c12Only && !c13Only && !c17Only && !runC13Red) {
+    if (
+      !c10Only &&
+      !c11Only &&
+      !c12Red &&
+      !c12Only &&
+      !c13Only &&
+      !c17Only &&
+      !c18Only &&
+      !runC13Red &&
+      !runC18Red
+    ) {
       createScratchDatabase(runtime, redDatabase);
       redDatabaseCreated = true;
       applyBaselineMigrations(runtime, redDatabase);
@@ -944,6 +1169,101 @@ async function testRuntime(runtime) {
     createScratchDatabase(runtime, database);
     scratchDatabaseCreated = true;
     applyBaselineMigrations(runtime, database);
+    if (runC18Red) {
+      runMigration(runtime, database, featureMigration, 'focused C18 RED base F010 migration');
+      runMigration(
+        runtime,
+        database,
+        c10ApiMigration,
+        'focused C18 RED prerequisite C10 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c11UpdateMigration,
+        'focused C18 RED prerequisite C11 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c12NoteMigration,
+        'focused C18 RED prerequisite C12 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c13CompletionMigration,
+        'focused C18 RED prerequisite C13 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c17ReferralsMigration,
+        'focused C18 RED prerequisite C17 API migration',
+      );
+      checkExpectedReferralAcceptanceRed(runtime, database);
+      console.log(`${runtime.name}: focused C18 RED PostgreSQL probe passed.`);
+      return;
+    }
+    if (c18Only) {
+      runMigration(runtime, database, featureMigration, 'focused C18 base F010 migration');
+      runMigration(
+        runtime,
+        database,
+        c10ApiMigration,
+        'focused C18 prerequisite C10 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c11UpdateMigration,
+        'focused C18 prerequisite C11 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c12NoteMigration,
+        'focused C18 prerequisite C12 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c13CompletionMigration,
+        'focused C18 prerequisite C13 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c17ReferralsMigration,
+        'focused C18 prerequisite C17 API migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c18ReferralAcceptanceMigration,
+        'focused C18 referral acceptance API migration',
+      );
+      checkStorage(runtime, database, 'focused C06 storage invariants before C18 vectors');
+      checkRls(runtime, database, 'focused C07 RLS regression before C18 vectors');
+      checkBookingSeam(runtime, database, 'focused C08 F009 parity before C18 vectors');
+      checkReferralAcceptance(runtime, database, 'focused C18 real-PostgreSQL API vectors');
+      runMigration(
+        runtime,
+        database,
+        c18ReferralAcceptanceMigration,
+        'focused C18 migration replay',
+      );
+      checkReferralAcceptance(
+        runtime,
+        database,
+        'focused C18 replayed real-PostgreSQL API vectors',
+      );
+      await checkConcurrentReferralAcceptanceWinner(runtime, database);
+      console.log(
+        `${runtime.name}: focused C18 acceptance, migration replay, F009 parity, and concurrency vectors passed.`,
+      );
+      return;
+    }
     if (runC13Red) {
       runMigration(runtime, database, featureMigration, 'focused C13 RED base F010 migration');
       runMigration(
