@@ -11,7 +11,11 @@ type Appointment = Awaited<
 >['items'][number];
 type Queue = Awaited<ReturnType<EncounterStartClients['scheduling']['getQueue']>>;
 
-export function createEncounterStartClients(accessToken: string, locale: ClinicLocale) {
+export function createEncounterStartClients(
+  accessToken: string,
+  locale: ClinicLocale,
+  aal: 1 | 2 | undefined,
+) {
   const baseUrl = process.env['NEXT_PUBLIC_API_BASE_URL'];
   if (!baseUrl) throw new Error('feature-010-api-unconfigured');
   return {
@@ -19,6 +23,8 @@ export function createEncounterStartClients(accessToken: string, locale: ClinicL
     encounters: createFeature010Client({
       baseUrl,
       accessToken: () => accessToken,
+      purpose: 'appointment.scheduling',
+      sessionAal: () => aal,
       acceptLanguage: locale,
     }),
   };

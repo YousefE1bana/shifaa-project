@@ -72,12 +72,15 @@ describe('generated Feature 010 API client', () => {
 
   it('uses the current session bearer for actor context and sends no-store API requests', async () => {
     let currentAccessToken: string | undefined = 'synthetic-clinician-session-one';
+    let currentAal: 1 | 2 | undefined = 2;
     const fetcher = vi.fn<typeof fetch>(async () => jsonResponse({ encounter: {} }, 201));
     const client = new Feature010Client({
+      purpose: 'appointment.scheduling',
+      sessionAal: () => currentAal,
       baseUrl: 'https://synthetic.invalid',
       accessToken: () => currentAccessToken,
       acceptLanguage: 'en-EG',
-      defaultHeaders: { Authorization: 'Bearer untrusted' },
+      defaultHeaders: { Authorization: 'Bearer untrusted', 'X-AAL': '2', 'X-Purpose': 'untrusted' },
       fetch: fetcher,
     });
 
@@ -86,6 +89,7 @@ describe('generated Feature 010 API client', () => {
       { idempotencyKey: 'synthetic-feature-010-encounter-create', requestId },
     );
     currentAccessToken = 'synthetic-clinician-session-two';
+    currentAal = undefined;
     await client.getEncounter(encounterId);
 
     const createInit = fetcher.mock.calls[0]?.[1];
@@ -94,6 +98,10 @@ describe('generated Feature 010 API client', () => {
     expect(fetcher.mock.calls[0]?.[0]).toBe('https://synthetic.invalid/v1/encounters');
     expect(createHeaders.get('authorization')).toBe('Bearer synthetic-clinician-session-one');
     expect(readHeaders.get('authorization')).toBe('Bearer synthetic-clinician-session-two');
+    expect(createHeaders.get('x-purpose')).toBe('appointment.scheduling');
+    expect(createHeaders.get('x-aal')).toBe('2');
+    expect(readHeaders.get('x-aal')).toBe('1');
+    expect(readHeaders.get('x-purpose')).toBe('appointment.scheduling');
     expect(readHeaders.get('idempotency-key')).toBeNull();
     expect(readHeaders.get('if-match')).toBeNull();
     expect(createHeaders.get('accept')).toBe('application/json, application/problem+json');
@@ -114,6 +122,8 @@ describe('generated Feature 010 API client', () => {
   it('sends quoted versions and idempotency keys for versioned mutations', async () => {
     const fetcher = vi.fn<typeof fetch>(async () => jsonResponse({ id: encounterId }));
     const client = new Feature010Client({
+      purpose: 'appointment.scheduling',
+      sessionAal: () => 2,
       baseUrl: 'https://synthetic.invalid',
       accessToken: () => 'synthetic-clinician-session',
       fetch: fetcher,
@@ -132,6 +142,8 @@ describe('generated Feature 010 API client', () => {
 
   it('rejects a clinical response without the contracted private no-store policy', async () => {
     const client = new Feature010Client({
+      purpose: 'appointment.scheduling',
+      sessionAal: () => 2,
       baseUrl: 'https://synthetic.invalid',
       accessToken: () => 'synthetic-clinician-session',
       fetch: async () => new Response(JSON.stringify({ id: encounterId }), { status: 200 }),
@@ -159,6 +171,8 @@ describe('generated Feature 010 API client', () => {
       request_id: requestId,
     };
     const client = new Feature010Client({
+      purpose: 'appointment.scheduling',
+      sessionAal: () => 2,
       baseUrl: 'https://synthetic.invalid',
       accessToken: () => 'synthetic-clinician-session',
       fetch: async () => problemResponse(status, code),
@@ -171,6 +185,8 @@ describe('generated Feature 010 API client', () => {
   it('fails closed when the session boundary has no access token', async () => {
     const fetcher = vi.fn<typeof fetch>();
     const client = new Feature010Client({
+      purpose: 'appointment.scheduling',
+      sessionAal: () => 2,
       baseUrl: 'https://synthetic.invalid',
       accessToken: () => undefined,
       fetch: fetcher,

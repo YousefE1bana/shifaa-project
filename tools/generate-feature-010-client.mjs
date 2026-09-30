@@ -212,6 +212,8 @@ ${operations.map(({ operationId }) => `  '${operationId}',`).join('\n')}
 export interface Feature010ClientOptions {
   baseUrl: string;
   accessToken: () => string | undefined;
+  purpose: string;
+  sessionAal: () => 1 | 2 | undefined;
   fetch?: typeof globalThis.fetch;
   acceptLanguage?: 'ar-EG' | 'en-EG';
   defaultHeaders?: Readonly<Record<string, string>>;
@@ -280,6 +282,8 @@ ${operations.map(generatedOperation).join('\n\n')}
       'Accept-Language': this.options.acceptLanguage ?? 'ar-EG',
       ...(this.options.defaultHeaders ?? {}),
     });
+    headers.set('X-Purpose', this.options.purpose);
+    headers.set('X-AAL', String(this.options.sessionAal() ?? 1));
     headers.set('Authorization', \`Bearer \${accessToken}\`);
     if (input.body !== undefined) headers.set('Content-Type', 'application/json');
     if (input.requestId) headers.set('X-Request-Id', input.requestId);

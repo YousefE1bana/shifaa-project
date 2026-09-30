@@ -457,10 +457,8 @@ export class ClinicContextMessagesController {
       baseUrl: this.options.apiBaseUrl,
       accessToken: () => token,
       acceptLanguage: this.options.locale,
-      defaultHeaders: {
-        'X-AAL': String(this.options.aal ?? 1),
-        'X-Purpose': MESSAGE_PURPOSE,
-      },
+      purpose: MESSAGE_PURPOSE,
+      sessionAal: () => this.options.aal ?? undefined,
       ...(this.options.fetch ? { fetch: this.options.fetch } : {}),
     });
   }

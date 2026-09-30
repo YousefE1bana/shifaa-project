@@ -46,6 +46,7 @@ describe('Feature 010 appointment-context messages', () => {
     });
 
     expect(result.statusCode).toBe(200);
+    expect(result.headers['x-request-id']).toEqual(expect.any(String));
     expect(result.headers['cache-control']).toBe('private, no-store');
     expect(result.headers['content-language']).toBe('ar-EG');
   });
@@ -76,6 +77,7 @@ describe('Feature 010 appointment-context messages', () => {
     });
 
     expect(result.statusCode).toBe(201);
+    expect(result.headers['x-request-id']).toEqual(expect.any(String));
     expect(result.json()).toMatchObject({
       contextType: 'appointment',
       contextId: appointmentId,

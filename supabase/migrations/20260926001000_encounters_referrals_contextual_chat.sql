@@ -407,8 +407,23 @@ BEGIN
     RAISE EXCEPTION 'appointment already has an open encounter' USING ERRCODE='40001';
   END IF;
 
-  -- Recheck live clinical authority only after the appointment and matching
-  -- queue are locked, so the scope used by the insert is current and stable.
+  -- Serialize authority changes with creation. Appointment -> queue precede
+  -- facility -> membership -> license -> people (UUID order) -> patient.
+  -- Lock by identity, then recheck statuses after any concurrent updater commits.
+  PERFORM 1 FROM identity.facilities f
+    WHERE f.id=appointment_row.facility_id FOR SHARE;
+  PERFORM 1 FROM identity.facility_memberships m
+    WHERE m.facility_id=appointment_row.facility_id AND m.person_id=actor
+      AND m.role_code='doctor' ORDER BY m.id FOR SHARE;
+  PERFORM 1 FROM identity.professional_licenses l
+    WHERE l.id IN (SELECT m.employment_license_id FROM identity.facility_memberships m
+      WHERE m.facility_id=appointment_row.facility_id AND m.person_id=actor AND m.role_code='doctor')
+    ORDER BY l.id FOR SHARE;
+  PERFORM 1 FROM identity.people person
+    WHERE person.id IN (actor,appointment_row.patient_person_id) ORDER BY person.id FOR SHARE;
+  PERFORM 1 FROM identity.patients p
+    WHERE p.person_id=appointment_row.patient_person_id FOR SHARE;
+
   SELECT EXISTS (
     SELECT 1
     FROM identity.facilities f
@@ -419,8 +434,9 @@ BEGIN
     JOIN identity.professional_licenses l ON l.id=m.employment_license_id
       AND l.person_id=actor AND l.profession='doctor' AND l.status='verified'
       AND l.expires_on>=(platform.context_now() AT TIME ZONE 'UTC')::date
-    JOIN identity.patients p ON p.person_id=appointment_row.patient_person_id
-      AND p.record_status='active'
+    JOIN identity.people clinician ON clinician.id=actor AND clinician.profile_status='active'
+    JOIN identity.people subject ON subject.id=appointment_row.patient_person_id AND subject.profile_status='active'
+    JOIN identity.patients p ON p.person_id=subject.id AND p.record_status='active'
     WHERE f.id=appointment_row.facility_id AND f.facility_status='active'
   ) INTO authorized;
   IF NOT authorized THEN

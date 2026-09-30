@@ -1,3 +1,4 @@
+import { rememberFeature010Session } from './feature-010-session.ts';
 import { IdentityOnboardingClient, ShifaaApiError } from '@shifaa/api-client';
 import {
   MemoryAccessTokenStore,
@@ -20,6 +21,7 @@ import {
 
 type AuthResult = {
   kind: 'challenge' | 'session';
+  aal?: 1 | 2;
   challenge_id?: string | null;
   access_token?: string | null;
   refresh_token?: string | null;
@@ -102,6 +104,7 @@ export class PatientOnboardingApi {
       await this.nativeRefreshTokens.write(result.refresh_token);
     }
     this.accessTokens.write(result.access_token);
+    rememberFeature010Session(result.access_token, result.aal);
     this.challengeId = undefined;
   }
 
@@ -154,6 +157,7 @@ export class PatientOnboardingApi {
 
   public clearSession(): void {
     this.accessTokens.clear();
+    rememberFeature010Session('', undefined);
     this.challengeId = undefined;
     this.profileVersion = undefined;
     this.notice = undefined;
@@ -163,8 +167,9 @@ export class PatientOnboardingApi {
     return this.accessTokens.read();
   }
 
-  public installAccessToken(accessToken: string): void {
+  public installAccessToken(accessToken: string, aal?: 1 | 2): void {
     this.accessTokens.write(accessToken);
+    rememberFeature010Session(accessToken, aal);
     this.challengeId = undefined;
   }
 

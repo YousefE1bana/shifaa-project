@@ -101,6 +101,7 @@ describe('Feature 010 acceptReferral HTTP integration', () => {
     });
 
     expect(result.statusCode).toBe(200);
+    expect(result.headers['x-request-id']).toEqual(expect.any(String));
     expect(registeredFeature010ReferralOperationIds).toContain('acceptReferral');
     expect(app.hasRoute({ method: 'POST', url: '/v1/referrals/:referralId/accept' })).toBe(true);
     expect(result.headers['cache-control']).toBe('private, no-store');

@@ -194,7 +194,7 @@ async function listContextMessages(
     throw new ApiPolicyError('internal-error', 500, 'The message page is unavailable.');
   return reply
     .status(200)
-    .headers({ ...noStore, 'content-language': actor.locale })
+    .headers({ ...noStore, 'content-language': actor.locale, 'x-request-id': request.id })
     .send(page);
 }
 
@@ -231,7 +231,7 @@ async function sendContextMessage(
     throw new ApiPolicyError('internal-error', 500, 'The message response is unavailable.');
   return reply
     .status(201)
-    .headers({ ...noStore, 'content-language': actor.locale })
+    .headers({ ...noStore, 'content-language': actor.locale, 'x-request-id': request.id })
     .send(message);
 }
 

@@ -88,6 +88,7 @@ describe.skipIf(!database)('C28 prerequisite encounter contract against real Pos
       const response = await read(person);
       expect(response.statusCode, 'Authorized OPEN encounter must not return HTTP 500').toBe(200);
       expect(response.json()).not.toHaveProperty('endedAt');
+      expect(response.json()).not.toHaveProperty('completionSummary');
       expect(Value.Check(EncounterProjectionSchema, response.json())).toBe(true);
       expect(response.json()).not.toHaveProperty('notes');
       expect(response.json().participants).toEqual(participants);
@@ -173,6 +174,10 @@ describe.skipIf(!database)('C28 prerequisite encounter contract against real Pos
     expect(Number.isFinite(Date.parse(completed.json().encounter.endedAt as string))).toBe(true);
     const history = await read(patient, encounter, 'notes,participants');
     expect(history.statusCode).toBe(200);
+    expect(history.json().completionSummary).toBe('Synthetic C28 completion.');
+    const reopened = await read(patient, encounter, 'participants');
+    expect(reopened.json().completionSummary).toBe('Synthetic C28 completion.');
+    expect(reopened.json()).not.toHaveProperty('notes');
     expect(Value.Check(EncounterProjectionSchema, history.json())).toBe(true);
     expect(history.json().endedAt).toEqual(completed.json().encounter.endedAt);
     expect(history.body).not.toContain(privateBody);

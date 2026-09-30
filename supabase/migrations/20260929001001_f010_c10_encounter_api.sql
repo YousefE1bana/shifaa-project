@@ -68,7 +68,9 @@ BEGIN
       FROM clinical.encounter_participants participant
       WHERE participant.encounter_id=encounter.id
     ),'[]'::jsonb)
-  ) INTO projection
+  ) || CASE WHEN encounter.status='completed' THEN pg_catalog.jsonb_build_object(
+    'completionSummary',encounter.completion_summary
+  ) ELSE '{}'::jsonb END INTO projection
   FROM clinical.encounters encounter
   WHERE encounter.id=p_encounter_id;
   RETURN projection;

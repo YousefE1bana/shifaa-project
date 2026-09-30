@@ -249,7 +249,7 @@ async function acceptReferral(
   }
   return reply
     .status(200)
-    .headers({ ...noStore, 'content-language': actor.locale })
+    .headers({ ...noStore, 'content-language': actor.locale, 'x-request-id': request.id })
     .send(value);
 }
 
@@ -296,7 +296,7 @@ async function createReferral(
   }
   return reply
     .status(201)
-    .headers({ ...noStore, 'content-language': actor.locale })
+    .headers({ ...noStore, 'content-language': actor.locale, 'x-request-id': request.id })
     .send(value);
 }
 
@@ -315,7 +315,7 @@ async function listReferrals(
   }
   return reply
     .status(200)
-    .headers({ ...noStore, 'content-language': actor.locale })
+    .headers({ ...noStore, 'content-language': actor.locale, 'x-request-id': request.id })
     .send(value);
 }
 

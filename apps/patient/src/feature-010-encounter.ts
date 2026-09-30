@@ -1,3 +1,4 @@
+import { readFeature010SessionAal } from './feature-010-session.ts';
 import { Feature010ApiError, createFeature010Client } from '@shifaa/api-client/feature-010';
 import type { Feature010Client } from '@shifaa/api-client/feature-010';
 
@@ -71,6 +72,11 @@ export class PatientFeature010EncounterApi {
       accessToken: () =>
         typeof options.accessToken === 'function' ? options.accessToken() : options.accessToken,
       acceptLanguage: options.locale,
+      purpose: 'appointment.scheduling',
+      sessionAal: () =>
+        readFeature010SessionAal(
+          typeof options.accessToken === 'function' ? options.accessToken() : options.accessToken,
+        ),
       ...(options.fetch ? { fetch: options.fetch } : {}),
     });
   }

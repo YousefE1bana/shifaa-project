@@ -95,6 +95,21 @@ BEGIN
   EXCEPTION WHEN insufficient_privilege THEN NULL;
   END;
   PERFORM pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
+  -- A live membership/patient row cannot authorize an inactive person.
+  UPDATE identity.people SET profile_status='suspended' WHERE id='f0100000-0000-4000-8000-000000000001';
+  BEGIN
+    PERFORM clinical.create_encounter_v1(request);
+    RAISE EXCEPTION 'inactive clinician profile created an encounter';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  UPDATE identity.people SET profile_status='active' WHERE id='f0100000-0000-4000-8000-000000000001';
+  UPDATE identity.people SET profile_status='suspended' WHERE id='f0100000-0000-4000-8000-000000000002';
+  BEGIN
+    PERFORM clinical.create_encounter_v1(request);
+    RAISE EXCEPTION 'inactive patient profile created an encounter';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  UPDATE identity.people SET profile_status='active' WHERE id='f0100000-0000-4000-8000-000000000002';
   IF (SELECT status FROM clinical.appointments WHERE id=fixture_appointment)<>'checked_in'
      OR (SELECT state FROM clinical.queue_entries WHERE appointment_id=fixture_appointment)<>'called'
      OR EXISTS (SELECT 1 FROM clinical.encounters WHERE appointment_id=fixture_appointment) THEN
@@ -221,6 +236,21 @@ BEGIN
   EXCEPTION WHEN insufficient_privilege THEN NULL;
   END;
   PERFORM pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
+  -- A live membership/patient row cannot authorize an inactive person.
+  UPDATE identity.people SET profile_status='suspended' WHERE id='f0100000-0000-4000-8000-000000000001';
+  BEGIN
+    PERFORM clinical.create_encounter_v1(request);
+    RAISE EXCEPTION 'inactive clinician profile created an encounter';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  UPDATE identity.people SET profile_status='active' WHERE id='f0100000-0000-4000-8000-000000000001';
+  UPDATE identity.people SET profile_status='suspended' WHERE id='f0100000-0000-4000-8000-000000000002';
+  BEGIN
+    PERFORM clinical.create_encounter_v1(request);
+    RAISE EXCEPTION 'inactive patient profile created an encounter';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  UPDATE identity.people SET profile_status='active' WHERE id='f0100000-0000-4000-8000-000000000002';
   IF (SELECT status FROM clinical.encounters WHERE appointment_id='f0100000-0000-4000-8500-000000000004')<>'open'
      OR (SELECT status FROM clinical.appointments WHERE id='f0100000-0000-4000-8500-000000000004')<>'in_consultation'
      OR (SELECT state FROM clinical.queue_entries WHERE appointment_id='f0100000-0000-4000-8500-000000000004')<>'in_service'

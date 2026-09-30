@@ -63,6 +63,11 @@ async function installApi(page: Page) {
       });
     if (path === '/auth/login')
       return json(200, { kind: 'challenge', challenge_id: 'synthetic-challenge' });
+    if (
+      (path.startsWith('/encounters/') || path === '/referrals') &&
+      (!request.headers()['x-purpose'] || request.headers()['x-aal'] !== '2')
+    )
+      return json(403, { status: 403 });
     if (path === '/auth/otp/verify')
       return json(200, { kind: 'session', access_token: 'synthetic-clinic-token', aal: 2 });
     if (path === `/encounters/${encounterId}/referrals` && request.method() === 'POST') {
@@ -411,7 +416,9 @@ test('denied or offline referral reads clear protected content and recover by au
   await expect(page.getByRole('alert')).toBeVisible();
   await page.context().setOffline(true);
   await expect(page.getByText(referralId)).toHaveCount(0);
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'You are offline.' }).first(),
+  ).toBeVisible();
   await page.context().setOffline(false);
   api.failList(503);
   await page.getByRole('button', { name: /retry|refresh/i }).click();

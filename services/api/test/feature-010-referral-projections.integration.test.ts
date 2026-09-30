@@ -157,6 +157,7 @@ describe('Feature 010 listReferrals projection and pagination integration', () =
       headers: headers(),
     });
     expect(defaultPage.statusCode).toBe(200);
+    expect(defaultPage.headers['x-request-id']).toEqual(expect.any(String));
     expect(calls).toHaveLength(4);
     expect(calls.map((call) => call.role)).toEqual(roles);
     expect(calls.map((call) => call.values[2])).toEqual([26, 26, 26, 26]);
@@ -169,6 +170,7 @@ describe('Feature 010 listReferrals projection and pagination integration', () =
       headers: headers(),
     });
     expect(maximumPage.statusCode).toBe(200);
+    expect(maximumPage.headers['x-request-id']).toEqual(expect.any(String));
     expect(calls).toHaveLength(4);
     expect(calls.map((call) => call.values[2])).toEqual([101, 101, 101, 101]);
     expect(calls.map((call) => call.values.slice(3))).toEqual(
@@ -210,6 +212,7 @@ describe('Feature 010 listReferrals projection and pagination integration', () =
       headers: headers(),
     });
     expect(firstPage.statusCode).toBe(200);
+    expect(firstPage.headers['x-request-id']).toEqual(expect.any(String));
     const firstBody = firstPage.json();
     expect(firstBody.data.map((referral: ReferralProjection) => referral.id)).toEqual([
       firstId,
@@ -227,6 +230,7 @@ describe('Feature 010 listReferrals projection and pagination integration', () =
       headers: headers(),
     });
     expect(repeatedFirstPage.statusCode).toBe(200);
+    expect(repeatedFirstPage.headers['x-request-id']).toEqual(expect.any(String));
     expect(repeatedFirstPage.json().meta.nextCursor).toBe(firstBody.meta.nextCursor);
     expect(calls).toHaveLength(8);
 
@@ -237,6 +241,7 @@ describe('Feature 010 listReferrals projection and pagination integration', () =
       headers: headers(),
     });
     expect(secondPage.statusCode).toBe(200);
+    expect(secondPage.headers['x-request-id']).toEqual(expect.any(String));
     expect(secondPage.json().data.map((referral: ReferralProjection) => referral.id)).toEqual([
       thirdId,
     ]);
@@ -288,6 +293,7 @@ describe('Feature 010 listReferrals projection and pagination integration', () =
     const result = await app.inject({ method: 'GET', url: '/v1/referrals', headers: headers() });
 
     expect(result.statusCode).toBe(200);
+    expect(result.headers['x-request-id']).toEqual(expect.any(String));
     expect(result.json().data).toEqual([acceptedTarget]);
     expect(Object.keys(result.json().data[0] as object).sort()).toEqual([
       'acceptedFieldCodes',

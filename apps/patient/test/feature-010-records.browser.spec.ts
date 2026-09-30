@@ -88,12 +88,19 @@ async function wireSyntheticApi(page: Page) {
         json: {
           accessToken: 'synthetic-local-only-token',
           sessionId: 'a1000000-0000-4000-8000-000000000099',
-          assurance: 'aal1',
+          assurance: 'aal2',
           expiresAt: '2026-09-29T10:00:00Z',
         },
         headers,
       });
       resolveRefresh();
+      return;
+    }
+    if (
+      (path === '/v1/referrals' || path.startsWith('/v1/referrals/')) &&
+      (!request.headers()['x-purpose'] || request.headers()['x-aal'] !== '2')
+    ) {
+      await route.fulfill({ status: 403, json: { status: 403 }, headers });
       return;
     }
     if (path === '/v1/people/me' && request.method() === 'GET') {
@@ -364,6 +371,13 @@ for (const locale of ['ar-EG', 'en-EG'] as const) {
       await expect(page.getByTestId('records-accept')).toHaveAttribute('aria-disabled', 'true');
       await page.getByTestId('records-target-slot').click();
       await expect(page.getByTestId('records-accept')).not.toHaveAttribute('aria-disabled', 'true');
+      await expect(page.getByTestId('records-booking-terms')).toContainText('EGP');
+      await expect(page.getByTestId('records-booking-terms')).toContainText(
+        locale === 'en-EG' ? 'Cash on arrival' : 'الدفع نقداً عند الوصول',
+      );
+      await expect(page.getByTestId('records-booking-terms')).toContainText(
+        locale === 'en-EG' ? '250' : '٢٥٠',
+      );
       await page.getByTestId('records-accept').click();
 
       await expect(page.getByTestId('records-success-appointment')).toContainText(
@@ -446,6 +460,13 @@ for (const locale of ['ar-EG', 'en-EG'] as const) {
           new URL(response.url()).pathname === `/v1/referrals/${referralId}/accept` &&
           response.request().method() === 'POST',
       );
+      await expect(page.getByTestId('records-booking-terms')).toContainText('EGP');
+      await expect(page.getByTestId('records-booking-terms')).toContainText(
+        locale === 'en-EG' ? 'Cash on arrival' : 'الدفع نقداً عند الوصول',
+      );
+      await expect(page.getByTestId('records-booking-terms')).toContainText(
+        locale === 'en-EG' ? '250' : '٢٥٠',
+      );
       await page.getByTestId('records-accept').click();
       expect((await accepted).status()).toBe(failure === 'denied' ? 403 : 412);
       await expect(page.getByTestId('records-success-appointment')).toHaveCount(0);
@@ -456,4 +477,66 @@ for (const locale of ['ar-EG', 'en-EG'] as const) {
       }
     });
   }
+}
+
+for (const locale of ['ar-EG', 'en-EG'] as const) {
+  test(`${locale} same doctor at two facilities keeps slots and server terms scoped to the selected pair`, async ({
+    page,
+  }) => {
+    await wireSyntheticApi(page);
+    const secondFacility = 'a1000000-0000-4000-8000-000000000099';
+    await page.route('**/v1/discovery/doctors**', async (route) =>
+      route.fulfill({
+        status: 200,
+        json: {
+          items: [
+            doctor,
+            {
+              ...doctor,
+              facilityId: secondFacility,
+              facilityDisplayName: 'Synthetic Second Clinic',
+            },
+          ],
+          nextCursor: null,
+          freshness: 'fresh',
+        },
+        headers: { 'cache-control': 'private, no-store' },
+      }),
+    );
+    await page.route(
+      `**/v1/clinics/${secondFacility}/doctors/${doctorId}/availability**`,
+      async (route) =>
+        route.fulfill({
+          status: 200,
+          json: {
+            items: [{ ...slot, facilityId: secondFacility }],
+            feeMinorUnits: 37500,
+            currency: 'EGP',
+            paymentMethod: 'cash_on_arrival',
+            version: 2,
+            freshness: 'fresh',
+          },
+          headers: { 'cache-control': 'private, no-store' },
+        }),
+    );
+    await openRecords(page, locale);
+    await reviewReferral(page);
+    await page.getByTestId('records-reason-authorize').click();
+    await page.getByTestId('records-encounter-type-choice-exclude').click();
+    await page.getByTestId('records-find-slots').click();
+    const choices = page.getByTestId('records-target-doctor');
+    await expect(choices).toHaveCount(2);
+    await choices.filter({ hasText: 'Synthetic Second Clinic' }).click();
+    await expect(page.getByTestId('records-target-slot')).toHaveCount(1);
+    await page.getByTestId('records-target-slot').click();
+    const terms = page.getByTestId('records-booking-terms');
+    await expect(terms).toContainText('Synthetic Second Clinic');
+    await expect(terms).toContainText(locale === 'en-EG' ? '375' : '٣٧٥');
+    await expect(terms).toContainText('EGP');
+    await choices.filter({ hasText: 'Synthetic Clinic' }).click();
+    await expect(terms).toHaveCount(0);
+    await expect(page.getByTestId('records-target-slot')).toHaveAttribute('aria-checked', 'false');
+    await page.getByTestId('records-target-slot').click();
+    await expect(terms).toContainText(locale === 'en-EG' ? '250' : '٢٥٠');
+  });
 }

@@ -1,3 +1,4 @@
+import { readFeature010SessionAal } from './feature-010-session.ts';
 import { Feature010ApiError, Feature010Client } from '@shifaa/api-client/feature-010';
 import type {
   PendingSubjectReferralProjection,
@@ -132,6 +133,11 @@ export class PatientFeature010ReferralApi {
       accessToken: () =>
         typeof options.accessToken === 'function' ? options.accessToken() : options.accessToken,
       acceptLanguage: options.locale,
+      purpose: 'appointment.scheduling',
+      sessionAal: () =>
+        readFeature010SessionAal(
+          typeof options.accessToken === 'function' ? options.accessToken() : options.accessToken,
+        ),
       ...(options.fetch ? { fetch: options.fetch } : {}),
     });
   }
@@ -149,26 +155,50 @@ export class PatientFeature010ReferralApi {
     }
     this.readState = 'loading';
     try {
-      const page = await this.client.listReferrals(
-        { patientId: this.actingContext.patientId, status: 'pending', limit: 100 },
-        signal ? { signal } : {},
-      );
-      if (signal?.aborted || generation !== this.requestGeneration)
-        throw new DOMException('Referral read was superseded.', 'AbortError');
-      if (page.meta.stale || !Number.isFinite(Date.parse(page.meta.lastUpdatedAt))) {
-        this.readState = 'stale';
-        throw new Error('stale-referral-projection');
+      const pending: PendingSubjectReferralProjection[] = [];
+      let cursor: string | undefined;
+      const seen = new Set<string>();
+      let lastUpdatedAt = '';
+      for (let pageNumber = 0; ; pageNumber += 1) {
+        if (pageNumber >= 20) throw new Error('referral-page-limit');
+        if (signal?.aborted || generation !== this.requestGeneration)
+          throw new DOMException('Referral read was superseded.', 'AbortError');
+        const page = await this.client.listReferrals(
+          {
+            patientId: this.actingContext.patientId,
+            status: 'pending',
+            limit: 100,
+            ...(cursor ? { cursor } : {}),
+          },
+          signal ? { signal } : {},
+        );
+        if (signal?.aborted || generation !== this.requestGeneration)
+          throw new DOMException('Referral read was superseded.', 'AbortError');
+        if (page.meta.stale || !Number.isFinite(Date.parse(page.meta.lastUpdatedAt))) {
+          this.readState = 'stale';
+          throw new Error('stale-referral-projection');
+        }
+        if (!lastUpdatedAt || Date.parse(page.meta.lastUpdatedAt) < Date.parse(lastUpdatedAt))
+          lastUpdatedAt = page.meta.lastUpdatedAt;
+        pending.push(
+          ...page.data
+            .filter(
+              (value): value is PendingSubjectReferralProjection => value.status === 'pending',
+            )
+            .map(projectPendingReferral),
+        );
+        if (!page.meta.nextCursor) break;
+        if (seen.has(page.meta.nextCursor)) throw new Error('referral-cursor-loop');
+        seen.add(page.meta.nextCursor);
+        cursor = page.meta.nextCursor;
       }
-      const pending = page.data
-        .filter((value): value is PendingSubjectReferralProjection => value.status === 'pending')
-        .map(projectPendingReferral);
       this.currentReferrals = pending;
       this.readState = pending.length ? 'pending' : 'empty';
       return {
         data: pending,
         meta: {
-          nextCursor: page.meta.nextCursor,
-          lastUpdatedAt: page.meta.lastUpdatedAt,
+          nextCursor: null,
+          lastUpdatedAt,
           stale: false,
         },
       };

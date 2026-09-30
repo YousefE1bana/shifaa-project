@@ -75,6 +75,7 @@ export default function EncounterWorkspace() {
   const [challenge, setChallenge] = useState('');
   const [otp, setOtp] = useState('');
   const [token, setToken] = useState('');
+  const [aal, setAal] = useState<1 | 2 | undefined>(undefined);
   const [busy, setBusy] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [online, setOnline] = useState(true);
@@ -94,6 +95,7 @@ export default function EncounterWorkspace() {
   const [message, setMessage] = useState('');
   const [completionResult, setCompletionResult] = useState<EncounterCompleteResult | null>(null);
   const [refreshRequired, setRefreshRequired] = useState(false);
+  const noteOperation = useRef<{ signature: string; key: string } | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogBackRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -109,9 +111,11 @@ export default function EncounterWorkspace() {
             baseUrl: apiBaseUrl,
             accessToken: () => token,
             acceptLanguage: locale,
+            purpose: 'appointment.scheduling',
+            sessionAal: () => aal,
           })
         : null,
-    [apiBaseUrl, locale, token],
+    [aal, apiBaseUrl, locale, token],
   );
   const encounter = data;
   const notes = encounter?.notes ?? [];
@@ -230,10 +234,11 @@ export default function EncounterWorkspace() {
         const response = (await auth.verifyOtp(
           { challenge_id: challenge, code: otp },
           crypto.randomUUID(),
-        )) as { kind?: string; access_token?: string };
+        )) as { kind?: string; access_token?: string; aal?: 1 | 2 };
         if (response.kind !== 'session' || !response.access_token)
           throw new Error('session-required');
         setToken(response.access_token);
+        setAal(response.aal === 2 ? 2 : response.aal === 1 ? 1 : undefined);
         setChallenge('');
         setOtp('');
       }
@@ -258,14 +263,22 @@ export default function EncounterWorkspace() {
       return;
     setBusy(true);
     setMessage('');
+    const payload = { noteType: noteType.trim(), body: noteBody, visibility };
+    const signature = JSON.stringify([encounterId, payload]);
+    if (noteOperation.current?.signature !== signature)
+      noteOperation.current = { signature, key: crypto.randomUUID() };
     let signedNote: CareTeamNoteProjection;
     try {
-      signedNote = await client.signEncounterNote(
-        encounterId,
-        { noteType: noteType.trim(), body: noteBody, visibility },
-        { idempotencyKey: crypto.randomUUID() },
-      );
-    } catch {
+      signedNote = await client.signEncounterNote(encounterId, payload, {
+        idempotencyKey: noteOperation.current.key,
+      });
+    } catch (error) {
+      if (
+        error instanceof Feature010ApiError &&
+        error.status < 500 &&
+        ![408, 429].includes(error.status)
+      )
+        noteOperation.current = null;
       setDialog(null);
       setMessage(copy.noteError);
       setBusy(false);
@@ -274,6 +287,7 @@ export default function EncounterWorkspace() {
     setData((current) =>
       current ? { ...current, notes: [...(current.notes ?? []), signedNote] } : current,
     );
+    noteOperation.current = null;
     setNoteType('');
     setNoteBody('');
     setVisibility('');

@@ -238,3 +238,77 @@ test('accepted booking conflict or denial never produces a success result', asyn
   status = 403;
   await assert.rejects(api.acceptReferral(pendingReferral, true, 'exclude', targetSlot), /403/);
 });
+
+test('pending referrals follow all pages and reject cursor loops, bounds and later authority/freshness loss', async () => {
+  for (const failure of ['none', 'loop', 'bound', 'denied', 'stale'] as const) {
+    let calls = 0;
+    const api = new PatientFeature010ReferralApi({
+      locale: 'en-EG',
+      actorRole: 'PAT',
+      patientId,
+      accessToken: 'synthetic-paging-token',
+      fetch: async (input) => {
+        calls += 1;
+        const cursor = new URL(String(input)).searchParams.get('cursor');
+        if (calls === 2 && failure === 'denied') return response({ status: 403 }, 403);
+        const payload = page(
+          [{ ...pendingReferral, id: calls === 1 ? referralId : appointmentId }],
+          calls === 2 && failure === 'stale',
+        );
+        return response({
+          ...payload,
+          meta: {
+            ...payload.meta,
+            nextCursor:
+              failure === 'bound'
+                ? `page-${calls}`
+                : failure === 'loop' || !cursor
+                  ? 'second'
+                  : null,
+          },
+        });
+      },
+    });
+    if (failure === 'none') {
+      const complete = await api.listPendingReferrals();
+      assert.equal(calls, 2);
+      assert.equal(complete.data.length, 2);
+      assert.equal(complete.meta.nextCursor, null);
+    } else {
+      await assert.rejects(api.listPendingReferrals());
+      assert.equal(api.currentReferrals.length, 0);
+      assert.ok(calls <= 20);
+    }
+  }
+});
+
+test('superseded pending-referral paging cannot replace a newer complete read', async () => {
+  let release!: () => void;
+  let calls = 0;
+  const api = new PatientFeature010ReferralApi({
+    locale: 'en-EG',
+    actorRole: 'PAT',
+    patientId,
+    accessToken: 'synthetic-paging-token',
+    fetch: async () => {
+      calls += 1;
+      if (calls === 1) {
+        await new Promise<void>((resolve) => {
+          release = resolve;
+        });
+        return response({
+          ...page([pendingReferral]),
+          meta: { ...page([]).meta, nextCursor: 'second' },
+        });
+      }
+      return response(page([{ ...pendingReferral, id: appointmentId }]));
+    },
+  });
+  const old = api.listPendingReferrals();
+  const rejected = assert.rejects(old, /superseded/);
+  await api.listPendingReferrals();
+  release();
+  await rejected;
+  assert.equal(calls, 2);
+  assert.equal(api.currentReferrals[0]?.id, appointmentId);
+});

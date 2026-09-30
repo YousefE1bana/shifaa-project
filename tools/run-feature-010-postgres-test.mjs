@@ -787,7 +787,8 @@ function commitMessagesFixture(runtime, database) {
   );
 }
 
-function runMessageApiPostgresTest(runtime, database, projection = false) {
+function runMessageApiPostgresTest(runtime, database, projection = false, authorityRace = false) {
+  if (authorityRace && runtime.name !== 'shifaa-local-postgres') return;
   const dockerPort = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
     cwd: root,
     encoding: 'utf8',
@@ -807,9 +808,12 @@ function runMessageApiPostgresTest(runtime, database, projection = false) {
     [
       'node_modules/vitest/vitest.mjs',
       'run',
-      projection
-        ? 'services/api/test/feature-010-encounter-projection.postgres.integration.test.ts'
-        : 'services/api/test/feature-010-messages.postgres.integration.test.ts',
+      '--fileParallelism=false',
+      authorityRace
+        ? 'services/api/test/feature-010-authority-race.postgres.integration.test.ts'
+        : projection
+          ? 'services/api/test/feature-010-encounter-projection.postgres.integration.test.ts'
+          : 'services/api/test/feature-010-messages.postgres.integration.test.ts',
     ],
     {
       cwd: root,
@@ -845,6 +849,7 @@ function checkEncounterProjectionApi(runtime, templateDatabase) {
     );
     created = true;
     setC22ApiSmokeClock(runtime, database);
+    runMessageApiPostgresTest(runtime, database, true, true);
     runMessageApiPostgresTest(runtime, database, true);
   } finally {
     if (created) dropScratchDatabase(runtime, database);
@@ -1686,6 +1691,7 @@ async function testRuntime(runtime) {
         runMigration(runtime, database, migration, 'C28 prerequisite projection chain');
       }
       commitMessagesFixture(runtime, database);
+      runMessageApiPostgresTest(runtime, database, true, true);
       checkEncounterProjectionApi(runtime, database);
       return;
     }

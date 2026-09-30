@@ -1,4 +1,10 @@
 import {
+  listReferralTargets,
+  referralDoctorKey,
+  referralSlotKey,
+  type ReferralTargetChoice,
+} from '../src/feature-010-targets';
+import {
   color,
   FocusVisiblePressable,
   OfflineNoQueueBanner,
@@ -8,11 +14,7 @@ import {
   semanticStyles,
   spacing,
 } from '@shifaa/design-system';
-import type {
-  PendingSubjectReferralProjection,
-  PublicDoctorProjection,
-  TargetSlot,
-} from '@shifaa/contracts';
+import type { PendingSubjectReferralProjection, PublicDoctorProjection } from '@shifaa/contracts';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform, ScrollView, Text, View } from 'react-native';
@@ -46,7 +48,7 @@ type ScreenState =
   | 'submitting'
   | 'accepted';
 
-type TargetChoice = { doctor: PublicDoctorProjection; slot: TargetSlot };
+type TargetChoice = ReferralTargetChoice;
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const actorRoles: PatientReferralActorRole[] = ['PAT', 'GUA', 'DEL'];
 type WebKeyboardEvent = {
@@ -300,55 +302,10 @@ export default function PatientRecordsRoute() {
       const api = schedulingApi();
       const fromDate = localDateAfter(0);
       const toDate = localDateAfter(30);
-      const doctors: PublicDoctorProjection[] = [];
-      let cursor: string | undefined;
-      const seen = new Set<string>();
-      let pagesRead = 0;
-      do {
-        pagesRead += 1;
-        if (pagesRead > 20) throw new Error('discovery-page-limit');
-        const page = await api.searchDoctors({
-          specialty: selectedReferral.targetSpecialty,
-          ...(selectedReferral.targetFacilityId
-            ? { facilityId: selectedReferral.targetFacilityId }
-            : {}),
-          date: fromDate,
-          ...(cursor ? { cursor } : {}),
-        });
-        if (page.freshness !== 'fresh') throw new Error('stale-discovery-projection');
-        if (generation !== requestGeneration.current) return;
-        doctors.push(
-          ...page.items.filter(
-            (doctor) =>
-              doctor.specialty === selectedReferral.targetSpecialty &&
-              !doctor.stale &&
-              (!selectedReferral.targetFacilityId ||
-                doctor.facilityId === selectedReferral.targetFacilityId) &&
-              (!selectedReferral.targetDoctorId ||
-                doctor.doctorId === selectedReferral.targetDoctorId),
-          ),
-        );
-        cursor = page.nextCursor ?? undefined;
-        if (cursor && seen.has(cursor)) throw new Error('discovery-cursor-loop');
-        if (cursor) seen.add(cursor);
-      } while (cursor);
-
-      const found: TargetChoice[] = [];
-      for (const doctor of doctors) {
-        const availability = await api.listDoctorAvailability(doctor.facilityId, doctor.doctorId, {
-          fromDate,
-          toDate,
-        });
-        if (generation !== requestGeneration.current) return;
-        if (availability.freshness !== 'fresh') throw new Error('stale-availability-projection');
-        for (const slot of availability.items) {
-          if (slot.facilityId !== doctor.facilityId || slot.doctorId !== doctor.doctorId) continue;
-          found.push({
-            doctor,
-            slot: { ...slot, availabilityVersion: availability.version },
-          });
-        }
-      }
+      const found = await listReferralTargets(api, currentReferral, { fromDate, toDate }, () => {
+        if (generation !== requestGeneration.current)
+          throw new DOMException('Search superseded.', 'AbortError');
+      });
       if (generation !== requestGeneration.current) return;
       setTargets(found);
       setState('slots');
@@ -755,12 +712,16 @@ export default function PatientRecordsRoute() {
             </Text>
           )}
           {[
-            ...new Map(targets.map((target) => [target.doctor.doctorId, target.doctor])).values(),
+            ...new Map(
+              targets.map((target) => [referralDoctorKey(target.doctor), target.doctor]),
+            ).values(),
           ].map((doctor) => {
-            const chosen = selectedDoctor?.doctorId === doctor.doctorId;
+            const chosen =
+              selectedDoctor !== null &&
+              referralDoctorKey(selectedDoctor) === referralDoctorKey(doctor);
             return (
               <FocusVisiblePressable
-                key={doctor.doctorId}
+                key={referralDoctorKey(doctor)}
                 testID="records-target-doctor"
                 accessibilityRole="radio"
                 accessibilityState={{ checked: chosen }}
@@ -794,20 +755,22 @@ export default function PatientRecordsRoute() {
           })}
           {selectedDoctor &&
             targets
-              .filter((target) => target.doctor.doctorId === selectedDoctor.doctorId)
+              .filter(
+                (target) => referralDoctorKey(target.doctor) === referralDoctorKey(selectedDoctor),
+              )
               .map((target) => (
                 <FocusVisiblePressable
-                  key={`${target.doctor.doctorId}-${target.slot.startsAt}`}
+                  key={referralSlotKey(target)}
                   testID="records-target-slot"
                   accessibilityRole="radio"
                   accessibilityState={{
                     checked:
-                      selectedTarget?.slot.startsAt === target.slot.startsAt &&
-                      selectedTarget?.doctor.doctorId === target.doctor.doctorId,
+                      selectedTarget !== null &&
+                      referralSlotKey(selectedTarget) === referralSlotKey(target),
                   }}
                   aria-checked={
-                    selectedTarget?.slot.startsAt === target.slot.startsAt &&
-                    selectedTarget?.doctor.doctorId === target.doctor.doctorId
+                    selectedTarget !== null &&
+                    referralSlotKey(selectedTarget) === referralSlotKey(target)
                   }
                   {...webKeyboardActivationProps(() => setSelectedTarget(target))}
                   onPress={() => setSelectedTarget(target)}
@@ -815,9 +778,14 @@ export default function PatientRecordsRoute() {
                     minHeight: 48,
                     justifyContent: 'center',
                     paddingInline: spacing.sm,
-                    borderWidth: selectedTarget?.slot.startsAt === target.slot.startsAt ? 2 : 1,
+                    borderWidth:
+                      selectedTarget !== null &&
+                      referralSlotKey(selectedTarget) === referralSlotKey(target)
+                        ? 2
+                        : 1,
                     borderColor:
-                      selectedTarget?.slot.startsAt === target.slot.startsAt
+                      selectedTarget !== null &&
+                      referralSlotKey(selectedTarget) === referralSlotKey(target)
                         ? color.brand
                         : color.border,
                     borderRadius: radius.control,
@@ -828,6 +796,26 @@ export default function PatientRecordsRoute() {
                   </Text>
                 </FocusVisiblePressable>
               ))}
+          {selectedTarget && (
+            <View testID="records-booking-terms" accessibilityLiveRegion="polite">
+              <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
+                {copy.doctor}: {selectedTarget.doctor.doctorDisplayName} · {copy.facility}:{' '}
+                {selectedTarget.doctor.facilityDisplayName}
+              </Text>
+              <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
+                {copy.slot}:{' '}
+                {displayTime(selectedTarget.slot.startsAt, locale, selectedTarget.slot.timezone)}
+              </Text>
+              <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
+                {copy.fee}:{' '}
+                {new Intl.NumberFormat(locale, {
+                  style: 'currency',
+                  currency: selectedTarget.terms.currency,
+                }).format(selectedTarget.terms.feeMinorUnits / 100)}{' '}
+                · {selectedTarget.terms.currency} · {copy.cash}
+              </Text>
+            </View>
+          )}
           <FocusVisiblePressable
             testID="records-accept"
             accessibilityRole="button"

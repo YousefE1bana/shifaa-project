@@ -201,6 +201,7 @@ export function ReferralWorkspace() {
   const [challenge, setChallenge] = useState('');
   const [otp, setOtp] = useState('');
   const [token, setToken] = useState('');
+  const [aal, setAal] = useState<1 | 2 | undefined>(undefined);
   const [loginBusy, setLoginBusy] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [online, setOnline] = useState(true);
@@ -238,9 +239,11 @@ export function ReferralWorkspace() {
             baseUrl: apiBaseUrl,
             accessToken: () => token,
             acceptLanguage: locale,
+            purpose: 'appointment.scheduling',
+            sessionAal: () => aal,
           })
         : null,
-    [apiBaseUrl, locale, token],
+    [aal, apiBaseUrl, locale, token],
   );
 
   const loadReferrals = useCallback(async (): Promise<ReferralListResolution> => {
@@ -370,10 +373,11 @@ export function ReferralWorkspace() {
         const response = (await auth.verifyOtp(
           { challenge_id: challenge, code: otp },
           crypto.randomUUID(),
-        )) as { kind?: string; access_token?: string };
+        )) as { kind?: string; access_token?: string; aal?: 1 | 2 };
         if (response.kind !== 'session' || !response.access_token)
           throw new Error('session-required');
         setToken(response.access_token);
+        setAal(response.aal === 2 ? 2 : response.aal === 1 ? 1 : undefined);
         setChallenge('');
         setOtp('');
       }

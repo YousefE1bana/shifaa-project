@@ -105,6 +105,11 @@ async function enterSummary(
                 },
               ],
       });
+    if (
+      path === '/encounters' &&
+      (!request.headers()['x-purpose'] || request.headers()['x-aal'] !== '2')
+    )
+      return json(403, { status: 403 });
     if (path === '/encounters' && request.method() === 'POST')
       if (rejectNextCreate) {
         rejectNextCreate = false;
@@ -115,6 +120,11 @@ async function enterSummary(
           code: 'encounter-start-eligibility-changed',
         });
       }
+    if (
+      path === '/encounters' &&
+      (!request.headers()['x-purpose'] || request.headers()['x-aal'] !== '2')
+    )
+      return json(403, { status: 403 });
     if (path === '/encounters' && request.method() === 'POST')
       return json(201, {
         encounter: {

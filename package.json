@@ -103,10 +103,10 @@
     "test:encounters:performance": "tsx tools/feature-010-performance.ts --require-both-runtimes",
     "test:encounters:restore": "node tools/run-feature-010-restore-test.mjs --require-both-runtimes",
     "test:encounters:privacy": "tsx --test tests/e2e/feature-010-security-privacy.spec.ts",
-    "test:encounters:ui:unit": "tsx --test apps/patient/test/feature-010-chat.test.tsx apps/patient/test/feature-010-encounter.test.tsx apps/patient/test/feature-010-records.test.tsx apps/clinic/test/feature-010-referrals.test.tsx apps/clinic/test/feature-010-messages.test.tsx",
+    "test:encounters:ui:unit": "tsx --test apps/patient/test/feature-010-targets.test.ts apps/patient/test/feature-010-chat.test.tsx apps/patient/test/feature-010-encounter.test.tsx apps/patient/test/feature-010-records.test.tsx apps/clinic/test/feature-010-referrals.test.tsx apps/clinic/test/feature-010-messages.test.tsx",
     "test:encounters:ui": "node tools/run-feature-010-ui-tests.mjs",
     "test:encounters:baselines": "powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command \"Import-Module (Join-Path $PSHOME 'Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1') -ErrorAction Stop; & 'specs/010-encounters-referrals-contextual-chat/visual-baselines/validate-reference-baselines.ps1'\"",
-    "test:encounters:verification": "pnpm test:encounters:tooling && pnpm test:encounters:scope && pnpm test:encounters:privacy && pnpm test:encounters:ui:unit && node tools/run-feature-010-postgres-test.mjs c28 && pnpm test:encounters:realtime:db && pnpm test:encounters:restore && pnpm test:encounters:performance && pnpm test:encounters:baselines && pnpm test:encounters:ui"
+    "test:encounters:verification": "pnpm exec vitest run tests/e2e/feature-010-client-context.test.ts && pnpm test:encounters:tooling && pnpm test:encounters:scope && pnpm test:encounters:privacy && pnpm test:encounters:ui:unit && node tools/run-feature-010-postgres-test.mjs c28 && pnpm test:encounters:realtime:db && pnpm test:encounters:restore && pnpm test:encounters:performance && pnpm test:encounters:baselines && pnpm test:encounters:ui"
   },
   "devDependencies": {
     "@shifaa/api": "workspace:*",

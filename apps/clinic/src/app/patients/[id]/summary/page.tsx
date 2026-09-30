@@ -66,6 +66,7 @@ export default function PatientSummaryPage() {
   const [challenge, setChallenge] = useState('');
   const [otp, setOtp] = useState('');
   const [token, setToken] = useState('');
+  const [aal, setAal] = useState<1 | 2 | undefined>(undefined);
   const [busy, setBusy] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [online, setOnline] = useState(true);
@@ -82,8 +83,8 @@ export default function PatientSummaryPage() {
   const ar = locale === 'ar-EG';
   useFeature010DocumentLocale(locale);
   const clients = useMemo(
-    () => (token && apiBaseUrl ? createEncounterStartClients(token, locale) : null),
-    [apiBaseUrl, locale, token],
+    () => (token && apiBaseUrl ? createEncounterStartClients(token, locale, aal) : null),
+    [aal, apiBaseUrl, locale, token],
   );
 
   const refreshEligibility = useCallback(async () => {
@@ -161,10 +162,11 @@ export default function PatientSummaryPage() {
         const response = (await auth.verifyOtp(
           { challenge_id: challenge, code: otp },
           crypto.randomUUID(),
-        )) as { kind?: string; access_token?: string };
+        )) as { kind?: string; access_token?: string; aal?: 1 | 2 };
         if (response.kind !== 'session' || !response.access_token)
           throw new Error('session-required');
         setToken(response.access_token);
+        setAal(response.aal === 2 ? 2 : response.aal === 1 ? 1 : undefined);
         setChallenge('');
         setOtp('');
       }

@@ -55,6 +55,8 @@ async function openWorkspace(
   let encounterReadFailureStatus = 503;
   let omitParticipantsFromNextUpdate = false;
   let failNextCompletionConflict = false;
+  let loseNextNoteResponse = false;
+  const signedOperations = new Map<string, unknown>();
   const seen: Array<{
     path: string;
     method: string;
@@ -97,6 +99,11 @@ async function openWorkspace(
         status: encounterReadFailureStatus,
       });
     }
+    if (
+      path.startsWith('/encounters/') &&
+      (!request.headers()['x-purpose'] || request.headers()['x-aal'] !== '2')
+    )
+      return json(403, { status: 403 });
     if (path === `/encounters/${encounterId}` && request.method() === 'GET')
       return json(200, activeEncounter);
     if (path === `/encounters/${encounterId}` && request.method() === 'PATCH') {
@@ -121,6 +128,8 @@ async function openWorkspace(
       return json(200, updateProjection);
     }
     if (path === `/encounters/${encounterId}/notes` && request.method() === 'POST') {
+      const key = request.headers()['idempotency-key']!;
+      if (signedOperations.has(key)) return json(201, signedOperations.get(key));
       const note = {
         id: '97000000-0000-4000-8000-000000000001',
         encounterId,
@@ -135,6 +144,11 @@ async function openWorkspace(
         version: (activeEncounter.version ?? 1) + 1,
         notes: [...(activeEncounter.notes ?? []), note],
       };
+      signedOperations.set(key, note);
+      if (loseNextNoteResponse) {
+        loseNextNoteResponse = false;
+        return route.abort('failed');
+      }
       return json(201, note);
     }
     if (path === `/encounters/${encounterId}/complete` && request.method() === 'POST') {
@@ -191,6 +205,9 @@ async function openWorkspace(
   await expect(page.getByRole('main')).toBeVisible();
   return {
     seen,
+    loseNextNoteResponse: () => {
+      loseNextNoteResponse = true;
+    },
     active: () => activeEncounter,
     failNextEncounterRead: (status = 503) => {
       failNextEncounterRead = true;
@@ -543,4 +560,37 @@ test('Arabic RTL and English LTR keep encounter actions keyboard accessible at c
     await page.keyboard.press('Escape');
     await expect(action).toBeFocused();
   }
+});
+
+test('committed note with lost response replays one immutable signing operation; changed payload gets a new key', async ({
+  page,
+}) => {
+  const api = await openWorkspace(page);
+  await page.getByLabel('Note type').fill('Consultation');
+  await page.getByLabel('Note body').fill('Synthetic response lost note.');
+  await page.getByLabel('Note visibility').selectOption('private');
+  api.loseNextNoteResponse();
+  await page.getByRole('button', { name: 'Review note' }).click();
+  await page.getByRole('button', { name: 'Sign note', exact: true }).click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Review note' }).click();
+  await page.getByRole('button', { name: 'Sign note', exact: true }).click();
+  await expect(page.getByLabel('Note body')).toHaveValue('');
+  const posts = () =>
+    api.seen.filter((item) => item.path.endsWith('/notes') && item.method === 'POST');
+  expect(posts()).toHaveLength(2);
+  expect(posts()[1]!.headers['idempotency-key']).toBe(posts()[0]!.headers['idempotency-key']);
+  expect(api.active().notes).toHaveLength(1);
+  await page.getByLabel('Note type').fill('Consultation');
+  await page.getByLabel('Note body').fill('Synthetic changed note.');
+  await page.getByLabel('Note visibility').selectOption('private');
+  api.loseNextNoteResponse();
+  await page.getByRole('button', { name: 'Review note' }).click();
+  await page.getByRole('button', { name: 'Sign note', exact: true }).click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await page.getByLabel('Note body').fill('Synthetic revised signing payload.');
+  await page.getByRole('button', { name: 'Review note' }).click();
+  await page.getByRole('button', { name: 'Sign note', exact: true }).click();
+  await expect(page.getByLabel('Note body')).toHaveValue('');
+  expect(posts()[3]!.headers['idempotency-key']).not.toBe(posts()[2]!.headers['idempotency-key']);
 });

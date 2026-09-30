@@ -135,6 +135,7 @@ describe('Feature 010 createReferral/listReferrals HTTP integration', () => {
     });
 
     expect(result.statusCode).toBe(201);
+    expect(result.headers['x-request-id']).toEqual(expect.any(String));
     expect(registeredFeature010ReferralOperationIds).toEqual([
       'createReferral',
       'listReferrals',
@@ -193,8 +194,10 @@ describe('Feature 010 createReferral/listReferrals HTTP integration', () => {
     });
 
     expect(explicit.statusCode).toBe(201);
+    expect(explicit.headers['x-request-id']).toEqual(expect.any(String));
     expect(explicit.json()).toHaveProperty('encounterType', 'consultation');
     expect(withoutOptionalType.statusCode).toBe(201);
+    expect(withoutOptionalType.headers['x-request-id']).toEqual(expect.any(String));
     expect(withoutOptionalType.json()).not.toHaveProperty('encounterType');
   });
 
@@ -213,7 +216,9 @@ describe('Feature 010 createReferral/listReferrals HTTP integration', () => {
     });
 
     expect(first.statusCode).toBe(201);
+    expect(first.headers['x-request-id']).toEqual(expect.any(String));
     expect(replay.statusCode).toBe(201);
+    expect(replay.headers['x-request-id']).toEqual(expect.any(String));
     expect(replay.json()).toEqual(first.json());
     expect(changed.statusCode).toBe(409);
     expect(changed.json().code).toBe('idempotency-key-reused');
@@ -242,6 +247,7 @@ describe('Feature 010 createReferral/listReferrals HTTP integration', () => {
     });
 
     expect(first.statusCode).toBe(201);
+    expect(first.headers['x-request-id']).toEqual(expect.any(String));
     expect(changed.statusCode).toBe(409);
     expect(changed.json().code).toBe('idempotency-key-reused');
     expect(first.json()).toMatchObject({ targetSpecialty: 'cardiology' });
@@ -260,8 +266,10 @@ describe('Feature 010 createReferral/listReferrals HTTP integration', () => {
     });
 
     expect(source.statusCode).toBe(200);
+    expect(source.headers['x-request-id']).toEqual(expect.any(String));
     expect(source.json()).toEqual(page([pendingSource]));
     expect(target.statusCode).toBe(200);
+    expect(target.headers['x-request-id']).toEqual(expect.any(String));
     expect(target.json()).toEqual(page([]));
     expect(JSON.stringify(target.json())).not.toContain(referralId);
   });
