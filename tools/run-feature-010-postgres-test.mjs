@@ -18,6 +18,8 @@ const c19ReferralProjectionMigration =
   'supabase/migrations/20260929001007_f010_c19_referral_projections.sql';
 const c22ContextMessagesMigration =
   'supabase/migrations/20260929001008_f010_c22_context_messages.sql';
+const c23RealtimeHintMigration = 'supabase/migrations/20260930001000_f010_c23_realtime_hint.sql';
+const c26PrivacyGuardsMigration = 'supabase/migrations/20260930001001_f010_c26_privacy_guards.sql';
 const c13CompletionRedTest = 'infra/db/tests/feature-010-completion-red.sql';
 const c13CompletionTest = 'infra/db/tests/feature-010-completion.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
@@ -85,6 +87,8 @@ const c17ReferralsMigrationIndex = migrations.indexOf(c17ReferralsMigration);
 const c18ReferralAcceptanceMigrationIndex = migrations.indexOf(c18ReferralAcceptanceMigration);
 const c19ReferralProjectionMigrationIndex = migrations.indexOf(c19ReferralProjectionMigration);
 const c22ContextMessagesMigrationIndex = migrations.indexOf(c22ContextMessagesMigration);
+const c23RealtimeHintMigrationIndex = migrations.indexOf(c23RealtimeHintMigration);
+const c26PrivacyGuardsMigrationIndex = migrations.indexOf(c26PrivacyGuardsMigration);
 const c13Red = process.env['SHIFAA_TEST_F010_C13_RED'] === 'true';
 if (
   featureMigrationIndex < 0 ||
@@ -105,10 +109,14 @@ if (
   c19ReferralProjectionMigrationIndex !== c18ReferralAcceptanceMigrationIndex + 1 ||
   migrations.lastIndexOf(c19ReferralProjectionMigration) !== c19ReferralProjectionMigrationIndex ||
   c22ContextMessagesMigrationIndex !== c19ReferralProjectionMigrationIndex + 1 ||
-  migrations.lastIndexOf(c22ContextMessagesMigration) !== c22ContextMessagesMigrationIndex
+  migrations.lastIndexOf(c22ContextMessagesMigration) !== c22ContextMessagesMigrationIndex ||
+  c23RealtimeHintMigrationIndex !== c22ContextMessagesMigrationIndex + 1 ||
+  migrations.lastIndexOf(c23RealtimeHintMigration) !== c23RealtimeHintMigrationIndex ||
+  c26PrivacyGuardsMigrationIndex !== c23RealtimeHintMigrationIndex + 1 ||
+  migrations.lastIndexOf(c26PrivacyGuardsMigration) !== c26PrivacyGuardsMigrationIndex
 ) {
   throw new Error(
-    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, ${c17ReferralsMigration}, ${c18ReferralAcceptanceMigration}, ${c19ReferralProjectionMigration}, and ${c22ContextMessagesMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
+    `The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, ${c17ReferralsMigration}, ${c18ReferralAcceptanceMigration}, ${c19ReferralProjectionMigration}, ${c22ContextMessagesMigration}, ${c23RealtimeHintMigration}, and ${c26PrivacyGuardsMigration} in order, each exactly once (C13 may be omitted only while probing C13 RED).`,
   );
 }
 
@@ -1524,6 +1532,8 @@ async function verifyFreshAndReplay(runtime, database) {
     c22ContextMessagesMigration,
     'fresh C22 context messages API migration',
   );
+  runMigration(runtime, database, c23RealtimeHintMigration, 'fresh C23 realtime hint migration');
+  runMigration(runtime, database, c26PrivacyGuardsMigration, 'fresh C26 privacy guard migration');
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
@@ -1570,6 +1580,8 @@ async function verifyFreshAndReplay(runtime, database) {
     c22ContextMessagesMigration,
     'C22 context messages API migration replay',
   );
+  runMigration(runtime, database, c23RealtimeHintMigration, 'C23 realtime hint migration replay');
+  runMigration(runtime, database, c26PrivacyGuardsMigration, 'C26 privacy guard migration replay');
   checkSchema(runtime, database, 'replayed F010 schema assertions');
   checkStorage(runtime, database, 'replayed F010 storage vectors');
   checkApi(runtime, database, 'replayed C10 create/read API vectors');
@@ -1849,12 +1861,32 @@ async function testRuntime(runtime) {
           'C23 compatibility migration before C22 authorization regressions',
         );
       }
+      runMigration(
+        runtime,
+        database,
+        c26PrivacyGuardsMigration,
+        'C26 guards before focused C22 vectors',
+      );
       checkStorage(runtime, database, 'focused C06 storage regression before C22 vectors');
       checkRls(runtime, database, 'focused C07 forced-RLS regression before C22 vectors');
       checkUpdate(runtime, database, 'focused C11 update regression before C22 vectors');
       checkCompletion(runtime, database, 'focused C13 completion regression before C22 vectors');
       checkMessages(runtime, database, 'focused C22 real-PostgreSQL message vectors');
       runMigration(runtime, database, c22ContextMessagesMigration, 'focused C22 migration replay');
+      if (process.env['SHIFAA_TEST_F010_C23_REGRESSION'] === 'true') {
+        runMigration(
+          runtime,
+          database,
+          c23RealtimeHintMigration,
+          'C23 compatibility migration before C22 replay authorization regressions',
+        );
+      }
+      runMigration(
+        runtime,
+        database,
+        c26PrivacyGuardsMigration,
+        'C26 guards before C22 replay vectors',
+      );
       checkMessages(runtime, database, 'focused C22 replayed message vectors');
       commitMessagesFixture(runtime, database);
       await checkC22LifecycleRaces(runtime, database);
@@ -1910,6 +1942,12 @@ async function testRuntime(runtime) {
         c19ReferralProjectionMigration,
         'focused C19 referral projection correction migration',
       );
+      runMigration(
+        runtime,
+        database,
+        c26PrivacyGuardsMigration,
+        'focused C26 privacy guard migration',
+      );
       checkStorage(runtime, database, 'focused C06 storage invariants before C18 vectors');
       checkRls(runtime, database, 'focused C07 RLS regression before C18 vectors');
       checkBookingSeam(runtime, database, 'focused C08 F009 parity before C18 vectors');
@@ -1925,6 +1963,12 @@ async function testRuntime(runtime) {
         database,
         c19ReferralProjectionMigration,
         'focused C19 migration replay',
+      );
+      runMigration(
+        runtime,
+        database,
+        c26PrivacyGuardsMigration,
+        'focused C26 privacy guard replay',
       );
       checkReferralAcceptance(
         runtime,
@@ -2068,6 +2112,24 @@ async function testRuntime(runtime) {
         'focused C17 prerequisite C13 API migration',
       );
       runMigration(runtime, database, c17ReferralsMigration, 'focused C17 referral API migration');
+      runMigration(
+        runtime,
+        database,
+        c18ReferralAcceptanceMigration,
+        'focused C17 prerequisite C18 referral acceptance migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c19ReferralProjectionMigration,
+        'focused C17 prerequisite C19 referral projection migration',
+      );
+      runMigration(
+        runtime,
+        database,
+        c26PrivacyGuardsMigration,
+        'focused C26 privacy guard migration',
+      );
       checkStorage(runtime, database, 'focused C06 storage invariants before C17 vectors');
       checkRls(runtime, database, 'focused C07 RLS regression before C17 vectors');
       checkReferrals(runtime, database, 'focused C17 real-PostgreSQL API vectors');
@@ -2076,6 +2138,12 @@ async function testRuntime(runtime) {
         database,
         c17ReferralsMigration,
         'focused C17 referral API migration replay',
+      );
+      runMigration(
+        runtime,
+        database,
+        c26PrivacyGuardsMigration,
+        'focused C26 privacy guard replay',
       );
       checkReferrals(runtime, database, 'focused C17 replayed real-PostgreSQL API vectors');
       console.log(

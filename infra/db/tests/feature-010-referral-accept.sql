@@ -103,6 +103,7 @@ DECLARE
   list_projection jsonb;
   visible_count integer;
   hidden_error_text text;
+  stale_hidden_error_text text;
   absent_error_text text;
   expected_reason_only jsonb := pg_catalog.jsonb_build_array('reason_summary');
   expected_reason_and_type jsonb := pg_catalog.jsonb_build_array('reason_summary','encounter_type');
@@ -406,6 +407,22 @@ BEGIN
     GET STACKED DIAGNOSTICS hidden_error_text=MESSAGE_TEXT;
   END;
   IF NOT denied THEN RAISE EXCEPTION 'C18 accepted a treating clinician instead of the subject or current representative'; END IF;
+  -- The same non-subject actor must not learn that a visible-to-the-patient
+  -- referral has already advanced beyond the supplied version. Authority is
+  -- resolved before stale-version diagnostics for this hidden referral.
+  PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c26-foreign-stale-accepted',true);
+  PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('6',64),true);
+  BEGIN
+    PERFORM clinical.accept_referral_api_v1(
+      'f0101000-0000-4000-8a00-000000000001',1,
+      pg_catalog.jsonb_build_object('authorizedFieldCodes',expected_reason_only,'targetSlot',slot_1400)
+    );
+  EXCEPTION WHEN no_data_found THEN
+    GET STACKED DIAGNOSTICS stale_hidden_error_text=MESSAGE_TEXT;
+  END;
+  IF stale_hidden_error_text IS DISTINCT FROM hidden_error_text THEN
+    RAISE EXCEPTION 'C18 foreign stale accepted referral must retain the same hidden denial as a pending foreign referral';
+  END IF;
   PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c18-absent-referral-001',true);
   PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('5',64),true);
   BEGIN

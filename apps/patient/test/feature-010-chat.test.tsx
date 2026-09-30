@@ -230,6 +230,69 @@ test('refresh hints only invalidate matching context and deduplicate event IDs',
   );
 });
 
+test('forged hints are inert; future and out-of-order versions only lead back to denied REST', async () => {
+  const deniedStatuses = [403, 404, 409] as const;
+  for (const deniedStatus of deniedStatuses) {
+    let messageReads = 0;
+    let messageWrites = 0;
+    const api = await createApi(async (_input, init) => {
+      if (init?.method === 'POST') {
+        messageWrites += 1;
+        return ok({ code: 'forbidden' }, deniedStatus);
+      }
+      messageReads += 1;
+      return messageReads === 1
+        ? ok({ data: [message], meta: pageMeta })
+        : ok({ code: 'forbidden' }, deniedStatus);
+    });
+    await api.listMessages(encounterId);
+    const futureHint = {
+      eventId: 'a1000000-0000-4000-8a00-000000000021',
+      contextId: encounterId,
+      version: 9,
+    };
+    assert.equal(api.handleRefreshHint({ ...futureHint, contextId: otherEncounterId }), false);
+    assert.equal(api.handleRefreshHint({ ...futureHint, eventType: 'wrong.event' }), false);
+    assert.equal(api.handleRefreshHint({ ...futureHint, body: message.body }), false);
+    assert.equal(
+      api.handleRefreshHint({ ...futureHint, bodyCiphertext: 'synthetic-ciphertext-canary' }),
+      false,
+    );
+    assert.equal(api.handleRefreshHint({ ...futureHint, version: 0 }), false);
+    assert.equal(messageReads, 1, 'invalid hints must not cause REST reads');
+    assert.deepEqual(
+      api.messages,
+      [message],
+      'invalid hints preserve the current authorized projection',
+    );
+
+    assert.equal(api.handleRefreshHint(futureHint), true);
+    assert.deepEqual(
+      api.messages,
+      [],
+      'a hint clears protected history before REST reauthorization',
+    );
+    await assert.rejects(api.listMessages(encounterId), new RegExp(String(deniedStatus)));
+    assert.deepEqual(api.messages, []);
+    assert.equal(api.readState, deniedStatus === 403 ? 'denied' : 'error');
+
+    const staleOutOfOrderHint = {
+      ...futureHint,
+      eventId: 'a1000000-0000-4000-8a00-000000000022',
+      version: 2,
+    };
+    assert.equal(api.handleRefreshHint(staleOutOfOrderHint), true);
+    await assert.rejects(api.listMessages(encounterId), new RegExp(String(deniedStatus)));
+    await assert.rejects(
+      api.sendMessage(encounterId, { body: message.body }, 'synthetic-denied-hint-send'),
+      new RegExp(String(deniedStatus)),
+    );
+    assert.equal(messageReads, 3);
+    assert.equal(messageWrites, 1);
+    assert.deepEqual(api.messages, [], 'REST denial never restores history or sent content');
+  }
+});
+
 test('aborted or superseded reads cannot return as current history', async () => {
   let resolveRead!: (response: Response) => void;
   const api = await createApi(

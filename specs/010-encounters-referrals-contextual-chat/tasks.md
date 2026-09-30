@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C25 accepted; T001–T075 complete, T076–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C26 accepted; T001–T078 complete, T079–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -466,15 +466,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Abuse and telemetry checks preserve synthetic-only data boundaries.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T076 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-006, NFR-SEC-007, NFR-PRIV-004, NFR-OBS-001] Write red abuse/privacy vectors for cross-patient/facility, forged realtime hint, revoked grants, private-note/referral/message body canaries in audit/outbox/logs/metrics/events — `tests/e2e/feature-010-security-privacy.spec.ts`
+- [X] T076 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-SEC-006, NFR-SEC-007, NFR-PRIV-004, NFR-OBS-001] Write red abuse/privacy vectors for cross-patient/facility, forged realtime hint, revoked grants, private-note/referral/message body canaries in audit/outbox/logs/metrics/events — `tests/e2e/feature-010-security-privacy.spec.ts`
   - Depends on: `T063, T075`
   - Acceptance evidence: `unauthorized mutations have no domain outbox and no PHI telemetry`
 
-- [ ] T077 [NFR-SEC-007, NFR-PRIV-004, NFR-OBS-001, NFR-SEC-006] Enforce approved redaction, rate/problem mapping and minimum attributable event fields using existing observability adapters; add no retention period or production channel — `packages/observability/src/feature-010.ts; services/api/src/routes/feature-010-encounters.ts; services/api/src/routes/feature-010-referrals.ts; services/api/src/routes/feature-010-messages.ts`
+- [X] T077 [NFR-SEC-007, NFR-PRIV-004, NFR-OBS-001, NFR-SEC-006] Enforce approved redaction, rate/problem mapping and minimum attributable event fields using existing observability adapters; add no retention period or production channel — `packages/observability/src/feature-010.ts; services/api/src/routes/feature-010-encounters.ts; services/api/src/routes/feature-010-referrals.ts; services/api/src/routes/feature-010-messages.ts`
   - Depends on: `T076`
   - Acceptance evidence: `canary scan finds no raw clinical body, token or patient payload`
 
-- [ ] T078 [NFR-SEC-006, NFR-SEC-007, NFR-PRIV-004, NFR-OBS-001] Run focused ASVS/API-abuse vectors, secrets check and no-PHI audit/outbox/telemetry scan — `specs/010-encounters-referrals-contextual-chat/evidence/C26-security-privacy.md`
+- [X] T078 [NFR-SEC-006, NFR-SEC-007, NFR-PRIV-004, NFR-OBS-001] Run focused ASVS/API-abuse vectors, secrets check and no-PHI audit/outbox/telemetry scan — `specs/010-encounters-referrals-contextual-chat/evidence/C26-security-privacy.md`
   - Depends on: `T077`
   - Acceptance evidence: `negative tests pass; legal production gates remain open`
 

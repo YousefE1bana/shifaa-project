@@ -335,6 +335,78 @@ test('hints are closed and deduplicated, and cursor pagination stays in the sele
   assert.equal(messageRequests.at(-1)?.searchParams.get('cursor'), 'synthetic-next-cursor');
 });
 
+test('forged hints are inert and valid future or out-of-order hints require REST authority again', async () => {
+  for (const revocation of ['revoked', 'completed'] as const) {
+    let revoked = false;
+    let messageReads = 0;
+    let messageWrites = 0;
+    const requests: string[] = [];
+    const controller = await createController(async (input, init) => {
+      const url = new URL(String(input));
+      requests.push(`${init?.method ?? 'GET'} ${url.pathname}`);
+      if (url.pathname === '/v1/people/me') return response(profile());
+      if (url.pathname === `/v1/encounters/${encounterId}`) {
+        if (revoked && revocation === 'revoked') return response({ code: 'not-found' }, 404);
+        return response(encounter(revoked ? { status: 'completed' } : {}));
+      }
+      if (url.pathname.endsWith('/messages')) {
+        if (init?.method === 'POST') {
+          messageWrites += 1;
+          return response({ code: 'forbidden' }, 403);
+        }
+        messageReads += 1;
+        return revoked ? response({ code: 'forbidden' }, 403) : response(messagePage());
+      }
+      return response({ code: 'unexpected-request' }, 404);
+    });
+    setExplicitSelection(controller);
+    await controller.confirmContext();
+    const hint = {
+      eventId:
+        revocation === 'revoked'
+          ? '98000000-0000-4000-8000-000000000021'
+          : '98000000-0000-4000-8000-000000000022',
+      contextId: appointmentId,
+      version: 8,
+    };
+    assert.equal(controller.handleRefreshHint({ ...hint, contextId: otherAppointmentId }), false);
+    assert.equal(controller.handleRefreshHint({ ...hint, eventType: 'wrong.event' }), false);
+    assert.equal(
+      controller.handleRefreshHint({ ...hint, body: 'synthetic-message-plaintext-canary' }),
+      false,
+    );
+    assert.equal(
+      controller.handleRefreshHint({ ...hint, bodyCiphertext: 'synthetic-ciphertext-canary' }),
+      false,
+    );
+    assert.equal(controller.handleRefreshHint({ ...hint, version: 0 }), false);
+    assert.equal(messageReads, 1, 'invalid hints must not reauthorize through REST');
+    assert.deepEqual(controller.state.messages, [message()]);
+
+    assert.equal(controller.handleRefreshHint(hint), true);
+    assert.deepEqual(controller.state.messages, []);
+    revoked = true;
+    await assert.rejects(controller.refresh(), /context-request-failed/);
+    assert.deepEqual(
+      controller.state.messages,
+      [],
+      `${revocation} REST denial must clear protected history`,
+    );
+    await assert.rejects(
+      controller.sendMessage({ body: 'must not be sent' }, 'synthetic-hint-denied-send'),
+      /message-context-not-current/,
+    );
+    assert.equal(messageWrites, 0, 'denied state must keep the composer send path closed');
+
+    const outOfOrder = { ...hint, eventId: `${hint.eventId.slice(0, -1)}3`, version: 2 };
+    assert.equal(controller.handleRefreshHint(outOfOrder), true);
+    await assert.rejects(controller.refresh(), /context-request-failed/);
+    assert.deepEqual(controller.state.messages, []);
+    assert.equal(messageWrites, 0);
+    assert.equal(requests.filter((request) => request.includes('/messages')).length, 1);
+  }
+});
+
 test('403, 409, and 503 reads clear protected history and expose safe states', async () => {
   for (const [status, state] of [
     [403, 'participant-removed'],

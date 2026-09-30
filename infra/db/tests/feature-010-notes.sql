@@ -263,7 +263,7 @@ BEGIN
     PERFORM clinical.sign_encounter_note_api_v1('f0101000-0000-4000-8800-000000000002',
       pg_catalog.jsonb_build_object('noteType','c12-revoked','visibility','private',
         'bodyCiphertext',pg_catalog.encode(pg_catalog.decode('01'||pg_catalog.repeat('d1',12)||pg_catalog.repeat('e2',16)||pg_catalog.repeat('f3',24),'hex'),'base64')));
-  EXCEPTION WHEN insufficient_privilege THEN denied := true;
+  EXCEPTION WHEN no_data_found THEN denied := true;
   END;
   IF NOT denied THEN RAISE EXCEPTION 'C12 signed a note after current treating authority was revoked'; END IF;
 END
@@ -273,8 +273,11 @@ RESET SESSION AUTHORIZATION;
 DO $feature_010_c12_atomic_effects$
 DECLARE note_id uuid := pg_catalog.current_setting('shifaa.test_c12_note_id')::uuid;
   stored_response jsonb;
+  ciphertext_value text;
   replay_key text := pg_catalog.current_setting('shifaa.test_c12_replay_key');
 BEGIN
+  SELECT pg_catalog.encode(body_ciphertext,'base64') INTO ciphertext_value
+  FROM clinical.clinical_notes WHERE id=note_id;
   SELECT response_body INTO stored_response
   FROM platform.idempotency_records
   WHERE method='POST' AND route_template='/v1/encounters/{encounterId}/notes'
@@ -300,7 +303,16 @@ BEGIN
            pg_catalog.to_jsonb(event) ? 'body'
            OR pg_catalog.to_jsonb(event) ? 'bodyCiphertext'
            OR pg_catalog.to_jsonb(event)::text LIKE '%c12-private%'
-         )) THEN
+         ))
+     OR EXISTS (SELECT 1 FROM audit.events event
+       WHERE event.resource_type='clinical_note' AND event.action_code='encounter.note_signed'
+         AND pg_catalog.strpos(pg_catalog.to_jsonb(event)::text,ciphertext_value)>0)
+     OR EXISTS (SELECT 1 FROM platform.outbox_events event
+       WHERE event.aggregate_type='clinical_note' AND event.event_type='clinical.note.signed.v1'
+         AND pg_catalog.strpos(pg_catalog.to_jsonb(event)::text,ciphertext_value)>0)
+     OR EXISTS (SELECT 1 FROM platform.idempotency_records record
+       WHERE record.method='POST' AND record.route_template='/v1/encounters/{encounterId}/notes'
+         AND pg_catalog.strpos((pg_catalog.to_jsonb(record)-'response_body')::text,ciphertext_value)>0) THEN
     RAISE EXCEPTION 'C12 replay/effects are not protected and exactly once';
   END IF;
   IF (SELECT body_ciphertext FROM clinical.clinical_notes WHERE id=note_id) IS NULL

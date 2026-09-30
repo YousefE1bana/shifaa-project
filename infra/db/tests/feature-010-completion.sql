@@ -100,7 +100,7 @@ BEGIN
   denied := false;
   BEGIN
     PERFORM clinical.complete_encounter_api_v1(encounter_id,6,request);
-  EXCEPTION WHEN insufficient_privilege THEN denied := true;
+  EXCEPTION WHEN no_data_found THEN denied := true;
   END;
   IF NOT denied THEN RAISE EXCEPTION 'C13 accepted a non-responsible clinician'; END IF;
 
@@ -175,7 +175,7 @@ BEGIN
   BEGIN
     PERFORM clinical.complete_encounter_api_v1(encounter_id,99,
       jsonb_build_object('summary','  C13 zero-reference encounter completion  ','structuralConfirmation',true));
-  EXCEPTION WHEN insufficient_privilege THEN denied := true;
+  EXCEPTION WHEN no_data_found THEN denied := true;
   END;
   IF NOT denied THEN RAISE EXCEPTION 'C13 replay succeeded after current clinician membership was revoked'; END IF;
 END

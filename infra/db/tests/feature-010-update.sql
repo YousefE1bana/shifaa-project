@@ -64,6 +64,8 @@ VALUES ('f0101000-0000-4000-8800-000000000002','f0101000-0000-4000-8000-00000000
 -- so C11's completed-state rejection is tested independently.
 INSERT INTO clinical.encounters(id,patient_person_id,facility_id,appointment_id,responsible_clinician_id,encounter_type,status,started_at,ended_at,completion_summary)
 VALUES ('f0101000-0000-4000-8800-000000000003','f0101000-0000-4000-8000-000000000002','f0101000-0000-4000-8200-000000000001','f0101000-0000-4000-8500-000000000004','f0101000-0000-4000-8000-000000000001','consultation','completed','2030-04-05T06:00:00Z','2030-04-05T06:30:00Z','Synthetic completed encounter');
+INSERT INTO clinical.encounters(id,patient_person_id,facility_id,appointment_id,responsible_clinician_id,encounter_type,status,started_at)
+VALUES ('f0101000-0000-4000-8800-000000000004','f0101000-0000-4000-8000-000000000002','f0101000-0000-4000-8200-000000000001','f0101000-0000-4000-8500-000000000005','f0101000-0000-4000-8000-000000000001','consultation','open','2030-04-05T07:00:00Z');
 INSERT INTO clinical.encounter_participants(encounter_id,person_id,role_code,started_at)
 VALUES ('f0101000-0000-4000-8800-000000000003','f0101000-0000-4000-8000-000000000001','responsible_clinician','2030-04-05T06:00:00Z');
 INSERT INTO clinical.clinical_notes(id,encounter_id,author_person_id,note_type,body_ciphertext,visibility_code,signed_at) VALUES
@@ -133,6 +135,8 @@ DECLARE
   replay jsonb;
   before_version integer := 3;
   denied boolean;
+  error_code text;
+  hidden_statuses text[];
 BEGIN
   IF session_user<>'shifaa_api' OR current_user<>'shifaa_api'
      OR EXISTS (SELECT 1 FROM pg_catalog.pg_roles WHERE rolname=current_user AND (rolsuper OR rolbypassrls)) THEN
@@ -154,6 +158,40 @@ BEGIN
   PERFORM pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
   PERFORM pg_catalog.set_config('shifaa.request_id','f0101000-0000-4000-9000-000000000011',true);
   PERFORM pg_catalog.set_config('shifaa.trace_id','f0101000-0000-4000-9000-000000000011',true);
+
+  -- A licensed clinician who has no participant interval for this open
+  -- encounter must not distinguish it from an absent encounter by PATCH.
+  PERFORM pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000003',true);
+  PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c26-update-absent',true);
+  PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('a',64),true);
+  error_code := NULL;
+  BEGIN
+    PERFORM clinical.update_encounter_api_v1(
+      'f0101000-0000-4000-8800-000000000099',1,jsonb_build_object('conditionIds','[]'::jsonb)
+    );
+  EXCEPTION
+    WHEN SQLSTATE 'P0002' THEN error_code := 'P0002';
+    WHEN SQLSTATE '42501' THEN error_code := '42501';
+    WHEN SQLSTATE '55000' THEN error_code := '55000';
+  END;
+  hidden_statuses := ARRAY[CASE error_code WHEN 'P0002' THEN '404' WHEN '42501' THEN '403' WHEN '55000' THEN '409' ELSE 'other' END]::text[];
+  PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c26-update-open-foreign',true);
+  PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('b',64),true);
+  error_code := NULL;
+  BEGIN
+    PERFORM clinical.update_encounter_api_v1(
+      'f0101000-0000-4000-8800-000000000004',1,jsonb_build_object('conditionIds','[]'::jsonb)
+    );
+  EXCEPTION
+    WHEN SQLSTATE 'P0002' THEN error_code := 'P0002';
+    WHEN SQLSTATE '42501' THEN error_code := '42501';
+    WHEN SQLSTATE '55000' THEN error_code := '55000';
+  END;
+  hidden_statuses := pg_catalog.array_append(hidden_statuses,
+    CASE error_code WHEN 'P0002' THEN '404' WHEN '42501' THEN '403' WHEN '55000' THEN '409' ELSE 'other' END);
+  IF hidden_statuses IS DISTINCT FROM ARRAY['404','404']::text[] THEN
+    RAISE EXCEPTION 'C26 absent and foreign open encounter PATCH must share hidden 404; observed %',hidden_statuses;
+  END IF;
 
   -- Same-patient reference arrays accept both empty (0) and populated (n)
   -- values. The second request uses a fresh key because every call is a

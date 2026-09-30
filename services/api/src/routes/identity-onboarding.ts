@@ -25,6 +25,10 @@ import {
 import type { RecoveryProofGrantAuthority } from '../modules/identity-onboarding/ports.js';
 import { preauthPrincipal, type IdempotencyStore } from '../platform/idempotency.js';
 import { initialBrowserSessionCookies } from './auth-session-cookies.js';
+import {
+  feature010OperationForRoute,
+  feature010SafeProblem,
+} from '@shifaa/observability/feature-010';
 
 export const registeredIdentityOnboardingOperationIds = routeCatalog.map(
   ({ operationId }) => operationId,
@@ -490,6 +494,41 @@ export function installIdentityErrorHandler(app: FastifyInstance): void {
         ? error.status
         : (mappedDatabase?.status ?? clientStatus ?? 500);
     const locale = request.headers['accept-language'] ?? 'ar-EG';
+    const feature010Operation = feature010OperationForRoute(
+      request.method,
+      request.routeOptions.url,
+    );
+    if (feature010Operation !== undefined) {
+      const safeProblem = feature010SafeProblem(
+        code,
+        status,
+        locale,
+        policy ? error.headers['retry-after'] : undefined,
+      );
+      const routeTemplate = request.routeOptions.url ?? '/';
+      void reply
+        .status(safeProblem.status)
+        .type('application/problem+json')
+        .headers({
+          ...noStoreHeaders,
+          'x-request-id': request.id,
+          'content-language': request.headers['accept-language'] === 'en-EG' ? 'en-EG' : 'ar-EG',
+          ...(safeProblem.retryAfter === undefined
+            ? {}
+            : { 'retry-after': safeProblem.retryAfter }),
+        })
+        .send({
+          type: `https://shifaa.test/problems/${safeProblem.code}`,
+          title: safeProblem.title,
+          status: safeProblem.status,
+          detail: safeProblem.detail,
+          code: safeProblem.code,
+          request_id: request.id,
+          instance: routeTemplate,
+          errors: [],
+        });
+      return;
+    }
     const shareRequest = request.url.startsWith('/v1/sos/share/');
     const safeInstance = shareRequest
       ? request.url.replace(/(\/v1\/sos\/share\/)[^/?#]+/, '$1[REDACTED]')

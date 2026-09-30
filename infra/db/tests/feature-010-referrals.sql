@@ -32,7 +32,7 @@ DECLARE
     'targetSpecialty','  cardiology  ',
     'targetFacilityId','f0101000-0000-4000-8200-000000000001',
     'targetDoctorId','f0101000-0000-4000-8000-000000000003',
-    'reasonSummary','  C17 referral reason only; never a note body.  ',
+    'reasonSummary','  synthetic-referral-reason-canary; never a note body.  ',
     'encounterType','consultation'
   );
   created jsonb;
@@ -40,6 +40,8 @@ DECLARE
   source_projection jsonb;
   denied boolean;
   visible_count integer;
+  error_code text;
+  hidden_statuses text[];
 BEGIN
   IF session_user<>'shifaa_api' OR current_user<>'shifaa_api'
      OR EXISTS (SELECT 1 FROM pg_catalog.pg_roles WHERE rolname=current_user AND (rolsuper OR rolbypassrls)) THEN
@@ -59,6 +61,41 @@ BEGIN
   PERFORM pg_catalog.set_config('shifaa.purposes','appointment.scheduling',true);
   PERFORM pg_catalog.set_config('shifaa.request_id','f0101000-0000-4000-9000-000000000041',true);
   PERFORM pg_catalog.set_config('shifaa.trace_id','f0101000-0000-4000-9000-000000000041',true);
+
+  -- This licensed facility clinician has no active participant interval for
+  -- the open source. Absent and unauthorized-existing targets must both map
+  -- to the contract's hidden-resource 404.
+  PERFORM pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000003',true);
+  hidden_statuses := ARRAY[]::text[];
+  PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c26-hidden-absent',true);
+  PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('a',64),true);
+  error_code := NULL;
+  BEGIN
+    PERFORM clinical.create_referral_api_v1('f0101000-0000-4000-8800-000000000099',request);
+  EXCEPTION
+      WHEN SQLSTATE 'P0002' THEN error_code := 'P0002';
+      WHEN SQLSTATE '42501' THEN error_code := '42501';
+      WHEN SQLSTATE '55000' THEN error_code := '55000';
+  END;
+  hidden_statuses := pg_catalog.array_append(hidden_statuses,
+    CASE error_code WHEN 'P0002' THEN '404' WHEN '42501' THEN '403' WHEN '55000' THEN '409' ELSE 'other' END);
+  PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c26-hidden-open_foreign',true);
+  PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('b',64),true);
+  error_code := NULL;
+  BEGIN
+    PERFORM clinical.create_referral_api_v1(source_encounter_id,request);
+  EXCEPTION
+      WHEN SQLSTATE 'P0002' THEN error_code := 'P0002';
+      WHEN SQLSTATE '42501' THEN error_code := '42501';
+      WHEN SQLSTATE '55000' THEN error_code := '55000';
+  END;
+  hidden_statuses := pg_catalog.array_append(hidden_statuses,
+    CASE error_code WHEN 'P0002' THEN '404' WHEN '42501' THEN '403' WHEN '55000' THEN '409' ELSE 'other' END);
+  IF hidden_statuses IS DISTINCT FROM ARRAY['404','404']::text[] THEN
+    RAISE EXCEPTION 'C26 absent/open foreign source must share one hidden-resource 404; observed status classes: %',hidden_statuses;
+  END IF;
+
+  PERFORM pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000001',true);
   PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c17-create-referral-001',true);
   PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('1',64),true);
   SELECT clinical.create_referral_api_v1(source_encounter_id,request) INTO created;
@@ -66,7 +103,7 @@ BEGIN
      OR created->>'status'<>'pending'
      OR created->>'version'<>'1'
      OR created->>'targetSpecialty'<>'cardiology'
-     OR created->>'reasonSummary'<>'C17 referral reason only; never a note body.'
+     OR created->>'reasonSummary'<>'synthetic-referral-reason-canary; never a note body.'
      OR created->>'encounterType'<>'consultation'
      OR created->>'targetFacilityId'<>'f0101000-0000-4000-8200-000000000001'
      OR created->>'targetDoctorId'<>'f0101000-0000-4000-8000-000000000003'
@@ -138,7 +175,7 @@ BEGIN
   denied := false;
   BEGIN
     PERFORM clinical.create_referral_api_v1(source_encounter_id,request);
-  EXCEPTION WHEN insufficient_privilege THEN denied := true;
+  EXCEPTION WHEN no_data_found THEN denied := true;
   END;
   IF NOT denied THEN RAISE EXCEPTION 'C17 unrelated target clinician created a referral for the source encounter'; END IF;
 
@@ -151,6 +188,24 @@ BEGIN
   PERFORM clinical.complete_encounter_api_v1(
     source_encounter_id,1,jsonb_build_object('summary','C17 stale source setup','structuralConfirmation',true)
   );
+  PERFORM pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000003',true);
+  PERFORM pg_catalog.set_config('shifaa.action','createReferral',true);
+  PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c26-hidden-completed_foreign',true);
+  PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('c',64),true);
+  error_code := NULL;
+  BEGIN
+    PERFORM clinical.create_referral_api_v1(source_encounter_id,request);
+  EXCEPTION
+      WHEN SQLSTATE 'P0002' THEN error_code := 'P0002';
+      WHEN SQLSTATE '42501' THEN error_code := '42501';
+      WHEN SQLSTATE '55000' THEN error_code := '55000';
+  END;
+  IF (CASE error_code WHEN 'P0002' THEN '404' WHEN '42501' THEN '403' WHEN '55000' THEN '409' ELSE 'other' END)
+       IS DISTINCT FROM '404' THEN
+    RAISE EXCEPTION 'C26 completed foreign source must share the absent 404; observed status class: %',
+      CASE error_code WHEN 'P0002' THEN '404' WHEN '42501' THEN '403' WHEN '55000' THEN '409' ELSE 'other' END;
+  END IF;
+  PERFORM pg_catalog.set_config('shifaa.person_id','f0101000-0000-4000-8000-000000000001',true);
   PERFORM pg_catalog.set_config('shifaa.action','createReferral',true);
   PERFORM pg_catalog.set_config('shifaa.idempotency_key','f010-c17-stale-source-001',true);
   PERFORM pg_catalog.set_config('shifaa.request_hash',pg_catalog.repeat('6',64),true);
@@ -194,7 +249,37 @@ BEGIN
   IF NOT denied THEN RAISE EXCEPTION 'C17 createReferral accepted missing purpose'; END IF;
 END
 $feature_010_c17_api_vectors$;
+
 RESET SESSION AUTHORIZATION;
+
+DO $feature_010_c26_hidden_encounter_no_effects$
+BEGIN
+  IF (SELECT count(*) FROM clinical.referrals WHERE source_encounter_id='f0101000-0000-4000-8800-000000000002')<>1
+     OR EXISTS (
+       SELECT 1 FROM platform.idempotency_records
+       WHERE key_hash IN (
+         pg_catalog.encode(audit.sha256_v1(pg_catalog.convert_to(
+           'shifaa:idempotency:key:v1:'||pg_catalog.octet_length('f010-c26-hidden-absent')||':f010-c26-hidden-absent','UTF8')),'hex'),
+         pg_catalog.encode(audit.sha256_v1(pg_catalog.convert_to(
+           'shifaa:idempotency:key:v1:'||pg_catalog.octet_length('f010-c26-hidden-open_foreign')||':f010-c26-hidden-open_foreign','UTF8')),'hex'),
+         pg_catalog.encode(audit.sha256_v1(pg_catalog.convert_to(
+           'shifaa:idempotency:key:v1:'||pg_catalog.octet_length('f010-c26-hidden-completed_foreign')||':f010-c26-hidden-completed_foreign','UTF8')),'hex')
+       )
+     )
+     OR EXISTS (
+       SELECT 1 FROM audit.events
+       WHERE resource_type='referral' AND action_code='referral.pending'
+         AND resource_id NOT IN (SELECT id FROM clinical.referrals WHERE source_encounter_id='f0101000-0000-4000-8800-000000000002')
+     )
+     OR EXISTS (
+       SELECT 1 FROM platform.outbox_events
+       WHERE aggregate_type='referral' AND event_type='clinical.referral.pending.v1'
+         AND aggregate_id NOT IN (SELECT id FROM clinical.referrals WHERE source_encounter_id='f0101000-0000-4000-8800-000000000002')
+     ) THEN
+    RAISE EXCEPTION 'C26 denied source encounter probes left a referral or mutation effect';
+  END IF;
+END
+$feature_010_c26_hidden_encounter_no_effects$;
 
 DO $feature_010_c17_atomic_effects$
 DECLARE
@@ -228,6 +313,33 @@ BEGIN
      OR (SELECT count(*) FROM platform.outbox_events WHERE aggregate_type='referral' AND event_type='clinical.referral.pending.v1')<>1
      OR (SELECT count(*) FROM platform.idempotency_records WHERE method='POST' AND route_template='/v1/encounters/{encounterId}/referrals')<>1 THEN
     RAISE EXCEPTION 'C17 replay or rejected requests left duplicate or partial referral/audit/outbox/idempotency effects';
+  END IF;
+  IF EXISTS (
+       SELECT 1 FROM audit.events event_row
+       WHERE pg_catalog.to_jsonb(event_row)::text LIKE ANY (ARRAY[
+         '%synthetic-private-note-canary%', '%synthetic-referral-reason-canary%',
+         '%synthetic-message-plaintext-canary%', '%synthetic-ciphertext-canary%',
+         '%synthetic-session-token-canary%', '%synthetic-patient-payload-canary%',
+         '%synthetic-patient-visible-note-canary%', '%synthetic-encounter-type-canary%'
+       ])
+     ) OR EXISTS (
+       SELECT 1 FROM platform.outbox_events event_row
+       WHERE pg_catalog.to_jsonb(event_row)::text LIKE ANY (ARRAY[
+         '%synthetic-private-note-canary%', '%synthetic-referral-reason-canary%',
+         '%synthetic-message-plaintext-canary%', '%synthetic-ciphertext-canary%',
+         '%synthetic-session-token-canary%', '%synthetic-patient-payload-canary%',
+         '%synthetic-patient-visible-note-canary%', '%synthetic-encounter-type-canary%'
+       ])
+     ) OR EXISTS (
+       SELECT 1 FROM platform.idempotency_records record
+       WHERE (pg_catalog.to_jsonb(record)-'response_body')::text LIKE ANY (ARRAY[
+         '%synthetic-private-note-canary%', '%synthetic-referral-reason-canary%',
+         '%synthetic-message-plaintext-canary%', '%synthetic-ciphertext-canary%',
+         '%synthetic-session-token-canary%', '%synthetic-patient-payload-canary%',
+         '%synthetic-patient-visible-note-canary%', '%synthetic-encounter-type-canary%'
+       ])
+     ) THEN
+    RAISE EXCEPTION 'C26 PHI/token canary entered audit, outbox, or idempotency metadata';
   END IF;
 END
 $feature_010_c17_atomic_effects$;

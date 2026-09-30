@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 
 import { Value } from '@sinclair/typebox/value';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { withFeature010Telemetry } from '@shifaa/observability/feature-010';
 import {
   ListContextMessagesQuerySchema,
   MessagePageSchema,
@@ -240,9 +241,13 @@ export async function registerFeature010MessagesRoutes(
 ): Promise<void> {
   syntheticModes.set(app, dependencies.syntheticMode);
   app.get('/v1/contexts/:contextType/:contextId/messages', (request, reply) =>
-    listContextMessages(request, reply, dependencies),
+    withFeature010Telemetry(request, reply, 'listContextMessages', () =>
+      listContextMessages(request, reply, dependencies),
+    ),
   );
   app.post('/v1/contexts/:contextType/:contextId/messages', (request, reply) =>
-    sendContextMessage(request, reply, dependencies),
+    withFeature010Telemetry(request, reply, 'sendContextMessage', () =>
+      sendContextMessage(request, reply, dependencies),
+    ),
   );
 }

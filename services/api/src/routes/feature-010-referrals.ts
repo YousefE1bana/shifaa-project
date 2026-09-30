@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 
 import { Value } from '@sinclair/typebox/value';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { withFeature010Telemetry } from '@shifaa/observability/feature-010';
 import {
   CreateReferralRequestSchema,
   AcceptReferralRequestSchema,
@@ -324,10 +325,18 @@ export async function registerFeature010ReferralRoutes(
 ): Promise<void> {
   syntheticModes.set(app, deps.syntheticMode);
   app.post('/v1/encounters/:encounterId/referrals', (request, reply) =>
-    createReferral(request, reply, deps),
+    withFeature010Telemetry(request, reply, 'createReferral', () =>
+      createReferral(request, reply, deps),
+    ),
   );
-  app.get('/v1/referrals', (request, reply) => listReferrals(request, reply, deps));
+  app.get('/v1/referrals', (request, reply) =>
+    withFeature010Telemetry(request, reply, 'listReferrals', () =>
+      listReferrals(request, reply, deps),
+    ),
+  );
   app.post('/v1/referrals/:referralId/accept', (request, reply) =>
-    acceptReferral(request, reply, deps),
+    withFeature010Telemetry(request, reply, 'acceptReferral', () =>
+      acceptReferral(request, reply, deps),
+    ),
   );
 }

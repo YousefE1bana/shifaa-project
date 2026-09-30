@@ -77,7 +77,7 @@ describe('generated Feature 010 API client', () => {
       baseUrl: 'https://synthetic.invalid',
       accessToken: () => currentAccessToken,
       acceptLanguage: 'en-EG',
-      defaultHeaders: { Authorization: 'Bearer untrusted-default-token' },
+      defaultHeaders: { Authorization: 'Bearer untrusted' },
       fetch: fetcher,
     });
 

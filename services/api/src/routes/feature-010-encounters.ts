@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 
 import { Value } from '@sinclair/typebox/value';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { withFeature010Telemetry } from '@shifaa/observability/feature-010';
 import {
   CreateEncounterRequestSchema,
   CareTeamNoteProjectionSchema,
@@ -421,15 +422,29 @@ export async function registerFeature010EncounterRoutes(
   deps: Feature010EncounterRouteDependencies,
 ): Promise<void> {
   syntheticModes.set(app, deps.syntheticMode);
-  app.post('/v1/encounters', (request, reply) => createEncounter(request, reply, deps));
-  app.get('/v1/encounters/:encounterId', (request, reply) => getEncounter(request, reply, deps));
+  app.post('/v1/encounters', (request, reply) =>
+    withFeature010Telemetry(request, reply, 'createEncounter', () =>
+      createEncounter(request, reply, deps),
+    ),
+  );
+  app.get('/v1/encounters/:encounterId', (request, reply) =>
+    withFeature010Telemetry(request, reply, 'getEncounter', () =>
+      getEncounter(request, reply, deps),
+    ),
+  );
   app.patch('/v1/encounters/:encounterId', (request, reply) =>
-    updateEncounter(request, reply, deps),
+    withFeature010Telemetry(request, reply, 'updateEncounter', () =>
+      updateEncounter(request, reply, deps),
+    ),
   );
   app.post('/v1/encounters/:encounterId/notes', (request, reply) =>
-    signEncounterNote(request, reply, deps),
+    withFeature010Telemetry(request, reply, 'signEncounterNote', () =>
+      signEncounterNote(request, reply, deps),
+    ),
   );
   app.post('/v1/encounters/:encounterId/complete', (request, reply) =>
-    completeEncounter(request, reply, deps),
+    withFeature010Telemetry(request, reply, 'completeEncounter', () =>
+      completeEncounter(request, reply, deps),
+    ),
   );
 }

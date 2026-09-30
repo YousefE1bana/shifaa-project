@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 const root = process.cwd();
 const c22Migration = 'supabase/migrations/20260929001008_f010_c22_context_messages.sql';
 const c23Migration = 'supabase/migrations/20260930001000_f010_c23_realtime_hint.sql';
+const c26Migration = 'supabase/migrations/20260930001001_f010_c26_privacy_guards.sql';
 const testFile = 'src/feature-010-realtime.postgres.test.ts';
 const packageJson = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
 const migrateCommand = packageJson.scripts?.['db:migrate'];
@@ -16,13 +17,18 @@ const migrations = [...migrateCommand.matchAll(/-f \/workspace\/([^\s]+\.sql)/g)
 );
 const c22Index = migrations.indexOf(c22Migration);
 const c23Index = migrations.indexOf(c23Migration);
+const c26Index = migrations.indexOf(c26Migration);
 if (
   c22Index < 0 ||
   migrations.lastIndexOf(c22Migration) !== c22Index ||
   c23Index !== c22Index + 1 ||
-  migrations.lastIndexOf(c23Migration) !== c23Index
+  migrations.lastIndexOf(c23Migration) !== c23Index ||
+  c26Index !== c23Index + 1 ||
+  migrations.lastIndexOf(c26Migration) !== c26Index
 ) {
-  throw new Error('db:migrate must include C23 exactly once, immediately after the C22 migration.');
+  throw new Error(
+    'db:migrate must include C23 exactly once immediately after C22 and C26 exactly once immediately after C23.',
+  );
 }
 
 const runtimes = [

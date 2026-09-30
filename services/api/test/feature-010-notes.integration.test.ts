@@ -10,7 +10,7 @@ const patientId = 'f0100000-0000-4000-8000-000000000002';
 const encounterId = 'f0100000-0000-4000-8800-000000000001';
 const noteId = 'f0100000-0000-4000-8900-000000000001';
 const signedAt = '2030-04-05T08:10:00.000Z';
-const noteBody = 'Synthetic signed encounter note.';
+const noteBody = 'synthetic-private-note-canary: signed encounter note.';
 const note: CareTeamNoteProjection = {
   id: noteId,
   encounterId,
@@ -113,7 +113,13 @@ describe('Feature 010 signEncounterNote and note projection', () => {
     const service = serviceStub();
     service.getEncounter.mockResolvedValue({
       ...encounter,
-      notes: [{ ...note, visibility: 'patient_visible', body: 'Released synthetic note.' }],
+      notes: [
+        {
+          ...note,
+          visibility: 'patient_visible',
+          body: 'synthetic-patient-visible-note-canary: released note.',
+        },
+      ],
     });
     const app = Fastify({ logger: false });
     apps.push(app);
@@ -130,7 +136,7 @@ describe('Feature 010 signEncounterNote and note projection', () => {
     });
 
     expect(result.statusCode).toBe(200);
-    expect(result.body).toContain('Released synthetic note.');
+    expect(result.body).toContain('synthetic-patient-visible-note-canary');
     expect(result.body).not.toContain(noteBody);
     expect(result.body).not.toContain('private');
   });

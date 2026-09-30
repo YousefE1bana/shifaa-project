@@ -15,7 +15,7 @@ const actor = {
   purposes: ['appointment.scheduling'],
 };
 const encounterId = 'f0100000-0000-4000-8800-000000000001';
-const body = 'Synthetic note body must never reach SQL as plaintext.';
+const body = 'synthetic-private-note-canary: never reach SQL as plaintext.';
 const encryptionKey = Buffer.alloc(32, 23);
 
 function transactionRepository(
@@ -142,6 +142,14 @@ describe('Feature 010 note encryption adapter', () => {
     });
     expect(replay).toEqual(first);
     expect(JSON.stringify(captured)).not.toContain(body);
+    const encryptedEnvelope = captured
+      .flat()
+      .find((value) => typeof value === 'object' && value !== null && 'bodyCiphertext' in value) as
+      | { bodyCiphertext: string }
+      | undefined;
+    expect(encryptedEnvelope).toBeDefined();
+    expect(encryptedEnvelope?.bodyCiphertext).not.toContain(body);
+    expect(encryptedEnvelope?.bodyCiphertext).not.toBe(body);
     expect(
       captured
         .flat()

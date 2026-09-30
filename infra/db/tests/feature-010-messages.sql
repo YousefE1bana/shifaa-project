@@ -499,8 +499,14 @@ BEGIN
     WHERE event.aggregate_type='context_message'
       AND event.event_type='clinical.context_message.created.v1'
       AND pg_catalog.strpos(pg_catalog.to_jsonb(event)::text,ciphertext_value)>0
+  ) OR EXISTS (
+    SELECT 1 FROM platform.idempotency_records record
+    WHERE record.method='POST'
+      AND record.route_template='/v1/contexts/{contextType}/{contextId}/messages'
+      AND record.resource_id=(patient_response->>'id')::uuid
+      AND pg_catalog.strpos((pg_catalog.to_jsonb(record)-'response_body')::text,ciphertext_value)>0
   ) THEN
-    RAISE EXCEPTION 'C22 audit or outbox metadata contains message plaintext or ciphertext';
+    RAISE EXCEPTION 'C22 audit, outbox, or idempotency metadata contains message ciphertext';
   END IF;
   IF EXISTS (
     SELECT 1 FROM platform.idempotency_records
