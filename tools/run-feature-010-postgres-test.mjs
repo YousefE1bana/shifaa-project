@@ -138,6 +138,11 @@ const requestedRuntime = process.env['SHIFAA_TEST_POSTGRES_RUNTIME'];
 const runtimes = requestedRuntime
   ? configuredRuntimes.filter((runtime) => runtime.name === requestedRuntime)
   : configuredRuntimes;
+if (process.argv[2] === 'c28' && runtimes.length !== 2) {
+  throw new Error(
+    'C28 verification requires both named runtimes; a runtime filter cannot satisfy it.',
+  );
+}
 if (runtimes.length === 0) {
   throw new Error(`Unknown SHIFAA_TEST_POSTGRES_RUNTIME: ${requestedRuntime}`);
 }
@@ -704,21 +709,7 @@ function checkRls(runtime, database, phase) {
 }
 
 function checkF009Regression(runtime, database, phase) {
-  let sql = readFileSync(resolve(root, f009RegressionTest), 'utf8');
-  if (runtime.name === 'shifaa-local-supabase') {
-    const directRoleCheck = sql.lastIndexOf('SET LOCAL ROLE shifaa_api;');
-    const rollback = sql.lastIndexOf('ROLLBACK;');
-    if (directRoleCheck < 0 || rollback < directRoleCheck) {
-      throw new Error(`${f009RegressionTest} no longer has its final direct-role check boundary.`);
-    }
-    // The Supabase container's postgres login is intentionally not a member
-    // of shifaa_api. Keep the F009 lifecycle vectors runnable without granting
-    // cluster-wide role membership solely for this disposable database.
-    sql = `${sql.slice(0, directRoleCheck)}\nROLLBACK;\n`;
-    console.log(
-      `${runtime.name}: F009 lifecycle run omits the direct SET ROLE shifaa_api subvector (role membership is unavailable).`,
-    );
-  }
+  const sql = readFileSync(resolve(root, f009RegressionTest), 'utf8');
   runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${f009RegressionTest}`);
 }
 
@@ -796,7 +787,7 @@ function commitMessagesFixture(runtime, database) {
   );
 }
 
-function runMessageApiPostgresTest(runtime, database) {
+function runMessageApiPostgresTest(runtime, database, projection = false) {
   const dockerPort = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
     cwd: root,
     encoding: 'utf8',
@@ -816,13 +807,16 @@ function runMessageApiPostgresTest(runtime, database) {
     [
       'node_modules/vitest/vitest.mjs',
       'run',
-      'services/api/test/feature-010-messages.postgres.integration.test.ts',
+      projection
+        ? 'services/api/test/feature-010-encounter-projection.postgres.integration.test.ts'
+        : 'services/api/test/feature-010-messages.postgres.integration.test.ts',
     ],
     {
       cwd: root,
       env: {
         ...process.env,
         SHIFAA_F010_C22_DATABASE: database,
+        SHIFAA_F010_C28_DATABASE: database,
         SHIFAA_PG_HOST: '127.0.0.1',
         SHIFAA_PG_PORT: port,
       },
@@ -834,8 +828,26 @@ function runMessageApiPostgresTest(runtime, database) {
   if (result.error) throw result.error;
   if (result.status !== 0) {
     throw new Error(
-      `${runtime.name} C22 real-PostgreSQL API smoke failed with status ${result.status}.`,
+      `${runtime.name} ${projection ? 'C28 encounter projection' : 'C22 message'} real-PostgreSQL API regression failed with status ${result.status}.`,
     );
+  }
+}
+
+function checkEncounterProjectionApi(runtime, templateDatabase) {
+  const database = `f010_c28_projection_${process.pid}_${randomBytes(8).toString('hex')}`;
+  let created = false;
+  try {
+    runPsql(
+      runtime,
+      runtime.adminDatabase,
+      `CREATE DATABASE "${database}" TEMPLATE "${templateDatabase}";`,
+      `${runtime.name} clone isolated encounter projection regression`,
+    );
+    created = true;
+    setC22ApiSmokeClock(runtime, database);
+    runMessageApiPostgresTest(runtime, database, true);
+  } finally {
+    if (created) dropScratchDatabase(runtime, database);
   }
 }
 
@@ -1497,7 +1509,7 @@ function applyBaselineMigrations(runtime, database) {
   }
 }
 
-async function verifyFreshAndReplay(runtime, database) {
+async function verifyFreshAndReplay(runtime, database, replayHistorical = true) {
   const f009SchemaBefore = runPgDump(
     runtime,
     database,
@@ -1551,46 +1563,53 @@ async function verifyFreshAndReplay(runtime, database) {
   await checkConcurrentCompletionWinner(runtime, database);
   await checkConcurrentBookingWinner(runtime, database);
   await checkConcurrentVersionStale(runtime, database);
-  runMigration(runtime, database, featureMigration, 'F010 migration replay');
-  runMigration(runtime, database, c10ApiMigration, 'C10 API migration replay');
-  runMigration(runtime, database, c11UpdateMigration, 'C11 update API migration replay');
-  runMigration(runtime, database, c12NoteMigration, 'C12 note signing API migration replay');
-  runMigration(
-    runtime,
-    database,
-    c13CompletionMigration,
-    'C13 encounter completion API migration replay',
-  );
-  runMigration(runtime, database, c17ReferralsMigration, 'C17 referral API migration replay');
-  runMigration(
-    runtime,
-    database,
-    c18ReferralAcceptanceMigration,
-    'C18 referral acceptance API migration replay',
-  );
-  runMigration(
-    runtime,
-    database,
-    c19ReferralProjectionMigration,
-    'C19 referral projection correction migration replay',
-  );
-  runMigration(
-    runtime,
-    database,
-    c22ContextMessagesMigration,
-    'C22 context messages API migration replay',
-  );
-  runMigration(runtime, database, c23RealtimeHintMigration, 'C23 realtime hint migration replay');
-  runMigration(runtime, database, c26PrivacyGuardsMigration, 'C26 privacy guard migration replay');
-  checkSchema(runtime, database, 'replayed F010 schema assertions');
-  checkStorage(runtime, database, 'replayed F010 storage vectors');
-  checkApi(runtime, database, 'replayed C10 create/read API vectors');
-  checkUpdate(runtime, database, 'replayed C11 update API vectors');
-  checkNotes(runtime, database, 'replayed C12 note signing and projection API vectors');
-  checkCompletion(runtime, database, 'replayed C13 completion API vectors');
-  checkMessages(runtime, database, 'replayed C22 context messages API vectors');
-  checkReferrals(runtime, database, 'replayed C17 create/list API vectors');
-  checkReferralAcceptance(runtime, database, 'replayed C18 acceptance API vectors');
+  if (replayHistorical) {
+    runMigration(runtime, database, featureMigration, 'F010 migration replay');
+    runMigration(runtime, database, c10ApiMigration, 'C10 API migration replay');
+    runMigration(runtime, database, c11UpdateMigration, 'C11 update API migration replay');
+    runMigration(runtime, database, c12NoteMigration, 'C12 note signing API migration replay');
+    runMigration(
+      runtime,
+      database,
+      c13CompletionMigration,
+      'C13 encounter completion API migration replay',
+    );
+    runMigration(runtime, database, c17ReferralsMigration, 'C17 referral API migration replay');
+    runMigration(
+      runtime,
+      database,
+      c18ReferralAcceptanceMigration,
+      'C18 referral acceptance API migration replay',
+    );
+    runMigration(
+      runtime,
+      database,
+      c19ReferralProjectionMigration,
+      'C19 referral projection correction migration replay',
+    );
+    runMigration(
+      runtime,
+      database,
+      c22ContextMessagesMigration,
+      'C22 context messages API migration replay',
+    );
+    runMigration(runtime, database, c23RealtimeHintMigration, 'C23 realtime hint migration replay');
+    runMigration(
+      runtime,
+      database,
+      c26PrivacyGuardsMigration,
+      'C26 privacy guard migration replay',
+    );
+    checkSchema(runtime, database, 'replayed F010 schema assertions');
+    checkStorage(runtime, database, 'replayed F010 storage vectors');
+    checkApi(runtime, database, 'replayed C10 create/read API vectors');
+    checkUpdate(runtime, database, 'replayed C11 update API vectors');
+    checkNotes(runtime, database, 'replayed C12 note signing and projection API vectors');
+    checkCompletion(runtime, database, 'replayed C13 completion API vectors');
+    checkMessages(runtime, database, 'replayed C22 context messages API vectors');
+    checkReferrals(runtime, database, 'replayed C17 create/list API vectors');
+    checkReferralAcceptance(runtime, database, 'replayed C18 acceptance API vectors');
+  }
 
   const f009SchemaAfter = runPgDump(
     runtime,
@@ -1604,7 +1623,7 @@ async function verifyFreshAndReplay(runtime, database) {
   }
 
   console.log(
-    `${runtime.name}: fresh migration, same-database replay, schema assertions, and F009 schema parity passed.`,
+    `${runtime.name}: fresh migration, ${replayHistorical ? 'same-database replay, ' : ''}schema assertions, and F009 schema parity passed.`,
   );
 }
 
@@ -1662,6 +1681,14 @@ async function testRuntime(runtime) {
     createScratchDatabase(runtime, database);
     scratchDatabaseCreated = true;
     applyBaselineMigrations(runtime, database);
+    if (process.argv[2] === 'projection') {
+      for (const migration of migrations.slice(featureMigrationIndex)) {
+        runMigration(runtime, database, migration, 'C28 prerequisite projection chain');
+      }
+      commitMessagesFixture(runtime, database);
+      checkEncounterProjectionApi(runtime, database);
+      return;
+    }
     if (runC22Red) {
       runMigration(runtime, database, featureMigration, 'focused C22 RED base F010 migration');
       runMigration(
@@ -2172,7 +2199,21 @@ async function testRuntime(runtime) {
       console.log(`${runtime.name}: focused C11 update and C07 RLS PostgreSQL vectors passed.`);
       return;
     }
-    await verifyFreshAndReplay(runtime, database);
+    // C28 proves fresh application here; the restore runner executes a populated
+    // previous-checkpoint database with only pending forward migrations.
+    await verifyFreshAndReplay(runtime, database, process.argv[2] !== 'c28');
+    if (process.argv[2] === 'c28') {
+      await checkConcurrentReferralAcceptanceWinner(runtime, database);
+      commitMessagesFixture(runtime, database);
+      checkEncounterProjectionApi(runtime, database);
+      await checkC22LifecycleRaces(runtime, database);
+      setC22ApiSmokeClock(runtime, database);
+      runMessageApiPostgresTest(runtime, database);
+      checkC22ApiSmokeEffects(runtime, database);
+      console.log(
+        `${runtime.name}: C28 referral/slot and send/completion races plus real C22 API regression passed.`,
+      );
+    }
   } finally {
     if (scratchDatabaseCreated) dropScratchDatabase(runtime, database);
     if (redDatabaseCreated) dropScratchDatabase(runtime, redDatabase);

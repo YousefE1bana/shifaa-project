@@ -28,6 +28,15 @@ type RawTransactionRepository = Pick<PostgresIdentityRepository, 'withRawTransac
 function parseProjection(raw: unknown): EncounterProjection {
   let value = raw;
   if (typeof value === 'string') value = JSON.parse(value) as unknown;
+  // SQL represents the open interval with NULL; the approved public contract
+  // represents it by absence. Preserve every other field for closed validation.
+  if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+    const projection = value as Record<string, unknown>;
+    if (projection['endedAt'] === null) {
+      value = { ...projection };
+      delete (value as Record<string, unknown>)['endedAt'];
+    }
+  }
   if (!Value.Check(EncounterProjectionSchema, value)) {
     throw new Error('Feature 010 encounter projection is not a valid API response.');
   }

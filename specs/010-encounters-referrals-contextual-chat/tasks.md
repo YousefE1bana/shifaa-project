@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C27 accepted; T001–T081 complete, T082–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C28 accepted; T001–T084 complete, T085–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -500,15 +500,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Focused nonfunctional evidence is measured without claiming open-gate closure.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T082 [NFR-PERF-001, NFR-PERF-002, NFR-AVAIL-001, NFR-AVAIL-002, NFR-DATA-002] Write red synthetic load/restore vectors for patient LCP/input, API read/mutation p95, one-winner concurrency, migration replay and restore from both named local runtimes — `tools/feature-010-performance.test.ts; tools/feature-010-restore.test.ts`
+- [X] T082 [NFR-PERF-001, NFR-PERF-002, NFR-AVAIL-001, NFR-AVAIL-002, NFR-DATA-002] Write red synthetic load/restore vectors for patient LCP/input, API read/mutation p95, one-winner concurrency, migration replay and restore from both named local runtimes — `tools/feature-010-performance.test.ts; tools/feature-010-restore.test.ts`
   - Depends on: `T081`
   - Acceptance evidence: `tests fail on missing measurement or restore proof, never fabricate device profile`
 
-- [ ] T083 [NFR-PERF-001, NFR-PERF-002, NFR-AVAIL-001, NFR-AVAIL-002, NFR-DATA-002, NFR-QUALITY-001] Implement focused measurement/restore runners and register F010 checks in package.json verify chain; use shifaa-local-postgres and shifaa-local-supabase without deleting legacy rollback volumes — `tools/feature-010-performance.ts; tools/run-feature-010-restore-test.mjs; package.json`
+- [X] T083 [NFR-PERF-001, NFR-PERF-002, NFR-AVAIL-001, NFR-AVAIL-002, NFR-DATA-002, NFR-QUALITY-001] Implement focused measurement/restore runners and register F010 checks in package.json verify chain; use shifaa-local-postgres and shifaa-local-supabase without deleting legacy rollback volumes — `tools/feature-010-performance.ts; tools/run-feature-010-restore-test.mjs; package.json`
   - Depends on: `T082`
   - Acceptance evidence: `focused commands produce reproducible synthetic evidence and retain OPEN-TECH-003`
 
-- [ ] T084 [NFR-PERF-001, NFR-PERF-002, NFR-AVAIL-001, NFR-AVAIL-002] Run focused perf/restore/migration and F009 regression, record topology, measured thresholds and any honest unavailable profile — `specs/010-encounters-referrals-contextual-chat/evidence/C28-perf-restore.md`
+- [X] T084 [NFR-PERF-001, NFR-PERF-002, NFR-AVAIL-001, NFR-AVAIL-002] Run focused perf/restore/migration and F009 regression, record topology, measured thresholds and any honest unavailable profile — `specs/010-encounters-referrals-contextual-chat/evidence/C28-perf-restore.md`
   - Depends on: `T083`
   - Acceptance evidence: `results are measured, not inferred; no open production/release gate is closed`
 
