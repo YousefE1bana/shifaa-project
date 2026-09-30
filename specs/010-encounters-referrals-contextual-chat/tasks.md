@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C23 accepted; T001–T069 complete, T070–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C24 accepted; T001–T072 complete, T073–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -429,15 +429,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Subject patient composes only inside /encounters/:id.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T070 [US3] [FR-FAC-006, NFR-AVAIL-002, NFR-I18N-001, NFR-A11Y-001] Write red compact-viewport tests for open/in_consultation body send, in-frame success, completed chat-ended proof, offline block, stale/last-updated and REST reconnect — `apps/patient/test/feature-010-chat.test.tsx`
+- [X] T070 [US3] [FR-FAC-006, NFR-AVAIL-002, NFR-I18N-001, NFR-A11Y-001] Write red compact-viewport tests for open/in_consultation body send, in-frame success, completed chat-ended proof, offline block, stale/last-updated and REST reconnect — `apps/patient/test/feature-010-chat.test.tsx`
   - Depends on: `T069`
   - Acceptance evidence: `no patient inbox, GUA/DEL composer or offline queue`
 
-- [ ] T071 [US3] [FR-FAC-006, NFR-AVAIL-002, NFR-I18N-001, NFR-A11Y-001] Add body-only chat composition inside approved patient /encounters/:id; reauthorize on reconnect, remove history/composer on completed context — `apps/patient/app/encounters/[id].tsx; apps/patient/src/feature-010-chat.ts`
+- [X] T071 [US3] [FR-FAC-006, NFR-AVAIL-002, NFR-I18N-001, NFR-A11Y-001] Add body-only chat composition inside approved patient /encounters/:id; reauthorize on reconnect, remove history/composer on completed context — `apps/patient/app/encounters/[id].tsx; apps/patient/src/feature-010-chat.ts`
   - Depends on: `T070`
   - Acceptance evidence: `messages never use attachment or local offline write replay`
 
-- [ ] T072 [US3] [FR-FAC-006, NFR-AVAIL-002, NFR-A11Y-001] Run ar-EG/en-EG patient chat states at 360/412/768 and compare approved functional baselines — `specs/010-encounters-referrals-contextual-chat/evidence/C24-patient-chat-ui.md`
+- [X] T072 [US3] [FR-FAC-006, NFR-AVAIL-002, NFR-A11Y-001] Run ar-EG/en-EG patient chat states at 360/412/768 and compare approved functional baselines — `specs/010-encounters-referrals-contextual-chat/evidence/C24-patient-chat-ui.md`
   - Depends on: `T071`
   - Acceptance evidence: `message success visible in-frame; completed chat end visible`
 
