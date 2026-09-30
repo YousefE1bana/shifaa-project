@@ -119,35 +119,4 @@ export class PatientFeature010EncounterApi {
   }
 }
 
-export const patientEncounterCopy = {
-  'ar-EG': {
-    title: 'تفاصيل الزيارة',
-    loading: 'جارٍ تحميل تفاصيل الزيارة…',
-    empty: 'لا تتوفر تفاصيل زيارة.',
-    denied: 'تعذّر عرض هذه الزيارة بسبب عدم توفر صلاحية حالية.',
-    offline: 'لا يوجد اتصال. أعد الاتصال لتحميل السجل من جديد.',
-    stale: 'تعذّر تحديث السجل. أعد المحاولة للحصول على أحدث المعلومات.',
-    error: 'تعذّر تحميل تفاصيل الزيارة. حاول مرة أخرى.',
-    refresh: 'إعادة المحاولة',
-    completed: 'اكتملت الزيارة',
-    open: 'الزيارة جارية',
-    note: 'ملاحظة متاحة لك',
-    started: 'بدأت في',
-    completion: 'ملخص الزيارة',
-  },
-  'en-EG': {
-    title: 'Encounter details',
-    loading: 'Loading encounter details…',
-    empty: 'No encounter details are available.',
-    denied: 'This encounter cannot be shown because current access is unavailable.',
-    offline: 'You are offline. Reconnect to load the record again.',
-    stale: 'The record could not be refreshed. Try again to get current information.',
-    error: 'Encounter details could not be loaded. Try again.',
-    refresh: 'Try again',
-    completed: 'Encounter completed',
-    open: 'Encounter in progress',
-    note: 'Note available to you',
-    started: 'Started',
-    completion: 'Encounter summary',
-  },
-} as const;
+export { patientEncounterCopy } from '@shifaa/i18n';

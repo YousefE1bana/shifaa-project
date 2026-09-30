@@ -1,21 +1,19 @@
 'use client';
 
+import { feature010ArEG, feature010EnEG } from '@shifaa/i18n';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IdentityOnboardingClient } from '@shifaa/api-client';
 import { createFeature010Client, Feature010ApiError } from '@shifaa/api-client/feature-010';
-import {
-  color,
-  localizedType,
-  minimumTargetSize,
-  radius,
-  spacing,
-} from '@shifaa/design-system/tokens';
+import { color, minimumTargetSize, radius, spacing } from '@shifaa/design-system/tokens';
+import { useFeature010DocumentLocale } from './useFeature010DocumentLocale';
+import { feature010WebTypography } from './feature010WebTypography';
 
 type Locale = 'ar-EG' | 'en-EG';
 type Feature010Client = ReturnType<typeof createFeature010Client>;
 type ReferralPage = Awaited<ReturnType<Feature010Client['listReferrals']>>;
 type CreateReferralRequest = Parameters<Feature010Client['createReferral']>[1];
 type ReferralProjection = ReferralPage['data'][number];
+
 type ClinicReferral = {
   id: string;
   sourceEncounterId: string;
@@ -157,144 +155,8 @@ export function resolveReferralMutationFailure(
 }
 
 const words = {
-  'ar-EG': {
-    language: 'English',
-    title: 'الإحالات',
-    intro: 'إنشاء إحالات داخلية ومتابعة حالتها المعتمدة من المصدر.',
-    loginTitle: 'دخول موظف العيادة',
-    loginHelp: 'يلزم سياق موظف مخوّل. لا تُحفظ بيانات الدخول على هذا الجهاز.',
-    handle: 'وسيلة الدخول',
-    password: 'كلمة المرور',
-    next: 'متابعة',
-    otp: 'رمز التحقق',
-    verify: 'تحقق',
-    loginFailure: 'تعذّر التحقق. حاول مجددًا.',
-    today: 'عمل اليوم',
-    schedule: 'الجدول',
-    queue: 'قائمة الانتظار',
-    referrals: 'الإحالات',
-    create: 'إنشاء إحالة',
-    sourceId: 'معرّف الزيارة المصدر',
-    sourceConfirm: 'أؤكد أنني راجعت معرّف الزيارة المصدر قبل إنشاء الإحالة.',
-    specialty: 'التخصص المستهدف',
-    reason: 'ملخص سبب الإحالة',
-    targetFacility: 'معرّف المنشأة المستهدفة (اختياري)',
-    targetDoctor: 'معرّف الطبيب المستهدف (اختياري)',
-    includeType: 'تضمين نوع الزيارة المصدر ضمن المعلومات المقترح مشاركتها بعد موافقة المريض.',
-    encounterType: 'نوع الزيارة المصدر',
-    disclosure: 'لا تُشارك التفاصيل مع المنشأة المستهدفة إلا بعد تفويض المريض أو ممثله المخوّل.',
-    review: 'مراجعة الإحالة',
-    reviewTitle: 'مراجعة إحالة داخلية',
-    confirm: 'إنشاء إحالة معلّقة',
-    back: 'رجوع',
-    source: 'الزيارة المصدر',
-    required: 'هذا الحقل مطلوب.',
-    invalid: 'أدخل معرّفًا صالحًا.',
-    confirmRequired: 'أكّد مراجعة الزيارة المصدر أولًا.',
-    loading: 'جارٍ تحميل الإحالات من المصدر الموثوق…',
-    empty: 'لا توجد إحالات لعرضها.',
-    denied: 'لا تملك صلاحية عرض إحالات هذا الفريق.',
-    error: 'تعذّر تحديث الإحالات. أعد المحاولة قبل متابعة العمل.',
-    retry: 'تحديث الإحالات',
-    stale: 'قد تكون بيانات الإحالات قديمة؛ عُرضت البيانات الموثوقة فقط بعد التحديث.',
-    offline: 'لا يوجد اتصال. لا تُحفظ الإحالات دون اتصال.',
-    createDenied: 'تعذّر تأكيد صلاحية إنشاء الإحالة؛ لا تغييرات معروضة.',
-    createValidation: 'تعذّر التحقق من بيانات الإحالة. راجع الحقول وحاول مجددًا.',
-    createConflict:
-      'تغيّرت حالة الطلب أو استُخدم مفتاح المحاولة سابقًا. حدّث الإحالات قبل إعادة المحاولة.',
-    createOffline: 'انقطع الاتصال؛ لم تُحفظ الإحالة محليًا. أعد المحاولة عند عودة الاتصال.',
-    createFailure: 'تعذّر إنشاء الإحالة. راجع الحالة الموثوقة قبل المحاولة مجددًا.',
-    created: 'تم إرسال طلب الإحالة. تظهر الإحالة في القائمة بعد تأكيد القراءة الموثوقة.',
-    createdRefresh: 'نجح الإرسال، لكن تعذّر تحديث القائمة. حدّث الإحالات قبل المتابعة.',
-    statusPending: 'معلّقة — بانتظار تفويض المريض أو ممثله المخوّل',
-    statusAccepted: 'مقبولة ومربوطة بموعد مؤكد',
-    reference: 'معرّف الإحالة',
-    sourceEncounter: 'معرّف الزيارة المصدر',
-    specialtyLabel: 'التخصص',
-    reasonLabel: 'ملخص السبب',
-    facilityId: 'معرّف المنشأة المستهدفة',
-    doctorId: 'معرّف الطبيب المستهدف',
-    appointmentId: 'معرّف الموعد المرتبط',
-    version: 'الإصدار',
-    lastUpdated: 'آخر تحديث موثوق',
-    acceptedFields: 'الحقول التي فُوّضت مشاركتها',
-    reasonCode: 'ملخص السبب',
-    typeCode: 'نوع الزيارة',
-    noAccept: 'الموافقة على الإحالة وحجز الموعد من صلاحية المريض أو ممثله المخوّل.',
-  },
-  'en-EG': {
-    language: 'العربية',
-    title: 'Referrals',
-    intro: 'Create internal referrals and track their authoritative status.',
-    loginTitle: 'Clinic staff sign-in',
-    loginHelp:
-      'An authorized staff context is required. Credentials are not stored on this device.',
-    handle: 'Sign-in handle',
-    password: 'Password',
-    next: 'Continue',
-    otp: 'Verification code',
-    verify: 'Verify',
-    loginFailure: 'Verification failed. Try again.',
-    today: 'Today',
-    schedule: 'Schedule',
-    queue: 'Queue',
-    referrals: 'Referrals',
-    create: 'Create referral',
-    sourceId: 'Source encounter ID',
-    sourceConfirm:
-      'I confirm that I reviewed this source encounter ID before creating the referral.',
-    specialty: 'Target specialty',
-    reason: 'Referral reason summary',
-    targetFacility: 'Target facility ID (optional)',
-    targetDoctor: 'Target doctor ID (optional)',
-    includeType:
-      'Include source encounter type among the fields proposed for sharing after patient authorization.',
-    encounterType: 'Source encounter type',
-    disclosure:
-      'Details are shared with the target facility only after the patient or authorized representative explicitly approves them.',
-    review: 'Review referral',
-    reviewTitle: 'Review internal referral',
-    confirm: 'Create pending referral',
-    back: 'Back',
-    source: 'Source encounter',
-    required: 'This field is required.',
-    invalid: 'Enter a valid identifier.',
-    confirmRequired: 'Confirm that you reviewed the source encounter first.',
-    loading: 'Loading referrals from the authoritative source…',
-    empty: 'There are no referrals to show.',
-    denied: 'You are not authorized to view this team’s referrals.',
-    error: 'Referrals could not be refreshed. Retry before continuing.',
-    retry: 'Refresh referrals',
-    stale: 'Referral data may be outdated; only authoritative refreshed data is shown.',
-    offline: 'You are offline. Referrals are never queued for offline creation.',
-    createDenied: 'Creation authority could not be confirmed; no change is shown.',
-    createValidation: 'Referral details could not be validated. Review the fields and try again.',
-    createConflict:
-      'The request changed or its retry key was already used. Refresh referrals before retrying.',
-    createOffline: 'The connection ended. The referral was not stored locally; retry when online.',
-    createFailure:
-      'The referral could not be created. Check the authoritative status before retrying.',
-    created:
-      'Referral submitted. It appears in the list only after an authoritative read confirms it.',
-    createdRefresh:
-      'Submission succeeded, but the list could not be refreshed. Refresh referrals before continuing.',
-    statusPending: 'Pending — awaiting patient or authorized representative approval',
-    statusAccepted: 'Accepted and linked to a confirmed appointment',
-    reference: 'Referral ID',
-    sourceEncounter: 'Source encounter ID',
-    specialtyLabel: 'Specialty',
-    reasonLabel: 'Reason summary',
-    facilityId: 'Target facility ID',
-    doctorId: 'Target doctor ID',
-    appointmentId: 'Linked appointment ID',
-    version: 'Version',
-    lastUpdated: 'Last authoritative update',
-    acceptedFields: 'Fields authorized for sharing',
-    reasonCode: 'Reason summary',
-    typeCode: 'Encounter type',
-    noAccept:
-      'Only the patient or authorized representative can approve a referral and book an appointment.',
-  },
+  'ar-EG': feature010ArEG['clinic.referrals'],
+  'en-EG': feature010EnEG['clinic.referrals'],
 } as const;
 
 const fieldStyle: React.CSSProperties = {
@@ -367,6 +229,7 @@ export function ReferralWorkspace() {
   const readGenerationRef = useRef(0);
   const apiBaseUrl = process.env['NEXT_PUBLIC_API_BASE_URL'];
   const ar = locale === 'ar-EG';
+  useFeature010DocumentLocale(locale);
   const copy = words[locale];
   const client = useMemo(
     () =>
@@ -607,7 +470,7 @@ export function ReferralWorkspace() {
         background: color.canvas,
         color: color.ink,
         minHeight: '100vh',
-        ...localizedType(locale, 'body'),
+        ...feature010WebTypography(locale, 'body'),
         fontFamily: ar ? 'IBM Plex Sans Arabic' : 'Inter',
       }}
     >
@@ -624,7 +487,7 @@ export function ReferralWorkspace() {
         }}
       >
         <nav
-          aria-label={ar ? 'تنقل العيادة' : 'Clinic navigation'}
+          aria-label={copy.navigationLabel}
           style={{ display: 'flex', flexWrap: 'wrap', gap: spacing.md }}
         >
           <a
@@ -682,11 +545,24 @@ export function ReferralWorkspace() {
         <main
           style={{
             width: 'min(100% - 32px, 1440px)',
+            boxSizing: 'border-box',
+            minWidth: 0,
+            overflowWrap: 'anywhere',
             marginInline: 'auto',
             paddingBlock: spacing.lg,
           }}
         >
-          <h1>{copy.title}</h1>
+          <h1
+            style={{
+              maxWidth: '100%',
+              minWidth: 0,
+              overflowWrap: 'anywhere',
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+            }}
+          >
+            {copy.title}
+          </h1>
           <p>{copy.intro}</p>
           {!online && <p role="alert">{copy.offline}</p>}
           {message && (
@@ -704,7 +580,13 @@ export function ReferralWorkspace() {
               gap: spacing.md,
             }}
           >
-            <div>
+            <div
+              style={{
+                minWidth: 0,
+                maxWidth: '100%',
+                overflowWrap: 'anywhere',
+              }}
+            >
               <h2>{copy.referrals}</h2>
               <p>{copy.noAccept}</p>
             </div>
@@ -881,7 +763,17 @@ export function ReferralWorkspace() {
         </main>
       ) : (
         <main style={{ maxWidth: 560, marginInline: 'auto', padding: spacing.lg }}>
-          <h1>{copy.loginTitle}</h1>
+          <h1
+            style={{
+              maxWidth: '100%',
+              minWidth: 0,
+              overflowWrap: 'anywhere',
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+            }}
+          >
+            {copy.loginTitle}
+          </h1>
           <p>{copy.loginHelp}</p>
           {!challenge ? (
             <>

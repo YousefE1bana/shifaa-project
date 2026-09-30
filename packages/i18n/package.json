@@ -7,7 +7,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "node --test src/catalogs.test.ts src/clinic-scheduling.test.ts",
+    "test": "node --test src/catalogs.test.ts src/clinic-scheduling.test.ts src/feature-010.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },

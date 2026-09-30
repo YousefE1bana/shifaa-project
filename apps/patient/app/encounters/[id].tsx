@@ -1,3 +1,4 @@
+import { feature010CommonCopy, feature010PatientEncounterChatCopy, isolateLtr } from '@shifaa/i18n';
 import {
   color,
   FocusVisiblePressable,
@@ -32,53 +33,6 @@ type ChatViewState =
   | 'ended';
 type ActingRole = 'PAT' | 'GUA' | 'DEL';
 
-const chatCopy = {
-  'ar-EG': {
-    messages: 'رسائل هذا الموعد',
-    active: 'الرسائل متاحة أثناء الزيارة فقط',
-    endedTitle: 'انتهت رسائل هذا الموعد',
-    endedBody: 'انتهت هذه الزيارة؛ لم تعد قراءة رسائل هذا الموعد أو إرسالها متاحة.',
-    loading: 'جارٍ التحقق من صلاحية الرسائل…',
-    reconnecting: 'جارٍ إعادة التحقق من صلاحية الرسائل…',
-    empty: 'لا توجد رسائل بعد.',
-    denied: 'تعذّر عرض الرسائل بسبب عدم توفر صلاحية حالية.',
-    offline: 'لا يوجد اتصال. أعد الاتصال للتحقق من الرسائل قبل المتابعة.',
-    stale: 'قد تكون الرسائل قديمة. أعد التحقق من السجل قبل المتابعة.',
-    error: 'تعذّر تحميل الرسائل. حاول إعادة التحقق من السجل.',
-    lastUpdated: 'آخر تحديث',
-    refresh: 'إعادة التحقق',
-    body: 'اكتب رسالتك',
-    send: 'إرسال الرسالة',
-    sending: 'جارٍ الإرسال…',
-    blank: 'اكتب رسالة قبل الإرسال.',
-    success: 'تم إرسال الرسالة',
-    next: 'يمكنك متابعة الرسائل هنا.',
-    more: 'تحميل رسائل أقدم',
-  },
-  'en-EG': {
-    messages: 'Appointment messages',
-    active: 'Messages are available during the encounter only',
-    endedTitle: 'Appointment messages ended',
-    endedBody: 'The encounter is complete. Its messages can no longer be read or sent.',
-    loading: 'Checking current message access…',
-    reconnecting: 'Rechecking message access…',
-    empty: 'There are no messages yet.',
-    denied: 'Messages cannot be shown because current access is unavailable.',
-    offline: 'You are offline. Reconnect to verify messages before continuing.',
-    stale: 'Messages may be out of date. Recheck the record before continuing.',
-    error: 'Messages could not be loaded. Try checking the record again.',
-    lastUpdated: 'Last updated',
-    refresh: 'Recheck access',
-    body: 'Write a message',
-    send: 'Send message',
-    sending: 'Sending…',
-    blank: 'Write a message before sending.',
-    success: 'Message sent',
-    next: 'You can continue the conversation here.',
-    more: 'Load older messages',
-  },
-} as const;
-
 export default function PatientEncounterRoute() {
   const { id, actingRole } = useLocalSearchParams<{ id: string; actingRole?: string }>();
   const role: ActingRole = actingRole === 'GUA' || actingRole === 'DEL' ? actingRole : 'PAT';
@@ -93,8 +47,9 @@ function PatientEncounterScreen({
   actorRole: ActingRole;
 }) {
   const { locale, setLocale } = usePatientLocaleController();
+  const common = feature010CommonCopy[locale];
   const copy = patientEncounterCopy[locale];
-  const chat = chatCopy[locale];
+  const chat = feature010PatientEncounterChatCopy[locale];
   const [state, setState] = useState<PatientEncounterReadState>('loading');
   const [chatState, setChatState] = useState<ChatViewState>('loading');
   const [encounter, setEncounter] = useState<Awaited<
@@ -408,14 +363,11 @@ function PatientEncounterScreen({
 
   const successNotice =
     showChat && chatState === 'current' && encounter?.status === 'open' && sentMessage ? (
-      <View
-        accessibilityRole="summary"
-        accessibilityLiveRegion="polite"
-        style={semanticStyles.card}
-      >
+      <View accessibilityRole="summary" style={semanticStyles.card}>
         <Text
           accessibilityRole="header"
           aria-level={2}
+          accessibilityLiveRegion="polite"
           style={{ ...localizedType(locale, 'title'), color: color.positive }}
         >
           {chat.success}
@@ -428,10 +380,12 @@ function PatientEncounterScreen({
             textAlign: 'left',
           }}
         >
-          {sentMessage.id}
+          {isolateLtr(sentMessage.id)}
         </Text>
         <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
-          {new Date(sentMessage.sentAt).toLocaleString(locale, { timeZone: 'Africa/Cairo' })}
+          {isolateLtr(
+            new Date(sentMessage.sentAt).toLocaleString(locale, { timeZone: 'Africa/Cairo' }),
+          )}
         </Text>
         <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
           {sentMessage.body}
@@ -464,7 +418,7 @@ function PatientEncounterScreen({
       {['current', 'stale', 'loading', 'offline'].includes(chatState) && lastUpdatedAt && (
         <Text style={{ ...localizedType(locale, 'label'), color: color.mutedInk }}>
           {chat.lastUpdated}:{' '}
-          {new Date(lastUpdatedAt).toLocaleString(locale, { timeZone: 'Africa/Cairo' })}
+          {isolateLtr(new Date(lastUpdatedAt).toLocaleString(locale, { timeZone: 'Africa/Cairo' }))}
         </Text>
       )}
       {chatState === 'current' && (
@@ -512,7 +466,9 @@ function PatientEncounterScreen({
                 {message.body}
               </Text>
               <Text style={{ ...localizedType(locale, 'label'), color: color.mutedInk }}>
-                {new Date(message.sentAt).toLocaleString(locale, { timeZone: 'Africa/Cairo' })}
+                {isolateLtr(
+                  new Date(message.sentAt).toLocaleString(locale, { timeZone: 'Africa/Cairo' }),
+                )}
               </Text>
             </View>
           ))}
@@ -572,13 +528,23 @@ function PatientEncounterScreen({
             onPress={() => void send()}
             style={{
               minHeight: 48,
+              maxWidth: '100%',
+              paddingInline: spacing.sm,
               backgroundColor: color.brand,
               borderRadius: radius.control,
               justifyContent: 'center',
               alignItems: 'center',
             }}
           >
-            <Text style={{ ...localizedType(locale, 'label'), color: color.inverse }}>
+            <Text
+              style={{
+                ...localizedType(locale, 'label'),
+                color: color.inverse,
+                maxWidth: '100%',
+                flexShrink: 1,
+                textAlign: 'center',
+              }}
+            >
               {sending ? chat.sending : chat.send}
             </Text>
           </FocusVisiblePressable>
@@ -604,21 +570,43 @@ function PatientEncounterScreen({
     >
       {successNotice}
       {ended && chatSection}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <View
+        style={{
+          width: '100%',
+          minWidth: 0,
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: spacing.sm,
+        }}
+      >
         <Text
           accessibilityRole="header"
-          style={{ ...localizedType(locale, 'display'), color: color.ink }}
+          style={{
+            ...localizedType(locale, 'display'),
+            color: color.ink,
+            minWidth: 0,
+            maxWidth: '100%',
+            flexShrink: 1,
+          }}
         >
           {copy.title}
         </Text>
         <FocusVisiblePressable
           accessibilityRole="button"
-          accessibilityLabel={locale === 'ar-EG' ? 'English' : 'العربية'}
+          accessibilityLabel={locale === 'ar-EG' ? common.languageEnglish : common.languageArabic}
           onPress={() => setLocale(locale === 'ar-EG' ? 'en-EG' : 'ar-EG')}
-          style={{ minWidth: 44, minHeight: 44, justifyContent: 'center' }}
+          style={{
+            minWidth: 44,
+            minHeight: 44,
+            maxWidth: '100%',
+            flexShrink: 0,
+            justifyContent: 'center',
+          }}
         >
           <Text style={{ ...localizedType(locale, 'label'), color: color.brand }}>
-            {locale === 'ar-EG' ? 'English' : 'العربية'}
+            {locale === 'ar-EG' ? common.languageEnglish : common.languageArabic}
           </Text>
         </FocusVisiblePressable>
       </View>
@@ -663,7 +651,7 @@ function PatientEncounterScreen({
           )}
         </View>
       ) : (
-        <View accessibilityLiveRegion="polite" style={{ gap: spacing.md }}>
+        <View style={{ gap: spacing.md }}>
           {showChat && !ended && chatSection}
           <View style={semanticStyles.card}>
             <Text style={{ ...localizedType(locale, 'title'), color: color.ink }}>
@@ -671,7 +659,9 @@ function PatientEncounterScreen({
             </Text>
             <Text style={{ ...localizedType(locale, 'body'), color: color.ink }}>
               {copy.started}:{' '}
-              {new Date(encounter.startedAt).toLocaleString(locale, { timeZone: 'Africa/Cairo' })}
+              {isolateLtr(
+                new Date(encounter.startedAt).toLocaleString(locale, { timeZone: 'Africa/Cairo' }),
+              )}
             </Text>
             {encounter.completionSummary !== undefined && (
               <View style={{ gap: spacing.xs }}>

@@ -27,6 +27,7 @@ import {
   type PatientReferralActorRole,
 } from '../src/feature-010-referrals';
 import { usePatientLocaleController } from '../src/locale-context';
+import { feature010CommonCopy } from '@shifaa/i18n';
 import { patientPlatform } from '../src/patient-auth-store';
 import { resolvePatientApiBaseUrl } from '../src/patient-api-base-url';
 
@@ -110,6 +111,7 @@ export default function PatientRecordsRoute() {
   const params = useLocalSearchParams<{ actingRole?: string; patientId?: string }>();
   const router = useRouter();
   const { locale, setLocale } = usePatientLocaleController();
+  const common = feature010CommonCopy[locale];
   const copy = referralRecordsCopy[locale];
   const initialRole = validActorRole(params.actingRole) ? params.actingRole : 'PAT';
   const [actorRole, setActorRole] = useState<PatientReferralActorRole>(initialRole);
@@ -450,21 +452,43 @@ export default function PatientRecordsRoute() {
         gap: spacing.md,
       }}
     >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <View
+        style={{
+          width: '100%',
+          minWidth: 0,
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: spacing.sm,
+        }}
+      >
         <Text
           accessibilityRole="header"
-          style={{ ...localizedType(locale, 'display'), color: color.ink }}
+          style={{
+            ...localizedType(locale, 'display'),
+            color: color.ink,
+            minWidth: 0,
+            maxWidth: '100%',
+            flexShrink: 1,
+          }}
         >
           {copy.title}
         </Text>
         <FocusVisiblePressable
           accessibilityRole="button"
-          accessibilityLabel={locale === 'ar-EG' ? 'English' : 'العربية'}
+          accessibilityLabel={locale === 'ar-EG' ? common.languageEnglish : common.languageArabic}
           onPress={() => setLocale(locale === 'ar-EG' ? 'en-EG' : 'ar-EG')}
-          style={{ minWidth: 44, minHeight: 44, justifyContent: 'center' }}
+          style={{
+            minWidth: 44,
+            minHeight: 44,
+            maxWidth: '100%',
+            flexShrink: 0,
+            justifyContent: 'center',
+          }}
         >
           <Text style={{ ...localizedType(locale, 'label'), color: color.brand }}>
-            {locale === 'ar-EG' ? 'English' : 'العربية'}
+            {locale === 'ar-EG' ? common.languageEnglish : common.languageArabic}
           </Text>
         </FocusVisiblePressable>
       </View>
@@ -475,7 +499,13 @@ export default function PatientRecordsRoute() {
         <View
           testID="records-context-role"
           accessibilityRole="radiogroup"
-          style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs }}
+          style={{
+            width: '100%',
+            minWidth: 0,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: spacing.xs,
+          }}
         >
           {actorRoles.map((role) => (
             <FocusVisiblePressable
@@ -488,6 +518,8 @@ export default function PatientRecordsRoute() {
               onPress={() => selectActorRole(role)}
               style={{
                 minHeight: 44,
+                maxWidth: '100%',
+                flexShrink: 1,
                 justifyContent: 'center',
                 paddingInline: spacing.md,
                 borderWidth: actorRole === role ? 2 : 1,
@@ -495,7 +527,15 @@ export default function PatientRecordsRoute() {
                 borderRadius: radius.control,
               }}
             >
-              <Text style={{ ...localizedType(locale, 'label'), color: color.ink }}>
+              <Text
+                style={{
+                  ...localizedType(locale, 'label'),
+                  color: color.ink,
+                  maxWidth: '100%',
+                  minWidth: 0,
+                  flexShrink: 1,
+                }}
+              >
                 {role === 'PAT' ? copy.pat : role === 'GUA' ? copy.gua : copy.del}
               </Text>
             </FocusVisiblePressable>
@@ -515,12 +555,7 @@ export default function PatientRecordsRoute() {
             textAlign: 'left',
           }}
         >
-          {patientId ||
-            (actorRole === 'PAT'
-              ? locale === 'ar-EG'
-                ? 'سجل المريض المسجّل'
-                : 'Signed-in patient record'
-              : '—')}
+          {patientId || (actorRole === 'PAT' ? copy.signedInPatientRecord : '—')}
         </Text>
       </View>
 

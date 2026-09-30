@@ -452,10 +452,11 @@ for (const locale of ['ar-EG', 'en-EG'] as const) {
       await expect(success).toBeVisible();
       const canonicalMessageId = messageIds[api.messagePosts.length];
       expect(canonicalMessageId).toBeTruthy();
-      await expect(page.getByText(canonicalMessageId!, { exact: true })).toBeVisible();
+      const isolatedCanonicalMessageId = `\u2066${canonicalMessageId!}\u2069`;
+      await expect(page.getByText(isolatedCanonicalMessageId, { exact: true })).toBeVisible();
       expect(
         await page
-          .getByText(canonicalMessageId!, { exact: true })
+          .getByText(isolatedCanonicalMessageId, { exact: true })
           .evaluate((element) => getComputedStyle(element).direction),
       ).toBe('ltr');
       expect(api.messagePosts).toHaveLength(1);

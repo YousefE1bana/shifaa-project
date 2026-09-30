@@ -1,10 +1,11 @@
 'use client';
 
+import { feature010ArEG, feature010CommonCopy, feature010EnEG } from '@shifaa/i18n';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
+  breakpoint,
   color,
-  localizedType,
   minimumTargetSize,
   radius,
   spacing,
@@ -16,95 +17,16 @@ import {
   type ClinicLocale,
   type EncounterStartEligibility,
 } from '../../../../lib/feature-010-api';
+import { useFeature010DocumentLocale } from '../../../../components/feature-010/useFeature010DocumentLocale';
+import { feature010WebTypography } from '../../../../components/feature-010/feature010WebTypography';
 
 const words = {
-  'ar-EG': {
-    english: 'English',
-    title: 'ملخص المريض',
-    subtitle: 'سياق المريض الحالي والتفاصيل السريرية المصرح بها.',
-    patientContext: 'سياق المريض الحالي',
-    summary: 'موعد المريض الحالي',
-    eligible: 'مؤهل لبدء الزيارة',
-    appointment: 'الموعد',
-    appointmentStatus: 'حالة الموعد',
-    checkedIn: 'تم تسجيل الحضور',
-    queue: 'الدور',
-    queueState: 'حالة الدور',
-    called: 'تم النداء',
-    start: 'بدء الزيارة',
-    apiRechecks: 'يعيد الخادم فحص أهلية الموعد والدور.',
-    review: 'راجع بدء الزيارة',
-    reviewText: 'الموعد والدور مؤهلان الآن. سيعيد الخادم فحص الحالة قبل إنشاء الزيارة.',
-    effect: 'الأثر المترابط',
-    effectText: 'تبدأ الزيارة، ويصبح الموعد قيد الاستشارة والدور قيد الخدمة.',
-    back: 'رجوع',
-    submitting: 'جارٍ فحص الأهلية وبدء الزيارة…',
-    stale: 'تعذّر تأكيد أهلية الموعد والدور. حدّث البيانات من المصدر الموثوق. لم تُنشأ زيارة.',
-    missing: 'لا يوجد موعد مؤهل بدور تم نداؤه. لم تُنشأ زيارة.',
-    denied: 'ليس لديك صلاحية بدء زيارة لهذا المريض أو تعذّر تأكيد الصلاحية.',
-    recoverable: 'تعذّر تحميل أهلية بدء الزيارة. حدّث الصفحة وحاول مجددًا.',
-    conflict: 'تغيّرت أهلية الموعد أو الدور. راجع الحالة الحالية. لم تُنشأ زيارة.',
-    error: 'تعذّر بدء الزيارة. راجع الحالة الحالية قبل المحاولة مجددًا.',
-    unavailable: 'لا يوجد اتصال بالخدمة؛ لا يمكن بدء الزيارة دون اتصال.',
-    signIn: 'دخول موظف العيادة',
-    signInHelp: 'يلزم سياق موظف مخوّل. لا تُحفظ بيانات الدخول على هذا الجهاز.',
-    handle: 'وسيلة الدخول',
-    password: 'كلمة المرور',
-    continue: 'متابعة',
-    otp: 'رمز التحقق',
-    verify: 'تحقق',
-    signInFailure: 'تعذّر التحقق. حاول مجددًا.',
-    facility: 'معرّف المنشأة',
-    currentPatient: 'سياق المريض الحالي',
-  },
-  'en-EG': {
-    english: 'العربية',
-    title: 'Patient summary',
-    subtitle: 'Current patient context and authorized clinical details.',
-    patientContext: 'Current patient context',
-    summary: 'Current patient appointment',
-    eligible: 'Eligible to start',
-    appointment: 'Appointment',
-    appointmentStatus: 'Appointment status',
-    checkedIn: 'Checked in',
-    queue: 'Queue',
-    queueState: 'Queue state',
-    called: 'Called',
-    start: 'Start encounter',
-    apiRechecks: 'The API rechecks appointment and queue eligibility.',
-    review: 'Review encounter start',
-    reviewText: 'Appointment and queue are currently eligible. The API rechecks before creation.',
-    effect: 'Linked effect',
-    effectText:
-      'The encounter opens, the appointment enters consultation, and the queue enters service.',
-    back: 'Back',
-    submitting: 'Checking eligibility and starting encounter…',
-    stale:
-      'Appointment and queue eligibility could not be confirmed. Refresh from the authoritative source. No encounter was created.',
-    missing:
-      'There is no eligible appointment with a called queue entry. No encounter was created.',
-    denied:
-      'You are not authorized to start an encounter for this patient, or access could not be confirmed.',
-    recoverable: 'Encounter start eligibility could not be loaded. Refresh and try again.',
-    conflict:
-      'Appointment or queue eligibility changed. Review the current state. No encounter was created.',
-    error: 'Encounter start failed. Review the current state before trying again.',
-    unavailable: 'The service is offline; an encounter cannot be started offline.',
-    signIn: 'Clinic staff sign-in',
-    signInHelp:
-      'An authorized staff context is required. Credentials are not stored on this device.',
-    handle: 'Sign-in handle',
-    password: 'Password',
-    continue: 'Continue',
-    otp: 'Verification code',
-    verify: 'Verify',
-    signInFailure: 'Verification failed. Try again.',
-    facility: 'Facility ID',
-    currentPatient: 'Current patient context',
-  },
-} satisfies Record<ClinicLocale, Record<string, string>>;
+  'ar-EG': feature010ArEG['clinic.summary'],
+  'en-EG': feature010EnEG['clinic.summary'],
+} as const;
 
 const buttonStyle: React.CSSProperties = {
+  minWidth: minimumTargetSize,
   minHeight: minimumTargetSize,
   border: `1px solid ${color.brand}`,
   borderRadius: radius.control,
@@ -115,7 +37,10 @@ const buttonStyle: React.CSSProperties = {
 };
 const fieldStyle: React.CSSProperties = {
   display: 'block',
+  boxSizing: 'border-box',
   width: '100%',
+  maxWidth: '100%',
+  minWidth: 0,
   minHeight: minimumTargetSize,
   border: `1px solid ${color.border}`,
   borderRadius: radius.control,
@@ -153,7 +78,9 @@ export default function PatientSummaryPage() {
   const modalRef = useRef<HTMLDivElement>(null);
   const apiBaseUrl = process.env['NEXT_PUBLIC_API_BASE_URL'];
   const copy = words[locale];
+  const common = feature010CommonCopy[locale];
   const ar = locale === 'ar-EG';
+  useFeature010DocumentLocale(locale);
   const clients = useMemo(
     () => (token && apiBaseUrl ? createEncounterStartClients(token, locale) : null),
     [apiBaseUrl, locale, token],
@@ -300,7 +227,7 @@ export default function PatientSummaryPage() {
         background: color.canvas,
         color: color.ink,
         minHeight: '100vh',
-        ...localizedType(locale, 'body'),
+        ...feature010WebTypography(locale, 'body'),
         fontFamily: locale === 'ar-EG' ? 'IBM Plex Sans Arabic' : 'Inter',
       }}
     >
@@ -321,32 +248,33 @@ export default function PatientSummaryPage() {
       </header>
       {token ? (
         <div
+          className="clinic-summary-workspace"
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(160px, 220px) minmax(0, 1fr)',
             minHeight: 'calc(100vh - 72px)',
           }}
         >
           <nav
-            aria-label={ar ? 'التنقل الرئيسي' : 'Primary navigation'}
+            aria-label={common.primaryNavigation}
             style={{
               padding: spacing.md,
               borderInlineEnd: `1px solid ${color.border}`,
               background: color.surface,
             }}
           >
-            <p>{ar ? 'اليوم' : 'Today'}</p>
+            <p>{common.navigationToday}</p>
             <p aria-current="page" style={{ color: color.brand, fontWeight: 700 }}>
-              {ar ? 'ملخص المريض' : 'Patient summary'}
+              {copy.title}
             </p>
-            <p>{ar ? 'الزيارة' : 'Encounter'}</p>
-            <p>{ar ? 'الإحالات' : 'Referrals'}</p>
-            <p>{ar ? 'الرسائل' : 'Messages'}</p>
+            <p>{common.navigationEncounter}</p>
+            <p>{common.navigationReferrals}</p>
+            <p>{common.navigationMessages}</p>
           </nav>
           <main
             style={{
-              width: 'min(100%, 1100px)',
               boxSizing: 'border-box',
+              minWidth: 0,
+              overflowWrap: 'anywhere',
+              width: 'min(100%, 1100px)',
               marginInline: 'auto',
               padding: spacing.lg,
             }}
@@ -363,10 +291,10 @@ export default function PatientSummaryPage() {
                 </bdi>
               </p>
             </section>
-            <p style={{ color: color.brand, fontWeight: 700 }}>
-              {ar ? 'مساحة العمل السريرية' : 'CLINICAL WORKSPACE'}
-            </p>
-            <h1>{copy.title}</h1>
+            <p style={{ color: color.brand, fontWeight: 700 }}>{common.clinicalWorkspace}</p>
+            <h1 style={{ maxWidth: '100%', minWidth: 0, overflowWrap: 'anywhere' }}>
+              {copy.title}
+            </h1>
             <p>{copy.subtitle}</p>
             {eligibility === null && (
               <p role="status" aria-live="polite">
@@ -432,7 +360,7 @@ export default function PatientSummaryPage() {
                   onClick={() => void refreshEligibility()}
                   disabled={busy}
                 >
-                  {ar ? 'تحديث من الخادم' : 'Refresh from server'}
+                  {copy.refreshFromServer}
                 </button>
               </section>
             )}
@@ -527,10 +455,31 @@ export default function PatientSummaryPage() {
               </div>
             )}
           </main>
+          <style jsx>{`
+            .clinic-summary-workspace {
+              display: grid;
+              grid-template-columns: minmax(0, 1fr);
+            }
+            @media (min-width: ${breakpoint.medium}px) {
+              .clinic-summary-workspace {
+                grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+              }
+            }
+          `}</style>
         </div>
       ) : (
-        <main style={{ maxWidth: 560, marginInline: 'auto', padding: spacing.lg }}>
-          <h1>{copy.signIn}</h1>
+        <main
+          style={{
+            boxSizing: 'border-box',
+            width: '100%',
+            maxWidth: 560,
+            minWidth: 0,
+            overflowWrap: 'anywhere',
+            marginInline: 'auto',
+            padding: spacing.lg,
+          }}
+        >
+          <h1 style={{ maxWidth: '100%', minWidth: 0, overflowWrap: 'anywhere' }}>{copy.signIn}</h1>
           <p>{copy.signInHelp}</p>
           {!challenge ? (
             <>

@@ -1,16 +1,19 @@
 'use client';
 
+import { feature010ArEG, feature010CommonCopy, feature010EnEG } from '@shifaa/i18n';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { IdentityOnboardingClient } from '@shifaa/api-client';
 import { createFeature010Client, Feature010ApiError } from '@shifaa/api-client/feature-010';
 import {
+  breakpoint,
   color,
-  localizedType,
   minimumTargetSize,
   radius,
   spacing,
 } from '@shifaa/design-system/tokens';
+import { useFeature010DocumentLocale } from './useFeature010DocumentLocale';
+import { feature010WebTypography } from './feature010WebTypography';
 
 type Locale = 'ar-EG' | 'en-EG';
 type Feature010Client = ReturnType<typeof createFeature010Client>;
@@ -20,166 +23,13 @@ type EncounterCompleteResult = Awaited<ReturnType<Feature010Client['completeEnco
 type ParticipantProjection = NonNullable<EncounterProjection['participants']>[number];
 
 const words = {
-  'ar-EG': {
-    english: 'English',
-    toggle: 'العربية',
-    signin: 'دخول موظف العيادة',
-    signinHelp: 'يلزم سياق موظف مخوّل. لا تُحفظ بيانات الدخول على هذا الجهاز.',
-    handle: 'وسيلة الدخول',
-    password: 'كلمة المرور',
-    next: 'متابعة',
-    otp: 'رمز التحقق',
-    verify: 'تحقق',
-    signinFailure: 'تعذّر التحقق. حاول مجددًا.',
-    title: 'مساحة الزيارة',
-    loading: 'جارٍ تحميل بيانات الزيارة من المصدر الموثوق…',
-    unavailable: 'لا يوجد اتصال بالخدمة؛ لا يمكن إجراء تغييرات سريرية دون اتصال.',
-    loadError: 'تعذّر تحميل الزيارة. حدّث الصفحة وحاول مجددًا.',
-    refreshRequired:
-      'نجح التغيير، لكن تعذّر تحديث الزيارة. أعد تحميل البيانات قبل إجراء أي تغيير آخر.',
-    refresh: 'تحديث الزيارة من المصدر الموثوق',
-    denied: 'ليس لديك صلاحية عرض هذه الزيارة أو تعذّر تأكيدها.',
-    retry: 'إعادة التحميل',
-    patient: 'المريض',
-    facility: 'معرّف المنشأة',
-    appointment: 'معرّف الموعد',
-    status: 'حالة الزيارة',
-    open: 'مفتوحة',
-    completed: 'مكتملة',
-    facts: 'حقائق الزيارة',
-    conditions: 'الحالات',
-    observations: 'الملاحظات',
-    orders: 'الطلبات',
-    none: 'لا توجد عناصر مسجلة.',
-    participants: 'المشاركون',
-    responsible: 'الطبيب المسؤول',
-    active: 'مشارك نشط',
-    historical: 'مشارك سابق',
-    endInterval: 'إنهاء فترة المشاركة',
-    noParticipants: 'لا توجد بيانات مشاركين من المصدر.',
-    noNotes: 'لا توجد ملاحظات موقعة.',
-    notes: 'الملاحظات الموقعة',
-    private: 'خاصة',
-    visible: 'مرئية للمريض',
-    noteType: 'نوع الملاحظة',
-    noteBody: 'نص الملاحظة',
-    visibility: 'إتاحة الملاحظة',
-    choose: 'اختر الإتاحة',
-    reviewNote: 'مراجعة الملاحظة',
-    noteReview: 'مراجعة توقيع الملاحظة',
-    sign: 'توقيع الملاحظة',
-    back: 'رجوع',
-    noteSigned: 'تم توقيع الملاحظة وإضافتها إلى سجل الزيارة.',
-    noteError: 'تعذّر توقيع الملاحظة. راجع الحالة قبل المحاولة مجددًا.',
-    endTitle: 'إنهاء فترة المشاركة',
-    endText: 'سيؤدي التأكيد إلى إنهاء وصول هذا المشارك إلى سجل المحادثة المرتبط بالموعد.',
-    confirmEnd: 'تأكيد إنهاء الفترة',
-    ended: 'انتهت فترة المشاركة. أصبح المشارك سابقًا.',
-    endError: 'تعذّر إنهاء فترة المشاركة. راجع الحالة الحالية.',
-    completion: 'ملخص الإكمال',
-    reviewCompletion: 'مراجعة الإكمال',
-    completeReview: 'مراجعة إكمال الزيارة',
-    summary: 'ملخص الإكمال',
-    structural: 'أؤكد اكتمال البنية المطلوبة للزيارة.',
-    complete: 'إكمال الزيارة',
-    completeEffect: 'سيتم إكمال الزيارة والموعد والدور المرتبطين معًا.',
-    completedSuccess: 'اكتملت الزيارة والموعد والدور المرتبطون.',
-    completeError: 'تعذّر إكمال الزيارة. راجع الحالة الحالية.',
-    appointmentState: 'حالة الموعد بعد الإكمال',
-    queueState: 'حالة الدور بعد الإكمال',
-    reference: 'مرجع الزيارة',
-    appointmentRef: 'مرجع الموعد',
-    queueRef: 'مرجع الدور',
-    version: 'الإصدار',
-    signedAt: 'وقت التوقيع',
-    startedAt: 'بدأت في',
-    endedAt: 'انتهت في',
-    appointmentVersion: 'إصدار الموعد',
-    queueVersion: 'إصدار الدور',
-    noWrites: 'لا يمكن إجراء تغييرات على زيارة مكتملة.',
-  },
-  'en-EG': {
-    english: 'العربية',
-    toggle: 'English',
-    signin: 'Clinic staff sign-in',
-    signinHelp:
-      'An authorized staff context is required. Credentials are not stored on this device.',
-    handle: 'Sign-in handle',
-    password: 'Password',
-    next: 'Continue',
-    otp: 'Verification code',
-    verify: 'Verify',
-    signinFailure: 'Verification failed. Try again.',
-    title: 'Encounter workspace',
-    loading: 'Loading encounter from the authoritative source…',
-    unavailable: 'The service is offline; clinical changes cannot be made offline.',
-    loadError: 'Encounter could not be loaded. Refresh and try again.',
-    refreshRequired:
-      'The change succeeded, but the encounter could not be refreshed. Reload before making another change.',
-    refresh: 'Refresh encounter from source',
-    denied: 'You are not authorized to view this encounter, or access could not be confirmed.',
-    retry: 'Reload encounter',
-    patient: 'Patient',
-    facility: 'Facility ID',
-    appointment: 'Appointment ID',
-    status: 'Encounter status',
-    open: 'Open',
-    completed: 'Completed',
-    facts: 'Encounter facts',
-    conditions: 'Conditions',
-    observations: 'Observations',
-    orders: 'Orders',
-    none: 'No items recorded.',
-    participants: 'Participants',
-    responsible: 'Responsible clinician',
-    active: 'Active participant',
-    historical: 'Historical participant',
-    endInterval: 'End participant interval',
-    noParticipants: 'No participant data was returned by the source.',
-    noNotes: 'No signed notes.',
-    notes: 'Signed notes',
-    private: 'Private',
-    visible: 'Patient-visible',
-    noteType: 'Note type',
-    noteBody: 'Note body',
-    visibility: 'Note visibility',
-    choose: 'Choose visibility',
-    reviewNote: 'Review note',
-    noteReview: 'Review signed note',
-    sign: 'Sign note',
-    back: 'Back',
-    noteSigned: 'Note signed and added to the encounter record.',
-    noteError: 'Note could not be signed. Review the current state before trying again.',
-    endTitle: 'End participant interval',
-    endText: 'Confirmation ends this participant’s access to appointment-context messages.',
-    confirmEnd: 'Confirm end interval',
-    ended: 'Participant interval ended. The participant is now historical.',
-    endError: 'Participant interval could not be ended. Review the current state.',
-    completion: 'Completion summary',
-    reviewCompletion: 'Review completion',
-    completeReview: 'Review encounter completion',
-    summary: 'Completion summary',
-    structural: 'I confirm this encounter is structurally complete.',
-    complete: 'Complete encounter',
-    completeEffect: 'The encounter, linked appointment, and queue will complete together.',
-    completedSuccess: 'The linked encounter, appointment, and queue are complete.',
-    completeError: 'Encounter could not be completed. Review the current state.',
-    appointmentState: 'Appointment status after completion',
-    queueState: 'Queue status after completion',
-    reference: 'Encounter reference',
-    appointmentRef: 'Appointment reference',
-    queueRef: 'Queue entry reference',
-    version: 'Version',
-    signedAt: 'Signed at',
-    startedAt: 'Started at',
-    endedAt: 'Ended at',
-    appointmentVersion: 'Appointment version',
-    queueVersion: 'Queue version',
-    noWrites: 'A completed encounter cannot be changed.',
-  },
-} satisfies Record<Locale, Record<string, string>>;
+  'ar-EG': feature010ArEG['clinic.encounter'],
+  'en-EG': feature010EnEG['clinic.encounter'],
+} as const;
 
 const buttonStyle: React.CSSProperties = {
+  boxSizing: 'border-box',
+  maxWidth: '100%',
   minHeight: minimumTargetSize,
   border: `1px solid ${color.brand}`,
   borderRadius: radius.control,
@@ -187,11 +37,15 @@ const buttonStyle: React.CSSProperties = {
   color: color.ink,
   paddingInline: spacing.md,
   cursor: 'pointer',
+  overflowWrap: 'anywhere',
+  whiteSpace: 'normal',
 };
 const fieldStyle: React.CSSProperties = {
   display: 'block',
   boxSizing: 'border-box',
   width: '100%',
+  maxWidth: '100%',
+  minWidth: 0,
   minHeight: minimumTargetSize,
   border: `1px solid ${color.border}`,
   borderRadius: radius.control,
@@ -201,6 +55,10 @@ const fieldStyle: React.CSSProperties = {
   color: color.ink,
 };
 const cardStyle: React.CSSProperties = {
+  boxSizing: 'border-box',
+  maxWidth: '100%',
+  minWidth: 0,
+  overflowWrap: 'anywhere',
   border: `1px solid ${color.border}`,
   borderRadius: radius.card,
   background: color.surface,
@@ -241,7 +99,9 @@ export default function EncounterWorkspace() {
   const dialogRef = useRef<HTMLDivElement>(null);
   const apiBaseUrl = process.env['NEXT_PUBLIC_API_BASE_URL'];
   const copy = words[locale];
+  const common = feature010CommonCopy[locale];
   const ar = locale === 'ar-EG';
+  useFeature010DocumentLocale(locale);
   const client = useMemo(
     () =>
       token && apiBaseUrl
@@ -516,7 +376,7 @@ export default function EncounterWorkspace() {
         minHeight: '100vh',
         background: color.canvas,
         color: color.ink,
-        ...localizedType(locale, 'body'),
+        ...feature010WebTypography(locale, 'body'),
         fontFamily: ar ? 'IBM Plex Sans Arabic' : 'Inter',
       }}
     >
@@ -537,39 +397,50 @@ export default function EncounterWorkspace() {
       </header>
       {token ? (
         <div
+          className="encounter-workspace"
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(160px, 220px) minmax(0, 1fr)',
             minHeight: 'calc(100vh - 72px)',
           }}
         >
           <nav
-            aria-label={ar ? 'التنقل الرئيسي' : 'Primary navigation'}
+            aria-label={common.primaryNavigation}
             style={{
+              minWidth: 0,
+              overflowWrap: 'anywhere',
               padding: spacing.md,
               borderInlineEnd: `1px solid ${color.border}`,
               background: color.surface,
             }}
           >
-            <p>{ar ? 'اليوم' : 'Today'}</p>
+            <p>{common.navigationToday}</p>
             <p aria-current="page" style={{ color: color.brand, fontWeight: 700 }}>
               {copy.title}
             </p>
-            <p>{ar ? 'الإحالات' : 'Referrals'}</p>
-            <p>{ar ? 'الرسائل' : 'Messages'}</p>
+            <p>{common.navigationReferrals}</p>
+            <p>{common.navigationMessages}</p>
           </nav>
           <main
+            className="encounter-content"
             style={{
               width: 'min(100%, 1100px)',
               boxSizing: 'border-box',
+              minWidth: 0,
               marginInline: 'auto',
               padding: spacing.lg,
             }}
           >
-            <p style={{ color: color.brand, fontWeight: 700 }}>
-              {ar ? 'مساحة العمل السريرية' : 'CLINICAL WORKSPACE'}
-            </p>
-            <h1>{copy.title}</h1>
+            <p style={{ color: color.brand, fontWeight: 700 }}>{common.clinicalWorkspace}</p>
+            <h1
+              style={{
+                maxWidth: '100%',
+                minWidth: 0,
+                overflowWrap: 'anywhere',
+                whiteSpace: 'normal',
+                wordBreak: 'break-word',
+              }}
+            >
+              {copy.title}
+            </h1>
             {loadState === 'loading' && (
               <p role="status" aria-live="polite">
                 {copy.loading}
@@ -593,7 +464,7 @@ export default function EncounterWorkspace() {
             )}
             {loadState === 'ready' && encounter && (
               <>
-                <section aria-label={ar ? 'سياق الزيارة' : 'Encounter context'} style={cardStyle}>
+                <section aria-label={common.encounterContext} style={cardStyle}>
                   <h2>{copy.facts}</h2>
                   <Row label={copy.patient} value={encounter.patientId} code />
                   <Row label={copy.facility} value={encounter.facilityId} code />
@@ -666,7 +537,7 @@ export default function EncounterWorkspace() {
                       }}
                       disabled={busy || !online || refreshRequired}
                     >
-                      {ar ? 'تعديل المشاركين' : 'Edit participants'}
+                      {copy.editParticipants}
                     </button>
                   )}
                 </section>
@@ -683,8 +554,8 @@ export default function EncounterWorkspace() {
                         paddingBlockStart: spacing.md,
                       }}
                     >
-                      <h3>{ar ? 'مسودة ملاحظة جديدة' : 'New note draft'}</h3>
-                      <label>
+                      <h3>{copy.newNoteDraft}</h3>
+                      <label style={{ display: 'block', minWidth: 0, maxWidth: '100%' }}>
                         {copy.noteType}
                         <input
                           style={fieldStyle}
@@ -692,7 +563,7 @@ export default function EncounterWorkspace() {
                           onChange={(event) => setNoteType(event.target.value)}
                         />
                       </label>
-                      <label>
+                      <label style={{ display: 'block', minWidth: 0, maxWidth: '100%' }}>
                         {copy.noteBody}
                         <textarea
                           style={{ ...fieldStyle, minHeight: 120, paddingBlock: spacing.sm }}
@@ -700,7 +571,7 @@ export default function EncounterWorkspace() {
                           onChange={(event) => setNoteBody(event.target.value)}
                         />
                       </label>
-                      <label>
+                      <label style={{ display: 'block', minWidth: 0, maxWidth: '100%' }}>
                         {copy.visibility}
                         <select
                           style={fieldStyle}
@@ -737,11 +608,7 @@ export default function EncounterWorkspace() {
                 {!completed ? (
                   <section style={cardStyle}>
                     <h2>{copy.completion}</h2>
-                    <p>
-                      {ar
-                        ? 'يتطلب الإكمال ملخصًا غير فارغ وتأكيدًا بنيويًا صريحًا.'
-                        : 'Completion requires a nonblank summary and explicit structural confirmation.'}
-                    </p>
+                    <p>{copy.completionRequirements}</p>
                     <button
                       style={{ ...buttonStyle, background: color.brand, color: color.inverse }}
                       disabled={busy || !online || refreshRequired}
@@ -806,6 +673,40 @@ export default function EncounterWorkspace() {
             )}
             {!online && <p role="alert">{copy.unavailable}</p>}
           </main>
+          <style jsx>{`
+            .encounter-content,
+            .encounter-content section,
+            .encounter-content article {
+              min-width: 0;
+              max-width: 100%;
+              overflow-wrap: anywhere;
+            }
+            .encounter-content h1,
+            .encounter-content h2,
+            .encounter-content h3 {
+              box-sizing: border-box;
+              max-width: 100%;
+              min-width: 0;
+              overflow-wrap: anywhere;
+              white-space: normal;
+              word-break: break-word;
+            }
+            .encounter-content button {
+              box-sizing: border-box;
+              max-width: 100%;
+              overflow-wrap: anywhere;
+              white-space: normal;
+            }
+            .encounter-workspace {
+              display: grid;
+              grid-template-columns: minmax(0, 1fr);
+            }
+            @media (min-width: ${breakpoint.medium}px) {
+              .encounter-workspace {
+                grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+              }
+            }
+          `}</style>
         </div>
       ) : (
         <main style={{ maxWidth: 560, marginInline: 'auto', padding: spacing.lg }}>
@@ -900,7 +801,7 @@ export default function EncounterWorkspace() {
             )}
             {dialog === 'participant-edit' && (
               <>
-                <h2 id="dialog-title">{ar ? 'مراجعة المشاركين' : 'Review participants'}</h2>
+                <h2 id="dialog-title">{copy.reviewParticipants}</h2>
                 {participants.map((participant) => {
                   const isResponsible = participant.personId === responsibleId;
                   const isActive = !participant.endedAt && !completed;
@@ -1045,16 +946,27 @@ function Row({ label, value, code = false }: { label: string; value: string; cod
         gap: spacing.md,
         borderBlockEnd: `1px solid ${color.border}`,
         paddingBlock: spacing.sm,
+        minWidth: 0,
+        maxWidth: '100%',
+        overflowWrap: 'anywhere',
         flexWrap: 'wrap',
       }}
     >
       <span>{label}</span>
       {code ? (
-        <bdi dir="ltr" style={{ overflowWrap: 'anywhere' }}>
+        <bdi
+          dir="ltr"
+          style={{
+            display: 'inline-block',
+            minWidth: 0,
+            maxWidth: '100%',
+            overflowWrap: 'anywhere',
+          }}
+        >
           {value}
         </bdi>
       ) : (
-        <span style={{ overflowWrap: 'anywhere' }}>{value}</span>
+        <span style={{ minWidth: 0, maxWidth: '100%', overflowWrap: 'anywhere' }}>{value}</span>
       )}
     </div>
   );
@@ -1063,8 +975,13 @@ function CodeList({ items }: { items: string[] }) {
   return (
     <ul>
       {items.map((item) => (
-        <li key={item}>
-          <bdi dir="ltr">{item}</bdi>
+        <li key={item} style={{ minWidth: 0, maxWidth: '100%', overflowWrap: 'anywhere' }}>
+          <bdi
+            dir="ltr"
+            style={{ display: 'inline-block', maxWidth: '100%', overflowWrap: 'anywhere' }}
+          >
+            {item}
+          </bdi>
         </li>
       ))}
     </ul>

@@ -1,24 +1,25 @@
 'use client';
 
+import { feature010ArEG, feature010CommonCopy, feature010EnEG, isolateLtr } from '@shifaa/i18n';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IdentityOnboardingClient, ShifaaApiError } from '@shifaa/api-client';
 import { createFeature010Client, Feature010ApiError } from '@shifaa/api-client/feature-010';
 import {
   breakpoint,
   color,
-  localizedType,
   minimumTargetSize,
   radius,
   spacing,
+  type TypographyVariant,
 } from '@shifaa/design-system/tokens';
+import { useFeature010DocumentLocale } from './useFeature010DocumentLocale';
+import { feature010WebTypography } from './feature010WebTypography';
 
 type Locale = 'ar-EG' | 'en-EG';
 
-function webTypography(locale: Locale, variant: Parameters<typeof localizedType>[1]) {
-  const typography = localizedType(locale, variant);
+function webTypography(locale: Locale, variant: TypographyVariant) {
   return {
-    ...typography,
-    lineHeight: typography.lineHeight / typography.fontSize,
+    ...feature010WebTypography(locale, variant),
     fontFamily: locale === 'ar-EG' ? 'IBM Plex Sans Arabic, sans-serif' : 'Inter, sans-serif',
   };
 }
@@ -675,92 +676,8 @@ const cardStyle: React.CSSProperties = {
 };
 
 const copy = {
-  'ar-EG': {
-    language: 'English',
-    title: 'رسائل سياق الموعد',
-    intro: 'اختر معرّف الزيارة والموعد صراحةً للتحقق من صلاحية المشاركة الحالية.',
-    login: 'دخول موظف العيادة',
-    loginHelp: 'أكمل التحقق الثنائي. لا تُحفظ بيانات الدخول على هذا الجهاز.',
-    handle: 'وسيلة الدخول',
-    password: 'كلمة المرور',
-    continue: 'متابعة',
-    otp: 'رمز التحقق',
-    verify: 'تحقق',
-    encounter: 'معرّف الزيارة',
-    appointment: 'معرّف الموعد',
-    confirm: 'تحقق من السياق المحدد',
-    change: 'تغيير السياق',
-    selected: 'سياق الموعد المحدد',
-    messages: 'الرسائل',
-    active: 'صلاحية المشاركة مؤكدة عبر السجل الحالي.',
-    loading: 'جارٍ التحقق من السجل والصلاحية…',
-    empty: 'لا توجد رسائل لهذا الموعد. تظهر الرسائل فقط أثناء الزيارة الجارية ومع مشاركة نشطة.',
-    denied: 'لا توجد صلاحية حالية لعرض هذا السياق.',
-    participantRemoved: 'انتهت مشاركة هذا الموظف؛ لم تعد الرسائل متاحة.',
-    accessEnded: 'انتهت الزيارة أو لم تعد الرسائل متاحة لهذا السياق.',
-    unavailable: 'خدمة الرسائل غير متاحة حاليًا.',
-    reconnecting: 'جارٍ إعادة التحقق عبر السجل الموثوق…',
-    stale: 'قد تكون الرسائل قديمة. أعد التحقق من السجل قبل المتابعة.',
-    offline: 'لا يوجد اتصال. القراءة والإرسال متوقفان حتى إعادة التحقق.',
-    conflict: 'تغير السياق أو تعذر تأكيده. حدّث السياق من السجل الموثوق.',
-    recoverable: 'تعذر تحديث الرسائل. أعد التحقق قبل المتابعة.',
-    terminal: 'هذا السياق غير متاح. راجع معرّفي الزيارة والموعد.',
-    retry: 'إعادة التحقق',
-    lastUpdated: 'آخر تحديث موثوق',
-    body: 'اكتب رسالة',
-    send: 'إرسال الرسالة',
-    sending: 'جارٍ الإرسال…',
-    sent: 'تم إرسال الرسالة',
-    next: 'يمكنك متابعة الرسائل ضمن هذا السياق النشط.',
-    more: 'تحميل رسائل أقدم',
-    required: 'أدخل معرّف الزيارة والموعد للتحقق.',
-    authError: 'تعذر التحقق. حاول مجددًا.',
-    blank: 'اكتب رسالة قبل الإرسال.',
-  },
-  'en-EG': {
-    language: 'العربية',
-    title: 'Appointment-context messages',
-    intro: 'Explicitly enter the encounter and appointment IDs to verify current participation.',
-    login: 'Clinic staff sign-in',
-    loginHelp: 'Complete two-step verification. Credentials are not stored on this device.',
-    handle: 'Sign-in handle',
-    password: 'Password',
-    continue: 'Continue',
-    otp: 'Verification code',
-    verify: 'Verify',
-    encounter: 'Encounter ID',
-    appointment: 'Appointment ID',
-    confirm: 'Verify selected context',
-    change: 'Change context',
-    selected: 'Selected appointment context',
-    messages: 'Messages',
-    active: 'Participation is confirmed against the current record.',
-    loading: 'Checking the record and current access…',
-    empty:
-      'No messages for this appointment. Messages appear only during an open encounter with active participation.',
-    denied: 'Current access to this context could not be confirmed.',
-    participantRemoved: 'This workforce participation ended; messages are no longer available.',
-    accessEnded: 'The encounter ended or its messages are no longer available.',
-    unavailable: 'Messaging is currently unavailable.',
-    reconnecting: 'Rechecking access against the authoritative record…',
-    stale: 'Messages may be out of date. Recheck the record before continuing.',
-    offline: 'You are offline. Reads and sends are paused until access is rechecked.',
-    conflict:
-      'The context changed or could not be confirmed. Recheck it against the authoritative record.',
-    recoverable: 'Messages could not be refreshed. Recheck access before continuing.',
-    terminal: 'This context is unavailable. Check the encounter and appointment IDs.',
-    retry: 'Recheck access',
-    lastUpdated: 'Last authoritative update',
-    body: 'Write a message',
-    send: 'Send message',
-    sending: 'Sending…',
-    sent: 'Message sent',
-    next: 'You can continue messages in this active context.',
-    more: 'Load older messages',
-    required: 'Enter both the encounter and appointment IDs to verify the context.',
-    authError: 'Verification failed. Try again.',
-    blank: 'Write a message before sending.',
-  },
+  'ar-EG': feature010ArEG['clinic.messages'],
+  'en-EG': feature010EnEG['clinic.messages'],
 } as const;
 
 export function ContextMessages() {
@@ -786,7 +703,9 @@ export function ContextMessages() {
   const [sending, setSending] = useState(false);
   const baseUrl = process.env['NEXT_PUBLIC_API_BASE_URL'];
   const words = copy[locale];
+  const common = feature010CommonCopy[locale];
   const ar = locale === 'ar-EG';
+  useFeature010DocumentLocale(locale);
   const direction = ar ? 'rtl' : 'ltr';
   const tokenRef = useRef(token);
   tokenRef.current = token;
@@ -1008,35 +927,64 @@ export function ContextMessages() {
           padding: spacing.md,
         }}
       >
-        <a
-          href="/today"
-          style={{
-            color: color.brand,
-            minHeight: minimumTargetSize,
-            display: 'inline-flex',
-            alignItems: 'center',
-          }}
+        <nav
+          aria-label={common.clinicNavigation}
+          style={{ display: 'flex', flexWrap: 'wrap', gap: spacing.md, alignItems: 'center' }}
         >
-          {ar ? 'اليوم' : 'Today'}
-        </a>
-        <a
-          href="/referrals"
-          style={{
-            color: color.brand,
-            minHeight: minimumTargetSize,
-            display: 'inline-flex',
-            alignItems: 'center',
-          }}
-        >
-          {ar ? 'الإحالات' : 'Referrals'}
-        </a>
+          <a
+            href="/today"
+            style={{
+              color: color.brand,
+              minWidth: minimumTargetSize,
+              minHeight: minimumTargetSize,
+              display: 'inline-flex',
+              alignItems: 'center',
+            }}
+          >
+            {common.navigationToday}
+          </a>
+          <a
+            href="/referrals"
+            style={{
+              color: color.brand,
+              minWidth: minimumTargetSize,
+              minHeight: minimumTargetSize,
+              display: 'inline-flex',
+              alignItems: 'center',
+            }}
+          >
+            {common.navigationReferrals}
+          </a>
+        </nav>
         <button type="button" style={buttonStyle} onClick={() => setLocale(ar ? 'en-EG' : 'ar-EG')}>
           {words.language}
         </button>
       </header>
       {!token ? (
-        <main style={{ maxWidth: 560, marginInline: 'auto', padding: spacing.lg }}>
-          <h1 style={{ ...webTypography(locale, 'title'), color: color.ink }}>{words.login}</h1>
+        <main
+          style={{
+            width: '100%',
+            maxWidth: 560,
+            minWidth: 0,
+            boxSizing: 'border-box',
+            overflowWrap: 'anywhere',
+            marginInline: 'auto',
+            padding: spacing.lg,
+          }}
+        >
+          <h1
+            style={{
+              ...webTypography(locale, 'title'),
+              color: color.ink,
+              maxWidth: '100%',
+              minWidth: 0,
+              overflowWrap: 'anywhere',
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+            }}
+          >
+            {words.login}
+          </h1>
           <p>{words.loginHelp}</p>
           {!challenge ? (
             <form
@@ -1097,15 +1045,46 @@ export function ContextMessages() {
           {loginError && <p role="alert">{words.authError}</p>}
         </main>
       ) : (
-        <main style={{ maxWidth: 1120, marginInline: 'auto', padding: spacing.lg }}>
-          <h1 style={{ ...webTypography(locale, 'title'), color: color.ink }}>{words.title}</h1>
+        <main
+          style={{
+            width: '100%',
+            maxWidth: 1120,
+            minWidth: 0,
+            boxSizing: 'border-box',
+            overflowWrap: 'anywhere',
+            marginInline: 'auto',
+            padding: spacing.lg,
+          }}
+        >
+          <h1
+            style={{
+              ...webTypography(locale, 'title'),
+              color: color.ink,
+              maxWidth: '100%',
+              minWidth: 0,
+              overflowWrap: 'anywhere',
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+            }}
+          >
+            {words.title}
+          </h1>
           <p>{words.intro}</p>
           {state?.kind === 'success' && state.sentMessage && state.selectedContext && (
-            <section aria-live="polite" style={{ ...cardStyle, borderColor: color.positive }}>
+            <section style={{ ...cardStyle, borderColor: color.positive }}>
               <h2
                 ref={sentHeadingRef}
                 tabIndex={-1}
-                style={{ ...webTypography(locale, 'title'), color: color.positive }}
+                aria-live="polite"
+                style={{
+                  ...webTypography(locale, 'title'),
+                  color: color.positive,
+                  maxWidth: '100%',
+                  minWidth: 0,
+                  overflowWrap: 'anywhere',
+                  whiteSpace: 'normal',
+                  wordBreak: 'break-word',
+                }}
               >
                 {words.sent}
               </h2>
@@ -1121,9 +1100,11 @@ export function ContextMessages() {
                 {state.sentMessage.id}
               </p>
               <p>
-                {new Date(state.sentMessage.sentAt).toLocaleString(locale, {
-                  timeZone: 'Africa/Cairo',
-                })}
+                {isolateLtr(
+                  new Date(state.sentMessage.sentAt).toLocaleString(locale, {
+                    timeZone: 'Africa/Cairo',
+                  }),
+                )}
               </p>
               <p style={{ fontSize: 16, overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
                 {state.sentMessage.body}
@@ -1139,7 +1120,17 @@ export function ContextMessages() {
               }}
               style={cardStyle}
             >
-              <h2 style={{ ...webTypography(locale, 'title'), color: color.ink }}>
+              <h2
+                style={{
+                  ...webTypography(locale, 'title'),
+                  color: color.ink,
+                  maxWidth: '100%',
+                  minWidth: 0,
+                  overflowWrap: 'anywhere',
+                  whiteSpace: 'normal',
+                  wordBreak: 'break-word',
+                }}
+              >
                 {words.selected}
               </h2>
               <label>
@@ -1195,17 +1186,31 @@ export function ContextMessages() {
               )}
             </form>
             {state && state.kind !== 'selection' && (
-              <section aria-live="polite" style={cardStyle}>
-                <h2 style={{ ...webTypography(locale, 'title'), color: color.ink }}>
+              <section style={cardStyle}>
+                <h2
+                  style={{
+                    ...webTypography(locale, 'title'),
+                    color: color.ink,
+                    maxWidth: '100%',
+                    minWidth: 0,
+                    overflowWrap: 'anywhere',
+                    whiteSpace: 'normal',
+                    wordBreak: 'break-word',
+                  }}
+                >
                   {words.messages}
                 </h2>
-                <p>{stateText}</p>
+                <p role="status" aria-live="polite">
+                  {stateText}
+                </p>
                 {state.lastUpdatedAt && (
                   <p style={{ ...webTypography(locale, 'label'), color: color.mutedInk }}>
                     {words.lastUpdated}:{' '}
-                    {new Date(state.lastUpdatedAt).toLocaleString(locale, {
-                      timeZone: 'Africa/Cairo',
-                    })}
+                    {isolateLtr(
+                      new Date(state.lastUpdatedAt).toLocaleString(locale, {
+                        timeZone: 'Africa/Cairo',
+                      }),
+                    )}
                   </p>
                 )}
                 {['active', 'empty', 'success'].includes(state.kind) && (
@@ -1230,9 +1235,11 @@ export function ContextMessages() {
                           {message.body}
                         </p>
                         <small>
-                          {new Date(message.sentAt).toLocaleString(locale, {
-                            timeZone: 'Africa/Cairo',
-                          })}
+                          {isolateLtr(
+                            new Date(message.sentAt).toLocaleString(locale, {
+                              timeZone: 'Africa/Cairo',
+                            }),
+                          )}
                         </small>
                       </article>
                     ))}
@@ -1306,6 +1313,11 @@ export function ContextMessages() {
             }
             .context-workspace > section {
               min-width: 0;
+              max-width: 100%;
+            }
+            .context-workspace > form {
+              min-width: 0;
+              max-width: 100%;
             }
           `}</style>
           {!baseUrl && <p role="status">{words.unavailable}</p>}

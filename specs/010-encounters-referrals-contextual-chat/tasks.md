@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C26 accepted; T001–T078 complete, T079–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C27 accepted; T001–T081 complete, T082–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -483,15 +483,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** All six approved families render and operate in both locales.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T079 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-I18N-001, NFR-A11Y-001] Write red catalog and browser checks for state labels, dates, RTL/LTR, bidi IDs, keyboard/focus, screen reader, 44x44 targets, 200/400% reflow and reduced motion — `packages/i18n/src/feature-010.test.ts; tests/e2e/feature-010-accessibility.spec.ts`
+- [X] T079 [FR-CLINIC-006, FR-CLINIC-007, FR-FAC-006, NFR-I18N-001, NFR-A11Y-001] Write red catalog and browser checks for state labels, dates, RTL/LTR, bidi IDs, keyboard/focus, screen reader, 44x44 targets, 200/400% reflow and reduced motion — `packages/i18n/src/feature-010.test.ts; tests/e2e/feature-010-accessibility.spec.ts`
   - Depends on: `T078`
   - Acceptance evidence: `test enumerates six approved families and P0 state matrix`
 
-- [ ] T080 [NFR-I18N-001, NFR-A11Y-001, NFR-PERF-001] Consolidate the already-tested ar-EG/en-EG Feature 010 route labels into exact shared message keys and wire accessible state primitives on approved patient/clinic routes only — `packages/i18n/src/feature-010.ts; packages/i18n/src/index.ts; apps/clinic/src/app/layout.tsx; apps/patient/app/_layout.tsx`
+- [X] T080 [NFR-I18N-001, NFR-A11Y-001, NFR-PERF-001] Consolidate the already-tested ar-EG/en-EG Feature 010 route labels into exact shared message keys and wire accessible state primitives on approved patient/clinic routes only — `packages/i18n/src/feature-010.ts; packages/i18n/src/index.ts; apps/clinic/src/app/layout.tsx; apps/patient/app/_layout.tsx`
   - Depends on: `T079`
   - Acceptance evidence: `human-facing enum codes do not appear as raw UI copy`
 
-- [ ] T081 [NFR-I18N-001, NFR-A11Y-001, NFR-PERF-001] Run bilingual live route/semantic checks against immutable 87-state/408-reference TEST-ONLY manifest without regenerating it — `specs/010-encounters-referrals-contextual-chat/evidence/C27-ar-en-accessibility.md`
+- [X] T081 [NFR-I18N-001, NFR-A11Y-001, NFR-PERF-001] Run bilingual live route/semantic checks against immutable 87-state/408-reference TEST-ONLY manifest without regenerating it — `specs/010-encounters-referrals-contextual-chat/evidence/C27-ar-en-accessibility.md`
   - Depends on: `T080`
   - Acceptance evidence: `AR RTL/EN LTR evidence recorded; OPEN-UX-002/OPEN-TECH-003 not auto-closed`
 
