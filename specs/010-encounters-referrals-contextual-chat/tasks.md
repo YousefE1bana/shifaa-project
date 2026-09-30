@@ -1,6 +1,6 @@
 # Tasks: Feature 010 — Encounters, Referrals, and Contextual Chat
 
-> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C24 accepted; T001–T072 complete, T073–T086 open
+> **Feature:** `010-encounters-referrals-contextual-chat` · **Plan status:** `PLAN_APPROVED` · **Ledger status:** C01–C25 accepted; T001–T075 complete, T076–T086 open
 > Source of truth: approved `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`, dated reconciliation/Plan Gate, and approved TEST-ONLY UX manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`.
 
 ## Rules
@@ -446,15 +446,15 @@ C03 intentionally precedes DB/API implementation: its stable typed boundary is c
 **Independent outcome:** Clinic selects only an eligible appointment context.
 **Focused checkpoint:** 3 tasks; complete in order and stop on failure.
 
-- [ ] T073 [US3] [FR-FAC-006, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001] Write red clinic /messages tests for explicit eligible context selection, ended interval access loss, completion, offline, conflict and REST reconnect/stale label — `apps/clinic/test/feature-010-messages.test.tsx`
+- [x] T073 [US3] [FR-FAC-006, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001] Write red clinic /messages tests for explicit eligible context selection, ended interval access loss, completion, offline, conflict and REST reconnect/stale label — `apps/clinic/test/feature-010-messages.test.tsx`
   - Depends on: `T072`
   - Acceptance evidence: `no general consultation channel or attachment control`
 
-- [ ] T074 [US3] [FR-FAC-006, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001] Implement approved clinic /messages view with generated client and current-participant reauthorization; body-only composer disappears immediately after interval end — `apps/clinic/src/app/messages/page.tsx; apps/clinic/src/components/feature-010/ContextMessages.tsx`
+- [x] T074 [US3] [FR-FAC-006, NFR-SEC-004, NFR-I18N-001, NFR-A11Y-001] Implement approved clinic /messages view with generated client and current-participant reauthorization; body-only composer disappears immediately after interval end — `apps/clinic/src/app/messages/page.tsx; apps/clinic/src/components/feature-010/ContextMessages.tsx`
   - Depends on: `T073`
   - Acceptance evidence: `no ended workforce history/read/send access`
 
-- [ ] T075 [US3] [FR-FAC-006, NFR-SEC-004, NFR-A11Y-001] Run clinic context states in ar-EG/en-EG at 768/1440 with keyboard/focus and refreshed authority — `specs/010-encounters-referrals-contextual-chat/evidence/C25-clinic-chat-ui.md`
+- [x] T075 [US3] [FR-FAC-006, NFR-SEC-004, NFR-A11Y-001] Run clinic context states in ar-EG/en-EG at 768/1440 with keyboard/focus and refreshed authority — `specs/010-encounters-referrals-contextual-chat/evidence/C25-clinic-chat-ui.md`
   - Depends on: `T074`
   - Acceptance evidence: `active/send-success/participant-removed/access-ended/reconnecting pass`
 
