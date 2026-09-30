@@ -5,3 +5,4 @@ export * from './privacy-dsr-notifications/index.js';
 export * from './discovery-sos/index.js';
 export * from './identity-continuity/index.js';
 export * from './audit-admin/index.js';
+export * from './feature-010/encounter-policy.js';

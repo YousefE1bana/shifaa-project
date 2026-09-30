@@ -7,6 +7,17 @@ export {
   clinicSchedulingMessageKeys,
   interpolateClinicScheduling,
 } from './clinic-scheduling.ts';
+export {
+  feature010ArEG,
+  feature010CommonCopy,
+  feature010EnEG,
+  feature010FamilyKeys,
+  feature010Copy,
+  feature010PatientEncounterChatCopy,
+  patientEncounterCopy,
+  referralRecordsCopy,
+  type Feature010Family,
+} from './feature-010.ts';
 export { arEG, catalogs, enEG, type Locale, type MessageKey } from './catalogs.ts';
 
 export const directionFor = (locale: Locale) => (locale === 'ar-EG' ? 'rtl' : 'ltr');

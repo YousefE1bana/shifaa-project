@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar-EG" dir="rtl">
       <body style={{ '--shifaa-focus-color': color.focus } as React.CSSProperties}>
         <SecurityStepUpShell>{children}</SecurityStepUpShell>
       </body>

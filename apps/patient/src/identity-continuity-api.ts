@@ -1,3 +1,4 @@
+import { rememberFeature010Session } from './feature-010-session.ts';
 import { IdentityContinuityClient } from '@shifaa/api-client/identity-continuity';
 import { IdentityOnboardingClient } from '@shifaa/api-client';
 import { FamilyCareClient } from '@shifaa/api-client/family-care';
@@ -77,6 +78,7 @@ export function createPatientSessionClient(options: PatientSessionClientOptions)
         { allSessions },
         mutationKey(allSessions ? 'logout-all' : 'logout-current'),
       );
+      rememberFeature010Session('', undefined);
     },
   };
   return {
@@ -160,7 +162,10 @@ export class PatientRecoveryApi implements PatientRecoveryApiPort {
   }
 
   public async installSession(session: RecoveryResult['session']): Promise<void> {
-    patientOnboardingApi.installAccessToken(session.accessToken);
+    patientOnboardingApi.installAccessToken(
+      session.accessToken,
+      session.assurance === 'aal2' ? 2 : 1,
+    );
     if (session.refreshToken && this.options.nativeRefreshTokens)
       await this.options.nativeRefreshTokens.write(session.refreshToken);
   }
@@ -223,7 +228,10 @@ export class PatientMfaApi implements PatientMfaApiPort {
   }
 
   public async installSession(session: FactorResult['session']): Promise<void> {
-    patientOnboardingApi.installAccessToken(session.accessToken);
+    patientOnboardingApi.installAccessToken(
+      session.accessToken,
+      session.assurance === 'aal2' ? 2 : 1,
+    );
     if (session.refreshToken && this.options.nativeRefreshTokens)
       await this.options.nativeRefreshTokens.write(session.refreshToken);
   }
@@ -359,6 +367,7 @@ function sessionProjection(value: unknown): NativeSessionProjection {
   ) {
     throw new Error('session-response-invalid');
   }
+  rememberFeature010Session(session['accessToken'], session['assurance'] === 'aal2' ? 2 : 1);
   return {
     accessToken: session['accessToken'],
     ...(typeof session['refreshToken'] === 'string'

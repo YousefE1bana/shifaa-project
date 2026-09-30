@@ -1,14 +1,14 @@
-# SHIFAA Remaining-Specs Roadmap
+# SHIFAA Graduation Roadmap
 
 > **Frozen baseline:** `origin/main@5b1e1d640dcda2060a554f799b90d8f37ce80f12`
 >
-> **Status:** final graduation roadmap boundary freeze after merged features 001-006
+> **Status:** full 001-026 graduation sequence; 001-006 are completed historical engineering foundations, and the 007-026 order, scope, and dependencies remain frozen. The existing filename is retained for canonical links.
 >
-> **Prohibition:** this document does not create, start, specify, plan, task, issue, or implement feature 007 or any successor.
+> **Prohibition:** cataloguing a feature or the post-026 phase does not authorize its next SpecKit stage, implementation, production enablement, or release.
 
 ## 1. How future work must use this roadmap
 
-Features execute one at a time in the exact order below. Before starting a feature, an agent reads its assigned row and detail block, the listed predecessor evidence, and only the canonical contracts relevant to that feature and its dependencies. The agent must not re-audit or re-split the whole program. A boundary change requires a governance PR first.
+Features execute one at a time in the exact order below. Features 001-006 are historical merged engineering foundations; their completion does not mean production release or closure of their retained gates. Before starting a successor, an agent reads its assigned row and detail block, the listed predecessor evidence, and only the canonical contracts relevant to that feature and its dependencies. The agent must not re-audit or re-split the whole program. A boundary change requires a governance PR first.
 
 No feature may:
 
@@ -23,6 +23,12 @@ No feature may:
 
 | Feature | Name                                                    | Master phase                    | Primary requirement closure                             | Predecessor | Successor |
 | ------- | ------------------------------------------------------- | ------------------------------- | ------------------------------------------------------- | ----------- | --------- |
+| 001     | Identity Onboarding                                     | 1 — Foundation                  | AUTH-001/002/003/004/006; notice/consent and inventory foundation | None | 002 |
+| 002     | Supabase Runtime Foundation                             | 1 — Foundation                  | Runtime enablement of the 001 identity slice; no new FR behavior | 001 | 003 |
+| 003     | Facility Onboarding and Contextual RBAC                 | 1 — Foundation                  | FAC-001/002/003/007; ADMIN-001 and role/facility controls | 002 | 004 |
+| 004     | Family Care Relationships                               | 1 — Foundation                  | FAM-001/002/004/005/006/007/008 | 003 | 005 |
+| 005     | Privacy DSR and Notifications                           | 1 — Foundation                  | AUTH-007/008 DSR and inventory; NOTIF-001/002 | 004 | 006 |
+| 006     | Discovery and SOS Foundation                            | 2 — Discovery/SOS               | DISC-001/HOSP-007 foundation; SOS-001..004 and FAM-006 delivery | 005 | 007 |
 | 007     | Identity Continuity, Sessions, MFA, and Recovery        | 1 — Foundation                  | AUTH-002/005, FAM-003, ADMIN-002                        | 006         | 008       |
 | 008     | Audit, Admin Aggregates, and Observability              | 1 — Foundation                  | ADMIN-003, SEC-006, observability/health foundations    | 007         | 009       |
 | 009     | Clinic Scheduling, Appointments, and Queue              | 3 — Clinic/safety               | FAC-005, CLINIC-001..005/008                            | 008         | 010       |
@@ -42,9 +48,9 @@ No feature may:
 | 023     | AI Evaluation and Release Governance                    | 7 — AI track                    | AI-005 and release-governance slice of AI-004           | 022         | 024       |
 | 024     | AI Runtime and Licensed-Human Confirmation              | 7 — AI track                    | AI-001..004                                             | 023         | 025       |
 | 025     | SHIFAA Control                                          | Enabling tooling before release | No product FR; parked developer-control contract        | 024         | 026       |
-| 026     | Integrated Graduation Release                           | 8 — Release                     | All remaining cross-cutting NFR closure and P0 journeys | 025         | None      |
+| 026     | Integrated Graduation Release                           | 8 — Release                     | Integrated feature-complete engineering closure: remaining cross-cutting NFRs and P0 journeys | 025 | None |
 
-There are **20 remaining SpecKit features**. SHIFAA Control is **feature 025**, not 007: its full-scope definition requires truthful lifecycle/health support for the AI service and the complete service graph, while the baseline AI service is only a placeholder. Scheduling it earlier would either fail its own Definition of Done or force later features to reopen its boundary.
+The graduation sequence contains **26 SpecKit feature IDs**. Features 001-006 are completed historical foundations; the 007-026 rows retain their approved order and ownership. SHIFAA Control is **feature 025**, not 007: its full-scope definition requires truthful lifecycle/health support for the AI service and the complete service graph, while the baseline AI service is only a placeholder. Scheduling it earlier would either fail its own Definition of Done or force later features to reopen its boundary. The distinct post-026 Polish phase in §8 is not a Feature 027.
 
 ## 3. NFR profiles used below
 
@@ -55,7 +61,9 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 - **REALTIME** = CORE plus `NFR-SEC-003`, `NFR-AVAIL-001`, `NFR-AVAIL-002`.
 - **ALL** = all 24 NFR IDs: `NFR-SEC-001..007`, `NFR-PRIV-001..004`, `NFR-I18N-001`, `NFR-A11Y-001`, `NFR-PERF-001/002`, `NFR-AVAIL-001/002`, `NFR-DATA-001/002`, `NFR-API-001/002`, `NFR-OBS-001`, `NFR-QUALITY-001`, `NFR-PORT-001`.
 
-## 4. Frozen feature boundaries
+## 4. Historical foundation and frozen feature boundaries
+
+The 001-006 table rows summarize merged, synthetic engineering slices recorded in their existing `specs/001-*` through `specs/006-*` directories. They do not retroactively change those specs' original gate metadata, create new operation ownership, or claim production approval. The detailed frozen successor boundaries begin at 007 below.
 
 ### 007 — Identity Continuity, Sessions, MFA, and Recovery
 
@@ -91,11 +99,11 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 
 - **FR/NFR:** `FR-FAC-006`, `FR-CLINIC-006`, `FR-CLINIC-007`; PATIENT and REALTIME.
 - **API operation IDs:** `createEncounter`, `getEncounter`, `updateEncounter`, `signEncounterNote`, `completeEncounter`, `createReferral`, `listReferrals`, `acceptReferral`, `listContextMessages`, `sendContextMessage`.
-- **Data/RLS:** `clinical.encounters`, `encounter_participants`, `clinical_notes`, `conditions`, `referrals`, `trust.messages`; encrypted/versioned notes, explicit visibility, authorized referral field set, context/expiry-bound messages.
-- **UI/apps/services:** patient `/records`, `/encounters/:id`; clinic `/patients/:id/summary`, `/encounters/:id`, `/referrals`, `/messages`; patient/clinic apps, API, realtime/outbox worker.
-- **Dependencies/exclusions:** 009 appointment/queue context. Excludes open-ended consultation chat, safety/prescription logic, unauthorized private-note sharing, and offline clinical writes. Chat attachments remain body-only/disabled until governance resolves the missing upload-intent operation; the patient chat composition is also a UI-contract reconciliation item.
-- **OPEN gates:** `OPEN-LEGAL-001/002/007`, `OPEN-UX-001/002`, `OPEN-PRODUCT-001`, `OPEN-TECH-002/003`.
-- **Evidence:** participant/care-purpose/RLS matrix; note visibility and immutable supersession; referral minimum-field consent and linked appointment; context expiry/participant removal; reconnect/stale chat; prohibited telemetry scan; AR/EN accessibility; read/mutation/realtime performance and full verification.
+- **Data/RLS:** `clinical.encounters`, `encounter_participants`, `clinical_notes`, `conditions`, `referrals`, `trust.messages`; encrypted/versioned notes with `private|patient_visible` visibility, `open|completed` encounters, `pending|accepted` referrals, explicitly authorized referral `reason_summary` plus optional `encounter_type`, and appointment-context/encounter-lifecycle-bound body messages. Referral subject read/accept authority is PAT self, GUA current active approved guardianship, or DEL with both current `record.view` and `appointment.manage`; every action rechecks authority. Source CLN reads under current treating/facility/action authority; target CLN sees only an accepted referral linked to its facility appointment under current membership/action/purpose and only accepted fields. The subject patient participates in chat while eligible; workforce requires an active encounter-participant interval; GUA/DEL do not chat in Feature 010.
+- **UI/apps/services:** patient `/records` (pending referral list/preview/acceptance), `/encounters/:id` (patient chat composition only within this route); clinic `/patients/:id/summary`, `/encounters/:id`, `/referrals` (clinician creation/tracking only), `/messages`; patient/clinic apps, API, realtime/outbox worker.
+- **Dependencies/exclusions:** 009 appointment/queue context. `createEncounter` requires linked appointment `checked_in` and queue `called`, then atomically creates encounter `open` and advances appointment/queue to `in_consultation`/`in_service`; a missing queue fails closed. At creation, `createEncounter` initializes exactly one responsible-clinician participant interval derived server-side from the linked appointment and current authorized treating-clinician context; the client supplies no arbitrary workforce participant IDs. Feature 010 exposes no participant-add picker or add behavior. For participant changes, `updateEncounter` may only end an active non-responsible interval while the encounter is open; the responsible clinician cannot be removed while open, and ending an interval immediately revokes that participant's contextual-chat read/send access. Participant addition is deferred until a separately approved authoritative current-facility workforce-selection source exists. `completeEncounter` requires a responsible-clinician-authored nonblank summary and explicit structural confirmation, then atomically completes encounter, appointment, and queue; conditions/observation/order references are optional `0..n` and their absence cannot block completion. `acceptReferral` inherits Feature 009 booking availability/version, slot-race, idempotency, server fee, EGP, and `cash_on_arrival` safeguards. Feature 010 chat is appointment-context only while the linked encounter is open and the appointment is in consultation; participant removal or completion ends access. Excludes unlinked encounters, pre-encounter chat, patient inbox/new route, open-ended consultation chat, order/prescription chat realization, safety/prescription logic, unauthorized private-note sharing, and offline clinical writes. Chat requests are body-only, reject any attachment property, and persist null attachments; no chat upload-intent operation or attachment UI is included.
+- **OPEN gates:** Feature 010's functional TEST-ONLY composition/reference requirement under `OPEN-UX-001` was approved on 2026-09-26 by Yousef Osama as Product Owner + Acting Design Lead for this feature only, against manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310` (87 states, 408 references). The program-wide `OPEN-UX-001` remains applicable to other UI features and final identity work. `OPEN-LEGAL-001/002/007`, `OPEN-UX-002`, `OPEN-PRODUCT-001`, and `OPEN-TECH-002/003` retain their recorded later-stage effects. Feature 010 `PLAN_APPROVED` is recorded separately in the dated Feature 010 Plan Gate decision under the approved pre-implementation operating model; no later-stage gate is closed by it.
+- **Evidence:** participant/care-purpose/RLS matrix; note visibility and immutable supersession; explicit referral-acceptance authorization of the minimum field set and linked appointment; context expiry/participant removal; reconnect/stale chat; prohibited telemetry scan; AR/EN accessibility; read/mutation/realtime performance and full verification. Production consent/lawful-basis evidence remains under `OPEN-LEGAL-001/007`.
 
 ### 011 — Allergies and Clinical-Content Governance
 
@@ -249,13 +257,13 @@ These aliases expand to exact immutable IDs; they do not create new requirements
 
 ### 026 — Integrated Graduation Release
 
-- **FR/NFR:** no new FR. Closure owner for every still-PARTIAL/PLANNED cross-cutting NFR; ALL. Rechecks all 92 active FRs and confirms the three deferred FRs remain absent.
+- **FR/NFR:** no new FR. Integrated feature-complete engineering closure for every still-PARTIAL/PLANNED cross-cutting NFR; ALL. Rechecks all 92 active FRs and confirms the three deferred FRs remain absent. Final project-wide visual identity and post-Polish reverification are a distinct later phase, not an extra feature requirement.
 - **API operation IDs:** no new operations. Exact parity gate is all **242 active** catalog IDs across catalog, generated OpenAPI 3.1.1, contracts, generated clients, authorization, and registered routes; all six donation reservations absent.
 - **Data/RLS:** no new domain scope; clean migration of every graduation table, forced-RLS matrix, backup/restore and rollback/roll-forward evidence, retention blocks preserved where unresolved.
 - **UI/apps/services:** every canonical P0 route in patient, clinic, pharmacy, hospital, lab, and admin; full service graph through SHIFAA Control.
-- **Dependencies/exclusions:** 001-025 merged, verified, and cleaned. Excludes production PHI/claims where release gates remain open, donations, ambulance dispatch, insurance/UHI claims, autonomous AI, and any hidden waiver.
+- **Dependencies/exclusions:** 001-025 merged, verified, and cleaned. Feature 026 closes the integrated feature-complete engineering build and records only the release claim supported by its actual gates and evidence; it does not claim final post-026 visual polish. Excludes production PHI/claims where release gates remain open, donations, ambulance dispatch, insurance/UHI claims, autonomous AI, and any hidden waiver.
 - **OPEN gates:** all 23 open items are rechecked. Release may record an honest synthetic graduation release with production capabilities disabled, but cannot relabel a production-blocking gate as closed without its named evidence. `OPEN-AI-001` must pass graduation acceptance.
-- **Evidence:** deterministic PRD journeys; all feature acceptance manifests; AR RTL/EN LTR at required viewports/devices; keyboard, NVDA/TalkBack, 200%/400%, contrast, reduced motion; all forced-RLS/authorization/idempotency/concurrency negatives; complete API/DDL/UI/trace parity; load/SLO/SOS; ASVS/API/SAST/dependency/secrets/SBOM; breach and restore/DR table-tops; no-PHI telemetry; signed clinical/security/DPO/Product evidence as applicable; one isolated clean `pnpm verify`; `git diff --check`; exact-head green PR and merged-main re-verification.
+- **Evidence:** deterministic PRD journeys; all feature acceptance manifests; AR RTL/EN LTR at required viewports/devices; keyboard, NVDA/TalkBack, 200%/400%, contrast, reduced motion; all forced-RLS/authorization/idempotency/concurrency negatives; complete API/DDL/UI/trace parity; load/SLO/SOS; ASVS/API/SAST/dependency/secrets/SBOM; breach and restore/DR table-tops; no-PHI telemetry; signed clinical/security/DPO/Product evidence as applicable; one isolated clean `pnpm verify`; `git diff --check`; exact-head green PR and merged-main re-verification. Post-Polish visual/accessibility/regression reverification is additional final project-wide evidence and is not preclaimed here.
 
 ## 5. Dependency DAG and execution rule
 
@@ -263,7 +271,12 @@ The integration graph is intentionally a single topological order. Domain prereq
 
 ```mermaid
 flowchart LR
-  S006[006 Discovery and SOS] --> S007[007 Identity continuity]
+  S001[001 Identity onboarding] --> S002[002 Runtime foundation]
+  S002 --> S003[003 Facility and RBAC]
+  S003 --> S004[004 Family Care]
+  S004 --> S005[005 Privacy and notifications]
+  S005 --> S006[006 Discovery and SOS]
+  S006 --> S007[007 Identity continuity]
   S007 --> S008[008 Audit and observability]
   S008 --> S009[009 Clinic schedule and queue]
   S009 --> S010[010 Encounters referrals chat]
@@ -285,7 +298,7 @@ flowchart LR
   S025 --> S026[026 Integrated release]
 ```
 
-This graph has 21 nodes including completed predecessor 006, 20 forward edges, no cycle, and no unowned prerequisite.
+This feature graph has 26 nodes and 25 forward edges: 001-006 are historical completed foundations, and the frozen successor sequence continues from 007 through 026. It has no cycle or unowned prerequisite. The post-026 Polish phase follows the feature graph and is not an additional node or feature ID.
 
 ## 6. OPEN-gate ownership map
 
@@ -305,7 +318,7 @@ This graph has 21 nodes including completed predecessor 006, 20 forward edges, n
 | OPEN-VENDOR-003                                      | 022                                    | Production digital payments remain disabled                                                                                                                                           |
 | OPEN-AI-001                                          | 023-024                                | Blocks graduation AI verification, not scope                                                                                                                                          |
 | `OPEN-LEGAL-001`, `OPEN-LEGAL-002`, `OPEN-LEGAL-007` | all PHI features / 026                 | Production PHI, retention automation, and article-level claims remain blocked                                                                                                         |
-| `OPEN-UX-001`, `OPEN-UX-002`                         | every UI feature / 026                 | Pixel-identical/formal visual claims remain blocked                                                                                                                                   |
+| `OPEN-UX-001`, `OPEN-UX-002`                         | every UI feature / 026                 | Feature 010's exact TEST-ONLY functional compositions/references satisfy its `OPEN-UX-001` affected-UI plan prerequisite by the dated Product Owner + Acting Design Lead approval; other UI features and post-026 identity work still require their own approval. `OPEN-UX-002` formal capture/tolerance and verification remain open. Pixel-identical product claims are not established by static Feature 010 PNGs. |
 | OPEN-PRODUCT-001                                     | journey features / 026                 | UAT baseline remains blocked                                                                                                                                                          |
 | OPEN-TEAM-001                                        | every feature                          | CLOSED by the Product Owner-approved v2.1.2 operating model; implementation assignments activate under approved specs/tasks and do not create independent lifecycle approvers         |
 | OPEN-TECH-001                                        | 025-026 and reproducibility claims     | Byte-reproducible tool/runtime claim remains blocked                                                                                                                                  |
@@ -314,14 +327,24 @@ This graph has 21 nodes including completed predecessor 006, 20 forward edges, n
 
 ## 7. Machine-checkable reconciliation targets
 
-Before this freeze is changed or feature 007 is started, the governance baseline must continue to satisfy:
+After an approved amendment, the governance baseline must continue to satisfy:
 
 1. PRD extraction: 95 unique FR IDs, exactly 92 active and 3 deferred; 24 unique NFR IDs.
 2. Coverage ledger: 119 unique rows, no duplicate/missing ID, category totals `27/23/60/6/3` for DONE/PARTIAL/PLANNED/BLOCKED/DEFERRED.
 3. API catalog: 242 unique active operation IDs plus six reserved donation IDs; 72 implemented by 001-006; 170 future IDs assigned exactly once across 007-024; no product API added by 025-026.
 4. Deferred exclusion: no future row owns `FR-FIN-001..003` or a reserved donation operation.
-5. DAG: 20 remaining nodes, exact order 007-026, no cycle, no missing predecessor/successor.
+5. DAG: 26 feature IDs with historical 001-006 and preserved exact 007-026 order; no cycle or missing predecessor/successor. Post-026 Polish has no feature ID.
 6. Every active requirement has a completed or future closure owner; every blocker names a canonical `OPEN-*` ID.
 7. Every future feature lists data/RLS, UI/app/service, security, performance, acceptance, dependency, and exclusion boundaries.
 
 Any failure is `BASELINE RECONCILIATION REQUIRED`; it is not permission to modify a canonical requirement to make the roadmap pass.
+
+## 8. POST-026 PROJECT-WIDE POLISH PHASE
+
+This is a distinct project-wide phase **after Feature 026's integrated feature-complete engineering closure**. It is **not Feature 027**, does not enter the 001-026 feature DAG, and creates no FR, NFR, API operation, data field, state, permission, route, or business behavior. It cannot reopen a feature's approved functional, security/privacy, clinical, or accessibility contract by implication.
+
+Polish refines the patient and workforce applications together: SHIFAA branding, logo and visual identity; palette and typography; spacing, hierarchy and component styling; iconography and illustrations; motion, transitions and micro-interactions; responsive treatment; empty, loading and error presentation; cross-app consistency; and final RTL/LTR and accessibility visual refinement. Clinical/safety surfaces retain their zero-decorative-motion and stable-action rules. No final mark, visual token, illustration, or motion behavior is preapproved by this roadmap.
+
+Approved per-feature **TEST-ONLY functional** compositions and PNG baselines, including Feature 010's 87-state/408-reference baseline, may be superseded during Polish only through versioned source compositions, immutable replacement references/digests, traceable review and the applicable Product Owner/Design/accessibility decisions. Supersession must preserve the approved behavior, security/privacy, accessibility, and functional contracts; it does not erase earlier evidence or close an `OPEN-*` gate without that gate's named evidence.
+
+After Polish, run and record final project-wide Arabic RTL and English LTR visual, accessibility, and regression reverification across affected applications, routes, states, and required viewports/devices. Reconcile the results with the feature acceptance evidence and retained release gates before any final project-wide visual or release claim. This is a reverification phase, not a new feature or an implicit production approval.

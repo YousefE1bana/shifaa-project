@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ar-EG" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SHIFAA Feature 010 P0 design candidate</title>
+  <style>
+    @font-face { font-family: PlexArabic; src: url('/apps/patient/node_modules/@expo-google-fonts/ibm-plex-sans-arabic/400Regular/IBMPlexSansArabic_400Regular.ttf'); font-weight: 400; }
+    @font-face { font-family: PlexArabic; src: url('/apps/patient/node_modules/@expo-google-fonts/ibm-plex-sans-arabic/600SemiBold/IBMPlexSansArabic_600SemiBold.ttf'); font-weight: 600; }
+    @font-face { font-family: PlexArabic; src: url('/apps/patient/node_modules/@expo-google-fonts/ibm-plex-sans-arabic/700Bold/IBMPlexSansArabic_700Bold.ttf'); font-weight: 700; }
+    @font-face { font-family: Inter; src: url('/apps/patient/node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf'); font-weight: 400; }
+    @font-face { font-family: Inter; src: url('/apps/patient/node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf'); font-weight: 600; }
+    @font-face { font-family: Inter; src: url('/apps/patient/node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf'); font-weight: 700; }
+    :root {
+      --canvas: #F7FAF9; --surface: #FFFFFF; --subtle: #EDF4F2; --ink: #102522;
+      --muted: #4E6662; --border: #C9D8D5; --brand: #087F6C; --info: #1264A3;
+      --positive: #19733D; --warning: #8A5400; --danger: #B42318; --focus: #6D4AFF;
+      --shadow: 0 1px 2px rgba(16,37,34,.08), 0 6px 20px rgba(16,37,34,.06);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; width: 100%; overflow-x: hidden; background: var(--canvas); color: var(--ink); }
+    body { font: 400 16px/1.5 PlexArabic, system-ui, sans-serif; }
+    html[lang="en-EG"] body { font-family: Inter, system-ui, sans-serif; }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button, .button { min-height: 44px; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; background: var(--surface); font-weight: 600; cursor: default; }
+    button.primary, .button.primary { min-height: 48px; border-color: var(--brand); background: var(--brand); color: white; }
+    button:disabled { opacity: .55; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+    h1, h2, h3, p { margin-block: 0; }
+    h1 { font-size: 28px; line-height: 1.28; font-weight: 700; }
+    h2 { font-size: 20px; line-height: 1.35; font-weight: 700; }
+    h3 { font-size: 17px; line-height: 1.4; font-weight: 600; }
+    small, .small { font-size: 14px; line-height: 1.45; }
+    .muted { color: var(--muted); }
+    .app { min-height: 100vh; }
+    .topbar { height: 64px; background: var(--surface); border-block-end: 1px solid var(--border); padding-inline: 24px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 21px; font-weight: 700; color: var(--brand); }
+    .mark { width: 28px; height: 28px; border: 5px solid currentColor; border-radius: 8px; transform: rotate(45deg); display: inline-block; }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
+    .top-actions button { padding-inline: 11px; }
+    .avatar { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 999px; background: var(--subtle); color: var(--brand); font-size: 13px; font-weight: 700; }
+    .shell { display: grid; grid-template-columns: 1fr; min-height: calc(100vh - 64px); }
+    .clinic .shell { grid-template-columns: 72px minmax(0,1fr); }
+    .sidebar { padding: 20px 10px; background: var(--surface); border-inline-end: 1px solid var(--border); }
+    .side-title, .side-label { display: none; }
+    .side-item { display: flex; align-items: center; justify-content: center; min-height: 44px; gap: 10px; margin-block-end: 7px; border-radius: 8px; color: var(--muted); text-decoration: none; font-size: 14px; }
+    .side-item.active { color: var(--brand); background: var(--subtle); font-weight: 700; }
+    .side-dot { width: 10px; height: 10px; border: 2px solid currentColor; border-radius: 3px; flex: none; }
+    .workspace { min-width: 0; width: 100%; max-width: 1440px; margin-inline: auto; padding: 24px 24px 76px; }
+    .patient .workspace { max-width: 720px; }
+    .context { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; background: var(--surface); }
+    .context-main { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .context-main strong, .context-main small { display: block; }
+    .context-main small { color: var(--muted); }
+    .page-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-block: 30px 22px; }
+    .page-head p:last-child { color: var(--muted); margin-block-start: 6px; }
+    .eyebrow { color: var(--brand); font-size: 13px; font-weight: 700; letter-spacing: .02em; margin-block-end: 8px; }
+    .fresh { white-space: nowrap; color: var(--muted); font-size: 14px; }
+    .grid { display: grid; gap: 16px; }
+    .cols-2 { grid-template-columns: minmax(0,1.4fr) minmax(260px,1fr); }
+    .card { min-width: 0; padding: 24px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); margin-block-end: 16px; }
+    .card > * + * { margin-block-start: 14px; }
+    .card-head { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    .card-head > div { min-width: 0; }
+    .badge { display: inline-flex; align-items: center; min-height: 28px; padding: 2px 10px; border-radius: 999px; background: var(--subtle); color: var(--brand); font-size: 13px; font-weight: 700; white-space: nowrap; }
+    .badge.info { background: #EAF3FA; color: var(--info); }
+    .badge.positive { background: #EAF5ED; color: var(--positive); }
+    .badge.warning { background: #FFF4DF; color: var(--warning); }
+    .badge.danger { background: #FDEDEC; color: var(--danger); }
+    .row { display: flex; justify-content: space-between; gap: 12px; padding-block: 11px; border-block-end: 1px solid var(--border); }
+    .row:last-child { border-block-end: 0; }
+    .row span:first-child { color: var(--muted); }
+    .row strong { text-align: end; font-weight: 600; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .alert { display: flex; gap: 12px; align-items: start; padding: 15px 16px; border: 1px solid var(--border); border-inline-start: 4px solid var(--info); border-radius: 8px; background: #F1F7FC; margin-block-end: 16px; }
+    .alert strong { display: block; }
+    .alert p { color: var(--muted); margin-block-start: 3px; }
+    .alert.warning { border-inline-start-color: var(--warning); background: #FFF8EB; }
+    .alert.danger { border-inline-start-color: var(--danger); background: #FFF3F2; }
+    .alert.positive { border-inline-start-color: var(--positive); background: #F0F8F1; }
+    .alert-symbol { width: 24px; height: 24px; flex: none; text-align: center; font-weight: 700; }
+    .note { border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: var(--surface); }
+    .note + .note { margin-block-start: 10px; }
+    .note p { margin-block-start: 10px; }
+    .field { display: grid; gap: 6px; }
+    .field label { font-size: 14px; font-weight: 600; }
+    .field input, .field textarea, .field select { width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; background: var(--surface); }
+    .field textarea { min-height: 104px; resize: none; }
+    .review { padding: 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--subtle); }
+    .review > * + * { margin-block-start: 7px; }
+    .option { display: flex; align-items: start; gap: 10px; padding-block: 10px; }
+    .option input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--brand); }
+    .message { max-width: 88%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; margin-block-end: 10px; background: var(--surface); }
+    .message.mine { margin-inline-start: auto; background: var(--subtle); }
+    .message p { margin-block: 5px; }
+    .message small { color: var(--muted); }
+    .empty { text-align: center; padding-block: 52px; }
+    .empty-mark { width: 44px; height: 44px; border: 2px solid var(--brand); border-radius: 12px; margin: 0 auto 16px; display: grid; place-items: center; color: var(--brand); font-size: 25px; }
+    .empty p { margin-block: 9px 18px; }
+    .skeleton { height: 18px; border-radius: 8px; background: var(--subtle); margin-block: 14px; }
+    .skeleton:nth-child(2) { width: 76%; } .skeleton:nth-child(3) { width: 53%; }
+    .bottom-nav { display: none; }
+    .evidence-tag { position: fixed; inset-inline-end: 8px; inset-block-end: 5px; z-index: 20; font: 10px/1.2 monospace; color: var(--muted); background: rgba(255,255,255,.92); padding: 3px 5px; border: 1px solid var(--border); }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 30; background: rgba(16,37,34,.38); display: grid; place-items: center; padding: 18px; }
+    .modal { width: min(100%, 540px); max-height: calc(100vh - 36px); display: flex; flex-direction: column; overflow: hidden; padding: 20px; border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); }
+    .modal-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+    .modal-body > * + * { margin-block-start: 12px; }
+    .modal-actions { flex: none; display: flex; flex-wrap: wrap; gap: 8px; padding-block-start: 12px; margin-block-start: 12px; border-block-start: 1px solid var(--border); background: var(--surface); }
+    .modal-actions button { flex: 1 1 auto; }
+    .review-choice { border: 0; padding: 0; margin: 10px 0 0; }
+    .review-choice legend { font-weight: 700; margin-block-end: 5px; }
+    .review-choice .option { padding-block: 5px; }
+    .action-emphasis { border: 2px solid var(--brand); border-radius: 10px; padding: 12px; background: var(--subtle); }
+    .state-accepted.patient .page-head p:not(.eyebrow) { display: none; }
+    .state-accepted.patient .card .row { padding-block: 6px; }
+    @media (min-width: 1024px) {
+      .clinic .shell { grid-template-columns: 256px minmax(0,1fr); }
+      .sidebar { padding: 24px 16px; }
+      .side-title { display: block; padding: 8px 12px 20px; color: var(--muted); font-size: 12px; font-weight: 700; }
+      .side-label { display: inline; }
+      .side-item { justify-content: flex-start; padding-inline: 14px; }
+      .workspace { padding-inline: 40px; }
+    }
+    @media (max-width: 1023px) { .cols-2 { grid-template-columns: 1fr; } .clinic .shell { grid-template-columns: 168px minmax(0,1fr); } .side-label { display: inline; } .side-item { justify-content: flex-start; padding-inline: 10px; } }
+    @media (max-width: 599px) {
+      .topbar { height: 56px; padding-inline: 16px; }
+      .shell { min-height: calc(100vh - 56px); }
+      .workspace { padding: 16px 16px 94px; }
+      .context { padding: 9px 12px; }
+      .context button { display: none; }
+      .page-head { margin-block: 24px 18px; align-items: start; }
+      .page-head .fresh { display: none; }
+      h1 { font-size: 24px; }
+      .card { padding: 16px; }
+      .card-head { flex-wrap: wrap; }
+      .row { display: grid; gap: 2px; }
+      .row strong { text-align: start; }
+      .actions button { flex: 1 1 auto; }
+      .bottom-nav { position: fixed; inset-inline: 0; inset-block-end: 0; height: 68px; display: flex; background: var(--surface); border-block-start: 1px solid var(--border); z-index: 5; }
+      .bottom-nav span { flex: 1; text-align: center; padding: 9px 2px; color: var(--muted); font-size: 12px; }
+      .bottom-nav span.active { color: var(--brand); font-weight: 700; border-block-start: 3px solid var(--brand); }
+      .evidence-tag { inset-block-end: 70px; }
+      .modal-backdrop { padding: 8px; }
+      .modal { max-height: calc(100vh - 16px); padding: 14px; }
+      .modal-actions { padding-block-start: 8px; margin-block-start: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0ms !important; transition-duration: 0ms !important; } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const q = new URLSearchParams(location.search);
+    const baseline = q.get('baseline') || 'F010-P0-PAT-RECORDS-001';
+    const state = q.get('state') || 'pending';
+    const locale = q.get('locale') === 'en-EG' ? 'en-EG' : 'ar-EG';
+    const ar = locale === 'ar-EG';
+    document.documentElement.lang = locale;
+    document.documentElement.dir = ar ? 'rtl' : 'ltr';
+    const t = (a, e) => ar ? a : e;
+    const iso = value => `<bdi dir="ltr">${value}</bdi>`;
+    const statusLabel = code => ({
+      checked_in: t('تم تسجيل الحضور', 'Checked in'),
+      called: t('تم استدعاء المريض', 'Called'),
+      in_consultation: t('الاستشارة جارية', 'In consultation'),
+      in_service: t('الخدمة جارية', 'In service'),
+      completed: t('مكتمل', 'Completed'),
+      private: t('خاصة بفريق الرعاية', 'Care team private'),
+      patient_visible: t('مرئية للمريض', 'Patient visible')
+    })[code];
+    const route = {
+      'F010-P0-PAT-RECORDS-001': ['patient', '/records', t('سجلاتي وإحالاتي', 'Records & referrals'), t('راجع البيانات المسموح بها قبل قبول الإحالة.', 'Review permitted details before accepting a referral.')],
+      'F010-P0-PAT-ENCOUNTER-001': ['patient', '/encounters/:id', t('تفاصيل الزيارة', 'Encounter details'), t('السجل المتاح لك ورسائل الموعد أثناء الزيارة فقط.', 'Your released record and appointment messages during the encounter only.')],
+      'F010-P0-CLN-SUMMARY-001': ['clinic', '/patients/:id/summary', t('ملخص المريض', 'Patient summary'), t('سياق المريض الحالي والبيانات السريرية المصرح بها.', 'Current patient context and authorized clinical details.')],
+      'F010-P0-CLN-ENCOUNTER-001': ['clinic', '/encounters/:id', t('الزيارة السريرية', 'Clinical encounter'), t('المشاركون والملاحظات والإكمال البنيوي للزيارة.', 'Participants, notes and structural encounter completion.')],
+      'F010-P0-CLN-REFERRALS-001': ['clinic', '/referrals', t('الإحالات', 'Referrals'), t('إنشاء الإحالة الداخلية وتتبع حالتها فقط.', 'Create internal referrals and track their status only.')],
+      'F010-P0-CLN-MESSAGES-001': ['clinic', '/messages', t('رسائل سياق الموعد', 'Appointment-context messages'), t('رسائل الموعد المحدد أثناء الزيارة النشطة فقط.', 'Messages for a selected appointment during its active encounter only.')],
+    }[baseline];
+    if (!route) throw Error('Unknown baseline');
+    const app = route[0];
+    const btn = (label, primary = false, disabled = false) => `<button type="button" class="${primary ? 'primary' : ''}" ${disabled ? 'disabled' : ''}>${label}</button>`;
+    const badge = (label, kind = '') => `<span class="badge ${kind}">${label}</span>`;
+    const row = (label, value) => `<div class="row"><span>${label}</span><strong>${value}</strong></div>`;
+    const alert = (kind, title, detail) => `<section class="alert ${kind}" role="status"><span class="alert-symbol" aria-hidden="true">${kind === 'positive' ? '✓' : kind === 'danger' ? '!' : 'i'}</span><div><strong>${title}</strong><p>${detail}</p></div></section>`;
+    const loading = () => `<section class="card" aria-busy="true"><h2>${t('جارٍ التحميل', 'Loading')}</h2><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></section>`;
+    const empty = (title, detail) => `<section class="card empty"><div class="empty-mark" aria-hidden="true">○</div><h2>${title}</h2><p class="muted">${detail}</p>${btn(t('تحديث', 'Refresh'))}</section>`;
+    const fresh = `<span class="fresh">${t('آخر تحديث ١٠:١٨', 'Last updated 10:18')}</span>`;
+    const note = (visible) => `<div class="note"><div class="card-head"><h3>${t('ملاحظة زيارة موقّعة', 'Signed encounter note')}</h3>${badge(visible ? t('مرئية للمريض', 'Patient visible') : t('خاصة بفريق الرعاية', 'Care team private'), visible ? 'positive' : 'warning')}</div><p>${visible ? t('ملخص تجريبي متاح للمريض عن متابعة الزيارة.', 'Synthetic visit follow-up summary available to the patient.') : t('ملاحظة تجريبية خاصة بفريق الرعاية ضمن نطاق العلاج الحالي.', 'Synthetic care-team note within the current treatment scope.')}</p><small class="muted">${t('موقعة ١٠:١٢ · نسخة ٢', 'Signed 10:12 · version 2')}</small></div>`;
+    const localDate = t('١٤ سبتمبر ٢٠٢٦', '14 Sep 2026');
+    const localSlot = t('١٤ سبتمبر ٢٠٢٦ · ١٠:٣٠ صباحًا بتوقيت القاهرة', '14 Sep 2026 · 10:30 AM Cairo time');
+    const referralPreview = (accepted = false, includeType = false) => `<div class="review"><h3>${accepted ? t('البيانات التي أُذن بمشاركتها', 'Authorized/shared disclosure') : t('البيانات المقترح مشاركتها', 'Proposed disclosure')}</h3>${row(t('ملخص السبب', 'Reason summary'), t('متابعة تخصصية تجريبية', 'Synthetic specialty follow-up'))}${row(t('نوع الزيارة — اختياري', 'Encounter type — optional'), accepted ? (includeType ? t('زيارة عيادة · تمت مشاركته', 'Clinic visit · shared') : t('لم تتم مشاركته', 'Not shared')) : t('يحتاج اختيارًا صريحًا', 'Requires an explicit choice'))}<p class="small muted">${t('لا تتضمن الإحالة نص الملاحظات السريرية.', 'No clinical-note body is included in the referral.')}</p></div>`;
+    const slot = (accepted = false) => `<div class="review"><h3>${accepted ? t('الموعد المحجوز والجهة الفعلية', 'Booked appointment and resolved target') : t('الموعد المحدد', 'Selected appointment slot')}</h3>${accepted ? row(t('رقم الموعد', 'Appointment ID'), iso('APT-010-015')) : ''}${row(t('الطبيب', 'Doctor'), t('د. مريم التجريبية', 'Dr. Mariam Test'))}${row(t('المنشأة', 'Facility'), t('عيادة النور التجريبية', 'Al Noor Test Clinic'))}${row(t('الوقت', 'Time'), localSlot)}${row(t('الرسوم وطريقة الدفع', 'Fee and payment'), `${iso('EGP 250')} · ${t('نقدًا عند الوصول', 'Cash on arrival')}`)}</div>`;
+    const consentChoice = (includeType) => `<fieldset class="review-choice"><legend>${t('نوع الزيارة الاختياري — اختر صراحة', 'Optional encounter type — choose explicitly')}</legend><label class="option"><input type="radio" name="encounter-type-consent" ${includeType ? 'checked' : ''}><span>${t('أوافق على مشاركة نوع الزيارة أيضًا', 'I opt in to sharing encounter type')}</span></label><label class="option"><input type="radio" name="encounter-type-consent" ${includeType ? '' : 'checked'}><span>${t('لا أوافق على مشاركة نوع الزيارة', 'I opt out of sharing encounter type')}</span></label></fieldset>`;
+    const messageThread = () => `<div class="message"><strong>${t('د. مريم التجريبية', 'Dr. Mariam Test')}</strong><p>${t('يمكنك مراجعة ملخص الزيارة هنا.', 'You can review the encounter summary here.')}</p><small>10:14</small></div><div class="message mine"><strong>${t('المريضة التجريبية 010', 'Test Patient 010')}</strong><p>${t('شكرًا، سأراجع الملخص.', 'Thank you, I will review the summary.')}</p><small>10:16</small></div>`;
+    const composer = () => `<div class="field"><label for="body">${t('رسالة لهذا الموعد', 'Message for this appointment')}</label><textarea id="body" placeholder="${t('اكتب نص الرسالة', 'Type a message')}"></textarea></div><div class="actions">${btn(t('إرسال الرسالة', 'Send message'), true)}</div>`;
+    const outcome = (title, reference, next) => alert('positive', title, `${t('المرجع', 'Reference')} ${iso(reference)} · 10:18 · ${t('الخطوة التالية', 'Next step')}: ${next}`);
+    function patientRecords() {
+      if (state === 'empty') return empty(t('لا توجد إحالات بعد', 'No referrals yet'), t('ستظهر الإحالات المصرح بها هنا.', 'Authorized referrals will appear here.'));
+      const accepted = state === 'accepted';
+      const booked = accepted ? `<section class="card"><div class="card-head"><h2>${t('تم قبول الإحالة وحجز الموعد', 'Referral accepted and appointment booked')}</h2>${badge(t('مقبولة', 'Accepted'), 'positive')}</div><p class="small muted">${t('المرجع', 'Reference')} ${iso('REF-010-014')} · 10:18 · ${t('الخطوة التالية: عرض الموعد', 'Next: view appointment')}</p>${row(t('رقم الموعد', 'Appointment ID'), iso('APT-010-015'))}${row(t('الطبيب والمنشأة الفعليان', 'Resolved doctor and facility'), t('د. مريم التجريبية · عيادة النور التجريبية', 'Dr. Mariam Test · Al Noor Test Clinic'))}${row(t('الوقت', 'Slot'), localSlot)}<div class="actions">${btn(t('عرض الموعد', 'View appointment'), true)}</div></section>` : '';
+      const ref = `<section class="card"><div class="card-head"><div><h2>${t('إحالة إلى تخصص القلب', 'Cardiology referral')}</h2><p class="muted">${iso('REF-010-014')} · ${t('من زيارة', 'From encounter')} ${localDate}</p></div>${badge(accepted ? t('مقبولة', 'Accepted') : t('بانتظار قرارك', 'Pending your decision'), accepted ? 'positive' : 'warning')}</div>${row(t('التخصص', 'Specialty'), t('القلب', 'Cardiology'))}${row(t('الطبيب المستهدف', 'Target doctor'), t('أي طبيب مؤهل في التخصص', 'Any eligible doctor in specialty'))}${state === 'pending' ? `<div class="actions">${btn(t('مراجعة الإحالة', 'Review referral'), true)}</div>` : ''}</section>`;
+      const preview = ['referral-preview','acceptance-review','representative-acceptance-review','submitting','stale','offline','conflict','accepted'].includes(state) ? `<section class="card"><h2>${accepted ? t('تفاصيل الإحالة المقبولة', 'Accepted referral details') : t('راجع الإحالة قبل القبول', 'Review before acceptance')}</h2>${referralPreview(accepted, accepted)}${accepted ? '' : slot()}${state === 'referral-preview' ? `<div class="actions">${btn(t('متابعة إلى مراجعة القبول', 'Continue to acceptance review'), true)}</div>` : ''}</section>` : '';
+      return booked + ref + preview;
+    }
+    function patientEncounter() {
+      if (state === 'empty') return empty(t('لا توجد زيارة متاحة', 'No available encounter'), t('تظهر الزيارة بعد بدء الاستشارة المصرح بها.', 'An authorized encounter appears after consultation starts.'));
+      const completed = ['completed','access-ended'].includes(state);
+      const chatUnavailable = completed;
+      const record = `<section class="card"><div class="card-head"><div><h2>${t('زيارة عيادة النور التجريبية', 'Al Noor Test Clinic encounter')}</h2><p class="muted">${iso('ENC-010-014')} · ${localDate}</p></div>${badge(completed ? t('مكتملة', 'Completed') : t('جارية', 'Open'), completed ? 'positive' : 'info')}</div>${row(t('الطبيب المسؤول', 'Responsible clinician'), t('د. مريم التجريبية', 'Dr. Mariam Test'))}${row(t('نوع الزيارة', 'Encounter type'), t('زيارة عيادة', 'Clinic visit'))}${completed ? row(t('ملخص الإكمال', 'Completion summary'), t('ملخص تجريبي موثق من الطبيب', 'Clinician-authored synthetic summary')) : ''}</section>`;
+      const notes = `<section class="card"><h2>${t('ملاحظات متاحة لك', 'Notes available to you')}</h2>${note(true)}</section>`;
+      const chat = `<section class="card"><div class="card-head"><h2>${t('رسائل هذا الموعد', 'Messages for this appointment')}</h2>${badge(chatUnavailable ? t('انتهى الوصول', 'Access ended') : t('نشطة', 'Active'), chatUnavailable ? 'warning' : 'positive')}</div>${chatUnavailable ? alert('warning', t('انتهت رسائل هذا الموعد', 'Appointment messages ended'), t('اكتملت الزيارة والموعد والدور؛ لا يمكن قراءة الرسائل أو إرسالها الآن.', 'The encounter, appointment and queue completed; message history and sending are no longer available.')) : messageThread() + composer()}${fresh}</section>`;
+      const chatFirst = ['open','chat-stale','reconnecting','access-ended','offline','conflict','message-success'].includes(state);
+      const sent = state === 'message-success' ? outcome(t('تم إرسال الرسالة', 'Message sent'), 'MSG-010-014', t('متابعة الرسائل هنا', 'Continue in this encounter')) : '';
+      const completedChatNotice = state === 'completed' ? alert('warning', t('انتهت رسائل هذا الموعد', 'Appointment messages ended'), t('اكتملت الزيارة؛ لم تعد قراءة رسائل هذا الموعد أو إرسالها متاحة.', 'The encounter completed; messages for this appointment can no longer be read or sent.')) : '';
+      return sent + completedChatNotice + record + (chatFirst ? chat + notes : notes + chat);
+    }
+    function clinicSummary() {
+      if (state === 'empty') return empty(t('لا توجد زيارة مرتبطة', 'No linked encounter'), t('لا يوجد سجل زيارة في نطاق هذا المريض.', 'There is no encounter in this patient scope.'));
+      if (['start-eligible','start-review','start-stale'].includes(state)) {
+        const eligible = state !== 'start-stale';
+        return `<section class="card"><div class="card-head"><h2>${t('موعد المريض الحالي', 'Current patient appointment')}</h2>${badge(eligible ? t('جاهز لبدء الزيارة', 'Eligible to start') : t('يلزم تحديث الحالة', 'Eligibility needs refresh'), eligible ? 'positive' : 'warning')}</div>${row(t('الموعد', 'Appointment'), iso('APT-010-014'))}${row(t('حالة الموعد', 'Appointment status'), eligible ? statusLabel('checked_in') : t('غير مؤكدة حاليًا', 'Not currently verified'))}${row(t('الدور', 'Queue'), iso('QUE-010-014'))}${row(t('حالة الدور', 'Queue state'), eligible ? statusLabel('called') : t('غير مؤكدة حاليًا', 'Not currently verified'))}${eligible ? `<div class="actions action-emphasis">${btn(t('بدء الزيارة', 'Start encounter'), true)}<span class="small muted">${t('يُعاد فحص أهلية الموعد والدور على الخادم.', 'The API rechecks appointment and queue eligibility.')}</span></div>` : alert('warning', t('بدء الزيارة متوقف', 'Encounter start blocked'), t('حدّث حالة الموعد والدور من المصدر الموثوق. لم تُنشأ زيارة.', 'Refresh the appointment and queue from the authoritative source. No encounter was created.'))}</section>`;
+      }
+      const privateFirst = state === 'private-note';
+      return `<div class="grid cols-2"><section class="card"><h2>${t('نظرة عامة', 'Overview')}</h2>${row(t('المريض', 'Patient'), t('المريضة التجريبية 010', 'Test Patient 010'))}${row(t('الزيارة', 'Encounter'), iso('ENC-010-014'))}${row(t('الحالة', 'Status'), t('جارية', 'Open'))}${row(t('مراجع الحالات', 'Condition references'), t('لا يوجد — اختياري', 'None — optional'))}<div class="actions">${btn(t('عرض الزيارة', 'View encounter'), true)}</div></section><section class="card"><h2>${t('الملاحظات المصرح بها', 'Authorized notes')}</h2>${privateFirst ? note(false) + note(true) : note(true) + note(false)}</section></div>`;
+    }
+    function clinicEncounter() {
+      if (state === 'empty') return empty(t('لا توجد زيارة في هذا السياق', 'No encounter in this context'), t('تحقق من المريض والموعد المرتبط.', 'Check the patient and linked appointment.'));
+      const completed = state === 'completed';
+      const ended = state === 'participant-removed';
+      const top = completed ? outcome(t('اكتملت الزيارة والموعد والدور', 'Encounter, appointment and queue completed'), 'ENC-010-014', t('عرض السجل المكتمل', 'View completed record')) : state === 'created' ? outcome(t('بدأت الزيارة وانتقلت إلى هذه الصفحة', 'Encounter started and navigated here'), 'ENC-010-014', t('توثيق الزيارة', 'Document encounter')) : state === 'participant-removed' ? outcome(t('انتهت مشاركة عضو الفريق', 'Workforce participation ended'), 'ENC-010-014', t('لم يعد بإمكانه قراءة الرسائل أو إرسالها', 'Their message read/send access has ended')) : state === 'note-signed' ? outcome(t('تم توقيع نسخة الملاحظة', 'Signed note version saved'), 'NOTE-010-024', t('عرض النسخ', 'View versions')) : '';
+      if (state === 'created') {
+        const freshOverview = `<section class="card"><div class="card-head"><h2>${t('الزيارة المرتبطة بالموعد', 'Encounter linked to appointment')}</h2>${badge(t('جارية', 'Open'), 'info')}</div>${row(t('الزيارة', 'Encounter'), iso('ENC-010-014'))}${row(t('الموعد', 'Appointment'), `${iso('APT-010-014')} · ${statusLabel('in_consultation')}`)}${row(t('الدور', 'Queue'), `${iso('QUE-010-014')} · ${statusLabel('in_service')}`)}${row(t('مراجع الحالات/الملاحظات/الطلبات', 'Condition/observation/order references'), t('لم توثق بعد — اختيارية', 'Not yet documented — optional'))}</section>`;
+        const freshParticipants = `<section class="card"><h2>${t('فريق الزيارة الحالي', 'Current encounter team')}</h2>${row(t('الطبيب المسؤول', 'Responsible clinician'), t('د. مريم التجريبية', 'Dr. Mariam Test'))}</section>`;
+        const freshNotes = `<section class="card"><h2>${t('الملاحظات الموقعة', 'Signed notes')}</h2><p class="muted">${t('لا توجد ملاحظات موقعة بعد لهذه الزيارة الجديدة.', 'No signed notes yet for this new encounter.')}</p><div class="actions">${btn(t('تحرير مسودة ملاحظة', 'Edit note draft'))}</div></section>`;
+        return top + `<div class="grid cols-2"><div>${freshOverview}${freshParticipants}</div><div>${freshNotes}</div></div>`;
+      }
+      const overview = `<section class="card"><div class="card-head"><h2>${t('الزيارة المرتبطة بالموعد', 'Encounter linked to appointment')}</h2>${badge(completed ? t('مكتملة', 'Completed') : t('جارية', 'Open'), completed ? 'positive' : 'info')}</div>${row(t('الزيارة', 'Encounter'), iso(completed ? 'ENC-010-014 · v3' : 'ENC-010-014 · v2'))}${row(t('الموعد', 'Appointment'), `${iso(completed ? 'APT-010-014 · v5' : 'APT-010-014 · v4')} · ${statusLabel(completed ? 'completed' : 'in_consultation')}`)}${row(t('الدور', 'Queue'), `${iso(completed ? 'QUE-010-014 · v4' : 'QUE-010-014 · v3')} · ${statusLabel(completed ? 'completed' : 'in_service')}`)}${row(t('مراجع الحالات/الملاحظات/الطلبات', 'Condition/observation/order references'), t('اختيارية · لا يوجد حاليًا', 'Optional · none currently'))}</section>`;
+      const participants = `<section class="card"><h2>${completed ? t('فريق الزيارة عند الإكمال', 'Historical encounter team at completion') : t('فريق الزيارة الحالي', 'Current encounter team')}</h2>${row(t('الطبيب المسؤول', 'Responsible clinician'), completed ? t('د. مريم التجريبية · عند الإكمال', 'Dr. Mariam Test · at completion') : t('د. مريم التجريبية · لا يمكن إزالتها', 'Dr. Mariam Test · non-removable'))}${row(t('عضو فريق آخر', 'Another team member'), completed ? t('لا يملك وصولًا حاليًا للرسائل', 'No current message access') : ended ? t('انتهت مشاركته ١٠:١٧', 'Participation ended 10:17') : t('مشارك حاليًا', 'Current participant'))}${!completed ? `<div class="actions">${btn(t('تعديل المشاركين', 'Edit participants'))}</div>` : ''}</section>`;
+      const notes = `<section class="card"><h2>${t('الملاحظات الموقعة', 'Signed notes')}</h2>${note(false)}${note(true)}${!completed ? `<div class="actions">${btn(t('تحرير مسودة ملاحظة', 'Edit note draft'))}</div>` : ''}</section>`;
+      const finish = `<section class="card"><h2>${t('إكمال الزيارة بنيويًا', 'Structural encounter completion')}</h2><div class="field"><label for="summary">${t('ملخص الطبيب المسؤول — مطلوب', 'Responsible clinician summary — required')}</label><textarea id="summary">${t('ملخص تجريبي موثق من الطبيب للزيارة.', 'Clinician-authored synthetic encounter summary.')}</textarea></div><p class="small muted">${t('مراجع الحالات والملاحظات والطلبات اختيارية؛ غيابها لا يمنع الإكمال. هذا التأكيد لا يقرر الكفاية الطبية.', 'Condition, observation and order references are optional; absence does not block completion. This does not assert clinical sufficiency.')}</p><div class="actions">${btn(t('مراجعة الإكمال', 'Review completion'), true)}</div></section>`;
+      return top + `<div class="grid cols-2"><div>${overview}${participants}</div><div>${notes}${!completed ? finish : ''}</div></div>`;
+    }
+    function clinicReferrals() {
+      if (state === 'empty') return empty(t('لا توجد إحالات في هذا النطاق', 'No referrals in this scope'), t('يمكن للطبيب المعالج إنشاء إحالة داخلية.', 'The treating clinician may create an internal referral.'));
+      const accepted = state === 'accepted';
+      const reviewing = state === 'create-review';
+      const top = state === 'create-success' ? outcome(t('أُنشئت إحالة داخلية معلقة', 'Pending internal referral created'), 'REF-010-014', t('زيارة المصدر ENC-010-014 · متابعة الحالة', 'Source encounter ENC-010-014 · Track status')) : '';
+      const list = `<section class="card"><div class="card-head"><h2>${t('قائمة الإحالات', 'Referral worklist')}</h2>${btn(t('إنشاء إحالة', 'Create referral'), true)}</div>${reviewing ? `<p class="muted">${t('لا توجد إحالة جديدة محفوظة قبل التأكيد. لا يظهر رقم مرجعي بعد.', 'No new referral is committed before confirmation. No reference ID exists yet.')}</p>` : `<article class="note"><div class="card-head"><h3>${t('إحالة تخصص القلب', 'Cardiology referral')}</h3>${badge(accepted ? t('مقبولة', 'Accepted') : t('معلقة — داخلية', 'Pending — internal'), accepted ? 'positive' : 'warning')}</div>${row(t('المرجع', 'Reference'), iso('REF-010-014'))}${row(t('زيارة المصدر', 'Source encounter'), iso('ENC-010-014'))}${accepted ? `${row(t('الموعد المرتبط', 'Linked appointment'), iso('APT-010-015'))}${row(t('الطبيب والمنشأة الفعليان', 'Resolved doctor and facility'), t('د. مريم التجريبية · عيادة النور التجريبية', 'Dr. Mariam Test · Al Noor Test Clinic'))}${row(t('الوقت', 'Time'), localSlot)}` : ''}<p class="small muted">${accepted ? t('المحتوى المشارك هو ملخص السبب ونوع الزيارة المصرح به فقط.', 'Shared content is the reason summary and explicitly authorized encounter type only.') : t('لا تُعرض أي بيانات للجهة المستهدفة قبل قبول المريض أو ممثله المصرح.', 'No content reaches the target before authorized subject acceptance.')}</p></article>`}</section>`;
+      const create = `<section class="card"><h2>${t('مراجعة إنشاء إحالة داخلية', 'Review internal referral creation')}</h2>${row(t('زيارة المصدر', 'Source encounter'), iso('ENC-010-014'))}${row(t('التخصص', 'Specialty'), t('القلب', 'Cardiology'))}${row(t('ملخص السبب', 'Reason summary'), t('متابعة تخصصية تجريبية', 'Synthetic specialty follow-up'))}<p class="small muted">${t('لم تُنشأ الإحالة بعد؛ لا يوجد رقم REF محفوظ. لا يتم إرسال نصوص الملاحظات أو قبول الإحالة نيابة عن المريض.', 'The referral is not created yet; no REF ID is committed. Note bodies are not sent, and the clinic cannot accept on the patient’s behalf.')}</p><div class="actions">${btn(t('إنشاء إحالة معلقة', 'Create pending referral'), true)}${btn(t('العودة', 'Back'))}</div></section>`;
+      return top + `<div class="grid cols-2"><div>${list}</div><div>${state === 'create-review' ? create : `<section class="card"><h2>${t('النطاق الحالي', 'Current scope')}</h2>${row(t('المنشأة', 'Facility'), t('عيادة النور التجريبية', 'Al Noor Test Clinic'))}${row(t('آخر تحديث', 'Last updated'), '10:18')}</section>`}</div></div>`;
+    }
+    function clinicMessages() {
+      if (state === 'empty') return empty(t('لا توجد رسائل لهذا الموعد', 'No messages for this appointment'), t('تظهر الرسائل فقط أثناء الزيارة الجارية ومع مشاركة نشطة.', 'Messages appear only during an open encounter with active participation.'));
+      const ended = ['participant-removed','access-ended','chat-unavailable','offline','reconnecting'].includes(state);
+      const unavailable = ended || state === 'conflict';
+      const top = state === 'send-success' ? outcome(t('تم إرسال الرسالة', 'Message sent'), 'MSG-010-014', t('متابعة السياق الحالي', 'Continue in this context')) : '';
+      return top + `<div class="grid cols-2"><section class="card"><h2>${t('سياق الموعد المحدد', 'Selected appointment context')}</h2>${row(t('الموعد', 'Appointment'), iso('APT-010-014'))}${row(t('الزيارة', 'Encounter'), iso('ENC-010-014'))}${row(t('المريض', 'Patient'), t('المريضة التجريبية 010', 'Test Patient 010'))}${row(t('المشاركة', 'Participation'), ended ? t('غير نشطة', 'Inactive') : t('نشطة حاليًا', 'Currently active'))}<div class="actions">${btn(t('تغيير الموعد', 'Change appointment'))}</div></section><section class="card"><div class="card-head"><h2>${t('الرسائل', 'Messages')}</h2>${badge(unavailable ? t('غير متاحة', 'Unavailable') : t('سياق نشط', 'Active context'), unavailable ? 'warning' : 'positive')}</div>${unavailable ? state === 'conflict' ? alert('warning', t('يلزم تحديث سياق الرسائل', 'Message context needs refresh'), t('أعد التحقق من النسخة والمشاركة عبر السجل قبل القراءة أو الإرسال.', 'Recheck the version and participation through the authoritative record before reading or sending.')) : alert('warning', t('انتهى الوصول إلى الرسائل', 'Message access has ended'), t('أُزيلت المشاركة أو انتهت الزيارة أو يلزم إعادة التحقق عبر السجل.', 'Participation ended, the encounter completed, or REST reauthorization is required.')) : messageThread() + composer()}${fresh}</section></div>`;
+    }
+    function stateBanner() {
+      if (state === 'permission-denied' || state === 'authority-lost') return alert('danger', t('لا يمكنك عرض هذا المحتوى', 'You cannot view this content'), t('تحقق من نطاق المريض والصلاحية الحالية. لم تُعرض بيانات سريرية.', 'Check the patient scope and current authority. No clinical content was shown.'));
+      if (state === 'offline') return alert('warning', t('أنت غير متصل — التعديل متوقف', 'Offline — changes are blocked'), t('اعرض آخر حالة مسموحة فقط. اتصل ثم حدّث للتحقق من الصلاحية قبل أي إجراء.', 'View only the last permitted state. Reconnect and refresh authority before any action.'));
+      if (state === 'stale' || state === 'chat-stale') return alert('warning', t('قد تكون المعلومات قديمة', 'Information may be stale'), t('آخر تحديث ١٠:١٨. حدّث من السجل الموثوق قبل المتابعة.', 'Last updated 10:18. Refresh from the authoritative record before continuing.'));
+      if (state === 'reconnecting') return alert('warning', t('جارٍ إعادة التحقق من الصلاحية', 'Reauthorizing after reconnect'), t('الرسائل والتعديل متوقفان حتى تنتهي مطابقة السجل عبر REST.', 'Messages and changes are paused until authoritative REST reconciliation completes.'));
+      if (state === 'conflict') {
+        const booking = baseline.includes('RECORDS') || baseline.includes('REFERRALS');
+        return alert('danger', booking ? t('تغيرت النسخة أو الموعد المحدد', 'Version or slot changed') : t('تغيرت نسخة السجل', 'Record version changed'), booking ? t('لم يُحفظ أي تغيير. حدّث البيانات واختر موعدًا متاحًا ثم حاول من جديد.', 'No change was saved. Refresh and select an available slot before retrying.') : t('لم يُحفظ أي تغيير. حدّث السجل الموثوق ثم حاول من جديد.', 'No change was saved. Refresh the authoritative record before retrying.'));
+      }
+      if (state === 'error-recoverable') return alert('warning', t('تعذر تحميل البيانات الآن', 'Data could not load now'), t('حاول مجددًا. لا يُعاد إرسال أي تعديل تلقائيًا.', 'Retry the read. No change will be resent automatically.'));
+      if (state === 'error-terminal') return alert('danger', t('هذا المحتوى غير متاح', 'This content is unavailable'), t('ارجع إلى السياق المصرح به أو تواصل مع الدعم.', 'Return to an authorized context or contact support.'));
+      if (state === 'submitting') return alert('', t('جارٍ التحقق من القبول والحجز', 'Checking acceptance and booking'), t('لا تغلق الصفحة حتى تظهر النتيجة المرجعية.', 'Wait for the referenced result before leaving.'));
+      return '';
+    }
+    function sidebar() {
+      const items = [
+        [t('اليوم', 'Today'), ''], [t('ملخص المريض', 'Patient summary'), 'SUMMARY'],
+        [t('الزيارة', 'Encounter'), 'ENCOUNTER'], [t('الإحالات', 'Referrals'), 'REFERRALS'],
+        [t('الرسائل', 'Messages'), 'MESSAGES']
+      ];
+      return `<nav class="sidebar" aria-label="${t('التنقل الرئيسي', 'Primary navigation')}"><div class="side-title">${t('مساحة العيادة', 'CLINIC WORKSPACE')}</div>${items.map(([label,key])=>`<a class="side-item ${key && baseline.includes(key) ? 'active' : ''}" href="#"><span class="side-dot" aria-hidden="true"></span><span class="side-label">${label}</span></a>`).join('')}</nav>`;
+    }
+    const contextBlocked = ['permission-denied','authority-lost','error-terminal'].includes(state);
+    const clinicContext = `<section class="context"><div class="context-main"><div class="avatar">${t('ن', 'N')}</div><div><strong>${contextBlocked ? t('عيادة النور التجريبية · لا يوجد سياق مريض مصرح', 'Al Noor Test Clinic · No authorized patient context') : t('عيادة النور التجريبية · المريضة التجريبية 010', 'Al Noor Test Clinic · Test Patient 010')}</strong><small>${t('طبيب معالج · AAL2 · بيئة تجريبية', 'Treating clinician · AAL2 · Test environment')}</small></div></div>${btn(t('تغيير النطاق', 'Change scope'))}</section>`;
+    const representative = state === 'representative-acceptance-review';
+    const authorityLost = state === 'authority-lost';
+    const patientContext = authorityLost ? `<section class="context"><div class="context-main"><div class="avatar">${t('و', 'G')}</div><div><strong>${t('سياق ولي الأمر/المفوض غير متاح', 'Guardian/delegate context unavailable')}</strong><small>${t('انتهت الصلاحية الحالية · لا تُعرض بيانات المريض', 'Current authority lost · no patient data shown')}</small></div></div></section>` : representative ? `<section class="context"><div class="context-main"><div class="avatar">${t('و', 'G')}</div><div><strong>${t('المريضة التجريبية 010', 'Test Patient 010')}</strong><small>${t('ولي أمر مخول حاليًا · سياق المريض', 'Currently authorized guardian · patient context')}</small></div></div>${btn(t('تغيير الشخص', 'Switch person'))}</section>` : `<section class="context"><div class="context-main"><div class="avatar">010</div><div><strong>${t('المريضة التجريبية 010', 'Test Patient 010')}</strong><small>${t('حسابي · سياق مؤكد', 'Self · Context confirmed')}</small></div></div>${btn(t('تغيير الشخص', 'Switch person'))}</section>`;
+    const body = baseline.includes('PAT-RECORDS') ? patientRecords() : baseline.includes('PAT-ENCOUNTER') ? patientEncounter() : baseline.includes('CLN-SUMMARY') ? clinicSummary() : baseline.includes('CLN-ENCOUNTER') ? clinicEncounter() : baseline.includes('CLN-REFERRALS') ? clinicReferrals() : clinicMessages();
+    const blocked = ['permission-denied','authority-lost','error-terminal'].includes(state);
+    const requiresRefresh = ['stale','chat-stale','offline','reconnecting','error-recoverable'].includes(state);
+    const refreshContent = `<section class="card"><h2>${t('حدّث للتحقق من السجل الحالي', 'Refresh to verify the current record')}</h2><p class="muted">${t('لن تُعرض تفاصيل سريرية من نسخة قديمة قبل إعادة التحقق من الصلاحية.', 'Clinical details from a stale copy stay hidden until authority is rechecked.')}</p><div class="actions">${btn(t('تحديث السجل', 'Refresh record'), true)}</div></section>`;
+    const content = state === 'loading' ? loading() : blocked ? '' : requiresRefresh ? refreshContent : body;
+    const reviewModal = (title, body, actions) => `<div class="modal-backdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="review-title"><div class="modal-body"><h2 id="review-title" tabindex="-1">${title}</h2>${body}</div><div class="modal-actions">${actions}</div></section></div>`;
+    const acceptanceModal = () => reviewModal(t('راجع قبول الإحالة', 'Review referral acceptance'), `${representative ? `<p class="small"><strong>${t('تتصرف بصفتك ولي أمر للمريضة التجريبية 010', 'Acting as guardian for Test Patient 010')}</strong></p>` : ''}<p>${t('بعد اختيارك الصريح، يُشارك ملخص السبب دائمًا ونوع الزيارة فقط إذا وافقت. لا تُستنتج الموافقة من علاقة التمثيل.', 'After your explicit choice, the reason summary is shared; encounter type is shared only if you opt in. Representative status never implies consent.')}</p>${row(t('زيارة المصدر', 'Source encounter'), iso('ENC-010-014'))}${referralPreview()}<label class="option"><input type="checkbox" checked><span>${t('أوافق صراحة على مشاركة ملخص السبب', 'I explicitly authorize sharing the reason summary')}</span></label>${consentChoice(!representative)}${slot()}`, `${btn(t('العودة', 'Back'))}${btn(t('تأكيد القبول والحجز', 'Confirm acceptance and booking'), true)}`);
+    const startModal = () => reviewModal(t('راجع بدء الزيارة', 'Review encounter start'), `<p>${t('الموعد والدور مؤهلان الآن؛ يعيد الخادم فحص الحالة قبل إنشاء الزيارة.', 'Appointment and queue are currently eligible; the API rechecks before creation.')}</p>${row(t('الموعد', 'Appointment'), `${iso('APT-010-014')} · ${statusLabel('checked_in')}`)}${row(t('الدور', 'Queue'), `${iso('QUE-010-014')} · ${statusLabel('called')}`)}<div class="review"><h3>${t('الأثر الذري', 'Atomic effect')}</h3><p>${t('الزيارة جارية · الموعد قيد الاستشارة · الدور قيد الخدمة', 'Encounter open · Appointment in consultation · Queue in service')}</p></div>`, `${btn(t('العودة', 'Back'))}${btn(t('بدء الزيارة', 'Start encounter'), true)}`);
+    const participantModal = (confirm = false) => reviewModal(confirm ? t('أكد إنهاء المشاركة', 'Confirm ending participation') : t('تعديل المشاركين', 'Edit participants'), `<p>${t('التعديل ضمن الزيارة الجارية فقط وبنسختها الحالية.', 'Changes apply only to this open encounter and its current version.')}</p>${row(t('الطبيب المسؤول', 'Responsible clinician'), t('د. مريم التجريبية · لا يمكن إزالتها', 'Dr. Mariam Test · non-removable'))}${row(t('عضو فريق حالي', 'Current workforce participant'), t('ممرض تجريبي · مشاركة نشطة', 'Test nurse · active interval'))}${confirm ? alert('warning', t('ينتهي الوصول فورًا', 'Access ends immediately'), t('يؤدي التأكيد إلى إنهاء فترة هذا العضو ومنع قراءة رسائل الموعد أو إرسالها فورًا.', 'Confirmation ends this member’s interval and immediately revokes message reads and sends.')) : ''}`, `${btn(t('إلغاء', 'Cancel'))}${btn(confirm ? t('تأكيد إنهاء المشاركة', 'Confirm end participation') : t('إنهاء مشاركة العضو', 'End member participation'), true)}`);
+    const draftModal = () => reviewModal(t('حرر مسودة الملاحظة', 'Edit note draft'), `<p>${t('لا تُنشأ نسخة موقعة حتى تراجع النص والرؤية وتؤكد التوقيع.', 'No signed version is created until you review body and visibility and confirm signing.')}</p><div class="field"><label for="note-type">${t('نوع الملاحظة', 'Note type')}</label><select id="note-type"><option>${t('ملخص متابعة الزيارة', 'Encounter follow-up')}</option></select></div><div class="field"><label for="note-body">${t('نص الملاحظة', 'Note body')}</label><textarea id="note-body">${t('متابعة تجريبية موثقة خلال الزيارة.', 'Synthetic follow-up documented during the encounter.')}</textarea></div><fieldset class="review-choice"><legend>${t('الرؤية قبل التوقيع — اختر صراحة', 'Visibility before signing — choose explicitly')}</legend><label class="option"><input type="radio" name="note-visibility" value="private" checked><span>${statusLabel('private')} · ${t('فريق الرعاية فقط', 'Care team only')}</span></label><label class="option"><input type="radio" name="note-visibility" value="patient_visible"><span>${statusLabel('patient_visible')} · ${t('متاحة للمريض المصرح له', 'Authorized patient projection')}</span></label></fieldset>`, `${btn(t('إلغاء', 'Cancel'))}${btn(t('مراجعة قبل التوقيع', 'Review before signing'), true)}`);
+    const noteModal = () => reviewModal(t('راجع الملاحظة قبل التوقيع', 'Review note before signing'), `<p>${t('ستُضاف نسخة موقعة جديدة؛ تبقى النسخة السابقة دون تعديل.', 'A new signed version will be appended; the previous version remains immutable.')}</p>${row(t('نوع الملاحظة', 'Note type'), t('ملخص متابعة الزيارة', 'Encounter follow-up'))}${row(t('الرؤية المختارة', 'Selected visibility'), `${statusLabel('patient_visible')} · ${t('متاحة للمريض المصرح له', 'Authorized patient projection')}`)}<div class="review"><h3>${t('نص المسودة', 'Draft body')}</h3><p>${t('متابعة تجريبية موثقة خلال الزيارة.', 'Synthetic follow-up documented during the encounter.')}</p></div>`, `${btn(t('العودة للتحرير', 'Back to edit'))}${btn(t('توقيع النسخة', 'Sign version'), true)}`);
+    const completionModal = () => reviewModal(t('راجع إكمال الزيارة', 'Review encounter completion'), `<p>${t('ملخص الطبيب المسؤول مطلوب. هذا تأكيد بنيوي لا يقرر الكفاية الطبية.', 'A responsible-clinician summary is required. This is structural confirmation, not a clinical-sufficiency claim.')}</p>${row(t('ملخص الإكمال', 'Completion summary'), t('ملخص تجريبي موثق من الطبيب للزيارة.', 'Clinician-authored synthetic encounter summary.'))}<div class="review"><h3>${t('آثار الإكمال الذرية', 'Atomic completion effects')}</h3>${row(t('الزيارة', 'Encounter'), `${iso('ENC-010-014')} · ${statusLabel('completed')}`)}${row(t('الموعد', 'Appointment'), `${iso('APT-010-014')} · ${statusLabel('completed')}`)}${row(t('الدور', 'Queue'), `${iso('QUE-010-014')} · ${statusLabel('completed')}`)}<p>${t('ينتهي الوصول إلى رسائل هذا الموعد لجميع المشاركين فورًا.', 'Appointment-context message access ends immediately for all participants.')}</p></div><label class="option"><input type="checkbox" checked><span>${t('أؤكد إكمال السجل بنيويًا بصفتي الطبيب المسؤول', 'I explicitly confirm structural completion as the responsible clinician')}</span></label>`, `${btn(t('العودة', 'Back'))}${btn(t('تأكيد إكمال الزيارة', 'Confirm encounter completion'), true)}`);
+    const modal = ['acceptance-review','representative-acceptance-review'].includes(state) ? acceptanceModal() : state === 'start-review' ? startModal() : state === 'participant-edit' ? participantModal() : state === 'participant-end-review' ? participantModal(true) : state === 'note-draft-edit' ? draftModal() : state === 'note-sign-review' ? noteModal() : state === 'completion-review' ? completionModal() : '';
+    const displayedState = state === 'private-note-excluded' ? 'patient-visible-note' : state;
+    document.getElementById('root').innerHTML = `<div class="app ${app} state-${state}"><header class="topbar"><div class="brand"><span class="mark" aria-hidden="true"></span><span>${t('شفاء', 'SHIFAA')}</span></div><div class="top-actions">${btn(ar ? 'EN' : 'ع')}<div class="avatar">${app === 'clinic' ? t('ط', 'DR') : authorityLost ? t('و', 'G') : '010'}</div></div></header><div class="shell">${app === 'clinic' ? sidebar() : ''}<main class="workspace" id="main">${app === 'clinic' ? clinicContext : patientContext}<header class="page-head"><div><p class="eyebrow">${app === 'clinic' ? t('العمل السريري', 'CLINICAL WORKSPACE') : t('السجل الصحي', 'HEALTH RECORD')}</p><h1 tabindex="-1">${route[2]}</h1><p>${route[3]}</p></div>${fresh}</header>${stateBanner()}${content}</main></div>${app === 'patient' ? `<nav class="bottom-nav" aria-label="${t('التنقل الرئيسي', 'Primary navigation')}"><span>${t('الرئيسية', 'Home')}</span><span class="active">${t('السجلات', 'Records')}</span><span>${t('المواعيد', 'Appointments')}</span><span>${t('حسابي', 'Profile')}</span></nav>` : ''}<div class="evidence-tag">${baseline} · ${displayedState} · ${locale} · ${route[1]}</div>${modal}</div>`;
+    document.fonts.ready.then(() => document.documentElement.dataset.ready = 'true');
+  </script>
+</body>
+</html>

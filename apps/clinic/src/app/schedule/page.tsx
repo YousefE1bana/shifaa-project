@@ -101,6 +101,18 @@ export default function Page() {
         <button style={button} onClick={() => setLocale(ar ? 'en-EG' : 'ar-EG')}>
           {ar ? 'English' : 'العربية'}
         </button>
+        <a
+          href="/referrals"
+          style={{
+            color: color.brand,
+            minHeight: minimumTargetSize,
+            display: 'inline-flex',
+            alignItems: 'center',
+            marginInlineStart: spacing.md,
+          }}
+        >
+          {ar ? 'الإحالات' : 'Referrals'}
+        </a>
       </div>
       {token ? (
         <ScheduleWorkspace accessToken={token} locale={locale} />

@@ -7,3 +7,5 @@ export * from './privacy-dsr-service.js';
 export * from './discovery-sos-service.js';
 export * from './audit-admin-service.js';
 export * from './clinic-scheduling-service.js';
+export * from './feature-010-encounters.js';
+export * from './feature-010-notes.js';
