@@ -66,12 +66,12 @@ BEGIN
     WHERE table_schema='platform' AND table_name='emergency_share_links'
       AND column_name ~* 'plain|raw|token_value|token_url'
   ) THEN RAISE EXCEPTION 'plaintext share-token column exists'; END IF;
+  -- Permanent shadow-source prohibition, valid on the fully migrated schema.
+  -- Later canonical clinical tables do not establish Feature 006 provenance;
+  -- inspect the 006 migration source or a schema stopped at that boundary.
   IF to_regclass('platform.emergency_profile') IS NOT NULL
-    OR to_regclass('platform.emergency_profile_projections') IS NOT NULL
-    OR to_regclass('clinical.allergies') IS NOT NULL
-    OR to_regclass('clinical.medication_statements') IS NOT NULL
-    OR to_regclass('clinical.conditions') IS NOT NULL THEN
-    RAISE EXCEPTION '006 introduced a shadow or later clinical source';
+    OR to_regclass('platform.emergency_profile_projections') IS NOT NULL THEN
+    RAISE EXCEPTION '006 shadow emergency-profile source exists';
   END IF;
   IF (SELECT blood_group FROM identity.patients WHERE id='61000000-0000-4000-8000-000000000001')<>'O+' THEN
     RAISE EXCEPTION 'synthetic canonical blood group seed missing';
