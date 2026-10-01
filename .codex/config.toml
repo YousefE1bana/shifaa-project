@@ -1,8 +1,8 @@
 [agents]
 enabled = true
 default_subagent_model = "gpt-6-luna"
-default_subagent_reasoning_effort = "low"
-max_concurrent_threads_per_session = 2
+default_subagent_reasoning_effort = "high"
+max_concurrent_threads_per_session = 4
 interrupt_message = false
 
 [agents.explorer]
@@ -73,13 +73,8 @@ enabled = false
 [plugins."frontend-design@claude-plugins-official"]
 enabled = false
 
-
-
-
 [plugins."figma@claude-plugins-official"]
 enabled = false
-
-
 
 [plugins."template-creator@openai-primary-runtime"]
 enabled = false
