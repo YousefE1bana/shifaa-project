@@ -219,7 +219,7 @@ export interface ClinicSchedulingAuthorizationPort {
     actor: ClinicSchedulingActor,
     action: ClinicSchedulingAction,
     target: RequestedScope,
-  ): Promise<CurrentClinicAuthorization>;
+  ): Promise<CurrentClinicAuthorization | void>;
 }
 
 export interface ClinicSchedulingClockPort {

@@ -47,7 +47,7 @@ test('PAT, current GUA, and current DEL reads use generated getEncounter with lo
       },
     });
     assert.deepEqual(await api.getEncounter(encounterId), projection);
-    assert.equal(url, `https://synthetic.invalid/v1/encounters/${encounterId}`);
+    assert.equal(url, `https://synthetic.invalid/v1/encounters/${encounterId}?fields=notes`);
     assert.equal(
       new Headers(init?.headers).get('Authorization'),
       `Bearer synthetic-${actor}-token`,
@@ -55,6 +55,25 @@ test('PAT, current GUA, and current DEL reads use generated getEncounter with lo
     assert.equal(new Headers(init?.headers).get('Accept-Language'), 'en-EG');
     assert.equal(init?.method, 'GET');
   }
+});
+
+test('patient encounter read explicitly requests the conditional notes projection', async () => {
+  let requestedFields: string | null = null;
+  const api = new PatientFeature010EncounterApi({
+    locale: 'en-EG',
+    accessToken: 'synthetic-patient-token',
+    apiBaseUrl: 'https://synthetic.invalid',
+    fetch: async (input) => {
+      requestedFields = new URL(String(input)).searchParams.get('fields');
+      const { notes: _notes, ...defaultProjection } = projection;
+      return response(requestedFields === 'notes' ? projection : defaultProjection);
+    },
+  });
+
+  const received = await api.getEncounter(encounterId);
+
+  assert.equal(requestedFields, 'notes');
+  assert.deepEqual(received.notes, projection.notes);
 });
 
 test('denied or revoked GUA/DEL authority fails closed and clears the previous projection', async () => {

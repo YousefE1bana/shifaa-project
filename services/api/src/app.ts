@@ -22,6 +22,7 @@ import {
   LocalSyntheticAuditObjectStore,
   PostgresFeature010EncounterRepository,
   PostgresFeature010NotesRepository,
+  PostgresClinicSchedulingService,
 } from './adapters/index.js';
 import { loadConfig, type ApiConfig } from './config.js';
 import {
@@ -52,7 +53,10 @@ import {
   type ClinicSchedulingRouteService,
 } from './routes/clinic-scheduling.js';
 import { ClinicSchedulingService } from './modules/clinic-scheduling/service.js';
-import type { ClinicSchedulingReadPort } from './modules/clinic-scheduling/types.js';
+import type {
+  ClinicSchedulingAuthorizationPort,
+  ClinicSchedulingReadPort,
+} from './modules/clinic-scheduling/types.js';
 import {
   FailClosedIdentityContinuityService,
   IdentityContinuityService,
@@ -233,7 +237,12 @@ export async function buildApp(
         })
       : new FailClosedIdentityContinuityService());
   const clinicSchedulingService =
-    options.clinicSchedulingService ?? failClosedClinicSchedulingService();
+    config.environment === 'production'
+      ? failClosedClinicSchedulingService()
+      : (options.clinicSchedulingService ??
+        (repository instanceof PostgresIdentityRepository
+          ? createPostgresClinicSchedulingService(repository, config)
+          : failClosedClinicSchedulingService()));
   const feature010EncounterService =
     options.feature010EncounterService ??
     (repository instanceof PostgresIdentityRepository
@@ -311,21 +320,34 @@ export async function buildApp(
   });
   installIdentityErrorHandler(app);
   app.get('/v1/health', async () => ({ status: 'ok', feature: 'identity-onboarding' }));
+  const approvedSyntheticMode =
+    config.syntheticMode && config.authAdapter === 'local' && config.environment !== 'production';
+  const resolveNativePatient =
+    config.environment !== 'production' &&
+    config.authAdapter === 'supabase' &&
+    continuityRuntime !== undefined &&
+    repository instanceof PostgresIdentityRepository
+      ? (token: string) => service.actorFromAccessToken(token)
+      : undefined;
   await registerFeature010EncounterRoutes(app, {
     service: feature010EncounterService,
-    syntheticMode: config.syntheticMode,
+    syntheticMode: approvedSyntheticMode,
+    ...(resolveNativePatient ? { resolveNativePatient } : {}),
   });
   await registerFeature010ReferralRoutes(app, {
     service: feature010ReferralService,
-    syntheticMode: config.syntheticMode,
+    syntheticMode: approvedSyntheticMode,
+    ...(resolveNativePatient ? { resolveNativePatient } : {}),
   });
   await registerFeature010MessagesRoutes(app, {
     service: feature010MessageService,
-    syntheticMode: config.syntheticMode,
+    syntheticMode: approvedSyntheticMode,
+    ...(resolveNativePatient ? { resolveNativePatient } : {}),
   });
   await registerClinicSchedulingRoutes(app, {
     service: clinicSchedulingService,
-    syntheticMode: config.syntheticMode,
+    syntheticMode: approvedSyntheticMode,
+    ...(resolveNativePatient ? { resolveNativePatient } : {}),
   });
   await registerIdentityOnboardingRoutes(app, {
     config,
@@ -514,6 +536,28 @@ function failClosedClinicSchedulingService(): ClinicSchedulingService {
       get: async () => undefined,
       set: async () => undefined,
     },
+  });
+}
+
+function createPostgresClinicSchedulingService(
+  repository: PostgresIdentityRepository,
+  config: ApiConfig,
+): ClinicSchedulingService {
+  const adapter = new PostgresClinicSchedulingService(
+    repository,
+    config.environment === 'test' ? 'ci' : 'local',
+  );
+  const authorization: ClinicSchedulingAuthorizationPort = {
+    // Fixed PostgreSQL functions are the authoritative action and scope check.
+    authorize: async () => undefined,
+  };
+  return new ClinicSchedulingService({
+    authorization,
+    featureFlags: { enabled: async () => true },
+    read: adapter as ClinicSchedulingReadPort,
+    repository: adapter,
+    clock: { now: () => new Date() },
+    cache: { get: async () => undefined, set: async () => undefined },
   });
 }
 

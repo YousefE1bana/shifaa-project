@@ -95,7 +95,11 @@ export class PatientFeature010EncounterApi {
     }
     this.readState = 'loading';
     try {
-      const response = await this.client.getEncounter(encounterId, {}, signal ? { signal } : {});
+      const response = await this.client.getEncounter(
+        encounterId,
+        { fields: ['notes'] },
+        signal ? { signal } : {},
+      );
       if (signal?.aborted) throw new DOMException('Encounter read was superseded.', 'AbortError');
       const projection = projectPatientEncounter(response);
       if (signal?.aborted) throw new DOMException('Encounter read was superseded.', 'AbortError');

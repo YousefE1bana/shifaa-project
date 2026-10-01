@@ -18,6 +18,7 @@ import {
 } from '@shifaa/contracts';
 
 import { ApiPolicyError } from '../modules/identity-onboarding/errors.js';
+import type { PatientActor } from '../modules/identity-onboarding/service.js';
 import { hashRequest } from '../platform/idempotency.js';
 import type { Feature010ReferralService } from '../modules/feature-010/referrals.js';
 
@@ -29,6 +30,7 @@ export type Feature010ReferralRouteService = Pick<
 export interface Feature010ReferralRouteDependencies {
   readonly service: Feature010ReferralRouteService;
   readonly syntheticMode: boolean;
+  readonly resolveNativePatient?: (accessToken: string) => Promise<PatientActor | undefined>;
 }
 
 export const registeredFeature010ReferralOperationIds = [
@@ -54,12 +56,34 @@ function requireClosed<T>(schema: unknown, value: unknown): T {
   return value as T;
 }
 
-function actorFor(request: FastifyRequest): RequestActor {
+async function actorFor(
+  request: FastifyRequest,
+  dependencies: Feature010ReferralRouteDependencies,
+): Promise<RequestActor> {
   if (!syntheticModes.get(request.server)) {
+    const accessToken = request.headers.authorization?.startsWith('Bearer ')
+      ? request.headers.authorization.slice('Bearer '.length)
+      : '';
+    if (dependencies.resolveNativePatient) {
+      if (!accessToken)
+        throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
+      const patient = await dependencies.resolveNativePatient(accessToken);
+      if (!patient)
+        throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
+      return {
+        personId: patient.personId as Feature010Uuid,
+        principal: patient.principal,
+        requestId: request.id,
+        traceId: traceId(request),
+        aal: patient.aal,
+        locale: request.headers['accept-language'] === 'en-EG' ? 'en-EG' : 'ar-EG',
+        purposes: parsePurposes(request.headers['x-purpose']),
+      };
+    }
     throw new ApiPolicyError(
       'open-sec-001',
       503,
-      'Feature 010 referral sessions remain disabled outside seeded-synthetic mode.',
+      'Feature 010 referral sessions remain disabled outside approved local and test runtimes.',
     );
   }
   const token = request.headers.authorization?.startsWith('Bearer ')
@@ -71,14 +95,33 @@ function actorFor(request: FastifyRequest): RequestActor {
     );
   if (!person) throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
 
-  const rawPurposes = request.headers['x-purpose'];
+  return {
+    personId: person[1] as Feature010Uuid,
+    principal: token,
+    requestId: request.id,
+    traceId: traceId(request),
+    aal: request.headers['x-aal'] === '2' ? 2 : 1,
+    locale: request.headers['accept-language'] === 'en-EG' ? 'en-EG' : 'ar-EG',
+    purposes: parsePurposes(request.headers['x-purpose']),
+  };
+}
+
+function traceId(request: FastifyRequest): string {
+  const value = request.headers['traceparent'];
+  return typeof value === 'string'
+    ? (/^00-([a-f0-9]{32})-[a-f0-9]{16}-[a-f0-9]{2}$/i.exec(value)?.[1]?.toLowerCase() ??
+        createHash('sha256').update(request.id).digest('hex').slice(0, 32))
+    : createHash('sha256').update(request.id).digest('hex').slice(0, 32);
+}
+
+function parsePurposes(rawPurposes: unknown): string[] {
   const purposes =
     typeof rawPurposes === 'string'
       ? [
           ...new Set(
             rawPurposes
               .split(',')
-              .map((value) => value.trim())
+              .map((purpose) => purpose.trim())
               .filter(Boolean),
           ),
         ]
@@ -86,22 +129,7 @@ function actorFor(request: FastifyRequest): RequestActor {
   if (purposes.some((purpose) => !/^[a-z][a-z0-9._-]{0,99}$/.test(purpose))) {
     throw new ApiPolicyError('validation-failed', 422, 'The purpose context is invalid.');
   }
-  const traceparent = request.headers['traceparent'];
-  const parsedTraceId =
-    typeof traceparent === 'string'
-      ? /^00-([a-f0-9]{32})-[a-f0-9]{16}-[a-f0-9]{2}$/i.exec(traceparent)?.[1]?.toLowerCase()
-      : undefined;
-  const traceId =
-    parsedTraceId ?? createHash('sha256').update(request.id).digest('hex').slice(0, 32);
-  return {
-    personId: person[1] as Feature010Uuid,
-    principal: token,
-    requestId: request.id,
-    traceId,
-    aal: request.headers['x-aal'] === '2' ? 2 : 1,
-    locale: request.headers['accept-language'] === 'en-EG' ? 'en-EG' : 'ar-EG',
-    purposes,
-  };
+  return purposes;
 }
 
 function idempotencyKey(request: FastifyRequest): string {
@@ -221,7 +249,7 @@ async function acceptReferral(
   reply: FastifyReply,
   deps: Feature010ReferralRouteDependencies,
 ) {
-  const actor = actorFor(request);
+  const actor = await actorFor(request, deps);
   if (actor.aal < 2)
     throw new ApiPolicyError('mfa-required', 403, 'AAL2 is required to accept a referral.');
   if (actor.purposes.length === 0)
@@ -258,7 +286,7 @@ async function createReferral(
   reply: FastifyReply,
   deps: Feature010ReferralRouteDependencies,
 ) {
-  const actor = actorFor(request);
+  const actor = await actorFor(request, deps);
   if (actor.aal < 2)
     throw new ApiPolicyError('mfa-required', 403, 'AAL2 is required to create a referral.');
   if (actor.purposes.length === 0)
@@ -305,7 +333,7 @@ async function listReferrals(
   reply: FastifyReply,
   deps: Feature010ReferralRouteDependencies,
 ) {
-  const actor = actorFor(request);
+  const actor = await actorFor(request, deps);
   if (actor.purposes.length === 0)
     throw new ApiPolicyError('purpose-required', 403, 'A current purpose is required.');
   const query = parseListQuery(request);

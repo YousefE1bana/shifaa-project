@@ -20,6 +20,8 @@ const c22ContextMessagesMigration =
   'supabase/migrations/20260929001008_f010_c22_context_messages.sql';
 const c23RealtimeHintMigration = 'supabase/migrations/20260930001000_f010_c23_realtime_hint.sql';
 const c26PrivacyGuardsMigration = 'supabase/migrations/20260930001001_f010_c26_privacy_guards.sql';
+const f04CompletionAuthorityMigration =
+  'supabase/migrations/20261001001002_f010_f04_completion_authority.sql';
 const c13CompletionRedTest = 'infra/db/tests/feature-010-completion-red.sql';
 const c13CompletionTest = 'infra/db/tests/feature-010-completion.sql';
 const schemaTest = 'infra/db/tests/feature-010-schema.sql';
@@ -856,6 +858,81 @@ function checkEncounterProjectionApi(runtime, templateDatabase) {
   }
 }
 
+function runPatientNotesPostgresTest(runtime, database, expectRed) {
+  const dockerPort = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
+    cwd: root,
+    encoding: 'utf8',
+    windowsHide: true,
+  });
+  if (dockerPort.error || dockerPort.status !== 0) {
+    throw new Error(
+      `${runtime.name} PostgreSQL host port lookup failed: ${dockerPort.stderr ?? dockerPort.error?.message ?? ''}`,
+    );
+  }
+  const port = dockerPort.stdout.trim().split(/\r?\n/)[0]?.split(':').at(-1);
+  if (!port || !/^\d+$/.test(port)) {
+    throw new Error(`${runtime.name} has no usable host-mapped PostgreSQL port.`);
+  }
+  const result = spawnSync(
+    process.execPath,
+    [
+      'node_modules/vitest/vitest.mjs',
+      'run',
+      '--fileParallelism=false',
+      'tests/e2e/pre-011-patient-notes.postgres.integration.test.ts',
+    ],
+    {
+      cwd: root,
+      env: {
+        ...process.env,
+        SHIFAA_F010_C28_DATABASE: database,
+        SHIFAA_PG_HOST: '127.0.0.1',
+        SHIFAA_PG_PORT: port,
+      },
+      encoding: 'utf8',
+      windowsHide: true,
+    },
+  );
+  if (result.error) throw result.error;
+  const output = [result.stdout, result.stderr].filter(Boolean).join('\n');
+  process.stdout.write(output);
+  if (expectRed) {
+    if (
+      result.status === 0 ||
+      !output.includes('F03 conditional patient notes projection missing')
+    ) {
+      throw new Error(
+        `${runtime.name} F03 baseline did not produce the expected conditional-notes assertion failure.`,
+      );
+    }
+    console.log(
+      `${runtime.name}: expected F03 conditional patient-notes projection RED confirmed.`,
+    );
+    return;
+  }
+  if (result.status !== 0) {
+    throw new Error(`${runtime.name} F03 patient-notes PostgreSQL regression failed.`);
+  }
+}
+
+function checkPatientNotesApi(runtime, templateDatabase, expectRed) {
+  const database = `f010_pre011_notes_${process.pid}_${randomBytes(8).toString('hex')}`;
+  let created = false;
+  try {
+    runPsql(
+      runtime,
+      runtime.adminDatabase,
+      `CREATE DATABASE "${database}" TEMPLATE "${templateDatabase}";`,
+      `${runtime.name} clone isolated F03 patient-notes regression`,
+    );
+    created = true;
+    setC22ApiSmokeClock(runtime, database);
+    runPatientNotesPostgresTest(runtime, database, expectRed);
+  } finally {
+    if (created) dropScratchDatabase(runtime, database);
+  }
+}
+
 const c22RaceCiphertext = Buffer.from(
   `01${'d1'.repeat(12)}${'e2'.repeat(16)}${'f3'.repeat(96)}`,
   'hex',
@@ -1551,6 +1628,7 @@ async function verifyFreshAndReplay(runtime, database, replayHistorical = true) 
   );
   runMigration(runtime, database, c23RealtimeHintMigration, 'fresh C23 realtime hint migration');
   runMigration(runtime, database, c26PrivacyGuardsMigration, 'fresh C26 privacy guard migration');
+  runMigration(runtime, database, f04CompletionAuthorityMigration, 'fresh F04 authority migration');
   reportDefaultDenySnapshot(runtime, database);
   checkSchema(runtime, database, 'fresh F010 schema assertions');
   checkLifecycle(runtime, database, 'fresh F010 lifecycle vectors');
@@ -1604,6 +1682,12 @@ async function verifyFreshAndReplay(runtime, database, replayHistorical = true) 
       database,
       c26PrivacyGuardsMigration,
       'C26 privacy guard migration replay',
+    );
+    runMigration(
+      runtime,
+      database,
+      f04CompletionAuthorityMigration,
+      'F04 completion authority migration replay',
     );
     checkSchema(runtime, database, 'replayed F010 schema assertions');
     checkStorage(runtime, database, 'replayed F010 storage vectors');
@@ -2207,11 +2291,21 @@ async function testRuntime(runtime) {
     }
     // C28 proves fresh application here; the restore runner executes a populated
     // previous-checkpoint database with only pending forward migrations.
-    await verifyFreshAndReplay(runtime, database, process.argv[2] !== 'c28');
+    await verifyFreshAndReplay(
+      runtime,
+      database,
+      process.argv[2] !== 'c28' && process.argv[2] !== 'patient-notes',
+    );
+    if (process.argv[2] === 'patient-notes') {
+      commitMessagesFixture(runtime, database);
+      checkPatientNotesApi(runtime, database, process.argv[3] === '--expect-red');
+      return;
+    }
     if (process.argv[2] === 'c28') {
       await checkConcurrentReferralAcceptanceWinner(runtime, database);
       commitMessagesFixture(runtime, database);
       checkEncounterProjectionApi(runtime, database);
+      checkPatientNotesApi(runtime, database, false);
       await checkC22LifecycleRaces(runtime, database);
       setC22ApiSmokeClock(runtime, database);
       runMessageApiPostgresTest(runtime, database);
