@@ -79,7 +79,7 @@ const proof = () => ({
     'c26-referral-create-ordering',
     'c26-referral-accept-ordering',
   ],
-  migrationHead: '20260930001001_f010_c26_privacy_guards.sql',
+  migrationHead: '20261001001002_f010_f04_completion_authority.sql',
   forwardUpgrade: 'C23-to-C26-populated-data-preserved',
   changedC26Functions: [
     'clinical.accept_referral_api_v1',
@@ -96,6 +96,9 @@ const proof = () => ({
     foreignDenied: 'PASS',
   },
   c26RestoredReplay: 'PASS',
+  changedF04Functions: ['clinical.complete_encounter_v1'],
+  f04ForwardUpgrade: 'C26-to-F04-populated-data-preserved',
+  f04RestoredReplay: 'PASS',
 });
 
 test('actual restore proof retains data, history, security and local-only classification', async () => {
@@ -145,6 +148,12 @@ test('restore cannot pass when rows, relationships, permissions or authorization
     (p: ReturnType<typeof proof>) => {
       p.apiCompatibilityChecks.privateNoteFiltering = 'FAIL';
     },
+    (p: ReturnType<typeof proof>) => {
+      p.changedF04Functions = [];
+    },
+    (p: ReturnType<typeof proof>) => {
+      p.f04RestoredReplay = 'FAIL';
+    },
   ]) {
     const candidate = proof();
     change(candidate);
@@ -178,6 +187,36 @@ const c26Functions = [
   'clinical.create_referral_api_v1(uuid,jsonb)',
   'clinical.accept_referral_api_v1(uuid,integer,jsonb)',
 ];
+
+test('F04 forward proof accepts only the completion producer change and preserved data', async () => {
+  const { verifyF04ForwardUpgrade } = await boundary();
+  const { before } = forwardUpgradeSnapshots();
+  const producer =
+    'clinical.complete_encounter_v1(p_encounter_id uuid, p_expected_version integer, p_input jsonb)';
+  before.functionDigests[producer] = 'before-f04';
+  const after = structuredClone(before);
+  after.functionDigests[producer] = 'after-f04';
+  after.securityDigest = 'c'.repeat(32);
+  assert.deepEqual(verifyF04ForwardUpgrade(before, after), ['clinical.complete_encounter_v1']);
+  for (const invalidate of [
+    (p: typeof after) => {
+      p.dataDigest = 'd'.repeat(32);
+    },
+    (p: typeof after) => {
+      p.functionDigests[c26Functions[0]!] = 'unrelated';
+    },
+    (p: typeof after) => {
+      p.functionDigests[producer] = 'before-f04';
+    },
+    (p: typeof after) => {
+      p.policyDigests['clinical.encounters.encounters_select'] = 'weakened';
+    },
+  ]) {
+    const invalid = structuredClone(after);
+    invalidate(invalid);
+    assert.throws(() => verifyF04ForwardUpgrade(before, invalid));
+  }
+});
 
 function forwardUpgradeSnapshots() {
   const before = {

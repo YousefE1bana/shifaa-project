@@ -6,7 +6,8 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
 
-const migrationHead = '20260930001001_f010_c26_privacy_guards.sql';
+const migrationHead = '20261001001002_f010_f04_completion_authority.sql';
+const c26Head = '20260930001001_f010_c26_privacy_guards.sql';
 const checkpointHead = '20260930001000_f010_c23_realtime_hint.sql';
 const c26RestatedFunctions = new Set([
   'clinical.update_encounter_api_v1',
@@ -89,6 +90,9 @@ export function verifyRestoreProof(proof) {
     foreignDenied: 'PASS',
   });
   assert.equal(proof.c26RestoredReplay, 'PASS', 'restored C26 replay evidence is missing');
+  assert.deepEqual(proof.changedF04Functions, ['clinical.complete_encounter_v1']);
+  assert.equal(proof.f04ForwardUpgrade, 'C26-to-F04-populated-data-preserved');
+  assert.equal(proof.f04RestoredReplay, 'PASS', 'restored F04 replay evidence is missing');
   assert.deepEqual(
     proof.authorizationChecks,
     checks,
@@ -122,7 +126,7 @@ export function pendingForwardMigrations(manifest, receipts, through = manifest.
 
 // C26 restates only its five privacy-sensitive API functions. Existing rows,
 // relationships, F009 scheduling state, and every other security object must
-// remain unchanged when that final forward migration is applied.
+// remain unchanged when the C26 forward migration is applied.
 export function verifyForwardUpgrade(before, after) {
   for (const snapshot of [before, after]) {
     assert.equal(snapshot.relationshipsValid, true, 'forward upgrade has invalid relationships');
@@ -170,6 +174,24 @@ export function verifyForwardUpgrade(before, after) {
     'C26 security restatement was not observed',
   );
   return changedC26Functions;
+}
+
+export function verifyF04ForwardUpgrade(before, after) {
+  assert.equal(after.relationshipsValid, true);
+  assert.equal(after.f009Compatible, true);
+  assert.equal(after.dataDigest, before.dataDigest, 'F04 changed populated data');
+  assert.deepEqual(after.counts, before.counts, 'F04 changed representative row counts');
+  for (const part of ['tableDigests', 'constraintDigests', 'triggerDigests', 'policyDigests']) {
+    assert.deepEqual(after[part], before[part], `F04 unexpectedly changed ${part}`);
+  }
+  const keys = Object.keys(before.functionDigests).sort();
+  assert.deepEqual(Object.keys(after.functionDigests).sort(), keys, 'F04 changed the function set');
+  const changed = keys.filter((key) => before.functionDigests[key] !== after.functionDigests[key]);
+  assert.deepEqual(changed, [
+    'clinical.complete_encounter_v1(p_encounter_id uuid, p_expected_version integer, p_input jsonb)',
+  ]);
+  assert.notEqual(after.securityDigest, before.securityDigest, 'F04 producer restatement missing');
+  return ['clinical.complete_encounter_v1'];
 }
 
 function docker(runtime, args, input, binary = false) {
@@ -578,7 +600,9 @@ export async function runRestore() {
     ),
   ].map((match) => match[1]);
   assert.equal(paths.at(-1)?.split('/').at(-1), migrationHead);
-  assert.equal(paths.at(-2)?.split('/').at(-1), checkpointHead);
+  const c26Index = paths.findIndex((path) => path.endsWith(`/${c26Head}`));
+  assert.equal(paths[c26Index - 1]?.split('/').at(-1), checkpointHead);
+  assert.equal(c26Index, paths.length - 2, 'only the bounded F04 step may follow C26');
   const manifest = paths.map((path) => ({
     path,
     digest: createHash('sha256').update(readFileSync(path)).digest('hex'),
@@ -634,16 +658,16 @@ export async function runRestore() {
         return pending;
       };
       stage = 'pre-C26-forward-migrations';
-      applyForward(manifest.length - 1);
+      applyForward(c26Index);
       const checkpointReceipts = readReceipts();
       assert.deepEqual(
         checkpointReceipts,
-        manifest.slice(0, -1),
+        manifest.slice(0, c26Index),
         'C28 source did not stop at the C23 receipt checkpoint',
       );
       assert.deepEqual(
-        pendingForwardMigrations(manifest, checkpointReceipts),
-        [manifest.at(-1)],
+        pendingForwardMigrations(manifest, checkpointReceipts, c26Index + 1),
+        [manifest[c26Index]],
         'C26 must be the sole pending forward migration',
       );
       stage = 'synthetic-state';
@@ -653,11 +677,15 @@ export async function runRestore() {
       const beforeUpgrade = JSON.parse(sql(runtime, source, snapshotSql));
       stage = 'populated-C23-to-C26-upgrade';
       assert.deepEqual(
-        applyForward(manifest.length),
-        [manifest.at(-1)],
+        applyForward(c26Index + 1),
+        [manifest[c26Index]],
         'populated C28 source did not apply only pending C26',
       );
-      assert.deepEqual(readReceipts(), manifest, 'C26 forward receipt was not recorded');
+      assert.deepEqual(
+        readReceipts(),
+        manifest.slice(0, c26Index + 1),
+        'C26 forward receipt was not recorded',
+      );
       const afterUpgrade = JSON.parse(sql(runtime, source, snapshotSql));
       const changedC26Functions = verifyForwardUpgrade(beforeUpgrade, afterUpgrade);
       sql(runtime, source, securitySql);
@@ -667,7 +695,11 @@ export async function runRestore() {
         afterUpgrade,
         'C26 authorization-ordering checks changed durable source state',
       );
-      const before = afterUpgrade;
+      stage = 'populated-C26-to-F04-upgrade';
+      assert.deepEqual(applyForward(), [manifest.at(-1)]);
+      assert.deepEqual(readReceipts(), manifest, 'F04 forward receipt was not recorded');
+      const before = JSON.parse(sql(runtime, source, snapshotSql));
+      const changedF04Functions = verifyF04ForwardUpgrade(afterUpgrade, before);
       stage = 'backup';
       const backup = docker(
         runtime,
@@ -731,6 +763,9 @@ export async function runRestore() {
         'rolled-back authorization checks changed durable state',
       );
       stage = 'C26-restored-replay';
+      migration(runtime, target, paths[c26Index]);
+      assert.deepEqual(JSON.parse(sql(runtime, target, snapshotSql)), restored);
+      stage = 'F04-restored-replay';
       migration(runtime, target, paths.at(-1));
       assert.deepEqual(JSON.parse(sql(runtime, target, snapshotSql)), restored);
       const report = verifyRestoreProof({
@@ -751,6 +786,9 @@ export async function runRestore() {
         apiCompatibility: 'PASS',
         apiCompatibilityChecks,
         c26RestoredReplay: 'PASS',
+        changedF04Functions,
+        f04ForwardUpgrade: 'C26-to-F04-populated-data-preserved',
+        f04RestoredReplay: 'PASS',
       });
       reports.push(report);
       console.log(

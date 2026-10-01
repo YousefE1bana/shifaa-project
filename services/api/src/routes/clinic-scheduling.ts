@@ -34,6 +34,7 @@ import type {
   ClinicSchedulingReadFreshness,
   ClinicSchedulingRequestContext,
 } from '../modules/clinic-scheduling/types.js';
+import type { PatientActor } from '../modules/identity-onboarding/service.js';
 import { ApiPolicyError } from '../modules/identity-onboarding/errors.js';
 import { hashRequest } from '../platform/idempotency.js';
 
@@ -63,6 +64,7 @@ export type ClinicSchedulingRouteService = Pick<
 export interface ClinicSchedulingRouteDependencies {
   readonly service: ClinicSchedulingRouteService;
   readonly syntheticMode: boolean;
+  readonly resolveNativePatient?: (accessToken: string) => Promise<PatientActor | undefined>;
 }
 
 export const registeredClinicSchedulingOperationIds = [
@@ -137,12 +139,33 @@ const traceId = (request: FastifyRequest): string => {
 const locale = (request: FastifyRequest): 'ar-EG' | 'en-EG' =>
   request.headers['accept-language'] === 'en-EG' ? 'en-EG' : 'ar-EG';
 
-function actorFor(request: FastifyRequest): ClinicSchedulingActor {
+async function actorFor(
+  request: FastifyRequest,
+  dependencies: ClinicSchedulingRouteDependencies,
+): Promise<ClinicSchedulingActor> {
   if (!syntheticModes.get(request.server)) {
+    const accessToken = request.headers.authorization?.startsWith('Bearer ')
+      ? request.headers.authorization.slice('Bearer '.length)
+      : '';
+    if (dependencies.resolveNativePatient) {
+      if (!accessToken)
+        throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
+      const patient = await dependencies.resolveNativePatient(accessToken);
+      if (!patient)
+        throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
+      return {
+        personId: patient.personId,
+        principal: patient.principal,
+        requestId: request.id,
+        traceId: traceId(request),
+        aal: patient.aal,
+        locale: locale(request),
+      };
+    }
     throw new ApiPolicyError(
       'open-sec-001',
       503,
-      'Clinic scheduling sessions remain disabled outside seeded-synthetic mode.',
+      'Clinic scheduling sessions remain disabled outside approved local and test runtimes.',
     );
   }
   const token = request.headers.authorization?.startsWith('Bearer ')
@@ -341,7 +364,7 @@ async function mutate(
   status: 200 | 201,
   work: (context: ClinicSchedulingRequestContext) => Promise<unknown>,
 ) {
-  const actor = actorFor(request);
+  const actor = await actorFor(request, dependencies);
   consumeRate(request, networkSubject(request), 30, 5 * 60_000);
   consumeRate(request, actorSubject(actor), 30, 5 * 60_000);
   const key = idempotencyKey(request);
@@ -515,7 +538,7 @@ export async function registerClinicSchedulingRoutes(
     '/v1/appointments',
     { schema: { querystring: AppointmentListQuerySchema } } as never,
     async (request, reply) => {
-      const actor = actorFor(request);
+      const actor = await actorFor(request, dependencies);
       consumeRate(request, actorSubject(actor), 120, 60_000);
       const query = request.query as AppointmentListQuery;
       const result = await invoke(() =>
@@ -551,7 +574,7 @@ export async function registerClinicSchedulingRoutes(
     '/v1/appointments/:appointmentId',
     { schema: { params: uuidParams('appointmentId') } } as never,
     async (request, reply) => {
-      const actor = actorFor(request);
+      const actor = await actorFor(request, dependencies);
       consumeRate(request, actorSubject(actor), 120, 60_000);
       const { appointmentId } = request.params as { appointmentId: string };
       const result = await invoke(() => dependencies.service.getAppointment(actor, appointmentId));
@@ -613,7 +636,7 @@ export async function registerClinicSchedulingRoutes(
     '/v1/clinics/:facilityId/queues',
     { schema: { params: uuidParams('facilityId'), querystring: QueueQuerySchema } } as never,
     async (request, reply) => {
-      const actor = actorFor(request);
+      const actor = await actorFor(request, dependencies);
       consumeRate(request, actorSubject(actor), 120, 60_000);
       const { facilityId } = request.params as { facilityId: string };
       const query = request.query as QueueQuery;
@@ -641,7 +664,7 @@ export async function registerClinicSchedulingRoutes(
     '/v1/appointments/:appointmentId/queue-position',
     { schema: { params: uuidParams('appointmentId') } } as never,
     async (request, reply) => {
-      const actor = actorFor(request);
+      const actor = await actorFor(request, dependencies);
       consumeRate(request, actorSubject(actor), 120, 60_000);
       const { appointmentId } = request.params as { appointmentId: string };
       const result = await invoke(() =>

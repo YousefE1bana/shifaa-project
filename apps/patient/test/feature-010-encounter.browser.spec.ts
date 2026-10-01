@@ -52,8 +52,8 @@ async function openEncounter(page: Page) {
 }
 
 async function reconcileEncounter(page: Page) {
-  const refreshed = page.waitForResponse((response) =>
-    response.url().endsWith(`/v1/encounters/${encounterId}`),
+  const refreshed = page.waitForResponse(
+    (response) => new URL(response.url()).pathname === `/v1/encounters/${encounterId}`,
   );
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await expect(
