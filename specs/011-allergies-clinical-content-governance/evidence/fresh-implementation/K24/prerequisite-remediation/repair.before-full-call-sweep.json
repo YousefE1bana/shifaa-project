@@ -1,0 +1,43 @@
+{
+  "result": "IMPLEMENTATION_REPAIR_PENDING_FRESH_VERIFICATION",
+  "repairs": {
+    "supabase/migrations/20261006175942_f011_atomic_receipts.sql": {
+      "before": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d",
+      "after": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929",
+      "change": "Single function reference only: audit.sha256_v1(bytea) -> pg_catalog.sha256(bytea); identical framed principal bytes, exact SHA-256, unchanged all-five predicates/grants/search_path"
+    },
+    "supabase/migrations/20261006185242_f011_receipt_functions.sql": {
+      "before": "850335b5acfc51eed3076a74b07acd3989b2ae08ba926d99f8489ed18ff9ac39",
+      "after": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31",
+      "change": "Single function reference only: audit.sha256_v1(bytea) -> pg_catalog.sha256(bytea); identical framed principal bytes, exact SHA-256, unchanged all-five predicates/grants/search_path"
+    }
+  },
+  "record": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/k24-native-receipt-digest-remediation-2026-10-09.md",
+    "sha256": "2c9a9807af045a0dd15227f356c4b0241d7961bed98dbb0f9761ac4664c40e16"
+  },
+  "validRed": {
+    "path": "artifacts/feature-011/k24/native-bootstrap-regression.log",
+    "sha256": "c339b99a94ff13d410b18702379f3336754d4ba30a415a11963687fda05e6509",
+    "failed": 3,
+    "setupSucceeded": true,
+    "reason": "F011 deferred guard invokes pgcrypto through schema inaccessible to non-owner executor"
+  },
+  "preservedPrior": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/documentation-renewal/stage-assertion.json",
+    "sha256": "ccf2e9ab6d11c6cc01b555d4f61d6897a7d43274a573ab12021e56a0aa122b75"
+  },
+  "serverContext": {
+    "observedDuringRootDiagnosis": "clinical.f011_require_mutation_commit_v1 -> audit.sha256_v1 -> extensions.digest",
+    "source": "Filtered Docker error context observed during preceding diagnostic tool call; subsequent time-window lookup had no retained matching lines. No fabricated raw log is claimed."
+  },
+  "harnessRepair": {
+    "failureLog": {
+      "path": "artifacts/feature-011/k24/native-k06.before-role-fixture.log",
+      "sha256": "2d4a7dc627d3aa35d2e25764c2bf67806d01ca95df8c684fec9c0fd2c9351a5c"
+    },
+    "reason": "Plain PostgreSQL counterpart service_role missing after fresh full baseline reset; existing predecessor F009 harness profile reused for denial probes only",
+    "productChange": false,
+    "newGrant": false
+  }
+}

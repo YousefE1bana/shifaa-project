@@ -1,0 +1,412 @@
+{
+  "result": "READY_FOR_PRODUCT_OWNER_REVIEW",
+  "checkpointWindow": "K13/K14 only",
+  "k12Acceptance": "specs/011-allergies-clinical-content-governance/decisions/k12-accepted-2026-10-08.md",
+  "issues": [
+    {
+      "number": 445,
+      "state": "CLOSED",
+      "closedAt": "2026-10-08T04:34:40Z",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/445"
+    },
+    {
+      "number": 446,
+      "state": "CLOSED",
+      "closedAt": "2026-10-08T04:34:43Z",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/446"
+    },
+    {
+      "number": 447,
+      "state": "CLOSED",
+      "closedAt": "2026-10-08T04:34:46Z",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/447"
+    },
+    {
+      "number": 448,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/448"
+    },
+    {
+      "number": 449,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/449"
+    },
+    {
+      "number": 450,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/450"
+    },
+    {
+      "number": 451,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/451"
+    },
+    {
+      "number": 452,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/452"
+    },
+    {
+      "number": 453,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/453"
+    }
+  ],
+  "ledgers": {
+    "tasksSha256": "1492a96629bec8ea2cf53fc91f0a307fc0a2cfd5f8ef9e20402f4c2958f041e5",
+    "taskMapSha256": "e5e4a60389bc820bd4e63e6e4703163762e35ee3c4f69656bff2ceeb693a8dbf",
+    "checked": "T001-T050",
+    "unchecked": "T051-T092",
+    "T057_T092Untouched": true
+  },
+  "counts": {
+    "red": 17,
+    "greenState": 29,
+    "apiRegression": 81,
+    "browser": {
+      "clinic": {
+        "tests": 30,
+        "failed": 0,
+        "flaky": 0,
+        "retries": 0,
+        "report": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/checks/clinic-browser-results.json"
+      },
+      "patient": {
+        "tests": 18,
+        "failed": 0,
+        "flaky": 0,
+        "retries": 0,
+        "report": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/checks/patient-browser-results.json"
+      }
+    }
+  },
+  "k13": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k08_77c5c5abbde8863b",
+          "owner": "shifaa_owner",
+          "serverVersion": "17.11",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "shifaa_owner",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 319496
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "shifaa_owner",
+          "-d",
+          "f011_k08_77c5c5abbde8863b"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k08_77c5c5abbde8863b"
+        ]
+      },
+      "checks": 61,
+      "races": [
+        "same-head",
+        "same-support",
+        "same-key"
+      ],
+      "authority": [
+        "revoke-first",
+        "action-first"
+      ],
+      "externalUnderLocks": 0,
+      "cleanup": {
+        "database": "f011_k08_77c5c5abbde8863b",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k08_06df6799874e8816",
+          "owner": "supabase_admin",
+          "serverVersion": "17.6",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "supabase_admin",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 77263
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "f011_k08_06df6799874e8816"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k08_06df6799874e8816"
+        ]
+      },
+      "checks": 61,
+      "races": [
+        "same-head",
+        "same-support",
+        "same-key"
+      ],
+      "authority": [
+        "revoke-first",
+        "action-first"
+      ],
+      "externalUnderLocks": 0,
+      "cleanup": {
+        "database": "f011_k08_06df6799874e8816",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "protection": {
+    "result": "PASS",
+    "pinnedInputs": 133,
+    "unchanged": true,
+    "sqlChanged": false,
+    "t029RenewalRequired": false
+  },
+  "retainedGates": {
+    "OPEN-UX-001": "Satisfied only for affected F011 UI Plan prerequisite",
+    "OPEN-UX-002": "OPEN - VERIFYING",
+    "OPEN-TECH-002": "OPEN globally; existing bounded F011 P1-P5 disposition remains current",
+    "OPEN-TECH-003": "OPEN - VERIFYING/reference environment",
+    "OPEN-CLIN-001": "OPEN - synthetic engineering only",
+    "OPEN-LEGAL-001/002/007": "OPEN with existing lifecycle effects"
+  },
+  "secondPassReviews": {
+    "cleanCode": "Primary review: native/current basis/CAS/opaque SQL, generated operations, exact handoff, transient state, same-key settlement and narrow errors.",
+    "testGuard": "Primary review: missing behavior RED, actual AES/native roles/SQL, independent sessions/pg_locks, real writer path, mock browser boundary explicitly limited, no setup failure counted.",
+    "docsGuard": "Primary review: additive historical amendment preserved, truthful synthetic/browser boundaries, no global gate closure or premature acceptance."
+  },
+  "initialStateScopeDiagnostic": {
+    "failures": [
+      "Fresh tasks.md approved hash mismatch",
+      "Fresh task-map approved hash mismatch",
+      "Fresh ledger task/status or checkbox state mismatch"
+    ],
+    "reason": "K01 readiness command intentionally pins initially unchecked execution ledgers. Accepted T001-T050 completion triggers its raw-hash/status diagnostics. Current normalized task definitions/dependencies equal approved hashes; full current contracts and P1-P5 parity PASS. No guard or ledger definitions changed to hide the diagnostic."
+  },
+  "changedFiles": [
+    "apps/clinic/src/app/patients/[id]/summary/AllergyHistory.tsx",
+    "apps/clinic/src/components/feature-011/AllergySummaryPanel.tsx",
+    "apps/clinic/src/lib/feature-011-context.ts",
+    "apps/clinic/test/feature-011-verification.test.tsx",
+    "apps/patient/src/AllergyRecordsPanel.tsx",
+    "apps/patient/src/feature-011-allergy-history.ts",
+    "apps/patient/test/feature-011-history.test.tsx",
+    "packages/api-client/src/feature-011-allergy-state.ts",
+    "packages/i18n/src/feature-011.ts",
+    "services/api/src/modules/feature-011/allergies.ts",
+    "services/api/src/modules/feature-011/verify-allergy.test.ts",
+    "services/api/src/modules/feature-011/verify-allergy.ts",
+    "services/api/src/routes/feature-011-allergies.ts",
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+    "specs/011-allergies-clinical-content-governance/decisions/k12-accepted-2026-10-08.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/checks/api-green.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/checks/final-checks.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/checks/parity.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/checks/preservation.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/verify-api-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/verify-api-red.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/verify-api.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-accessibility.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-decision-1-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-decision-2-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-decision-3-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-decision-4-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-default-off.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-denied.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-empty.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-history-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-history-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-history-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-history-self_reported.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-j02.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-kill.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-loading.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-offline.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-provenance.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-receipt.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-ar-EG-stale.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-accessibility.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-decision-1-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-decision-2-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-decision-3-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-decision-4-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-default-off.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-denied.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-empty.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-history-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-history-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-history-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-history-self_reported.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-j02.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-kill.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-loading.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-offline.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-provenance.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-receipt.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/clinic-en-EG-stale.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-accessibility.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-default-off.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-denied.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-empty.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-history-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-history-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-history-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-history-self_reported.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-kill.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-loading.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-offline.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-ar-EG-stale.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-accessibility.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-default-off.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-denied.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-empty.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-history-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-history-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-history-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-history-self_reported.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-kill.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-loading.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-offline.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/browser/patient-en-EG-stale.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/checks/clinic-browser-results.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/checks/initial-state-scope-diagnostic.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/checks/issue-states.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/checks/patient-browser-results.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/us2-demo.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/verify-ui-red.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/verify-ui.json",
+    "specs/011-allergies-clinical-content-governance/tasks.md",
+    "tests/e2e/feature-011-verification.spec.ts",
+    "tools/feature-011-verification-playwright.config.ts",
+    "tools/run-feature-011-allergy-api-test.mjs",
+    "tools/run-feature-011-verify-api-test.mjs",
+    "packages/api-client/tsconfig.json",
+    "packages/i18n/src/index.ts"
+  ],
+  "git": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "status": "M apps/clinic/src/app/patients/[id]/summary/page.tsx\n M apps/clinic/src/components/feature-010/EncounterWorkspace.tsx\n M apps/patient/app/care-switcher.tsx\n M apps/patient/app/records.tsx\n M apps/patient/app/relationships.tsx\n M apps/patient/src/family-care-api.ts\n M apps/patient/src/patient-session-runtime.tsx\n M docs/architecture/SHIFAA-API-Catalog.md\n M docs/architecture/SHIFAA-Data-RLS.md\n M docs/traceability/SHIFAA-Traceability-Matrix.md\n M packages/api-client/package.json\n M packages/api-client/src/identity-onboarding.ts\n M packages/api-client/tsconfig.json\n M packages/contracts/package.json\n M packages/contracts/src/feature-010.ts\n M packages/contracts/src/identity-onboarding.ts\n M packages/contracts/src/index.ts\n M packages/i18n/src/index.ts\n M services/api/src/adapters/postgres/identity-repository.ts\n M services/api/src/app.ts\n M services/api/src/config.ts\n M services/api/src/modules/identity-onboarding/identity-onboarding.unit.test.ts\n M services/api/src/modules/identity-onboarding/in-memory-repository.ts\n M services/api/src/modules/identity-onboarding/ports.ts\n M services/api/src/modules/identity-onboarding/service.ts\n M specs/001-identity-onboarding/contracts/openapi.yaml\n M specs/010-encounters-referrals-contextual-chat/contracts/openapi.yaml\n?? apps/clinic/src/app/patients/[id]/summary/AllergyHistory.tsx\n?? apps/clinic/src/components/feature-011/\n?? apps/clinic/src/lib/feature-011-allergies.ts\n?? apps/clinic/src/lib/feature-011-context.ts\n?? apps/clinic/test/feature-011-summary.test.tsx\n?? apps/clinic/test/feature-011-verification.test.tsx\n?? apps/patient/src/AllergyRecordsPanel.tsx\n?? apps/patient/src/feature-011-allergies.ts\n?? apps/patient/src/feature-011-allergy-history.ts\n?? apps/patient/src/managed-care-context.ts\n?? apps/patient/test/feature-011-history.test.tsx\n?? apps/patient/test/feature-011-managed-handoff.test.ts\n?? apps/patient/test/feature-011-records.test.tsx\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? docs/governance/SHIFAA-Identifier-Handoff-Amendment-2026-10-08.md\n?? infra/db/fixtures/feature-011-k04.sql\n?? infra/db/fixtures/feature-011-k06.sql\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-concurrency.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-k05-storage.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-receipts.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011-allergy-state.ts\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? packages/core/src/feature-011/\n?? packages/i18n/src/feature-011.ts\n?? packages/test-kit/src/feature-011/\n?? services/api/src/adapters/postgres/feature-011-allergies.ts\n?? services/api/src/adapters/postgres/feature-011-receipts.ts\n?? services/api/src/feature-011-exposure.test.ts\n?? services/api/src/feature-011-exposure.ts\n?? services/api/src/modules/feature-011/\n?? services/api/src/routes/feature-011-allergies.contract.test.ts\n?? services/api/src/routes/feature-011-allergies.ts\n?? specs/011-allergies-clinical-content-governance/\n?? supabase/migrations/20261006175926_f011_allergy_revisions.sql\n?? supabase/migrations/20261006175932_f011_content_artifacts.sql\n?? supabase/migrations/20261006175937_f011_governance_evidence.sql\n?? supabase/migrations/20261006175942_f011_atomic_receipts.sql\n?? supabase/migrations/20261006185236_f011_allergy_functions.sql\n?? supabase/migrations/20261006185237_f011_release_functions.sql\n?? supabase/migrations/20261006185239_f011_signing_functions.sql\n?? supabase/migrations/20261006185240_f011_publication_functions.sql\n?? supabase/migrations/20261006185241_f011_rls_grants.sql\n?? supabase/migrations/20261006185242_f011_receipt_functions.sql\n?? supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql\n?? test-results/\n?? tests/e2e/feature-011-handoff.test.ts\n?? tests/e2e/feature-011-ui.spec.ts\n?? tests/e2e/feature-011-verification.spec.ts\n?? tools/feature-011-consumer-fixtures.mjs\n?? tools/feature-011-evidence-fixtures.mjs\n?? tools/feature-011-harness.test.mjs\n?? tools/feature-011-k08-preflight.mjs\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/feature-011-offline-proof.mjs\n?? tools/feature-011-physical-green.mjs\n?? tools/feature-011-physical-races.mjs\n?? tools/feature-011-physical-red.test.mjs\n?? tools/feature-011-predecessor-races.mjs\n?? tools/feature-011-protection-fixtures.mjs\n?? tools/feature-011-protocol-parity.test.mjs\n?? tools/feature-011-source-negatives.mjs\n?? tools/feature-011-support-lifecycle.mjs\n?? tools/feature-011-ui-playwright.config.ts\n?? tools/feature-011-verification-playwright.config.ts\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/provision-feature-011-evidence.mjs\n?? tools/run-feature-011-allergy-api-test.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-consumer-test.mjs\n?? tools/run-feature-011-core-equivalence-test.mjs\n?? tools/run-feature-011-evidence-test.mjs\n?? tools/run-feature-011-handoff-test.mjs\n?? tools/run-feature-011-physical-red.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/run-feature-011-protection-test.mjs\n?? tools/run-feature-011-storage-test.mjs\n?? tools/run-feature-011-verify-api-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs"
+  },
+  "blockers": [],
+  "sqlOrArchitectureChanges": false,
+  "subagentsUsed": false,
+  "stop": "Before K15/T057",
+  "acceptance": "PENDING_PRODUCT_OWNER"
+}

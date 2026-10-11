@@ -8,7 +8,7 @@ const testDirectory = path.dirname(fileURLToPath(import.meta.url));
 const filters = process.argv.slice(2).filter((argument) => argument !== '--');
 const files = fs
   .readdirSync(testDirectory)
-  .filter((file) => file.endsWith('.test.ts'))
+  .filter((file) => /\.test\.tsx?$/.test(file))
   .filter((file) => filters.length === 0 || filters.some((filter) => file.includes(filter)))
   .map((file) => path.join(testDirectory, file));
 
@@ -17,5 +17,7 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-const result = spawnSync(process.execPath, ['--test', ...files], { stdio: 'inherit' });
+const result = spawnSync(process.execPath, ['--import', 'tsx', '--test', ...files], {
+  stdio: 'inherit',
+});
 process.exit(result.status ?? 1);

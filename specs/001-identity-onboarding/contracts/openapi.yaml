@@ -446,6 +446,12 @@ components:
         properties:
           {
             id: { type: string, format: uuid },
+            managedPatientId:
+              {
+                type: [string, 'null'],
+                format: uuid,
+                description: 'Post-acceptance additive maintenance 2026-10-08: getMyProfile only; server derives the own identity.patients.id through person_id. Null for non-patients; never a request selector.',
+              },
             display_name: { type: string },
             birth_date: { type: [string, 'null'], format: date },
             nationality_code: { type: string, pattern: '^[A-Z]{2}$' },

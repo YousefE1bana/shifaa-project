@@ -1,0 +1,12 @@
+{
+  "result": "FAIL_SETUP_BEFORE_BASELINE",
+  "attempt": "2026-10-10T133312-608Z-f10cccac-39ac-40d7-893e-2ddafe3d1cf6",
+  "exitCode": 1,
+  "error": "cdpSession.send: Protocol error (Browser.getBrowserCommandLine): Command line not returned because --enable-automation not set.",
+  "rootCause": "Browser inspection requires the explicit Chrome automation flag on this installed Chrome version.",
+  "fix": "Add --enable-automation to this test-only Chrome launch and record actual launch arguments via CDP. No security-boundary, application, contract or runtime grant change.",
+  "baselineCreated": false,
+  "failureCountedAsPass": false,
+  "originalServerLogs": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T133312-608Z-f10cccac-39ac-40d7-893e-2ddafe3d1cf6/",
+  "historicalEvidenceOverwritten": false
+}

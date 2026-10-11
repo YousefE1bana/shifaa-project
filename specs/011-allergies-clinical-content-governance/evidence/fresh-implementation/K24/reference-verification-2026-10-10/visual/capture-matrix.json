@@ -1,0 +1,69 @@
+{
+  "id": "SHIFAA-F011-VISUAL-REFERENCE@1.0.0",
+  "authority": "Prospective SHIFAA-F011-BOUNDED-REFERENCE-PROFILES@1.0.0 approval; does not close UX-002",
+  "logicalStateCoverage": "29 configured route/state combinations from the 99-state candidate; not full application-state coverage or native accessibility acceptance.",
+  "preflight": "Before the full paired matrix, exercise all 29 configured states in both locales at 360x800, normal color mode, with exact visible-state assertions and local emitted-asset/font checks. A setup failure aborts before baseline capture.",
+  "sourceProposal": "../../delegated-closeout-2026-10-10/visual-reference-proposal.json",
+  "configuration": {
+    "os": "Windows 11 Pro 26300.9550",
+    "browser": "Chrome 154.0.8037.93 64-bit",
+    "deviceScaleFactor": 1,
+    "timezone": "Africa/Cairo",
+    "locales": ["ar-EG", "en-EG"],
+    "viewports": [
+      { "width": 360, "height": 800 },
+      { "width": 412, "height": 915 },
+      { "width": 768, "height": 1024 },
+      { "width": 1440, "height": 900 }
+    ],
+    "reducedMotion": "reduce",
+    "colorModes": ["normal", "dark", "forced-colors-active"],
+    "clock": "Freeze fixture clock and identifiers for both captures; retain visible effect, status, history and time values.",
+    "fonts": "Wait for document.fonts.ready; record and hash every rendered local font asset.",
+    "rendererMetadata": ["browser executable SHA-256", "browser version", "GPU/rendering backend", "launch arguments", "OS build/update", "Playwright version", "application build and emitted asset hashes"]
+  },
+  "surfaces": [
+    {
+      "id": "patient-records",
+      "app": "patient",
+      "route": "/records",
+      "fixture": "tests/e2e/feature-011-ui.spec.ts enter() transport fixture and fixed revision",
+      "states": ["ready", "history-open", "empty", "permission-denied", "stale", "recoverable-error", "offline", "success-receipt"]
+    },
+    {
+      "id": "clinic-summary",
+      "app": "clinic",
+      "route": "/patients/{personId}/summary?encounterId={encounterId}",
+      "fixture": "tests/e2e/feature-011-ui.spec.ts enter() transport fixture and fixed revision",
+      "states": ["ready", "history-open", "empty", "permission-denied", "stale", "recoverable-error", "offline", "success-receipt"]
+    },
+    {
+      "id": "admin-content",
+      "app": "admin",
+      "route": "/clinical-content",
+      "fixture": "capture-ui-gap-scenarios.mjs adminEnter() fixed neutral synthetic governance and assigned-review rows; stub auth and domain transport",
+      "states": ["governance-ready", "assigned-review", "empty", "aal2-required", "permission-denied", "recoverable-error", "confirmation-dialog"]
+    },
+    {
+      "id": "clinic-status",
+      "app": "clinic",
+      "route": "/clinical-content/status",
+      "fixture": "K21 status UI transport fixture shape with fixed synthetic authorized status metadata whose eligibility is unavailable; stub auth and domain transport. The ready state means metadata loaded, not that content is effective or clinically endorsed.",
+      "states": ["ready", "empty", "stale", "permission-denied", "recoverable-error", "offline"]
+    }
+  ],
+  "comparison": {
+    "captureCount": 2,
+    "screenshotsPerPass": 696,
+    "sameBuildFixtureAndEnvironmentRequired": true,
+    "changedPixelsAllowed": 0,
+    "perChannelTolerance": 0,
+    "masks": [],
+    "toolingControl": "Installed Next.js Hide indicator preference on owned dev servers before preflight; no application CSS mask or source change. Fail if a tooling button remains visible.",
+    "screenshotStabilization": ["Playwright animations disabled", "caret hidden", "page clock fixed", "fixture identifiers fixed"],
+    "archive": "Each run gets a new timestamp-and-random-id directory; keep both raw captures and the generated pixel diff even on failure.",
+    "historicalReferencesAreComparisonInputs": false,
+    "candidateHtmlIsApplicationEvidence": false,
+    "transportFixturesAreRealApiAuthOrAssistiveTechnologyEvidence": false
+  }
+}

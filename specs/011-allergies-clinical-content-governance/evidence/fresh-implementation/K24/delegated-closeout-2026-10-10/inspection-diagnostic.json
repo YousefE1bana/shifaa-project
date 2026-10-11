@@ -1,0 +1,9 @@
+{
+  "capturedAt": "2026-10-10T12:36:28.236Z",
+  "attempt": "sql() metadata query against runtime admin DB",
+  "result": "DENIED_BY_HARNESS_TEMPORARY_DATABASE_BOUNDARY",
+  "message": "Unsafe harness-owned temporary database name.",
+  "resolution": "Use postgres --version binary metadata instead of any shared-database query",
+  "databaseChanges": false,
+  "countedAsProof": false
+}

@@ -1,4 +1,5 @@
 import { FamilyCareClient } from '@shifaa/api-client/family-care';
+import { patientAccessTokens } from './patient-auth-store';
 
 export const syntheticFamilyIds = {
   selfPerson: '40000000-0000-4000-8000-000000000001',
@@ -28,7 +29,7 @@ export function createPatientFamilyClient(
   const baseUrl = process.env['EXPO_PUBLIC_API_BASE_URL'] ?? 'http://127.0.0.1:3000';
   return new FamilyCareClient({
     baseUrl,
-    accessToken: `synthetic-person:${personId}`,
+    accessToken: patientAccessTokens.read() ?? `synthetic-person:${personId}`,
     acceptLanguage: locale,
   });
 }

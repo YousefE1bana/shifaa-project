@@ -1,0 +1,144 @@
+[WebServer] (node:16148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:21288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 38 tests using 1 worker
+
+(node:23308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/38] tests\e2e\feature-011-ui.spec.ts:170:7 › ar-EG report, explicit review, original receipt, keyboard and source/history
+  1) tests\e2e\feature-011-ui.spec.ts:170:7 › ar-EG report, explicit review, original receipt, keyboard and source/history 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('f011-allergy-panel').getByText('السجل الحالي', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('f011-allergy-panel').getByText('السجل الحالي', { exact: true }) with timeout 20000ms
+      - waiting for getByTestId('f011-allergy-panel').getByText('السجل الحالي', { exact: true })
+
+
+      172 |   }) => {
+      173 |     const f = await enter(page, locale);
+    > 174 |     await expect(f.panel.getByText(copy.ready, { exact: true })).toBeVisible();
+          |                                                                  ^
+      175 |     await expect(
+      176 |       f.panel.getByText(`${copy.coding}: ${copy.unknown}`, { exact: true }),
+      177 |     ).toBeVisible();
+        at D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tests\e2e\feature-011-ui.spec.ts:174:66
+
+    Error Context: artifacts\feature-011\k22\patient-browser\feature-011-ui-ar-EG-repor-50cd5-keyboard-and-source-history\error-context.md
+
+
+(node:21624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[2/38] tests\e2e\feature-011-ui.spec.ts:227:9 › ar-EG empty clears sensitive rows and enforces access
+  2) tests\e2e\feature-011-ui.spec.ts:227:9 › ar-EG empty clears sensitive rows and enforces access 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('f011-allergy-panel').getByText('لا توجد بلاغات متاحة. هذا لا يعني عدم وجود حساسية.', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('f011-allergy-panel').getByText('لا توجد بلاغات متاحة. هذا لا يعني عدم وجود حساسية.', { exact: true }) with timeout 20000ms
+      - waiting for getByTestId('f011-allergy-panel').getByText('لا توجد بلاغات متاحة. هذا لا يعني عدم وجود حساسية.', { exact: true })
+
+
+      231 |           exact: true,
+      232 |         }),
+    > 233 |       ).toBeVisible();
+          |         ^
+      234 |       if (mode !== 'empty') {
+      235 |         await expect(f.panel.getByLabel(copy.substance, { exact: true })).toHaveCount(0);
+      236 |         await expect(f.panel.getByText(/Neutral \/ مادة/)).toHaveCount(0);
+        at D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tests\e2e\feature-011-ui.spec.ts:233:9
+
+    Error Context: artifacts\feature-011\k22\patient-browser\feature-011-ui-ar-EG-empty-845ca-ve-rows-and-enforces-access\error-context.md
+
+
+(node:20840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[3/38] tests\e2e\feature-011-ui.spec.ts:227:9 › ar-EG denied clears sensitive rows and enforces access
+  3) tests\e2e\feature-011-ui.spec.ts:227:9 › ar-EG denied clears sensitive rows and enforces access 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('f011-allergy-panel').getByText('السجل غير متاح ضمن الصلاحية والسياق الحاليين', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('f011-allergy-panel').getByText('السجل غير متاح ضمن الصلاحية والسياق الحاليين', { exact: true }) with timeout 20000ms
+      - waiting for getByTestId('f011-allergy-panel').getByText('السجل غير متاح ضمن الصلاحية والسياق الحاليين', { exact: true })
+
+
+      231 |           exact: true,
+      232 |         }),
+    > 233 |       ).toBeVisible();
+          |         ^
+      234 |       if (mode !== 'empty') {
+      235 |         await expect(f.panel.getByLabel(copy.substance, { exact: true })).toHaveCount(0);
+      236 |         await expect(f.panel.getByText(/Neutral \/ مادة/)).toHaveCount(0);
+        at D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tests\e2e\feature-011-ui.spec.ts:233:9
+
+    Error Context: artifacts\feature-011\k22\patient-browser\feature-011-ui-ar-EG-denie-110a5-ve-rows-and-enforces-access\error-context.md
+
+
+(node:16704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[4/38] tests\e2e\feature-011-ui.spec.ts:227:9 › ar-EG stale clears sensitive rows and enforces access
+  4) tests\e2e\feature-011-ui.spec.ts:227:9 › ar-EG stale clears sensitive rows and enforces access 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('f011-allergy-panel').getByText('السجل قديم؛ حدّث السياق قبل الإبلاغ.', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('f011-allergy-panel').getByText('السجل قديم؛ حدّث السياق قبل الإبلاغ.', { exact: true }) with timeout 20000ms
+      - waiting for getByTestId('f011-allergy-panel').getByText('السجل قديم؛ حدّث السياق قبل الإبلاغ.', { exact: true })
+
+
+      231 |           exact: true,
+      232 |         }),
+    > 233 |       ).toBeVisible();
+          |         ^
+      234 |       if (mode !== 'empty') {
+      235 |         await expect(f.panel.getByLabel(copy.substance, { exact: true })).toHaveCount(0);
+      236 |         await expect(f.panel.getByText(/Neutral \/ مادة/)).toHaveCount(0);
+        at D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tests\e2e\feature-011-ui.spec.ts:233:9
+
+    Error Context: artifacts\feature-011\k22\patient-browser\feature-011-ui-ar-EG-stale-7f619-ve-rows-and-enforces-access\error-context.md
+
+
+(node:7588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[5/38] tests\e2e\feature-011-ui.spec.ts:227:9 › ar-EG error clears sensitive rows and enforces access

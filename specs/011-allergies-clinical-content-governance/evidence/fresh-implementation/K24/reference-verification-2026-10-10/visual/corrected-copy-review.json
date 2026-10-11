@@ -1,0 +1,158 @@
+{
+  "recordedAt": "2026-10-10T21:51:34.023Z",
+  "reviewer": "Primary Codex agent",
+  "result": "PASS_BOUNDED_COPY_OBSERVATIONS_ON_FAILED_PAIR_RUN",
+  "pairedPixelResult": "FAIL_PIXEL_DIFFERENCE",
+  "reviewedImageCount": 16,
+  "images": [
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/patient-records__ready__ar-EG__360x800__normal.png",
+      "sha256": "cc1e1d637046e0f5326f31dbcae798154b01fe504cabcb9c40541a48995d49b9",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/patient-records__ready__ar-EG__360x800__normal.png",
+        "sha256": "cc1e1d637046e0f5326f31dbcae798154b01fe504cabcb9c40541a48995d49b9"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/patient-records__ready__en-EG__1440x900__normal.png",
+      "sha256": "cd1213e57e2da39ee815298b9e11960ccf9cc5b6922957ebfdafc128305ecea1",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/patient-records__ready__en-EG__1440x900__normal.png",
+        "sha256": "cd1213e57e2da39ee815298b9e11960ccf9cc5b6922957ebfdafc128305ecea1"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/clinic-summary__ready__ar-EG__1440x900__normal.png",
+      "sha256": "b2925f5ee1b1e5131c67b5c14e08e0252f20386d52b246a6310aaba75d9d1f7e",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/clinic-summary__ready__ar-EG__1440x900__normal.png",
+        "sha256": "b2925f5ee1b1e5131c67b5c14e08e0252f20386d52b246a6310aaba75d9d1f7e"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/clinic-summary__permission-denied__en-EG__412x915__forced-colors-active.png",
+      "sha256": "0b0efa3b42da909d822d63454e7d6ee9e52bd9db4de3533965219646fa35a01b",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/clinic-summary__permission-denied__en-EG__412x915__forced-colors-active.png",
+        "sha256": "0b0efa3b42da909d822d63454e7d6ee9e52bd9db4de3533965219646fa35a01b"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/patient-records__history-open__ar-EG__1440x900__normal.png",
+      "sha256": "52aa79c027983eb68a24d58aaf657b8065c0f6c5bf70c5d75822320a4acd7fbb",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/patient-records__history-open__ar-EG__1440x900__normal.png",
+        "sha256": "52aa79c027983eb68a24d58aaf657b8065c0f6c5bf70c5d75822320a4acd7fbb"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__governance-ready__ar-EG__360x800__normal.png",
+      "sha256": "cc27ecf54cd1b8a57f32f64f57711efcdf3a9a36490eb2d998874a2b57f4c0ae",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T203756-527Z-95e477bf-5644-4624-bdbd-f4d89cb6774d/capture-a/admin-content__governance-ready__ar-EG__360x800__normal.png",
+        "sha256": "cc27ecf54cd1b8a57f32f64f57711efcdf3a9a36490eb2d998874a2b57f4c0ae"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__governance-ready__en-EG__1440x900__normal.png",
+      "sha256": "bc9cb1fe58fd27f9ea4c6eb3b4ffc16754c1ed9792120447fef8af55455d3e78",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/admin-content__governance-ready__en-EG__1440x900__normal.png",
+        "sha256": "bc9cb1fe58fd27f9ea4c6eb3b4ffc16754c1ed9792120447fef8af55455d3e78"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__governance-ready__en-EG__412x915__forced-colors-active.png",
+      "sha256": "1d245196d04953ae7f403c492abb8d23dcffe26fb96576d26ed3e4f59f9045d9",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/admin-content__governance-ready__en-EG__412x915__forced-colors-active.png",
+        "sha256": "1d245196d04953ae7f403c492abb8d23dcffe26fb96576d26ed3e4f59f9045d9"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__governance-ready__ar-EG__1440x900__normal.png",
+      "sha256": "76a31ee26e4935e220eaa7af8d0b389b1e665d2ae9ea3cfa745746cbc79ca253",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T203756-527Z-95e477bf-5644-4624-bdbd-f4d89cb6774d/capture-a/admin-content__governance-ready__ar-EG__1440x900__normal.png",
+        "sha256": "76a31ee26e4935e220eaa7af8d0b389b1e665d2ae9ea3cfa745746cbc79ca253"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__governance-ready__en-EG__360x800__dark.png",
+      "sha256": "c87518dcef6db5f72b9c484fcbf76ff65b4a04176a97769c7f9d29c5e983bf04",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/admin-content__governance-ready__en-EG__360x800__dark.png",
+        "sha256": "c87518dcef6db5f72b9c484fcbf76ff65b4a04176a97769c7f9d29c5e983bf04"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__recoverable-error__en-EG__1440x900__normal.png",
+      "sha256": "2b15b4e46bfb782950ccdbd7deb82211bfef3085346a33bf5f481f84efde8e80",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/admin-content__recoverable-error__en-EG__1440x900__normal.png",
+        "sha256": "2b15b4e46bfb782950ccdbd7deb82211bfef3085346a33bf5f481f84efde8e80"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__recoverable-error__ar-EG__412x915__normal.png",
+      "sha256": "e6e6f6a736966a35bb177798c503121257a970535ed8e8a61e9cae2bc6692ba0",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T203756-527Z-95e477bf-5644-4624-bdbd-f4d89cb6774d/capture-a/admin-content__recoverable-error__ar-EG__412x915__normal.png",
+        "sha256": "e6e6f6a736966a35bb177798c503121257a970535ed8e8a61e9cae2bc6692ba0"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/clinic-status__ready__en-EG__1440x900__normal.png",
+      "sha256": "2f629245ebd0ae1354582bfc88ad8fdb433b388878a9b67f997ac06df90bb1ad",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/clinic-status__ready__en-EG__1440x900__normal.png",
+        "sha256": "2f629245ebd0ae1354582bfc88ad8fdb433b388878a9b67f997ac06df90bb1ad"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/clinic-status__offline__ar-EG__412x915__normal.png",
+      "sha256": "1946defbfedc6fbf70fde299b9e2ad20d5afe085bf023844c4fe79f09ebf56e7",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T183846-006Z-d74ad76f-0f04-406f-91db-3be6a66574da/capture-a/clinic-status__offline__ar-EG__412x915__normal.png",
+        "sha256": "1946defbfedc6fbf70fde299b9e2ad20d5afe085bf023844c4fe79f09ebf56e7"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__governance-ready__ar-EG__360x800__dark.png",
+      "sha256": "cc27ecf54cd1b8a57f32f64f57711efcdf3a9a36490eb2d998874a2b57f4c0ae",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T203756-527Z-95e477bf-5644-4624-bdbd-f4d89cb6774d/capture-a/admin-content__governance-ready__ar-EG__360x800__dark.png",
+        "sha256": "cc27ecf54cd1b8a57f32f64f57711efcdf3a9a36490eb2d998874a2b57f4c0ae"
+      }
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/admin-content__governance-ready__ar-EG__768x1024__normal.png",
+      "sha256": "72ff0743834b24c01d5a6f115f7e34ea4ed77b720626a689a76f636cfb08e7be",
+      "inspectedSource": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T203756-527Z-95e477bf-5644-4624-bdbd-f4d89cb6774d/capture-a/admin-content__governance-ready__ar-EG__768x1024__normal.png",
+        "sha256": "72ff0743834b24c01d5a6f115f7e34ea4ed77b720626a689a76f636cfb08e7be"
+      }
+    }
+  ],
+  "reviewMethod": "11 directly inspected images from the preceding same-product-source capture run freshly revalidated byte-identically; five Arabic governance/error images directly inspected in the current run. All 16 archived images bound to their exact inspection sources. No prior acceptance was transferred.",
+  "observations": [
+    "Ready governance samples display the corrected current-eligibility message in Arabic and English; no safety inference is stated.",
+    "Desktop Arabic and narrow English/Arabic governance samples retain the exact-material section and visible functional controls.",
+    "English narrow forced-colors and dark-media samples wrap the corrected message; dark-media emulation is not new theme acceptance.",
+    "Arabic and English recoverable-error samples retain the existing load-failure message and disclose no release material.",
+    "Patient and clinic ready samples retain explicit unknown values, synthetic notices, and visible source/history distinctions.",
+    "Forced-colors clinic permission-denied sample shows no allergy details and retains the privacy entrypoint text.",
+    "Clinic status ready sample states unavailable with no automatic fallback and displays metadata without signer identity/private evidence.",
+    "Arabic clinic offline sample explicitly states unknown current status and no mutation queue."
+  ],
+  "limitations": [
+    "16 directly inspected images across these same-product-source runs; not direct inspection of all1392 screenshots or acceptance of all99 candidate states.",
+    "Actual native NVDA/TalkBack speech, keyboard/swipe/focus and physical-device scaling were not executed.",
+    "Visible patient viewport does not prove complete long history or all dialog actions; narrow native selects may truncate visible values.",
+    "Synthetic transport fixtures; no claim of production, clinical, full accessibility or final design acceptance.",
+    "Image viewer resized some tall images for display; original source image bytes and dimensions remain bound by the capture manifests."
+  ],
+  "nativeAssistiveTechnology": false,
+  "formalUx002Acceptance": false,
+  "checkpointAcceptance": false
+}

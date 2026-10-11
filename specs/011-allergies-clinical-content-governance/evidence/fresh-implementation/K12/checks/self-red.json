@@ -1,0 +1,102 @@
+{
+  "numTotalTestSuites": 2,
+  "numPassedTestSuites": 0,
+  "numFailedTestSuites": 2,
+  "numPendingTestSuites": 0,
+  "numTotalTests": 5,
+  "numPassedTests": 4,
+  "numFailedTests": 1,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "snapshot": {
+    "added": 0,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0,
+    "didUpdate": false
+  },
+  "startTime": 1791423538742,
+  "success": false,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [
+            "identity onboarding use-case module"
+          ],
+          "fullName": "identity onboarding use-case module hands off only the native subject own canonical managed patient ID",
+          "status": "failed",
+          "title": "hands off only the native subject own canonical managed patient ID",
+          "duration": 8.335199999999986,
+          "failureMessages": [
+            "AssertionError: expected { …(7) } to match object { …(2) }\n(6 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+expect@4.1.0/node_modules/@vitest/expect/dist/index.js:1278:10)\n    at Proxy.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+expect@4.1.0/node_modules/@vitest/expect/dist/index.js:1151:15)\n    at Proxy.methodWrapper (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1700:25)\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/identity-onboarding/identity-onboarding.unit.test.ts:44:21\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+          ],
+          "meta": {},
+          "tags": []
+        },
+        {
+          "ancestorTitles": [
+            "identity onboarding use-case module"
+          ],
+          "fullName": "identity onboarding use-case module creates registration atomically and audits only approved fields",
+          "status": "passed",
+          "title": "creates registration atomically and audits only approved fields",
+          "duration": 2.57770000000005,
+          "failureMessages": [],
+          "meta": {},
+          "tags": []
+        },
+        {
+          "ancestorTitles": [
+            "identity onboarding use-case module"
+          ],
+          "fullName": "identity onboarding use-case module defaults to deny and commits audit/outbox with the domain result",
+          "status": "passed",
+          "title": "defaults to deny and commits audit/outbox with the domain result",
+          "duration": 13.845100000000002,
+          "failureMessages": [],
+          "meta": {},
+          "tags": []
+        },
+        {
+          "ancestorTitles": [
+            "identity onboarding use-case module"
+          ],
+          "fullName": "identity onboarding use-case module denies a restricted native session before protected onboarding access",
+          "status": "passed",
+          "title": "denies a restricted native session before protected onboarding access",
+          "duration": 0.6797999999998865,
+          "failureMessages": [],
+          "meta": {},
+          "tags": []
+        },
+        {
+          "ancestorTitles": [
+            "identity onboarding use-case module"
+          ],
+          "fullName": "identity onboarding use-case module locks and consumes a recovery proof grant around the linked verification case",
+          "status": "passed",
+          "title": "locks and consumes a recovery proof grant around the linked verification case",
+          "duration": 7.892000000000053,
+          "failureMessages": [],
+          "meta": {},
+          "tags": []
+        }
+      ],
+      "startTime": 1791423540481,
+      "endTime": 1791423540514.892,
+      "status": "failed",
+      "message": "",
+      "name": "D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/identity-onboarding/identity-onboarding.unit.test.ts"
+    }
+  ]
+}

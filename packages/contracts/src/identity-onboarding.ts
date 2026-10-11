@@ -68,6 +68,7 @@ export const AuthResult = Type.Object({
 
 export const Profile = Type.Object({
   id: Uuid,
+  managedPatientId: Type.Optional(Type.Union([Uuid, Type.Null()])),
   display_name: Type.String(),
   birth_date: Type.Union([Type.String({ format: 'date' }), Type.Null()]),
   nationality_code: Type.String({ pattern: '^[A-Z]{2}$' }),

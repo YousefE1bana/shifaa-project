@@ -1,0 +1,66 @@
+{
+  "changedExisting": [
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+    "specs/011-allergies-clinical-content-governance/tasks.md",
+    "services/api/src/app.ts"
+  ],
+  "added": [
+    "apps/clinic/src/lib/feature-011-allergies.ts",
+    "apps/clinic/test/feature-011-summary.test.tsx",
+    "apps/patient/src/feature-011-allergies.ts",
+    "apps/patient/test/feature-011-records.test.tsx",
+    "services/api/src/adapters/postgres/feature-011-allergies.ts",
+    "services/api/src/modules/feature-011/allergies.test.ts",
+    "services/api/src/modules/feature-011/allergies.ts",
+    "services/api/src/routes/feature-011-allergies.contract.test.ts",
+    "services/api/src/routes/feature-011-allergies.ts",
+    "specs/011-allergies-clinical-content-governance/decisions/k09-accepted-2026-10-07.md",
+    "specs/011-allergies-clinical-content-governance/decisions/k10-accepted-2026-10-07.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-api-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-api-red.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-read-create.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-routes.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/change-inventory.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/paired-review.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/allergy-ui-blocked.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/allergy-ui-red.json",
+    "tools/run-feature-011-allergy-api-test.mjs"
+  ],
+  "verification": {
+    "focusedUnitAndExposure": 55,
+    "passed": 55,
+    "apiTypecheck": "PASS",
+    "contracts": "PASS P1-P5; 123 pinned inputs",
+    "prettier": "PASS",
+    "validRedApi": {
+      "total": 28,
+      "fail": 24,
+      "pass": 4
+    },
+    "validRedUiPreparation": {
+      "total": 10,
+      "fail": 10,
+      "pass": 0
+    },
+    "bothRuntimeIntegration": [
+      {
+        "runtime": "shifaa-local-postgres",
+        "count": 41,
+        "result": "PASS"
+      },
+      {
+        "runtime": "shifaa-local-supabase",
+        "count": 41,
+        "result": "PASS"
+      }
+    ]
+  },
+  "reviews": {
+    "cleanCode": "Root reviewed native-session authorization, generated validation, current SQL context, encrypted reconstruction, idempotency binding, opaque receipt replay and default-off registration. Removed unused imports and formatted bounded new files.",
+    "testGuard": "Root inspected valid missing-behavior RED separately from setup failures, real native current-session checks, independent clean runtime databases, durable all-five counts, replay and commit-fault assertions. K12 tests are only initial RED preparation; no accessibility/live success claim.",
+    "docsGuard": "Root revalidated accepted K09/K10 evidence hashes and final GitHub Issue states; blocked and pass reports tied to current source hashes. Historical accepted records preserved."
+  },
+  "gateState": "Unchanged; UX001 satisfied only F011 affected-UI Plan prerequisite, UX002 OPEN VERIFYING, TECH002 OPEN affected IMPLEMENTING globally, TECH003 OPEN reference environment, CLIN001 OPEN synthetic-only, LEGAL001/002/007 unchanged",
+  "noDelegation": true,
+  "noGitIntegration": true
+}

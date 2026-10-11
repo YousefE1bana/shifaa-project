@@ -1,0 +1,19 @@
+{
+  "result": "INTERRUPTED_NO_COMPLETION_RESULT",
+  "capturedAt": "2026-10-10T06:12:45.370Z",
+  "startedAt": "2026-10-09T21:53:32.964Z",
+  "exitCode": null,
+  "processCheck": "No full-verify-driver/corepack verify/vitest node process remains; no active test session",
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-interrupted.log",
+    "sha256": "47c11a69db3834f767ea0aaf6aa55a69ffa7674de997f10a702e7488e806f32d"
+  },
+  "start": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-interrupted-start.json",
+    "sha256": "293d1e3dce519b584029be5f7586819e97e865b3ceac26772f3d5c685be8ac4f"
+  },
+  "pinsUnchanged": 141,
+  "ledgerUnchanged": true,
+  "previousCapturedPredecessorEvidenceRestored": true,
+  "noPassClaim": true
+}

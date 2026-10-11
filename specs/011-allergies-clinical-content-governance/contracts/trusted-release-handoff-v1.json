@@ -1,0 +1,277 @@
+{
+  "formatVersion": 1,
+  "contractId": "SHIFAA-F011-CREATE-RELEASE-HANDOFF/1",
+  "status": "PLAN_RECOVERY_DRAFT_REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+  "designDecision": "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md",
+  "consumptionAllowed": false,
+  "consumptionPrerequisite": "Recovered Plan review/approval, regenerated Tasks under separate authorization, accepted current handoff metadata and explicit physical authorization; old C02B/C03/T017 IDs are historical recovery input only",
+  "canonicalContractId": "SHIFAA-F011-ARTIFACT/1",
+  "canonicalInputs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+      "sha256": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+      "sha256": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json",
+      "sha256": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+      "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133"
+    }
+  ],
+  "closedHandoff": {
+    "required": [
+      "contractId",
+      "artifactFacts",
+      "trustedEvidence",
+      "allocation",
+      "protectedBody"
+    ],
+    "optional": [
+      "declaredDigest"
+    ],
+    "additionalProperties": false,
+    "artifactFacts": "unchanged closed normalized approved v1 facts schema",
+    "trustedEvidence": {
+      "closedKeys": [
+        "content",
+        "code",
+        "testVectors"
+      ],
+      "entry": {
+        "closedKeys": [
+          "reference",
+          "verifiedSha256"
+        ],
+        "reference": "canonical lowercase immutable evidence UUID; exact equality with artifactFacts evidence.ref",
+        "verifiedSha256": "64 lowercase ASCII hex; produced ONLY by trusted Evidence Port over exact immutable unencrypted bytes; exact equality with artifactFacts evidence.sha256"
+      },
+      "rawMaterialAllowed": false,
+      "externalCallerAuthorshipAllowed": false
+    },
+    "allocation": {
+      "closedKeys": [
+        "releaseId",
+        "artifactVersion"
+      ],
+      "releaseId": "fresh canonical lowercase release UUID allocated by trusted service before protection",
+      "artifactVersion": "positive exact integer; initial=1; successor=authoritative predecessor.artifactVersion+1"
+    },
+    "protectedBody": "exact protectedBodyContract below",
+    "declaredDigest": "optional canonical lowercase SHA-256; equal SQL-computed artifact hash"
+  },
+  "protectedBodyContract": {
+    "contractId": "SHIFAA-F011-PROTECTED-BODY/1",
+    "algorithm": "AES-256-GCM",
+    "algorithmAgility": false,
+    "closedFields": [
+      "contractId",
+      "keyRef",
+      "nonce",
+      "ciphertext",
+      "authTag"
+    ],
+    "fields": {
+      "contractId": {
+        "type": "text",
+        "equals": "SHIFAA-F011-PROTECTED-BODY/1",
+        "column": "body_contract_id"
+      },
+      "keyRef": {
+        "type": "exact nonempty strict UTF-8 text",
+        "meaning": "immutable/versioned external KMS/HSM key reference, no key material; mutable aliases including current/latest are invalid",
+        "immutableVersionProofOwner": "C04 trusted Protection Port; SQL treats reference as opaque",
+        "normalization": "NONE",
+        "column": "body_key_ref",
+        "publicOrObservabilityExposureAllowed": false
+      },
+      "nonce": {
+        "type": "octets",
+        "octetLength": 12,
+        "column": "body_nonce"
+      },
+      "ciphertext": {
+        "type": "opaque octets",
+        "minOctetLength": 1,
+        "column": "body_ciphertext"
+      },
+      "authTag": {
+        "type": "octets",
+        "octetLength": 16,
+        "column": "body_auth_tag"
+      }
+    },
+    "physicalStorage": "five explicit NOT NULL typed columns; text/text/bytea/bytea/bytea; no JSON/text serialized envelope",
+    "internalJsonbOctetCarrier": {
+      "fields": [
+        "nonce",
+        "ciphertext",
+        "authTag"
+      ],
+      "representation": "even-length lowercase hex without prefix/whitespace; decode once to bytea; not a persisted or alternate encryption representation"
+    },
+    "keyMaterialAllowed": false,
+    "plaintextStorageAllowed": false,
+    "sqlCryptographyAllowed": false
+  },
+  "protectedAadContract": {
+    "contractId": "SHIFAA-F011-PROTECTED-AAD/1",
+    "prefix": "SHIFAA-F011-PROTECTED-AAD/1;",
+    "frameOrder": [
+      "resourceType",
+      "resourceId",
+      "fieldId",
+      "artifactVersion",
+      "keyRef"
+    ],
+    "fields": {
+      "resourceType": {
+        "constant": "clinical.content_release"
+      },
+      "resourceId": {
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        "source": "authoritative release id / prevalidated allocation.releaseId"
+      },
+      "fieldId": {
+        "constant": "body"
+      },
+      "artifactVersion": {
+        "decimalPattern": "^[1-9][0-9]*$",
+        "source": "authoritative artifact_version / exactly revalidated candidate",
+        "rendering": "minimal unsigned decimal ASCII"
+      },
+      "keyRef": {
+        "source": "exact protectedBody.keyRef / body_key_ref"
+      }
+    },
+    "frameCount": 5,
+    "frameRepresentation": "S<byte-length>:<strict UTF-8 payload>,",
+    "lengthRepresentation": "minimal unsigned decimal ASCII",
+    "lengthUnit": "UTF-8 octets",
+    "nullFramesAllowed": false,
+    "jsonSerializationAllowed": false,
+    "escaping": "NONE",
+    "unicodeNormalization": "NONE",
+    "whitespaceNormalization": "NONE",
+    "localeTransformation": "NONE",
+    "invalidText": [
+      "malformed UTF-8",
+      "surrogates",
+      "U+0000"
+    ],
+    "excludedFields": [
+      "workflowVersion"
+    ],
+    "persistedFreeFormAadAllowed": false,
+    "reconstructedFrom": [
+      "id",
+      "artifact_version",
+      "body_key_ref",
+      "constant resourceType",
+      "constant fieldId"
+    ]
+  },
+  "allocationTiming": {
+    "beforeLocks": [
+      "trusted service allocates releaseId",
+      "authoritative predecessor/series preflight",
+      "candidate version: initial 1 or predecessor.artifactVersion+1",
+      "Evidence Port resolves/verifies exact immutable bytes and emits only reference+verifiedSha256",
+      "Protection Port uses candidate releaseId/version and keyRef in exact AAD; fresh random nonce"
+    ],
+    "insideLocks": [
+      "existing idempotency scope first",
+      "series advisory and ascending stable UUID series/predecessor locks",
+      "current authority/admission and lineage revalidation",
+      "recompute expected artifactVersion; require exact candidate equality",
+      "persist same releaseId/version plus opaque body and approved verified evidence; atomic effects"
+    ],
+    "networkEvidenceKmsWhileLocksHeld": false,
+    "staleOrConflictingAllocation": "atomic rejection; no partial release/evidence/success audit/outbox/receipt",
+    "precommitRetry": [
+      "outside locks",
+      "current preflight",
+      "fresh releaseId",
+      "fresh random nonce",
+      "fresh protected envelope",
+      "same public idempotency scope/bindings"
+    ],
+    "successfulCommittedReplay": "existing reauthorized stored result; no second release or re-encryption",
+    "versionIdentity": [
+      "id",
+      "series_id",
+      "artifact_version"
+    ],
+    "removedDraftOrdinalConstraint": "unique(series_id,artifact_version)",
+    "publishedChainGuards": [
+      "unique published root per series",
+      "unique published successor per predecessor"
+    ]
+  },
+  "responsibilities": {
+    "C04": {
+      "hashes": "exact resolved immutable material SHA-256; ciphertext/plaintext and reference association proof",
+      "protects": "AES-256-GCM using exact AAD; key/context/tamper/random nonce proof",
+      "composition": "real producer -> already-prepared SQL in BOTH runtimes, no raw bytes in SQL or sinks, no network/KMS under locks"
+    },
+    "C03": {
+      "hashes": "construct approved SHIFAA-F011-ARTIFACT/1 bytes and compute artifact SHA-256 ONLY",
+      "validates": "canonical facts; trusted ref/hash syntax and equality; current context/lineage; candidate version; five-field body structure",
+      "stores": "approved facts, reference+verifiedSha256, artifact hash, authoritative id/version and five typed opaque body fields",
+      "fixtureLimitation": "synthetic structurally valid envelopes only; no real evidence-port/AES-GCM acceptance",
+      "rawEvidenceMaterialAllowed": false,
+      "encryptionKeyAllowed": false
+    }
+  },
+  "failure": "closed shape, atomic redacted rejection; no plaintext or caller digest fallback",
+  "blockers": [],
+  "resolvedDesignBlockers": [
+    {
+      "id": "HND-DESIGN-001",
+      "disposition": "RESOLVED_BY_PRODUCT_OWNER_ARCHITECTURE_DECISION",
+      "evidence": "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md"
+    }
+  ],
+  "openTech002": "OPEN",
+  "recoveryDecision": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md",
+  "historicalTaskOwnershipIsExecutionAuthority": false,
+  "recoveryRound2Decision": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md",
+  "authorizedReviewDisclosure": {
+    "contract": "specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md",
+    "rawSqlEvidenceInput": false,
+    "genericReceiptMaterial": false,
+    "authorizedExistingArtifactReview": true,
+    "exactStringEncoding": "lossless strict UTF-8 decode/encode; no base64 or normalization; reference+SHA-256 checked before disclosure",
+    "dedicatedReceipt": "ciphertext only under SHIFAA-F011-RECEIPT-PROTECTED/1"
+  },
+  "localReceiptUnderLocks": {
+    "allowed": true,
+    "preparedCapabilityBeforeTransaction": true,
+    "networkKmsEvidenceCalls": false,
+    "contract": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md",
+    "historicalHndN26": "domain protection/external call denial, not bounded local receipt encryption"
+  },
+  "evidenceFoundation": {
+    "contractId": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1",
+    "profile": "verified-evidence-binding-v1.json",
+    "status": "REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+    "existingMembersChanged": false,
+    "privatePreparation": {
+      "name": "CreateReleasePhysicalPreparation",
+      "members": [
+        "handoff",
+        "materialBindings"
+      ],
+      "bindingProfiles": [
+        "content_material",
+        "code_material",
+        "test_vector_material"
+      ]
+    }
+  }
+}

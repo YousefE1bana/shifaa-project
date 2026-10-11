@@ -1,0 +1,1475 @@
+{
+  "result": "PASS_PENDING_PRODUCT_OWNER_ACCEPTANCE",
+  "capturedAt": "2026-10-06T18:48:19.645Z",
+  "migration": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+  "beforeSha256": "490bd4a739ddcea605e3b3510a5cb8ac701693031f120bcd9b99a73cb8b7396e",
+  "afterSha256": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+  "rootCause": "Unparenthesized SQL CASE inside a PL/pgSQL IF condition permits the CASE THEN token to terminate parsing of the IF condition. Parentheses disambiguate the complete SQL expression.",
+  "change": "Two added parentheses; profession mapping and every comparison preserved.",
+  "fixtureRepair": {
+    "location": "tools/run-feature-011-storage-test.mjs:65",
+    "old": "f011-storage",
+    "current": "f011a000-0000-4000-8000-000000000099",
+    "baselineConstraint": "audit.events.trace_id: 16-64 UTF-8 octets, lowercase identifier characters",
+    "validLength": 36,
+    "runnerUnchangedThisTurn": true,
+    "productBehaviorChanged": false
+  },
+  "k05Proof": {
+    "path": "artifacts/feature-011/k05-k06/storage-proof.json",
+    "sha256": "a9696cc73f57e45e4623b63042055f0401f0b3e570c112dd1d1a7c6242dc1473",
+    "completedAt": "2026-10-06T18:47:28.402Z"
+  },
+  "k06Started": false,
+  "realAesKmsAcceptance": false,
+  "clinicalApproval": false,
+  "k07Acceptance": false,
+  "recordId": "SHIFAA-F011-K05-REMEDIATION-PROOF@1.0.0",
+  "historicalBlockedRecord": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/paired-window-blocked.json",
+    "sha256": "fdbf803b2c78207cb90abc3ab44e1ce3979359b89c7a9cfa24a8cd0fb364993d",
+    "unchanged": true,
+    "previousEvidence": {
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/history/previous-paired-attempt/ddl-allergy.json": "c70fc5df11c06f18710eb6263a7bd2b835be51b303faa2378d18e9ff638e359e",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/history/previous-paired-attempt/ddl-release.json": "5d5b695986734d431ac4c23774b24737de79fb52e8dacc28a84cf17b52008c4b",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/history/previous-paired-attempt/ddl-signing.json": "9c8413eaeedbce867f4668180b56b75de67bbcae3df1462994eaff34a5f376c3",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/history/previous-paired-attempt/ddl-receipt.json": "b485e2e08b9e9b098445223b76507610a98c19c3ad7f80e4171490ab97f6db63"
+    }
+  },
+  "runtimeResults": [
+    {
+      "runtime": {
+        "name": "shifaa-local-postgres",
+        "container": "shifaa-local-postgres-postgres-1",
+        "user": "shifaa_owner",
+        "adminDatabase": "shifaa",
+        "running": true,
+        "image": "shifaa/postgis:17-3.5-006-local",
+        "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7"
+      },
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k05_918895d995a038ad",
+          "owner": "shifaa_owner",
+          "serverVersion": "17.11",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "shifaa_owner",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 59040
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "shifaa_owner",
+          "-d",
+          "f011_k05_918895d995a038ad"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k05_918895d995a038ad"
+        ]
+      },
+      "applied": [
+        {
+          "path": "supabase/migrations/20261006175926_f011_allergy_revisions.sql",
+          "sha256": "7339ef80383615cc33b60c904a0d8a8408308dae6f8c7eadd67f22518afed4c5",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175932_f011_content_artifacts.sql",
+          "sha256": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+          "sha256": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175942_f011_atomic_receipts.sql",
+          "sha256": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d",
+          "exitCode": 0
+        }
+      ],
+      "catalog": [
+        {
+          "id": "ALG-FACTS",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-PLAINTEXT",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-HEAD",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-REASON",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-SUPPORT",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-ONE-USE",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-APPEND",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-PREDECESSOR-CONTEXT",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-ENVELOPE-LENGTHS",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-TERMINAL-CORRECTION",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-BODY",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-MATERIAL",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-COMPETING-DRAFTS",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-BASIS-50",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-STABLE-BASIS",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-RECIPROCAL",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": "Use authoritative audit.signature_evidence; accepted fixture bytes preserved"
+        },
+        {
+          "id": "SIGN-REJECTED-PRESERVED",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-credential-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-designation-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-grant-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-EXACT-ADMISSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-IMMUTABLE-ADMISSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-LINEAGE",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-APPROVAL-VERSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RECEIPT-TUPLE",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "OBLIGATION-TUPLE",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RECEIPT-HISTORY",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_heads",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergies",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-mutation_receipts",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-mutation_commit_obligations",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_series",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_releases",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_governance_authorities",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_reviewer_designations",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_material_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_signature_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_admissibility_evidence",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_artifact_admissibility_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_verification_support",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_verification_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-shifaa_api",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-shifaa_worker",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-anon",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-authenticated",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-service_role",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        }
+      ],
+      "actualRoleDenials": [
+        {
+          "relation": "clinical.allergy_heads",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_heads",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergies",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergies",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_support",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_support",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_series",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_series",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_releases",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_releases",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_material_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_material_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_governance_authorities",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_governance_authorities",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_reviewer_designations",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_reviewer_designations",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_signature_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_signature_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_admissibility_evidence",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_admissibility_evidence",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_artifact_admissibility_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_artifact_admissibility_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_receipts",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_receipts",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_commit_obligations",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_commit_obligations",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        }
+      ],
+      "privateBoundary": {
+        "publicFunctionExecute": 0,
+        "onlineTableGrants": 0
+      },
+      "storageBehavior": {
+        "fixture": "infra/db/tests/feature-011-k05-storage.sql",
+        "sha256": "fcdfd61abe0a7ec7b4d0e3617b55944c66e2978dcbb268769282ef2cabb9b012",
+        "competingDrafts": true,
+        "threeMaterialBindings": true,
+        "missingMaterialBindingsDeniedAtDeferredCheck": true,
+        "immutableBodyAndBindings": true,
+        "contiguousAllergyHistoryAndReciprocalBindings": true,
+        "immutableAllergyHistory": true,
+        "terminalAllergyResurrectionDenied": true,
+        "crossSeriesPredecessorDenied": true,
+        "secondPublishedRootDenied": true,
+        "domainOnlyCommitDenied": true,
+        "partialCommitSqlstate": "23514",
+        "partialCommitDiagnostic": "ERROR:  23514: domain mutation lacks its atomic Feature 011 commit obligation\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 120 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n",
+        "completeSyntheticAllFiveCommit": true,
+        "neutralFixtureIsNotProductEventAcceptance": true,
+        "testReceiptUsesAuthoritativeObligationTimestamp": true,
+        "deferredFaults": [
+          {
+            "fault": "missing-receipt",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "incomplete-idempotency",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "wrong-pointer",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "wrong-tuple",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "wrong-audit",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "wrong-outbox",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          }
+        ],
+        "transactionCleanup": "Rollback / failed COMMIT; no durable test domain effect"
+      },
+      "consumerEntrypointsStillAbsent": true,
+      "populatedPredecessorTablesPreserved": 53,
+      "cleanup": {
+        "database": "f011_k05_918895d995a038ad",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": {
+        "name": "shifaa-local-supabase",
+        "container": "supabase_db_shifaa-local-supabase",
+        "user": "supabase_admin",
+        "adminDatabase": "postgres",
+        "running": true,
+        "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+        "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+      },
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k05_9999b79b5d08b230",
+          "owner": "supabase_admin",
+          "serverVersion": "17.6",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "supabase_admin",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 32736
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "f011_k05_9999b79b5d08b230"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k05_9999b79b5d08b230"
+        ]
+      },
+      "applied": [
+        {
+          "path": "supabase/migrations/20261006175926_f011_allergy_revisions.sql",
+          "sha256": "7339ef80383615cc33b60c904a0d8a8408308dae6f8c7eadd67f22518afed4c5",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175932_f011_content_artifacts.sql",
+          "sha256": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+          "sha256": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175942_f011_atomic_receipts.sql",
+          "sha256": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d",
+          "exitCode": 0
+        }
+      ],
+      "catalog": [
+        {
+          "id": "ALG-FACTS",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-PLAINTEXT",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-HEAD",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-REASON",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-SUPPORT",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-ONE-USE",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-APPEND",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-PREDECESSOR-CONTEXT",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-ENVELOPE-LENGTHS",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-TERMINAL-CORRECTION",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-BODY",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-MATERIAL",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-COMPETING-DRAFTS",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-BASIS-50",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-STABLE-BASIS",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-RECIPROCAL",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": "Use authoritative audit.signature_evidence; accepted fixture bytes preserved"
+        },
+        {
+          "id": "SIGN-REJECTED-PRESERVED",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-credential-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-designation-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-grant-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-EXACT-ADMISSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-IMMUTABLE-ADMISSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-LINEAGE",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-APPROVAL-VERSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RECEIPT-TUPLE",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "OBLIGATION-TUPLE",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RECEIPT-HISTORY",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_heads",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergies",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-mutation_receipts",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-mutation_commit_obligations",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_series",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_releases",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_governance_authorities",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_reviewer_designations",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_material_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_signature_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_admissibility_evidence",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_artifact_admissibility_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_verification_support",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_verification_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-shifaa_api",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-shifaa_worker",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-anon",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-authenticated",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-service_role",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        }
+      ],
+      "actualRoleDenials": [
+        {
+          "relation": "clinical.allergy_heads",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_heads",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergies",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergies",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_support",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_support",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_series",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_series",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_releases",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_releases",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_material_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_material_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_governance_authorities",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_governance_authorities",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_reviewer_designations",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_reviewer_designations",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_signature_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_signature_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_admissibility_evidence",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_admissibility_evidence",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_artifact_admissibility_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_artifact_admissibility_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_receipts",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_receipts",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_commit_obligations",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_commit_obligations",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        }
+      ],
+      "privateBoundary": {
+        "publicFunctionExecute": 0,
+        "onlineTableGrants": 0
+      },
+      "storageBehavior": {
+        "fixture": "infra/db/tests/feature-011-k05-storage.sql",
+        "sha256": "fcdfd61abe0a7ec7b4d0e3617b55944c66e2978dcbb268769282ef2cabb9b012",
+        "competingDrafts": true,
+        "threeMaterialBindings": true,
+        "missingMaterialBindingsDeniedAtDeferredCheck": true,
+        "immutableBodyAndBindings": true,
+        "contiguousAllergyHistoryAndReciprocalBindings": true,
+        "immutableAllergyHistory": true,
+        "terminalAllergyResurrectionDenied": true,
+        "crossSeriesPredecessorDenied": true,
+        "secondPublishedRootDenied": true,
+        "domainOnlyCommitDenied": true,
+        "partialCommitSqlstate": "23514",
+        "partialCommitDiagnostic": "ERROR:  23514: domain mutation lacks its atomic Feature 011 commit obligation\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 120 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n",
+        "completeSyntheticAllFiveCommit": true,
+        "neutralFixtureIsNotProductEventAcceptance": true,
+        "testReceiptUsesAuthoritativeObligationTimestamp": true,
+        "deferredFaults": [
+          {
+            "fault": "missing-receipt",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "incomplete-idempotency",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "wrong-pointer",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "wrong-tuple",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "wrong-audit",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "wrong-outbox",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          }
+        ],
+        "transactionCleanup": "Rollback / failed COMMIT; no durable test domain effect"
+      },
+      "consumerEntrypointsStillAbsent": true,
+      "populatedPredecessorTablesPreserved": 53,
+      "cleanup": {
+        "database": "f011_k05_9999b79b5d08b230",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "unlock": {
+    "path": "artifacts/feature-011/k05-k06/k05-before-k06.json",
+    "sha256": "ee71af3686b8aa0e320e3616ddafb4cbfcdb54ffd6672625911cb8223ef8baf6"
+  },
+  "syntheticOnly": true,
+  "taskCompletionApplied": false,
+  "issuesClosed": false,
+  "allRetainedGatesPreserved": true
+}

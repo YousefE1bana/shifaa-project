@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Input/source/SQL/generated/producer drift: docs/architecture/SHIFAA-API-Catalog.md
++ actual - expected
+
++ 'ba6dd9177ee07410ebde92140ea086b06a86750e146a267625bbff498e832490'
+- '8e7f5cbea6d36d1d6a89f2920f0871db361b8b10f650301f22cbbbc9556d5d0f'
+
+    at verifyPins (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-1b0ca075-3622-4331-b58b-b49db873f36c.mjs:60:12)
+    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-1b0ca075-3622-4331-b58b-b49db873f36c.mjs:62:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'ba6dd9177ee07410ebde92140ea086b06a86750e146a267625bbff498e832490',
+  expected: '8e7f5cbea6d36d1d6a89f2920f0871db361b8b10f650301f22cbbbc9556d5d0f',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0

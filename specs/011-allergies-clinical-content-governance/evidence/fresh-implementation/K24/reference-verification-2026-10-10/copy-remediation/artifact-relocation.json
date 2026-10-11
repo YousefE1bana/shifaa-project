@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-10-10T17:19:25.6384426Z",
+  "byteIdentical": true,
+  "scope": "Harness-created failed attempt outputs only",
+  "acceptedHistoryMoved": false,
+  "reason": "Windows Git directory path length limit",
+  "files": [
+    {
+      "sha256": "c446668d8b7943a66273d7d428adec312181b5c6cd29a3fc7d492112c4002d41",
+      "path": "artifacts/f011-copy-reruns-01/specs/006-discovery-sos-foundation/evidence/performance.json",
+      "originalPath": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/verification-reruns/specs/006-discovery-sos-foundation/evidence/performance.json"
+    },
+    {
+      "sha256": "0ad9f832bdd9bd106cc2bdd175d3ecdb353f451a22ae0b9d007d18961d7147f6",
+      "path": "artifacts/f011-copy-reruns-01/specs/007-identity-continuity-sessions-mfa-recovery/evidence/performance.json",
+      "originalPath": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/verification-reruns/specs/007-identity-continuity-sessions-mfa-recovery/evidence/performance.json"
+    },
+    {
+      "sha256": "2104b676dadc11615b969d1a7d18137008ec951f901d274df5e0b740f439063b",
+      "path": "artifacts/f011-copy-reruns-01/specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md",
+      "originalPath": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/verification-reruns/specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md"
+    },
+    {
+      "sha256": "3f728323582fc7c7b37a27d613dd26bf9e5ba7bfa1712bf7a5d116382d6c627f",
+      "path": "artifacts/f011-copy-reruns-01/specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json",
+      "originalPath": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/verification-reruns/specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json"
+    },
+    {
+      "sha256": "a326036818c72397e7d9d78b75b2982b66f905965594cae1bd639f426f610b86",
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-copy-r01/full-verify-start.json",
+      "originalPath": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/verification-retry-01/full-verify-start.json"
+    },
+    {
+      "sha256": "cda78a6b368a9d0567ec62dce7c1332f4a8ab6890425dd1187e81200bfb755f4",
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-copy-r01/full-verify.json",
+      "originalPath": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/verification-retry-01/full-verify.json"
+    }
+  ]
+}

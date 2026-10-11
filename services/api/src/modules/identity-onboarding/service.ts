@@ -173,7 +173,7 @@ export class IdentityOnboardingService {
     const patient = this.requirePatient(actor);
     const profile = await this.ports.repository.profileByAuthSubject(patient.subjectId);
     if (!profile || profile.id !== patient.personId) deny();
-    return profileDto(profile);
+    return { ...profileDto(profile), managedPatientId: profile.managedPatientId ?? null };
   }
 
   public async updateProfile(

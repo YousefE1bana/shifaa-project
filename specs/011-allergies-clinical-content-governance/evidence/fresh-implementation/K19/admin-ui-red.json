@@ -1,0 +1,47 @@
+{
+  "result": "VALID_RED",
+  "checkpoint": "K19",
+  "task": "T070",
+  "discovered": 16,
+  "intendedFailures": 16,
+  "setupFailures": 0,
+  "causes": [
+    "MISSING_APPROVED_GOVERNANCE_UI_COMPOSITION",
+    "MISSING_F011_GOVERNANCE_COPY"
+  ],
+  "observation": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/red-observation.log",
+    "sha256": "f67461be972ef8cdf4cc19196b4cfeaf03b579aef3200e429b584d51b4ad5cf9"
+  },
+  "currentTests": [
+    {
+      "path": "apps/admin/test/feature-011-clinical-content.test.tsx",
+      "sha256": "a3eda9a615fdb81a83b0322f1a8966f586fb10f849b80c3aa90be9b16fe267d7"
+    },
+    {
+      "path": "packages/i18n/src/feature-011.test.ts",
+      "sha256": "f32b7fd1eb33fdaf7e39fcdb372f16536c6c8b68bb68a2c9ab73bf66b933556c"
+    }
+  ],
+  "chronology": "The 16 original assertions ran before controller/workspace/copy implementation. Later formatting retained those assertions; five focused receipt/connectivity/lineage regressions were added. No import/runtime/setup failure is accepted as RED.",
+  "additionalValidRed": [
+    {
+      "scenario": "Uncertain original receipt must survive offline cancellation",
+      "observation": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/receipt-offline-red.log",
+        "sha256": "8779dabb644d011712d118b8c07b2189ef8b393a547b206bf512aede7c9b157c"
+      },
+      "intendedFailures": 1,
+      "green": "Included in current 21/21 focused suite"
+    },
+    {
+      "scenario": "Successor predecessor must not be labeled initial release",
+      "observation": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/lineage-label-red.log",
+        "sha256": "70506c7fd210262af54d9506024b3823858f21bdbfd98ca6e6b54c602a4b9891"
+      },
+      "intendedFailures": 1,
+      "green": "Included in current 21/21 focused suite"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "command": "node --import tsx tools/discovery-sos-performance.ts",
+  "startedAt": "2026-10-09T20:35:23.006Z",
+  "finishedAt": "2026-10-09T20:35:52.450Z",
+  "exitCode": 1,
+  "sourceSha256": "11304051a635a13607fc5082a139e143d1d480c12eee8a7263cba27550326261",
+  "log": {
+    "path": "artifacts/feature-011/k24/f006-performance-focused-retry.log",
+    "sha256": "1a8d38acaab123667420bb64285fb5fdf944e8537e469c727eaca5bc5fea3797"
+  },
+  "historicalSha256": "4687c8604678c64b19c32e955bad021d85fb8fd69901dac499c4133ffe2d44aa",
+  "freshSha256": "47742bbbcd7679adba85cafac67b42d82b8c7bf929e75a438628ac831536ce1f",
+  "unchangedThresholdsAndWorkload": true
+}

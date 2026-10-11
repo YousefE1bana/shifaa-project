@@ -1,0 +1,178 @@
+{
+  "formatVersion": 1,
+  "checkpoint": "K08",
+  "result": "BLOCKED",
+  "ledgerId": "SHIFAA-F011-FRESH-TASKS@1.0.0",
+  "blockerClass": "EXISTING_SQL_IMPLEMENTATION_AND_RESPONSE_CONTRACT_GAP",
+  "findings": [
+    {
+      "id": "K08-B01",
+      "task": "T033",
+      "required": "Generated SignReleaseResponse.signature.signatureId from the authoritative SQL signature",
+      "observed": "Signing creates audit.signature_evidence.id but returns only the mutation effect metadata. The exact generated signature identity is absent.",
+      "source": "supabase/migrations/20261006185239_f011_signing_functions.sql",
+      "lines": [
+        333,
+        368
+      ],
+      "apiDirectSignatureRead": {
+        "exitCode": 3,
+        "sqlstate": "42501",
+        "interpretation": "Expected security denial; not a defect and must remain denied."
+      },
+      "runtimeAssertionsBeforeFailure": [
+        "physician signing succeeded and finalized structurally",
+        "one signature exists for this exact release/signer",
+        "signature identity exists in SQL",
+        "mutation result has no signatureId or signature object",
+        "direct shifaa_api signature read denied"
+      ]
+    },
+    {
+      "id": "K08-B02",
+      "task": "T033",
+      "function": "clinical.list_clinical_content_api_v1(text,jsonb)",
+      "projection": "assigned_review",
+      "source": "supabase/migrations/20261006185240_f011_publication_functions.sql",
+      "line": 831,
+      "sqlstate": "42702",
+      "error": "column reference \"reviewer_capacity\" is ambiguous",
+      "detail": "It could refer to either a PL/pgSQL variable or a table column.",
+      "interpretation": "Existing product SQL function defect, not a runner/setup defect and never valid protection RED. The projection also statically omits signature identities."
+    }
+  ],
+  "diagnostic": {
+    "command": "node artifacts/feature-011/k08/probe-signature-boundary.mjs",
+    "exitCode": 1,
+    "runtime": "shifaa-local-postgres",
+    "serverVersion": "17.11",
+    "baseline": "Full predecessor setup and all ten accepted T017-T026 migrations applied successfully to a clean harness-owned temporary database.",
+    "fixtureCandidate": "tools/feature-011-consumer-fixtures.mjs",
+    "fixtureRevalidation": "Current hash matched accepted T027 pin. Test-only copied fixture inserts assertions after successful physician signing; original remains byte-identical.",
+    "boundary": "Operations use session_user shifaa_api and approved non-owner functions. Owner queries only observe test state.",
+    "cleanup": {
+      "harnessFinallyCompleted": true,
+      "exactDropWithoutForce": true,
+      "absenceQueryConfirmed": true,
+      "remainingK07TemporaryDatabases": 0
+    },
+    "supabase": {
+      "cryptographicProof": "NOT_RUN_AFTER_STOP",
+      "diagnostic": "NOT_RUN_AFTER_FIRST_PRODUCT_DEFECT"
+    },
+    "notK08CryptographicAcceptance": true
+  },
+  "taskResults": {
+    "T030": "NOT_EXECUTED: contract readiness blocker found before protection RED",
+    "T031": "NOT_IMPLEMENTED",
+    "T032": "NOT_IMPLEMENTED",
+    "T033": "BLOCKED: no SQL/grant change authorized",
+    "T034": "NOT_EXECUTED"
+  },
+  "cryptoFaultTestCounts": {
+    "red": 0,
+    "green": 0,
+    "bothRuntimeCryptoProofs": 0
+  },
+  "k07Acceptance": {
+    "record": "specs/011-allergies-clinical-content-governance/decisions/k07-accepted-2026-10-07.md",
+    "checked": "T027-T029",
+    "issuesClosed": [
+      424,
+      425,
+      426
+    ]
+  },
+  "completion": {
+    "checked": "T001-T029",
+    "unchecked": "T030-T092",
+    "k08IssuesOpen": [
+      427,
+      428,
+      429,
+      430,
+      431
+    ],
+    "k09Started": false
+  },
+  "verification": {
+    "contracts": "PASS",
+    "k07PinnedInputs": 121,
+    "allK07PinsMatch": true,
+    "preservedExistingFiles": 3604,
+    "allPreservedFilesMatch": true,
+    "permittedChangedFiles": [
+      "specs/011-allergies-clinical-content-governance/tasks.md",
+      "specs/011-allergies-clinical-content-governance/contracts/task-map.json"
+    ],
+    "ledgerHashes": {
+      "tasks": "815b619cc28a369d6a29b77ad1486fd4222d564388d39cf6cde9fa39856682cd",
+      "taskMap": "bfa13551ef4d5b8af840eeab1d6806904bfb3b587cd9e648698b4feced15273b"
+    },
+    "issueStates": [
+      {
+        "number": 424,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED"
+      },
+      {
+        "number": 425,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED"
+      },
+      {
+        "number": 426,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED"
+      },
+      {
+        "number": 427,
+        "state": "OPEN",
+        "stateReason": ""
+      },
+      {
+        "number": 428,
+        "state": "OPEN",
+        "stateReason": ""
+      },
+      {
+        "number": 429,
+        "state": "OPEN",
+        "stateReason": ""
+      },
+      {
+        "number": 430,
+        "state": "OPEN",
+        "stateReason": ""
+      },
+      {
+        "number": 431,
+        "state": "OPEN",
+        "stateReason": ""
+      }
+    ]
+  },
+  "sourceDigests": {
+    "supabase/migrations/20261006185239_f011_signing_functions.sql": "60a3dcbc086b31671142aa7f3b5b6e4029bebf474379d0ca51d8d1e60243ac29",
+    "supabase/migrations/20261006185240_f011_publication_functions.sql": "286e48f1cdc1ed64d9bcd6a3f1bde3438779e631615cef264ac452e8a3cad2d1",
+    "packages/contracts/src/feature-011.ts": "e5320aede7768a5b66797a7802cfc2e831467e520f5fd2f87cd26f078062862c",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49",
+    "tools/feature-011-consumer-fixtures.mjs": "8813e1e628cd400fc0e09593c5df529ae328ad1648fa28ea87075cb997cd65c5"
+  },
+  "retainedGatesUnchanged": true,
+  "realCryptoKmsAcceptance": false,
+  "clinicalApproval": false,
+  "productionReadiness": false,
+  "noSqlSchemaGrantContractArchitectureChanges": true,
+  "noProductionImplementationChanges": true,
+  "noDelegatesUsed": true,
+  "git": {
+    "status": "M docs/architecture/SHIFAA-API-Catalog.md\n M packages/api-client/package.json\n M packages/contracts/package.json\n M packages/contracts/src/index.ts\n M services/api/src/app.ts\n M services/api/src/config.ts\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? infra/db/fixtures/feature-011-k04.sql\n?? infra/db/fixtures/feature-011-k06.sql\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-concurrency.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-k05-storage.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-receipts.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? packages/test-kit/src/feature-011/\n?? services/api/src/feature-011-exposure.test.ts\n?? services/api/src/feature-011-exposure.ts\n?? specs/011-allergies-clinical-content-governance/\n?? supabase/migrations/20261006175926_f011_allergy_revisions.sql\n?? supabase/migrations/20261006175932_f011_content_artifacts.sql\n?? supabase/migrations/20261006175937_f011_governance_evidence.sql\n?? supabase/migrations/20261006175942_f011_atomic_receipts.sql\n?? supabase/migrations/20261006185236_f011_allergy_functions.sql\n?? supabase/migrations/20261006185237_f011_release_functions.sql\n?? supabase/migrations/20261006185239_f011_signing_functions.sql\n?? supabase/migrations/20261006185240_f011_publication_functions.sql\n?? supabase/migrations/20261006185241_f011_rls_grants.sql\n?? supabase/migrations/20261006185242_f011_receipt_functions.sql\n?? tools/feature-011-consumer-fixtures.mjs\n?? tools/feature-011-harness.test.mjs\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/feature-011-physical-green.mjs\n?? tools/feature-011-physical-races.mjs\n?? tools/feature-011-physical-red.test.mjs\n?? tools/feature-011-predecessor-races.mjs\n?? tools/feature-011-protocol-parity.test.mjs\n?? tools/feature-011-support-lifecycle.mjs\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-consumer-test.mjs\n?? tools/run-feature-011-physical-red.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/run-feature-011-storage-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "stagedFiles": [],
+    "commitPushPrMainChanged": false
+  },
+  "recordedAt": "2026-10-07T14:08:32.840Z"
+}

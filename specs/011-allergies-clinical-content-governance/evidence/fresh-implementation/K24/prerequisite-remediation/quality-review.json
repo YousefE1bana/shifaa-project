@@ -1,0 +1,40 @@
+{
+  "result": "PASS_DIFF_REVIEW",
+  "proofs": [
+    {
+      "path": "supabase/migrations/20261006175942_f011_atomic_receipts.sql",
+      "before": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d",
+      "after": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929",
+      "onlyChange": "Only SHA primitive references, byte framing/comparisons/guards/privileges unchanged"
+    },
+    {
+      "path": "supabase/migrations/20261006185242_f011_receipt_functions.sql",
+      "before": "850335b5acfc51eed3076a74b07acd3989b2ae08ba926d99f8489ed18ff9ac39",
+      "after": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31",
+      "onlyChange": "Only SHA primitive references, byte framing/comparisons/guards/privileges unchanged"
+    },
+    {
+      "path": "supabase/migrations/20261006185241_f011_rls_grants.sql",
+      "before": "368d9b19425451b1031de65780cb7ff36063eac795d71de925194df069fba26d",
+      "after": "6c7b6ab99d8b8d00ac6699cdfc8a63d88bd41d6f73e2f5ccd36a7244c1df0236",
+      "onlyChange": "Only SHA primitive references, byte framing/comparisons/guards/privileges unchanged"
+    },
+    {
+      "path": "supabase/migrations/20261006185237_f011_release_functions.sql",
+      "before": "a8bba430b0ac52dd4c0fe13be4fddabff58ba5d89ca464131d2663100b62253a",
+      "after": "3871489179a618a277c598c142786343514c738751e4b03b443352ba047b34a9",
+      "onlyChange": "Only SHA primitive references, byte framing/comparisons/guards/privileges unchanged"
+    }
+  ],
+  "review": [
+    "No early-return/global obligation bypass",
+    "No security definer, RLS, grant, role, wire, evidence or cryptographic envelope change",
+    "Built-in SHA preserves the approved fixed ARTIFACT algorithm; fresh vector parity required",
+    "Native bootstrap only pinned CLI/owned project/approved offline-admin migration boundary",
+    "Global test role service_role counterpart is restricted, created only when absent, existing runtime roles never altered",
+    "Native-context role/private helper probes distinguish expected denial from failing receipt guard",
+    "Fresh physical/races/ops/full verify required; historical records retained"
+  ],
+  "syntheticOnly": true,
+  "formalAcceptance": false
+}

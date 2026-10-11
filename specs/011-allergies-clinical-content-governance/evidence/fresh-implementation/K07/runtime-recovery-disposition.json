@@ -1,0 +1,129 @@
+{
+  "formatVersion": 1,
+  "checkpoint": "K07",
+  "authorization": "K07_RUNTIME_RECOVERY_APPROVED",
+  "result": "BLOCKED",
+  "runtimeRecovery": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/runtime-recovery.json",
+    "sha256": "d23ea6b23841a073c4d00b7bdc6f4a6491e810c444b93d988901ff01906bc8fb"
+  },
+  "health": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "measured": {
+        "version": "17.11",
+        "inRecovery": false,
+        "remainingOwnedDatabases": 0
+      },
+      "ownedNamesChecked": [
+        "f011_k07_0dd7c22902dac0ca",
+        "f011_k07_686ad910be9ab28e"
+      ],
+      "command": [
+        "docker",
+        "exec",
+        "shifaa-local-postgres-postgres-1",
+        "psql",
+        "-X",
+        "-qAt",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-U",
+        "shifaa_owner",
+        "-d",
+        "shifaa",
+        "-c",
+        "BEGIN READ ONLY; SELECT json_build_object('version',current_setting('server_version'),'inRecovery',pg_is_in_recovery(),'remainingOwnedDatabases',(SELECT count(*) FROM pg_database WHERE datname IN ('f011_k07_0dd7c22902dac0ca','f011_k07_686ad910be9ab28e'))); ROLLBACK;"
+      ]
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "measured": {
+        "version": "17.6",
+        "inRecovery": false,
+        "remainingOwnedDatabases": 0
+      },
+      "ownedNamesChecked": [
+        "f011_k07_48b242419f44a123"
+      ],
+      "command": [
+        "docker",
+        "exec",
+        "supabase_db_shifaa-local-supabase",
+        "psql",
+        "-X",
+        "-qAt",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-U",
+        "supabase_admin",
+        "-d",
+        "postgres",
+        "-c",
+        "BEGIN READ ONLY; SELECT json_build_object('version',current_setting('server_version'),'inRecovery',pg_is_in_recovery(),'remainingOwnedDatabases',(SELECT count(*) FROM pg_database WHERE datname IN ('f011_k07_48b242419f44a123'))); ROLLBACK;"
+      ]
+    }
+  ],
+  "t027": {
+    "result": "PASS_BOTH_RUNTIME_PHYSICAL_SUITE",
+    "proof": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-green.json",
+      "sha256": "1e9aaa6aecf526a27a6fd481935048903ffecc7891673e298e648250ceff576e"
+    },
+    "perRuntime": {
+      "storageInvariants": 46,
+      "roleDenials": 157,
+      "frozenVectors": 7,
+      "canonicalNegatives": 16,
+      "consumerChecks": 45,
+      "populatedPredecessorTables": 53
+    },
+    "routesAbsentTests": 27,
+    "formalP4StageAccepted": false
+  },
+  "t028": {
+    "result": "FAIL_SETUP",
+    "sqlstate": "42703",
+    "rootCause": "Runner receiptState confused platform.outbox_events.event_type with audit.events.action_code. The current Feature008 audit schema defines action_code; Feature011 records allergy.created/allergy.verified/clinical_content_release.* actions through audit.append_event_v1. No race executed and no physical GREEN/RED is inferred.",
+    "proof": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-races.json",
+      "sha256": "fe82a90ecb060e772693b7192b650342f088d906ec9d1a279a94bb38dbea2e95"
+    },
+    "commandLog": "artifacts/feature-011/k07/runtime-recovery/races-command.log",
+    "retryPerformed": false
+  },
+  "t029": {
+    "executed": false,
+    "dispositionRecorded": false,
+    "reason": "T028 prerequisite failed",
+    "actingOwners": "Yousef Osama authorized API Lead/Data Lead/QA Lead for Feature011 P5 only; conditional disposition not exercised"
+  },
+  "tests": {
+    "harnessPassed": 5,
+    "protocolPassed": 109,
+    "raceSyntaxPassed": true,
+    "physicalCommandExitCode": 0,
+    "raceCommandExitCode": 1
+  },
+  "codeChange": "Only unaccepted K07 race runner coverage/fixture/assertion corrections; no Feature011 migration/domain/API/UI changes for runtime recovery. Root pre-run assertion correction reads finalizer from complete result rather than domain metadata.",
+  "retainedGatesUnchanged": true,
+  "openTech002": "OPEN",
+  "t027ToT029": "UNCHECKED",
+  "t030ToT092": "UNCHANGED_UNCHECKED",
+  "ledgerHashes": {
+    "tasks": "16542baa0f98202beda61b699a8341020b39cc0473c4193fba9c59bd2775448c",
+    "taskMap": "da2bbce9960affa001ca80b57a88450b312315bc4c0c94166fef859dae9f4be5"
+  },
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "gitStatus": " M docs/architecture/SHIFAA-API-Catalog.md\n M packages/api-client/package.json\n M packages/contracts/package.json\n M packages/contracts/src/index.ts\n M services/api/src/app.ts\n M services/api/src/config.ts\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? infra/db/fixtures/feature-011-k04.sql\n?? infra/db/fixtures/feature-011-k06.sql\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-concurrency.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-k05-storage.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-receipts.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? packages/test-kit/src/feature-011/\n?? services/api/src/feature-011-exposure.test.ts\n?? services/api/src/feature-011-exposure.ts\n?? specs/011-allergies-clinical-content-governance/\n?? supabase/migrations/20261006175926_f011_allergy_revisions.sql\n?? supabase/migrations/20261006175932_f011_content_artifacts.sql\n?? supabase/migrations/20261006175937_f011_governance_evidence.sql\n?? supabase/migrations/20261006175942_f011_atomic_receipts.sql\n?? supabase/migrations/20261006185236_f011_allergy_functions.sql\n?? supabase/migrations/20261006185237_f011_release_functions.sql\n?? supabase/migrations/20261006185239_f011_signing_functions.sql\n?? supabase/migrations/20261006185240_f011_publication_functions.sql\n?? supabase/migrations/20261006185241_f011_rls_grants.sql\n?? supabase/migrations/20261006185242_f011_receipt_functions.sql\n?? tools/feature-011-consumer-fixtures.mjs\n?? tools/feature-011-harness.test.mjs\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/feature-011-physical-green.mjs\n?? tools/feature-011-physical-races.mjs\n?? tools/feature-011-physical-red.test.mjs\n?? tools/feature-011-predecessor-races.mjs\n?? tools/feature-011-protocol-parity.test.mjs\n?? tools/feature-011-support-lifecycle.mjs\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-consumer-test.mjs\n?? tools/run-feature-011-physical-red.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/run-feature-011-storage-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs",
+  "gitStatusCounts": {
+    "trackedModified": 6,
+    "untrackedEntries": 52
+  },
+  "staged": false,
+  "commitPushPrMainChange": false,
+  "k08Started": false,
+  "capturedAt": "2026-10-07T11:05:02.943Z"
+}

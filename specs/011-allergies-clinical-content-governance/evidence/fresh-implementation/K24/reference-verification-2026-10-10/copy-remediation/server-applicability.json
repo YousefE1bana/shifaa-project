@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-10-10T14:56:11.338Z",
+  "result": "PASS_UNCHANGED_MEASURED_SERVER_INPUTS",
+  "measurementSummary": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/performance-summary.json",
+    "sha256": "416d23503ed12bf12909924b7140a8741ddcd783b794c455aed21dff97895f32"
+  },
+  "measuredInputHashes": {
+    "tools/run-feature-011-performance.mjs": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c",
+    "tools/feature-011-ops-fixtures.mjs": "787e616b0bf365bfe294a284a723a87fefc6a3f248a4cf99bffd40666f997fc0",
+    "services/api/src/modules/feature-011/allergies.ts": "bcf654e2e68bdf127aed441769f63b884a17b2484ee68ada144aa166c17ae368",
+    "services/api/src/modules/feature-011/observability.ts": "975d90537a3bb75d99ccaa81044ded7295f8ee18944512a10e947359f85eacd5",
+    "services/api/src/app.ts": "6a9cfcd521da370534902fbd9c79d4f472e1af9dba29aa4d30b1b346ae41434d"
+  },
+  "uiChangeOutsideMeasuredBoundary": true,
+  "repeatMeasurementsRequired": false,
+  "scope": "Approved bounded local server workload only; corrected UI copy requires new browser/build verification, not altered server workload/thresholds",
+  "productionAcceptance": false
+}

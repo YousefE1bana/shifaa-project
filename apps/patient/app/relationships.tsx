@@ -1,4 +1,5 @@
 import type { DelegablePermissionCode } from '@shifaa/contracts/family-care';
+import { retainManagedRelationship, currentManagedCareContext } from '../src/managed-care-context';
 import type { PatientDependentTransitionSummary } from '@shifaa/contracts/family-care';
 import {
   color,
@@ -12,7 +13,7 @@ import {
   useSecurityConnection,
 } from '@shifaa/design-system';
 import { directionFor, translate } from '@shifaa/i18n';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -51,6 +52,7 @@ type UiState =
   | 'error';
 
 export default function RelationshipsScreen() {
+  const router = useRouter();
   const { locale, setLocale } = usePatientLocaleController();
   const params = useLocalSearchParams<{
     patientId?: string;
@@ -95,6 +97,13 @@ export default function RelationshipsScreen() {
   };
   useEffect(() => {
     void refreshTransition();
+    const reconciled = () => void refreshTransition();
+    if (typeof window !== 'undefined')
+      window.addEventListener('shifaa-session-reconciled', reconciled);
+    return () => {
+      if (typeof window !== 'undefined')
+        window.removeEventListener('shifaa-session-reconciled', reconciled);
+    };
   }, [transitionClient, patientId, connection.reconnectVersion]);
   const run = async (work: () => Promise<unknown>) => {
     try {
@@ -110,6 +119,7 @@ export default function RelationshipsScreen() {
       assertOnline();
       setState('loading');
       const value = await work();
+      retainManagedRelationship(value);
       setResult(JSON.stringify(value));
       setState('success');
     } catch (error: unknown) {
@@ -420,6 +430,15 @@ export default function RelationshipsScreen() {
           {result.replace(/invitation_token[^,}]*/g, 'invitation_token:[REDACTED]')}
         </Text>
       ) : null}
+      {currentManagedCareContext() && (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/care-switcher')}
+          style={{ minHeight: 48 }}
+        >
+          <Text>{locale === 'ar-EG' ? 'عرض سياق الرعاية' : 'View care context'}</Text>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }

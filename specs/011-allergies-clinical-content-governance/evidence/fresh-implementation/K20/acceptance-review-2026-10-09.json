@@ -1,0 +1,40 @@
+{
+  "result": "PASS",
+  "reviewer": "Primary Codex agent",
+  "focusedTests": 119,
+  "runtimes": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "checks": 51
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "checks": 51
+    }
+  ],
+  "parityPins": 133,
+  "evidence": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/status-red.json",
+      "sha256": "f9b30f9effcf7b2b71690e044ab805f30e1de8025f575db7d0162d739a524b16"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/status.json",
+      "sha256": "4dd2dd46e9811c52b01fae76b7e540d84a0ad8be7e1a5b8d5f8a187ce1bf146f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/status-proof.json",
+      "sha256": "ed534d102b6f47705de441c0b2ef8c46fb880ada34007533a9d0c59639de0b7e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/parity.json",
+      "sha256": "10602e79df95fe4bb6d1366d58c7a6d17df43ba505d084731e46f2637903b7e4"
+    }
+  ],
+  "acceptanceRecord": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/k20-accepted-2026-10-09.md",
+    "sha256": "717eef887a2557d931e0ce5b8a1770eed749060730bc5e3c6d4772ccb0f7e469"
+  },
+  "findings": [],
+  "capturedAt": "2026-10-09T10:36:39.275Z"
+}

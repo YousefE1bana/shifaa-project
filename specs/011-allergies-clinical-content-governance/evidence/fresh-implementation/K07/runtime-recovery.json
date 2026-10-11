@@ -1,0 +1,152 @@
+{
+  "checkpoint": "K07",
+  "authorization": "K07_RUNTIME_RECOVERY_APPROVED",
+  "result": "PASS_RUNTIME_HEALTH",
+  "cause": "Unclean shutdown evidenced by PostgreSQL automatic recovery; initiating host/container cause not established.",
+  "alreadyRestartedBeforeInspection": true,
+  "composeCommand": "docker compose -f compose.yml start --wait postgres",
+  "destructiveReset": false,
+  "containerRecreated": false,
+  "volumeDeleted": false,
+  "implementationChangedForRecovery": false,
+  "health": [
+    {
+      "runtime": "PostgreSQL 17.11",
+      "container": "shifaa-local-postgres-postgres-1",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 4925,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-07T10:35:12.167890679Z",
+        "FinishedAt": "2026-10-07T10:05:40.84742438Z",
+        "Health": {
+          "Status": "healthy",
+          "FailingStreak": 0,
+          "Log": [
+            {
+              "Start": "2026-10-07T10:36:56.944885851Z",
+              "End": "2026-10-07T10:36:56.976754849Z",
+              "ExitCode": 0,
+              "Output": "/var/run/postgresql:5432 - accepting connections\n"
+            },
+            {
+              "Start": "2026-10-07T10:36:58.977667755Z",
+              "End": "2026-10-07T10:36:59.009330613Z",
+              "ExitCode": 0,
+              "Output": "/var/run/postgresql:5432 - accepting connections\n"
+            },
+            {
+              "Start": "2026-10-07T10:37:01.009940121Z",
+              "End": "2026-10-07T10:37:01.041514793Z",
+              "ExitCode": 0,
+              "Output": "/var/run/postgresql:5432 - accepting connections\n"
+            },
+            {
+              "Start": "2026-10-07T10:37:03.042950091Z",
+              "End": "2026-10-07T10:37:03.074287902Z",
+              "ExitCode": 0,
+              "Output": "/var/run/postgresql:5432 - accepting connections\n"
+            },
+            {
+              "Start": "2026-10-07T10:37:05.074756557Z",
+              "End": "2026-10-07T10:37:05.107102046Z",
+              "ExitCode": 0,
+              "Output": "/var/run/postgresql:5432 - accepting connections\n"
+            }
+          ]
+        }
+      },
+      "version": "17.11|f"
+    },
+    {
+      "runtime": "Supabase PostgreSQL 17.6",
+      "container": "supabase_db_shifaa-local-supabase",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 443,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-07T10:05:41.855075902Z",
+        "FinishedAt": "2026-10-07T10:05:40.849119417Z",
+        "Health": {
+          "Status": "healthy",
+          "FailingStreak": 0,
+          "Log": [
+            {
+              "Start": "2026-10-07T10:36:18.580377026Z",
+              "End": "2026-10-07T10:36:18.613250089Z",
+              "ExitCode": 0,
+              "Output": "127.0.0.1:5432 - accepting connections\n"
+            },
+            {
+              "Start": "2026-10-07T10:36:28.614444097Z",
+              "End": "2026-10-07T10:36:28.645976343Z",
+              "ExitCode": 0,
+              "Output": "127.0.0.1:5432 - accepting connections\n"
+            },
+            {
+              "Start": "2026-10-07T10:36:38.646935091Z",
+              "End": "2026-10-07T10:36:38.679760353Z",
+              "ExitCode": 0,
+              "Output": "127.0.0.1:5432 - accepting connections\n"
+            },
+            {
+              "Start": "2026-10-07T10:36:48.679220409Z",
+              "End": "2026-10-07T10:36:48.711298322Z",
+              "ExitCode": 0,
+              "Output": "127.0.0.1:5432 - accepting connections\n"
+            },
+            {
+              "Start": "2026-10-07T10:36:58.711952168Z",
+              "End": "2026-10-07T10:36:58.744191717Z",
+              "ExitCode": 0,
+              "Output": "127.0.0.1:5432 - accepting connections\n"
+            }
+          ]
+        }
+      },
+      "version": "17.6|f"
+    }
+  ],
+  "mounts": [
+    {
+      "Type": "volume",
+      "Name": "shifaa-local-postgres_shifaa-postgres-data",
+      "Source": "/var/lib/docker/volumes/shifaa-local-postgres_shifaa-postgres-data/_data",
+      "Destination": "/var/lib/postgresql/data",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "bind",
+      "Source": "/run/desktop/mnt/host/d/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance",
+      "Destination": "/workspace",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ],
+  "ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "5432"
+      }
+    ]
+  },
+  "startupLog": "2026-10-07T10:35:12.348650871Z \n2026-10-07T10:35:12.349457816Z PostgreSQL Database directory appears to contain a database; Skipping initialization\n2026-10-07T10:35:12.349465739Z \n2026-10-07T10:35:12.449247382Z 2026-10-07 10:35:12.449 UTC [1] LOG:  starting PostgreSQL 17.11 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit\n2026-10-07T10:35:12.449292474Z 2026-10-07 10:35:12.449 UTC [1] LOG:  listening on IPv4 address \"0.0.0.0\", port 5432\n2026-10-07T10:35:12.449295026Z 2026-10-07 10:35:12.449 UTC [1] LOG:  listening on IPv6 address \"::\", port 5432\n2026-10-07T10:35:12.452791779Z 2026-10-07 10:35:12.452 UTC [1] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\n2026-10-07T10:35:12.459140823Z 2026-10-07 10:35:12.458 UTC [24] LOG:  database system was interrupted; last known up at 2026-10-07 05:41:28 UTC\n2026-10-07T10:35:12.661610229Z 2026-10-07 10:35:12.661 UTC [24] LOG:  database system was not properly shut down; automatic recovery in progress\n2026-10-07T10:35:12.666248533Z 2026-10-07 10:35:12.666 UTC [24] LOG:  redo starts at 0/98CFBF38\n2026-10-07T10:35:12.666272686Z 2026-10-07 10:35:12.666 UTC [24] LOG:  invalid record length at 0/98CFC058: expected at least 24, got 0\n2026-10-07T10:35:12.666274628Z 2026-10-07 10:35:12.666 UTC [24] LOG:  redo done at 0/98CFC020 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s\n2026-10-07T10:35:12.674040705Z 2026-10-07 10:35:12.673 UTC [22] LOG:  checkpoint starting: end-of-recovery immediate wait\n2026-10-07T10:35:12.684763539Z 2026-10-07 10:35:12.684 UTC [22] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.003 s, total=0.013 s; sync files=3, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/98CFC058, redo lsn=0/98CFC058\n2026-10-07T10:35:12.687615769Z 2026-10-07 10:35:12.687 UTC [1] LOG:  database system is ready to accept connections\n",
+  "capturedAt": "2026-10-07T10:37:06.995Z"
+}

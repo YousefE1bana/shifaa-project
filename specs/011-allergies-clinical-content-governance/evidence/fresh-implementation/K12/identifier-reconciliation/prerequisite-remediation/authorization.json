@@ -1,0 +1,27 @@
+{
+  "authorization": "F011_K12_BASELINE_RECONCILIATION_APPROVED",
+  "authorizer": "Yousef Osama - Product Owner",
+  "record": "docs/governance/SHIFAA-Identifier-Handoff-Amendment-2026-10-08.md",
+  "recordSha256": "b0fb879e16129c0f2da56465c6b531d146cf9b5651c963f0f6f3889d7edf942f",
+  "sqlChanges": {
+    "supabase/migrations/20261006185239_f011_signing_functions.sql": {
+      "before": "60a3dcbc086b31671142aa7f3b5b6e4029bebf474379d0ca51d8d1e60243ac29",
+      "after": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550"
+    },
+    "supabase/migrations/20261006185240_f011_publication_functions.sql": {
+      "before": "286e48f1cdc1ed64d9bcd6a3f1bde3438779e631615cef264ac452e8a3cad2d1",
+      "after": "34584f7d9de0b72cf35900cb1f0b817177be57a761e9cc22454685bd481e497d"
+    },
+    "supabase/migrations/20261006185236_f011_allergy_functions.sql": {
+      "before": "51c6f718a1ea0bb0947d86265751b1e50e9aed71e93995cc380c0f1c9200f94e",
+      "after": "64d10b422ab4711a3f327d2e8984718bc3c8e2149aa76e0dbc36fbbe2b1e56b3"
+    },
+    "supabase/migrations/20261006185237_f011_release_functions.sql": {
+      "before": "93c4eeee80279066fb90271d4d2ded3fdbbe1df2e6f16b19680065f283283117",
+      "after": "a8bba430b0ac52dd4c0fe13be4fddabff58ba5d89ca464131d2663100b62253a"
+    }
+  },
+  "additionalMigration": "supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql",
+  "historicalEvidencePreserved": true,
+  "completionBoundary": 47
+}

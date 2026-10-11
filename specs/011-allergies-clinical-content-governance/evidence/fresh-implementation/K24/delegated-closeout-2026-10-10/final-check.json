@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-10-10T12:55:51.660Z",
+  "result": "PASS",
+  "manifestReferences": 29,
+  "pinnedInputs": 141,
+  "documentationLinks": 12,
+  "precedingPacketPreserved": true,
+  "ledgerUnchanged": true,
+  "sourceSqlContractGrantChanges": 0,
+  "engineeringResult": "ENGINEERING_READY_FOR_K24_REVIEW_FORMAL_ACCEPTANCE_BLOCKED",
+  "formalGateClosure": false,
+  "taskAcceptance": false,
+  "statusEntries": 170,
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "docsGuardSecondPass": "Claims/counts/paths/hash bindings/engineering vs formal limits checked against source and proof; device-version documentation correction verified"
+}

@@ -1,0 +1,10 @@
+$ vitest run --exclude='dist/**'
+
+ RUN  v4.1.0 D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/packages/contracts
+
+
+ Test Files  10 passed (10)
+      Tests  76 passed (76)
+   Start at  16:03:15
+   Duration  10.79s (transform 1.09s, setup 0ms, import 4.04s, tests 10.34s, environment 1ms)
+

@@ -1,0 +1,1687 @@
+{
+  "capturedAt": "2026-10-09T20:49:02.863Z",
+  "purpose": "DIAGNOSTIC_ONLY_NOT_ACCEPTANCE",
+  "originalSource": {
+    "path": "tools/run-feature-011-performance.mjs",
+    "sha256": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c"
+  },
+  "derivativeSha256": "27651784568cf8d8b3ddb5890da80029156380ad757ddafdba676c7221080e3a",
+  "changes": [
+    "five diagnostic samples instead of twenty; no acceptance claim",
+    "numeric owner-process instrumentation only",
+    "separate output destination"
+  ],
+  "calls": [
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 114.03470000000016,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 117.47839999999997,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 130.6775000000016,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 128.4285000000018,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 99.87779999999839,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 101.08190000000104,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 102.05870000000141,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 96.89959999999701,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 100.12379999999757,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 102.44420000000173,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 106.66110000000117,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 102.53050000000076,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 101.62480000000141,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 99.66430000000037,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 95.21869999999763,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 96.61000000000058,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 105.92859999999928,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 104.63539999999921,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 104.56339999999909,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 122.15439999999944,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 125.75989999999729,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 107.6768000000011,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 99.30419999999867,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 103.136599999998,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 98.27359999999317,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 98.08890000000247,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 100.27819999999338,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 101.41899999999441,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 100.00979999999981,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 102.06049999999959,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 97.65140000000247,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 101.9097000000038,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 109.76239999999962,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 103.61410000000615,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 101.53579999999783,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 106.31719999999041,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 103.15240000000631,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 99.54339999999502,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 98.7615000000078,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 104.5506999999925,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 109.67999999999302,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 106.67480000000796,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 118.64070000000356,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 125.94509999999718,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 127.76630000000296,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 166.45299999999406,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 148.37809999998717,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 137.4021999999968,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 173.50290000000678,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 161.6773000000103,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 147.8289999999979,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 140.21500000001106,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 147.58199999999488,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 143.0466999999917,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 149.289300000004,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 140.97329999999783,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 141.58950000000186,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 138.16019999999844,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 151.42050000000745,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 141.6243000000104,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 130.90230000000156,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 132.11079999999492,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 135.53830000000016,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 127.0619000000006,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 152.94950000000244,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 150.3752999999997,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 182.87739999999758,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 201.45210000000952,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 157.47299999999814,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 131.6765000000014,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 130.95410000000265,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 136.2884000000049,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 130.70479999999225,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 127.35970000000088,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 132.92829999999958,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 131.68670000000566,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 126.26910000000498,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 141.2436999999918,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 136.18570000000182,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 129.29709999999614,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 136.89100000000326,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 137.44619999999122,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 134.3703999999998,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 130.95130000000063,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 248.09649999999965,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 174.66770000000542,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 139.78789999999572,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 140.42020000000775,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 145.81010000000242,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 153.69070000000647,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 133.427199999991,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 138.38399999999092,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 145.86639999999898,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 146.27460000000428,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 160.96749999999884,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 147.3018000000011,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 147.14970000000903,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 127.05549999998766,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 133.85020000000077,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 132.6654000000126,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 130.8649000000005,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 134.03100000000268,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 138.74929999999586,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 140.76980000000913,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 140.3905999999988,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 142.0558000000019,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 161.5561000000016,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 165.56639999999607,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 156.30389999999898,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 151.99249999999302,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 134.3015999999916,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 132.0101999999897,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 132.21229999999923,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 146.57769999999437,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 172.67250000000058,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 154.50920000000042,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 128.20650000000023,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 147.0048999999999,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 149.7057999999961,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 157.03230000000622,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 161.5445999999938,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 171.37819999999192,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 146.94679999999062,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 131.55740000000515,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 135.10549999999057,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 129.54449999998906,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 131.8799999999901,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 139.37079999998969,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 138.5746000000072,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 141.1368999999977,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 135.90609999999288,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 132.9323000000004,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 134.3652000000002,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 132.95059999999648,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 126.58599999999569,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 134.85980000000563,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 146.56610000002547,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 145.02430000001914,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 156.75800000000163,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 136.90669999999227,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 120.32460000002175,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 124.03719999999157,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 120.66240000000107,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 133.47940000001108,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 125.42989999998827,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 124.48019999999087,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 125.00620000000345,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 126.40009999999893,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 129.09189999999944,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 126.79360000000452,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 124.25770000001648,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 138.68249999999534,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 136.11129999998957,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 140.94249999997555,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 152.09489999999641,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 158.71149999997579,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 136.70789999997942,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 151.4599000000162,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 126.0333999999857,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 129.0466000000015,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 143.73619999998482,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 145.2945999999938,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 150.66690000001108,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 159.29230000000098,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 138.18410000001313,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 131.25909999999567,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "support-source",
+      "elapsedMs": 133.8422000000137,
+      "exitCode": 0
+    },
+    {
+      "operation": "verifyAllergy",
+      "category": "other-owner-control",
+      "elapsedMs": 129.69190000000526,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 150.41629999998258,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 154.19599999999627,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 161.90170000001672,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 156.96280000000843,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 153.44120000000112,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 147.11040000000503,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 146.12039999998524,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 156.73850000000675,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 169.33800000001793,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 171.8304000000062,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 178.659399999975,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 155.14019999999437,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 137.94980000000214,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 139.26920000000973,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 149.68739999999525,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 131.88380000001052,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 126.78330000001006,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 130.30629999999655,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 133.82709999999497,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 131.89949999999953,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 126.82270000001881,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 126.92009999998845,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 128.4731000000029,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 138.47390000001178,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 130.1316999999981,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 135.57189999998081,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 159.03900000001886,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 143.81770000001416,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 169.6469999999972,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 175.72299999999814,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 154.85469999999623,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 136.2774999999965,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 139.26350000000093,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 143.07670000000508,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 145.4646000000066,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 133.81560000000172,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 129.70130000001518,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 131.31070000000182,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 126.70920000001206,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 127.05979999998817,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 126.02629999999772,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 124.28649999998743,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 143.40280000001076,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 123.39040000000386,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 123.92879999999423,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 136.81479999999283,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 137.78680000000168,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 136.47630000000936,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 132.87770000001183,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 135.24589999997988,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 149.625,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 140.9983999999822,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 145.46730000001844,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 137.24229999998352,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 138.8538000000117,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 135.40239999999176,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 132.2768999999971,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 133.60620000000927,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 131.0158999999985,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 138.32149999999092,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 142.9646000000066,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 140.66730000000098,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 132.76620000001276,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 129.54740000001038,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 128.69620000000577,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 128.79240000000573,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 134.1146000000008,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 132.6972999999998,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 130.85860000000685,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 132.25260000000708,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 133.00260000000708,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 137.08730000001378,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 140.2913000000117,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 141.0965000000142,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 143.19040000002133,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 137.09460000001127,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 140.13000000000466,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 157.35589999999502,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 137.9314000000013,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 141.69839999999385,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 146.1760999999824,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 127.23630000001867,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 138.38000000000466,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 139.83269999999902,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 132.92169999997714,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 140.05529999997816,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 152.25419999999576,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 148.84979999999632,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 143.11559999999008,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 137.35999999998603,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 146.60990000001038,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 136.5106000000087,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 136.82989999998244,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 134.13850000000093,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 133.11449999999604,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 137.70209999999497,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 157.20549999998184,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 141.3813000000082,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 133.67050000000745,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 132.19920000000275,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "signing-basis",
+      "elapsedMs": 135.01840000000084,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 141.1606000000029,
+      "exitCode": 0
+    },
+    {
+      "operation": "signClinicalContentRelease",
+      "category": "admin-status",
+      "elapsedMs": 133.08720000000903,
+      "exitCode": 0
+    },
+    {
+      "operation": "publishClinicalContentRelease",
+      "category": "release-context",
+      "elapsedMs": 129.26050000000396,
+      "exitCode": 0
+    }
+  ],
+  "summaries": {
+    "verifyAllergy/support-source": {
+      "count": 32,
+      "totalMs": 3847.519900000014,
+      "minMs": 95.21869999999763,
+      "maxMs": 156.75800000000163
+    },
+    "verifyAllergy/other-owner-control": {
+      "count": 32,
+      "totalMs": 3887.7210999999697,
+      "minMs": 96.61000000000058,
+      "maxMs": 159.29230000000098
+    },
+    "signClinicalContentRelease/signing-basis": {
+      "count": 64,
+      "totalMs": 9054.979600000115,
+      "minMs": 98.7615000000078,
+      "maxMs": 248.09649999999965
+    },
+    "signClinicalContentRelease/release-context": {
+      "count": 64,
+      "totalMs": 8979.033199999933,
+      "minMs": 103.15240000000631,
+      "maxMs": 178.659399999975
+    },
+    "signClinicalContentRelease/admin-status": {
+      "count": 64,
+      "totalMs": 8885.671400000007,
+      "minMs": 99.54339999999502,
+      "maxMs": 182.87739999999758
+    },
+    "publishClinicalContentRelease/release-context": {
+      "count": 16,
+      "totalMs": 2211.9324999999953,
+      "minMs": 126.70920000001206,
+      "maxMs": 157.35589999999502
+    }
+  },
+  "benchmarkResult": "FAIL_LOCAL_THRESHOLDS"
+}

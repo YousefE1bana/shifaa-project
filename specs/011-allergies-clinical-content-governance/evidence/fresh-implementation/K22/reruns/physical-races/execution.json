@@ -1,0 +1,38 @@
+{
+  "id": "physical-races",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\20036_1791553018937\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-79493d63-50d6-4b64-a5d5-8477051e1d00.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/physical-races.log",
+    "sha256": "dd9fb782077e2ce00e321bc3e284b35a99a7f875d80c8b6fe3bc6be6d7c79e33"
+  },
+  "original": "tools/feature-011-physical-races.mjs",
+  "originalSha256": "fec6fbb352a30ebd3f42244ecf4a2de5ac6ef9eb4be9299542fae89869ec3dba",
+  "substitutions": [
+    [
+      "const runtimeEvidenceDir = resolve(root, evidenceRoot, 'runtime');",
+      "const runtimeEvidenceDir = resolve(root, \"specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-races\", 'runtime');"
+    ]
+  ],
+  "lifecycleSubstitutions": [
+    [
+      "for (let i = 0; i < 92; i++)",
+      "const firstUnchecked = map.tasks.findIndex(t => t.status === 'UNCHECKED');\n  const acceptedBoundary = firstUnchecked < 0 ? 92 : firstUnchecked;\n  assert.ok(acceptedBoundary >= 79 && acceptedBoundary >= boundary, 'K21/current accepted prefix required');\n  for (let i = 0; i < 92; i++)"
+    ],
+    [
+      "i < boundary ? 'CHECKED' : 'UNCHECKED'",
+      "i < acceptedBoundary ? 'CHECKED' : 'UNCHECKED'"
+    ]
+  ],
+  "lifecycleSource": {
+    "path": "tools/feature-011-physical-green.mjs",
+    "sha256": "91f5b73e2267bad53fb3e7c97370ef52ef1d3028f14181a93dbc30d3640e147a"
+  },
+  "lifecyclePreflightAdaptedToCurrentAcceptedPrefix": true,
+  "physicalAssertionsChanged": false
+}

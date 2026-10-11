@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Input/source/SQL/generated/producer drift: tools/feature-011-offline-proof.mjs
++ actual - expected
+
++ '67d632cbd1704c89f9f0fe0d9c338cd3c4b1c3110db3c44649119e1a9ad2c4be'
+- '145771bbf3ab4c73fc5e66a43d408029f0c69c6b43566ca3457accfec38fc320'
+
+    at verifyPins (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-18dc5d84-31f4-434b-9bb0-c0628ef3d677.mjs:58:12)
+    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-18dc5d84-31f4-434b-9bb0-c0628ef3d677.mjs:60:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '67d632cbd1704c89f9f0fe0d9c338cd3c4b1c3110db3c44649119e1a9ad2c4be',
+  expected: '145771bbf3ab4c73fc5e66a43d408029f0c69c6b43566ca3457accfec38fc320',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0

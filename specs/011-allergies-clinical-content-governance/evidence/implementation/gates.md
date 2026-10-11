@@ -1,0 +1,19 @@
+# C01 gate disposition and pending OPEN-TECH-002 bundle
+
+Date: 2026-10-06 (Africa/Cairo). Authority: approved Spec/Plan/tasks plus the Product Owner's C01-only instructions in this conversation. Scope: existing readiness and evidence-bundle definition; no consumer authorization.
+
+The read-only `tools/verify-feature-011-scope.mjs` checks exact 19 NFRs/seven operation bindings, bounded FR-ADMIN-004, AC-01–AC-16, the four approved surfaces, byte-bound TEST-ONLY UX/authority artifacts, ACTIVE PRD rows, recorded Spec/Plan approval, both catalog reconciliations, retained gates/exclusions, and installed/declared Node/pnpm/Supabase tooling. Failures exit 1. Exit 0 means **C01 existing readiness only**. Every report includes `status: PENDING` and `affectedConsumersAllowed: false` for OPEN-TECH-002; this verifier never examines or approves the future physical bundle.
+
+| Required bundle component | Producer | Acceptance content |
+| --- | --- | --- |
+| Generated contracts and client | C02/T004–T007 | Approved OpenAPI refs resolved; closed payload shapes; exact seven method/path bindings; five Idempotency-Key and three If-Match bindings; generated schema/client digests; generator checks and zero-diff reproduction; both catalog reconciliations preserved. Contracts-only preparation cannot claim stage readiness. |
+| Full physical footprint | C03/T008–T016 | Complete seven-migration chain; tables/columns/types/constraints and SQL operation/function shapes; ENABLE/FORCE RLS; owner/executor separation, NOLOGIN/NOSUPERUSER/NOBYPASSRLS executor, minimum grants, PUBLIC EXECUTE denial and fixed search paths. Supporting structures are included. |
+| Both real-runtime enforcement/race proof | C03/T008–T016 | Isolated databases in shifaa-local-postgres and shifaa-local-supabase; actual runtime versions, migration/fixture/runtime digests, commands, assertions and outcomes; real non-owner online-role execution plus forbidden-access negatives; distinct physical sessions/barriers/observed locks for approved append/correction, signatures/qualification/authority-loss, initial/supersession/rollback/future-effective and closed projection invariants. No mocked, owner-only or skip-green substitute. |
+| Explicit affected-stage assertion | C03/T017 after T016 and before C04 consumers | Full contract verifier rejects missing/stale/incomplete/owner-only physical evidence; current digest-bound bundle plus applicable owner/stage disposition is recorded. Later SQL changes require renewed parity and assertion before consumption. |
+| Applicable formal acceptance | API Lead + Data Lead + QA Lead under Master OPEN-TECH-002 | Active-catalog/OpenAPI/DDL/trace consistency CI and required integration/acceptance remain subject to canonical stage authority. Local preparation is not a substitute for that acceptance and does not close the gate. |
+
+Both runtime IDs and all four bundle categories are emitted by the C01 verifier. Missing future outputs are expected at C01 and are not failures of existing prerequisites. They remain mandatory before affected consumers. Tests cover removal of the T017 assertion and preserve its dependency on T016.
+
+OPEN-TECH-002 remains **OPEN, fail-closed**. OPEN-CLIN-001 permits only synthetic governance engineering; real clinical content/qualification/admissibility/code/test-vector approval remains absent. OPEN-TECH-003 and OPEN-UX-002 retain formal VERIFYING effects. The exact Feature 011 TEST-ONLY functional UX approval satisfies only its prerequisite; program-wide OPEN-UX-001 remains retained. OPEN-LEGAL-001/002/007 continue to block their production effects. No production, Feature 012 or real-content approval is asserted.
+
+Evidence: [scope-gates](scope-gates.md), [RED](C01-red.md), [approved tasks](../../tasks.md), [task map](../../contracts/task-map.json), [Master OPEN register](../../../../SHIFAA-Implementation-Plan-MASTER.md). No later producer or assertion has been executed.

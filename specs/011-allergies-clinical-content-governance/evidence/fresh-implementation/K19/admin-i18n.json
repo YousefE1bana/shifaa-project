@@ -1,0 +1,209 @@
+{
+  "result": "PASS",
+  "checkpoint": "K19",
+  "task": "T072",
+  "locales": [
+    "ar-EG RTL",
+    "en-EG LTR"
+  ],
+  "keysPerLocale": 76,
+  "identicalClosedKeys": true,
+  "distinctOperationConfirmations": 6,
+  "sharedPackageRegression": 13,
+  "patientClinicFocusedRegression": 29,
+  "localFonts": [
+    {
+      "path": "apps/admin/public/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2",
+      "sha256": "6010e7fd0dce5d527583951750728cbe3c895efbd16aa0f809ab8c824878c9d8",
+      "source": "existing pinned @fontsource/ibm-plex-sans-arabic"
+    },
+    {
+      "path": "apps/admin/public/fonts/ibm-plex-sans-arabic-latin-400-normal.woff2",
+      "sha256": "9ed8dcb02e6c7246de4c120295fafa39a7bb73085f4951a4524a07dc911069f2",
+      "source": "existing pinned @fontsource/ibm-plex-sans-arabic"
+    },
+    {
+      "path": "apps/admin/public/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2",
+      "sha256": "16734a5adb27b0f363e566cbbeacec480da0dc0baa19c8f0053251c2e2bc0eac",
+      "source": "existing pinned @fontsource/ibm-plex-sans-arabic"
+    },
+    {
+      "path": "apps/admin/public/fonts/ibm-plex-sans-arabic-latin-600-normal.woff2",
+      "sha256": "63f4757271e403f7baec0862f284ffaa4560ea6096ba9fe8bc6e585ca656e724",
+      "source": "existing pinned @fontsource/ibm-plex-sans-arabic"
+    },
+    {
+      "path": "apps/admin/public/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2",
+      "sha256": "04c730b4292731ccedadd5bd80756124364ae4923895145d9cd7b1f28e443de1",
+      "source": "existing pinned @fontsource/ibm-plex-sans-arabic"
+    },
+    {
+      "path": "apps/admin/public/fonts/ibm-plex-sans-arabic-latin-700-normal.woff2",
+      "sha256": "ae2d59f91ecf9f7ed279e4a1fc1a9da8170fb0ce5b9152917a8f759033f5777c",
+      "source": "existing pinned @fontsource/ibm-plex-sans-arabic"
+    },
+    {
+      "path": "apps/admin/public/fonts/inter-latin-400-normal.woff2",
+      "sha256": "8909904ab6c872eb994093482a88a28eca2cd95912d7b6fecd72103b0dc07edc",
+      "source": "existing pinned @fontsource/inter"
+    },
+    {
+      "path": "apps/admin/public/fonts/inter-latin-600-normal.woff2",
+      "sha256": "f9a06e79cd3a2a20951c0f0e28f66dd0e6d3fda73911d640a2125c8fcb78f21a",
+      "source": "existing pinned @fontsource/inter"
+    },
+    {
+      "path": "apps/admin/public/fonts/inter-latin-700-normal.woff2",
+      "sha256": "6f56409fd3d64bb85f7d070bce20749db2d66b6d63cec586cc22d1c761be2491",
+      "source": "existing pinned @fontsource/inter"
+    }
+  ],
+  "fontCss": {
+    "path": "apps/admin/public/fonts/feature-011-fonts.css",
+    "sha256": "815e2bc01ed1e1ce4a70367d491c10335f69fe31d03018b4b2e412dc4f0990c8"
+  },
+  "formattingOnlyAfterLiveProof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/font-css-formatting.json",
+    "sha256": "542b035bf6fc980f14503aec72ae8728d0f5cce75e371cb82a0b02a77c78bb5c"
+  },
+  "fontLicenses": [
+    {
+      "path": "apps/admin/public/fonts/Inter-LICENSE.txt",
+      "sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345"
+    },
+    {
+      "path": "apps/admin/public/fonts/IBM-Plex-Sans-Arabic-LICENSE.txt",
+      "sha256": "1c32ddc3fc6efd167cdcbe475195287f2dc26ed1a4c92fbe31c87ceaffe44f98"
+    }
+  ],
+  "fontPolicy": "Reused bytes from already-pinned clinic @fontsource packages; no download, installation or dependency change.",
+  "screenshots": [
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-ar-EG-1440-viewport.png",
+      "sha256": "652ec9ed61e96eafcf2eaddb4e6fbb4d38d2da6d9e38b31e6fbd8958d8f0e3a8"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-ar-EG-1440x900.png",
+      "sha256": "b24008db5cc14fe889007d3df3b74a5cddc347ffe05d4843dccb00d941007afe"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-ar-EG-360-viewport.png",
+      "sha256": "a370609e6272429b455e7e7140c6e66c3aa0c10636f83a2c6bb49b2bb26867c9"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-ar-EG-360x800.png",
+      "sha256": "0184ad744a1974c8e58e0f841109d05097abb1d783f237ecb765544fbb680465"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-ar-EG-412x915.png",
+      "sha256": "5f3bf1a3cb0f26d53f00ab34cb2eb6e9a75befebaadb27b6f61c2f0b920c250d"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-ar-EG-768x1024.png",
+      "sha256": "33c98f1770d88c9e8ffd6676df35c8c1975e6a0f73ea8e509b64389fd4c1a7a7"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-en-EG-1440-viewport.png",
+      "sha256": "61fe480b463894c10d7b66665920c6a33d7b3c2e2a9e415b6a71e0161f336f50"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-en-EG-1440x900.png",
+      "sha256": "1f90c67dc960ff49d67e5d4b0b12b25ce892d276e99c4580208b4274a4eddea8"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-en-EG-360-viewport.png",
+      "sha256": "d0094669405d55818842b03e759f413f59decaaa418ff4046c5588b13bc1bb85"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-en-EG-360x800.png",
+      "sha256": "11d61c549433b0accdd6c67baeb909f7aa35dba81c832c9ea8f1be500049b410"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-en-EG-412x915.png",
+      "sha256": "5badc3d3abcb6db597e7590fc9f06b155733415f26d076b150f76248d95cc891"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-postgres-en-EG-768x1024.png",
+      "sha256": "2d192dd47b017e618d19302a1113fd8dd6c1869737feab84783b03179c9aea50"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-ar-EG-1440-viewport.png",
+      "sha256": "92a31e28286e1071331aa8fec4e14557cefe976e2ac9eace8ec6191d2106006a"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-ar-EG-1440x900.png",
+      "sha256": "8ad0a86376807dc2764d7c80fdd5ed2e36348c8abc5db5aa837b8a6f024f7f2d"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-ar-EG-360-viewport.png",
+      "sha256": "e9da3930aa1be37a2d197104dc1446a7e3f3912c3d3d701e327493e3ee80c876"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-ar-EG-360x800.png",
+      "sha256": "aaa82ef545def17baea07be86df1f6696f30946862fd7d6d11f632125515694d"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-ar-EG-412x915.png",
+      "sha256": "bee705521507b754ffa051b1d4c009f59aa9cd863082a060019995b6a0d67a7b"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-ar-EG-768x1024.png",
+      "sha256": "1df5e0fd84e3d38bb0922d9d914f23e5495bfa45091829b8d98a800b5685081f"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-en-EG-1440-viewport.png",
+      "sha256": "fa68a46e9d6109b90032e5b3a42bbdf4ad5dfe9cfc8ff13eea5d72ed2e728407"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-en-EG-1440x900.png",
+      "sha256": "182bf780baf3b8844610349ba0d9738af4959d6f749eec41f372a16984bf3241"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-en-EG-360-viewport.png",
+      "sha256": "5f1b76d30b4864362ce50443fa07810b19556de75f62e3993323b56ec88dd96b"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-en-EG-360x800.png",
+      "sha256": "f7bcc5ecdd1849c4ece48e7a5eb5b044ab920854bd94046e03b6de21b361881a"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-en-EG-412x915.png",
+      "sha256": "c0b4023c21279c1c38b2f5c34fe851ef7cb0a4236dbcb6309a43a4b29b03865e"
+    },
+    {
+      "path": "artifacts/feature-011/k19/shifaa-local-supabase-en-EG-768x1024.png",
+      "sha256": "d97bab285f3446bad7a563741b9c63eff6b9e21642e3d178a6713a5fd32731ff"
+    }
+  ],
+  "primaryVisualReview": [
+    "Final Supabase Arabic 360px viewport",
+    "Final PostgreSQL English 1440px viewport"
+  ],
+  "accessibility": [
+    "Explicit control names including populated reason textarea",
+    "Native named dialog focus trap, cancel, Escape and post-render focus return",
+    "Live status/error regions",
+    "Readable Cairo localized dates; only technical IDs/digests isolated LTR",
+    "44px minimum controls in both locales at every tested viewport",
+    "200% text and 400% reflow-equivalent 360px viewport",
+    "Reduced-motion and forced-color focus",
+    "Approved local fonts render"
+  ],
+  "limitations": [
+    "No manual screen-reader certification or final visual acceptance",
+    "400% layout equivalence; no claim of a browser chrome zoom shortcut test",
+    "OPEN-UX-002 remains OPEN"
+  ],
+  "inputs": {
+    "apps/admin/src/app/clinical-content/page.tsx": "9f7e105250ff03f847ee0142aa10e1936782d5685403750fd2a1fb548eac3826",
+    "apps/admin/src/app/clinical-content/ClinicalContentWorkspace.tsx": "b435ebc27c283162f74c9af0caacc906f25f227d9dbbc3d9e4d17526c867f106",
+    "apps/admin/src/app/clinical-content/content-controller.ts": "753a296ab45cb64f045461496aaea7e658c0a14653c68677c51b5c680dfb8ee8",
+    "apps/admin/src/app/clinical-content/clinical-content.css": "1e0776e2f69cb9040f58690a7faf3619af8849ca31a0388912acc50814a84b86",
+    "packages/i18n/src/feature-011.ts": "d89270a18c84f6960c9bcf268b7d188d8c622aa4190c974613a151d1790a1e7a",
+    "tools/run-feature-011-admin-ui-test.mjs": "d800ce270fe3ea55e3e78901c3e900bef8e44d16d806137473e4bc2bf63c87aa"
+  },
+  "proof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/us3-demo.json",
+    "sha256": "ad02a1994be448e942b16cb1d52ab434948e07f50cdf94977ecf4cace7a385ad"
+  }
+}

@@ -1,0 +1,378 @@
+{
+  "validator": "F011_FRESH_TASKS_STATIC_VALIDATION/1",
+  "status": "PASS",
+  "scope": "Tasks-stage static checks only; not speckit.analyze, implementation or runtime evidence",
+  "counts": {
+    "tasks": 92,
+    "checkpoints": 24,
+    "NFRs": 19,
+    "operations": 7,
+    "ACs": 16
+  },
+  "checks": [
+    {
+      "name": "approved_manifest",
+      "status": "PASS",
+      "details": {
+        "id": "SHIFAA-F011-RECOVERED-PLAN-APPROVAL@1.0.0",
+        "sha256": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548",
+        "path": "specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json"
+      }
+    },
+    {
+      "name": "normative_hashes",
+      "status": "PASS",
+      "details": {
+        "count": 42
+      }
+    },
+    {
+      "name": "ledger_output_hashes",
+      "status": "PASS",
+      "details": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/tasks.md",
+          "sha256": "e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957235f9573165"
+        },
+        {
+          "path": "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+          "sha256": "5a6037838bc644a5dbb61c17a5504a662822f8d5ee0925379b823737f17b738d"
+        }
+      ]
+    },
+    {
+      "name": "unchecked_three_line_template",
+      "status": "PASS",
+      "details": {
+        "blocks": 92,
+        "tasks": 92
+      }
+    },
+    {
+      "name": "fresh_identity",
+      "status": "PASS",
+      "details": "No historical completion transfer; no execution/Analyze authority"
+    },
+    {
+      "name": "task_dependencies",
+      "status": "PASS",
+      "details": "Every edge names an earlier fresh task"
+    },
+    {
+      "name": "checkpoint_DAG",
+      "status": "PASS",
+      "details": {
+        "count": 24
+      }
+    },
+    {
+      "name": "checkpoint_ownership",
+      "status": "PASS",
+      "details": "Each task belongs to one checkpoint"
+    },
+    {
+      "name": "concrete_path_and_handoff",
+      "status": "PASS",
+      "details": "Concrete targets; CLI owns only future migration timestamp, never placeholder schema"
+    },
+    {
+      "name": "migration_generation_ownership",
+      "status": "PASS",
+      "details": "Ten distinct planned additive outputs, pinned local CLI; none created"
+    },
+    {
+      "name": "scope_19NFR_4FR",
+      "status": "PASS",
+      "details": {
+        "nfr": 19,
+        "fr": 4
+      }
+    },
+    {
+      "name": "active_PRD_targets",
+      "status": "PASS",
+      "details": "All targets exist in active FR/NFR tables; no reserved scope added"
+    },
+    {
+      "name": "implementation_and_verification_coverage",
+      "status": "PASS",
+      "details": [
+        {
+          "id": "FR-SAFE-002",
+          "implementation": 18,
+          "verification": 29
+        },
+        {
+          "id": "FR-SAFE-008",
+          "implementation": 13,
+          "verification": 26
+        },
+        {
+          "id": "FR-SAFE-012",
+          "implementation": 14,
+          "verification": 26
+        },
+        {
+          "id": "FR-ADMIN-004",
+          "implementation": 14,
+          "verification": 26
+        },
+        {
+          "id": "NFR-SEC-001",
+          "implementation": 30,
+          "verification": 45
+        },
+        {
+          "id": "NFR-SEC-002",
+          "implementation": 24,
+          "verification": 30
+        },
+        {
+          "id": "NFR-SEC-004",
+          "implementation": 23,
+          "verification": 37
+        },
+        {
+          "id": "NFR-SEC-005",
+          "implementation": 15,
+          "verification": 24
+        },
+        {
+          "id": "NFR-SEC-006",
+          "implementation": 29,
+          "verification": 41
+        },
+        {
+          "id": "NFR-SEC-007",
+          "implementation": 13,
+          "verification": 25
+        },
+        {
+          "id": "NFR-PRIV-002",
+          "implementation": 33,
+          "verification": 45
+        },
+        {
+          "id": "NFR-PRIV-004",
+          "implementation": 24,
+          "verification": 30
+        },
+        {
+          "id": "NFR-I18N-001",
+          "implementation": 6,
+          "verification": 14
+        },
+        {
+          "id": "NFR-A11Y-001",
+          "implementation": 6,
+          "verification": 14
+        },
+        {
+          "id": "NFR-PERF-002",
+          "implementation": 2,
+          "verification": 6
+        },
+        {
+          "id": "NFR-DATA-001",
+          "implementation": 34,
+          "verification": 46
+        },
+        {
+          "id": "NFR-DATA-002",
+          "implementation": 20,
+          "verification": 33
+        },
+        {
+          "id": "NFR-API-001",
+          "implementation": 22,
+          "verification": 26
+        },
+        {
+          "id": "NFR-API-002",
+          "implementation": 29,
+          "verification": 38
+        },
+        {
+          "id": "NFR-OBS-001",
+          "implementation": 15,
+          "verification": 24
+        },
+        {
+          "id": "NFR-QUALITY-001",
+          "implementation": 23,
+          "verification": 27
+        },
+        {
+          "id": "NFR-PORT-001",
+          "implementation": 24,
+          "verification": 31
+        },
+        {
+          "id": "NFR-PRIV-001",
+          "implementation": 16,
+          "verification": 30
+        }
+      ]
+    },
+    {
+      "name": "all_AC_01_16",
+      "status": "PASS",
+      "details": "Every Spec acceptance criterion mapped"
+    },
+    {
+      "name": "seven_public_operations",
+      "status": "PASS",
+      "details": [
+        {
+          "id": "listAllergies",
+          "method": "get",
+          "path": "/patients/{managedPatientId}/allergies"
+        },
+        {
+          "id": "createAllergy",
+          "method": "post",
+          "path": "/patients/{managedPatientId}/allergies"
+        },
+        {
+          "id": "verifyAllergy",
+          "method": "post",
+          "path": "/allergies/{allergyId}/verification"
+        },
+        {
+          "id": "listClinicalContent",
+          "method": "get",
+          "path": "/admin/clinical-content/{contentType}"
+        },
+        {
+          "id": "createClinicalContentRelease",
+          "method": "post",
+          "path": "/admin/clinical-content/{contentType}/releases"
+        },
+        {
+          "id": "signClinicalContentRelease",
+          "method": "post",
+          "path": "/admin/clinical-content/releases/{releaseId}/signatures"
+        },
+        {
+          "id": "publishClinicalContentRelease",
+          "method": "post",
+          "path": "/admin/clinical-content/releases/{releaseId}/publish"
+        }
+      ]
+    },
+    {
+      "name": "implementation_verification_pairing",
+      "status": "PASS",
+      "details": "Each implementation has named executable test/evidence owner"
+    },
+    {
+      "name": "test_first_behavior",
+      "status": "PASS",
+      "details": "Behavior/SQL/crypto/domain/API/UI consumers depend on RED test owner; scaffold/low-impact maintenance verified independently"
+    },
+    {
+      "name": "protocol_producer_consumer_evidence",
+      "status": "PASS",
+      "details": [
+        "SHIFAA-F011-ARTIFACT/1",
+        "SHIFAA-F011-CREATE-RELEASE-HANDOFF/1",
+        "SHIFAA-F011-PROTECTED-BODY/1 + SHIFAA-F011-PROTECTED-AAD/1",
+        "SHIFAA-F011-ALLERGY-FACTS/1 + SHIFAA-F011-ALLERGY-REASON/1 + SHIFAA-F011-ALLERGY-PROTECTED/1 + SHIFAA-F011-ALLERGY-AAD/1",
+        "SHIFAA-F011-RECEIPT-PROTECTED/1 + SHIFAA-F011-RECEIPT-AAD/1",
+        "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1",
+        "Existing artifactReview disclosure contract"
+      ]
+    },
+    {
+      "name": "physical_inventory",
+      "status": "PASS",
+      "details": "Exact typed structures plus baseline audit extension have storage/test/consumer ownership"
+    },
+    {
+      "name": "trusted_evidence_and_flow_ownership",
+      "status": "PASS",
+      "details": "No missing typed producer/consumer; current approved matrices define every trust/storage/hash/retry cell"
+    },
+    {
+      "name": "evidence_before_stage_assertion_before_consumers",
+      "status": "PASS",
+      "details": "P1–P4 exist before owned P5; P6 never prerequisite to its own producer"
+    },
+    {
+      "name": "default_off_before_all_routes_and_demo",
+      "status": "PASS",
+      "details": "Exposure safety precedes every router consumer and synthetic demonstration"
+    },
+    {
+      "name": "authoritative_US4_before_UI_acceptance",
+      "status": "PASS",
+      "details": "Projection/UI cannot claim full current eligibility first"
+    },
+    {
+      "name": "retained_open_gates",
+      "status": "PASS",
+      "details": "No automatic closure/waiver; stage-specific evidence and owner disposition remain separate"
+    },
+    {
+      "name": "nonfinal_UI_and_99_state_coverage",
+      "status": "PASS",
+      "details": "All four approved engineering route/state families have implementation/test/live owners; no final pixel lock"
+    },
+    {
+      "name": "reference_inventory_integrity",
+      "status": "PASS",
+      "details": "All 746 immutable reference assets match current manifest"
+    },
+    {
+      "name": "parallel_claims_and_shared_i18n",
+      "status": "PASS",
+      "details": "No unsafe parallel marker; shared file owners explicitly sequenced; DB harness remains serial"
+    },
+    {
+      "name": "historical_archives_exact",
+      "status": "PASS",
+      "details": [
+        {
+          "source": "specs/011-allergies-clinical-content-governance/tasks.md",
+          "archive": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/tasks.md",
+          "sha256": "8c7159c44253445cf48a86cd6637339ee8a5b328153dae1f4bfe5daf1c85635d"
+        },
+        {
+          "source": "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+          "archive": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+          "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+        },
+        {
+          "source": "specs/011-allergies-clinical-content-governance/evidence/tasks-generation-validation.md",
+          "archive": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/tasks-generation-validation.md",
+          "sha256": "9d551233dd21b65790b67f4934fdb2c372821ac0a6c452c6412dfbc0e154f86f"
+        }
+      ]
+    },
+    {
+      "name": "historical_crosswalk_no_completion",
+      "status": "PASS",
+      "details": {
+        "REUSABLE_CANDIDATE": 7,
+        "PARTIALLY_REUSABLE": 13,
+        "SUPERSEDED": 84,
+        "NOT_APPLICABLE": 1
+      }
+    },
+    {
+      "name": "no_hidden_design_choice_or_excluded_task",
+      "status": "PASS",
+      "details": "Approved protocols/current matrices own architecture, Feature010 mapping preserved and Feature012 excluded"
+    },
+    {
+      "name": "branch_HEAD_main_preserved",
+      "status": "PASS",
+      "details": {
+        "branch": "codex/011-allergies-clinical-content-governance",
+        "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+        "main": "670b1e0fe15c719b98179805f2628d1b478a55dd"
+      }
+    }
+  ],
+  "failures": []
+}

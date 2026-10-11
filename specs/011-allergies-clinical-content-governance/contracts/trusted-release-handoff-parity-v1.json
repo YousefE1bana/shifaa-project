@@ -1,0 +1,129 @@
+{
+  "formatVersion": 1,
+  "contractId": "SHIFAA-F011-CREATE-RELEASE-HANDOFF/1",
+  "relatedContracts": [
+    "SHIFAA-F011-PROTECTED-BODY/1",
+    "SHIFAA-F011-PROTECTED-AAD/1"
+  ],
+  "status": "PLAN_RECOVERY_R2_DRAFT_REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+  "consumptionAllowed": false,
+  "inputs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md",
+      "sha256": "e8f43933311ba5430d758504675162aca86d0537205eda95febbf3d6ab0bc5db"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json",
+      "sha256": "03945dbb8f323f480f1a93f09340936f5623f7c1feeea6f2fcce98211b4b3a11"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json",
+      "sha256": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/data-model.md",
+      "sha256": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+      "sha256": "c053e28f529ecea784917ab38028b599f45f0a4b58e517970a644ed7e2a268b5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md",
+      "sha256": "8d3fe1ae977bb99e3d24d1cf1f5548dafc0ecdb350f7e681b89acb04488e0bab"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/plan.md",
+      "sha256": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/research.md",
+      "sha256": "d862cfb3698f7651e0b63c80910107ee4c43e136bb417d079294f5e5451967c5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/quickstart.md",
+      "sha256": "71e377027f3aee5385e3c079e288498ea9e5597ae657dd07eecd5bf11e25ec5a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md",
+      "sha256": "4f8bf26bdfb43cd016b62cd572f21bc9f2a81477dcd2b1a067314cb95887ba3f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md",
+      "sha256": "b9632b94dfb136b35d0b3bcef89a2cee47002836ed7db679a56cc4a000c0b48b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json",
+      "sha256": "9f3be0aa5f5b3aa62b3505ea40d8b142b31f25a228a6b0bb19f221b28748ffa9"
+    }
+  ],
+  "canonicalInputs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+      "sha256": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+      "sha256": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json",
+      "sha256": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+      "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133"
+    }
+  ],
+  "requiredAssertions": [
+    "exact five protected-envelope fields and typed immutable storage columns; AES-256-GCM only",
+    "12-byte nonce, nonempty opaque ciphertext, 16-byte tag",
+    "trusted C04 validation of immutable versioned external keyRef; no key material or mutable aliases; no SQL external lookup or public/observable keyRef exposure",
+    "exact AAD prefix and five-field order/framing/UTF-8 octet counts, strict text/minimal positive version, no workflowVersion or persisted free-form AAD",
+    "fresh releaseId allocated and lineage-relative version/evidence/protection preflight before locks",
+    "locked SQL lineage/version equality and atomic stale/conflicting-allocation rejection",
+    "fresh ID/random nonce/envelope on rejected pre-commit retry; committed replay creates/re-encrypts nothing",
+    "raw material absent from SQL evidence-resolution input and generic/prohibited sinks; authorized existing artifactReview and dedicated ciphertext-only canonical receipt follow R2 disclosure; C04 hashes material, SQL hashes canonical artifact",
+    "no external evidence/network/KMS while locks held, including retries",
+    "C03 synthetic structure/storage/binding/races only, not real evidence-port or AES-GCM acceptance",
+    "C04 fixed AAD, actual cryptographic/material and BOTH-runtime real producer -> prepared SQL composition obligation",
+    "all current handoff/body/AAD/vector/model/governance/decision/parity input hashes bound in generated metadata only",
+    "missing/stale/inconsistent/unaccepted inputs fail closed; seven public operation wire shapes and approved canonical v1 remain unchanged",
+    "R2 allergy/receipt contracts own separate immutable protection identity; bounded LOCAL receipt encryption exception only, no external work under locks",
+    "current shared foundation closed signing/material/admission/allergy profiles and exact historical/current rules before physical consumers",
+    "current shared foundation closed signing/material/admission/allergy profiles and exact historical/current rules before physical consumers"
+  ],
+  "metadataImplementation": "NOT_IMPLEMENTED; recovery edits design/hash registry only; T093-T095 not executed; existing C02A metadata does not accept current extension",
+  "acceptance": "PRIOR_PLAN_APPROVAL_SUSPENDED; implementation fully paused; preserved accepted evidence requires recovered-Plan revalidation; no C02B/C03/T017 authorization",
+  "resolvedDesignBlocker": {
+    "id": "HND-DESIGN-001",
+    "disposition": "RESOLVED_BY_RECORDED_PRODUCT_OWNER_ARCHITECTURE_DECISION",
+    "evidence": "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md"
+  },
+  "openTech002": "OPEN",
+  "recoveryDecision": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md",
+  "historicalOwnership": {
+    "contractVectorsAndNegativeTests": "T093",
+    "metadataOnlyVerifierGenerators": "T094",
+    "preparationEvidenceReviewDisposition": "T095",
+    "physicalTests": "T008",
+    "sqlConsumer": "T012",
+    "syntheticBothRuntimePhysicalEvidence": "T016",
+    "physicalGeneratedParityAssertion": "T017",
+    "realProducerTests": "T018",
+    "realEvidenceProtectionProducer": "T019",
+    "realProducerSqlCompositionBothRuntimes": "T020",
+    "canonicalCoreEncoder": "T046",
+    "canonicalSqlCoreEquivalence": "T047"
+  },
+  "ownership": {
+    "trustedHandoffContractMetadata": "Plan P3; future rebuilt Tasks only after approval",
+    "syntheticPhysical": "Plan P4; historical C03 responsibility",
+    "physicalGeneratedAssertion": "Plan P5; historical T017 responsibility",
+    "realProducerComposition": "Plan P6; historical C04 responsibility",
+    "sqlCoreEquivalence": "Plan P7; historical C13 responsibility"
+  },
+  "recoveryRound2Decision": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md",
+  "architectureReviewResult": "PASS_PLAN_LEVEL_ONLY_NO_GATE_APPROVAL",
+  "evidenceFoundationDecision": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md"
+}

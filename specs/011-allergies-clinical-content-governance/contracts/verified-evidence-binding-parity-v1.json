@@ -1,0 +1,145 @@
+{
+  "contractId": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1",
+  "formatVersion": 1,
+  "status": "DRAFT_REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+  "consumptionAllowed": false,
+  "inputs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/plan.md",
+      "sha256": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/research.md",
+      "sha256": "d862cfb3698f7651e0b63c80910107ee4c43e136bb417d079294f5e5451967c5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/data-model.md",
+      "sha256": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/quickstart.md",
+      "sha256": "71e377027f3aee5385e3c079e288498ea9e5597ae657dd07eecd5bf11e25ec5a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+      "sha256": "c053e28f529ecea784917ab38028b599f45f0a4b58e517970a644ed7e2a268b5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md",
+      "sha256": "e75f95ea9daef89918083be8ea66b8fce896bf55c8d323a1bdffef07e37bd1eb"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json",
+      "sha256": "782b32e23764c7ecf9b5114f387be174591c0d0ef6b2eed04749520991eee6cc"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json",
+      "sha256": "8326cde913c59e4c899b16ba73193d9a48a99191f5eb7dba66883d904b1523b0"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md",
+      "sha256": "e8f43933311ba5430d758504675162aca86d0537205eda95febbf3d6ab0bc5db"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json",
+      "sha256": "03945dbb8f323f480f1a93f09340936f5623f7c1feeea6f2fcce98211b4b3a11"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json",
+      "sha256": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md",
+      "sha256": "03dbaeccfc4342136c6f6623f8613157e51806ddf0f07fea85a8ecb3374da257"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json",
+      "sha256": "f031aa09edddf8c60ebe4cc8165fa35afee7e3875551ca2f6136e68a31bf7f25"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json",
+      "sha256": "b0f8d4ba2ad5f30bbdf6ec963a6dc4e16677236b3ed0fbc6aa263ee81a2ed6ed"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md",
+      "sha256": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json",
+      "sha256": "2bf23cae34648742f995edced1008f7988efdbaf9dd12d9e1c46aa83e10d68ec"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json",
+      "sha256": "4eff01a61b485f0616b69480a979f3024da21b464cf768771055bb2694e56050"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md",
+      "sha256": "b203e00aaf3e2cc689b2ccc60e0b846ca206942de9b660d1d185ba4006d0a57e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md",
+      "sha256": "1fc278a00df5b46115374d1f435d1168f5de0977df3e21c9dabdb76b726c2989"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md",
+      "sha256": "03eaf4a9ace7d26fbbf977309774728531e763f13dc1bf06f726957838092709"
+    }
+  ],
+  "canonicalInputs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+      "sha256": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+      "sha256": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json",
+      "sha256": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+      "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133"
+    }
+  ],
+  "publicScope": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/spec.md",
+      "sha256": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml",
+      "sha256": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json",
+      "sha256": "53e46fbbbf79526749e0786c1630a2c2b6ad515ec3ac33d8755d2730df0842ac"
+    }
+  ],
+  "supersedesHistoricalRegistries": [
+    "specs/011-allergies-clinical-content-governance/contracts/plan-protection-parity-r2.json"
+  ],
+  "semantics": {
+    "closedProfiles": 9,
+    "fixedShapePositives": 10,
+    "fixedShapeNegatives": 8,
+    "fixedAdmissionCases": 42,
+    "exactHistoricallyBoundVersion": true,
+    "genericRulesOrTable": false,
+    "rawMaterialSql": false,
+    "realAcceptanceClaim": false
+  },
+  "assertions": [
+    "R2-SD-04 exact signing tuple + reciprocal typed sidecar + verified evidenceRef",
+    "AC-02 exact historically bound ID/version/full facts; unrelated replacement never rehabilitates signature",
+    "AC-03 approval + binding exact release/artifact version/digest; ambiguity/broad-scope deny",
+    "AC-04 existing immutable supporting provenance; exact patient/assertion/head/target/actor; one-use revision",
+    "coding approved-source-only; optional unknown; unchanged known historical, no fabricated validation",
+    "stable-ID authority FKs + snapshots permit version/revocation; exact immutable artifact composite FKs",
+    "P3 current contracts before P4 synthetic both-runtime proof; P6 real producer authenticity/composition later; P7 fixed equivalence",
+    "all seven public operations/19 NFRs/gates unchanged"
+  ],
+  "openTech002": "OPEN",
+  "metadataImplementation": "NOT_IMPLEMENTED; generators/verifiers/SQL/core/client unchanged; accepted C02A preserved pending revalidation"
+}

@@ -1,0 +1,10 @@
+{
+  "result": "PASS_LOCAL_ENGINEERING_FORMAL_ACCEPTANCE_BLOCKED",
+  "capturedAt": "2026-10-09T21:03:58.754Z",
+  "misses": [],
+  "evidence": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-workload/performance-proof.json",
+  "priorFailedEvidence": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/preceding-ops/performance-proof.json",
+  "workloadAndThresholdsUnchanged": true,
+  "formalAcceptance": "BLOCKED_OPEN-TECH-003",
+  "productionSloDrApproval": false
+}

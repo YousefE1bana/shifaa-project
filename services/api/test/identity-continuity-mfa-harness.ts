@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { createHmac, randomUUID } from 'node:crypto';
+import { dirname, resolve } from 'node:path';
 
 import Fastify, { type FastifyInstance } from 'fastify';
 
@@ -26,12 +27,27 @@ export interface SupabaseStatus {
 }
 
 export function supabaseStatus(): SupabaseStatus {
-  const command = process.platform === 'win32' ? (process.env['ComSpec'] ?? 'cmd.exe') : 'corepack';
-  const args =
-    process.platform === 'win32'
-      ? ['/d', '/s', '/c', 'corepack pnpm exec supabase status -o json']
-      : ['pnpm', 'exec', 'supabase', 'status', '-o', 'json'];
-  return JSON.parse(execFileSync(command, args, { encoding: 'utf8' })) as SupabaseStatus;
+  const packagePath = requireFromApi.resolve('supabase/package.json');
+  const cli = requireFromApi('supabase/package.json') as {
+    version: string;
+    bin: { supabase: string };
+  };
+  if (cli.version !== '2.113.0') throw new Error('Pinned project-local Supabase CLI required');
+  // Bypass package-manager banners; never log status credentials on parse failure.
+  const stdout = execFileSync(
+    process.execPath,
+    [resolve(dirname(packagePath), cli.bin.supabase), 'status', '-o', 'json'],
+    {
+      encoding: 'utf8',
+      windowsHide: true,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    },
+  );
+  try {
+    return JSON.parse(stdout) as SupabaseStatus;
+  } catch {
+    throw new Error('Pinned local Supabase status returned malformed JSON');
+  }
 }
 
 export function authClient(runtime: SupabaseStatus) {

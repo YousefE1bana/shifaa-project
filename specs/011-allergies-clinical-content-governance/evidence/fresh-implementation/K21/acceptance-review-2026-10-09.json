@@ -1,0 +1,47 @@
+{
+  "result": "ACCEPTED",
+  "checkpoint": "K21",
+  "tasks": [
+    "T077",
+    "T078",
+    "T079"
+  ],
+  "issues": [
+    474,
+    475,
+    476
+  ],
+  "productOwner": "Yousef Osama",
+  "authorization": "start review and if everything is right go for K22",
+  "reviewer": "Primary Codex",
+  "currentEvidenceHashes": "PASS",
+  "sourceAndScreenshotHashes": "PASS",
+  "freshRegressions": 93,
+  "parityPins": 133,
+  "evidence": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/status-ui-red.json",
+      "sha256": "fdeb8c2ba91117505d6b7b9bebfd15e36fd34625875e244928aa9f1ad0994bf2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/status-ui.json",
+      "sha256": "cc8bd2b5087b6a368a7bf792a09c5d4d12f9bc662ef2b90c1e86993856e904a2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/us4-demo.json",
+      "sha256": "41c6c5539cf9cca98e8f677a21671b14a9b1f74785912480acbd59fa7caf0ba7"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/parity.json",
+      "sha256": "10602e79df95fe4bb6d1366d58c7a6d17df43ba505d084731e46f2637903b7e4"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/checkpoint-review.json",
+      "sha256": "a911ce065849327dbe7d3a6b04c335f99dae9315f89c734183621ca0e8ed246c"
+    }
+  ],
+  "retainedGates": "UNCHANGED_OPEN",
+  "syntheticEngineeringOnly": true,
+  "nextAuthorization": "K22 T080–T083 only; stop before K23",
+  "capturedAt": "2026-10-09T12:57:08.649Z"
+}

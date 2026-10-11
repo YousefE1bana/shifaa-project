@@ -1,0 +1,99 @@
+{
+  "result": "PASS_FORMAT_ONLY_REPAIR",
+  "files": [
+    {
+      "path": "services/api/src/modules/identity-onboarding/identity-onboarding.unit.test.ts",
+      "before": "1ef69289a0acbefa5f2c131b4af9f8eb20eb8178ba0fb7478fb55c7672a5e269",
+      "after": "2b6f6cdfe0d5775393c75e144671d98b00eea151db8df563d61c1c4d06dd60ce",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "services/api/src/modules/identity-onboarding/in-memory-repository.ts",
+      "before": "4fcaca0886c03ff5318726a5cdd18aaedb1fb4fabe040144993c3671ad8c91e6",
+      "after": "695bd21af1f8dc8f48019512cb2ddd771986914f73917a94d6d930809b29f436",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tests/e2e/feature-011-ui.spec.ts",
+      "before": "9621c1e265dc0edb053fe7d4cdc7b1de6bd4205aeac6c8d6d22a0a0999139c5b",
+      "after": "ecc286a514fe0577c152b3db3eea98ad981ffdd3e34cfea8e40a2c39890c9e15",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tests/e2e/feature-011-verification.spec.ts",
+      "before": "3a5dab34fa8837ac5388fb5c510a876e941517ff7628c41fbbc2326a564595a7",
+      "after": "9357228a252bd425896663e5bd0068e39a09fd9913052b376b4559f92e2177dc",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tools/feature-011-harness.test.mjs",
+      "before": "4cbc5f0eb6396b0a67e0bf067cc09278f9f83705c84b62c18dc67fc978bed823",
+      "after": "886ecac88a96c0320b9a5ac9107bddc6e7ccc2c5f5fa618dbcb5ed62e5247280",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tools/feature-011-k08-preflight.mjs",
+      "before": "d96dc8b408e8e08f9f56fd0127fb33007e1f4690c00623df2a9845579b0ad53c",
+      "after": "d0c994a544bd4e985ab0693a90c43fae62e22587314f0df995ebfb5dd34298c0",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tools/feature-011-ledger-contract.test.mjs",
+      "before": "c0b2b33fb2126bc2faa055e5a55c7ce3f159dce0acd620ec5a75876eb733553a",
+      "after": "36d4e37870959e4cbb8fd1b7c2d5cdc6c3d5bb60cdedee2bb425d6fadf8fb717",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tools/feature-011-physical-races.mjs",
+      "before": "fec6fbb352a30ebd3f42244ecf4a2de5ac6ef9eb4be9299542fae89869ec3dba",
+      "after": "ec5a14e11d68330ee0c6cee0607ac28af23404bb2f659f3f3333c89b18b2e7fd",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tools/feature-011-support-lifecycle.mjs",
+      "before": "787087ba9ae09ea7dba102f633f5e6c7210b431ad519878e031d959d8fbf8141",
+      "after": "1e64b06ba9a441b4f1c4c40e995dc7b03fa9372ac3ee80899a0605117aa2cd83",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tools/run-feature-011-allergy-api-test.mjs",
+      "before": "6cca95247fa3b7eff6c77a180c11b6f6ac2c68a6aa93a9928da00970a0bce2dd",
+      "after": "492ce3996fce3d4cc0b4e2419bca68021cc4e57bd87087bd8466dca6b6ac2dde",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "tools/run-feature-011-consumer-test.mjs",
+      "before": "88b3d09eedc909a788c75e92d9045eabde827810a7c76cb7b8c2cd9d909f8058",
+      "after": "016d11c5643d645093027f2a77675a6af7ea89495601ec9cf3131097fd0d50c5",
+      "semanticsEqual": true,
+      "comparison": "Babel TypeScript syntax tree deep equality excluding locations, comments and raw spelling metadata"
+    },
+    {
+      "path": "specs/001-identity-onboarding/contracts/openapi.yaml",
+      "before": "10e9dc4c5facb114ea1db2b24eeb0403ee09c1fa8b4d6bac2f21b0554c94af63",
+      "after": "fa0120408c939bc1f895cceedf415f930fee50134a26d161953404d22e0649da",
+      "semanticsEqual": true,
+      "comparison": "YAML parsed-value deep equality"
+    }
+  ],
+  "capturedAt": "2026-10-09T16:12:43.956Z",
+  "priorCurrentParityPreserved": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/documentation-renewal-before-format",
+  "originalApprovedDocumentationUntouched": true,
+  "sqlChanged": false,
+  "securityOrPrivilegeChanged": false,
+  "failedDriverAttempts": [
+    "Installed Node path corrected before formatter ran",
+    "Installed TypeScript package has version API only; use installed Prettier Babel parser for semantic comparison"
+  ],
+  "assertionsWeakened": false
+}

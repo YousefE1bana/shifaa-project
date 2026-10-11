@@ -1,0 +1,111 @@
+{
+  "checkpoint": "K03",
+  "task": "T008",
+  "ledgerId": "SHIFAA-F011-FRESH-TASKS@1.0.0",
+  "result": "VALID_RED",
+  "capturedAt": "2026-10-06T16:05:41.740Z",
+  "command": "pnpm --filter @shifaa/api exec vitest run src/feature-011-exposure.test.ts --reporter=json --outputFile=../../artifacts/feature-011/k03/exposure-red-vitest.json",
+  "expectedExitCode": 1,
+  "counts": {
+    "tests": 25,
+    "pass": 5,
+    "fail": 20
+  },
+  "setupHealthy": true,
+  "baselineRoutesAbsent": true,
+  "reason": "Existing application /v1/health passes and all actual seven Feature 011/excluded route absence checks pass. Twenty assertion failures show absent flag defaults/validation, absent registration prerequisite and absent request kill-switch behavior. No import, syntax, runtime or discovery failure is counted.",
+  "excludedSetupDiagnostics": "Initial wrong /health test URL and Vitest thenable rejection assertion were corrected before this valid RED; excluded-setup-diagnostic.json remains diagnostic only.",
+  "test": {
+    "path": "services/api/src/feature-011-exposure.test.ts",
+    "sha256": "8eaaaf23206cf6f303b59b49d802eb9dad41d66d0f94b1aa931449ad8bfaa7de"
+  },
+  "results": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure-red-results.json",
+    "sha256": "82f6651a702b1b9ad031d4bfb1ff75a82f880d1e015f09191b5a163955cca332"
+  },
+  "failureSummaries": [
+    {
+      "title": "defaults to disabled exposure and an engaged kill switch",
+      "message": "AssertionError: expected { environment: 'test', …(26) } to match object { feature011Enabled: false, …(2) }"
+    },
+    {
+      "title": "rejects invalid FEATURE_011_ENABLED before any application can register routes",
+      "message": "AssertionError: expected [Function] to throw an error"
+    },
+    {
+      "title": "rejects invalid FEATURE_011_ISOLATED_TEST before any application can register routes",
+      "message": "AssertionError: expected [Function] to throw an error"
+    },
+    {
+      "title": "rejects invalid FEATURE_011_KILL_SWITCH before any application can register routes",
+      "message": "AssertionError: expected [Function] to throw an error"
+    },
+    {
+      "title": "denies nonisolated enablement {}",
+      "message": "AssertionError: expected [Function] to throw an error"
+    },
+    {
+      "title": "denies nonisolated enablement {\"SHIFAA_SYNTHETIC_MODE\":\"false\"}",
+      "message": "AssertionError: expected [Function] to throw an error"
+    },
+    {
+      "title": "denies nonisolated enablement {}",
+      "message": "AssertionError: expected [Function] to throw an error"
+    },
+    {
+      "title": "denies nonisolated enablement {\"FEATURE_011_ISOLATED_TEST\":\"false\"}",
+      "message": "AssertionError: expected [Function] to throw an error"
+    },
+    {
+      "title": "denies nonisolated enablement {\"NODE_ENV\":\"development\"}",
+      "message": "AssertionError: expected [Function] to throw error matching /Feature 011/ but got 'Executable development runtime requir…'"
+    },
+    {
+      "title": "denies nonisolated enablement {\"NODE_ENV\":\"production\"}",
+      "message": "AssertionError: expected [Function] to throw error matching /Feature 011/ but got 'Production startup denied: synthetic/…'"
+    },
+    {
+      "title": "denies nonisolated enablement {\"HOST\":\"0.0.0.0\"}",
+      "message": "AssertionError: expected [Function] to throw an error"
+    },
+    {
+      "title": "blocks later registration while disabled: GET /v1/patients/:managedPatientId/allergies",
+      "message": "AssertionError: Missing default-off exposure behavior: expected undefined to be type of 'function'"
+    },
+    {
+      "title": "blocks later registration while disabled: POST /v1/patients/:managedPatientId/allergies",
+      "message": "AssertionError: Missing default-off exposure behavior: expected undefined to be type of 'function'"
+    },
+    {
+      "title": "blocks later registration while disabled: POST /v1/allergies/:allergyId/verification",
+      "message": "AssertionError: Missing default-off exposure behavior: expected undefined to be type of 'function'"
+    },
+    {
+      "title": "blocks later registration while disabled: GET /v1/admin/clinical-content/:contentType",
+      "message": "AssertionError: Missing default-off exposure behavior: expected undefined to be type of 'function'"
+    },
+    {
+      "title": "blocks later registration while disabled: POST /v1/admin/clinical-content/:contentType/releases",
+      "message": "AssertionError: Missing default-off exposure behavior: expected undefined to be type of 'function'"
+    },
+    {
+      "title": "blocks later registration while disabled: POST /v1/admin/clinical-content/releases/:releaseId/signatures",
+      "message": "AssertionError: Missing default-off exposure behavior: expected undefined to be type of 'function'"
+    },
+    {
+      "title": "blocks later registration while disabled: POST /v1/admin/clinical-content/releases/:releaseId/publish",
+      "message": "AssertionError: Missing default-off exposure behavior: expected undefined to be type of 'function'"
+    },
+    {
+      "title": "permits only neutral ephemeral handlers in explicit isolated exposure and rechecks kill switch before execution",
+      "message": "AssertionError: Missing default-off exposure behavior: expected undefined to be type of 'function'"
+    },
+    {
+      "title": "guards later nested application registration without affecting baseline routes",
+      "message": "AssertionError: expected undefined to be an instance of Error"
+    }
+  ],
+  "disposition": "IMPLEMENTED_PENDING_PRODUCT_OWNER_REVIEW_AND_ACCEPTANCE",
+  "noDelegation": true,
+  "noRoutesRegisteredInProduct": true
+}

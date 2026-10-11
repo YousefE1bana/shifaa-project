@@ -1,0 +1,482 @@
+{
+  "formatVersion": 1,
+  "checkpoint": "K07",
+  "authorization": "K07_T028_RUNNER_REMEDIATION_APPROVED",
+  "result": "READY_FOR_REVIEW",
+  "runnerFixes": [
+    {
+      "id": "timing-holder",
+      "description": "Use runtime.user only for deterministic series-row lock orchestration; publish contender still authenticates as shifaa_api and uses the approved non-owner entrypoint. No direct shifaa_api content_series grant."
+    },
+    {
+      "id": "receipt-denial-diagnostic",
+      "description": "Add the exact existing closed-object diagnostic to two receipt-fault message assertions. SQLSTATE 22023, all-five rollback snapshots, retry wait and durable-count checks are unchanged."
+    },
+    {
+      "id": "facility-writer-fixture",
+      "description": "Use synthetic facility creator person(2), facility_approver and professional_license_review in the actual predecessor service, matching the previously validated fixture. No synthetic grant/policy changes. Verify both actual writer schedules afresh."
+    },
+    {
+      "id": "writer-error-diagnostics",
+      "description": "Propagate a captured repository writer error when a blocking proof fails, rather than hiding it behind the barrier timeout. Other writers without that error callback preserve the original thrown failure."
+    }
+  ],
+  "diff": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/runner-remediation.diff",
+    "sha256": "11611943b8f4a033c0a85268e332d43cce8e9a229242fdae14adaaf197e38d73"
+  },
+  "runnerBefore": {
+    "path": "artifacts/feature-011/k07/runner-before-timing-remediation.mjs",
+    "sha256": "818b202760ace82d1b84742f475bb020e397bd3d297b03afcceed2fc3a69b72b"
+  },
+  "runnerAfter": {
+    "path": "tools/feature-011-physical-races.mjs",
+    "sha256": "d283e0a8eec552ebe555c5991b224e56a1429573957669cf0ebe67ddf2eb7443"
+  },
+  "tests": {
+    "syntax": "PASS",
+    "harnessSafety": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "completeMatrixCommand": [
+      "node",
+      "tools/run-feature-011-concurrency-test.mjs",
+      "green"
+    ],
+    "matrixExitCode": 0,
+    "defaultVerifierCommand": [
+      "node",
+      "tools/verify-feature-011-contracts.mjs"
+    ],
+    "defaultVerifierExitCode": 0
+  },
+  "attempts": [
+    {
+      "log": "t028-timing-holder-remediation-run.log",
+      "exitCode": 1,
+      "reason": "Receipt diagnostic regex mismatch; setup failure not counted as race success."
+    },
+    {
+      "log": "t028-receipt-diagnostic-remediation-run.log",
+      "exitCode": 1,
+      "reason": "Facility fixture supplied wrong actor for predecessor RLS; missing blocking proof not counted as race success."
+    },
+    {
+      "log": "t028-facility-fixture-remediation-run.log",
+      "exitCode": 0,
+      "reason": "Complete clean both-runtime run with current source hashes."
+    }
+  ],
+  "t028": {
+    "proof": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-races.json",
+      "sha256": "3927e1df659b219abb991f97da1b91c13c5bca6efd4e5c47b4b2ef8841d6f5f8"
+    },
+    "runtimes": [
+      {
+        "runtime": "shifaa-local-postgres",
+        "required": 12,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "categories": [
+          {
+            "category": "allergy-head-cas",
+            "result": "PASS",
+            "assertions": 4
+          },
+          {
+            "category": "signature-independence",
+            "result": "PASS",
+            "assertions": 2
+          },
+          {
+            "category": "initial-published-root",
+            "result": "PASS",
+            "assertions": 2
+          },
+          {
+            "category": "release-allocation-version",
+            "result": "PASS",
+            "assertions": 1
+          },
+          {
+            "category": "published-successor-lineage",
+            "result": "PASS",
+            "assertions": 2
+          },
+          {
+            "category": "effective-time-after-wait",
+            "result": "PASS",
+            "assertions": 3
+          },
+          {
+            "category": "idempotency-replay",
+            "result": "PASS",
+            "assertions": 3
+          },
+          {
+            "category": "receipt-fault-atomicity",
+            "result": "PASS",
+            "assertions": 4
+          },
+          {
+            "category": "current-authority-revoke-first-action-first",
+            "result": "PASS",
+            "schedules": [
+              {
+                "schedule": "action-first",
+                "result": "PASS"
+              },
+              {
+                "schedule": "writer-first",
+                "result": "PASS"
+              }
+            ]
+          },
+          {
+            "category": "actual-facility-writer",
+            "result": "PASS",
+            "schedules": [
+              {
+                "schedule": "action-first",
+                "result": "PASS"
+              },
+              {
+                "schedule": "writer-first",
+                "result": "PASS"
+              }
+            ]
+          },
+          {
+            "category": "actual-continuity-writer",
+            "result": "PASS",
+            "schedules": [
+              {
+                "schedule": "action-first",
+                "result": "PASS"
+              },
+              {
+                "schedule": "writer-first",
+                "result": "PASS"
+              }
+            ]
+          },
+          {
+            "category": "actual-encounter-writer",
+            "result": "PASS",
+            "schedules": [
+              {
+                "schedule": "action-first",
+                "result": "PASS"
+              },
+              {
+                "schedule": "writer-first",
+                "result": "PASS"
+              }
+            ]
+          }
+        ],
+        "durableCounts": {
+          "before": {
+            "allergyHeads": 0,
+            "allergyRevisions": 0,
+            "verificationBindings": 0,
+            "contentSeries": 0,
+            "contentReleases": 0,
+            "signatureEvidence": 0,
+            "signatureBindings": 0,
+            "receipts": 0,
+            "obligations": 0,
+            "completedFeatureIdempotency": 0,
+            "auditAllergyEvents": 0,
+            "auditReleaseEvents": 0,
+            "outboxFeatureEvents": 0,
+            "badReceiptPointers": 0
+          },
+          "after": {
+            "allergyHeads": 3,
+            "allergyRevisions": 4,
+            "verificationBindings": 1,
+            "contentSeries": 1,
+            "contentReleases": 6,
+            "signatureEvidence": 12,
+            "signatureBindings": 12,
+            "receipts": 26,
+            "obligations": 26,
+            "completedFeatureIdempotency": 26,
+            "auditAllergyEvents": 4,
+            "auditReleaseEvents": 22,
+            "outboxFeatureEvents": 26,
+            "badReceiptPointers": 0
+          }
+        },
+        "rawProof": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/runtime/shifaa-local-postgres-physical-races.json",
+          "sha256": "648826ac6205694b33314c4155d05d6cc0641177193ab7c2b69565a3d4a9bef7"
+        }
+      },
+      {
+        "runtime": "shifaa-local-supabase",
+        "required": 12,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "categories": [
+          {
+            "category": "allergy-head-cas",
+            "result": "PASS",
+            "assertions": 4
+          },
+          {
+            "category": "signature-independence",
+            "result": "PASS",
+            "assertions": 2
+          },
+          {
+            "category": "initial-published-root",
+            "result": "PASS",
+            "assertions": 2
+          },
+          {
+            "category": "release-allocation-version",
+            "result": "PASS",
+            "assertions": 1
+          },
+          {
+            "category": "published-successor-lineage",
+            "result": "PASS",
+            "assertions": 2
+          },
+          {
+            "category": "effective-time-after-wait",
+            "result": "PASS",
+            "assertions": 3
+          },
+          {
+            "category": "idempotency-replay",
+            "result": "PASS",
+            "assertions": 3
+          },
+          {
+            "category": "receipt-fault-atomicity",
+            "result": "PASS",
+            "assertions": 4
+          },
+          {
+            "category": "current-authority-revoke-first-action-first",
+            "result": "PASS",
+            "schedules": [
+              {
+                "schedule": "action-first",
+                "result": "PASS"
+              },
+              {
+                "schedule": "writer-first",
+                "result": "PASS"
+              }
+            ]
+          },
+          {
+            "category": "actual-facility-writer",
+            "result": "PASS",
+            "schedules": [
+              {
+                "schedule": "action-first",
+                "result": "PASS"
+              },
+              {
+                "schedule": "writer-first",
+                "result": "PASS"
+              }
+            ]
+          },
+          {
+            "category": "actual-continuity-writer",
+            "result": "PASS",
+            "schedules": [
+              {
+                "schedule": "action-first",
+                "result": "PASS"
+              },
+              {
+                "schedule": "writer-first",
+                "result": "PASS"
+              }
+            ]
+          },
+          {
+            "category": "actual-encounter-writer",
+            "result": "PASS",
+            "schedules": [
+              {
+                "schedule": "action-first",
+                "result": "PASS"
+              },
+              {
+                "schedule": "writer-first",
+                "result": "PASS"
+              }
+            ]
+          }
+        ],
+        "durableCounts": {
+          "before": {
+            "allergyHeads": 0,
+            "allergyRevisions": 0,
+            "verificationBindings": 0,
+            "contentSeries": 0,
+            "contentReleases": 0,
+            "signatureEvidence": 0,
+            "signatureBindings": 0,
+            "receipts": 0,
+            "obligations": 0,
+            "completedFeatureIdempotency": 0,
+            "auditAllergyEvents": 0,
+            "auditReleaseEvents": 0,
+            "outboxFeatureEvents": 0,
+            "badReceiptPointers": 0
+          },
+          "after": {
+            "allergyHeads": 3,
+            "allergyRevisions": 4,
+            "verificationBindings": 1,
+            "contentSeries": 1,
+            "contentReleases": 6,
+            "signatureEvidence": 12,
+            "signatureBindings": 12,
+            "receipts": 26,
+            "obligations": 26,
+            "completedFeatureIdempotency": 26,
+            "auditAllergyEvents": 4,
+            "auditReleaseEvents": 22,
+            "outboxFeatureEvents": 26,
+            "badReceiptPointers": 0
+          }
+        },
+        "rawProof": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/runtime/shifaa-local-supabase-physical-races.json",
+          "sha256": "b1c30c02714c1095e93a374a05ce0483a0911166c9e259f87b2cb01216e0e0f9"
+        }
+      }
+    ]
+  },
+  "t027": {
+    "pinnedInputs": 121,
+    "allMatch": true,
+    "rawResult": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/runtime/physical-green-before-evidence-bundling.json",
+      "sha256": "1e9aaa6aecf526a27a6fd481935048903ffecc7891673e298e648250ceff576e"
+    },
+    "currentProof": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-green.json",
+      "sha256": "2f61b425891eac3c4c328d9b37e180dc6486549f72271f99eb82620f42d5c299"
+    },
+    "rawResultsUnchanged": true,
+    "evidenceDescriptorsAddedOnly": true
+  },
+  "t029": {
+    "proof": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/stage-assertion.json",
+      "sha256": "e0a17fb219e30856ec2b9bd699ce754f5f5cc7b72d2840bdf88d76edf31af575"
+    },
+    "verifier": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/parity-stage-verifier.json",
+      "sha256": "544aa864e44d30982c8cc0b3eba32dc6494571c739c5560bc2ed137fb69be08b"
+    },
+    "result": "PASS",
+    "disposition": "ACCEPTED_FOR_AFFECTED_CONSUMERS",
+    "owners": [
+      {
+        "name": "Yousef Osama",
+        "role": "API Lead",
+        "disposition": "ACCEPTED",
+        "record": {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k07-p5-disposition-2026-10-07.md",
+          "sha256": "9b5002491917cc025e9f47167613511280dcec72ba4896921f9f99881ed6b1ed"
+        }
+      },
+      {
+        "name": "Yousef Osama",
+        "role": "Data Lead",
+        "disposition": "ACCEPTED",
+        "record": {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k07-p5-disposition-2026-10-07.md",
+          "sha256": "9b5002491917cc025e9f47167613511280dcec72ba4896921f9f99881ed6b1ed"
+        }
+      },
+      {
+        "name": "Yousef Osama",
+        "role": "QA Lead",
+        "disposition": "ACCEPTED",
+        "record": {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k07-p5-disposition-2026-10-07.md",
+          "sha256": "9b5002491917cc025e9f47167613511280dcec72ba4896921f9f99881ed6b1ed"
+        }
+      }
+    ],
+    "openTech002": "OPEN",
+    "globalGateClosure": false,
+    "checkpointAcceptance": "PENDING"
+  },
+  "productDefectEncountered": false,
+  "productMigrationsSchemaGrantsContractsChanged": false,
+  "preservation": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/t028-runner-remediation-state.json",
+    "sha256": "cf9e5199e7830ac4194122955bf72fae844979a81705223c003e4338a1803c4f"
+  },
+  "ledgerHashes": {
+    "tasks": "16542baa0f98202beda61b699a8341020b39cc0473c4193fba9c59bd2775448c",
+    "taskMap": "da2bbce9960affa001ca80b57a88450b312315bc4c0c94166fef859dae9f4be5"
+  },
+  "t027ToT029": "UNCHECKED",
+  "t030ToT092": "UNCHANGED_UNCHECKED",
+  "issues": [
+    {
+      "number": 424,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/424"
+    },
+    {
+      "number": 425,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/425"
+    },
+    {
+      "number": 426,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/426"
+    }
+  ],
+  "retainedGatesUnchanged": true,
+  "syntheticOnly": true,
+  "realAesKmsEvidenceClinicalProductionAcceptance": false,
+  "subagentsUsed": false,
+  "k08Started": false,
+  "commitPushPrMainChange": false,
+  "changedFiles": [
+    "tools/feature-011-physical-races.mjs",
+    "specs/011-allergies-clinical-content-governance/decisions/k07-p5-disposition-2026-10-07.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-green.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/stage-assertion.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/parity-stage-verifier.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/runtime/",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/t028-runner-remediation-state.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/runner-remediation.diff",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/t028-runner-remediation.json"
+  ],
+  "ignoredHelpersAndLogs": "artifacts/feature-011/k07/",
+  "gitStatus": " M docs/architecture/SHIFAA-API-Catalog.md\n M packages/api-client/package.json\n M packages/contracts/package.json\n M packages/contracts/src/index.ts\n M services/api/src/app.ts\n M services/api/src/config.ts\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? infra/db/fixtures/feature-011-k04.sql\n?? infra/db/fixtures/feature-011-k06.sql\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-concurrency.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-k05-storage.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-receipts.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? packages/test-kit/src/feature-011/\n?? services/api/src/feature-011-exposure.test.ts\n?? services/api/src/feature-011-exposure.ts\n?? specs/011-allergies-clinical-content-governance/\n?? supabase/migrations/20261006175926_f011_allergy_revisions.sql\n?? supabase/migrations/20261006175932_f011_content_artifacts.sql\n?? supabase/migrations/20261006175937_f011_governance_evidence.sql\n?? supabase/migrations/20261006175942_f011_atomic_receipts.sql\n?? supabase/migrations/20261006185236_f011_allergy_functions.sql\n?? supabase/migrations/20261006185237_f011_release_functions.sql\n?? supabase/migrations/20261006185239_f011_signing_functions.sql\n?? supabase/migrations/20261006185240_f011_publication_functions.sql\n?? supabase/migrations/20261006185241_f011_rls_grants.sql\n?? supabase/migrations/20261006185242_f011_receipt_functions.sql\n?? tools/feature-011-consumer-fixtures.mjs\n?? tools/feature-011-harness.test.mjs\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/feature-011-physical-green.mjs\n?? tools/feature-011-physical-races.mjs\n?? tools/feature-011-physical-red.test.mjs\n?? tools/feature-011-predecessor-races.mjs\n?? tools/feature-011-protocol-parity.test.mjs\n?? tools/feature-011-support-lifecycle.mjs\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-consumer-test.mjs\n?? tools/run-feature-011-physical-red.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/run-feature-011-storage-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs",
+  "gitStatusCounts": {
+    "trackedModified": 6,
+    "untrackedEntries": 52
+  },
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "staged": false,
+  "capturedAt": "2026-10-07T11:30:15.690Z"
+}

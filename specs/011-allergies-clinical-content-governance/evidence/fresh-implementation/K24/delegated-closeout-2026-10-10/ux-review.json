@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-10T12:37:43.5131669Z",
+  "feature": "011",
+  "checkpoint": "K24",
+  "status": "BOUNDED_SECOND_PASS_COMPLETE_WITH_EVIDENCE_LIMITS",
+  "authority": "PO technical delegation; advisory functional/accessibility review, no gate or formal owner approval",
+  "scope": "12 distinct saved images, four route families, AR/EN, compact and wide evidence; source inspection and manifest hash binding only",
+  "independentlyExecutedTests": [],
+  "independentlyObservedLiveDOM": false,
+  "selectedImages": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser/patient/patient-ar-EG-history.png",
+      "sha256": "553990c855f5e180e8668d6397fc539fe92c42ee907f6419056c75d17a2dd2ab",
+      "imageWidth": 1280,
+      "imageHeight": 720,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser/patient/patient-en-EG-reflow-contrast.png",
+      "sha256": "86f92d5d96c07b9d58400bb43e8100d9a06dac397c66019f233bc956e26e2d50",
+      "imageWidth": 360,
+      "imageHeight": 900,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ui-gap-scenarios/clinic-ar-EG-aal2-required.png",
+      "sha256": "40b77763534050c1578a4aac35146a1492dba3aa4e79b85693e5fdc3c770d3fa",
+      "imageWidth": 1280,
+      "imageHeight": 949,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser/clinic/clinic-en-EG-receipt.png",
+      "sha256": "cbe288e7a76310da3f032e66f9911e0c48a3fc9f5b03e559f8935c46947b7a50",
+      "imageWidth": 1280,
+      "imageHeight": 1297,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "artifacts/feature-011/k24/admin/shifaa-local-postgres-ar-EG-360x800.png",
+      "sha256": "f16464f48fed4c7074d559bfa33169ba5c6e3741a2ac0c4d079d921956cdad0c",
+      "imageWidth": 360,
+      "imageHeight": 9451,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "artifacts/feature-011/k24/admin/shifaa-local-postgres-en-EG-1440x900.png",
+      "sha256": "77c8720a0314faf288c6891dc5b57b2d3ff52aa36e78e86bb60c2cd7fd77e7f1",
+      "imageWidth": 1440,
+      "imageHeight": 7974,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "artifacts/feature-011/k24/status/shifaa-local-postgres-ar-EG-future.png",
+      "sha256": "bf512cdbafab10e21dcaa5d4ea5407dbd2c4970b0a3722759cdba0d5d72c743f",
+      "imageWidth": 1440,
+      "imageHeight": 993,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "artifacts/feature-011/k24/status/shifaa-local-postgres-en-EG-gated.png",
+      "sha256": "f5723f31f2e779dde3c70f67c449802fdb40a79e19b9b810a3ee3f31f48a67b6",
+      "imageWidth": 1440,
+      "imageHeight": 900,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ui-gap-scenarios/patient-ar-EG-submitting.png",
+      "sha256": "6692b212294e0b1e039d02734d976fd40af8a4b4445adce7c88b2b35e1770cfc",
+      "imageWidth": 1280,
+      "imageHeight": 2000,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ui-gap-scenarios/patient-en-EG-authority-lost.png",
+      "sha256": "04f436dab10f691238fb61d401c933d779a98048d9baa78ea2ab2f22b42145ad",
+      "imageWidth": 1280,
+      "imageHeight": 2000,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "artifacts/feature-011/k24/status/shifaa-local-postgres-en-EG-360x800.png",
+      "sha256": "5d21a6397b36f882583d552790ebb49f9dbdc06219c1b4f366a0f1771fc1a6e5",
+      "imageWidth": 360,
+      "imageHeight": 1437,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser/clinic/clinic-ar-EG-reflow-contrast.png",
+      "sha256": "a8c46302fe6575643160a65523a19efad11876c4ae9cc855709758d7952a2864",
+      "imageWidth": 360,
+      "imageHeight": 42013,
+      "independentlyViewed": true,
+      "manifestBinding": "MATCHED_CAPTURE_HASH",
+      "hashMatches": true
+    }
+  ],
+  "sourceRenderBinding": [
+    {
+      "path": "apps/clinic/src/components/feature-011/AllergySummaryPanel.tsx",
+      "sha256": "8578651765402b8a0174e0bfd04e41cb33f4bef97b1c08882fc3e85a4a174559",
+      "captureSourcePinMatches": null
+    },
+    {
+      "path": "apps/clinic/src/app/clinical-content/status/StatusWorkspace.tsx",
+      "sha256": "83ed26ca5595c5437211b836a9ed3e0507c4d1f34deafdd935cad4663a5b64b1",
+      "captureSourcePinMatches": null
+    },
+    {
+      "path": "apps/admin/src/app/clinical-content/ClinicalContentWorkspace.tsx",
+      "sha256": "b435ebc27c283162f74c9af0caacc906f25f227d9dbbc3d9e4d17526c867f106",
+      "captureSourcePinMatches": null
+    },
+    {
+      "path": "apps/admin/src/app/clinical-content/clinical-content.css",
+      "sha256": "1e0776e2f69cb9040f58690a7faf3619af8849ca31a0388912acc50814a84b86",
+      "captureSourcePinMatches": null
+    }
+  ],
+  "independentlyObserved": [
+    "Patient AR submitting image has explicit submission text and no report confirmation action visible; unknown facts retain localized unknown text.",
+    "Patient EN authority-lost image shows safe unavailability and cleared referral data, with visible focused refresh action and source/history/privacy actions.",
+    "Clinic EN receipt includes saved-new-revision status, report reference, recorded time and next step to preserved history.",
+    "Clinic AR aal2 fixture renders generic unavailable-under-authority/context copy and no report form; it does not independently prove an AAL2-specific native cause or distinct step-up composition.",
+    "Admin AR compact and EN wide captures stack labeled release metadata, exact synthetic material and signature history; approval history is explicitly not proof of current eligibility. English source was additionally viewed at original detail.",
+    "Status AR future displays published status together with not-currently-available meaning; EN gated displays unknown/unavailable without release detail. EN compact labels wrap and release identifier remains within the content card.",
+    "Status and patient images show text meaning in addition to visual treatment; RTL/LTR placement is visible in the selected pairs."
+  ],
+  "confirmedProductDefects": [],
+  "evidenceFindings": [
+    {
+      "id": "UX-E01",
+      "kind": "CAPTURE_LIMIT",
+      "evidence": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser/patient/patient-ar-EG-history.png",
+      "fact": "Image begins within revision history and omits route heading/current context; it cannot alone establish full-page hierarchy or focus order.",
+      "recommendation": "Retain this historical image and prefer the supplementary scroll-to-top capture for current hierarchy review."
+    },
+    {
+      "id": "UX-E02",
+      "kind": "CAPTURE_LIMIT",
+      "evidence": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser/clinic/clinic-ar-EG-reflow-contrast.png",
+      "fact": "360px-wide clinic reflow image is 42013px tall; whole-image display reduces it to an unreadable strip. Patient EN scale capture shows fragmented oversized words and only a scroll slice.",
+      "recommendation": "Use existing physical reviewer report only within its attributed scope; future scaled capture evidence should record settings and readable viewport slices of critical actions. No new production defect inferred."
+    },
+    {
+      "id": "UX-E03",
+      "kind": "STATE_MEANING_LIMIT",
+      "evidence": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ui-gap-scenarios/review.md",
+      "fact": "Supplement labels identify HTTP fixture causes; generic forbidden/conflict/unavailable presentations do not establish distinct candidate-copy acceptance or physical Auth/SQL cause.",
+      "recommendation": "Keep scenario association and distinct composition acceptance separate; root should resolve product-copy decisions only against approved authority."
+    }
+  ],
+  "sourceObservations": [
+    "AllergySummaryPanel.tsx:123-129 localized polite status region; :185-201 linked required form labels; :233-242 persistent reference/time/next step; :150 and :236 LTR bdi identifiers.",
+    "StatusWorkspace.tsx:45-53 section language/direction and atomic polite outcome; :68 eligibility copy; :75-94 isolated version/release and withheld-signature wording.",
+    "ClinicalContentWorkspace.tsx:24-26 isolated technical identifiers; :252-271 outcome/modal/return focus source; clinical-content.css provides wrapping, target-size variables and focus-visible outline. These are static source observations, not independently executed behavior."
+  ],
+  "recordedEvidenceOnly": [
+    "Browser execution records exitCode 0 for patient/clinic/admin/status; not rerun by this delegate.",
+    "Gap execution records PASS_SUPPLEMENTARY_TRANSPORT_SCENARIOS, 36 AR/EN cases, nativeAssistiveTechnology=false, nativeZoom=false, distinctCandidateCopyAcceptance=false.",
+    "Yousef Osama reviewer reports PC 400% patient AR/EN reflow, physical access/readability, review/cancel and remaining NVDA/TalkBack/text/high-contrast/reduced-motion checks with no issues. This delegate did not observe those live checks or native utterances."
+  ],
+  "limits": [
+    "Not a manual review of all 99 states or 746 references",
+    "No live DOM/browser/DB/network activity",
+    "No native speech transcript or independent device-setting verification",
+    "No exhaustive contrast, target measurement, focus traversal, 200%/400% or reduced-motion test independently executed",
+    "OPEN-UX-002 and OPEN-TECH-003 formal disposition remains for owners; no gate changes",
+    "No pixel lock, clinical approval, production readiness or Design Lead/QA approval",
+    "Selected component source paths are absent from browser-execution top-level sourceDigests; current source hashes are recorded, but exact capture-time component byte identity is not established by those pins."
+  ],
+  "documentationSecondPass": "Docs Guard under SHIFAA third-party overlay: image paths and hashes verified, source claims bounded, recorded outcomes attributed, no executable helper or network used"
+}

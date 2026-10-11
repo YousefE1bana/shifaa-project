@@ -1,0 +1,42 @@
+{
+  "checkpoint": "K22",
+  "result": "ACCEPTED",
+  "productOwner": "Yousef Osama",
+  "reviewer": "Primary Codex",
+  "authorization": "Review and if all good go ahead for K23 and 24",
+  "capturedAt": "2026-10-09T14:19:00.501Z",
+  "tasks": [
+    "T080",
+    "T081",
+    "T082",
+    "T083"
+  ],
+  "issues": [
+    477,
+    478,
+    479,
+    480
+  ],
+  "evidence": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-harness.json",
+      "sha256": "f209e3307b61a0a18af8dff7db079acc5c490261ac942f705c6a49d91cc4dd70"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/all-races.json",
+      "sha256": "b60b8d29636c023c9680bd55c70e282f6fec78eb29b1c76a1f35e526c3c28507"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/security-proof.json",
+      "sha256": "04b8d2d2f93e7fba340932ff099e843aa79745422520a0f11ed25d37c4ef6ab6"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/atomic-proof.json",
+      "sha256": "b0b2a0d62fbdaa26cdc46106f8405a141b2657be2df1326b223b7cbceb74a852"
+    }
+  ],
+  "reviewedReferences": 31,
+  "pins": 133,
+  "retainedGates": "UNCHANGED_OPEN",
+  "syntheticEngineeringOnly": true
+}

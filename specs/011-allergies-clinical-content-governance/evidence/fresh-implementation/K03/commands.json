@@ -1,0 +1,198 @@
+[
+  {
+    "label": "harness-negative-unit",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tools/feature-011-harness.test.mjs"
+    ],
+    "startedAt": "2026-10-06T16:17:23.461Z",
+    "finishedAt": "2026-10-06T16:17:24.019Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/harness-negative-unit.log",
+      "sha256": "05f507c9bf74df4b8c9ac7a0b7039e66392665daa38556bd063bf458b4703692"
+    }
+  },
+  {
+    "label": "api-typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@shifaa/api",
+      "typecheck"
+    ],
+    "startedAt": "2026-10-06T16:17:24.027Z",
+    "finishedAt": "2026-10-06T16:17:25.608Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/api-typecheck.log",
+      "sha256": "38ac890c60e7f38d59ddfb410325cdfb5fca83c9411765c5481754e01c021630"
+    }
+  },
+  {
+    "label": "test-kit-typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@shifaa/test-kit",
+      "typecheck"
+    ],
+    "startedAt": "2026-10-06T16:17:25.614Z",
+    "finishedAt": "2026-10-06T16:17:26.351Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/test-kit-typecheck.log",
+      "sha256": "38ac890c60e7f38d59ddfb410325cdfb5fca83c9411765c5481754e01c021630"
+    }
+  },
+  {
+    "label": "format",
+    "command": [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "services/api/src/config.ts",
+      "services/api/src/app.ts",
+      "services/api/src/feature-011-exposure.ts",
+      "services/api/src/feature-011-exposure.test.ts",
+      "tools/run-feature-011-postgres-test.mjs",
+      "tools/run-feature-011-concurrency-test.mjs",
+      "tools/feature-011-harness.test.mjs",
+      "packages/test-kit/src/feature-011/fixtures.ts"
+    ],
+    "startedAt": "2026-10-06T16:17:26.352Z",
+    "finishedAt": "2026-10-06T16:17:27.304Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/format.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  },
+  {
+    "label": "postgres-both-runtime",
+    "command": [
+      "node",
+      "tools/run-feature-011-postgres-test.mjs",
+      "health"
+    ],
+    "startedAt": "2026-10-06T16:17:27.310Z",
+    "finishedAt": "2026-10-06T16:17:39.782Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/postgres-both-runtime.log",
+      "sha256": "1e76f537fda981c4e0f282d91c4a915d8485769328dded70a023c2d5b0fad545"
+    }
+  },
+  {
+    "label": "concurrency-both-runtime",
+    "command": [
+      "node",
+      "tools/run-feature-011-concurrency-test.mjs",
+      "health"
+    ],
+    "startedAt": "2026-10-06T16:17:39.790Z",
+    "finishedAt": "2026-10-06T16:17:53.464Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/concurrency-both-runtime.log",
+      "sha256": "aac10d067b41d26f9e5a8f28dd33a974a4f183de0070a423a1e4b1f8b3a1f4c4"
+    }
+  },
+  {
+    "label": "contracts-only",
+    "command": [
+      "node",
+      "tools/verify-feature-011-contracts.mjs",
+      "--contracts-only"
+    ],
+    "startedAt": "2026-10-06T16:17:53.473Z",
+    "finishedAt": "2026-10-06T16:17:54.041Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/contracts-only.log",
+      "sha256": "726a7105ae44b29ec810ae47f8cf8073c467e9589dd0a0f4ca89c0f8f2b43c3d"
+    }
+  },
+  {
+    "label": "default-fail-closed",
+    "command": [
+      "node",
+      "tools/verify-feature-011-contracts.mjs"
+    ],
+    "startedAt": "2026-10-06T16:17:54.049Z",
+    "finishedAt": "2026-10-06T16:17:54.750Z",
+    "exitCode": 1,
+    "expectedExitCode": 1,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/default-fail-closed.log",
+      "sha256": "eb0f40cb2b2607d885fdf3288499ccc7ee2544641725bf1e1270c52393bb03e5"
+    }
+  },
+  {
+    "label": "architecture",
+    "command": [
+      "node",
+      "tools/verify-architecture.mjs"
+    ],
+    "startedAt": "2026-10-06T16:17:54.762Z",
+    "finishedAt": "2026-10-06T16:17:54.968Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/architecture.log",
+      "sha256": "a012fe1a8f90af827da9e1b0a2b9617c2ae8926233a09fc8b32db65bcd671ae5"
+    }
+  },
+  {
+    "label": "secrets",
+    "command": [
+      "node",
+      "tools/verify-secrets.mjs"
+    ],
+    "startedAt": "2026-10-06T16:17:54.980Z",
+    "finishedAt": "2026-10-06T16:17:55.425Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/secrets.log",
+      "sha256": "fb385c6898a9f2933966649bff5373b3366eb8dae2ed70435318954656606c53"
+    }
+  },
+  {
+    "label": "diff",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "startedAt": "2026-10-06T16:17:55.433Z",
+    "finishedAt": "2026-10-06T16:17:55.516Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/diff.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+]

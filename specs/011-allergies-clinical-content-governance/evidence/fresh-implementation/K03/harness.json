@@ -1,0 +1,1686 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "K03",
+  "ledgerId": "SHIFAA-F011-FRESH-TASKS@1.0.0",
+  "authorization": "Direct Product Owner K02_ACCEPTED + K03_APPROVED; T008-T011 only",
+  "disposition": "IMPLEMENTED_PENDING_PRODUCT_OWNER_REVIEW_AND_ACCEPTANCE",
+  "capturedAt": "2026-10-06T16:21:02.419Z",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "delegationUsed": false,
+  "planManifest": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json",
+    "sha256": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548"
+  },
+  "normativeInputDigests": {
+    ".specify/memory/constitution.md": "25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a",
+    "docs/design/SHIFAA-UI-Contract.md": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+    "docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md": "9feadc0b489857c66533d20f1829c9826d8ea7ae8ea7bf8e683968276e1cad04",
+    "docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md": "51fdac8ecd2710bc13a53c89f9d09d4d486ad36631056e7171521d5e16b6abd6",
+    "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+    "packages/design-system/src/tokens.ts": "39fb80ef2c702aab3663b46dd98d92cc747c9ff694b4a8161005cc4ca317201d",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json": "b0f8d4ba2ad5f30bbdf6ec963a6dc4e16677236b3ed0fbc6aa263ee81a2ed6ed",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json": "f031aa09edddf8c60ebe4cc8165fa35afee7e3875551ca2f6136e68a31bf7f25",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md": "03dbaeccfc4342136c6f6623f8613157e51806ddf0f07fea85a8ecb3374da257",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md": "b203e00aaf3e2cc689b2ccc60e0b846ca206942de9b660d1d185ba4006d0a57e",
+    "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md": "c053e28f529ecea784917ab38028b599f45f0a4b58e517970a644ed7e2a268b5",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json": "4eff01a61b485f0616b69480a979f3024da21b464cf768771055bb2694e56050",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json": "2bf23cae34648742f995edced1008f7988efdbaf9dd12d9e1c46aa83e10d68ec",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49",
+    "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e",
+    "specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json": "53e46fbbbf79526749e0786c1630a2c2b6ad515ec3ac33d8755d2730df0842ac",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json": "2948f78fd1fb92ee9d411092da30f577b9215c2543182c2e85f56b306da30291",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json": "03945dbb8f323f480f1a93f09340936f5623f7c1feeea6f2fcce98211b4b3a11",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md": "e8f43933311ba5430d758504675162aca86d0537205eda95febbf3d6ab0bc5db",
+    "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json": "9f3be0aa5f5b3aa62b3505ea40d8b142b31f25a228a6b0bb19f221b28748ffa9",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json": "8326cde913c59e4c899b16ba73193d9a48a99191f5eb7dba66883d904b1523b0",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json": "782b32e23764c7ecf9b5114f387be174591c0d0ef6b2eed04749520991eee6cc",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md": "e75f95ea9daef89918083be8ea66b8fce896bf55c8d323a1bdffef07e37bd1eb",
+    "specs/011-allergies-clinical-content-governance/data-model.md": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f",
+    "specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md": "b3dcef629ed2e3b80f1ef07a73369664314c4da4c623f1d80a78141942bba269",
+    "specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md": "a46d7f12480819c7649998729ba9149499cf66e33dcfcef335151d712710d817",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md": "4f8bf26bdfb43cd016b62cd572f21bc9f2a81477dcd2b1a067314cb95887ba3f",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md": "1fc278a00df5b46115374d1f435d1168f5de0977df3e21c9dabdb76b726c2989",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md": "b9632b94dfb136b35d0b3bcef89a2cee47002836ed7db679a56cc4a000c0b48b",
+    "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md": "8d3fe1ae977bb99e3d24d1cf1f5548dafc0ecdb350f7e681b89acb04488e0bab",
+    "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md": "03eaf4a9ace7d26fbbf977309774728531e763f13dc1bf06f726957838092709",
+    "specs/011-allergies-clinical-content-governance/plan.md": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca",
+    "specs/011-allergies-clinical-content-governance/quickstart.md": "71e377027f3aee5385e3c079e288498ea9e5597ae657dd07eecd5bf11e25ec5a",
+    "specs/011-allergies-clinical-content-governance/research.md": "d862cfb3698f7651e0b63c80910107ee4c43e136bb417d079294f5e5451967c5",
+    "specs/011-allergies-clinical-content-governance/spec.md": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0",
+    "specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json": "59ea1788edbae023533a9e08da97bc3884e0e098ec6e80721272822b6439c432"
+  },
+  "ledgerDigests": {
+    "specs/011-allergies-clinical-content-governance/tasks.md": "78ae4467e89df9610f1e7e0ba796d968ba5a697e9f038d3dae7f8fce43b362cf",
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json": "ebbfc1c6bd60ec2083d0da475a052abf465305dc32bd16ec8390a31bf933bdda"
+  },
+  "sourceDigests": {
+    "services/api/src/config.ts": "6e75d8d66bac6e9b49921feb9a65d2055616d028bfe5bce20d84a2dd6ce71a77",
+    "services/api/src/app.ts": "4cfbd5f67ce3ae913977b41d26432506f2870206108cf9d1d664d0665ab3c61b",
+    "services/api/src/feature-011-exposure.ts": "c242b0d39d349ffd74294c5bb36afa0089a2e0a65b58fe154377f1ea055b6bf0",
+    "services/api/src/feature-011-exposure.test.ts": "ad8cf52597e74889e39f8bf6be1cd6efbe3d2255e2bfa0a7cd4fdc3da05ca124",
+    "tools/run-feature-011-postgres-test.mjs": "252d2296e68671deed3499bfc0d8f23551de999081a5ffdf2671ed714b79d922",
+    "tools/run-feature-011-concurrency-test.mjs": "95cc74c03c52c3df91e11928d8ea9ee565b658357e99a33ff08c28e14e49dab0",
+    "tools/feature-011-harness.test.mjs": "edeedcaabeb857a91e46f41a6293c126f94638817f51d3fc9ec58bfad46936ec",
+    "packages/test-kit/src/feature-011/fixtures.ts": "f294c5711fc60fc8247388cd3a089330f62aa60863d383a992336b44d627213e"
+  },
+  "retainedGates": {
+    "OPEN-UX-001": "SATISFIED_FOR_F011_AFFECTED_UI_PLAN_ONLY",
+    "OPEN-UX-002": "OPEN",
+    "OPEN-TECH-002": "OPEN",
+    "OPEN-TECH-003": "OPEN",
+    "OPEN-CLIN-001": "OPEN_SYNTHETIC_ENGINEERING_ONLY",
+    "OPEN-LEGAL-001": "OPEN",
+    "OPEN-LEGAL-002": "OPEN",
+    "OPEN-LEGAL-007": "OPEN"
+  },
+  "scope": {
+    "operations": 7,
+    "nfrs": 19,
+    "boundedFrTargets": 4,
+    "feature010DependencyPreserved": true,
+    "feature012Excluded": true,
+    "frozenProtocolBytesUnchanged": true
+  },
+  "limitations": "Synthetic isolated engineering only; no Feature 011 DDL/routes/domain behavior; no actual AES/KMS or evidence-source acceptance, clinical approval, production readiness, gate closure or later checkpoint execution.",
+  "task": "T010",
+  "result": "PASS",
+  "postgres": {
+    "result": "PASS",
+    "checkpoint": "K03",
+    "mode": "BASELINE_ONLY_HEALTH_AND_INTENTIONAL_MISSING_BEHAVIOR",
+    "inputs": {
+      "cli": {
+        "command": "pnpm exec supabase --version",
+        "version": "2.113.0",
+        "packageVersion": "2.113.0",
+        "packageSha256": "30eaabae63471c5d3fd1b668d77cf97bacd690f6c88a23416b6afb0cfca84af1"
+      },
+      "baselineCount": 27,
+      "inputDigests": {
+        "infra/db/migrations/001_identity_onboarding.sql": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+        "supabase/migrations/20260811000300_facility_onboarding_rbac.sql": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+        "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+        "supabase/migrations/20260811000500_family_care_relationships.sql": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+        "supabase/migrations/20260811000600_family_care_storage.sql": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+        "supabase/migrations/20260813000500_privacy_dsr_notifications.sql": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+        "supabase/migrations/20260813000600_privacy_dsr_storage.sql": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+        "supabase/migrations/20260820000600_discovery_sos_foundation.sql": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+        "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+        "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+        "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+        "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+        "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+        "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+        "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+        "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+        "supabase/migrations/20260929001001_f010_c10_encounter_api.sql": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+        "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+        "supabase/migrations/20260929001003_f010_c12_note_signing.sql": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+        "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+        "supabase/migrations/20260929001005_f010_c17_referrals_api.sql": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+        "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+        "supabase/migrations/20260929001007_f010_c19_referral_projections.sql": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+        "supabase/migrations/20260929001008_f010_c22_context_messages.sql": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+        "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+        "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+        "supabase/migrations/20261001001002_f010_f04_completion_authority.sql": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+        "package.json": "88fb16d2a3313a19b3e25ac1bf68421942de876a7e0ae0c041932c67a2d3ea60",
+        "pnpm-lock.yaml": "a49eea490e48af9a9452841cf88e0373719bfe3afef525a80b8d81a75792fda6",
+        "compose.yml": "bfab38e14aeb8d3fa527637833b131df1b8a65ff627517cf84824cb911afcf5e",
+        "infra/db/Dockerfile.postgis": "99e801a9e225f0b4a32d849c4cd878d94fc472c004404b0de928b97b5fe8d2d8",
+        "supabase/config.toml": "f6dbb7071faa4c94d0d52d11c9b1618daf6895149cd86ae6ad31b213aa2c0417",
+        "infra/db/fixtures/feature-011.sql": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+        "packages/test-kit/src/feature-011/fixtures.ts": "f294c5711fc60fc8247388cd3a089330f62aa60863d383a992336b44d627213e",
+        "tools/run-feature-011-postgres-test.mjs": "252d2296e68671deed3499bfc0d8f23551de999081a5ffdf2671ed714b79d922",
+        "tools/run-feature-011-concurrency-test.mjs": "95cc74c03c52c3df91e11928d8ea9ee565b658357e99a33ff08c28e14e49dab0"
+      },
+      "fixture": {
+        "kind": "SYNTHETIC_ENGINEERING_ONLY",
+        "personId": "f0110000-0000-4000-8000-000000000001",
+        "patientId": "f0110000-0000-4000-8100-000000000001",
+        "facilityId": "f0110000-0000-4000-8200-000000000001",
+        "clinicianId": "f0110000-0000-4000-8000-000000000002",
+        "encounterId": "f0110000-0000-4000-8400-000000000001",
+        "actorCount": 8,
+        "lockNamespace": 11003,
+        "lockKey": 1,
+        "missingBehaviorMessage": "F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)",
+        "rawEvidenceSqlAllowed": false,
+        "realClinicalApproval": false
+      },
+      "feature011MigrationFiles": []
+    },
+    "results": [
+      {
+        "runtime": {
+          "name": "shifaa-local-postgres",
+          "container": "shifaa-local-postgres-postgres-1",
+          "user": "shifaa_owner",
+          "adminDatabase": "shifaa",
+          "running": true,
+          "image": "shifaa/postgis:17-3.5-006-local",
+          "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7"
+        },
+        "database": "f011_k03_eb0c977dcd1e9086",
+        "setup": {
+          "applied": [
+            {
+              "path": "infra/db/migrations/001_identity_onboarding.sql",
+              "sha256": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+              "sha256": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
+              "sha256": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000500_family_care_relationships.sql",
+              "sha256": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000600_family_care_storage.sql",
+              "sha256": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260813000500_privacy_dsr_notifications.sql",
+              "sha256": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260813000600_privacy_dsr_storage.sql",
+              "sha256": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260820000600_discovery_sos_foundation.sql",
+              "sha256": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+              "sha256": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+              "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+              "sha256": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql",
+              "sha256": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+              "sha256": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql",
+              "sha256": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+              "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+              "sha256": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+              "sha256": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql",
+              "sha256": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001003_f010_c12_note_signing.sql",
+              "sha256": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql",
+              "sha256": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001005_f010_c17_referrals_api.sql",
+              "sha256": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql",
+              "sha256": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001007_f010_c19_referral_projections.sql",
+              "sha256": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001008_f010_c22_context_messages.sql",
+              "sha256": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql",
+              "sha256": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+              "sha256": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+              "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+              "exitCode": 0
+            }
+          ],
+          "fixtureSha256": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+          "legacyFeatureHelpersUsed": false
+        },
+        "smoke": {
+          "result": "PASS",
+          "manifest": {
+            "database": "f011_k03_eb0c977dcd1e9086",
+            "owner": "shifaa_owner",
+            "serverVersion": "17.11",
+            "actors": 8,
+            "encounters": 1,
+            "feature010Entrypoint": true,
+            "roles": [
+              {
+                "name": "shifaa_api",
+                "superuser": false,
+                "bypassRls": false,
+                "login": true
+              },
+              {
+                "name": "shifaa_worker",
+                "superuser": false,
+                "bypassRls": false,
+                "login": true
+              }
+            ],
+            "peopleOwner": "shifaa_owner",
+            "peopleForceRls": true
+          },
+          "nonOwner": {
+            "user": "shifaa_api",
+            "visiblePeople": 0,
+            "backendPid": 4267
+          },
+          "setupCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "shifaa_owner",
+            "-d",
+            "f011_k03_eb0c977dcd1e9086"
+          ],
+          "nonOwnerCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "-e",
+            "PGPASSWORD",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "shifaa_api",
+            "-d",
+            "f011_k03_eb0c977dcd1e9086"
+          ]
+        },
+        "missing": {
+          "result": "VALID_RED",
+          "absence": {
+            "allergies": true,
+            "releases": true,
+            "verify": true
+          },
+          "expectedSqlstate": "P0001",
+          "command": [
+            "docker",
+            "exec",
+            "-i",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "shifaa_owner",
+            "-d",
+            "f011_k03_eb0c977dcd1e9086"
+          ],
+          "exitCode": 3,
+          "stdout": "",
+          "stderr": "ERROR:  P0001: F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n",
+          "output": "ERROR:  P0001: F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+        },
+        "cleanup": {
+          "database": "f011_k03_eb0c977dcd1e9086",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        }
+      },
+      {
+        "runtime": {
+          "name": "shifaa-local-supabase",
+          "container": "supabase_db_shifaa-local-supabase",
+          "user": "supabase_admin",
+          "adminDatabase": "postgres",
+          "running": true,
+          "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+          "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+        },
+        "database": "f011_k03_29c87e9a41d86f9a",
+        "setup": {
+          "applied": [
+            {
+              "path": "infra/db/migrations/001_identity_onboarding.sql",
+              "sha256": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+              "sha256": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
+              "sha256": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000500_family_care_relationships.sql",
+              "sha256": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000600_family_care_storage.sql",
+              "sha256": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260813000500_privacy_dsr_notifications.sql",
+              "sha256": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260813000600_privacy_dsr_storage.sql",
+              "sha256": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260820000600_discovery_sos_foundation.sql",
+              "sha256": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+              "sha256": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+              "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+              "sha256": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql",
+              "sha256": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+              "sha256": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql",
+              "sha256": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+              "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+              "sha256": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+              "sha256": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql",
+              "sha256": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001003_f010_c12_note_signing.sql",
+              "sha256": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql",
+              "sha256": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001005_f010_c17_referrals_api.sql",
+              "sha256": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql",
+              "sha256": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001007_f010_c19_referral_projections.sql",
+              "sha256": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001008_f010_c22_context_messages.sql",
+              "sha256": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql",
+              "sha256": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+              "sha256": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+              "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+              "exitCode": 0
+            }
+          ],
+          "fixtureSha256": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+          "legacyFeatureHelpersUsed": false
+        },
+        "smoke": {
+          "result": "PASS",
+          "manifest": {
+            "database": "f011_k03_29c87e9a41d86f9a",
+            "owner": "supabase_admin",
+            "serverVersion": "17.6",
+            "actors": 8,
+            "encounters": 1,
+            "feature010Entrypoint": true,
+            "roles": [
+              {
+                "name": "shifaa_api",
+                "superuser": false,
+                "bypassRls": false,
+                "login": true
+              },
+              {
+                "name": "shifaa_worker",
+                "superuser": false,
+                "bypassRls": false,
+                "login": true
+              }
+            ],
+            "peopleOwner": "supabase_admin",
+            "peopleForceRls": true
+          },
+          "nonOwner": {
+            "user": "shifaa_api",
+            "visiblePeople": 0,
+            "backendPid": 9717
+          },
+          "setupCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "supabase_admin",
+            "-d",
+            "f011_k03_29c87e9a41d86f9a"
+          ],
+          "nonOwnerCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "-e",
+            "PGPASSWORD",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "shifaa_api",
+            "-d",
+            "f011_k03_29c87e9a41d86f9a"
+          ]
+        },
+        "missing": {
+          "result": "VALID_RED",
+          "absence": {
+            "allergies": true,
+            "releases": true,
+            "verify": true
+          },
+          "expectedSqlstate": "P0001",
+          "command": [
+            "docker",
+            "exec",
+            "-i",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "supabase_admin",
+            "-d",
+            "f011_k03_29c87e9a41d86f9a"
+          ],
+          "exitCode": 3,
+          "stdout": "",
+          "stderr": "ERROR:  P0001: F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n",
+          "output": "ERROR:  P0001: F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+        },
+        "cleanup": {
+          "database": "f011_k03_29c87e9a41d86f9a",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        }
+      }
+    ],
+    "realProducerAcceptance": false
+  },
+  "concurrency": {
+    "result": "PASS",
+    "checkpoint": "K03",
+    "mode": "BASELINE_ONLY_CONNECTION_HEALTH",
+    "inputs": {
+      "cli": {
+        "command": "pnpm exec supabase --version",
+        "version": "2.113.0",
+        "packageVersion": "2.113.0",
+        "packageSha256": "30eaabae63471c5d3fd1b668d77cf97bacd690f6c88a23416b6afb0cfca84af1"
+      },
+      "baselineCount": 27,
+      "inputDigests": {
+        "infra/db/migrations/001_identity_onboarding.sql": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+        "supabase/migrations/20260811000300_facility_onboarding_rbac.sql": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+        "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+        "supabase/migrations/20260811000500_family_care_relationships.sql": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+        "supabase/migrations/20260811000600_family_care_storage.sql": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+        "supabase/migrations/20260813000500_privacy_dsr_notifications.sql": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+        "supabase/migrations/20260813000600_privacy_dsr_storage.sql": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+        "supabase/migrations/20260820000600_discovery_sos_foundation.sql": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+        "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+        "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+        "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+        "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+        "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+        "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+        "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+        "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+        "supabase/migrations/20260929001001_f010_c10_encounter_api.sql": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+        "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+        "supabase/migrations/20260929001003_f010_c12_note_signing.sql": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+        "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+        "supabase/migrations/20260929001005_f010_c17_referrals_api.sql": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+        "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+        "supabase/migrations/20260929001007_f010_c19_referral_projections.sql": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+        "supabase/migrations/20260929001008_f010_c22_context_messages.sql": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+        "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+        "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+        "supabase/migrations/20261001001002_f010_f04_completion_authority.sql": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+        "package.json": "88fb16d2a3313a19b3e25ac1bf68421942de876a7e0ae0c041932c67a2d3ea60",
+        "pnpm-lock.yaml": "a49eea490e48af9a9452841cf88e0373719bfe3afef525a80b8d81a75792fda6",
+        "compose.yml": "bfab38e14aeb8d3fa527637833b131df1b8a65ff627517cf84824cb911afcf5e",
+        "infra/db/Dockerfile.postgis": "99e801a9e225f0b4a32d849c4cd878d94fc472c004404b0de928b97b5fe8d2d8",
+        "supabase/config.toml": "f6dbb7071faa4c94d0d52d11c9b1618daf6895149cd86ae6ad31b213aa2c0417",
+        "infra/db/fixtures/feature-011.sql": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+        "packages/test-kit/src/feature-011/fixtures.ts": "f294c5711fc60fc8247388cd3a089330f62aa60863d383a992336b44d627213e",
+        "tools/run-feature-011-postgres-test.mjs": "252d2296e68671deed3499bfc0d8f23551de999081a5ffdf2671ed714b79d922",
+        "tools/run-feature-011-concurrency-test.mjs": "95cc74c03c52c3df91e11928d8ea9ee565b658357e99a33ff08c28e14e49dab0"
+      },
+      "fixture": {
+        "kind": "SYNTHETIC_ENGINEERING_ONLY",
+        "personId": "f0110000-0000-4000-8000-000000000001",
+        "patientId": "f0110000-0000-4000-8100-000000000001",
+        "facilityId": "f0110000-0000-4000-8200-000000000001",
+        "clinicianId": "f0110000-0000-4000-8000-000000000002",
+        "encounterId": "f0110000-0000-4000-8400-000000000001",
+        "actorCount": 8,
+        "lockNamespace": 11003,
+        "lockKey": 1,
+        "missingBehaviorMessage": "F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)",
+        "rawEvidenceSqlAllowed": false,
+        "realClinicalApproval": false
+      },
+      "feature011MigrationFiles": []
+    },
+    "results": [
+      {
+        "runtime": {
+          "name": "shifaa-local-postgres",
+          "container": "shifaa-local-postgres-postgres-1",
+          "user": "shifaa_owner",
+          "adminDatabase": "shifaa",
+          "running": true,
+          "image": "shifaa/postgis:17-3.5-006-local",
+          "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7"
+        },
+        "database": "f011_k03_fd8450008bcff9d0",
+        "setup": {
+          "applied": [
+            {
+              "path": "infra/db/migrations/001_identity_onboarding.sql",
+              "sha256": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+              "sha256": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
+              "sha256": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000500_family_care_relationships.sql",
+              "sha256": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000600_family_care_storage.sql",
+              "sha256": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260813000500_privacy_dsr_notifications.sql",
+              "sha256": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260813000600_privacy_dsr_storage.sql",
+              "sha256": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260820000600_discovery_sos_foundation.sql",
+              "sha256": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+              "sha256": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+              "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+              "sha256": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql",
+              "sha256": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+              "sha256": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql",
+              "sha256": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+              "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+              "sha256": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+              "sha256": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql",
+              "sha256": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001003_f010_c12_note_signing.sql",
+              "sha256": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql",
+              "sha256": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001005_f010_c17_referrals_api.sql",
+              "sha256": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql",
+              "sha256": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001007_f010_c19_referral_projections.sql",
+              "sha256": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001008_f010_c22_context_messages.sql",
+              "sha256": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql",
+              "sha256": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+              "sha256": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+              "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+              "exitCode": 0
+            }
+          ],
+          "fixtureSha256": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+          "legacyFeatureHelpersUsed": false
+        },
+        "smoke": {
+          "result": "PASS",
+          "manifest": {
+            "database": "f011_k03_fd8450008bcff9d0",
+            "owner": "shifaa_owner",
+            "serverVersion": "17.11",
+            "actors": 8,
+            "encounters": 1,
+            "feature010Entrypoint": true,
+            "roles": [
+              {
+                "name": "shifaa_api",
+                "superuser": false,
+                "bypassRls": false,
+                "login": true
+              },
+              {
+                "name": "shifaa_worker",
+                "superuser": false,
+                "bypassRls": false,
+                "login": true
+              }
+            ],
+            "peopleOwner": "shifaa_owner",
+            "peopleForceRls": true
+          },
+          "nonOwner": {
+            "user": "shifaa_api",
+            "visiblePeople": 0,
+            "backendPid": 4571
+          },
+          "setupCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "shifaa_owner",
+            "-d",
+            "f011_k03_fd8450008bcff9d0"
+          ],
+          "nonOwnerCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "-e",
+            "PGPASSWORD",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "shifaa_api",
+            "-d",
+            "f011_k03_fd8450008bcff9d0"
+          ]
+        },
+        "connections": {
+          "result": "PASS",
+          "kind": "BASELINE_ONLY_CONNECTION_AND_BARRIER_HEALTH",
+          "identities": [
+            {
+              "user": "shifaa_api",
+              "pid": 4584,
+              "database": "f011_k03_fd8450008bcff9d0"
+            },
+            {
+              "user": "shifaa_api",
+              "pid": 4585,
+              "database": "f011_k03_fd8450008bcff9d0"
+            }
+          ],
+          "locks": {
+            "holderPid": 4584,
+            "contenderPid": 4585,
+            "holderGranted": true,
+            "contenderWaiting": true,
+            "blockingPids": [
+              4584
+            ],
+            "contenderWaitEvent": "Lock",
+            "observerCommand": [
+              "docker",
+              "exec",
+              "-i",
+              "shifaa-local-postgres-postgres-1",
+              "psql",
+              "-X",
+              "-qAt",
+              "-v",
+              "ON_ERROR_STOP=1",
+              "-v",
+              "VERBOSITY=verbose",
+              "-U",
+              "shifaa_owner",
+              "-d",
+              "f011_k03_fd8450008bcff9d0"
+            ]
+          },
+          "holder": {
+            "code": 0,
+            "output": "{\"user\" : \"shifaa_api\", \"pid\" : 4584, \"database\" : \"f011_k03_fd8450008bcff9d0\"}\nREADY\n\nHELD\nRELEASED\n",
+            "command": [
+              "docker",
+              "exec",
+              "-i",
+              "-e",
+              "PGPASSWORD",
+              "shifaa-local-postgres-postgres-1",
+              "psql",
+              "-X",
+              "-qAt",
+              "-v",
+              "ON_ERROR_STOP=1",
+              "-v",
+              "VERBOSITY=verbose",
+              "-h",
+              "127.0.0.1",
+              "-U",
+              "shifaa_api",
+              "-d",
+              "f011_k03_fd8450008bcff9d0"
+            ]
+          },
+          "contender": {
+            "code": 0,
+            "output": "{\"user\" : \"shifaa_api\", \"pid\" : 4585, \"database\" : \"f011_k03_fd8450008bcff9d0\"}\nREADY\n\nACQUIRED\nFINISHED\n",
+            "command": [
+              "docker",
+              "exec",
+              "-i",
+              "-e",
+              "PGPASSWORD",
+              "shifaa-local-postgres-postgres-1",
+              "psql",
+              "-X",
+              "-qAt",
+              "-v",
+              "ON_ERROR_STOP=1",
+              "-v",
+              "VERBOSITY=verbose",
+              "-h",
+              "127.0.0.1",
+              "-U",
+              "shifaa_api",
+              "-d",
+              "f011_k03_fd8450008bcff9d0"
+            ]
+          },
+          "domainMutationExecuted": false
+        },
+        "missing": {
+          "result": "VALID_RED",
+          "absence": {
+            "allergies": true,
+            "releases": true,
+            "verify": true
+          },
+          "expectedSqlstate": "P0001",
+          "command": [
+            "docker",
+            "exec",
+            "-i",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "shifaa_owner",
+            "-d",
+            "f011_k03_fd8450008bcff9d0"
+          ],
+          "exitCode": 3,
+          "stdout": "",
+          "stderr": "ERROR:  P0001: F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n",
+          "output": "ERROR:  P0001: F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+        },
+        "cleanup": {
+          "database": "f011_k03_fd8450008bcff9d0",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        }
+      },
+      {
+        "runtime": {
+          "name": "shifaa-local-supabase",
+          "container": "supabase_db_shifaa-local-supabase",
+          "user": "supabase_admin",
+          "adminDatabase": "postgres",
+          "running": true,
+          "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+          "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+        },
+        "database": "f011_k03_26102d1a2c9a58ae",
+        "setup": {
+          "applied": [
+            {
+              "path": "infra/db/migrations/001_identity_onboarding.sql",
+              "sha256": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+              "sha256": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
+              "sha256": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000500_family_care_relationships.sql",
+              "sha256": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260811000600_family_care_storage.sql",
+              "sha256": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260813000500_privacy_dsr_notifications.sql",
+              "sha256": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260813000600_privacy_dsr_storage.sql",
+              "sha256": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260820000600_discovery_sos_foundation.sql",
+              "sha256": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+              "sha256": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+              "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+              "sha256": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql",
+              "sha256": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+              "sha256": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql",
+              "sha256": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+              "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+              "sha256": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+              "sha256": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql",
+              "sha256": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001003_f010_c12_note_signing.sql",
+              "sha256": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql",
+              "sha256": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001005_f010_c17_referrals_api.sql",
+              "sha256": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql",
+              "sha256": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001007_f010_c19_referral_projections.sql",
+              "sha256": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260929001008_f010_c22_context_messages.sql",
+              "sha256": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql",
+              "sha256": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+              "sha256": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+              "exitCode": 0
+            },
+            {
+              "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+              "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+              "exitCode": 0
+            }
+          ],
+          "fixtureSha256": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+          "legacyFeatureHelpersUsed": false
+        },
+        "smoke": {
+          "result": "PASS",
+          "manifest": {
+            "database": "f011_k03_26102d1a2c9a58ae",
+            "owner": "supabase_admin",
+            "serverVersion": "17.6",
+            "actors": 8,
+            "encounters": 1,
+            "feature010Entrypoint": true,
+            "roles": [
+              {
+                "name": "shifaa_api",
+                "superuser": false,
+                "bypassRls": false,
+                "login": true
+              },
+              {
+                "name": "shifaa_worker",
+                "superuser": false,
+                "bypassRls": false,
+                "login": true
+              }
+            ],
+            "peopleOwner": "supabase_admin",
+            "peopleForceRls": true
+          },
+          "nonOwner": {
+            "user": "shifaa_api",
+            "visiblePeople": 0,
+            "backendPid": 9969
+          },
+          "setupCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "supabase_admin",
+            "-d",
+            "f011_k03_26102d1a2c9a58ae"
+          ],
+          "nonOwnerCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "-e",
+            "PGPASSWORD",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "shifaa_api",
+            "-d",
+            "f011_k03_26102d1a2c9a58ae"
+          ]
+        },
+        "connections": {
+          "result": "PASS",
+          "kind": "BASELINE_ONLY_CONNECTION_AND_BARRIER_HEALTH",
+          "identities": [
+            {
+              "user": "shifaa_api",
+              "pid": 9982,
+              "database": "f011_k03_26102d1a2c9a58ae"
+            },
+            {
+              "user": "shifaa_api",
+              "pid": 9983,
+              "database": "f011_k03_26102d1a2c9a58ae"
+            }
+          ],
+          "locks": {
+            "holderPid": 9982,
+            "contenderPid": 9983,
+            "holderGranted": true,
+            "contenderWaiting": true,
+            "blockingPids": [
+              9982
+            ],
+            "contenderWaitEvent": "Lock",
+            "observerCommand": [
+              "docker",
+              "exec",
+              "-i",
+              "supabase_db_shifaa-local-supabase",
+              "psql",
+              "-X",
+              "-qAt",
+              "-v",
+              "ON_ERROR_STOP=1",
+              "-v",
+              "VERBOSITY=verbose",
+              "-U",
+              "supabase_admin",
+              "-d",
+              "f011_k03_26102d1a2c9a58ae"
+            ]
+          },
+          "holder": {
+            "code": 0,
+            "output": "{\"user\" : \"shifaa_api\", \"pid\" : 9982, \"database\" : \"f011_k03_26102d1a2c9a58ae\"}\nREADY\n\nHELD\nRELEASED\n",
+            "command": [
+              "docker",
+              "exec",
+              "-i",
+              "-e",
+              "PGPASSWORD",
+              "supabase_db_shifaa-local-supabase",
+              "psql",
+              "-X",
+              "-qAt",
+              "-v",
+              "ON_ERROR_STOP=1",
+              "-v",
+              "VERBOSITY=verbose",
+              "-h",
+              "127.0.0.1",
+              "-U",
+              "shifaa_api",
+              "-d",
+              "f011_k03_26102d1a2c9a58ae"
+            ]
+          },
+          "contender": {
+            "code": 0,
+            "output": "{\"user\" : \"shifaa_api\", \"pid\" : 9983, \"database\" : \"f011_k03_26102d1a2c9a58ae\"}\nREADY\n\nACQUIRED\nFINISHED\n",
+            "command": [
+              "docker",
+              "exec",
+              "-i",
+              "-e",
+              "PGPASSWORD",
+              "supabase_db_shifaa-local-supabase",
+              "psql",
+              "-X",
+              "-qAt",
+              "-v",
+              "ON_ERROR_STOP=1",
+              "-v",
+              "VERBOSITY=verbose",
+              "-h",
+              "127.0.0.1",
+              "-U",
+              "shifaa_api",
+              "-d",
+              "f011_k03_26102d1a2c9a58ae"
+            ]
+          },
+          "domainMutationExecuted": false
+        },
+        "missing": {
+          "result": "VALID_RED",
+          "absence": {
+            "allergies": true,
+            "releases": true,
+            "verify": true
+          },
+          "expectedSqlstate": "P0001",
+          "command": [
+            "docker",
+            "exec",
+            "-i",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "supabase_admin",
+            "-d",
+            "f011_k03_26102d1a2c9a58ae"
+          ],
+          "exitCode": 3,
+          "stdout": "",
+          "stderr": "ERROR:  P0001: F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n",
+          "output": "ERROR:  P0001: F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+        },
+        "cleanup": {
+          "database": "f011_k03_26102d1a2c9a58ae",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        }
+      }
+    ],
+    "realProducerAcceptance": false
+  },
+  "commands": [
+    {
+      "label": "harness-negative-unit",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tools/feature-011-harness.test.mjs"
+      ],
+      "startedAt": "2026-10-06T16:17:23.461Z",
+      "finishedAt": "2026-10-06T16:17:24.019Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/harness-negative-unit.log",
+        "sha256": "05f507c9bf74df4b8c9ac7a0b7039e66392665daa38556bd063bf458b4703692"
+      }
+    },
+    {
+      "label": "api-typecheck",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@shifaa/api",
+        "typecheck"
+      ],
+      "startedAt": "2026-10-06T16:17:24.027Z",
+      "finishedAt": "2026-10-06T16:17:25.608Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/api-typecheck.log",
+        "sha256": "38ac890c60e7f38d59ddfb410325cdfb5fca83c9411765c5481754e01c021630"
+      }
+    },
+    {
+      "label": "test-kit-typecheck",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@shifaa/test-kit",
+        "typecheck"
+      ],
+      "startedAt": "2026-10-06T16:17:25.614Z",
+      "finishedAt": "2026-10-06T16:17:26.351Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/test-kit-typecheck.log",
+        "sha256": "38ac890c60e7f38d59ddfb410325cdfb5fca83c9411765c5481754e01c021630"
+      }
+    },
+    {
+      "label": "format",
+      "command": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "services/api/src/config.ts",
+        "services/api/src/app.ts",
+        "services/api/src/feature-011-exposure.ts",
+        "services/api/src/feature-011-exposure.test.ts",
+        "tools/run-feature-011-postgres-test.mjs",
+        "tools/run-feature-011-concurrency-test.mjs",
+        "tools/feature-011-harness.test.mjs",
+        "packages/test-kit/src/feature-011/fixtures.ts"
+      ],
+      "startedAt": "2026-10-06T16:17:26.352Z",
+      "finishedAt": "2026-10-06T16:17:27.304Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/format.log",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    },
+    {
+      "label": "postgres-both-runtime",
+      "command": [
+        "node",
+        "tools/run-feature-011-postgres-test.mjs",
+        "health"
+      ],
+      "startedAt": "2026-10-06T16:17:27.310Z",
+      "finishedAt": "2026-10-06T16:17:39.782Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/postgres-both-runtime.log",
+        "sha256": "1e76f537fda981c4e0f282d91c4a915d8485769328dded70a023c2d5b0fad545"
+      }
+    },
+    {
+      "label": "concurrency-both-runtime",
+      "command": [
+        "node",
+        "tools/run-feature-011-concurrency-test.mjs",
+        "health"
+      ],
+      "startedAt": "2026-10-06T16:17:39.790Z",
+      "finishedAt": "2026-10-06T16:17:53.464Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/concurrency-both-runtime.log",
+        "sha256": "aac10d067b41d26f9e5a8f28dd33a974a4f183de0070a423a1e4b1f8b3a1f4c4"
+      }
+    },
+    {
+      "label": "contracts-only",
+      "command": [
+        "node",
+        "tools/verify-feature-011-contracts.mjs",
+        "--contracts-only"
+      ],
+      "startedAt": "2026-10-06T16:17:53.473Z",
+      "finishedAt": "2026-10-06T16:17:54.041Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/contracts-only.log",
+        "sha256": "726a7105ae44b29ec810ae47f8cf8073c467e9589dd0a0f4ca89c0f8f2b43c3d"
+      }
+    },
+    {
+      "label": "default-fail-closed",
+      "command": [
+        "node",
+        "tools/verify-feature-011-contracts.mjs"
+      ],
+      "startedAt": "2026-10-06T16:17:54.049Z",
+      "finishedAt": "2026-10-06T16:17:54.750Z",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/default-fail-closed.log",
+        "sha256": "eb0f40cb2b2607d885fdf3288499ccc7ee2544641725bf1e1270c52393bb03e5"
+      }
+    },
+    {
+      "label": "architecture",
+      "command": [
+        "node",
+        "tools/verify-architecture.mjs"
+      ],
+      "startedAt": "2026-10-06T16:17:54.762Z",
+      "finishedAt": "2026-10-06T16:17:54.968Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/architecture.log",
+        "sha256": "a012fe1a8f90af827da9e1b0a2b9617c2ae8926233a09fc8b32db65bcd671ae5"
+      }
+    },
+    {
+      "label": "secrets",
+      "command": [
+        "node",
+        "tools/verify-secrets.mjs"
+      ],
+      "startedAt": "2026-10-06T16:17:54.980Z",
+      "finishedAt": "2026-10-06T16:17:55.425Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/secrets.log",
+        "sha256": "fb385c6898a9f2933966649bff5373b3366eb8dae2ed70435318954656606c53"
+      }
+    },
+    {
+      "label": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "startedAt": "2026-10-06T16:17:55.433Z",
+      "finishedAt": "2026-10-06T16:17:55.516Z",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/diff.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "unitNegatives": {
+    "passed": 5,
+    "failed": 0,
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/harness-negative-unit.log",
+      "sha256": "05f507c9bf74df4b8c9ac7a0b7039e66392665daa38556bd063bf458b4703692"
+    }
+  },
+  "historicalReuse": {
+    "completionTransferred": false,
+    "material": "C03 runtime identifiers/readMigration structure and unchanged neutral predecessor SQL fixture section only",
+    "oldSourceDigests": {
+      "postgres": "5a3f120d204d853d21e11c96adae1d43c3813e4a939a494fd6adaeec9df1f238",
+      "concurrency": "19e7f1dd207c1a383adc9a42d52ffc9798b3f5f47b12a9486d894d6f04fc3b9d",
+      "fixture": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc"
+    },
+    "revalidation": "Applied all 27 current predecessor sources in fresh template0 scratch DBs on both runtimes; owner/non-owner/forced-RLS/Feature 010 smoke and actual independent backend locks observed. No legacy Feature 011 helpers, physical suites, old PASS or completion reused."
+  },
+  "excludedSetupFailure": {
+    "kind": "SUPABASE_SOCKET_PEER_AUTHENTICATION",
+    "countedAsRed": false,
+    "resolution": "Existing seeded-synthetic loopback executor login used; no shared role/password change",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/excluded-peer-auth-setup.log",
+      "sha256": "928956ca9fe9e15a3277616b28c3b8c8802ee8da7bfc0200a62473596d65a763"
+    }
+  },
+  "cleanup": "Exact process-owned f011_k03_<16 lowercase hex> names only; awaited callbacks, drained connections, DROP without FORCE, absence verified; no shared destructive reset.",
+  "noRawEvidenceMaterialInSql": true
+}

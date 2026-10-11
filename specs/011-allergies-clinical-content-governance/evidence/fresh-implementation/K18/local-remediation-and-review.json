@@ -1,0 +1,50 @@
+{
+  "checkpoint": "K18",
+  "result": "PASS_FOCUSED_APPLICATION_VERIFICATION",
+  "cacheHeader": {
+    "contract": "private, no-store",
+    "red": {
+      "failed": 1,
+      "passed": 42,
+      "setupFailure": false,
+      "report": {
+        "path": "artifacts/feature-011/k18/cache-header-red.json",
+        "sha256": "633261ff0ef44423c8ce9d0baa9503cbaeb333e3fea1fc50f87857f9dc7c0d14"
+      }
+    },
+    "correction": "New governance GET now emits exact unchanged OpenAPI response header"
+  },
+  "emptyText": {
+    "contract": "Empty code/testVectors are valid lossless strings; content BODY remains nonempty",
+    "correction": "Remove only generic empty material rejection; preserve Buffer, exact ref/source/correlation, SHA, fatal UTF-8 and content protection checks",
+    "redReport": {
+      "path": "artifacts/feature-011/k18/empty-material-red-vitest.json",
+      "sha256": "4cfcfbd81232be6fb47c4735ab6d20b37a45ee80bcfe1bbb6d5ee7da49a93aac"
+    }
+  },
+  "focusedApi": {
+    "passed": 295,
+    "failed": 0,
+    "report": {
+      "path": "artifacts/feature-011/k18/api-final-vitest.json",
+      "sha256": "2327e41f4a2296d2a037f7403aa78aac56bca5652ef305e95f14c049201b8e27"
+    }
+  },
+  "guardReview": {
+    "skills": [
+      "clean-code-guard",
+      "test-guard",
+      "docs-guard"
+    ],
+    "production": "Generated DTO allowlist and strict schema checks; exact immutable source/hash binding; final current native SQL authorization; no SQL raw material/direct table access/new grants; protected original response uses existing all-five receipt machinery.",
+    "tests": "Real native/non-owner runtime probes own mutable authorization and race semantics; mocks only assert composition and HTTP boundaries. Independent SQL sessions and pg_locks own contention. No setup failure is accepted as GREEN or valid RED.",
+    "docs": "Every path, function, runtime and test count is bound to current source or captured evidence; historical acceptance and synthetic boundaries are explicit."
+  },
+  "historicalK01Diagnostic": {
+    "result": "KNOWN_PREEXISTING_COMPATIBILITY_LIMITATION",
+    "failedTests": 27,
+    "passedTests": 2,
+    "reason": "Old scope tooling expects initial all-unchecked/raw ledger; current accepted completion bookkeeping predates this turn. Semantic normalized fresh ledger and current contracts are separately verified. No K01 tool changed."
+  },
+  "acceptance": "PENDING_PRODUCT_OWNER"
+}

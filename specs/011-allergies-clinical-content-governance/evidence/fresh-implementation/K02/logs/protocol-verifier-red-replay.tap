@@ -1,0 +1,1077 @@
+TAP version 13
+# Subtest: fixture health: all recovered approval inputs are intact and legacy public preparation runs
+ok 1 - fixture health: all recovered approval inputs are intact and legacy public preparation runs
+  ---
+  duration_ms: 701.8159
+  type: 'test'
+  ...
+# Subtest: frozen V01–V07 keep independent bytes, digests and the sole field-8 lineage exception
+ok 2 - frozen V01–V07 keep independent bytes, digests and the sole field-8 lineage exception
+  ---
+  duration_ms: 1.1603
+  type: 'test'
+  ...
+# Subtest: recovered metadata is data only and binds all current approved profiles in both outputs
+ok 3 - recovered metadata is data only and binds all current approved profiles in both outputs
+  ---
+  duration_ms: 113.4983
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: .specify/memory/constitution.md
+ok 4 - both generators and contracts-only reject missing approved input: .specify/memory/constitution.md
+  ---
+  duration_ms: 137.5641
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: docs/design/SHIFAA-UI-Contract.md
+ok 5 - both generators and contracts-only reject missing approved input: docs/design/SHIFAA-UI-Contract.md
+  ---
+  duration_ms: 125.1716
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md
+ok 6 - both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md
+  ---
+  duration_ms: 129.1938
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md
+ok 7 - both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md
+  ---
+  duration_ms: 108.386
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Remaining-Specs-Roadmap.md
+ok 8 - both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Remaining-Specs-Roadmap.md
+  ---
+  duration_ms: 131.6284
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: packages/design-system/src/tokens.ts
+ok 9 - both generators and contracts-only reject missing approved input: packages/design-system/src/tokens.ts
+  ---
+  duration_ms: 134.3315
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json
+ok 10 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json
+  ---
+  duration_ms: 135.3952
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json
+ok 11 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json
+  ---
+  duration_ms: 145.3172
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md
+ok 12 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md
+  ---
+  duration_ms: 150.0213
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json
+ok 13 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json
+  ---
+  duration_ms: 113.0826
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json
+ok 14 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json
+  ---
+  duration_ms: 99.7045
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json
+ok 15 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json
+  ---
+  duration_ms: 99.7092
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md
+ok 16 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md
+  ---
+  duration_ms: 91.7046
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md
+ok 17 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md
+  ---
+  duration_ms: 156.082
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md
+ok 18 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md
+  ---
+  duration_ms: 144.1582
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json
+ok 19 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json
+  ---
+  duration_ms: 158.8248
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json
+ok 20 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json
+  ---
+  duration_ms: 174.5242
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md
+ok 21 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md
+  ---
+  duration_ms: 174.9015
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml
+ok 22 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml
+  ---
+  duration_ms: 118.0885
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json
+ok 23 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json
+  ---
+  duration_ms: 144.6116
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json
+ok 24 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json
+  ---
+  duration_ms: 174.9698
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json
+ok 25 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json
+  ---
+  duration_ms: 175.0397
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json
+ok 26 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json
+  ---
+  duration_ms: 188.3795
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md
+ok 27 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md
+  ---
+  duration_ms: 195.8289
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md
+ok 28 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md
+  ---
+  duration_ms: 208.5082
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json
+ok 29 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json
+  ---
+  duration_ms: 195.832
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json
+ok 30 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json
+  ---
+  duration_ms: 183.8995
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json
+ok 31 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json
+  ---
+  duration_ms: 188.9066
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md
+ok 32 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md
+  ---
+  duration_ms: 220.1762
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/data-model.md
+ok 33 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/data-model.md
+  ---
+  duration_ms: 220.7587
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md
+ok 34 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md
+  ---
+  duration_ms: 233.6501
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md
+ok 35 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md
+  ---
+  duration_ms: 212.4041
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md
+ok 36 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md
+  ---
+  duration_ms: 235.2779
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md
+ok 37 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md
+  ---
+  duration_ms: 241.0456
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md
+ok 38 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md
+  ---
+  duration_ms: 237.2597
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md
+ok 39 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md
+  ---
+  duration_ms: 227.5356
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md
+ok 40 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md
+  ---
+  duration_ms: 214.6277
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/plan.md
+ok 41 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/plan.md
+  ---
+  duration_ms: 250.0839
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/quickstart.md
+ok 42 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/quickstart.md
+  ---
+  duration_ms: 253.6543
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/research.md
+ok 43 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/research.md
+  ---
+  duration_ms: 255.8723
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/spec.md
+ok 44 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/spec.md
+  ---
+  duration_ms: 247.2639
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json
+ok 45 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json
+  ---
+  duration_ms: 263.5919
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json
+ok 46 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json
+  ---
+  duration_ms: 117.3309
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md
+ok 47 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md
+  ---
+  duration_ms: 126.0829
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json
+ok 48 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json
+  ---
+  duration_ms: 158.4911
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json
+ok 49 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json
+  ---
+  duration_ms: 161.3974
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md
+ok 50 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md
+  ---
+  duration_ms: 146.3231
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json
+ok 51 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json
+  ---
+  duration_ms: 109.5518
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json
+ok 52 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json
+  ---
+  duration_ms: 99.4706
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json
+ok 53 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json
+  ---
+  duration_ms: 99.1771
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md
+ok 54 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md
+  ---
+  duration_ms: 100.8826
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md
+ok 55 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md
+  ---
+  duration_ms: 162.9863
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md
+ok 56 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md
+  ---
+  duration_ms: 170.6694
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json
+ok 57 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json
+  ---
+  duration_ms: 170.6272
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json
+ok 58 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json
+  ---
+  duration_ms: 168.3038
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md
+ok 59 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md
+  ---
+  duration_ms: 169.0413
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml
+ok 60 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml
+  ---
+  duration_ms: 137.9988
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json
+ok 61 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json
+  ---
+  duration_ms: 157.0543
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json
+ok 62 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json
+  ---
+  duration_ms: 414.2036
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json
+ok 63 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json
+  ---
+  duration_ms: 171.7061
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json
+ok 64 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json
+  ---
+  duration_ms: 184.9088
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md
+ok 65 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md
+  ---
+  duration_ms: 195.0413
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md
+ok 66 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md
+  ---
+  duration_ms: 212.1944
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json
+ok 67 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json
+  ---
+  duration_ms: 204.2122
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json
+ok 68 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json
+  ---
+  duration_ms: 189.2231
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json
+ok 69 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json
+  ---
+  duration_ms: 206.4189
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md
+ok 70 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md
+  ---
+  duration_ms: 217.4221
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1.json
+ok 71 - both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1.json
+  ---
+  duration_ms: 151.4634
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1-vectors.json
+ok 72 - both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1-vectors.json
+  ---
+  duration_ms: 142.7378
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1.json
+ok 73 - both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1.json
+  ---
+  duration_ms: 128.2728
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1-vectors.json
+ok 74 - both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1-vectors.json
+  ---
+  duration_ms: 91.1728
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1.json
+ok 75 - both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1.json
+  ---
+  duration_ms: 105.2575
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1-vectors.json
+ok 76 - both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1-vectors.json
+  ---
+  duration_ms: 111.1575
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1.json
+ok 77 - both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1.json
+  ---
+  duration_ms: 170.2907
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1-vectors.json
+ok 78 - both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1-vectors.json
+  ---
+  duration_ms: 173.2769
+  type: 'test'
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-parity-v1.json
+ok 79 - both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-parity-v1.json
+  ---
+  duration_ms: 159.2128
+  type: 'test'
+  ...
+# Subtest: contracts-only binds P1–P3, including current vector/profile registries
+not ok 80 - contracts-only binds P1–P3, including current vector/profile registries
+  ---
+  duration_ms: 412.4098
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:230:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + undefined
+    - [
+    -   'P1',
+    -   'P2',
+    -   'P3'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'P1'
+    1: 'P2'
+    2: 'P3'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:234:12
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default requires current P4 and separately owned P5, with no P6 backward prerequisite
+not ok 81 - default requires current P4 and separately owned P5, with no P6 backward prerequisite
+  ---
+  duration_ms: 409.5987
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:240:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + undefined
+    - [
+    -   'P1',
+    -   'P2',
+    -   'P3',
+    -   'P4',
+    -   'P5'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'P1'
+    1: 'P2'
+    2: 'P3'
+    3: 'P4'
+    4: 'P5'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:244:12
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: historical R2 registry is bound as history without accepting its superseded current hashes
+not ok 82 - historical R2 registry is bound as history without accepting its superseded current hashes
+  ---
+  duration_ms: 388.4692
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:251:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + undefined
+    - [
+    -   'specs/011-allergies-clinical-content-governance/contracts/plan-protection-parity-r2.json'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'specs/011-allergies-clinical-content-governance/contracts/plan-protection-parity-r2.json'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:255:12
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 failed independently of missing physical behavior
+not ok 83 - default rejects P5 failed independently of missing physical behavior
+  ---
+  duration_ms: 408.5661
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-aVUQPO\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 unaccepted independently of missing physical behavior
+not ok 84 - default rejects P5 unaccepted independently of missing physical behavior
+  ---
+  duration_ms: 440.5994
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-yrTbAy\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 stale source independently of missing physical behavior
+not ok 85 - default rejects P5 stale source independently of missing physical behavior
+  ---
+  duration_ms: 406.5399
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-3uVsSG\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 missing source independently of missing physical behavior
+not ok 86 - default rejects P5 missing source independently of missing physical behavior
+  ---
+  duration_ms: 412.7248
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-I1Pk74\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 stale physical binding independently of missing physical behavior
+not ok 87 - default rejects P5 stale physical binding independently of missing physical behavior
+  ---
+  duration_ms: 418.1356
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-00IsGk\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 missing race binding independently of missing physical behavior
+not ok 88 - default rejects P5 missing race binding independently of missing physical behavior
+  ---
+  duration_ms: 396.6178
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-5fQWl5\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 stale public proof independently of missing physical behavior
+not ok 89 - default rejects P5 stale public proof independently of missing physical behavior
+  ---
+  duration_ms: 424.2581
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-lP49KF\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 stale HEAD independently of missing physical behavior
+not ok 90 - default rejects P5 stale HEAD independently of missing physical behavior
+  ---
+  duration_ms: 403.684
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-IaFG3f\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 wrong ledger independently of missing physical behavior
+not ok 91 - default rejects P5 wrong ledger independently of missing physical behavior
+  ---
+  duration_ms: 401.1188
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-lmKqrF\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 missing owner independently of missing physical behavior
+not ok 92 - default rejects P5 missing owner independently of missing physical behavior
+  ---
+  duration_ms: 424.5227
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-JnexOR\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 unaccepted owner independently of missing physical behavior
+not ok 93 - default rejects P5 unaccepted owner independently of missing physical behavior
+  ---
+  duration_ms: 393.9854
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-tgFoaN\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 stale owner record independently of missing physical behavior
+not ok 94 - default rejects P5 stale owner record independently of missing physical behavior
+  ---
+  duration_ms: 383.7763
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-rxc2YT\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 missing owner record independently of missing physical behavior
+not ok 95 - default rejects P5 missing owner record independently of missing physical behavior
+  ---
+  duration_ms: 406.0715
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-bGQdZ2\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 wrong owner role independently of missing physical behavior
+not ok 96 - default rejects P5 wrong owner role independently of missing physical behavior
+  ---
+  duration_ms: 384.6784
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-mEZ5WD\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 gate closure independently of missing physical behavior
+not ok 97 - default rejects P5 gate closure independently of missing physical behavior
+  ---
+  duration_ms: 379.7186
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-sA2cGZ\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 global waiver independently of missing physical behavior
+not ok 98 - default rejects P5 global waiver independently of missing physical behavior
+  ---
+  duration_ms: 409.5598
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-DgY5B2\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 P6 backward dependency independently of missing physical behavior
+not ok 99 - default rejects P5 P6 backward dependency independently of missing physical behavior
+  ---
+  duration_ms: 417.7387
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-YzZam1\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 unaccepted record despite accepted flag independently of missing physical behavior
+not ok 100 - default rejects P5 unaccepted record despite accepted flag independently of missing physical behavior
+  ---
+  duration_ms: 438.1848
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-L80Boq\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects P5 record outside decisions independently of missing physical behavior
+not ok 101 - default rejects P5 record outside decisions independently of missing physical behavior
+  ---
+  duration_ms: 417.0598
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:461:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-GcjcaY\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:468:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: P5 input set has no circular P6 prerequisite; an incomplete P4 still prevents full PASS
+ok 102 - P5 input set has no circular P6 prerequisite; an incomplete P4 still prevents full PASS
+  ---
+  duration_ms: 399.1198
+  type: 'test'
+  ...
+# Subtest: default rejects current P4 failed result before physical consumer preparation
+not ok 103 - default rejects current P4 failed result before physical consumer preparation
+  ---
+  duration_ms: 415.4232
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:542:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-9f79WT\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:561:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects current P4 wrong ledger before physical consumer preparation
+not ok 104 - default rejects current P4 wrong ledger before physical consumer preparation
+  ---
+  duration_ms: 440.5138
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:542:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-v7Ui47\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:561:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects current P4 stale HEAD before physical consumer preparation
+not ok 105 - default rejects current P4 stale HEAD before physical consumer preparation
+  ---
+  duration_ms: 403.7898
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:542:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-cMcPvO\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:561:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects current P4 stale Plan before physical consumer preparation
+not ok 106 - default rejects current P4 stale Plan before physical consumer preparation
+  ---
+  duration_ms: 403.1766
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:542:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-nyGgmA\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:561:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects current P4 stale generated hash before physical consumer preparation
+not ok 107 - default rejects current P4 stale generated hash before physical consumer preparation
+  ---
+  duration_ms: 420.1464
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:542:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-8t6Lb5\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:561:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects current P4 missing input hash before physical consumer preparation
+not ok 108 - default rejects current P4 missing input hash before physical consumer preparation
+  ---
+  duration_ms: 411.9355
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:542:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-U3PjfY\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:561:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default rejects current P4 non-synthetic claim before physical consumer preparation
+not ok 109 - default rejects current P4 non-synthetic claim before physical consumer preparation
+  ---
+  duration_ms: 423.2074
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:542:3'
+  failureType: 'testCodeFailure'
+  error: "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k02\\fixtures\\protocol-aMuSxC\\specs\\011-allergies-clinical-content-governance\\evidence\\implementation\\physical-parity.json'"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:561:14
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:66:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+1..109
+# tests 109
+# suites 0
+# pass 80
+# fail 29
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26293.2061

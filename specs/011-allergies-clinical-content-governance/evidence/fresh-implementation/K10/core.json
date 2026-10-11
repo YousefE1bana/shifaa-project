@@ -1,0 +1,17 @@
+{
+  "checkpoint": "K10",
+  "task": "T042",
+  "result": "PASS",
+  "unitTests": 109,
+  "sourceDigests": {
+    "packages/core/src/feature-011/artifact.ts": "e22dca51e271fe33ac3e344583297e997f1466ece31603172756d86ec7f7165f",
+    "packages/core/src/feature-011/allergy-policy.ts": "5026188fbdf4a75bef2ce10bb3930c2bad8a3df2f8edeb870500afc19dcd6d4d",
+    "packages/core/src/feature-011/content-policy.ts": "19a5451e52d05f169caf073df0cb59c06bc0c185a921aa98f69ee535f2d1d98d"
+  },
+  "vectorsSha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133",
+  "pureBoundary": "Only deterministic ECMAScript primitives and local pure artifact import; no DB/network/framework/vendor/Feature012 evaluation",
+  "preserved": "UTF8 octet framing, exact scalar Unicode, six UTC microseconds, sole predecessor release identity at field8, closed facts, declared digest equality, strict decoder; approved allergy/lineage/independence/current eligibility policies",
+  "expectedValuesRegenerated": false,
+  "openGatesRetained": true,
+  "productionClinicalApproval": false
+}

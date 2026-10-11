@@ -190,3 +190,20 @@ if ($confirmation -ne 'RESET-SHIFAA-LOCAL-SUPABASE') { throw 'Reset cancelled' }
 pnpm supabase:reset
 pnpm supabase:test
 ```
+
+## Feature 011 engineering verification maintenance — 2026-10-09
+
+Feature 011 uses Node 24.18.0, pnpm 11.13.0 and the pinned project-local Supabase CLI 2.113.0. Its isolated SQL proofs require PostgreSQL 17.11 and Supabase PostgreSQL 17.6. Use the approved harness-owned temporary databases; do not reset shared databases or remove unrelated volumes.
+
+The following commands produce synthetic local engineering evidence from this Feature 011 worktree:
+
+```powershell
+node --import tsx tools/run-feature-011-performance.mjs
+node --import tsx tools/run-feature-011-restore.mjs
+node --import tsx tools/run-feature-011-observability.mjs
+node --import tsx tools/run-feature-011-final-ui-test.mjs
+```
+
+K23 records workload, topology, raw measurements, protected-history restore and operational negatives. Test keys and neutral sources do not establish production KMS, clinical, backup/WORM or SLO/DR acceptance. OPEN-TECH-003 remains open: a documented reference device/network/dataset/load profile and explicit owner disposition are still required. Browser engineering checks do not substitute for native assistive-technology/reference-device acceptance under OPEN-UX-002.
+
+K24 final engineering verification and PR-based integration remain pending. These commands do not authorize commit, push, PR, production enablement or main changes. Preserve historical predecessor acceptance evidence and the dated identifier-handoff amendment.

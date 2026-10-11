@@ -1,0 +1,1979 @@
+{
+  "formatVersion": 1,
+  "contractId": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1",
+  "status": "DRAFT_REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+  "consumptionAllowed": false,
+  "profiles": {
+    "content_material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "releaseId",
+        "artifactVersion",
+        "evidenceRef",
+        "verifiedSha256"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "content_material"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "f011.evidence_port"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "releaseId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "artifactVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidenceRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "verifiedSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "code_material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "releaseId",
+        "artifactVersion",
+        "evidenceRef",
+        "verifiedSha256"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "code_material"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "f011.evidence_port"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "releaseId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "artifactVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidenceRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "verifiedSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "test_vector_material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "releaseId",
+        "artifactVersion",
+        "evidenceRef",
+        "verifiedSha256"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "test_vector_material"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "f011.evidence_port"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "releaseId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "artifactVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidenceRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "verifiedSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "signing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "releaseId",
+        "artifactVersion",
+        "artifactDigest",
+        "signerPersonId",
+        "capacity",
+        "decision",
+        "evidenceRef",
+        "sourceIdentity",
+        "sourceEvidenceIdentity",
+        "sourceEvidenceVersion",
+        "sourceEvidenceSha256",
+        "credentialBasis",
+        "designationBasis",
+        "authorityBasis"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "signing"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "f011.signing_port"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "releaseId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "artifactVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "artifactDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "signerPersonId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "capacity": {
+          "type": "string",
+          "enum": [
+            "physician",
+            "pharmacist"
+          ]
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "rejected"
+          ]
+        },
+        "evidenceRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "sourceIdentity": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$"
+        },
+        "sourceEvidenceIdentity": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$"
+        },
+        "sourceEvidenceVersion": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceEvidenceSha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "credentialBasis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "personId",
+            "profession",
+            "status",
+            "expiresOn",
+            "issuer",
+            "evidenceObjectId",
+            "reviewedByPersonId",
+            "reviewedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "personId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "profession": {
+              "type": "string",
+              "enum": [
+                "doctor",
+                "pharmacist"
+              ]
+            },
+            "status": {
+              "const": "verified"
+            },
+            "expiresOn": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "issuer": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "evidenceObjectId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reviewedByPersonId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reviewedAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "designationBasis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "personId",
+            "professionalLicenseId",
+            "capacity",
+            "evidenceRef",
+            "designatedBy",
+            "status",
+            "validFrom",
+            "validUntil",
+            "sourceIdentity",
+            "sourceEvidenceIdentity",
+            "sourceEvidenceVersion",
+            "sourceEvidenceSha256",
+            "evidenceProducerId",
+            "evidenceVerifiedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "personId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "professionalLicenseId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "capacity": {
+              "type": "string",
+              "enum": [
+                "physician",
+                "pharmacist"
+              ]
+            },
+            "evidenceRef": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "designatedBy": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "status": {
+              "const": "active"
+            },
+            "validFrom": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+            },
+            "validUntil": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sourceIdentity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "sourceEvidenceIdentity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "sourceEvidenceVersion": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^[^\\u0000]+$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sourceEvidenceSha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidenceProducerId": {
+              "const": "f011.governance_provisioner"
+            },
+            "evidenceVerifiedAt": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+            }
+          }
+        },
+        "authorityBasis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "personId",
+            "action",
+            "capacity",
+            "contentType",
+            "governedContentKey",
+            "effectiveScopeKey",
+            "facilityId",
+            "issuedBy",
+            "evidenceRef",
+            "status",
+            "validFrom",
+            "validUntil",
+            "sourceIdentity",
+            "sourceEvidenceIdentity",
+            "sourceEvidenceVersion",
+            "sourceEvidenceSha256",
+            "evidenceProducerId",
+            "evidenceVerifiedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "personId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "action": {
+              "const": "signClinicalContentRelease"
+            },
+            "capacity": {
+              "type": "string",
+              "enum": [
+                "physician",
+                "pharmacist"
+              ]
+            },
+            "contentType": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "governedContentKey": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "effectiveScopeKey": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "facilityId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "issuedBy": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "evidenceRef": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "status": {
+              "const": "active"
+            },
+            "validFrom": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+            },
+            "validUntil": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sourceIdentity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "sourceEvidenceIdentity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "sourceEvidenceVersion": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^[^\\u0000]+$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sourceEvidenceSha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidenceProducerId": {
+              "const": "f011.governance_provisioner"
+            },
+            "evidenceVerifiedAt": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+            }
+          }
+        }
+      }
+    },
+    "credential": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "credentialBasis"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "credential"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "identity.professional_license_review"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "credentialBasis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "personId",
+            "profession",
+            "status",
+            "expiresOn",
+            "issuer",
+            "evidenceObjectId",
+            "reviewedByPersonId",
+            "reviewedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "personId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "profession": {
+              "type": "string",
+              "enum": [
+                "doctor",
+                "pharmacist"
+              ]
+            },
+            "status": {
+              "const": "verified"
+            },
+            "expiresOn": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "issuer": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "evidenceObjectId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reviewedByPersonId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reviewedAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "designation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "designationBasis"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "designation"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "f011.governance_provisioner"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "designationBasis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "personId",
+            "professionalLicenseId",
+            "capacity",
+            "evidenceRef",
+            "designatedBy",
+            "status",
+            "validFrom",
+            "validUntil",
+            "sourceIdentity",
+            "sourceEvidenceIdentity",
+            "sourceEvidenceVersion",
+            "sourceEvidenceSha256",
+            "evidenceProducerId",
+            "evidenceVerifiedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "personId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "professionalLicenseId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "capacity": {
+              "type": "string",
+              "enum": [
+                "physician",
+                "pharmacist"
+              ]
+            },
+            "evidenceRef": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "designatedBy": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "status": {
+              "const": "active"
+            },
+            "validFrom": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+            },
+            "validUntil": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sourceIdentity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "sourceEvidenceIdentity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "sourceEvidenceVersion": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^[^\\u0000]+$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sourceEvidenceSha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidenceProducerId": {
+              "const": "f011.governance_provisioner"
+            },
+            "evidenceVerifiedAt": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+            }
+          }
+        }
+      }
+    },
+    "signing_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "authorityBasis"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "signing_authority"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "f011.governance_provisioner"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "authorityBasis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "personId",
+            "action",
+            "capacity",
+            "contentType",
+            "governedContentKey",
+            "effectiveScopeKey",
+            "facilityId",
+            "issuedBy",
+            "evidenceRef",
+            "status",
+            "validFrom",
+            "validUntil",
+            "sourceIdentity",
+            "sourceEvidenceIdentity",
+            "sourceEvidenceVersion",
+            "sourceEvidenceSha256",
+            "evidenceProducerId",
+            "evidenceVerifiedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "personId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "action": {
+              "const": "signClinicalContentRelease"
+            },
+            "capacity": {
+              "type": "string",
+              "enum": [
+                "physician",
+                "pharmacist"
+              ]
+            },
+            "contentType": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "governedContentKey": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "effectiveScopeKey": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "facilityId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "issuedBy": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "evidenceRef": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "status": {
+              "const": "active"
+            },
+            "validFrom": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+            },
+            "validUntil": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sourceIdentity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "sourceEvidenceIdentity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            "sourceEvidenceVersion": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^[^\\u0000]+$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sourceEvidenceSha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidenceProducerId": {
+              "const": "f011.governance_provisioner"
+            },
+            "evidenceVerifiedAt": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+            }
+          }
+        }
+      }
+    },
+    "admissibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "releaseId",
+        "artifactVersion",
+        "artifactDigest",
+        "approvalId",
+        "approvalVersion",
+        "contentType",
+        "governedContentKey",
+        "effectiveScopeKey",
+        "policyRef",
+        "policyVersion",
+        "policySha256",
+        "sourceAdmissionRef",
+        "categoryAdmissionRef",
+        "codeAdmissionRef",
+        "testVectorAdmissionRef",
+        "sourceIdentity",
+        "sourceEvidenceIdentity",
+        "sourceEvidenceVersion",
+        "sourceEvidenceSha256",
+        "synthetic"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "admissibility"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "f011.governance_provisioner"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "releaseId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "artifactVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "artifactDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "approvalId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "approvalVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "contentType": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$"
+        },
+        "governedContentKey": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$"
+        },
+        "effectiveScopeKey": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$"
+        },
+        "policyRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$"
+        },
+        "policySha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "sourceAdmissionRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "categoryAdmissionRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "codeAdmissionRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "testVectorAdmissionRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "sourceIdentity": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$"
+        },
+        "sourceEvidenceIdentity": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000]+$"
+        },
+        "sourceEvidenceVersion": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceEvidenceSha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
+      }
+    },
+    "allergy_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "profile",
+        "bindingId",
+        "producerId",
+        "verifiedAt",
+        "evidenceRef",
+        "patientId",
+        "allergyId",
+        "previousRevisionId",
+        "previousVersion",
+        "revisionId",
+        "revisionVersion",
+        "targetStatus",
+        "attestorPersonId",
+        "sourceIdentity",
+        "sourceEvidenceIdentity",
+        "synthetic"
+      ],
+      "properties": {
+        "contractId": {
+          "const": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1"
+        },
+        "profile": {
+          "const": "allergy_verification"
+        },
+        "bindingId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "producerId": {
+          "const": "f011.allergy_evidence_boundary"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$"
+        },
+        "evidenceRef": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "patientId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "allergyId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "previousRevisionId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "previousVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "revisionId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "revisionVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "targetStatus": {
+          "type": "string",
+          "enum": [
+            "clinician_confirmed",
+            "refuted",
+            "entered_in_error"
+          ]
+        },
+        "attestorPersonId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "sourceIdentity": {
+          "type": "string",
+          "enum": [
+            "governed.internal_clinician_provenance",
+            "synthetic.internal_clinician_provenance"
+          ]
+        },
+        "sourceEvidenceIdentity": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "physical": {
+    "content_material_bindings": [
+      {
+        "name": "binding_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "release_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "artifact_version",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "name": "material_kind",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "evidence_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "verified_sha256",
+        "type": "bytea",
+        "nullable": false
+      },
+      {
+        "name": "producer_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "verified_at",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "binding_contract_id",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "content_signature_bindings": [
+      {
+        "name": "signature_evidence_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "binding_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "binding_contract_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "evidence_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "producer_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "verified_at",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "source_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "source_evidence_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "source_evidence_version",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "source_evidence_sha256",
+        "type": "bytea",
+        "nullable": true
+      },
+      {
+        "name": "credential_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "credential_version",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "name": "credential_profession",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "credential_status",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "credential_expires_on",
+        "type": "date",
+        "nullable": false
+      },
+      {
+        "name": "credential_issuer",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "credential_evidence_object_id",
+        "type": "uuid",
+        "nullable": true
+      },
+      {
+        "name": "credential_reviewed_by",
+        "type": "uuid",
+        "nullable": true
+      },
+      {
+        "name": "credential_reviewed_at",
+        "type": "timestamptz",
+        "nullable": true
+      },
+      {
+        "name": "designation_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "designation_version",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "name": "designation_evidence_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "designation_by",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "designation_status",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "designation_valid_from",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "designation_valid_until",
+        "type": "timestamptz",
+        "nullable": true
+      },
+      {
+        "name": "designation_source_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "designation_source_evidence_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "designation_source_evidence_version",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "designation_source_evidence_sha256",
+        "type": "bytea",
+        "nullable": true
+      },
+      {
+        "name": "designation_evidence_producer_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "designation_evidence_verified_at",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "signing_authority_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "signing_authority_version",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "name": "authority_action",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "authority_content_type",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "authority_governed_content_key",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "authority_effective_scope_key",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "authority_facility_id",
+        "type": "uuid",
+        "nullable": true
+      },
+      {
+        "name": "authority_issued_by",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "authority_evidence_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "authority_status",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "authority_valid_from",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "authority_valid_until",
+        "type": "timestamptz",
+        "nullable": true
+      },
+      {
+        "name": "authority_source_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "authority_source_evidence_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "authority_source_evidence_version",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "authority_source_evidence_sha256",
+        "type": "bytea",
+        "nullable": true
+      },
+      {
+        "name": "authority_evidence_producer_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "authority_evidence_verified_at",
+        "type": "timestamptz",
+        "nullable": false
+      }
+    ],
+    "content_admissibility_evidence": [
+      {
+        "name": "id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "release_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "artifact_version",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "name": "artifact_digest",
+        "type": "bytea",
+        "nullable": false
+      },
+      {
+        "name": "content_type",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "governed_content_key",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "effective_scope_key",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "policy_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "policy_version",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "policy_sha256",
+        "type": "bytea",
+        "nullable": false
+      },
+      {
+        "name": "source_admission_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "category_admission_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "code_admission_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "test_vector_admission_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "source_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "source_evidence_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "source_evidence_version",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "source_evidence_sha256",
+        "type": "bytea",
+        "nullable": true
+      },
+      {
+        "name": "synthetic",
+        "type": "boolean",
+        "nullable": false
+      },
+      {
+        "name": "status",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "valid_from",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "valid_until",
+        "type": "timestamptz",
+        "nullable": true
+      },
+      {
+        "name": "version",
+        "type": "integer",
+        "nullable": false
+      }
+    ],
+    "content_artifact_admissibility_bindings": [
+      {
+        "name": "binding_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "binding_contract_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "release_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "artifact_version",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "name": "artifact_digest",
+        "type": "bytea",
+        "nullable": false
+      },
+      {
+        "name": "approval_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "approval_version",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "name": "content_type",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "governed_content_key",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "effective_scope_key",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "policy_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "policy_version",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "policy_sha256",
+        "type": "bytea",
+        "nullable": false
+      },
+      {
+        "name": "source_admission_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "category_admission_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "code_admission_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "test_vector_admission_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "source_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "source_evidence_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "source_evidence_version",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "source_evidence_sha256",
+        "type": "bytea",
+        "nullable": true
+      },
+      {
+        "name": "producer_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "verified_at",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "synthetic",
+        "type": "boolean",
+        "nullable": false
+      },
+      {
+        "name": "approval_status",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "approval_valid_from",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "approval_valid_until",
+        "type": "timestamptz",
+        "nullable": true
+      }
+    ],
+    "allergy_verification_support": [
+      {
+        "name": "id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "patient_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "allergy_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "previous_revision_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "previous_version",
+        "type": "integer",
+        "nullable": false
+      },
+      {
+        "name": "target_status",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "attestor_person_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "source_identity",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "source_evidence_identity",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "producer_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "recorded_at",
+        "type": "timestamptz",
+        "nullable": false
+      },
+      {
+        "name": "synthetic",
+        "type": "boolean",
+        "nullable": false
+      }
+    ],
+    "allergy_verification_bindings": [
+      {
+        "name": "revision_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "binding_id",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "binding_contract_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "evidence_ref",
+        "type": "uuid",
+        "nullable": false
+      },
+      {
+        "name": "producer_id",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "verified_at",
+        "type": "timestamptz",
+        "nullable": false
+      }
+    ]
+  },
+  "temporal": {
+    "historicalSnapshot": "IMMUTABLE",
+    "currentEligibility": "GOVERNED_MUTABLE_VERSIONED_ROW",
+    "domainDecision": "EXACT_RESOURCE_HISTORICAL_BINDING",
+    "credential": "EXACT_BOUND_ROW_VERSION_ONLY",
+    "designation": "EXACT_BOUND_ROW_VERSION_ONLY",
+    "signingAuthority": "EXACT_BOUND_ROW_VERSION_ONLY",
+    "admissibility": "EXACT_ARTIFACT_EXACT_CURRENT_APPROVAL_ROW_VERSION",
+    "sameLineageExceptions": [],
+    "replacementRetrovalidation": false,
+    "newSignatureWhenPriorFinalDecisionExists": "NEW_INDEPENDENTLY_REVIEWED_DRAFT"
+  },
+  "enforcement": {
+    "genericPhysicalTable": false,
+    "arbitraryJsonClaims": false,
+    "booleanVerified": false,
+    "sqlAuthenticatesExternalProof": false,
+    "lockedSnapshotComparison": true,
+    "immutableSidecars": true,
+    "stableIdFkOnlyForMutableAuthorities": true,
+    "reciprocalDeferredCompleteness": [
+      "clinical signature/sidecar",
+      "verification revision/binding",
+      "release/three material bindings"
+    ],
+    "exactArtifactAdmissionCompositeFk": true,
+    "allergySupportSingleConsumption": true,
+    "clinicalSecretMaterialInSql": false,
+    "externalWorkUnderLocks": false,
+    "localReceiptException": "PREPARED_CAPABILITY_ONLY",
+    "nativeContextNotCrypto": true
+  },
+  "coding": {
+    "approvedRealSourceIdentified": false,
+    "syntaxEqualsTerminologyValidation": false,
+    "knownWithoutApprovedSource": "REJECT_VALIDATION_FAILED_NO_SILENT_COERCION",
+    "omittedOrExplicitUnknown": "ACCEPT",
+    "preserveUnchangedHistoricalKnown": true,
+    "syntheticFixtureOnlyInIsolatedMode": true
+  },
+  "acceptance": {
+    "P3": "contract/profile/fixed vectors/parity",
+    "P4": "both-runtime synthetic physical invariants only",
+    "P5": "current physical/generated stage assertion; TECH002 OPEN",
+    "P6": "real trusted producers/source authenticity/composition/privacy/atomic receipts",
+    "P7": "frozen ARTIFACT SQL/core equivalence",
+    "gateClosure": false
+  }
+}

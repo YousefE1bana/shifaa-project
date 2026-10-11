@@ -1,0 +1,179 @@
+$ node --import tsx --test test/*.test.ts test/*.test.tsx
+✔ clinic has its own entrypoint (1.8915ms)
+✔ clinic adapter classifies generated-client failures for observable route recovery (1.5887ms)
+✔ clinic appointment projection exposes every canonical state with read-only terminal actions (0.9912ms)
+✔ clinic actions require confirmation, current version, server-selected replacement, and no offline write (0.6584ms)
+✔ conflicts refresh authoritative appointment and all failure/result states restore focus (0.4992ms)
+✔ clinic appointment is Arabic-first with English parity, reflow, contrast, targets, and reduced motion (0.4413ms)
+✔ restricted reorder reasons accept bounded visible text and reject blank, oversized, or control input (2.7042ms)
+✔ schedule UI mutations preserve generated API authority, versions, and response truth (47.8786ms)
+D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\playwright@1.63.0\node_modules\playwright\lib\common\index.js:2224
+      throw new Error([
+            ^
+
+Error: Playwright Test did not expect test() to be called here.
+Most common reasons include:
+- You are calling test() in a configuration file.
+- You are calling test() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+- You are calling test() from an async test.describe() block. Only sync ones are supported.
+    at _TestTypeImpl._currentSuite (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\playwright@1.63.0\node_modules\playwright\lib\common\index.js:2224:13)
+    at _TestTypeImpl._createTest (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\playwright@1.63.0\node_modules\playwright\lib\common\index.js:2238:24)
+    at D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\playwright@1.63.0\node_modules\playwright\lib\common\index.js:1154:12
+    at <anonymous> (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\apps\clinic\test\feature-010-encounter.test.tsx:225:1)
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.18.0
+✖ test\feature-010-encounter.test.tsx (1360.0461ms)
+✔ explicit context uses profile and encounter authority before generated message REST (200.4636ms)
+✖ identity, encounter, participant, and appointment mismatch fail closed before message REST (15.9499ms)
+✔ body-only send waits for the canonical generated response and uses current purpose (10.864ms)
+✔ hints are closed and deduplicated, and cursor pagination stays in the selected context (4.2974ms)
+✔ forged hints are inert and valid future or out-of-order hints require REST authority again (6.5894ms)
+✔ 403, 409, and 503 reads clear protected history and expose safe states (9.8849ms)
+✔ AAL 1 cannot send and never reaches the generated POST endpoint (1.3829ms)
+✔ blank and whitespace-only bodies never reach POST (3.1577ms)
+✔ offline send is blocked and a late read cannot restore a newly selected context (8.3162ms)
+✔ older failed refresh cannot replace newer successful history (9.3737ms)
+✔ a late successful send cannot restore canonical content after going offline (3.5922ms)
+✔ a late successful send cannot restore content after authoritative encounter completion (2.4684ms)
+✔ an ignored-abort old success cannot restore history after a newer identity denial (3.1556ms)
+✔ token rotation during a deferred profile preflight prevents message reads (2.015ms)
+✔ source encounter must be explicitly confirmed before referral review (1.7667ms)
+✔ specialty and reason are required and review contains no precommitted referral identity (0.4275ms)
+✔ valid review sends only approved referral fields and source type only after explicit selection (1.4449ms)
+✔ authoritative pending and accepted list projections retain only authorized source IDs (0.6987ms)
+✔ offline, stale, denied and failed reads clear previously known referral content (0.4399ms)
+✔ validation, stale conflict and idempotency replay mutation failures expose no optimistic row (0.4883ms)
+D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\playwright@1.63.0\node_modules\playwright\lib\common\index.js:2224
+      throw new Error([
+            ^
+
+Error: Playwright Test did not expect test() to be called here.
+Most common reasons include:
+- You are calling test() in a configuration file.
+- You are calling test() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+- You are calling test() from an async test.describe() block. Only sync ones are supported.
+    at _TestTypeImpl._currentSuite (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\playwright@1.63.0\node_modules\playwright\lib\common\index.js:2224:13)
+    at _TestTypeImpl._createTest (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\playwright@1.63.0\node_modules\playwright\lib\common\index.js:2238:24)
+    at D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\playwright@1.63.0\node_modules\playwright\lib\common\index.js:1154:12
+    at <anonymous> (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\apps\clinic\test\feature-010-start.test.tsx:183:1)
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.18.0
+✖ test\feature-010-start.test.tsx (1310.8623ms)
+✔ authorized metadata loads using only the generated status read (29.8997ms)
+✔ empty current set stays unknown with no invented fallback (1.5709ms)
+✔ offline clears metadata and sends no request or queued mutation (1.0546ms)
+✔ stale authorized response removes protected rows (0.7628ms)
+✔ HTTP 401 fails closed as denied (0.547ms)
+✔ HTTP 403 fails closed as denied (0.3112ms)
+✔ HTTP 404 fails closed as gated (0.3471ms)
+✔ HTTP 503 fails closed as gated (0.3709ms)
+✔ HTTP 409 fails closed as stale (0.7615ms)
+✔ HTTP 412 fails closed as stale (0.6719ms)
+✔ HTTP 500 fails closed as error (0.5077ms)
+✔ surplus body rejects the entire metadata page (0.3661ms)
+✔ surplus artifactReview rejects the entire metadata page (0.4853ms)
+✔ surplus keyRef rejects the entire metadata page (0.3275ms)
+✔ surplus signatures rejects the entire metadata page (0.2442ms)
+✔ surplus evidenceRef rejects the entire metadata page (0.3328ms)
+✔ surplus workflowVersion rejects the entire metadata page (0.2983ms)
+✔ surplus creatorPersonId rejects the entire metadata page (0.2738ms)
+✔ invalid, unsigned or inconsistent lineage metadata denies without partial rows (0.4842ms)
+✔ invalid, unsigned or inconsistent lineage metadata denies without partial rows (0.2428ms)
+✔ invalid, unsigned or inconsistent lineage metadata denies without partial rows (0.3252ms)
+✔ invalid, unsigned or inconsistent lineage metadata denies without partial rows (0.2306ms)
+✔ invalid, unsigned or inconsistent lineage metadata denies without partial rows (0.2275ms)
+✔ authority clearing invalidates an already in-flight response (0.5547ms)
+✔ authorized future metadata is preserved without safety inference (0.4601ms)
+✔ authorized superseded metadata is preserved without safety inference (0.3268ms)
+✔ authorized unavailable metadata is preserved without safety inference (0.21ms)
+✔ ar-EG preserves the existing privacy entrypoint without inventing a clinic route (12.5263ms)
+✔ ar-EG loading has named live recovery and no metadata (1.1676ms)
+✔ ar-EG empty has named live recovery and no metadata (0.6429ms)
+✔ ar-EG denied has named live recovery and no metadata (0.4923ms)
+✔ ar-EG offline has named live recovery and no metadata (0.9883ms)
+✔ ar-EG stale has named live recovery and no metadata (0.587ms)
+✔ ar-EG error has named live recovery and no metadata (0.5551ms)
+✔ ar-EG terminal has named live recovery and no metadata (0.5087ms)
+✔ ar-EG gated has named live recovery and no metadata (0.6251ms)
+✔ ar-EG effective preserves dates, lineage, bidi and synthetic boundary (26.7651ms)
+✔ ar-EG future preserves dates, lineage, bidi and synthetic boundary (6.7173ms)
+✔ ar-EG superseded preserves dates, lineage, bidi and synthetic boundary (1.3768ms)
+✔ ar-EG unavailable preserves dates, lineage, bidi and synthetic boundary (1.1914ms)
+✔ en-EG preserves the existing privacy entrypoint without inventing a clinic route (0.9187ms)
+✔ en-EG loading has named live recovery and no metadata (0.5621ms)
+✔ en-EG empty has named live recovery and no metadata (0.3977ms)
+✔ en-EG denied has named live recovery and no metadata (0.7334ms)
+✔ en-EG offline has named live recovery and no metadata (0.2412ms)
+✔ en-EG stale has named live recovery and no metadata (0.5667ms)
+✔ en-EG error has named live recovery and no metadata (0.5267ms)
+✔ en-EG terminal has named live recovery and no metadata (0.367ms)
+✔ en-EG gated has named live recovery and no metadata (0.2872ms)
+✔ en-EG effective preserves dates, lineage, bidi and synthetic boundary (1.9235ms)
+✔ en-EG future preserves dates, lineage, bidi and synthetic boundary (1.2702ms)
+✔ en-EG superseded preserves dates, lineage, bidi and synthetic boundary (1.3119ms)
+✔ en-EG unavailable preserves dates, lineage, bidi and synthetic boundary (1.497ms)
+✔ missing private response cache policy fails closed without using metadata (0.7955ms)
+✔ clinician report retains server-issued encounter and rejects an unrelated encounter (54.5141ms)
+✔ current empty explicitly retains unknown; source/history success stays attributable (2.3527ms)
+✔ read-only roles cannot create; current context remains server-authorized (1.9852ms)
+✔ permission, offline and stale clear protected rows and disable mutations (6.0044ms)
+✔ explicit review/report and original-key reconciliation never queues a write (1.329ms)
+✔ route composition includes named fields, focus and bidi-safe state regions (1.2862ms)
+✔ clinician review captures exact assertion/version/reason/evidence and generated operation (41.3439ms)
+✔ PAT has no verification controls/state (1.9126ms)
+✔ GUA has no verification controls/state (0.8875ms)
+✔ DEL has no verification controls/state (0.8571ms)
+✔ reason/evidence/closed status {"targetStatus":"clinician_confirmed","reason":"","verificationEvidenceRef":"17a2f4e1-e29b-4562-b6df-626d7cd91e3a"} (1.056ms)
+✔ reason/evidence/closed status {"targetStatus":"clinician_confirmed","reason":"سبب تجريبي","verificationEvidenceRef":""} (1.9965ms)
+✔ reason/evidence/closed status {"targetStatus":"self_reported","reason":"سبب تجريبي","verificationEvidenceRef":"17a2f4e1-e29b-4562-b6df-626d7cd91e3a"} (0.7307ms)
+✔ terminal or historical row is never mutable (2.0841ms)
+✔ offline verification sends nothing and queues nothing (1.203ms)
+✔ uncertain outcome retains original key/version/body until explicit settlement (1.4253ms)
+✔ current 409 clears candidate and protected projection (1.0783ms)
+✔ current 403 clears candidate and protected projection (0.7018ms)
+✔ clinic shell denies AAL1 and stale or incomplete privileged context (1.8035ms)
+ℹ tests 103
+ℹ suites 0
+ℹ pass 100
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1412.275
+
+✖ failing tests:
+
+test at test\feature-010-encounter.test.tsx:1:1
+✖ test\feature-010-encounter.test.tsx (1360.0461ms)
+  'test failed'
+
+test at test\feature-010-messages.test.tsx:1:5112
+✖ identity, encounter, participant, and appointment mismatch fail closed before message REST (15.9499ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\apps\clinic\test\feature-010-messages.test.tsx:242:5)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /context-request-failed/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at test\feature-010-start.test.tsx:1:1
+✖ test\feature-010-start.test.tsx (1310.8623ms)
+  'test failed'
+D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\apps\clinic:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @shifaa/clinic@0.1.0 test: `node --import tsx --test test/*.test.ts test/*.test.tsx`
+Exit status 1

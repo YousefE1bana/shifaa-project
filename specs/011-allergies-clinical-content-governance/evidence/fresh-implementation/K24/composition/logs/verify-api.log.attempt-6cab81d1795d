@@ -1,0 +1,3 @@
+shifaa-local-postgres: K13 clean native verification/history/race proof
+shifaa-local-supabase: K13 clean native verification/history/race proof
+{"result":"PASS","runtimes":[{"runtime":"shifaa-local-postgres","count":61,"races":3,"authority":2},{"runtime":"shifaa-local-supabase","count":61,"races":3,"authority":2}]}

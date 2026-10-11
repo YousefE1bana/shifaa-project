@@ -1,0 +1,175 @@
+{
+  "schema": "SHIFAA-F011-K01-PRIMARY-REVIEW@1.0.0",
+  "result": "PASS_BOUNDED_PRESERVATION",
+  "identity": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "main": "670b1e0fe15c719b98179805f2628d1b478a55dd"
+  },
+  "normativeInputs": {
+    "count": 42,
+    "matched": 42
+  },
+  "ledger": {
+    "tasks": 92,
+    "checkpoints": 24,
+    "checked": [],
+    "taskMapStatuses": [
+      "UNCHECKED"
+    ],
+    "reason": "Evidence is ready for Product Owner checkpoint review; no acceptance or historical completion is transferred."
+  },
+  "changedExistingFiles": [
+    "tools/verify-feature-011-scope.mjs",
+    "tools/verify-feature-011-scope.test.mjs"
+  ],
+  "newFiles": [
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/readiness.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/scope-guard.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/scope-red.json",
+    "tools/feature-011-ledger-contract.test.mjs"
+  ],
+  "preservedExistingFiles": 3468,
+  "missingExistingFiles": [],
+  "driftDisposition": {
+    "cause": "Product Owner confirmed intentional archive removal during this run, then restoration. Final preservation check confirms exact original bytes restored.",
+    "delegateAudit": "Readiness and scope delegates explicitly confirmed none of their commands moved, removed or archived evidence.zip; scope fixture cleanup was restricted to artifacts/feature-011/k01-fixtures.",
+    "userClarification": "User: i remove it and now i restore it if you wanna it",
+    "archiveSha256": "9903071a07567ae3b33cf57f71fd0e86ef36463fb062cad5469575967b41a048",
+    "originalArchiveSha256": "9903071a07567ae3b33cf57f71fd0e86ef36463fb062cad5469575967b41a048",
+    "archiveRestoredExactly": true,
+    "readinessLimit": "Transient archive drift resolved by Product Owner restoration; no remaining preservation blocker. Checkpoint acceptance remains pending."
+  },
+  "currentHashes": {
+    "tools/verify-feature-011-scope.mjs": "4bf4e2ae82ff0f5e08781f48fada019b54331e41e4633e0d6d2d7e551d61f5aa",
+    "tools/verify-feature-011-scope.test.mjs": "98f0fe5035676997195da2511731c218924ff8addb97cecbe6214635b26974d1",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/readiness.json": "2d86e5e30a0655f61edfe06f119889f39eb3f6657dc3d304972f143197f04ed3",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/scope-guard.json": "7d2b8a67526e78128e7df27c1f043771c8b3f44a3537b96b4cb98c111d6acd01",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/scope-red.json": "fd529369d67dcf037d0b3d2801d7d897327982bb150a7259c3309133a7bb3c59",
+    "tools/feature-011-ledger-contract.test.mjs": "47ec57fc05f01e959b172835fe773c151e02c47b3ff08c721b90eb3addc800ea"
+  },
+  "approvalHashes": {
+    "tasks": "e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957235f9573165",
+    "taskMap": "5a6037838bc644a5dbb61c17a5504a662822f8d5ee0925379b823737f17b738d",
+    "manifest": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548"
+  },
+  "gitStatus": "M docs/architecture/SHIFAA-API-Catalog.md\n M packages/api-client/package.json\n M packages/contracts/package.json\n M packages/contracts/src/index.ts\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? specs/011-allergies-clinical-content-governance/\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs",
+  "stagedFiles": "",
+  "primaryCommands": [
+    {
+      "command": "node --version",
+      "exitCode": 0,
+      "output": "v24.18.0"
+    },
+    {
+      "command": "corepack pnpm --version",
+      "exitCode": 0,
+      "output": "11.13.0"
+    },
+    {
+      "command": "corepack pnpm exec supabase --version",
+      "exitCode": 0,
+      "output": "2.113.0"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": "node tools/verify-feature-011-scope.mjs",
+      "exitCode": 0,
+      "output": "{\n  \"failures\": [],\n  \"parity\": {\n    \"gate\": \"OPEN-TECH-002\",\n    \"status\": \"PENDING\",\n    \"affectedConsumersAllowed\": false,\n    \"assertionTask\": \"T029\",\n    \"checkpoint\": \"K07\",\n    \"runtimes\": [\n      \"shifaa-local-postgres\",\n      \"shifaa-local-supabase\"\n    ],\n    \"requiredEvidence\": [\n      \"generated-contract-client\",\n      \"physical-schema-rls-grants-functions\",\n      \"both-runtime-non-owner-races\",\n      \"owner-stage-disposition\"\n    ]\n  }\n}"
+    },
+    {
+      "command": "corepack pnpm exec prettier --check tools/verify-feature-011-scope.mjs tools/verify-feature-011-scope.test.mjs tools/feature-011-ledger-contract.test.mjs",
+      "exitCode": 0,
+      "output": "Checking formatting...\nAll matched files use Prettier code style!"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": "node --test tools/verify-feature-011-scope.test.mjs tools/feature-011-ledger-contract.test.mjs",
+      "exitCode": 0,
+      "result": "29 tests, 29 pass, 0 fail; primary agent observed fresh completed run"
+    }
+  ],
+  "historicalReuse": {
+    "crosswalk": "specs/011-allergies-clinical-content-governance/evidence/historical-task-evidence-crosswalk-v1.json",
+    "crosswalkSha256": "1375ea78d0583e561ae8dfe48b89962a98f9057217fa95c948ae823204a35413",
+    "reused": "Useful C01 seven-operation, FR/NFR, Catalog reconciliation and toolchain assertion intent; existing generated C02 client/contract bytes read only for current wire comparison.",
+    "revalidation": "All 42 current recovered Plan inputs and exact fresh 92-task/24-checkpoint ledger hashes matched. Fresh healthy fixtures, new recorded RED and final GREEN validate current operation/header/DTO/catalog/client boundaries. Existing outputs compared in memory against current approved OpenAPI, without rewriting output or claiming protocol/runtime acceptance.",
+    "notTransferred": "No historical test result, checkbox, checkpoint acceptance or C02B/C03 completion transferred; P1-P7 and all retained gates stay separate."
+  },
+  "qualityReview": {
+    "code": "Root reviewed current guard and named checks for fail-closed current approval, frozen inventory, catalog, wire and tooling behavior; no new architecture.",
+    "tests": "Fresh fixture health asserted before mutation; semantic rejection and positive current-family tests; isolated cleanup restricted to owned worktree artifact folders.",
+    "evidence": "Fresh evidence separates static readiness, observed RED/GREEN, historical reuse and pending Product Owner/gate acceptance."
+  },
+  "gateState": {
+    "OPEN-UX-001": {
+      "status": "SATISFIED_FOR_F011_AFFECTED_UI_PLAN_ONLY",
+      "limit": "0.1.1-test-only candidate; no global closure/final design/pixel lock"
+    },
+    "OPEN-UX-002": {
+      "status": "OPEN",
+      "stage": "VERIFYING",
+      "evidence": [
+        "T088",
+        "T092"
+      ],
+      "limit": "Separate owner design/reference/accessibility disposition; engineering evidence alone insufficient"
+    },
+    "OPEN-TECH-002": {
+      "status": "OPEN",
+      "stage": "affected IMPLEMENTING",
+      "preparation": [
+        "T005",
+        "T007",
+        "T027",
+        "T028"
+      ],
+      "assertion": [
+        "T029"
+      ],
+      "limit": "Evidence before owner assertion before consumers; no P6 backward dependency/global closure"
+    },
+    "OPEN-TECH-003": {
+      "status": "OPEN",
+      "stage": "affected VERIFYING",
+      "evidence": [
+        "T085",
+        "T092"
+      ],
+      "limit": "Approved reference environment required; no local-only acceptance"
+    },
+    "OPEN-CLIN-001": {
+      "status": "OPEN",
+      "stage": "real clinical/production admission",
+      "limit": "Neutral synthetic clinical fixtures only; actual local crypto/evidence logic is not real medical/source approval"
+    },
+    "OPEN-LEGAL-001": {
+      "status": "OPEN",
+      "stage": "production",
+      "limit": "Current legal owner/effects unchanged"
+    },
+    "OPEN-LEGAL-002": {
+      "status": "OPEN",
+      "stage": "production retention/deletion",
+      "limit": "No guessed retention duration/deletion automation"
+    },
+    "OPEN-LEGAL-007": {
+      "status": "OPEN",
+      "stage": "production",
+      "limit": "Current legal owner/effects unchanged"
+    },
+    "otherApplicableGates": {
+      "status": "UNCHANGED",
+      "limit": "No task waives release/verification gates"
+    }
+  },
+  "boundary": "K01 only. No K02/T004+ execution, runtime startup, migrations, lifecycle rerun, commit, push, PR, or main modification. Full pnpm verify is outside authorization because it resets databases and applies migrations."
+}

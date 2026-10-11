@@ -188,3 +188,20 @@
 | `FR-FAC-006`; `NFR-AVAIL-002`; `NFR-I18N-001`; `NFR-A11Y-001` | Appointment-context-only body messages while the linked encounter is open/in consultation: subject patient participates, workforce only with an active encounter-participant interval, and GUA/DEL never participate in Feature 010. Interval ending or completion denies history and send. Patient composition is within `/encounters/:id`; reconnect uses authoritative REST, stale/last-updated states, and Arabic/English accessibility checks. Any attachment property, including null, denies. |
 
 These are required future vectors, not passed implementation tests or approval of `OPEN-LEGAL-001/002/007`, `OPEN-UX-002`, `OPEN-PRODUCT-001`, or `OPEN-TECH-002/003`. The separate 2026-09-26 Product Owner + Acting Design Lead decision approves Feature 010's TEST-ONLY functional `OPEN-UX-001` baseline only: 87 states/408 references, manifest SHA-256 `18e4471d686990e797e8a5e370a20ceda7ea823020e3f84fdea0e03a65394310`. Other UI features retain their own `OPEN-UX-001` prerequisite.
+
+
+### Post-acceptance response maintenance — 2026-10-08
+
+[Identifier handoff amendment](../governance/SHIFAA-Identifier-Handoff-Amendment-2026-10-08.md) supports F011 T048–T050 / AC-14 privacy handoff without adding requirements or operations. Current F001 getMyProfile and F010 authorized encounter responses carry canonical server-derived identifiers; F004 existing managed context is reused unchanged. Historical predecessor and K11 acceptance records remain intact. Current focused predecessor regressions and renewed F011 P1–P5 evidence precede consumer proof. K12 remains pending acceptance, functional/test-only; no gate is closed.
+
+## Feature 011 current execution traceability — 2026-10-09
+
+This dated overlay preserves all historical approval/acceptance sections. The fresh 92-task ledger and contracts/task-map.json remain the execution traceability authority. K01–K23 engineering acceptance covers T001–T087; K24/final review/integration remain pending. No production, clinical, formal reference-device or final-design acceptance is inferred.
+
+| Requirement / acceptance | Direct implementation owners and evidence |
+| --- | --- |
+| AC-14; NFR-PRIV-001; NFR-I18N-001; NFR-A11Y-001 | T048 and T049 are explicit direct AC-14 privacy owners for patient /records and clinic /patients/:id/summary. T050 supplies the supporting J-01 synthetic demonstration. K12 acceptance and the post-acceptance identifier-handoff amendment bind authoritative self/F004/F010 contexts; clients never infer person-to-patient mapping. |
+| FR-SAFE-008; FR-SAFE-002; FR-SAFE-012; FR-ADMIN-004 | Existing seven-operation allergy/content behavior and both-runtime physical, concurrency, protection, typed evidence, disclosure and atomicity proofs are linked by the fresh task map and current bounded P1–P5 disposition. Feature 012 remains excluded. |
+| NFR-PERF-002; NFR-PORT-001; NFR-OBS-001 | K23 local performance, populated restore and closed opaque telemetry proofs record exact workload/environment/hash bindings. OPEN-TECH-003 reference ownership, production SLO/DR/backup/WORM and retained legal gates remain open. |
+
+The historical 2026-10-08 handoff paragraph describes its then-current pending K12 state; the later K12 acceptance record supplies the current disposition without rewriting that history. Final T090 must represent all 19 NFRs and AC-01–AC-16, including the direct T048/T049 privacy ownership above.

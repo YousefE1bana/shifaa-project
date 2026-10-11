@@ -1,0 +1,3 @@
+shifaa-local-postgres: clean K11 native/application proof
+shifaa-local-supabase: clean K11 native/application proof
+{"result":"PASS","counts":[{"runtime":"shifaa-local-postgres","tests":41},{"runtime":"shifaa-local-supabase","tests":41}]}

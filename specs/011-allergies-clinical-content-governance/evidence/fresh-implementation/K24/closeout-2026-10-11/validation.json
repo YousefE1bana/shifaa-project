@@ -1,0 +1,80 @@
+{
+  "recordedAt": "2026-10-11T08:45:08.235Z",
+  "result": "PASS_ENGINEERING_CLOSEOUT_WITH_DEFERRED_FORMAL_REVIEW",
+  "acceptance": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/acceptance-review.json",
+    "bytes": 25915,
+    "sha256": "d0ec018c44b53bef39eb3a1e2ba29666537204bac5c133c61a1cceae4139615c"
+  },
+  "bookkeeping": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/bookkeeping.json",
+    "bytes": 1165,
+    "sha256": "336879a887011372355ff5f8b1e7db8df22c73a8a80641ee8f3aa7ccb83de26e"
+  },
+  "revalidation": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/revalidation.json",
+    "bytes": 6140,
+    "sha256": "98bb9715084fc1ba99fd823f68efd719c8bdb02f458f4ca97b2d6722b2979425"
+  },
+  "currentParity": "PASS",
+  "pinnedInputs": 141,
+  "focusedTests": {
+    "beforeBookkeeping": 149,
+    "afterBookkeeping": 5,
+    "failures": 0,
+    "skipped": 0,
+    "afterLog": {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/post-bookkeeping-ledger.log",
+      "bytes": 646,
+      "sha256": "e6465cbc811d44dccb5f4ba97890fde5a72b4cbe20c602bd2b6e1900054cc220"
+    }
+  },
+  "tasksChecked": 92,
+  "tasksUnchecked": 0,
+  "ledger": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/tasks.md",
+      "bytes": 84236,
+      "sha256": "3d5229dbe80618d78100921e32ed90bf6b85b8ffa3906834dda58618ecd210ad"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+      "bytes": 400868,
+      "sha256": "d2a03aac8f387db8d8c2666b45f979ebcf74276cf9c001391bf6839a14e4b253"
+    }
+  ],
+  "originalSnapshotsPreserved": true,
+  "productImplementationChangesThisCloseout": [],
+  "retainedGatesClosed": [],
+  "issues": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/issue-state.json",
+    "bytes": 1251,
+    "sha256": "a190c9bab91423fd6d18ac352d2a292769405e964ac4717fe1ba0cf8e286a719"
+  },
+  "fullVerifyReexecuted": false,
+  "T092Reexecuted": false,
+  "deferredReview": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/conditional-acceptance-2026-10-11/decision.md",
+    "bytes": 3324,
+    "sha256": "b60ccc03f9bad488f354b64fbfd7bbe392009a9b91a3d30fdc395eecf6e19283"
+  },
+  "strictPixelProof": "FAILED_PRESERVED",
+  "formalPhysicalDeviceEvidence": "PENDING",
+  "git": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "statusEntries": 172,
+    "status": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/git-status.txt",
+      "bytes": 8093,
+      "sha256": "d3b1069c2c971942f2162a92024a1fc0f44699bb7ed9e8ef48f6aba6fd35afd3"
+    }
+  },
+  "commit": false,
+  "push": false,
+  "pr": false,
+  "mainChanged": false,
+  "worktreeCleanup": false,
+  "Feature012Started": false
+}

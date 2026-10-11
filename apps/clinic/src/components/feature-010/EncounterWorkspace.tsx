@@ -481,6 +481,18 @@ export default function EncounterWorkspace() {
                 <section aria-label={common.encounterContext} style={cardStyle}>
                   <h2>{copy.facts}</h2>
                   <Row label={copy.patient} value={encounter.patientId} code />
+                  <a
+                    href={`/patients/${encounter.patientId}/summary?encounterId=${encounter.id}`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      minHeight: minimumTargetSize,
+                      minWidth: minimumTargetSize,
+                      maxWidth: '100%',
+                    }}
+                  >
+                    {locale === 'ar-EG' ? 'ملخص المريض والحساسية' : 'Patient and allergy summary'}
+                  </a>
                   <Row label={copy.facility} value={encounter.facilityId} code />
                   <Row label={copy.appointment} value={encounter.appointmentId} code />
                   <Row label={copy.status} value={completed ? copy.completed : copy.open} />

@@ -1,0 +1,132 @@
+{
+  "id": "SHIFAA-F011-K24-ENGINEERING-CLOSEOUT-REVALIDATION@1.0.0",
+  "startedAt": "2026-10-11T08:39:46.364Z",
+  "finishedAt": "2026-10-11T08:40:33.574Z",
+  "result": "PASS_CURRENT_ENGINEERING_BINDINGS",
+  "immutableSeals": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/manifest.json",
+      "sha256": "fa800afe1de048d284a9675187412aac43716ec9d9af34486d0d21d42f620ed7",
+      "files": 18054,
+      "bytes": 1341799827,
+      "result": "PASS_IMMUTABLE_REHASH",
+      "historicalResult": "BLOCKED_VISUAL_REFERENCE"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-render-r01/manifest.json",
+      "sha256": "84171bfe555a37729d67eebb51d0c01a570486d121cc34316387a2e802581b04",
+      "files": 1394,
+      "bytes": 103865529,
+      "result": "PASS_IMMUTABLE_REHASH",
+      "historicalResult": "BLOCKED_STRICT_PIXEL_AND_NATIVE_EXECUTION"
+    }
+  ],
+  "currentPinnedInputs": 141,
+  "additionalVerifiedSourceHashes": {
+    "services/api/src/routes/clinic-scheduling.ts": "c2065284f93f575ff375b19e312461de4b3c109e99449b960df7116b98ebbac8",
+    "services/api/src/routes/clinic-scheduling.contract.test.ts": "1aa0267260dd76a5b21c27a52a11dcff3a0d757fb11180ce96df368a81326fea",
+    "apps/admin/src/app/clinical-content/ClinicalContentWorkspace.tsx": "5459bf22e068a4e3f367980a46f2acdb8f60effc86857d1494f358c1dd6ca719",
+    "packages/i18n/src/feature-011.ts": "9b89f9597f610e5d6cb5aaf8e34724d722dfedd2d29685e03f8bba817fd210d2",
+    "apps/admin/test/feature-011-clinical-content.test.tsx": "6aa89fe25c07cd0406eaf69559b27006d6414a381ef97147d1abe799c95a831f",
+    "packages/i18n/src/feature-011.test.ts": "3cc1f15f652ffc3977a80cd36b66e2f2bfb6844241765bc9b550f3bb2121ab3d"
+  },
+  "historicalPreservationBindings": 37,
+  "historicalPreservationVerification": "Original 37-file preservation review remains sealed; both complete evidence manifests freshly rehashed",
+  "fullVerify": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-copy-r04/full-verify.json",
+    "sha256": "5ced040b04692a1b7e031cbde148732b7d62aca5560b9698a6ba4ced6ab3fd24",
+    "command": "pnpm verify",
+    "exitCode": 0,
+    "startedAt": "2026-10-10T17:47:59.113Z",
+    "finishedAt": "2026-10-10T18:38:30.696Z",
+    "log": {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/copy-full-verify-retry-04.log",
+      "sha256": "6bc566053ab8d9cafedf8e8c03a472e7b8067912b1a29085fda76e6c85a9a991"
+    },
+    "reusedAfterFreshSourceAndLogRevalidation": true,
+    "rerunThisSession": false
+  },
+  "commands": [
+    {
+      "command": "node tools/generate-feature-011-contract.mjs --check",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/closeout-2026-10-11/generated-contract-1.log",
+        "sha256": "5f4689cc0ec2811a39030f256834d8c08e27624dfe22d780a1fba76b541821a8"
+      }
+    },
+    {
+      "command": "node tools/generate-feature-011-client.mjs --check",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/closeout-2026-10-11/generated-client-1.log",
+        "sha256": "d69a2770b3f40f50802ff1d658aad2b53e5d983344c78a0d0b924b4ee626c145"
+      }
+    },
+    {
+      "command": "node tools/generate-feature-011-contract.mjs --check",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/closeout-2026-10-11/generated-contract-2.log",
+        "sha256": "5f4689cc0ec2811a39030f256834d8c08e27624dfe22d780a1fba76b541821a8"
+      }
+    },
+    {
+      "command": "node tools/generate-feature-011-client.mjs --check",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/closeout-2026-10-11/generated-client-2.log",
+        "sha256": "d69a2770b3f40f50802ff1d658aad2b53e5d983344c78a0d0b924b4ee626c145"
+      }
+    },
+    {
+      "command": "node --test tools/verify-feature-011-scope.test.mjs tools/feature-011-ledger-contract.test.mjs tools/feature-011-protocol-parity.test.mjs tools/feature-011-documentation-successor.test.mjs tools/feature-011-native-digest-binding.test.mjs",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/closeout-2026-10-11/protocol-ledger-scope.log",
+        "sha256": "8618e9701ba771a37fa035dbb9f5c1dded919a2cc9a2351d6f7321162d763968"
+      }
+    }
+  ],
+  "currentParity": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/current-parity.json",
+    "sha256": "b359928e85753c38f0c6962caae515bde6a3eb3512f0934b792bb4c2c16d579f"
+  },
+  "performance": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/performance-summary.json",
+    "sha256": "416d23503ed12bf12909924b7140a8741ddcd783b794c455aed21dff97895f32",
+    "checks": 42,
+    "measuredRequests": 960,
+    "warmupRequests": 144,
+    "thresholdMisses": 0,
+    "scope": "BOUNDED_LOCAL_SERVER_ONLY"
+  },
+  "ledgerBefore": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/tasks.md",
+      "sha256": "4d7d5b36a61b2b7410ca93be8404f446e53f83f7d52d10043de963e6ca7ff1f8"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+      "sha256": "9ee0719a82bf0df827c5c8803b9229a5de0558a354ad70204323a6fba4d5fe6d"
+    }
+  ],
+  "taskCount": 92,
+  "checkpointCount": 24,
+  "operationCount": 7,
+  "directAC14Owners": ["T048", "T049"],
+  "deferredReview": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/conditional-acceptance-2026-10-11/decision.json",
+    "sha256": "8d5b4024f630c05dbd0f34399e27b79538b53367b3da6c459b9ea39b005b58c3"
+  },
+  "formalPhysicalDeviceAcceptance": false,
+  "strictPixelAcceptance": false,
+  "retainedGatesClosed": [],
+  "T092Reexecuted": false,
+  "git": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "main": "670b1e0fe15c719b98179805f2628d1b478a55dd"
+  },
+  "noCommitPushPrMainChange": true
+}

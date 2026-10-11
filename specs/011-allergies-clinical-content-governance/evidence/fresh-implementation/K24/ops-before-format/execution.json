@@ -1,0 +1,31 @@
+{
+  "runs": [
+    {
+      "source": "tools/run-feature-011-performance.mjs",
+      "originalSha256": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c",
+      "executedSha256": "5772eadf5c06cf7107479beeb0d2aedc1956916e7316213091e69e54bcf8575e",
+      "transformation": "Exact evidence output-root replacement only; assertions unchanged",
+      "startedAt": "2026-10-09T16:03:46.858Z",
+      "finishedAt": "2026-10-09T16:08:33.465Z",
+      "exitCode": 0
+    },
+    {
+      "source": "tools/run-feature-011-restore.mjs",
+      "originalSha256": "9321675ef914bbc1bafa697fc0f467b0b10770a367c4ad373ea85816301c5964",
+      "executedSha256": "c4f32f87450d82a38838015d4a33c2207bae22852542db3038fb9aa733a31beb",
+      "transformation": "Exact evidence output-root replacement only; assertions unchanged",
+      "startedAt": "2026-10-09T16:08:33.468Z",
+      "finishedAt": "2026-10-09T16:10:36.058Z",
+      "exitCode": 0
+    },
+    {
+      "source": "tools/run-feature-011-observability.mjs",
+      "originalSha256": "e10002040b540fb06e82b84d03d2f9fae3d1e6289c5dd5f60abe5f75a88565c0",
+      "executedSha256": "1f68da0e829ef2f14d27f3bda824ee0212dee2575bf62033f56e6cca73735d98",
+      "transformation": "Exact evidence output-root replacement only; assertions unchanged",
+      "startedAt": "2026-10-09T16:10:36.059Z",
+      "finishedAt": "2026-10-09T16:11:25.430Z",
+      "exitCode": 0
+    }
+  ]
+}

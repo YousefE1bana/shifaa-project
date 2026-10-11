@@ -1,0 +1,60 @@
+{
+  "result": "PASS",
+  "checkpoint": "K19",
+  "task": "T071",
+  "route": "/clinical-content",
+  "operations": [
+    "listClinicalContent",
+    "createClinicalContentRelease",
+    "signClinicalContentRelease",
+    "publishClinicalContentRelease"
+  ],
+  "generatedClient": true,
+  "newOperation": false,
+  "newRoute": false,
+  "productionDefaultOff": true,
+  "separateActionAndDisclosureAuthority": true,
+  "privateProvisioningApi": false,
+  "receipt": "Explicit original-key/body/version reconciliation; no offline queue, automatic retry or cancellation of an in-flight/uncertain mutation",
+  "unitCounts": {
+    "admin": 41,
+    "focusedFeatureAndCopy": 21
+  },
+  "realRuntimes": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "checks": 59,
+      "cleanup": {
+        "database": "f011_k08_fde7aa2f5afff8e9",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "checks": 59,
+      "cleanup": {
+        "database": "f011_k08_ef4ea86ffef8671d",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "inputs": {
+    "apps/admin/src/app/clinical-content/page.tsx": "9f7e105250ff03f847ee0142aa10e1936782d5685403750fd2a1fb548eac3826",
+    "apps/admin/src/app/clinical-content/ClinicalContentWorkspace.tsx": "b435ebc27c283162f74c9af0caacc906f25f227d9dbbc3d9e4d17526c867f106",
+    "apps/admin/src/app/clinical-content/content-controller.ts": "753a296ab45cb64f045461496aaea7e658c0a14653c68677c51b5c680dfb8ee8",
+    "apps/admin/src/app/clinical-content/clinical-content.css": "1e0776e2f69cb9040f58690a7faf3619af8849ca31a0388912acc50814a84b86",
+    "packages/i18n/src/feature-011.ts": "d89270a18c84f6960c9bcf268b7d188d8c622aa4190c974613a151d1790a1e7a",
+    "tools/run-feature-011-admin-ui-test.mjs": "d800ce270fe3ea55e3e78901c3e900bef8e44d16d806137473e4bc2bf63c87aa"
+  },
+  "sourceProof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/us3-demo.json",
+    "sha256": "ad02a1994be448e942b16cb1d52ab434948e07f50cdf94977ecf4cace7a385ad"
+  },
+  "syntheticOnly": true,
+  "clinicalApproval": false,
+  "finalDesignApproval": false
+}

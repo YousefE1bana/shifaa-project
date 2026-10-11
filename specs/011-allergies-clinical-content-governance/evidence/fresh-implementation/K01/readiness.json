@@ -1,0 +1,401 @@
+{
+  "schema": "SHIFAA-F011-K01-READINESS@1.0.0",
+  "recordedAt": "2026-10-06T17:31:54.3823813+03:00",
+  "feature": "011-allergies-clinical-content-governance",
+  "checkpoint": "K01",
+  "task": "T001",
+  "result": "PASS_BOUNDED_READINESS",
+  "scope": "Static approval/input, native prerequisite and pinned toolchain revalidation only; no runtime startup, migrations, lifecycle rerun, generation, task checkbox edit, app change, secrets or pnpm verify.",
+  "identity": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "main": "670b1e0fe15c719b98179805f2628d1b478a55dd"
+  },
+  "approvals": {
+    "planDecision": "decisions/recovered-plan-approved-2026-10-06.md",
+    "planDecisionSha256": "665824ab1180ef0ebb5d864584e4b58921428e0c172d3e97244fd5222bf9948c",
+    "planManifest": "specs\\011-allergies-clinical-content-governance\\decisions\\recovered-plan-approval-manifest-v1.json",
+    "planManifestSha256": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548",
+    "taskDecision": "decisions/fresh-tasks-approved-2026-10-06.md",
+    "taskDecisionSha256": "1798fcf91ba1a523a8f912884528d1a0b1b3b7cfefb18969d161b56ca7f660a9",
+    "tasksSha256": "e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957235f9573165",
+    "expectedTasksSha256": "e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957235f9573165",
+    "taskMapSha256": "5a6037838bc644a5dbb61c17a5504a662822f8d5ee0925379b823737f17b738d",
+    "expectedTaskMapSha256": "5a6037838bc644a5dbb61c17a5504a662822f8d5ee0925379b823737f17b738d"
+  },
+  "normativeInputRevalidation": {
+    "count": 42,
+    "matched": 42,
+    "mismatches": 0,
+    "manifestId": "SHIFAA-F011-RECOVERED-PLAN-APPROVAL@1.0.0",
+    "manifestSha256": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548",
+    "expectedManifestSha256": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548",
+    "files": [
+      {
+        "path": ".specify/memory/constitution.md",
+        "expectedSha256": "25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a",
+        "actualSha256": "25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a",
+        "matches": true
+      },
+      {
+        "path": "docs/design/SHIFAA-UI-Contract.md",
+        "expectedSha256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+        "actualSha256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+        "matches": true
+      },
+      {
+        "path": "docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md",
+        "expectedSha256": "9feadc0b489857c66533d20f1829c9826d8ea7ae8ea7bf8e683968276e1cad04",
+        "actualSha256": "9feadc0b489857c66533d20f1829c9826d8ea7ae8ea7bf8e683968276e1cad04",
+        "matches": true
+      },
+      {
+        "path": "docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md",
+        "expectedSha256": "51fdac8ecd2710bc13a53c89f9d09d4d486ad36631056e7171521d5e16b6abd6",
+        "actualSha256": "51fdac8ecd2710bc13a53c89f9d09d4d486ad36631056e7171521d5e16b6abd6",
+        "matches": true
+      },
+      {
+        "path": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "expectedSha256": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+        "actualSha256": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+        "matches": true
+      },
+      {
+        "path": "packages/design-system/src/tokens.ts",
+        "expectedSha256": "39fb80ef2c702aab3663b46dd98d92cc747c9ff694b4a8161005cc4ca317201d",
+        "actualSha256": "39fb80ef2c702aab3663b46dd98d92cc747c9ff694b4a8161005cc4ca317201d",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json",
+        "expectedSha256": "b0f8d4ba2ad5f30bbdf6ec963a6dc4e16677236b3ed0fbc6aa263ee81a2ed6ed",
+        "actualSha256": "b0f8d4ba2ad5f30bbdf6ec963a6dc4e16677236b3ed0fbc6aa263ee81a2ed6ed",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json",
+        "expectedSha256": "f031aa09edddf8c60ebe4cc8165fa35afee7e3875551ca2f6136e68a31bf7f25",
+        "actualSha256": "f031aa09edddf8c60ebe4cc8165fa35afee7e3875551ca2f6136e68a31bf7f25",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md",
+        "expectedSha256": "03dbaeccfc4342136c6f6623f8613157e51806ddf0f07fea85a8ecb3374da257",
+        "actualSha256": "03dbaeccfc4342136c6f6623f8613157e51806ddf0f07fea85a8ecb3374da257",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json",
+        "expectedSha256": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523",
+        "actualSha256": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+        "expectedSha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133",
+        "actualSha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+        "expectedSha256": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2",
+        "actualSha256": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+        "expectedSha256": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9",
+        "actualSha256": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md",
+        "expectedSha256": "b203e00aaf3e2cc689b2ccc60e0b846ca206942de9b660d1d185ba4006d0a57e",
+        "actualSha256": "b203e00aaf3e2cc689b2ccc60e0b846ca206942de9b660d1d185ba4006d0a57e",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+        "expectedSha256": "c053e28f529ecea784917ab38028b599f45f0a4b58e517970a644ed7e2a268b5",
+        "actualSha256": "c053e28f529ecea784917ab38028b599f45f0a4b58e517970a644ed7e2a268b5",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json",
+        "expectedSha256": "4eff01a61b485f0616b69480a979f3024da21b464cf768771055bb2694e56050",
+        "actualSha256": "4eff01a61b485f0616b69480a979f3024da21b464cf768771055bb2694e56050",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json",
+        "expectedSha256": "2bf23cae34648742f995edced1008f7988efdbaf9dd12d9e1c46aa83e10d68ec",
+        "actualSha256": "2bf23cae34648742f995edced1008f7988efdbaf9dd12d9e1c46aa83e10d68ec",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md",
+        "expectedSha256": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49",
+        "actualSha256": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml",
+        "expectedSha256": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e",
+        "actualSha256": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json",
+        "expectedSha256": "53e46fbbbf79526749e0786c1630a2c2b6ad515ec3ac33d8755d2730df0842ac",
+        "actualSha256": "53e46fbbbf79526749e0786c1630a2c2b6ad515ec3ac33d8755d2730df0842ac",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json",
+        "expectedSha256": "2948f78fd1fb92ee9d411092da30f577b9215c2543182c2e85f56b306da30291",
+        "actualSha256": "2948f78fd1fb92ee9d411092da30f577b9215c2543182c2e85f56b306da30291",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json",
+        "expectedSha256": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709",
+        "actualSha256": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json",
+        "expectedSha256": "03945dbb8f323f480f1a93f09340936f5623f7c1feeea6f2fcce98211b4b3a11",
+        "actualSha256": "03945dbb8f323f480f1a93f09340936f5623f7c1feeea6f2fcce98211b4b3a11",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md",
+        "expectedSha256": "e8f43933311ba5430d758504675162aca86d0537205eda95febbf3d6ab0bc5db",
+        "actualSha256": "e8f43933311ba5430d758504675162aca86d0537205eda95febbf3d6ab0bc5db",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md",
+        "expectedSha256": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59",
+        "actualSha256": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json",
+        "expectedSha256": "9f3be0aa5f5b3aa62b3505ea40d8b142b31f25a228a6b0bb19f221b28748ffa9",
+        "actualSha256": "9f3be0aa5f5b3aa62b3505ea40d8b142b31f25a228a6b0bb19f221b28748ffa9",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json",
+        "expectedSha256": "8326cde913c59e4c899b16ba73193d9a48a99191f5eb7dba66883d904b1523b0",
+        "actualSha256": "8326cde913c59e4c899b16ba73193d9a48a99191f5eb7dba66883d904b1523b0",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json",
+        "expectedSha256": "782b32e23764c7ecf9b5114f387be174591c0d0ef6b2eed04749520991eee6cc",
+        "actualSha256": "782b32e23764c7ecf9b5114f387be174591c0d0ef6b2eed04749520991eee6cc",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md",
+        "expectedSha256": "e75f95ea9daef89918083be8ea66b8fce896bf55c8d323a1bdffef07e37bd1eb",
+        "actualSha256": "e75f95ea9daef89918083be8ea66b8fce896bf55c8d323a1bdffef07e37bd1eb",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/data-model.md",
+        "expectedSha256": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f",
+        "actualSha256": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md",
+        "expectedSha256": "b3dcef629ed2e3b80f1ef07a73369664314c4da4c623f1d80a78141942bba269",
+        "actualSha256": "b3dcef629ed2e3b80f1ef07a73369664314c4da4c623f1d80a78141942bba269",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md",
+        "expectedSha256": "a46d7f12480819c7649998729ba9149499cf66e33dcfcef335151d712710d817",
+        "actualSha256": "a46d7f12480819c7649998729ba9149499cf66e33dcfcef335151d712710d817",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md",
+        "expectedSha256": "4f8bf26bdfb43cd016b62cd572f21bc9f2a81477dcd2b1a067314cb95887ba3f",
+        "actualSha256": "4f8bf26bdfb43cd016b62cd572f21bc9f2a81477dcd2b1a067314cb95887ba3f",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md",
+        "expectedSha256": "1fc278a00df5b46115374d1f435d1168f5de0977df3e21c9dabdb76b726c2989",
+        "actualSha256": "1fc278a00df5b46115374d1f435d1168f5de0977df3e21c9dabdb76b726c2989",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md",
+        "expectedSha256": "b9632b94dfb136b35d0b3bcef89a2cee47002836ed7db679a56cc4a000c0b48b",
+        "actualSha256": "b9632b94dfb136b35d0b3bcef89a2cee47002836ed7db679a56cc4a000c0b48b",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md",
+        "expectedSha256": "8d3fe1ae977bb99e3d24d1cf1f5548dafc0ecdb350f7e681b89acb04488e0bab",
+        "actualSha256": "8d3fe1ae977bb99e3d24d1cf1f5548dafc0ecdb350f7e681b89acb04488e0bab",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md",
+        "expectedSha256": "03eaf4a9ace7d26fbbf977309774728531e763f13dc1bf06f726957838092709",
+        "actualSha256": "03eaf4a9ace7d26fbbf977309774728531e763f13dc1bf06f726957838092709",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/plan.md",
+        "expectedSha256": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca",
+        "actualSha256": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/quickstart.md",
+        "expectedSha256": "71e377027f3aee5385e3c079e288498ea9e5597ae657dd07eecd5bf11e25ec5a",
+        "actualSha256": "71e377027f3aee5385e3c079e288498ea9e5597ae657dd07eecd5bf11e25ec5a",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/research.md",
+        "expectedSha256": "d862cfb3698f7651e0b63c80910107ee4c43e136bb417d079294f5e5451967c5",
+        "actualSha256": "d862cfb3698f7651e0b63c80910107ee4c43e136bb417d079294f5e5451967c5",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/spec.md",
+        "expectedSha256": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0",
+        "actualSha256": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0",
+        "matches": true
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json",
+        "expectedSha256": "59ea1788edbae023533a9e08da97bc3884e0e098ec6e80721272822b6439c432",
+        "actualSha256": "59ea1788edbae023533a9e08da97bc3884e0e098ec6e80721272822b6439c432",
+        "matches": true
+      }
+    ]
+  },
+  "toolchain": {
+    "packagePins": {
+      "node": "24.18.0",
+      "pnpm": "11.13.0",
+      "packageManager": "pnpm@11.13.0",
+      "supabaseCli": "2.113.0"
+    },
+    "observed": {
+      "nodeCommand": "node --version",
+      "node": "v24.18.0",
+      "pnpmCommand": "pnpm --version",
+      "pnpm": "11.13.0",
+      "supabaseCommand": "pnpm exec supabase --version",
+      "supabase": "2.113.0"
+    }
+  },
+  "nativeFeature010Prerequisites": {
+    "result": "STATIC_PRESENCE_AND_HASHES_CONFIRMED; PARENT_VERIFIED_ALL_FOUR_BYTES_MATCH_HEAD",
+    "basis": "Plan §3 reuses existing native auth, identity repository and Feature 010 context; data-model §§1, 11 explicitly map identity.patients.person_id and preserve encounter completion/lock ordering. These checks establish source/migration presence and byte identities only, not a runtime/live prerequisite test.",
+    "files": [
+      {
+        "path": "packages/auth/src/index.ts",
+        "sha256": "f939a0ec7cac5eb897ea3ef1c728e6c53af4749f024533a58ccd9282054a2959"
+      },
+      {
+        "path": "services/api/src/adapters/postgres/identity-repository.ts",
+        "sha256": "33010b3fb04d285ca7b60d656c2ba5ee054dbf43ec566556f781f8a8c30c0999"
+      },
+      {
+        "path": "services/api/src/adapters/postgres/feature-010-encounters.ts",
+        "sha256": "94ccea18b40ccacfca6e43daabf9063fd229a4bba38ca797b8260ccc40cf3729"
+      },
+      {
+        "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+        "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850"
+      }
+    ],
+    "reportedBoundary": "Current native auth/session remains authority. Feature 010 context is consumed without lifecycle changes; resolve patient.person_id explicitly; encounter context precedes existing authority facts; no appointment/queue mutation lock.",
+    "headComparison": "Parent independently verified all four recorded prerequisite file hashes against HEAD; exact bytes match."
+  },
+  "historicalReuse": {
+    "crosswalk": "evidence/historical-task-evidence-crosswalk-v1.json",
+    "c01": "C01 historical T001/T002 are REUSABLE_CANDIDATE; historical T003 PARTIALLY_REUSABLE; preserved historical C01-red is REUSABLE_CANDIDATE for T002 only.",
+    "rule": "Candidate metadata may be reused only after current-input/source/role/runtime revalidation. No completion transfers; fresh evidence and separate checkpoint acceptance remain required. No historical C01 is treated as fresh acceptance."
+  },
+  "pStages": {
+    "P1": "PENDING",
+    "P2": "PENDING",
+    "P3": "PENDING",
+    "P4": "PENDING",
+    "P5": "PENDING",
+    "P6": "PENDING",
+    "P7": "PENDING",
+    "limits": "No P-stage evidence was run or accepted by T001. P1-P3 metadata/vector preparation, P4 physical both-runtime synthetic evidence, P5 separately owned stage assertion, P6 real local producer proof, and P7 SQL/core/fixed-vector parity remain separate downstream proof."
+  },
+  "retainedGates": {
+    "OPEN-UX-001": "SATISFIED only for Feature 011 affected-UI PLAN_APPROVED prerequisite",
+    "OPEN-UX-002": "OPEN; affected VERIFYING owner/accessibility/reference evidence",
+    "OPEN-TECH-002": "OPEN; affected IMPLEMENTING parity plus applicable owner/stage assertion",
+    "OPEN-TECH-003": "OPEN; affected VERIFYING approved reference environment",
+    "OPEN-CLIN-001": "OPEN; synthetic engineering only, no real clinical qualification/admissibility/content approval",
+    "OPEN-LEGAL-001": "OPEN; production obligations unchanged",
+    "OPEN-LEGAL-002": "OPEN; retention/deletion schedule unapproved, no duration inferred",
+    "OPEN-LEGAL-007": "OPEN; controlling legal/counsel mapping required",
+    "otherApplicableGates": "UNCHANGED and fail-closed"
+  },
+  "execution": {
+    "freshTasks": "TASKS_APPROVED",
+    "allTasksUnchecked": true,
+    "implementation": "K01_AUTHORIZED_ONLY",
+    "thisAuthorization": "K01 tasks T001-T003 only",
+    "noCheckpointAcceptanceClaimed": true,
+    "noAutomaticContinuation": true,
+    "downstreamCheckpoints": "PAUSED_PENDING_SEPARATE_PO_AUTHORIZATION"
+  },
+  "commands": [
+    {
+      "command": "Get-FileHash SHA256 over 42 normativeApprovalInputs paths from recovered-plan-approval-manifest-v1.json",
+      "result": "42/42 expected hashes matched"
+    },
+    {
+      "command": "Get-FileHash SHA256 on approval manifest, fresh tasks.md, contracts/task-map.json, and two formal approval decisions",
+      "result": "manifest 79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548; tasks and task-map match approved hashes"
+    },
+    {
+      "command": "node --version",
+      "result": "v24.18.0"
+    },
+    {
+      "command": "pnpm --version",
+      "result": "11.13.0"
+    },
+    {
+      "command": "pnpm exec supabase --version",
+      "result": "2.113.0"
+    },
+    {
+      "command": "git rev-parse HEAD; git rev-parse refs/heads/main",
+      "result": "both 670b1e0fe15c719b98179805f2628d1b478a55dd"
+    },
+    {
+      "command": "Get-FileHash SHA256 on four existing native Feature 010/auth prerequisite files listed above",
+      "result": "All four present; actual hashes recorded above; parent independently verified exact bytes match HEAD."
+    }
+  ],
+  "notRun": [
+    "Supabase/PostgreSQL runtime startup",
+    "migration or lifecycle command",
+    "generation or scope verifier",
+    "pnpm verify",
+    "application tests or acceptance",
+    "P1-P7 proof execution"
+  ]
+}

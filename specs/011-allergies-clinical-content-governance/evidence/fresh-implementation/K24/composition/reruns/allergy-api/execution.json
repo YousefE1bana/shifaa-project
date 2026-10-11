@@ -1,0 +1,21 @@
+{
+  "id": "allergy-api",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\464_1791613898202\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-d6e6a43e-f889-4dd3-bbae-d46fa1fa137e.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/allergy-api.log",
+    "sha256": "290124b3e6c3f694bc7863706c9e6f1547312734636ef85c12ea84d3332a3cd1"
+  },
+  "original": "tools/run-feature-011-allergy-api-test.mjs",
+  "originalSha256": "492ce3996fce3d4cc0b4e2419bca68021cc4e57bd87087bd8466dca6b6ac2dde",
+  "substitution": "const f = 'specs/011-allergies-clinical-content-governance',\n  e = `${f}/evidence/fresh-implementation/K11`;",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/allergy-api",
+  "temporarySha256": "c2bd79dcba82b01ed5186340063a8f0cb2610f9833b88c0f13d489ef10ddf0ab",
+  "testAssertionsChanged": false,
+  "preflightSubstitutions": []
+}

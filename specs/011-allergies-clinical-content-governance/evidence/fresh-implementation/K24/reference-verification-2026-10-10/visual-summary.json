@@ -1,0 +1,115 @@
+{
+  "recordedAt": "2026-10-10T21:52:45.683Z",
+  "result": "FAIL_PIXEL_DIFFERENCE",
+  "execution": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T20-37-55-849Z-5bed2003-e772-4f87-80de-97409ca60652.json",
+    "sha256": "b4cca3071483e60ac36a8504a25327b6fbdefbe7f1dca7d6ae998819bd02ae87"
+  },
+  "comparison": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/comparison.json",
+    "sha256": "f808bc9edca6c1424c6965dcc41da4dc4545589ab80eb71a0ba3afe5e69286b4"
+  },
+  "pairs": 696,
+  "identical": 695,
+  "differences": [
+    {
+      "name": "patient-records__success-receipt__ar-EG__360x800__dark.png",
+      "width": 360,
+      "height": 800,
+      "sha256": {
+        "a": "2015884b063d5e8f5b1a86cdcf2c0e4aeabd72985f24c372d546364f2de633f9",
+        "b": "823ed5b6f06a1d58ff04e25b4369d876cf08fe84c71ded76bf764aff1ac553f4"
+      },
+      "changedPixels": 1,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 1
+    }
+  ],
+  "threshold": {
+    "changedPixels": 0,
+    "perChannelTolerance": 0,
+    "masks": []
+  },
+  "captureManifests": [
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-a/capture-manifest.json",
+      "sha256": "28e2656b280a65c5385891529cc12ced3b39bbb81ac8b17f7c0e4cbd4a57955a"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/capture-b/capture-manifest.json",
+      "sha256": "d4550c6b4ac08735f40fcd277538234ab401e06e4cfcb66693e20592e59cff5e"
+    }
+  ],
+  "failedFullAttempts": [
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T13-34-29-884Z-05ee7c48-0db1-4606-ae38-630312a10cb3.json",
+      "sha256": "29dda40f1e597b8dc1fef2aaf9a31de29e6f31ab5a207309a6c90ca6175f1ae5"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T13-41-00-454Z-a7f2b00f-9768-4d72-926d-5d4b56683f0b.json",
+      "sha256": "03959d5aaca2b5ceb0ca46ed0afe227c6343f52aaae1bef0a2980fd79865956a"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T13-41-36-231Z-1c6d184a-a6f2-4665-a2a9-3b6f79a5415d.json",
+      "sha256": "3407978bbfb5f19363129d53b595fe6426aa3e4c14fa4f0ea170e8a591dab616"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T13-43-00-631Z-102666cd-2317-48ff-b823-58f28330bc5d.json",
+      "sha256": "71f35bd696f8ea5b98ff6c8bb711875f9c9893ce71ea7e1797aa79d2e56b13b8"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T13-44-23-916Z-2f098ed0-b257-4aa7-917b-fc257f058009.json",
+      "sha256": "e12e879f9c8ec2fe361e9820f3f3e0cfa67eda0d3ad3cc52fad8d24f698b672f"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T13-50-42-441Z-9c764759-ec78-42b1-b641-a9480d48698f.json",
+      "sha256": "a3f77b812beadec74690e29045b6af610bef323d32304c247c36577067902f2a"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T14-23-12-941Z-8af61008-3557-4107-b1b3-f311dc1949a4.json",
+      "sha256": "e1d2f6bc5aad30aa54e538c4c722255c04e0b3d4c05c960f8474046b474762c2"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T18-38-45-172Z-283cc1dd-dff6-4834-83df-12cf3650590c.json",
+      "sha256": "b5938e71e94cb9d87224d625f253b23f192a919c7769914e8d1282b26c315083"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T19-36-20-999Z-b19018b2-c2f2-4afb-ab2e-1ae286e4ae31.json",
+      "sha256": "a99e4d7e7c55b10d7ddb4db12f466803cffb0d93d1862f2f6747214c89c21932"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T20-37-55-849Z-5bed2003-e772-4f87-80de-97409ca60652.json",
+      "sha256": "b4cca3071483e60ac36a8504a25327b6fbdefbe7f1dca7d6ae998819bd02ae87"
+    }
+  ],
+  "rootCopyObservations": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/visual/corrected-copy-review.json",
+    "sha256": "d4c89847b977e81329e9f6e9aa69bbd9e7581f9939aa8ac3fb6fe689314ec749"
+  },
+  "failedRasterizationTrial": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/visual/software-rasterization-result.json",
+    "sha256": "0341737e10321c17f49cd5648ba6baa77c6925c26d6697b561a50a3e2a890bf0"
+  },
+  "failedSoftwareTrial": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostics/2026-10-10T214059-412Z-eac8e407-1a3b-438a-aaf2-44c2273749f1/strict-comparison.json",
+    "sha256": "050f6677b532409d468f9577f17ef60b1c25b9a95b93a900e310abf88297279c"
+  },
+  "softwareTrialBefore": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostics/2026-10-10T214059-412Z-eac8e407-1a3b-438a-aaf2-44c2273749f1/pre-baseline-renderer.json",
+    "sha256": "0931eb392dee529997f073e32fd8bf7b4f947bb328148b03370e336682e5743e"
+  },
+  "runnerRestored": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-current-app-surfaces.mjs",
+    "sha256": "80ae220bf0eb2532f7cbdba011d954d7e12e76a45adbc1ca1458061ad8375435"
+  },
+  "rootCause": "NOT_ESTABLISHED",
+  "nativeAssistiveTechnology": false,
+  "formalAcceptance": false,
+  "limitations": [
+    "29 of 99 configured logical states; synthetic HTTP fixtures",
+    "Headless browser; no physical NVDA/TalkBack execution",
+    "Strict pixel requirement failed and remains unchanged",
+    "Software rendering did not resolve equality; experimental flags were removed",
+    "No altered font positioning, CSS, masks or tolerances were adopted"
+  ]
+}

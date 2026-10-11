@@ -1,0 +1,21 @@
+{
+  "result": "K05_PASS_BEFORE_K06",
+  "storageProof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/k05/storage-proof.json",
+    "sha256": "a502bf3375ef46b759cd4455eafc13ddbbfc52d4108005f9fcc1bb47d42d80e0"
+  },
+  "k05Proof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/k05/storage-proof.json",
+    "sha256": "a502bf3375ef46b759cd4455eafc13ddbbfc52d4108005f9fcc1bb47d42d80e0"
+  },
+  "tests": {
+    "tools/run-feature-011-storage-test.mjs": "62dc149fa7899de9a3e68dfb2600dba6ad47aa7a94d089c70022109710d71b6d",
+    "tools/feature-011-support-lifecycle.mjs": "1e64b06ba9a441b4f1c4c40e995dc7b03fa9372ac3ee80899a0605117aa2cd83"
+  },
+  "migrations": {
+    "supabase/migrations/20261006175926_f011_allergy_revisions.sql": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+    "supabase/migrations/20261006175932_f011_content_artifacts.sql": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+    "supabase/migrations/20261006175937_f011_governance_evidence.sql": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+    "supabase/migrations/20261006175942_f011_atomic_receipts.sql": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929"
+  }
+}

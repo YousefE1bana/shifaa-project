@@ -1,0 +1,18 @@
+{
+  "original": {
+    "path": "artifacts/feature-011/k24/delegated-closeout/run-performance-repeats.mjs",
+    "sha256": "863571b9192caf7db99146244c403b24f8bb7ee93921a604a71198a4a84e8330"
+  },
+  "prepared": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/run-performance-repeats.mjs",
+    "sha256": "9623f055ba044f0ea1e1bf6922695a9c78a0f14f5f4f3245335e53bb0a6e804a"
+  },
+  "substitutions": [
+    {
+      "from": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/delegated-closeout-2026-10-10/performance",
+      "to": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/performance"
+    }
+  ],
+  "workloadChanged": false,
+  "thresholdsChanged": false
+}

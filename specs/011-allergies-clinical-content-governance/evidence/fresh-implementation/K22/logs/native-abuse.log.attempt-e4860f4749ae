@@ -1,0 +1,37 @@
+shifaa-local-postgres: K22 native/GUC attribution and API abuse
+K15 behavior failure: Error: shifaa-local-postgres: SQL setup/smoke failed (3)
+ERROR:  42703: column "recorder_person_id" does not exist
+LINE 1: SELECT json_build_object('person',recorder_person_id,'patien...
+                                          ^
+LOCATION:  errorMissingColumn, parse_relation.c:3716
+
+    at sql (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\run-feature-011-postgres-test.mjs:88:11)
+    at Object.owner (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/run-feature-011-allergy-api-test.mjs:238:43)
+    at results.push.withPublication.reading.Feature011Governance (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-composition-security.mjs:158:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async withSigning.additionalActors (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-publication-fixtures.mjs:63:16)
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/run-feature-011-sign-api-test.mjs:191:16
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/run-feature-011-allergy-api-test.mjs:434:24
+    at async withDatabase (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\run-feature-011-postgres-test.mjs:107:14)
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-composition-security.mjs:36:5
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+Error: shifaa-local-postgres: SQL setup/smoke failed (3)
+ERROR:  42703: column "recorder_person_id" does not exist
+LINE 1: SELECT json_build_object('person',recorder_person_id,'patien...
+                                          ^
+LOCATION:  errorMissingColumn, parse_relation.c:3716
+
+    at sql (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\run-feature-011-postgres-test.mjs:88:11)
+    at Object.owner (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/run-feature-011-allergy-api-test.mjs:238:43)
+    at results.push.withPublication.reading.Feature011Governance (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-composition-security.mjs:158:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async withSigning.additionalActors (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-publication-fixtures.mjs:63:16)
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/run-feature-011-sign-api-test.mjs:191:16
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/run-feature-011-allergy-api-test.mjs:434:24
+    at async withDatabase (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\run-feature-011-postgres-test.mjs:107:14)
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-composition-security.mjs:36:5
+
+Node.js v24.18.0

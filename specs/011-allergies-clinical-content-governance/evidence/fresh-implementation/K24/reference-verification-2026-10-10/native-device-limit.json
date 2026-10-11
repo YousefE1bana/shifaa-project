@@ -1,0 +1,20 @@
+{
+  "id": "SHIFAA-F011-PROSPECTIVE-NATIVE-VERIFICATION-LIMIT@1.0.0",
+  "recordedDate": "2026-10-10",
+  "reviewer": "Yousef Osama",
+  "reviewerRoles": ["Product Owner", "QA Lead", "Platform Lead", "Design Lead"],
+  "latestDirectReply": "i can't do tests right now if you can do it just do it and i'm here to listen",
+  "action": "Continue available automated server and browser verification without requiring immediate manual tests",
+  "knownUserReportedDevices": {
+    "windows": {"os": "Windows 11 Pro 26300.9550", "nvda": "2026.2", "chrome": "154.0.8037.93 Official Build 64-bit"},
+    "android": {"model": "Reno 13", "os": "Android 16", "build": "CPH2689 Build/BP2A.250605.015", "software": "CPH2689_16.0.5.1001(EX01C10P02)", "chrome": "154.0.8037.92", "talkBack": "17.0.1.926549743", "talkBackVersionCode": 60215178}
+  },
+  "settingsNotYetRecorded": ["Windows display scaling and Chrome zoom for native session", "NVDA language/voice and speech settings", "Android display/font size and Chrome text scaling", "TalkBack language/voice and speech settings"],
+  "capabilityLimit": "Native computer control is disabled in this agent session. Browser automation cannot operate NVDA or physical Android TalkBack, observe actual speech or determine the unreported native settings.",
+  "newNativeFormalExecution": "NOT_EXECUTED",
+  "previousReports": "Preserved attributed engineering observations; no retroactive formal promotion",
+  "remaining": "New attributable native execution/settings and owner evidence disposition where required by UI Contract section 10",
+  "browserAutomatedEvidence": "Supplementary; never a replacement for native screen-reader speech or physical-device checks",
+  "formalGateClosure": false,
+  "checkpointAcceptance": false
+}

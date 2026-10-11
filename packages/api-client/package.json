@@ -13,7 +13,9 @@
     "./identity-continuity": "./src/identity-continuity.ts",
     "./audit-admin": "./src/audit-admin.ts",
     "./clinic-scheduling": "./src/clinic-scheduling.ts",
-    "./feature-010": "./src/feature-010.ts"
+    "./feature-010": "./src/feature-010.ts",
+    "./feature-011": "./src/feature-011.ts",
+    "./feature-011-allergy-state": "./src/feature-011-allergy-state.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -21,7 +23,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --exclude='dist/**'",
     "generate:feature-010": "node ../../tools/generate-feature-010-client.mjs",
-    "generate:feature-010:check": "node ../../tools/generate-feature-010-client.mjs --check"
+    "generate:feature-010:check": "node ../../tools/generate-feature-010-client.mjs --check",
+    "generate:feature-011": "node ../../tools/generate-feature-011-client.mjs",
+    "generate:feature-011:check": "node ../../tools/generate-feature-011-client.mjs --check"
   },
   "dependencies": {
     "@shifaa/contracts": "workspace:*"

@@ -1,0 +1,28 @@
+{
+  "id": "admin-ui",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\3948_1791575743567\\node.exe",
+    "--import",
+    "tsx",
+    "tools/.f011-k24-8aae8dcd-1933-46f1-9b02-d7bfc9b553d0.mjs"
+  ],
+  "exitCode": 0,
+  "log": {
+    "path": "artifacts/feature-011/k24/admin-ui.log",
+    "sha256": "8c31e61cc3cd63f0d232b7fb5cd1d8df75acb1c2e458138a8f6d22e698876ae6"
+  },
+  "original": "tools/run-feature-011-admin-ui-test.mjs",
+  "originalSha256": "d800ce270fe3ea55e3e78901c3e900bef8e44d16d806137473e4bc2bf63c87aa",
+  "substitutions": [
+    [
+      "e = `${f}/evidence/fresh-implementation/K19`",
+      "e = \"specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/admin\""
+    ],
+    [
+      "a = 'artifacts/feature-011/k19'",
+      "a = \"artifacts/feature-011/k24/admin\""
+    ]
+  ],
+  "temporarySha256": "87e752cb08b20b7197f5bb29ef84c6030b7f55463f9ca51b917452b9297d310b",
+  "assertionsChanged": false
+}

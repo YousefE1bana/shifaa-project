@@ -1,0 +1,308 @@
+{
+  "result": "PASS",
+  "total": 67,
+  "passed": 67,
+  "failed": 0,
+  "sourceDigests": {
+    "tools/run-feature-011-protection-test.mjs": "0e57d04e9dc9c6103c53683ea1bd76538e5e76637a04323413206d62bb28bd82",
+    "tools/feature-011-protection-fixtures.mjs": "dbdd535c5381788f745b4b5717b4d982b06474aaa939287e7f499da8362b89bb",
+    "services/api/src/modules/feature-011/protection.ts": "090e7be543396eb3e92f0923ae3915f9bdcc55abcb379e5e55322cddd7b899a3",
+    "services/api/src/modules/feature-011/release-protection.ts": "39c6299f50a8b089c2b3aeb2451be772a7385b31e0070e90ac8d32d9f6cf0982",
+    "services/api/src/modules/feature-011/allergy-protection.ts": "2a5a2e4ec4928694fabc9be51e3f73f9f231f993151e044be0371f49758d971f",
+    "services/api/src/modules/feature-011/mutation-receipts.ts": "a7995e1adaeec30c0ac41cb93a8af7ec8a4aa4050faf640fa61a109c62603ccc",
+    "services/api/src/modules/feature-011/response-composition.ts": "2dee45d01bf4dda00cbe07f35781e174843d7493fad53a1b7d9f46eaaf7de161",
+    "services/api/src/adapters/postgres/feature-011-receipts.ts": "4b6c3a0b710bbb1211eab60b74230d0fd698b4f70e073e17082e9ebc076b3f52"
+  },
+  "testDigests": {
+    "services/api/src/feature-011-exposure.test.ts": "ad8cf52597e74889e39f8bf6be1cd6efbe3d2255e2bfa0a7cd4fdc3da05ca124",
+    "services/api/src/modules/feature-011/protection.test.ts": "37656674243a121bbed6f38c37c19ea869148cfa5305a98362a7ade2ddc4057d",
+    "services/api/src/modules/feature-011/receipts.test.ts": "78451ef32420a064ad052b4aabe8ed6c7eb482b57337b67fdbe900637b26c8ae"
+  },
+  "suites": [
+    {
+      "path": "services/api/src/feature-011-exposure.test.ts",
+      "cases": [
+        {
+          "id": "Feature 011 exposure prerequisite has a healthy baseline application/configuration before exposure assertions",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite defaults to disabled exposure and an engaged kill switch",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite rejects invalid FEATURE_011_ENABLED before any application can register routes",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite rejects invalid FEATURE_011_ISOLATED_TEST before any application can register routes",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite rejects invalid FEATURE_011_KILL_SWITCH before any application can register routes",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite keeps all seven actual application routes absent for {\"NODE_ENV\":\"test\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite keeps all seven actual application routes absent for {\"NODE_ENV\":\"test\",\"FEATURE_011_ENABLED\":\"false\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite keeps all seven actual application routes absent for {\"NODE_ENV\":\"test\",\"SHIFAA_SYNTHETIC_MODE\":\"true\",\"FEATURE_011_ENABLED\":\"true\",\"FEATURE_011_ISOLATED_TEST\":\"true\",\"FEATURE_011_KILL_SWITCH\":\"true\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite keeps all seven actual application routes absent for {\"NODE_ENV\":\"test\",\"SHIFAA_SYNTHETIC_MODE\":\"true\",\"FEATURE_011_ENABLED\":\"true\",\"FEATURE_011_ISOLATED_TEST\":\"true\",\"FEATURE_011_KILL_SWITCH\":\"false\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite denies nonisolated enablement {}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite denies nonisolated enablement {\"SHIFAA_SYNTHETIC_MODE\":\"false\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite denies nonisolated enablement {}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite denies nonisolated enablement {\"FEATURE_011_ISOLATED_TEST\":\"false\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite denies nonisolated enablement {\"NODE_ENV\":\"development\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite denies nonisolated enablement {\"NODE_ENV\":\"production\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite denies nonisolated enablement {\"HOST\":\"0.0.0.0\"}",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite blocks later registration while disabled: GET /v1/patients/:managedPatientId/allergies",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite blocks later registration while disabled: POST /v1/patients/:managedPatientId/allergies",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite blocks later registration while disabled: POST /v1/allergies/:allergyId/verification",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite blocks later registration while disabled: GET /v1/admin/clinical-content/:contentType",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite blocks later registration while disabled: POST /v1/admin/clinical-content/:contentType/releases",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite blocks later registration while disabled: POST /v1/admin/clinical-content/releases/:releaseId/signatures",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite blocks later registration while disabled: POST /v1/admin/clinical-content/releases/:releaseId/publish",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite permits only neutral ephemeral handlers in explicit isolated exposure and rechecks kill switch before execution",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite guards later nested application registration without affecting baseline routes",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite cannot bypass disabled registration by renaming a parameter or specializing its value",
+          "result": "passed"
+        },
+        {
+          "id": "Feature 011 exposure prerequisite rechecks isolation after registration before any neutral effect or queue entry",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": "services/api/src/modules/feature-011/protection.test.ts",
+      "cases": [
+        {
+          "id": "K08 frozen protection contracts and real local AES ALG-P01",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES ALG-P02",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES ALG-P03",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES ALG-A01",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES ALG-A02",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES ALG-A03",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES ALG-A04",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES AAD-P01",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES AAD-P02",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES AAD-P03",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES AAD-P04",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES AAD-P05",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES AAD-P06",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES AAD-P07",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES Unicode scalar ordering and exact strings",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES rejects noncanonical input NaN",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES rejects noncanonical input 0.5",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES rejects noncanonical input undefined",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES rejects noncanonical input \ud800",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES rejects noncanonical input { value: undefined }",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES requires configured immutable external key boundary",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES real BODY roundtrip, intended association and opaque capability",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES fresh nonces, tag/cipher/key/version/context substitution deny",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES separate fresh allergy facts/reason and authorized reconstruction",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES closed facts/reason reject unknown fields and unsafe payloads",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES strict decrypted JSON denies duplicates/BOM/noncanonical bytes {\"a\":1,\"a\":1}",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES strict decrypted JSON denies duplicates/BOM/noncanonical bytes  {\"a\":1}",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES strict decrypted JSON denies duplicates/BOM/noncanonical bytes {\"a\":1.0}",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES strict decrypted JSON denies duplicates/BOM/noncanonical bytes ﻿{\"a\":1}",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES invalid UTF-8 and hidden/getter/array members deny before access",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES workflow/head changes are excluded; immutable context identities remain",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES creation normalizes unknown; correction preserves source and validates new known coding",
+          "result": "passed"
+        },
+        {
+          "id": "K08 frozen protection contracts and real local AES short key/tag/nonce, mutable alias and closed envelope substitution deny",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": "services/api/src/modules/feature-011/receipts.test.ts",
+      "cases": [
+        {
+          "id": "RCP-P01 exact generated body bytes/AAD/header tuple",
+          "result": "passed"
+        },
+        {
+          "id": "RCP-P02 exact generated body bytes/AAD/header tuple",
+          "result": "passed"
+        },
+        {
+          "id": "RCP-P03 exact generated body bytes/AAD/header tuple",
+          "result": "passed"
+        },
+        {
+          "id": "RCP-P04 exact generated body bytes/AAD/header tuple",
+          "result": "passed"
+        },
+        {
+          "id": "RCP-P05 exact generated body bytes/AAD/header tuple",
+          "result": "passed"
+        },
+        {
+          "id": "receipt local AES only; exact tuple/context/version tamper denial",
+          "result": "passed"
+        },
+        {
+          "id": "serializer failure rolls back all components and disposes capability",
+          "result": "passed"
+        }
+      ]
+    }
+  ],
+  "command": "pnpm --filter @shifaa/api exec vitest run src/modules/feature-011/protection.test.ts src/modules/feature-011/receipts.test.ts src/feature-011-exposure.test.ts",
+  "apiTypecheck": "PASS; pnpm --filter @shifaa/api typecheck"
+}

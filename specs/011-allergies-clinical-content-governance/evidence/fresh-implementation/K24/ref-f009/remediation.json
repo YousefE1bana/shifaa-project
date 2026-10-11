@@ -1,0 +1,62 @@
+{
+  "recordedAt": "2026-10-10T17:36:46.158Z",
+  "defect": "PostgreSQL 40P01 deadlock during competing F009 reschedules escaped the existing conflict mapper as HTTP500",
+  "origin": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-copy-r02/full-verify.json",
+    "sha256": "87b363a0f1a3ff80e948ce137fdce79c338bb49782d87fa6316050c4f3c9ca05"
+  },
+  "databaseDiagnostic": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/reschedule-db-diagnostic.log",
+    "sha256": "6ec731f1610900f1a66fd7c39d31b6eeb91d4854f51f20ae31245566eeb2576c"
+  },
+  "beforeRouteSha256": "fb51864e0f379d140e538655708acc522711dee2b81eb9add627fce447475a87",
+  "fix": "Map only40P01 alongside existing40001 to existing HTTP409/version-conflict; unknownXX000 remains500; no implicit success or auto-retry",
+  "changedSourceHashes": {
+    "services/api/src/routes/clinic-scheduling.ts": "c2065284f93f575ff375b19e312461de4b3c109e99449b960df7116b98ebbac8",
+    "services/api/src/routes/clinic-scheduling.contract.test.ts": "1aa0267260dd76a5b21c27a52a11dcff3a0d757fb11180ce96df368a81326fea"
+  },
+  "red": {
+    "log": {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/reschedule-conflict-red.log",
+      "sha256": "f3eede3ed9bf2003c1771029e7b57cc9ba1dbb736daab43a42f95256cec9dfe6"
+    },
+    "passed": 8,
+    "failed": 1,
+    "reason": "Expected409 but got500 for40P01; all setup and other cases passed"
+  },
+  "green": {
+    "log": {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/reschedule-conflict-green.log",
+      "sha256": "ad9741043a0455f8a3e630afe0cc148b1e91caaba37d562129067b5e63e72686"
+    },
+    "passed": 16,
+    "failed": 0
+  },
+  "preflight": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-f009/preflight.json",
+    "sha256": "39d90ed151f309028a8e7dc08a2d648cced795101fe693ac46397952991883ee"
+  },
+  "helperRepair": {
+    "failedExecutedSource": {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/run-reschedule-preflight-failed-source.mjs",
+      "sha256": "41b45cfd70412836efc8b64a15b08b4299618161209078c1aae0a02057e00f43"
+    },
+    "log": {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/reschedule-preflight-1.log",
+      "sha256": "6b8a33710507fe65ffc4e92c31a4eb8796222daa797ad4c09a1bd208dffdf189"
+    },
+    "reason": "Evidence adapter assumed a JSON load-profile; actual runner outputs JSON stdout and optional markdown report. Runner itself exited0; this adapter exception was not accepted as proof. Correct adapter reran full runner twice with report preservation."
+  },
+  "qualityReview": {
+    "cleanCode": "Single explicit SQLSTATE branch; unrecognized errors still fail; no dependency or abstraction",
+    "testGuard": "HTTP-observable boundary regression plus real existing race runner; no internal-helper mock; unknown error and private diagnostic non-disclosure covered"
+  },
+  "scope": "Post-acceptance predecessor implementation maintenance needed by T091, under current Product Owner blocker-resolution authority; historical F009 acceptance unchanged",
+  "noSqlSchemaGrantLockThresholdAssertionContractRouteChanges": true,
+  "sourcePins": 141,
+  "parity": "PASS",
+  "T029RenewalRequired": false,
+  "reasonNoRenewal": "Both route/test files are outside141 pinned physical/P1–P5 inputs; approved SQL unchanged",
+  "T092Reexecuted": false,
+  "formalAcceptance": false
+}

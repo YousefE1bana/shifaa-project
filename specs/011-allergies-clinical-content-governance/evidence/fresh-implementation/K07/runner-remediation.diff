@@ -1,0 +1,70 @@
+diff --git a/artifacts/feature-011/k07/runner-before-timing-remediation.mjs b/tools/feature-011-physical-races.mjs
+index 9709222..2e02e33 100644
+--- a/artifacts/feature-011/k07/runner-before-timing-remediation.mjs
++++ b/tools/feature-011-physical-races.mjs
+@@ -704,7 +704,7 @@ async function receiptFaultProof(runtime, database) {
+   const fault = await callApi(runtime, database, 1, 'PAT', 'createAllergy', input, createAllergyExpression(input), {
+     envelope: invalidEnvelope,
+   });
+-  const result = assertFailure(fault.api, ['22023'], /envelope|contract|field/i, 'malformed receipt envelope');
++  const result = assertFailure(fault.api, ['22023'], /envelope|contract|field|^Feature 011 object has missing or unknown members$/i, 'malformed receipt envelope');
+   const after = snapshot(runtime, database);
+   assert.deepEqual(after, before, 'Malformed finalization must roll back all domain, receipt, audit, idempotency and outbox effects.');
+   const retryInput = createAllergyInput();
+@@ -742,7 +742,7 @@ SELECT 'K07_RECEIPT_FAULT_ROLLED_BACK';`);
+     await marker(holder, 'K07_RECEIPT_FAULT_ROLLED_BACK');
+     finalizerFault = jsonFromOutput(holder.output, (line) => line.startsWith('{') && line.includes('"sqlstate"'));
+     assert.equal(finalizerFault.sqlstate, '22023');
+-    assert.match(finalizerFault.message, /envelope|contract|field/i);
++    assert.match(finalizerFault.message, /envelope|contract|field|^Feature 011 object has missing or unknown members$/i);
+     holder.child.stdin.end();
+     holderClose = await holder.closed;
+     assert.equal(holderClose.code, 0, `Unfinalized receipt holder did not roll back cleanly: ${holderClose.output}`);
+@@ -1084,8 +1084,9 @@ async function contentLineageRaces(runtime, database, onPhase = () => {}) {
+   });
+   const grandchildSetup = await signAndAdmit(runtime, database, grandchild);
+   onPhase('effective-time-after-wait');
+-  const seriesLock = session(runtime, database, `${database}_holder`);
+-  const lockIdentity = await identify(seriesLock, 'shifaa_api', { idleTransactionTimeout: '90s' });
++  // Owner-only orchestration holds the series lock; the contender remains shifaa_api.
++  const seriesLock = session(runtime, database, `${database}_holder`, runtime.user);
++  const lockIdentity = await identify(seriesLock, runtime.user, { idleTransactionTimeout: '90s' });
+   seriesLock.send(`BEGIN; SELECT id FROM clinical.content_series WHERE content_type='synthetic' AND governed_content_key='neutral-series' AND effective_scope_key='synthetic-scope' FOR UPDATE; SELECT 'K07_EFFECTIVE_SERIES_HELD';`);
+   await marker(seriesLock, 'K07_EFFECTIVE_SERIES_HELD');
+   const grandchildPublishInput = publishInput(grandchild);
+@@ -1277,7 +1278,7 @@ async function actualCurrentAuthorityRace(runtime, database, schedule) {
+       await marker(action.connection, 'K07_AUTHORITY_PUBLISH_READY');
+       actionValue = assertSuccess(actionResult(action.connection), 'publish before signer-authority revocation');
+       writer = await startAuthorityRevoker(runtime, database, authorityId, 'contender');
+-      locks = await proveWait(runtime, database, action.identity.pid, writer.identity.pid);
++      locks = await proveWait(runtime, database, action.identity.pid, writer.identity.pid).catch((error) => { throw writer.error?.() ?? error; });
+       actionCommit = await finishSession(action.connection, 'K07_AUTHORITY_PUBLISH_COMMITTED');
+       await marker(writer.connection, 'K07_AUTHORITY_REVOKED_READY');
+       writerCommit = await finishSession(writer.connection, 'K07_AUTHORITY_REVOKER_COMMITTED');
+@@ -1409,7 +1410,7 @@ async function actualEncounterRace(runtime, database, schedule) {
+       await marker(action.connection, 'K07_F010_VERIFY_READY');
+       actionValue = assertSuccess(actionResult(action.connection), 'Feature 011 verification before F010 completion');
+       writer = await startSqlWriter(runtime, database, encounterWriterSql(), 'contender');
+-      locks = await proveWait(runtime, database, action.identity.pid, writer.identity.pid);
++      locks = await proveWait(runtime, database, action.identity.pid, writer.identity.pid).catch((error) => { throw writer.error?.() ?? error; });
+       actionCommit = await finishSession(action.connection, 'K07_F010_VERIFY_COMMITTED');
+       await waitMarker(writer.connection, 'K07_ACTUAL_WRITER_DONE');
+       writerCommit = await finishSession(writer.connection, 'K07_F010_WRITER_COMMITTED');
+@@ -1503,7 +1504,7 @@ async function startFacilityServiceWriter(runtime, database, schedule) {
+     await tx`select set_config('application_name',${`${database}_${schedule === 'action-first' ? 'contender' : 'holder'}`},false)`;
+     [writerIdentity] = await tx`SELECT pg_backend_pid() AS pid,current_user AS "user",current_database() AS database,current_setting('application_name') AS "applicationName"`;
+     writerResult = await service.endMembership(
+-      { personId: person(8), principal: 'synthetic-k07', adminRole: 'super_admin', aal: 2, purpose: 'facility_approval', requestId: randomUUID() },
++      { personId: person(2), principal: 'synthetic-k07', adminRole: 'facility_approver', aal: 2, purpose: 'professional_license_review', requestId: randomUUID() },
+       facility, membership.id, { reason: 'synthetic.k07.revoke' }, membership.version,
+     );
+     held = true;
+@@ -1562,7 +1563,7 @@ async function actualFacilityRace(runtime, database, schedule) {
+       await marker(action.connection, 'K07_FACILITY_VERIFY_READY');
+       actionValue = assertSuccess(actionResult(action.connection), 'Feature 011 verification before actual facility membership revocation');
+       writer = await startFacilityServiceWriter(runtime, database, schedule);
+-      locks = await proveWait(runtime, database, action.identity.pid, writer.identity.pid);
++      locks = await proveWait(runtime, database, action.identity.pid, writer.identity.pid).catch((error) => { throw writer.error?.() ?? error; });
+       actionCommit = await finishSession(action.connection, 'K07_FACILITY_VERIFY_COMMITTED');
+       await writer.waitHeld();
+       await writer.commit();

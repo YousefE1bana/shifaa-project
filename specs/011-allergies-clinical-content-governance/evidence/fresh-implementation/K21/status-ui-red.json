@@ -1,0 +1,28 @@
+{
+  "result": "VALID_RED",
+  "task": "T077",
+  "tests": 54,
+  "failed": 54,
+  "passed": 0,
+  "exit": 1,
+  "reason": "Loadable no-op metadata controller and render placeholders omit required behavior; all failures are explicit assertions, not setup/import/parser/cache-policy failures.",
+  "setupRepair": "Mock transport now honors generated private,no-store policy; rejected early fixture attempts excluded.",
+  "inputs": {
+    "apps/clinic/test/feature-011-status.test.tsx": "8182d773882565c0bc8cd2478cb2ff79df2153415405b77138c5a051a973f1a2"
+  },
+  "baseline": {
+    "controller": {
+      "path": "artifacts/feature-011/k21/status-red-baseline.ts",
+      "sha256": "0d0780abd992d8c67eecb88d6ae0fd7b2a8b8e14c8a4f2f1fbce86c5cb4a8556"
+    },
+    "view": {
+      "path": "artifacts/feature-011/k21/status-view-red-baseline.tsx",
+      "sha256": "6b68d621b3d483a12fc180d42c22f6d524fa70c97f28f3f26315b5d53d394ef5"
+    }
+  },
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/status-ui-red.log",
+    "sha256": "981572b0611e93d11c4637847111ffcf5239ee17d9f35614f579e035bd94beed"
+  },
+  "capturedAt": "2026-10-09T10:57:13.027Z"
+}

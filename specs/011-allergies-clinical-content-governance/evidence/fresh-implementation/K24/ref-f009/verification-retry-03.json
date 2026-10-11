@@ -1,0 +1,21 @@
+{
+  "recordedAt": "2026-10-10T17:36:46.173Z",
+  "driver": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/run-copy-full-verify-retry-03.mjs",
+    "sha256": "cc859102af526571e64f6517bfea2e60aa612f4fef1c482082669022d56e1fb3"
+  },
+  "preflight": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-f009/preflight.json",
+    "sha256": "39d90ed151f309028a8e7dc08a2d648cced795101fe693ac46397952991883ee"
+  },
+  "remediation": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-f009/remediation.json",
+    "sha256": "f724ddeae82d631cb5e7c90f7af2998098afadd3f326a4d282b8d5c5dc50e047"
+  },
+  "priorFailedProof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-copy-r02/full-verify.json",
+    "sha256": "87b363a0f1a3ff80e948ce137fdce79c338bb49782d87fa6316050c4f3c9ca05"
+  },
+  "failedAttemptsPreserved": true,
+  "thresholdsWorkloadAssertionsUnchanged": true
+}

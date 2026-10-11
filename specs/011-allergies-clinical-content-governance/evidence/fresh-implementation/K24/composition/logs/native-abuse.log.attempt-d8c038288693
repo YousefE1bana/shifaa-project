@@ -1,0 +1,3 @@
+shifaa-local-postgres: K22 native/GUC attribution and API abuse
+shifaa-local-supabase: K22 native/GUC attribution and API abuse
+{"result":"PASS","counts":[{"runtime":"shifaa-local-postgres","count":39},{"runtime":"shifaa-local-supabase","count":39}]}

@@ -7,3 +7,4 @@ export * from './identity-continuity.js';
 export * from './audit-admin.js';
 export * from './clinic-scheduling.js';
 export * from './feature-010.js';
+export * from './feature-011.js';

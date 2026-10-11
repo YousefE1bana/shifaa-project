@@ -1,0 +1,12 @@
+shifaa-local-postgres-postgres-1|40.12%|164.6MiB / 7.601GiB|9
+supabase_db_shifaa-local-supabase|0.67%|237MiB / 7.601GiB|54
+supabase_pooler_shifaa-local-supabase|5.21%|243.2MiB / 7.601GiB|57
+supabase_studio_shifaa-local-supabase|0.03%|189.3MiB / 7.601GiB|11
+supabase_pg_meta_shifaa-local-supabase|0.49%|96.1MiB / 7.601GiB|12
+supabase_edge_runtime_shifaa-local-supabase|0.01%|24.11MiB / 7.601GiB|37
+supabase_storage_shifaa-local-supabase|0.01%|135.1MiB / 7.601GiB|12
+supabase_rest_shifaa-local-supabase|0.09%|70.72MiB / 7.601GiB|56
+supabase_inbucket_shifaa-local-supabase|3.23%|15.59MiB / 7.601GiB|14
+supabase_auth_shifaa-local-supabase|0.00%|20.08MiB / 7.601GiB|19
+supabase_kong_shifaa-local-supabase|2.00%|96.81MiB / 7.601GiB|3
+supabase_analytics_shifaa-local-supabase|2.04%|565.4MiB / 7.601GiB|73

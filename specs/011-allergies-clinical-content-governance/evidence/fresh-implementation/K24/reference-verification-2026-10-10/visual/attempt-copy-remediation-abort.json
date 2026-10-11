@@ -1,0 +1,16 @@
+{
+  "recordedAt": "2026-10-10T14:51:51.616Z",
+  "classification": "ABORTED_REFERENCE_ATTEMPT_FOR_CONFIRMED_COPY_REMEDIATION",
+  "execution": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T14-23-12-941Z-8af61008-3557-4107-b1b3-f311dc1949a4.json",
+    "sha256": "e1d2f6bc5aad30aa54e538c4c722255c04e0b3d4c05c960f8474046b474762c2"
+  },
+  "ownedServerProcessIds": [
+    21812,
+    18536
+  ],
+  "verifiedParentProcessId": 22688,
+  "interruption": "Verified harness-owned admin18319 and clinic18313 process trees stopped; capture failed connection refused and finally cleaned up other owned servers/browser and restored generated files",
+  "validPass": false,
+  "productTestFailure": false
+}

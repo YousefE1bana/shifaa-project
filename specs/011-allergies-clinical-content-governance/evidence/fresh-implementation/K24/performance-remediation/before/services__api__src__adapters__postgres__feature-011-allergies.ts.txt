@@ -1,0 +1,156 @@
+import { createHmac, timingSafeEqual } from 'node:crypto';
+import type { Sql, TransactionSql, JSONValue } from 'postgres';
+import type { Feature011ListAllergiesQuery } from '@shifaa/contracts/feature-011';
+import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
+import type {
+  AllergyActor,
+  AllergyRepository,
+  AllergyScope,
+} from '../../modules/feature-011/allergies.js';
+import { canonicalBytes, uuid } from '../../modules/feature-011/protection.js';
+import { PostgresFeature011Receipts } from './feature-011-receipts.js';
+/** Existing Feature010 current-care context, resolved by the trusted server;
+ * client role/AAL/context values never establish current SQL authority. */
+export type Feature011CareContext = (
+  actor: AllergyActor,
+  patientId: string,
+  encounterId?: string,
+) => Promise<{ facilityId: string; encounterId: string } | undefined>;
+export class PostgresFeature011Allergies implements AllergyRepository {
+  readonly receipts: PostgresFeature011Receipts;
+  constructor(
+    private readonly pool: Sql,
+    private readonly cursorKey: Buffer,
+    private readonly currentCare?: Feature011CareContext,
+  ) {
+    if (cursorKey.length < 32) throw Error('F011_CURSOR_KEY_REQUIRED');
+    this.receipts = new PostgresFeature011Receipts(pool);
+  }
+  private async context(tx: TransactionSql, scope: AllergyScope): Promise<void> {
+    const [role] = await tx`SELECT session_user AS session,current_user AS current`;
+    if (role?.['session'] !== 'shifaa_api' || role['current'] !== 'shifaa_api')
+      throw new ApiPolicyError('forbidden', 403, 'Online principal is not authorized.');
+    const values = {
+      environment: 'local',
+      person_id: uuid(scope.actor.personId),
+      actor_role: scope.role,
+      aal: String(scope.actor.aal),
+      purposes: scope.actor.purposes.join(','),
+      facility_id: scope.facilityId ?? '',
+      encounter_id: scope.encounterId ?? '',
+      request_id: scope.actor.requestId,
+      action: 'listAllergies',
+    };
+    for (const [name, value] of Object.entries(values))
+      await tx`SELECT set_config(${`shifaa.${name}`},${value},true)`;
+  }
+  async resolve(
+    actor: AllergyActor,
+    patientId: string,
+    encounterId?: string,
+  ): Promise<AllergyScope> {
+    const care = await this.currentCare?.(actor, patientId, encounterId);
+    if (encounterId && (!care || care.encounterId !== encounterId))
+      throw new ApiPolicyError('forbidden', 403, 'Current care context is unavailable.');
+    const scopes: AllergyScope[] = care
+      ? [
+          {
+            actor,
+            role: 'CLN',
+            facilityId: uuid(care.facilityId),
+            encounterId: uuid(care.encounterId),
+          },
+        ]
+      : ['PAT', 'GUA', 'DEL'].map((role) => ({ actor, role: role as AllergyScope['role'] }));
+    for (const scope of scopes) {
+      try {
+        await this.read(scope, patientId, { limit: 1 });
+        return scope;
+      } catch (error) {
+        if (!(error instanceof Error && 'code' in error && error.code === '42501')) throw error;
+      }
+    }
+    throw new ApiPolicyError('forbidden', 403, 'The current patient context is not authorized.');
+  }
+  private binding(
+    scope: AllergyScope,
+    patientId: string,
+    query: Feature011ListAllergiesQuery,
+  ): string {
+    return canonicalBytes({
+      actor: scope.actor.personId,
+      patient: patientId,
+      role: scope.role,
+      facility: scope.facilityId ?? null,
+      encounter: scope.encounterId ?? null,
+      purposes: scope.actor.purposes,
+      aal: scope.actor.aal,
+      view: query.view ?? 'current',
+      status: query.status ?? null,
+      allergyId: query.allergyId ?? null,
+      limit: query.limit ?? 25,
+    }).toString();
+  }
+  private decode(raw: string, binding: string): unknown {
+    const invalid = () =>
+      new ApiPolicyError(
+        'validation-failed',
+        422,
+        'The allergy cursor is invalid for this context.',
+      );
+    if (raw.length > 4096) throw invalid();
+    const [payload, signature, extra] = raw.split('.');
+    if (
+      extra !== undefined ||
+      !payload ||
+      !signature ||
+      !/^[A-Za-z0-9_-]+$/.test(payload) ||
+      !/^[A-Za-z0-9_-]+$/.test(signature)
+    )
+      throw invalid();
+    const expected = createHmac('sha256', this.cursorKey).update(payload).digest(),
+      actual = Buffer.from(signature, 'base64url');
+    if (expected.length !== actual.length || !timingSafeEqual(expected, actual)) throw invalid();
+    try {
+      const record = JSON.parse(Buffer.from(payload, 'base64url').toString()) as {
+        binding: string;
+        continuation: unknown;
+      };
+      if (record.binding !== binding || !record.continuation) throw invalid();
+      return record.continuation;
+    } catch {
+      throw invalid();
+    }
+  }
+  private encode(continuation: unknown, binding: string): string {
+    const payload = canonicalBytes({ binding, continuation }).toString('base64url');
+    return `${payload}.${createHmac('sha256', this.cursorKey).update(payload).digest('base64url')}`;
+  }
+  async read(scope: AllergyScope, patientId: string, query: Feature011ListAllergiesQuery) {
+    const binding = this.binding(scope, patientId, query),
+      input: Record<string, unknown> = { ...query };
+    if (query.cursor !== undefined) input['cursor'] = this.decode(query.cursor, binding);
+    const raw = (await this.pool.begin(async (tx) => {
+      await this.context(tx, scope);
+      const [row] =
+        await tx`SELECT clinical.list_allergies_api_v1(${uuid(patientId)}::uuid,${tx.json(input as JSONValue)}::jsonb) AS result`;
+      return row?.['result'];
+    })) as
+      | {
+          view: string;
+          data: Record<string, unknown>[];
+          meta: Record<string, unknown>;
+          continuation: unknown;
+        }
+      | undefined;
+    if (!raw || !Array.isArray(raw.data) || !raw.meta) throw Error('F011_INVALID_SQL_READ');
+    return {
+      view: raw.view,
+      data: raw.data,
+      meta: {
+        ...raw.meta,
+        nextCursor: raw.continuation ? this.encode(raw.continuation, binding) : null,
+      },
+    };
+  }
+}

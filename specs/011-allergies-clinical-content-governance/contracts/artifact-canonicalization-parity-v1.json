@@ -1,0 +1,75 @@
+{
+  "formatVersion": 1,
+  "contractId": "SHIFAA-F011-ARTIFACT/1",
+  "status": "PROPOSED_PENDING_PRODUCT_OWNER_ARCHITECTURE_REVIEW",
+  "normativeInputs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+      "sha256": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+      "sha256": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+      "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133"
+    }
+  ],
+  "ownership": {
+    "contractAndVectorReviewTests": "T090",
+    "generatorVerifierMetadataPreparation": "T091",
+    "prePhysicalAcceptance": "T092",
+    "sqlConsumer": "T012",
+    "bothRuntimePhysicalEvidence": "T016",
+    "affectedStageAssertion": "T017",
+    "coreEncoder": "T046",
+    "sqlCoreEquivalence": "T047",
+    "coreAndEquivalenceTests": "T045"
+  },
+  "requiredContractVerifierInputs": [
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json"
+  ],
+  "generatedMetadata": {
+    "symbol": "feature011ArtifactCanonicalizationMetadata",
+    "modules": [
+      "packages/contracts/src/feature-011.ts",
+      "packages/api-client/src/feature-011.ts"
+    ],
+    "fields": [
+      "contractId",
+      "normativeInputDigests",
+      "parityRegistrySha256"
+    ],
+    "behavior": "generated data only; no encoder, normalization function or operation; existing wire DTOs and methods stay unchanged"
+  },
+  "preparationAssertions": [
+    "exact version/14-field profile agreement",
+    "normative text and profile exclude current release UUID and physical/database series UUID only; predecessor.supersedesReleaseId is the sole release-UUID lineage field at ordinal 8, canonical UUID for successors and N, for initials; all fixed-vector ordinal-8 bytes agree",
+    "fixed vector bytes/UTF-8 lengths/material digests/envelope SHA-256 integrity",
+    "missing normative input fails",
+    "registry/input hash mismatch fails",
+    "changed canonical input without regeneration fails",
+    "generated contract/client metadata agrees",
+    "current verifier source binding includes every canonical artifact"
+  ],
+  "physicalAssertion": {
+    "category": "artifact-canonicalization-v1",
+    "requiredBefore": "T017",
+    "runtimes": [
+      "shifaa-local-postgres",
+      "shifaa-local-supabase"
+    ],
+    "proof": "real physical SQL implementation outputs match normative bytes/hash and negatives; operation/evidence binding remains independently required"
+  },
+  "extensionState": "NOT_IMPLEMENTED: current C02 generator/verifier does not yet bind these inputs; T090-T092 must pass before T008 resumes; historical C02 remains wire-shape preparation only",
+  "gate": {
+    "id": "OPEN-TECH-002",
+    "closed": false,
+    "physicalParity": "PENDING",
+    "stageAssertion": "NOT_AUTHORIZED_BY_THIS_RECONCILIATION"
+  }
+}

@@ -127,6 +127,49 @@ describe('clinic scheduling HTTP contract', () => {
     await app.close();
   });
 
+  it.each([
+    ['40001', 409, 'version-conflict'],
+    ['40P01', 409, 'version-conflict'],
+    ['XX000', 500, 'internal-error'],
+  ])(
+    'returns %s reschedule failures as %i %s without database details',
+    async (code, status, problemCode) => {
+      const app = Fastify({ logger: false });
+      installIdentityErrorHandler(app);
+      const injected = service();
+      const privateDetail = 'Synthetic private database diagnostic';
+      vi.mocked(injected.rescheduleAppointment).mockRejectedValueOnce(
+        Object.assign(new Error(privateDetail), { code }),
+      );
+      await registerClinicSchedulingRoutes(app, { service: injected, syntheticMode: true });
+      try {
+        const response = await app.inject({
+          method: 'POST',
+          url: `/v1/appointments/${id}/reschedule`,
+          headers: {
+            authorization: `Bearer synthetic-person:${id}`,
+            'idempotency-key': 'synthetic-reschedule-conflict',
+            'if-match': '"1"',
+          },
+          payload: {
+            startsAt: appointment.startsAt,
+            endsAt: appointment.endsAt,
+            timezone: appointment.timezone,
+            civilDate: appointment.civilDate,
+            reason: 'Synthetic replacement slot',
+          },
+        });
+        expect(response.statusCode).toBe(status);
+        expect(response.json()).toMatchObject({ code: problemCode });
+        expect(response.headers['cache-control']).toBe('private, no-store');
+        expect(response.headers['content-type']).toContain('application/problem+json');
+        expect(response.body).not.toContain(privateDetail);
+      } finally {
+        await app.close();
+      }
+    },
+  );
+
   it('uses generated request validation before authentication or mutation work', async () => {
     const app = Fastify({ logger: false });
     installIdentityErrorHandler(app);

@@ -1,0 +1,192 @@
+{
+  "formatVersion": 1,
+  "status": "PLAN_RECOVERY_R2_DRAFT_REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+  "consumptionAllowed": false,
+  "contractId": "SHIFAA-F011-RECEIPT-PROTECTED/1",
+  "envelope": {
+    "contractId": "SHIFAA-F011-RECEIPT-PROTECTED/1",
+    "algorithm": "AES-256-GCM",
+    "closedFields": [
+      "contractId",
+      "keyRef",
+      "nonce",
+      "ciphertext",
+      "authTag"
+    ],
+    "nonceBytes": 12,
+    "tagBytes": 16,
+    "ciphertextMinBytes": 1,
+    "keyRef": "immutable/versioned exact external key reference; trusted producer rejects mutable aliases; opaque nonempty no-NUL strict UTF-8 to SQL",
+    "columns": {
+      "contractId": [
+        "receipt_contract_id",
+        "text"
+      ],
+      "keyRef": [
+        "receipt_key_ref",
+        "text"
+      ],
+      "nonce": [
+        "receipt_nonce",
+        "bytea"
+      ],
+      "ciphertext": [
+        "receipt_ciphertext",
+        "bytea"
+      ],
+      "authTag": [
+        "receipt_auth_tag",
+        "bytea"
+      ]
+    },
+    "byteCarrier": "lowercase even-length hex decoded once; no serialized durable envelope",
+    "sqlCrypto": false,
+    "keyMaterialInSql": false
+  },
+  "canonicalJson": {
+    "keyOrder": "Unicode scalar ascending, recursive",
+    "arrayOrder": "preserved",
+    "encoding": "strict UTF-8",
+    "whitespace": "none outside strings; no BOM/terminator",
+    "strings": "quote/backslash escape; short b/f/n/r/t; other U+0000-001F lowercase u00xx; other Unicode scalar literal; no normalization",
+    "integers": "minimal decimal ASCII",
+    "rejection": [
+      "duplicate/unknown fields",
+      "unpaired surrogates/invalid UTF-8",
+      "noncanonical serialized bytes",
+      "floats in these schemas"
+    ]
+  },
+  "responseSchema": "unchanged generated success response; no plaintext SQL handoff",
+  "mutationResponses": {
+    "createAllergy": {
+      "status": 201,
+      "schema": "AllergyRevision",
+      "resourceType": "clinical.allergy_revision"
+    },
+    "verifyAllergy": {
+      "status": 200,
+      "schema": "AllergyRevision",
+      "resourceType": "clinical.allergy_revision"
+    },
+    "createClinicalContentRelease": {
+      "status": 201,
+      "schema": "GovernanceRelease",
+      "resourceType": "clinical.content_release"
+    },
+    "signClinicalContentRelease": {
+      "status": 200,
+      "schema": "SignReleaseResponse",
+      "resourceType": "clinical.content_release"
+    },
+    "publishClinicalContentRelease": {
+      "status": 200,
+      "schema": "GovernanceRelease",
+      "resourceType": "clinical.content_release"
+    }
+  },
+  "physicalTable": "clinical.mutation_receipts",
+  "physicalMetadata": {
+    "id": "uuid PK",
+    "idempotency_record_id": "uuid UNIQUE FK platform.idempotency_records",
+    "actor_person_id": "uuid FK identity.people",
+    "operation_id": "text one of five IDs",
+    "resource_type": "text allergy_revision/content_release",
+    "resource_id": "uuid stable allergy/release identity",
+    "resource_version": "positive integer returned version snapshot",
+    "response_status": "smallint exact operation result",
+    "response_etag": "text quoted resource_version",
+    "response_language": "text ar-EG/en-EG",
+    "response_request_id": "uuid original",
+    "occurred_at": "timestamptz"
+  },
+  "allFieldsNotNull": true,
+  "allowedHeaders": [
+    "X-Request-Id",
+    "Cache-Control",
+    "ETag",
+    "Content-Language"
+  ],
+  "cacheControl": "private, no-store",
+  "contentType": "application/json",
+  "aad": {
+    "contractId": "SHIFAA-F011-RECEIPT-AAD/1",
+    "prefix": "SHIFAA-F011-RECEIPT-AAD/1;",
+    "frameOrder": [
+      "resourceType",
+      "receiptId",
+      "idempotencyRecordId",
+      "operationId",
+      "targetResourceType",
+      "targetResourceId",
+      "responseResourceVersion",
+      "responseStatus",
+      "responseETag",
+      "responseLanguage",
+      "responseRequestId",
+      "keyRef"
+    ],
+    "frameCount": 12,
+    "framing": "S<minimal UTF-8 octet length>:<exact UTF-8 payload>,",
+    "nullAllowed": false,
+    "reconstruction": "immutable persisted receipt/obligation tuple + constants, never newer resource/auth state"
+  },
+  "commitObligation": {
+    "table": "clinical.mutation_commit_obligations",
+    "fields": {
+      "idempotency_record_id": "uuid PK FK",
+      "receipt_id": "uuid UNIQUE",
+      "actor_person_id": "uuid FK",
+      "operation_id": "text",
+      "resource_type": "text",
+      "resource_id": "uuid",
+      "resource_version": "positive integer",
+      "response_status": "smallint",
+      "response_etag": "text",
+      "response_language": "text",
+      "response_request_id": "uuid",
+      "audit_event_occurred_at": "timestamptz",
+      "audit_event_id": "uuid",
+      "outbox_event_id": "uuid FK",
+      "occurred_at": "timestamptz"
+    },
+    "auditForeignKey": "(audit_event_occurred_at,audit_event_id) -> audit.events(occurred_at,id)",
+    "allNotNull": true,
+    "guard": "INITIALLY DEFERRED COMMIT enforcement of matching immutable receipt+tuple+audit+outbox+completed idempotency pointer; missing finalization aborts COMMIT",
+    "writes": "narrow executor only; ENABLE/FORCE RLS; immutable; no shifaa_api direct DML",
+    "deletion": "RESTRICT; no generic purge/inferred committed absence; retention OPEN-LEGAL-002"
+  },
+  "transaction": {
+    "externalPreparation": "native verification/current context, domain preflight/evidence/response review, receipt key/capability before lock-holding transaction",
+    "insideOneTransaction": [
+      "claim/lock idempotency",
+      "fixed ranked domain+authority admission",
+      "domain/audit/outbox/authoritative obligation",
+      "service generated-schema validation + canonical exact response bytes",
+      "LOCAL receipt AES-GCM using prepared capability",
+      "SQL receipt finalization + idempotency completed",
+      "deferred COMMIT guard"
+    ],
+    "localCryptoUnderLocks": true,
+    "externalNetworkKmsEvidenceUnderLocks": false,
+    "plaintextReceiptSql": false,
+    "postcommitReceiptCompletion": false,
+    "serializerCryptoFailure": "rollback ALL components",
+    "committedSend": "same canonical bytes/status/header tuple"
+  },
+  "replay": {
+    "currentDisclosureAuthorizationFirst": true,
+    "originalSnapshotOnly": true,
+    "encryption": false,
+    "domainEffect": false,
+    "artifactReview": "verify original reference/hash/material outside locks then final current authorization and exact stored string checks",
+    "lostAuthority": "deny no effect/body",
+    "commitUnknown": "resolve authoritative scope first; failed lookup/processing/expiry not absence; never blindly new mutation"
+  },
+  "capability": "attempt-scoped bounded local AES capability; no export/persist/log/SQL key; best-effort buffer zeroize/release finally all outcomes; no hardware-erasure/provider claim",
+  "ownership": {
+    "physical": "synthetic both-runtime columns/FK/tuple/deferred guard/RLS only",
+    "realProducer": "all five exact generated responses/local AES-GCM/capability disposal/no external under locks and both-runtime atomic-failure composition",
+    "application": "crashes/commit-unknown/replay-authority/newer-resource/overlap; original byte/status/header replay"
+  }
+}

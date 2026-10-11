@@ -1,0 +1,137 @@
+{
+  "formatVersion": 1,
+  "recordId": "SHIFAA-F011-PLAN-PROTECTION-PARITY-R2",
+  "date": "2026-10-06",
+  "status": "DRAFT_REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+  "consumptionAllowed": false,
+  "inputs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md",
+      "sha256": "b203e00aaf3e2cc689b2ccc60e0b846ca206942de9b660d1d185ba4006d0a57e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md",
+      "sha256": "be9c3cb150a8003bac64f91e65540ef90314bdb636874fdc8ecce4d41932a8c7"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json",
+      "sha256": "435c198065945d643cb53dac952f0c33982741f6221c255ba8dbcbfc67e61ac6"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json",
+      "sha256": "b0f8d4ba2ad5f30bbdf6ec963a6dc4e16677236b3ed0fbc6aa263ee81a2ed6ed"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md",
+      "sha256": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json",
+      "sha256": "2bf23cae34648742f995edced1008f7988efdbaf9dd12d9e1c46aa83e10d68ec"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json",
+      "sha256": "4eff01a61b485f0616b69480a979f3024da21b464cf768771055bb2694e56050"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md",
+      "sha256": "95c8bd6f892ff413f4484894675f6b57c17b2104af78ec1b6cd52126d96941e2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json",
+      "sha256": "5aa331c44dff081bdf7270b36d2be2078ee3768aa915b7eefbe6fa9ab662cdec"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json",
+      "sha256": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml",
+      "sha256": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json",
+      "sha256": "53e46fbbbf79526749e0786c1630a2c2b6ad515ec3ac33d8755d2730df0842ac"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/plan.md",
+      "sha256": "6152a5f9156853a9852e040b76552912c5b19acb580ef880773b994d97a714ea"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/research.md",
+      "sha256": "216d420b2de7d1f7b258860d5893a7befc3bb7614d13ddb421a1a18ae3e42f70"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/data-model.md",
+      "sha256": "fda5b6fdf44805a90969872036c60f0b55708396bcfe60826161cb2c544f08c9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/quickstart.md",
+      "sha256": "4060f53bf42d3c21ffdbdd9ec5279da4b2db7590a9db9e28ac9ae29b18530d21"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+      "sha256": "7ca22c0cab4294d99e199cef5764f3929a27286afc319bbfac1860652bee2dd5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md",
+      "sha256": "b9632b94dfb136b35d0b3bcef89a2cee47002836ed7db679a56cc4a000c0b48b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-r2-cross-layer-matrix.md",
+      "sha256": "f3f5fd3885f7bd5683e6209e7c0a47d6f39447b1f1ac6e322a8dbe5ec77c8f5b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-r2-self-debate.md",
+      "sha256": "a55695f55f86a7310ddb86a2350c9b794fd4032c1d7292dee04938460c850ab0"
+    }
+  ],
+  "frozenCanonicalInputs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json",
+      "sha256": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+      "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+      "sha256": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+      "sha256": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9"
+    }
+  ],
+  "counts": {
+    "nfr": 19,
+    "operations": 7,
+    "allergyPayloadPositive": 3,
+    "allergyAadPositive": 4,
+    "allergyNegativeObligations": 25,
+    "receiptResponsePositive": 5,
+    "receiptAadPositive": 5,
+    "receiptNegativeObligations": 42
+  },
+  "requiredAssertions": [
+    "exact existing artifactReview lossless UTF-8 reference AND digest equality plus current independent scoped disclosure",
+    "clinic resolver/decryptor not called; no raw SQL evidence input or generic/prohibited sinks",
+    "allergy exact closed facts/reason, ten typed columns, six-field AAD and fresh revision/locked CAS binding",
+    "receipt exact five-field envelope, typed immutable metadata, twelve-field AAD and four permitted headers",
+    "all five mutation domain+audit+outbox+receipt+idempotency commit atomically via deferred obligation/finalizer guard",
+    "external network/evidence/KMS forbidden under locks; only prepared-capability bounded local receipt AES-GCM permitted",
+    "current-action original receipt replay; unknown commit resolved first; fresh rejected-attempt identity/nonces; losing preflight may encrypt",
+    "explicit verified-context threat boundary and predecessor-compatible ranks",
+    "synthetic physical versus real producer acceptance distinct and non-circular",
+    "nineteen NFRs/seven public shapes/frozen canonical bytes/history unchanged; retained gates not closed"
+  ],
+  "architectureReview": {
+    "result": "FAIL",
+    "remainingBlockers": [
+      "R2-SD-04"
+    ],
+    "evidence": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-r2-self-debate.md"
+  },
+  "metadataImplementation": "NOT_IMPLEMENTED; design input registry only; no generator/verifier/runtime execution or checkpoint acceptance"
+}

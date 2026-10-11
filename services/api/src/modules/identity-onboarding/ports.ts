@@ -72,6 +72,7 @@ export interface UploadStore {
 
 export interface ProfileRecord {
   id: string;
+  managedPatientId?: string | null;
   authSubjectId: string;
   displayName: string;
   birthDate: string | null;

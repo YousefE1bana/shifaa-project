@@ -1,0 +1,88 @@
+{
+  "recordedAt": "2026-10-10T20:37:55.112Z",
+  "scope": "test-only locale initialization/readiness",
+  "failedFullComparison": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T202723-214Z-a55802dc-421f-48c7-9f8b-990210ea9ffe/comparison.json",
+    "sha256": "ae6f8b4fa6e3b11329e3763885d1aeec2c56c0ca8c72362585125c0ec8cfdc06"
+  },
+  "failedFullExecution": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T19-36-20-999Z-b19018b2-c2f2-4afb-ab2e-1ae286e4ae31.json",
+    "sha256": "a99e4d7e7c55b10d7ddb4db12f466803cffb0d93d1862f2f6747214c89c21932"
+  },
+  "fullPairs": 696,
+  "identical": 692,
+  "differing": [
+    {
+      "name": "admin-content__aal2-required__ar-EG__360x800__forced-colors-active.png",
+      "width": 360,
+      "height": 1097,
+      "sha256": {
+        "a": "561ec824fe6a6da36d3b58158cdc1de336366d1f9cd931e4851dc535f67de779",
+        "b": "b7e98b863b980cfd4b03159fc2af7e1a9552db1937f6b91d851bca92182fc4e5"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 255
+    },
+    {
+      "name": "admin-content__aal2-required__ar-EG__412x915__dark.png",
+      "width": 412,
+      "height": 1073,
+      "sha256": {
+        "a": "10089c4042a4f6ad004c603a913868d6bcb4e9b546bbb0ad02ed649f1ba92700",
+        "b": "5066437fed1f2352198605ddcc58152e10770fdfb27fae27d4e5168de26abef2"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    },
+    {
+      "name": "admin-content__empty__ar-EG__360x800__dark.png",
+      "width": 360,
+      "height": 1918,
+      "sha256": {
+        "a": "da7219393c18f8e199b09cfab2221fb5212c66937ab7a96bc337b33313346c09",
+        "b": "99a5a877661cad5671e730e4a0692aa3eed1befabd115f18de46a1d8b3105674"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    },
+    {
+      "name": "admin-content__governance-ready__ar-EG__360x800__dark.png",
+      "width": 360,
+      "height": 3065,
+      "sha256": {
+        "a": "581ada3d7fe5d58cf62b615d59ecf4d32e72a651ae1772e93be9862c7699a3ee",
+        "b": "cc27ecf54cd1b8a57f32f64f57711efcdf3a9a36490eb2d998874a2b57f4c0ae"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    }
+  ],
+  "observation": "Explicit selection of unchanged initial ar-EG did not settle native label paint in the full matrix; previous29-pair diagnostic was insufficient and is not promoted to full pass.",
+  "repair": "After both existing bundled font faces are ready, initialize Arabic via existing user-visible locale select ar-EG -> en-EG -> ar-EG before requested fixture actions; actual selected value changes, with before/after evidence. No application/CSS/SQL/contract/grant/response/comparator/mask/threshold change.",
+  "currentRunner": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-current-app-surfaces.mjs",
+    "sha256": "80ae220bf0eb2532f7cbdba011d954d7e12e76a45adbc1ca1458061ad8375435"
+  },
+  "previousRunner": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-source-2026-10-10T19-36-20-999Z-b19018b2-c2f2-4afb-ab2e-1ae286e4ae31.mjs",
+    "sha256": "50342ab2a8bb7fac242ebe4e29b6697bbb8b72175257ba8f1c3d92348a35b2b6"
+  },
+  "diagnostic": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostics/2026-10-10T202918-304Z-8cb3e433-1932-45e9-871f-5dd464ceab7c/strict-comparison.json",
+    "sha256": "c8fd05600ab1c6ddd90cae2c05ebee44c761284ec08a30e001fae6074f25e589"
+  },
+  "diagnosticPairs": 107,
+  "diagnosticResult": "PASS_IDENTICAL_107_DIAGNOSTIC_PAIRS_ONLY",
+  "diagnosticCoverage": "all84 Arabic administrator combinations plus23 previous English/patient cases",
+  "formalPass": false,
+  "fullRerunRequired": true,
+  "pinnedInputs": 141,
+  "pinsUnchanged": true,
+  "T091Current": true,
+  "T092Reexecuted": false,
+  "retainedGates": "OPEN"
+}

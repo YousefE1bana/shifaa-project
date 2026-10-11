@@ -1,0 +1,32 @@
+{
+  "checkpoint": "K12",
+  "result": "BLOCKED",
+  "tasks": {
+    "T048": "Initial valid RED preparation only; full coverage not accepted",
+    "T049": "Not implemented",
+    "T050": "Not run"
+  },
+  "context": "Existing records/profile and clinic summary use identity.people.id. Feature011 public path requires identity.patients.id; data-model section 1 forbids interchange. Existing care switcher has separate synthetic IDs, no handoff to these routes, and a synthetic-person client rather than native current-care composition.",
+  "requiredResolution": "Identify the approved selected managed-patient and current encounter/facility handoff into the existing routes, including explicit person-to-patient mapping. No public mapping endpoint, profile wire field, hardcoded ID substitution, or client-claimed care authority was invented.",
+  "sourceHashes": {
+    "apps/patient/app/records.tsx": "3d35f810670ca541f738fb5ac7d0717fc4fcaa786101519af91a5d7a24b9e901",
+    "apps/clinic/src/app/patients/[id]/summary/page.tsx": "a942acc6e383a88768f0d8647212759d42792dd5543ecdef2b8e5cbec093fb90",
+    "apps/patient/app/care-switcher.tsx": "068c2b859f60333aa13138dad90259dfc2514a6ee4d21eebd9391d397ff7ab43",
+    "apps/patient/src/family-care-api.ts": "22e1977bf84de23991790b8cacedae7dfee079fea9244f4e492173c4eb61a320",
+    "packages/contracts/src/identity-onboarding.ts": "c9ffb34863bd18b8009035efb839cfd3737e827f80f328c73505975a14c333f0",
+    "services/api/src/adapters/postgres/identity-repository.ts": "33010b3fb04d285ca7b60d656c2ba5ee054dbf43ec566556f781f8a8c30c0999",
+    "specs/011-allergies-clinical-content-governance/data-model.md": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f",
+    "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59"
+  },
+  "implementationStopped": true,
+  "architectureChanged": false,
+  "publicContractChanged": false,
+  "liveArEnDemo": false,
+  "accessibilityAccepted": false,
+  "uiRoutesChanged": false,
+  "syntheticOnly": true,
+  "productionReady": false,
+  "clinicalReady": false,
+  "shippableMvp": false,
+  "retainedGates": "Unchanged; OPEN-UX-002 remains OPEN; all retained OPEN gates remain open"
+}

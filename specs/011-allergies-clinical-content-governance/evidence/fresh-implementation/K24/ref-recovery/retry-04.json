@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-10-10T17:47:54.909Z",
+  "driver": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/run-copy-full-verify-retry-04.mjs",
+    "sha256": "1286b779bf6c8081db8b0eb49a11aff6be03db2a12c171a47ac7327533e11c5a"
+  },
+  "focusedProof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-recovery/focused.json",
+    "sha256": "d98a320c8d82e67ef442ce5d19bbaa8c097df743ffc563b8b588d51139cc8727"
+  },
+  "allFailedAttemptsPreserved": true,
+  "newImplementationChanges": false
+}

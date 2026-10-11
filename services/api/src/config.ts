@@ -13,6 +13,9 @@ export interface ApiConfig {
   discoverySosEnabled: boolean;
   identityContinuityEnabled: boolean;
   clinicSchedulingNotificationsEnabled: boolean;
+  feature011Enabled: boolean;
+  feature011IsolatedTest: boolean;
+  feature011KillSwitch: boolean;
   discoveryRadiusM: number;
   sosMatchRadiusM: number;
   capacitySourceCode: string;
@@ -109,6 +112,21 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
 
   const syntheticMode = readBoolean(env['SHIFAA_SYNTHETIC_MODE'], environment !== 'production');
   const syntheticModeExplicitlyEnabled = env['SHIFAA_SYNTHETIC_MODE'] === 'true';
+  const feature011Enabled = readBoolean(env['FEATURE_011_ENABLED'], false);
+  const feature011IsolatedTest = readBoolean(env['FEATURE_011_ISOLATED_TEST'], false);
+  const feature011KillSwitch = readBoolean(env['FEATURE_011_KILL_SWITCH'], true);
+  if (
+    feature011Enabled &&
+    (environment !== 'test' ||
+      !syntheticMode ||
+      !syntheticModeExplicitlyEnabled ||
+      !feature011IsolatedTest ||
+      !['127.0.0.1', '::1', 'localhost'].includes(env['HOST'] ?? '127.0.0.1'))
+  ) {
+    throw new ConfigurationError(
+      'Feature 011 exposure requires an explicitly isolated, loopback synthetic test runtime.',
+    );
+  }
   const syntheticProofingEnabled = readBoolean(
     env['SYNTHETIC_PROOFING_ENABLED'],
     environment !== 'production',
@@ -252,6 +270,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ApiConfig {
   ]);
 
   return {
+    feature011Enabled,
+    feature011IsolatedTest,
+    feature011KillSwitch,
     environment,
     host: env['HOST'] ?? '127.0.0.1',
     port: Number(env['PORT'] ?? 3000),

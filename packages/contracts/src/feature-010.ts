@@ -665,6 +665,8 @@ export const CareTeamEncounterProjectionSchema = Type.Object(
   {
     id: Feature010UuidSchema,
     patientId: Feature010UuidSchema,
+    patientPersonId: Type.Optional(Feature010UuidSchema),
+    managedPatientId: Type.Optional(Feature010UuidSchema),
     facilityId: Feature010UuidSchema,
     appointmentId: Feature010UuidSchema,
     encounterType: Type.String({}),
@@ -686,6 +688,8 @@ export const SubjectEncounterProjectionSchema = Type.Object(
   {
     id: Feature010UuidSchema,
     patientId: Feature010UuidSchema,
+    patientPersonId: Type.Optional(Feature010UuidSchema),
+    managedPatientId: Type.Optional(Feature010UuidSchema),
     facilityId: Feature010UuidSchema,
     appointmentId: Feature010UuidSchema,
     encounterType: Type.String({}),

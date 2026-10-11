@@ -2,7 +2,9 @@
 
 import { feature010ArEG, feature010CommonCopy, feature010EnEG } from '@shifaa/i18n';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { AllergySummaryPanel } from '../../../../components/feature-011/AllergySummaryPanel';
+import { allergyEncounterContext } from '../../../../lib/feature-011-context';
 import {
   breakpoint,
   color,
@@ -59,6 +61,11 @@ const cardStyle: React.CSSProperties = {
 export default function PatientSummaryPage() {
   const params = useParams<{ id: string }>();
   const patientId = params.id;
+  const search = useSearchParams();
+  const encounterId = search.get('encounterId') ?? '';
+  const [allergyContext, setAllergyContext] = useState<ReturnType<
+    typeof allergyEncounterContext
+  > | null>(null);
   const router = useRouter();
   const [locale, setLocale] = useState<ClinicLocale>('ar-EG');
   const [handle, setHandle] = useState('');
@@ -97,6 +104,44 @@ export default function PatientSummaryPage() {
       setEligibility({ kind: 'recoverable' });
     }
   }, [clients, patientId]);
+  useEffect(() => {
+    let current = true;
+    if (!clients || !encounterId) setAllergyContext(null);
+    if (clients && encounterId && online)
+      void clients.encounters
+        .getEncounter(encounterId)
+        .then((projection) => {
+          const context = allergyEncounterContext(projection, patientId, encounterId);
+          if (current)
+            setAllergyContext((prior) =>
+              prior &&
+              prior.managedPatientId === context.managedPatientId &&
+              prior.patientPersonId === context.patientPersonId &&
+              prior.facilityId === context.facilityId &&
+              prior.encounterId === context.encounterId
+                ? prior
+                : context,
+            );
+        })
+        .catch(() => {
+          if (current) setAllergyContext(null);
+        });
+    return () => {
+      current = false;
+    };
+  }, [clients, encounterId, patientId, online]);
+  const reauthorizeAllergies = useCallback(async () => {
+    if (!clients || !allergyContext || !navigator.onLine)
+      throw Error('allergy-current-care-unavailable');
+    const current = allergyEncounterContext(
+      await clients.encounters.getEncounter(allergyContext.encounterId),
+      patientId,
+      allergyContext.encounterId,
+      allergyContext.facilityId,
+    );
+    if (current.managedPatientId !== allergyContext.managedPatientId)
+      throw Error('allergy-patient-substitution');
+  }, [clients, allergyContext, patientId]);
 
   useEffect(() => {
     if (clients) void refreshEligibility();
@@ -289,7 +334,8 @@ export default function PatientSummaryPage() {
               <p>
                 {copy.facility}:{' '}
                 <bdi dir="ltr">
-                  {eligibility?.kind === 'eligible' ? eligibility.appointment.facilityId : '—'}
+                  {allergyContext?.facilityId ??
+                    (eligibility?.kind === 'eligible' ? eligibility.appointment.facilityId : '—')}
                 </bdi>
               </p>
             </section>
@@ -298,6 +344,16 @@ export default function PatientSummaryPage() {
               {copy.title}
             </h1>
             <p>{copy.subtitle}</p>
+            {allergyContext && apiBaseUrl && (
+              <AllergySummaryPanel
+                locale={locale}
+                managedPatientId={allergyContext.managedPatientId}
+                encounterId={allergyContext.encounterId}
+                token={token}
+                baseUrl={apiBaseUrl}
+                reauthorize={reauthorizeAllergies}
+              />
+            )}
             {eligibility === null && (
               <p role="status" aria-live="polite">
                 {copy.submitting}

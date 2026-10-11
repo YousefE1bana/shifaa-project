@@ -1,0 +1,73 @@
+{
+  "result": "PASS",
+  "command": "corepack pnpm exec tsx tools/run-feature-011-handoff-test.mjs",
+  "runtimes": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "result": "PASS",
+      "tests": [
+        "native-patient-own-profile",
+        "native-clinician-own-profile",
+        "native-outsider-own-profile",
+        "existing-F010-adapter-generated-contract-pair",
+        "authorized-F010-canonical-pair",
+        "F010-wrongActor-denied",
+        "F010-missingPurpose-denied",
+        "client-claimed-mapping-and-facility-ignored",
+        "actual-facility-membership-loss-denied",
+        "unknown-native-subject-no-other-mapping",
+        "native-patient-ar-EG-read-report-original-response",
+        "native-patient-en-EG-read-report-original-response",
+        "native-clinician-ar-EG-read-report-original-response",
+        "native-clinician-en-EG-read-report-original-response"
+      ],
+      "count": 14,
+      "actualNativeAuth": "Supabase ES256 with native TOTP AAL2; owner synthetic accounts cleaned by harness",
+      "databaseRole": "shifaa_api",
+      "noNewGrant": true,
+      "cleanup": {
+        "database": "f011_k08_28565310ed582d05",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "result": "PASS",
+      "tests": [
+        "native-patient-own-profile",
+        "native-clinician-own-profile",
+        "native-outsider-own-profile",
+        "existing-F010-adapter-generated-contract-pair",
+        "authorized-F010-canonical-pair",
+        "F010-wrongActor-denied",
+        "F010-missingPurpose-denied",
+        "client-claimed-mapping-and-facility-ignored",
+        "actual-facility-membership-loss-denied",
+        "unknown-native-subject-no-other-mapping",
+        "native-patient-ar-EG-read-report-original-response",
+        "native-patient-en-EG-read-report-original-response",
+        "native-clinician-ar-EG-read-report-original-response",
+        "native-clinician-en-EG-read-report-original-response"
+      ],
+      "count": 14,
+      "actualNativeAuth": "Supabase ES256 with native TOTP AAL2; owner synthetic accounts cleaned by harness",
+      "databaseRole": "shifaa_api",
+      "noNewGrant": true,
+      "cleanup": {
+        "database": "f011_k08_2191426e896ec6ad",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "inputs": {
+    "tools/run-feature-011-handoff-test.mjs": "92b2de4e2c39c3bf2f3283f54a85c9de05b2227d8b328d3730600b8fcd6c30fa",
+    "services/api/src/adapters/postgres/identity-repository.ts": "5ccdc43ab2192748722d3348984eafc44297f2277f31dcf90bfe963dc1196cda",
+    "supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql": "b12eda7e4cdf6b9096833a0a19b96d61dedd16bb3c57cb8bc9cf463089f1a90b",
+    "packages/contracts/src/feature-010.ts": "d5be14bd357f9b73a81227aadc868be10275f47ea7661620087a406e88e6096e"
+  },
+  "syntheticOnly": true
+}

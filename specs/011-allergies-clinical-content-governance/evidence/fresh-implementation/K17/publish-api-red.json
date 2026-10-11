@@ -1,0 +1,45 @@
+{
+  "task": "T063",
+  "checkpoint": "K17",
+  "result": "VALID_RED",
+  "capturedAt": "2026-10-08T07:06:26.605Z",
+  "total": 24,
+  "failed": 24,
+  "setupFailures": 0,
+  "reason": "Approved application publication composition intentionally absent; explicit beforeEach behavior prerequisite, not unresolved imports/setup/syntax.",
+  "testSource": {
+    "path": "services/api/src/modules/feature-011/publish-release.test.ts",
+    "sha256": "0471b8c811146ed616c3311cd41cf4392ab57019739f8b4b05d6edcd5d43a10d"
+  },
+  "report": {
+    "path": "artifacts/feature-011/k17/publish-red-vitest.json",
+    "sha256": "7e2d68172084fe5e999ec94dd26c81b24170182c3dc3c63b0d7486c48be9d1e7"
+  },
+  "cases": [
+    "K17 publication composition returns exact protected original review after authoritative locked publication",
+    "K17 publication composition never treats SQL denial historical-signature-only as publication",
+    "K17 publication composition never treats SQL denial credential-expired as publication",
+    "K17 publication composition never treats SQL denial designation-revoked as publication",
+    "K17 publication composition never treats SQL denial grant-version-advanced as publication",
+    "K17 publication composition never treats SQL denial unrelated-replacement as publication",
+    "K17 publication composition never treats SQL denial missing-exact-admission as publication",
+    "K17 publication composition never treats SQL denial ambiguous-admission as publication",
+    "K17 publication composition never treats SQL denial publisher-self as publication",
+    "K17 publication composition never treats SQL denial publisher-signer as publication",
+    "K17 publication composition never treats SQL denial competing-root as publication",
+    "K17 publication composition never treats SQL denial competing-successor as publication",
+    "K17 publication composition never treats SQL denial future-predecessor as publication",
+    "K17 publication composition never treats SQL denial current-authority-lost as publication",
+    "K17 publication composition never treats SQL denial receipt-finalization-fault as publication",
+    "K17 publication composition rejects incorrect public tuple/body {\"artifactVersion\":2} before mutation",
+    "K17 publication composition rejects incorrect public tuple/body {\"artifactDigest\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"} before mutation",
+    "K17 publication composition rejects incorrect public tuple/body {\"confirmPublication\":false} before mutation",
+    "K17 publication composition rejects incorrect public tuple/body {\"extra\":true} before mutation",
+    "K17 publication composition denies missing current governance disclosure before resolution",
+    "K17 publication composition denies immutable hash substitution before SQL",
+    "K17 publication composition denies malformed UTF-8 before SQL",
+    "K17 publication composition denies stale workflow before fresh preparation",
+    "K17 publication composition denies locked immutable artifact substitution and rolls back response composition"
+  ],
+  "acceptance": "PENDING_PRODUCT_OWNER"
+}

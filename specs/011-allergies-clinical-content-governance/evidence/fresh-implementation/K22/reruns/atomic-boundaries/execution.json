@@ -1,0 +1,25 @@
+{
+  "id": "atomic-boundaries",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\5448_1791554459377\\node.exe",
+    "--import",
+    "tsx",
+    "tools/.f011-k22-104e85f8-cff6-4376-a95d-38e7fd8773de.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/atomic-boundaries.log",
+    "sha256": "8a02b025b015f660afecd1395f75d8841ad8c036e12605de4715f7e5ce4dbc32"
+  },
+  "extension": {
+    "original": "tools/run-feature-011-protection-test.mjs",
+    "originalSha256": "0e57d04e9dc9c6103c53683ea1bd76538e5e76637a04323413206d62bb28bd82",
+    "temporarySha256": "2c629a4158b48b98490f60ba5f347ce46ffd536a9c7690598704b39d22f29701",
+    "testAssertionsChanged": true,
+    "addedScenarios": [
+      "real canonical serialization failure",
+      "real local AES failure"
+    ],
+    "expectedValuesRegenerated": false
+  }
+}

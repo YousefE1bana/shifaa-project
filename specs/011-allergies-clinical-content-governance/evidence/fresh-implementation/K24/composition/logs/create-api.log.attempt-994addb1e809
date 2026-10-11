@@ -1,0 +1,3 @@
+shifaa-local-postgres: K15 clean native create proof
+shifaa-local-supabase: K15 clean native create proof
+{"result":"PASS","runtimes":[{"runtime":"shifaa-local-postgres","count":46,"races":3},{"runtime":"shifaa-local-supabase","count":46,"races":3}]}

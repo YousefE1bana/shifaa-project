@@ -1,0 +1,58 @@
+{
+  "capturedAt": "2026-10-10T13:19:59.357Z",
+  "host": {
+    "os": "Windows_NT",
+    "release": "10.0.26300",
+    "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
+    "logicalCPUs": 16,
+    "totalMemoryBytes": 16850108416,
+    "freeMemoryBytes": 4011503616,
+    "node": "v24.18.0"
+  },
+  "runtimes": [
+    {
+      "name": "shifaa-local-postgres",
+      "container": "shifaa-local-postgres-postgres-1",
+      "image": "shifaa/postgis:17-3.5-006-local",
+      "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7",
+      "binaryVersion": "postgres (PostgreSQL) 17.11",
+      "state": {
+        "running": true,
+        "exitCode": 0,
+        "oomKilled": false
+      },
+      "allocation": {
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0,
+        "CpusetCpus": "",
+        "Memory": 0,
+        "MemoryReservation": 0,
+        "MemorySwap": 0,
+        "PidsLimit": null
+      }
+    },
+    {
+      "name": "shifaa-local-supabase",
+      "container": "supabase_db_shifaa-local-supabase",
+      "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+      "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+      "binaryVersion": "postgres (PostgreSQL) 17.6",
+      "state": {
+        "running": true,
+        "exitCode": 0,
+        "oomKilled": false
+      },
+      "allocation": {
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0,
+        "CpusetCpus": "",
+        "Memory": 0,
+        "MemoryReservation": 0,
+        "MemorySwap": 0,
+        "PidsLimit": null
+      }
+    }
+  ]
+}

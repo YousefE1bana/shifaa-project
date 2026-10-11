@@ -1,0 +1,45 @@
+{
+  "fixtureId": "F011-SYNTHETIC-VISUAL-001",
+  "syntheticOnly": true,
+  "artifacts": {
+    "1": {
+      "payload": {
+        "syntheticOnly": true,
+        "artifactVersion": 1,
+        "source": "TEST-NONCLINICAL-SOURCE-001",
+        "effectiveAt": "2026-09-28T12:00:00+03:00",
+        "body": "NEUTRAL PLACEHOLDER: NO CLINICAL CONTENT",
+        "codeEvidence": "CODE-EVIDENCE-TEST-001",
+        "testVectorEvidence": "TEST-VECTORS-NEUTRAL-001"
+      },
+      "canonical": "{\"syntheticOnly\":true,\"artifactVersion\":1,\"source\":\"TEST-NONCLINICAL-SOURCE-001\",\"effectiveAt\":\"2026-09-28T12:00:00+03:00\",\"body\":\"NEUTRAL PLACEHOLDER: NO CLINICAL CONTENT\",\"codeEvidence\":\"CODE-EVIDENCE-TEST-001\",\"testVectorEvidence\":\"TEST-VECTORS-NEUTRAL-001\"}",
+      "digest": "2bfd609dd9be0af12e4dae760d1de7eced8e620919c842043cfd578bd1262b09"
+    },
+    "2": {
+      "payload": {
+        "syntheticOnly": true,
+        "artifactVersion": 2,
+        "source": "TEST-NONCLINICAL-SOURCE-001",
+        "effectiveAt": "2026-10-08T12:00:00+03:00",
+        "body": "NEUTRAL PLACEHOLDER: NO CLINICAL CONTENT",
+        "codeEvidence": "CODE-EVIDENCE-TEST-001",
+        "testVectorEvidence": "TEST-VECTORS-NEUTRAL-001"
+      },
+      "canonical": "{\"syntheticOnly\":true,\"artifactVersion\":2,\"source\":\"TEST-NONCLINICAL-SOURCE-001\",\"effectiveAt\":\"2026-10-08T12:00:00+03:00\",\"body\":\"NEUTRAL PLACEHOLDER: NO CLINICAL CONTENT\",\"codeEvidence\":\"CODE-EVIDENCE-TEST-001\",\"testVectorEvidence\":\"TEST-VECTORS-NEUTRAL-001\"}",
+      "digest": "f8221606551735ae0bbee1d0b86725bc38491e11ae569d886a002ece80ac9326"
+    },
+    "3": {
+      "payload": {
+        "syntheticOnly": true,
+        "artifactVersion": 3,
+        "source": "TEST-NONCLINICAL-SOURCE-001",
+        "effectiveAt": "2026-10-10T12:00:00+03:00",
+        "body": "NEUTRAL PLACEHOLDER: NO CLINICAL CONTENT",
+        "codeEvidence": "CODE-EVIDENCE-TEST-001",
+        "testVectorEvidence": "TEST-VECTORS-NEUTRAL-001"
+      },
+      "canonical": "{\"syntheticOnly\":true,\"artifactVersion\":3,\"source\":\"TEST-NONCLINICAL-SOURCE-001\",\"effectiveAt\":\"2026-10-10T12:00:00+03:00\",\"body\":\"NEUTRAL PLACEHOLDER: NO CLINICAL CONTENT\",\"codeEvidence\":\"CODE-EVIDENCE-TEST-001\",\"testVectorEvidence\":\"TEST-VECTORS-NEUTRAL-001\"}",
+      "digest": "0de719f9ede077792cdd9fb495e62f8b4673e40096c6af0c75aa833a99600ae0"
+    }
+  }
+}

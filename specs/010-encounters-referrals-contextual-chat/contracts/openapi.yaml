@@ -450,6 +450,8 @@ components:
       properties:
         id: { $ref: '#/components/schemas/Uuid' }
         patientId: { $ref: '#/components/schemas/Uuid' }
+        patientPersonId: { $ref: '#/components/schemas/Uuid', description: 'Post-acceptance 2026-10-08: explicit person identity; must equal patientId. Optional for historical canonical mutation replay.' }
+        managedPatientId: { $ref: '#/components/schemas/Uuid', description: 'Post-acceptance 2026-10-08: server-derived identity.patients.id joined by person_id in the authorized current projection. Optional for historical canonical mutation replay; required by new allergy handoff consumers.' }
         facilityId: { $ref: '#/components/schemas/Uuid' }
         appointmentId: { $ref: '#/components/schemas/Uuid' }
         encounterType: { type: string }
@@ -472,6 +474,8 @@ components:
       properties:
         id: { $ref: '#/components/schemas/Uuid' }
         patientId: { $ref: '#/components/schemas/Uuid' }
+        patientPersonId: { $ref: '#/components/schemas/Uuid', description: 'Post-acceptance 2026-10-08: explicit person identity; must equal patientId. Optional for historical canonical mutation replay.' }
+        managedPatientId: { $ref: '#/components/schemas/Uuid', description: 'Post-acceptance 2026-10-08: server-derived identity.patients.id joined by person_id in the authorized current projection. Optional for historical canonical mutation replay; required by new allergy handoff consumers.' }
         facilityId: { $ref: '#/components/schemas/Uuid' }
         appointmentId: { $ref: '#/components/schemas/Uuid' }
         encounterType: { type: string }

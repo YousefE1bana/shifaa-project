@@ -1,0 +1,90 @@
+{
+  "capturedAt": "2026-10-10T12:54:06.389Z",
+  "result": "ENGINEERING_READY_FOR_K24_REVIEW_FORMAL_ACCEPTANCE_BLOCKED",
+  "reviewer": "Primary Codex agent under direct Product Owner technical delegation",
+  "authority": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/delegated-closeout-2026-10-10/technical-selection.json",
+    "sha256": "4e973e01a082a6a2d8603b234b3d867488f7ca9629afdec286785bbfdc9d2c26"
+  },
+  "performance": {
+    "result": "PASS_ALL_LOCAL_REPEATS",
+    "repeats": 3,
+    "runtimeExecutions": 6,
+    "operationP95Checks": 42,
+    "measuredRequests": 960,
+    "warmupRequests": 144,
+    "exactScratchCleanup": 12,
+    "externalUnderLocks": 0
+  },
+  "currentContracts": "PASS",
+  "generatedChecks": [
+    {
+      "command": "node tools/generate-feature-011-contract.mjs --check",
+      "exitCode": 0,
+      "output": "Feature 011 generated contracts are current."
+    },
+    {
+      "command": "node tools/generate-feature-011-client.mjs --check",
+      "exitCode": 0,
+      "output": "Feature 011 generated client is current."
+    }
+  ],
+  "pinnedInputs": 141,
+  "pinDrift": [],
+  "fullVerify": {
+    "proof": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/full-verify.json",
+      "sha256": "f247792cef5a17625bdf21f30d6a8b525804683785f676f8b6f1467aab2f7c73"
+    },
+    "log": {
+      "path": "artifacts/feature-011/k24/pnpm-verify.log",
+      "sha256": "c2105495c56c4b63e572d1bfa94a285885cd2aed29632f1983dec006fc5b405e"
+    },
+    "exitCode": 0,
+    "execution": "Existing successful execution on 2026-10-10, freshly hash/source revalidated; not rerun"
+  },
+  "ui": {
+    "independentSelectedImages": 12,
+    "confirmedProductDefects": [],
+    "evidenceLimits": [
+      {
+        "id": "UX-E01",
+        "kind": "CAPTURE_LIMIT",
+        "evidence": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser/patient/patient-ar-EG-history.png",
+        "fact": "Image begins within revision history and omits route heading/current context; it cannot alone establish full-page hierarchy or focus order.",
+        "recommendation": "Retain this historical image and prefer the supplementary scroll-to-top capture for current hierarchy review."
+      },
+      {
+        "id": "UX-E02",
+        "kind": "CAPTURE_LIMIT",
+        "evidence": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser/clinic/clinic-ar-EG-reflow-contrast.png",
+        "fact": "360px-wide clinic reflow image is 42013px tall; whole-image display reduces it to an unreadable strip. Patient EN scale capture shows fragmented oversized words and only a scroll slice.",
+        "recommendation": "Use existing physical reviewer report only within its attributed scope; future scaled capture evidence should record settings and readable viewport slices of critical actions. No new production defect inferred."
+      },
+      {
+        "id": "UX-E03",
+        "kind": "STATE_MEANING_LIMIT",
+        "evidence": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ui-gap-scenarios/review.md",
+        "fact": "Supplement labels identify HTTP fixture causes; generic forbidden/conflict/unavailable presentations do not establish distinct candidate-copy acceptance or physical Auth/SQL cause.",
+        "recommendation": "Keep scenario association and distinct composition acceptance separate; root should resolve product-copy decisions only against approved authority."
+      }
+    ],
+    "nativeObservations": "USER_REPORTED; current consolidation preserved. No utterance/per-state/settings facts invented."
+  },
+  "changes": {
+    "productSqlContractGrants": [],
+    "evidenceCorrection": "Stale device-version unknowns repaired in the new reproducibility profile only; historical records unchanged"
+  },
+  "tasks": "T001-T087 checked; T088-T092 unchecked",
+  "issues": "485-489 OPEN",
+  "formalBlockedBy": [
+    "OPEN-UX-002: named formal Design/QA/PO disposition and approved deterministic baseline/diff proof",
+    "OPEN-TECH-003: named QA/Platform/PO disposition and approved reproducible reference profile/device settings"
+  ],
+  "retainedGates": "UNCHANGED_OPEN; no clinical, production KMS, rollout, final-design or global TECH002 acceptance",
+  "integration": "NO COMMIT/PUSH/PR/MAIN CHANGE",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "statusEntries": 170
+}

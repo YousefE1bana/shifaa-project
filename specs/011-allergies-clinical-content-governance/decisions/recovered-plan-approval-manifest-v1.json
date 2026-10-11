@@ -1,0 +1,356 @@
+{
+  "authority": {
+    "approvalRecord": "specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md",
+    "approver": "Yousef Osama",
+    "featureScopedDesignLead": "Yousef Osama",
+    "roles": [
+      "Product Owner",
+      "Architecture Lead",
+      "current SHIFAA pre-implementation lifecycle authority"
+    ]
+  },
+  "bindingLimits": "This manifest does not hash itself or its approval/validation output, avoiding circular provenance. Supporting evidence is cited without promotion to normative architecture. Any normative-byte change requires new applicable review/approval and a new manifest/version; no silent hash refresh.",
+  "context": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "worktree": "D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance"
+  },
+  "date": "2026-10-06",
+  "execution": {
+    "historicalLedger": {
+      "checkpoints": 29,
+      "status": "SUPERSEDED_FOR_EXECUTION; historical recovery input only",
+      "tasks": 95
+    },
+    "implementationPaused": true,
+    "nextLifecycle": "Fresh /speckit.tasks eligible only after separate explicit Product Owner authorization",
+    "preservedEvidence": {
+      "C01": "Pending fresh-ledger mapping/revalidation",
+      "C02": "Pending fresh-ledger mapping/revalidation",
+      "C02A": "Pending fresh-ledger mapping/revalidation",
+      "C03_RED": "Historical/reusable drafts and RED, pending revalidation"
+    },
+    "tasksGenerationAuthorized": false,
+    "unauthorized": [
+      "C02B/T093-T095",
+      "C03",
+      "T017",
+      "all implementation checkpoints"
+    ]
+  },
+  "feature": "011-allergies-clinical-content-governance",
+  "historicalReferences": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/product-owner-approvals-2026-10-02.md",
+      "sha256": "f87b462cd221ae49b6050b4d25e6dcae0e2be7d23fe9a724e6663798c3e5dc15"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery/plan.md",
+      "sha256": "bb6f5918696dab056e4cec756324078f5c28ea640d5387ad6fa515caf3992689"
+    }
+  ],
+  "manifestId": "SHIFAA-F011-RECOVERED-PLAN-APPROVAL",
+  "normativeApprovalInputs": {
+    "baselineAuthority": [
+      {
+        "path": ".specify/memory/constitution.md",
+        "sha256": "25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a"
+      },
+      {
+        "path": "docs/design/SHIFAA-UI-Contract.md",
+        "sha256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e"
+      },
+      {
+        "path": "docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md",
+        "sha256": "9feadc0b489857c66533d20f1829c9826d8ea7ae8ea7bf8e683968276e1cad04"
+      },
+      {
+        "path": "docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md",
+        "sha256": "51fdac8ecd2710bc13a53c89f9d09d4d486ad36631056e7171521d5e16b6abd6"
+      },
+      {
+        "path": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "sha256": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580"
+      },
+      {
+        "path": "packages/design-system/src/tokens.ts",
+        "sha256": "39fb80ef2c702aab3663b46dd98d92cc747c9ff694b4a8161005cc4ca317201d"
+      }
+    ],
+    "baselineFileCount": 6,
+    "featureFileCount": 36,
+    "featurePlanFamily": [
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json",
+        "sha256": "b0f8d4ba2ad5f30bbdf6ec963a6dc4e16677236b3ed0fbc6aa263ee81a2ed6ed"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json",
+        "sha256": "f031aa09edddf8c60ebe4cc8165fa35afee7e3875551ca2f6136e68a31bf7f25"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md",
+        "sha256": "03dbaeccfc4342136c6f6623f8613157e51806ddf0f07fea85a8ecb3374da257"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json",
+        "sha256": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+        "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+        "sha256": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+        "sha256": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md",
+        "sha256": "b203e00aaf3e2cc689b2ccc60e0b846ca206942de9b660d1d185ba4006d0a57e"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+        "sha256": "c053e28f529ecea784917ab38028b599f45f0a4b58e517970a644ed7e2a268b5"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json",
+        "sha256": "4eff01a61b485f0616b69480a979f3024da21b464cf768771055bb2694e56050"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json",
+        "sha256": "2bf23cae34648742f995edced1008f7988efdbaf9dd12d9e1c46aa83e10d68ec"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md",
+        "sha256": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml",
+        "sha256": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json",
+        "sha256": "53e46fbbbf79526749e0786c1630a2c2b6ad515ec3ac33d8755d2730df0842ac"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json",
+        "sha256": "2948f78fd1fb92ee9d411092da30f577b9215c2543182c2e85f56b306da30291"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json",
+        "sha256": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json",
+        "sha256": "03945dbb8f323f480f1a93f09340936f5623f7c1feeea6f2fcce98211b4b3a11"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md",
+        "sha256": "e8f43933311ba5430d758504675162aca86d0537205eda95febbf3d6ab0bc5db"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md",
+        "sha256": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json",
+        "sha256": "9f3be0aa5f5b3aa62b3505ea40d8b142b31f25a228a6b0bb19f221b28748ffa9"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json",
+        "sha256": "8326cde913c59e4c899b16ba73193d9a48a99191f5eb7dba66883d904b1523b0"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json",
+        "sha256": "782b32e23764c7ecf9b5114f387be174591c0d0ef6b2eed04749520991eee6cc"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md",
+        "sha256": "e75f95ea9daef89918083be8ea66b8fce896bf55c8d323a1bdffef07e37bd1eb"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/data-model.md",
+        "sha256": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md",
+        "sha256": "b3dcef629ed2e3b80f1ef07a73369664314c4da4c623f1d80a78141942bba269"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md",
+        "sha256": "a46d7f12480819c7649998729ba9149499cf66e33dcfcef335151d712710d817"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md",
+        "sha256": "4f8bf26bdfb43cd016b62cd572f21bc9f2a81477dcd2b1a067314cb95887ba3f"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md",
+        "sha256": "1fc278a00df5b46115374d1f435d1168f5de0977df3e21c9dabdb76b726c2989"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md",
+        "sha256": "b9632b94dfb136b35d0b3bcef89a2cee47002836ed7db679a56cc4a000c0b48b"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md",
+        "sha256": "8d3fe1ae977bb99e3d24d1cf1f5548dafc0ecdb350f7e681b89acb04488e0bab"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md",
+        "sha256": "03eaf4a9ace7d26fbbf977309774728531e763f13dc1bf06f726957838092709"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/plan.md",
+        "sha256": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/quickstart.md",
+        "sha256": "71e377027f3aee5385e3c079e288498ea9e5597ae657dd07eecd5bf11e25ec5a"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/research.md",
+        "sha256": "d862cfb3698f7651e0b63c80910107ee4c43e136bb417d079294f5e5451967c5"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/spec.md",
+        "sha256": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json",
+        "sha256": "59ea1788edbae023533a9e08da97bc3884e0e098ec6e80721272822b6439c432"
+      }
+    ],
+    "interpretation": "Normative architecture/product/authority bytes only. Fixed vectors and current parity registries are normative preparation inputs, not implemented parity acceptance. BODY/1 and AAD/1 are defined in trusted-release-handoff-v1 text/profile/vectors. The current evidence-foundation matrix is normative despite its evidence directory. Older R2 matrices, captures, Tasks and validation reports are not current architecture authority.",
+    "totalFileCount": 42
+  },
+  "precedence": {
+    "architecture": "Current evidence-foundation Plan family and dated superseding design decisions; Spec and unchanged public OpenAPI remain authoritative. Earlier design alternatives survive only as explicitly superseded history.",
+    "consumption": "No consumptionAllowed=false flag, checkpoint restriction or retained implementation/verification gate is activated by Plan approval. Historical Tasks remain non-executable.",
+    "lifecycle": "The new recovered-plan-approved-2026-10-06 decision owns current formal status for this exact manifest. Its PLAN_APPROVED supersedes prior suspension/review-required labels for Plan status only; the feature UX gate supersedes old missing-Design-Lead labels. No historical file is rewritten."
+  },
+  "recoveredPlanVersion": "EVIDENCE-FOUNDATION",
+  "retainedGates": {
+    "OPEN-CLIN-001": "OPEN — synthetic engineering only; no real clinical-content/qualification/admissibility approval",
+    "OPEN-LEGAL-001": "OPEN — production",
+    "OPEN-LEGAL-002": "OPEN — production retention/deletion unapproved",
+    "OPEN-LEGAL-007": "OPEN — production",
+    "OPEN-TECH-002": "OPEN — current generated/physical preparation and applicable owner/stage assertion before affected IMPLEMENTING; no closure",
+    "OPEN-TECH-003": "OPEN — applicable VERIFYING environments",
+    "OPEN-UX-002": "OPEN — affected VERIFYING",
+    "otherApplicableReleaseVerificationGates": "Unchanged, fail-closed with existing ownership; no waiver"
+  },
+  "scope": {
+    "feature010": "Current patient/encounter/care/facility context consumed; lifecycle unchanged",
+    "feature012": "Prescriptions, safety evaluation, warnings/contraindications, override/break-glass execution and dispensing excluded",
+    "nfr": [
+      "NFR-SEC-001",
+      "NFR-SEC-002",
+      "NFR-SEC-004",
+      "NFR-SEC-005",
+      "NFR-SEC-006",
+      "NFR-SEC-007",
+      "NFR-PRIV-002",
+      "NFR-PRIV-004",
+      "NFR-I18N-001",
+      "NFR-A11Y-001",
+      "NFR-PERF-002",
+      "NFR-DATA-001",
+      "NFR-DATA-002",
+      "NFR-API-001",
+      "NFR-API-002",
+      "NFR-OBS-001",
+      "NFR-QUALITY-001",
+      "NFR-PORT-001",
+      "NFR-PRIV-001"
+    ],
+    "nfrCount": 19,
+    "operationCount": 7,
+    "operations": [
+      {
+        "id": "listAllergies",
+        "method": "get",
+        "path": "/patients/{managedPatientId}/allergies"
+      },
+      {
+        "id": "createAllergy",
+        "method": "post",
+        "path": "/patients/{managedPatientId}/allergies"
+      },
+      {
+        "id": "verifyAllergy",
+        "method": "post",
+        "path": "/allergies/{allergyId}/verification"
+      },
+      {
+        "id": "listClinicalContent",
+        "method": "get",
+        "path": "/admin/clinical-content/{contentType}"
+      },
+      {
+        "id": "createClinicalContentRelease",
+        "method": "post",
+        "path": "/admin/clinical-content/{contentType}/releases"
+      },
+      {
+        "id": "signClinicalContentRelease",
+        "method": "post",
+        "path": "/admin/clinical-content/releases/{releaseId}/signatures"
+      },
+      {
+        "id": "publishClinicalContentRelease",
+        "method": "post",
+        "path": "/admin/clinical-content/releases/{releaseId}/publish"
+      }
+    ]
+  },
+  "serialization": {
+    "arrays": "input entries sorted by repository-relative path; semantic arrays retain stated order",
+    "encoding": "UTF-8 without BOM",
+    "hash": "SHA-256 of exact file bytes; lowercase hexadecimal",
+    "indentSpaces": 2,
+    "lineEndings": "LF",
+    "objectKeys": "recursive ordinal ASCII key order",
+    "terminalNewline": true,
+    "volatileTimestamps": false
+  },
+  "supportingValidationReviewEvidence": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/design-lead-ux-review-2026-10-06.json",
+      "sha256": "2937c10b0109c3edb69b764230ad05be1c40b13ad8080789bd56babd7c92cf94"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-architecture-review.md",
+      "sha256": "62e9159eaab5fbd0a0531d988f8f97496534e425606783486c082467e60563f5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-self-debate.md",
+      "sha256": "f8afb0676f2e99e226eb5ee44ae8da3f5be6acfd929aca6285bd116defdb8e56"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-inputs.json",
+      "sha256": "c4e0f705a39d5d4fbe2aa0360ad3143cb6de5af5f9a68358be9949510078bc6a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-validation.md",
+      "sha256": "4c3b728f6ce682225f9ac0b1eb0adda40c4b72af3b6d10ef4ff9cf20413d04e8"
+    }
+  ],
+  "timezone": "Africa/Cairo",
+  "ux": {
+    "candidateId": "SHIFAA-F011-OPEN-UX-001-CANDIDATE@0.1.1-test-only",
+    "captureAuthority": "Unchanged capture retains original Plan hash. Prospective UX gate decision binds compatibility to the recovered family; original capture is not rewritten.",
+    "families": 4,
+    "manifestSha256": "59ea1788edbae023533a9e08da97bc3884e0e098ec6e80721272822b6439c432",
+    "planPrerequisite": "OPEN-UX-001 SATISFIED only for Feature 011 affected-UI PLAN_APPROVED",
+    "references": 746,
+    "scope": "Engineering/test-only composition; not final visual design, permanent pixel lock, post-026 product polish or OPEN-UX-002 closure.",
+    "states": 99
+  },
+  "version": "1.0.0"
+}

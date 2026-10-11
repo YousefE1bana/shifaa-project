@@ -1,0 +1,40 @@
+{
+  "id": "SHIFAA-F011-BOUNDED-ACCEPTANCE-DEFERRED-REVIEW@1.0.0",
+  "recordedAt": "2026-10-11T04:24:23.174773+00:00",
+  "decisionMaker": "Yousef Osama",
+  "disposition": "ACCEPTED_WITH_DEFERRED_REVIEW",
+  "criteriaUnchanged": true,
+  "formalPhysicalDeviceEvidence": "PENDING",
+  "strictPixelProof": "FAILED_PRESERVED",
+  "retainedGatesClosed": [],
+  "t092Executed": false,
+  "ledgerCompletionChanged": false,
+  "issueStateChanged": false,
+  "sources": [
+    {
+      "path": "evidence/fresh-implementation/K24/ref-render-r01/manifest.json",
+      "sha256": "84171bfe555a37729d67eebb51d0c01a570486d121cc34316387a2e802581b04"
+    },
+    {
+      "path": "evidence/fresh-implementation/K24/ref-render-r01/review.md",
+      "sha256": "03c83e7bf457df559f405fb06cc4b61ccb00c29ee954a568dc4b40e78168b673"
+    },
+    {
+      "path": "evidence/fresh-implementation/K24/reference-verification-2026-10-10/manifest.json",
+      "sha256": "fa800afe1de048d284a9675187412aac43716ec9d9af34486d0d21d42f620ed7"
+    },
+    {
+      "path": "evidence/fresh-implementation/K24/reference-verification-2026-10-10/remaining-formal-evidence.md",
+      "sha256": "585da0508d62647d08b51b31535b378e51e67d2f752b4a5f8a086c7e40161c78"
+    },
+    {
+      "path": "tasks.md",
+      "sha256": "4d7d5b36a61b2b7410ca93be8404f446e53f83f7d52d10043de963e6ca7ff1f8"
+    },
+    {
+      "path": "contracts/task-map.json",
+      "sha256": "9ee0719a82bf0df827c5c8803b9229a5de0558a354ad70204323a6fba4d5fe6d"
+    }
+  ],
+  "decisionSha256": "b60ccc03f9bad488f354b64fbfd7bbe392009a9b91a3d30fdc395eecf6e19283"
+}

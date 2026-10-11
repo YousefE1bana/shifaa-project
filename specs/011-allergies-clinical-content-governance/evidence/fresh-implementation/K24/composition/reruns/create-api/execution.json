@@ -1,0 +1,21 @@
+{
+  "id": "create-api",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\464_1791613898202\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-382996ec-b102-4f73-9811-68a205f4edff.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/create-api.log",
+    "sha256": "994addb1e80982b5def4edc25743a2cfabf97967856b3d4588c2da43d995729e"
+  },
+  "original": "tools/run-feature-011-content-api-test.mjs",
+  "originalSha256": "913611bae882219a150fe2a4ae7b65bf6f018b11d529ec0cd45c197798dac88e",
+  "substitution": "const e = f + '/evidence/fresh-implementation/K15';",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/create-api",
+  "temporarySha256": "b35a0db9a01d604a511c485ee50c7e80d65015487babd51d4be548daf0502c2c",
+  "testAssertionsChanged": false,
+  "preflightSubstitutions": []
+}

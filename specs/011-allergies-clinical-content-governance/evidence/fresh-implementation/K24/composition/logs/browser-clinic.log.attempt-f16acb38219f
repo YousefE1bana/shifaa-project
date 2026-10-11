@@ -1,0 +1,216 @@
+[WebServer] (node:18948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:18944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:9992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:19048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 49 tests using 1 worker
+
+(node:4016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/49] tests\e2e\feature-011-ui.spec.ts:175:7 › ar-EG report, explicit review, original receipt, keyboard and source/history
+[WebServer] (node:13592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/49] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG empty clears sensitive rows and enforces access
+[WebServer] (node:8920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/49] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG denied clears sensitive rows and enforces access
+[WebServer] (node:18784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/49] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG stale clears sensitive rows and enforces access
+[WebServer] (node:8532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/49] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG error clears sensitive rows and enforces access
+[WebServer] (node:11004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/49] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG default-off clears sensitive rows and enforces access
+[WebServer] (node:17960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/49] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG kill clears sensitive rows and enforces access
+[WebServer] (node:8204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/49] tests\e2e\feature-011-ui.spec.ts:248:7 › ar-EG loading barrier, offline, manual reconciliation preserves original key/body
+[WebServer] (node:18852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/49] tests\e2e\feature-011-ui.spec.ts:274:7 › ar-EG responsive 360/412/768/1440, 200% text and 400% reflow
+[WebServer] (node:11632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[10/49] tests\e2e\feature-011-ui.spec.ts:175:7 › en-EG report, explicit review, original receipt, keyboard and source/history
+[WebServer] (node:6460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/49] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG empty clears sensitive rows and enforces access
+[WebServer] (node:18524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[12/49] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG denied clears sensitive rows and enforces access
+[WebServer] (node:9812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[13/49] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG stale clears sensitive rows and enforces access
+[WebServer] (node:13960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[14/49] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG error clears sensitive rows and enforces access
+[WebServer] (node:19360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[15/49] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG default-off clears sensitive rows and enforces access
+[WebServer] (node:18728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[16/49] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG kill clears sensitive rows and enforces access
+[WebServer] (node:18160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[17/49] tests\e2e\feature-011-ui.spec.ts:248:7 › en-EG loading barrier, offline, manual reconciliation preserves original key/body
+[WebServer] (node:19364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[18/49] tests\e2e\feature-011-ui.spec.ts:274:7 › en-EG responsive 360/412/768/1440, 200% text and 400% reflow
+[WebServer] (node:16716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[19/49] tests\e2e\feature-011-ui.spec.ts:307:7 › route person / server pair mismatch never starts allergy requests
+[WebServer] (node:2516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[20/49] tests\e2e\feature-011-verification.spec.ts:283:7 › ar-EG J-02 preserved four-state history, attribution, unknown and read boundary
+[WebServer] (node:11908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[21/49] tests\e2e\feature-011-verification.spec.ts:313:9 › ar-EG selected correction clears after authority loss
+[WebServer] (node:17104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[22/49] tests\e2e\feature-011-verification.spec.ts:323:9 › ar-EG J-02 confirm, reversal, refute, terminal and linked corrected assertion
+[WebServer] (node:8764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[23/49] tests\e2e\feature-011-verification.spec.ts:382:11 › ar-EG stale verification denial clears protected projection
+[WebServer] (node:11772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[24/49] tests\e2e\feature-011-verification.spec.ts:382:11 › ar-EG denied verification denial clears protected projection
+[WebServer] (node:18344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[25/49] tests\e2e\feature-011-verification.spec.ts:382:11 › ar-EG provenance verification denial clears protected projection
+[WebServer] (node:7076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[26/49] tests\e2e\feature-011-verification.spec.ts:400:9 › ar-EG ACK-loss manual original verification settlement
+[WebServer] (node:1540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[27/49] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG empty degraded/isolation
+[WebServer] (node:19396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[28/49] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG loading degraded/isolation
+[WebServer] (node:19000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[29/49] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG error degraded/isolation
+[WebServer] (node:18728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[30/49] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG denied degraded/isolation
+[WebServer] (node:8028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[31/49] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG stale degraded/isolation
+[WebServer] (node:10804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[32/49] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG default-off degraded/isolation
+[WebServer] (node:3440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[33/49] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG kill degraded/isolation
+[WebServer] (node:19228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[34/49] tests\e2e\feature-011-verification.spec.ts:435:7 › ar-EG offline, labels, bidi, keyboard, reflow and forced colors
+[WebServer] (node:17900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[35/49] tests\e2e\feature-011-verification.spec.ts:283:7 › en-EG J-02 preserved four-state history, attribution, unknown and read boundary
+[WebServer] (node:16196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[36/49] tests\e2e\feature-011-verification.spec.ts:313:9 › en-EG selected correction clears after authority loss
+[WebServer] (node:5652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[37/49] tests\e2e\feature-011-verification.spec.ts:323:9 › en-EG J-02 confirm, reversal, refute, terminal and linked corrected assertion
+[WebServer] (node:19400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[38/49] tests\e2e\feature-011-verification.spec.ts:382:11 › en-EG stale verification denial clears protected projection
+[WebServer] (node:18908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[39/49] tests\e2e\feature-011-verification.spec.ts:382:11 › en-EG denied verification denial clears protected projection
+[WebServer] (node:19068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[40/49] tests\e2e\feature-011-verification.spec.ts:382:11 › en-EG provenance verification denial clears protected projection
+[WebServer] (node:19452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[41/49] tests\e2e\feature-011-verification.spec.ts:400:9 › en-EG ACK-loss manual original verification settlement
+[WebServer] (node:10036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[42/49] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG empty degraded/isolation
+[WebServer] (node:5224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[43/49] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG loading degraded/isolation
+[WebServer] (node:8704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[44/49] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG error degraded/isolation
+[WebServer] (node:13372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[45/49] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG denied degraded/isolation
+[WebServer] (node:11772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[46/49] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG stale degraded/isolation
+[WebServer] (node:4476) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[47/49] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG default-off degraded/isolation
+[WebServer] (node:7348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[48/49] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG kill degraded/isolation
+[WebServer] (node:6396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[49/49] tests\e2e\feature-011-verification.spec.ts:435:7 › en-EG offline, labels, bidi, keyboard, reflow and forced colors
+[WebServer] (node:10992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+  49 passed (46.1s)

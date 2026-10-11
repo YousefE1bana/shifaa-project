@@ -1,0 +1,22 @@
+✔ clinician report retains server-issued encounter and rejects an unrelated encounter (36.2327ms)
+✔ current empty explicitly retains unknown; source/history success stays attributable (1.5162ms)
+✔ read-only roles cannot create; current context remains server-authorized (1.2264ms)
+✔ permission, offline and stale clear protected rows and disable mutations (4.4911ms)
+✔ explicit review/report and original-key reconciliation never queues a write (1.217ms)
+✔ route composition includes named fields, focus and bidi-safe state regions (2.5161ms)
+✔ existing authorized F004 selection retains managed ID and purpose; invalid context clears and never bootstraps (247.9748ms)
+✔ current empty explicitly retains unknown; source/history success stays attributable (31.6143ms)
+✔ read-only roles cannot create; current context remains server-authorized (1.3695ms)
+✔ permission, offline and stale clear protected rows and disable mutations (3.7215ms)
+✔ explicit review/report and original-key reconciliation never queues a write (1.4856ms)
+✔ route composition includes named fields, focus and bidi-safe state regions (0.8282ms)
+✔ clinic consumes canonical pair only from same current encounter/facility projection (1.0419ms)
+✔ Arabic and English preserve exact state/copy parity and readable dates (20.0338ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 635.3116

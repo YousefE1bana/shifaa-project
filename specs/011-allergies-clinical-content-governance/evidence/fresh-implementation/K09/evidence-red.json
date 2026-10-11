@@ -1,0 +1,215 @@
+{
+  "task": "T035",
+  "result": "VALID_RED",
+  "tests": 51,
+  "passed": 33,
+  "failed": 18,
+  "reason": "All failing assertions reach explicit missing producer behavior; imports and vector fixture healthy; initial path setup failure excluded",
+  "testSha256": "90672f39074c1f03d8e9652a2b573af8c53fd1c8832fa0eea5c18a96965f2dd2",
+  "cases": [
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P01 signing",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P02 signing",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P03 credential",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P04 designation",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P05 signing_authority",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P06 admissibility",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P07 allergy_verification",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P08 content_material",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P09 code_material",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-P10 test_vector_material",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-N01 unknown generic trust boolean",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-N02 untrusted producer",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-N03 invalid version",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-N04 noncanonical digest",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-N05 arbitrary nested claims",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-N06 invalid verification decision",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-N07 reject before conversion",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries VE-N08 NUL metadata",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries profile substitution denies",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries source exact signing approved and rejected",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution releaseId",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution artifactVersion",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution artifactDigest",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution signerPersonId",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution capacity",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution decision",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution evidenceRef",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution sourceIdentity",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries signing source substitution sourceEvidenceIdentity",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries unavailable and unconfigured verifier deny",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries exact historical row/version not unrelated replacement credentialBasis",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries exact historical row/version not unrelated replacement designationBasis",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries exact historical row/version not unrelated replacement authorityBasis",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries expiry and changed same-version basis deny",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries all three exact material bindings exclude raw bytes",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries material denies hash before SQL",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries material denies reference before SQL",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries material denies kind before SQL",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries material denies identity before SQL",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries material denies unavailable before SQL",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries material denies unapproved before SQL",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries material denies correlation before SQL",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries support exact private source produces one-use tuple",
+      "status": "failed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries support denies reuse/substitution patientId",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries support denies reuse/substitution allergyId",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries support denies reuse/substitution previousRevisionId",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries support denies reuse/substitution previousVersion",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries support denies reuse/substitution targetStatus",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries support denies reuse/substitution attestorPersonId",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries support denies reuse/substitution consumed",
+      "status": "passed"
+    },
+    {
+      "id": "K09 closed profiles and actual producer boundaries coding omitted/unknown accepted, new known requires approved exact source",
+      "status": "failed"
+    }
+  ]
+}

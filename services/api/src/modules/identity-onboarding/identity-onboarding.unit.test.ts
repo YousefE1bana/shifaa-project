@@ -34,6 +34,32 @@ function serviceHarness(
 }
 
 describe('identity onboarding use-case module', () => {
+  it('hands off only the native subject own canonical managed patient ID', async () => {
+    const { service, repository } = serviceHarness();
+    const subjectId = randomUUID();
+    const own = repository.createRegistration(subjectId, 'synthetic-own', 'ar-EG');
+    const other = repository.createRegistration(randomUUID(), 'synthetic-other', 'en-EG');
+    const actor = {
+      kind: 'PAT' as const,
+      subjectId,
+      personId: own.personId,
+      principal: subjectId,
+      aal: 1 as const,
+    };
+    const profile = await service.getProfile(actor);
+    expect(profile).toMatchObject({ id: own.personId, managedPatientId: own.patientId });
+    expect(profile.managedPatientId).not.toBe(own.personId);
+    expect(profile.managedPatientId).not.toBe(other.patientId);
+    await expect(service.getProfile({ ...actor, personId: other.personId })).rejects.toMatchObject({
+      status: 403,
+    });
+    const original = repository.profileByAuthSubject.bind(repository);
+    repository.profileByAuthSubject = (subject) => {
+      const value = original(subject);
+      return value ? { ...value, managedPatientId: null } : undefined;
+    };
+    expect((await service.getProfile(actor)).managedPatientId).toBeNull();
+  });
   it('creates registration atomically and audits only approved fields', async () => {
     const { service, repository } = serviceHarness();
     const challenge = await service.register({

@@ -1,0 +1,412 @@
+{
+  "checkpoint": "K22",
+  "result": "PASS",
+  "reviewer": "Primary Codex",
+  "capturedAt": "2026-10-09T14:11:41.736Z",
+  "tasks": [
+    "T080",
+    "T081",
+    "T082",
+    "T083"
+  ],
+  "productOwnerAcceptance": "PENDING",
+  "proofs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-harness.json",
+      "sha256": "f209e3307b61a0a18af8dff7db079acc5c490261ac942f705c6a49d91cc4dd70"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/all-races.json",
+      "sha256": "b60b8d29636c023c9680bd55c70e282f6fec78eb29b1c76a1f35e526c3c28507"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/security-proof.json",
+      "sha256": "04b8d2d2f93e7fba340932ff099e843aa79745422520a0f11ed25d37c4ef6ab6"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/atomic-proof.json",
+      "sha256": "b0b2a0d62fbdaa26cdc46106f8405a141b2657be2df1326b223b7cbceb74a852"
+    }
+  ],
+  "cleanupVerification": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/cleanup-verification.json",
+    "sha256": "6b20e9a214b8dca0c30cc3074955ac999ba85978f0579af69d6cd40a3882580b"
+  },
+  "priorAttemptLogs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/allergy-api.log.attempt-e0c902137fca",
+      "sha256": "e0c902137fcaa2152c4093401eb24a5b0dac8eb0c5c2d31dae68caa44c94d00c",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/browser-patient.log.attempt-ad31b4702307",
+      "sha256": "ad31b4702307471dea97e54bb313c64510a142d597b66a3190a146c0840df25f",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/core-equivalence.log.attempt-5e51f52fb2f9",
+      "sha256": "5e51f52fb2f97bc1899610732475e4603e461bde6dec4e60ad143c688c856943",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/core-equivalence.log.attempt-721dbb363e45",
+      "sha256": "721dbb363e45ebaf30c3db73d284ef8c68117402d4a2f8886bdd8f98f7b48451",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/native-abuse.log.attempt-9f697fab1309",
+      "sha256": "9f697fab1309ed83be301b0857dfbff542a2da3f4de189711ee420ea956f492d",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/native-abuse.log.attempt-e4860f4749ae",
+      "sha256": "e4860f4749aebdaef9b24890bfe237fc53c7d45f123c4bf711014be7bfa1ff84",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-admin.log.attempt-91da6c16027f",
+      "sha256": "91da6c16027f4eb4930f0ad41805f5f0b0ab3d4c0926dd7d047167e74a7034bd",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api-client.log.attempt-989fdd77ed3a",
+      "sha256": "989fdd77ed3a7771907c7d696d0ae0047de133f6c195808e76838a6701af441f",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api-client.log.attempt-acdd7aea50c8",
+      "sha256": "acdd7aea50c857d70f51562a4f98382ec27a9860c5a4f10791e0d3f3391c9b18",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api.log.attempt-15e1ecadc370",
+      "sha256": "15e1ecadc370765fa777948ec0c2727aa962c6008b43679f2de812a66e1b8e52",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api.log.attempt-5bf5e2bd028b",
+      "sha256": "5bf5e2bd028b08af2299e0d507e74055f0392e792f7ba2a5d8d90ef0d720583c",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-clinic.log.attempt-6311c9497fcc",
+      "sha256": "6311c9497fcc7f853c0d005c2665568e138124bca3dc2adf8144fa34fffb5d6b",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-clinic.log.attempt-b7e63467c7b3",
+      "sha256": "b7e63467c7b387c413a48fcd3b47c8a8478de4f6cbdfccbfb41c10c32e4c3e24",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-contracts.log.attempt-1b8f6e2eb5e1",
+      "sha256": "1b8f6e2eb5e128233a1826068e871b3ccab0f4c82aeac9c1d10fdbb382c6326f",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-contracts.log.attempt-768f48565294",
+      "sha256": "768f48565294684738823a6a4b7361c24149b2cfac64276446f15f3b4b470ef4",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-core.log.attempt-5cbcd31fdf91",
+      "sha256": "5cbcd31fdf91ec68ad233ffd5b4a63da6a97b7abbe3de8c4452235800f6e99d9",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-core.log.attempt-e8d4b173025c",
+      "sha256": "e8d4b173025c4cf57b32ccaa74ea5a541a7e2f66a127d5fc34022fae246f7058",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-i18n.log.attempt-190e1747c9ea",
+      "sha256": "190e1747c9ea5df4cc2311de47314930a500616b6944b8f18d80f1c6ce58c5ea",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-i18n.log.attempt-f73ddf9c7090",
+      "sha256": "f73ddf9c7090cc734a4755ff9fd7de61bda24c97e165a79931abfeadbb33cb7c",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-patient.log.attempt-2ca0ac0e29bf",
+      "sha256": "2ca0ac0e29bff6e3210b7ef605237f754a5b8c535382e3f62f8376960cd915e0",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-patient.log.attempt-77e3aee0374b",
+      "sha256": "77e3aee0374b78bd3ebdba170f503736b30a518027d80eaa2bba0b903b04e784",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/physical-races.log.attempt-2f719c797a1a",
+      "sha256": "2f719c797a1a321a606e816339fa79337fa4b62439277a359a8a49fa48fff522",
+      "countedInCurrentPassTotals": false
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/tooling.log.attempt-789062ee72fa",
+      "sha256": "789062ee72fa3ca24557e9cf8300ae83fb3e75015bb1b3b59c267060ae7297cf",
+      "countedInCurrentPassTotals": false
+    }
+  ],
+  "qualityReview": {
+    "testGuard": "PASS",
+    "docsGuard": "PASS",
+    "productionCodeChanged": false
+  },
+  "parityPins": 133,
+  "pinnedInputsUnchanged": true,
+  "sqlChanged": false,
+  "publicContractsChanged": false,
+  "preexistingFileCount": 4009,
+  "preexistingMissing": [],
+  "changedPreexisting": [
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+    "specs/011-allergies-clinical-content-governance/tasks.md",
+    "tests/e2e/feature-011-ui.spec.ts",
+    "tests/e2e/feature-011-verification.spec.ts",
+    "tools/feature-011-ledger-contract.test.mjs",
+    "tools/verify-feature-011-scope.test.mjs",
+    "apps/clinic/package.json",
+    "apps/patient/package.json",
+    "package.json",
+    "services/api/test/identity-continuity-mfa-harness.ts"
+  ],
+  "added": [
+    "specs/011-allergies-clinical-content-governance/decisions/k21-accepted-2026-10-09.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/acceptance-review-2026-10-09.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/README.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/all-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/atomic-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-accessibility.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-decision-1-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-decision-2-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-decision-3-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-decision-4-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-default-off.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-denied.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-empty.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-history-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-history-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-history-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-history-self_reported.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-j02.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-kill.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-loading.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-offline.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-provenance.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-receipt.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-reflow-contrast.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-source-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-ar-EG-stale.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-accessibility.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-decision-1-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-decision-2-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-decision-3-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-decision-4-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-default-off.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-denied.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-empty.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-history-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-history-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-history-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-history-self_reported.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-j02.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-kill.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-loading.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-offline.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-provenance.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-receipt.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-reflow-contrast.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-source-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/clinic/clinic-en-EG-stale.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-accessibility.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-default-off.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-denied.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-empty.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-history-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-history-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-history-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-history-self_reported.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-kill.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-loading.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-offline.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-reflow-contrast.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-source-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-ar-EG-stale.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-accessibility.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-default-off.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-denied.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-empty.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-history-clinician_confirmed.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-history-entered_in_error.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-history-refuted.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-history-self_reported.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-kill.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-loading.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-offline.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-reflow-contrast.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-source-history.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/browser/patient/patient-en-EG-stale.png",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/checkpoint-review.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/cleanup-verification.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-atomic.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-browser.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-harness.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-security.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-units.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/git-status.txt",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/inventory.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/allergy-api.log.attempt-e0c902137fca",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/browser-patient.log.attempt-ad31b4702307",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/core-equivalence.log.attempt-5e51f52fb2f9",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/core-equivalence.log.attempt-721dbb363e45",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/native-abuse.log.attempt-9f697fab1309",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/native-abuse.log.attempt-e4860f4749ae",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-admin.log.attempt-91da6c16027f",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api-client.log.attempt-989fdd77ed3a",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api-client.log.attempt-acdd7aea50c8",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api.log.attempt-15e1ecadc370",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api.log.attempt-5bf5e2bd028b",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-clinic.log.attempt-6311c9497fcc",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-clinic.log.attempt-b7e63467c7b3",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-contracts.log.attempt-1b8f6e2eb5e1",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-contracts.log.attempt-768f48565294",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-core.log.attempt-5cbcd31fdf91",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-core.log.attempt-e8d4b173025c",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-i18n.log.attempt-190e1747c9ea",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-i18n.log.attempt-f73ddf9c7090",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-patient.log.attempt-2ca0ac0e29bf",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-patient.log.attempt-77e3aee0374b",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/physical-races.log.attempt-2f719c797a1a",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/tooling.log.attempt-789062ee72fa",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/allergy-api/allergy-api-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/allergy-api/allergy-read-create.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/allergy-api/allergy-routes.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/allergy-api/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/atomic-boundaries/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/atomic-boundaries/protection-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/atomic-boundaries/runtime/shifaa-local-postgres-protection.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/atomic-boundaries/runtime/shifaa-local-supabase-protection.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/core-equivalence/equivalence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/core-equivalence/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/core-equivalence/runtime/shifaa-local-postgres-equivalence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/core-equivalence/runtime/shifaa-local-supabase-equivalence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/create-api/draft-api-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/create-api/draft-api.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/create-api/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/deferred-obligations/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/deferred-obligations/storage-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/evidence/evidence-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/evidence/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/evidence/runtime/shifaa-local-postgres-evidence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/evidence/runtime/shifaa-local-supabase-evidence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/native-abuse/proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-green/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-green/expected-catalog.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-green/physical-green.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-green/proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-green/shifaa-local-postgres-physical-details.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-green/shifaa-local-supabase-physical-details.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-races/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-races/proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-races/runtime/shifaa-local-postgres-physical-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/physical-races/runtime/shifaa-local-supabase-physical-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/protection/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/protection/protection-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/protection/runtime/shifaa-local-postgres-protection.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/protection/runtime/shifaa-local-supabase-protection.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/publish-api/eligibility-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/publish-api/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/publish-api/publish-api.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/publish-api/publish-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/review/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/review/governance-read.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/review/review-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/sign-api/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/sign-api/sign-api-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/sign-api/sign-api.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/status/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/status/status-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/verify-api/execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/verify-api/verify-api-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/verify-api/verify-api.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/security-proof.json",
+    "tools/feature-011-composition-atomic.mjs",
+    "tools/feature-011-composition-playwright.config.ts",
+    "tools/feature-011-composition-security.mjs",
+    "tools/run-feature-011-composition-test.mjs"
+  ],
+  "taskCompletion": {
+    "checked": "T001–T079",
+    "unchecked": "T080–T092",
+    "definitionsAndDependenciesInitialHashes": "UNCHANGED"
+  },
+  "issueStates": [
+    {
+      "number": 480,
+      "state": "open",
+      "title": "[011-allergies-clinical-content-governance] T083: Fault every all-five transaction/local receipt serialization/encryption boundary across five mutations",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/480"
+    },
+    {
+      "number": 479,
+      "state": "open",
+      "title": "[011-allergies-clinical-content-governance] T082: Run native/GUC/online-role/RLS/API abuse/redaction matrix",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/479"
+    },
+    {
+      "number": 478,
+      "state": "open",
+      "title": "[011-allergies-clinical-content-governance] T081: Run all-operation barrier/pg_locks concurrency/retry/commit-unknown proof",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/478"
+    },
+    {
+      "number": 477,
+      "state": "open",
+      "title": "[011-allergies-clinical-content-governance] T080: Integrate all new suites into package test/full verify discovery",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/477"
+    },
+    {
+      "number": 476,
+      "state": "closed",
+      "title": "[011-allergies-clinical-content-governance] T079: Capture complete J-04 AR/EN after authoritative eligibility and status security acceptance",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/476"
+    },
+    {
+      "number": 475,
+      "state": "closed",
+      "title": "[011-allergies-clinical-content-governance] T078: Implement existing /clinical-content/status engineering route",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/475"
+    },
+    {
+      "number": 474,
+      "state": "closed",
+      "title": "[011-allergies-clinical-content-governance] T077: Add RED clinic status family state/a11y/allowlist tests",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/474"
+    }
+  ],
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "gitStatus": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/git-status.txt",
+    "sha256": "55ac44f378f5e0595db4db3c5fe8dbaba8b817dadfe4d767e3da400057f0b92a",
+    "entries": 152
+  },
+  "retainedGates": "UNCHANGED_OPEN",
+  "k23Started": false,
+  "subagentsUsed": false,
+  "committed": false,
+  "pushed": false,
+  "pullRequestCreated": false
+}

@@ -1,0 +1,80 @@
+{
+  "capturedAt": "2026-10-10T12:44:19.872Z",
+  "result": "PASS",
+  "precedingPacketReferences": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/engineering-closeout-2026-10-10/authorization.json",
+      "sha256": "4294156c41646f9a015480229074bcd7a4b434e77c578ea69fd163875fa224b8",
+      "matches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/engineering-closeout-2026-10-10/verification.json",
+      "sha256": "0bf7fd9939324a45706d5d9e2dd4a9011d9c93ea05171a028bbd1cbe87c04570",
+      "matches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/engineering-closeout-2026-10-10/preceding-bilingual-acceptance.json",
+      "sha256": "71f55b69e156020043556d4da6d7c0404a9d026fea9577cef9d7400213a4e889",
+      "matches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/engineering-closeout-2026-10-10/preceding-final-parity.json",
+      "sha256": "ae656b347a146f7db9b97b32e5f87b062d62dd0aaa8dea03e4a4e19c2d016a35",
+      "matches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/engineering-closeout-2026-10-10/review.md",
+      "sha256": "bcdbf6f8d2769d1d05e77127184db803820c6a75d835493e1bcbb9f3e15c80aa",
+      "matches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/bilingual-acceptance.json",
+      "sha256": "ede39f1c05afe79afb8799c1de0955d6eacc97764bb0ed602fd2f0f9684f3e41",
+      "matches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/final-parity.json",
+      "sha256": "f7665026e4a2dd8190687564110e8625766e1186c352bfa71b175904d6bedf3e",
+      "matches": true
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/final-gates.json",
+      "sha256": "c6c5e3a30239733dd6ad555f3a140496d947f716a5fcffd6ad26245916751c32",
+      "matches": true
+    }
+  ],
+  "fullVerifyInputDrift": [],
+  "ledger": {
+    "checkedCount": 87,
+    "unchecked": [
+      "T088",
+      "T089",
+      "T090",
+      "T091",
+      "T092"
+    ],
+    "mapStates": [
+      {
+        "id": "T088",
+        "status": "UNCHECKED"
+      },
+      {
+        "id": "T089",
+        "status": "UNCHECKED"
+      },
+      {
+        "id": "T090",
+        "status": "UNCHECKED"
+      },
+      {
+        "id": "T091",
+        "status": "UNCHECKED"
+      },
+      {
+        "id": "T092",
+        "status": "UNCHECKED"
+      }
+    ]
+  },
+  "noEvidenceReplacement": true
+}

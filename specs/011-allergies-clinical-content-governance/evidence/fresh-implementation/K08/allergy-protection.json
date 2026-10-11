@@ -1,0 +1,45 @@
+{
+  "checkpoint": "K08",
+  "result": "PASS_PENDING_PRODUCT_OWNER_ACCEPTANCE",
+  "sourceDigests": {
+    "tools/run-feature-011-protection-test.mjs": "0e57d04e9dc9c6103c53683ea1bd76538e5e76637a04323413206d62bb28bd82",
+    "tools/feature-011-protection-fixtures.mjs": "dbdd535c5381788f745b4b5717b4d982b06474aaa939287e7f499da8362b89bb",
+    "services/api/src/modules/feature-011/protection.ts": "090e7be543396eb3e92f0923ae3915f9bdcc55abcb379e5e55322cddd7b899a3",
+    "services/api/src/modules/feature-011/release-protection.ts": "39c6299f50a8b089c2b3aeb2451be772a7385b31e0070e90ac8d32d9f6cf0982",
+    "services/api/src/modules/feature-011/allergy-protection.ts": "2a5a2e4ec4928694fabc9be51e3f73f9f231f993151e044be0371f49758d971f",
+    "services/api/src/modules/feature-011/mutation-receipts.ts": "a7995e1adaeec30c0ac41cb93a8af7ec8a4aa4050faf640fa61a109c62603ccc",
+    "services/api/src/modules/feature-011/response-composition.ts": "2dee45d01bf4dda00cbe07f35781e174843d7493fad53a1b7d9f46eaaf7de161",
+    "services/api/src/adapters/postgres/feature-011-receipts.ts": "4b6c3a0b710bbb1211eab60b74230d0fd698b4f70e073e17082e9ebc076b3f52"
+  },
+  "unitEvidence": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/runtime/crypto-unit-tests.json",
+    "sha256": "d2e56024658ced2e86761b05c57ee1d1edeb48bed4dd5039cd651c6a9e9395a5"
+  },
+  "realRuntimeEvidence": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-proof.json",
+    "sha256": "181c75d6e31c63688424e8eb7e73cc6462e48ed76c25411ca2aac25808b0509f"
+  },
+  "prerequisiteStage": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/stage-assertion.json",
+    "sha256": "5312d18dc2d28b34d3c9827c5e460528359d514bf98a434aad825dc2892e9d3e"
+  },
+  "boundary": {
+    "realLocalAes": true,
+    "neutralTestKeys": true,
+    "productionKmsAccepted": false,
+    "evidenceSourceAccepted": false,
+    "clinicalApproval": false,
+    "globalGateClosure": false,
+    "routeRegistration": false
+  },
+  "task": "T032",
+  "implementation": "services/api/src/modules/feature-011/allergy-protection.ts",
+  "checks": [
+    "Closed facts/reason schemas; scalar-key canonical UTF-8; exact reported text/source/unknown values",
+    "Creation normalizes unknown values; changed known coding requires injected validation; correction preserves source",
+    "Exact six-frame assertion/revision/version/field/key AAD; no workflow/head identity",
+    "Fresh distinct facts/reason envelopes; no reason on v1; required reason for later revisions",
+    "Authorized exact revision reconstruction only; tamper/wrong key/context/version denial",
+    "Owned temporary buffers and local key capabilities cleared on completion/failure"
+  ]
+}

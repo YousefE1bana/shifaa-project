@@ -1,0 +1,772 @@
+✔ temporary names cannot select either application database, escape, or use historical scratch names (2.4809ms)
+✔ baseline chain contains the complete 27 prerequisites and rejects Feature 011 DDL (1.3103ms)
+✔ migration includes cannot escape the repository or cycle (1.1143ms)
+✔ only the exact intentional missing-behavior SQLSTATE/message qualifies as RED (0.8839ms)
+✔ runners reject malformed modes before contacting a runtime (526.8723ms)
+✖ fresh approval binds exact 92-task ledger and recovered 42-input Plan family (4.8678ms)
+✔ current map has the fresh schema, exact Feature 011 scope, and no historical scope/acceptance fields (7.0419ms)
+✖ K01 and pending parity assertion resolve only to fresh tasks and K07 T029 (14.1999ms)
+✔ generation-time labels and immutable candidate provenance remain separate from current formal approvals (5.1885ms)
+✖ scope verifier accepts the current approved family while preserving pending gate limits (971.4435ms)
+✔ physical RED cannot be manufactured from syntax, setup, permission, runtime, or unrelated failures (4.6034ms)
+✔ closed case inventory binds exactly the four K04 RED owners without raw evidence input (6.5039ms)
+✔ fixture health: all recovered approval inputs are intact and legacy public preparation runs (1298.3245ms)
+✔ frozen V01–V07 keep independent bytes, digests and the sole field-8 lineage exception (1.5085ms)
+✔ recovered metadata is data only and binds all current approved profiles in both outputs (199.8929ms)
+✔ both generators and contracts-only reject missing approved input: .specify/memory/constitution.md (153.9359ms)
+✔ both generators and contracts-only reject missing approved input: docs/design/SHIFAA-UI-Contract.md (154.1654ms)
+✔ both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md (157.473ms)
+✔ both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md (152.6098ms)
+✔ both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Remaining-Specs-Roadmap.md (150.4875ms)
+✔ both generators and contracts-only reject missing approved input: packages/design-system/src/tokens.ts (153.0742ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json (159.5126ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json (164.7379ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md (203.9637ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json (181.5742ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json (143.5572ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json (155.3672ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md (144.3591ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md (171.4763ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md (179.5437ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json (177.0798ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json (177.2184ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md (190.7488ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml (152.9741ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json (183.6605ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json (188.2586ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json (231.8615ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json (198.661ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md (204.6719ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md (214.4243ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json (205.2162ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json (191.5814ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json (232.0769ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md (231.9925ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/data-model.md (287.9105ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md (268.3869ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md (256.2193ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md (267.8609ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md (257.4982ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md (243.5096ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md (268.9038ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md (289.419ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/plan.md (278.9042ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/quickstart.md (277.443ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/research.md (282.5212ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/spec.md (318.4846ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json (319.1447ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json (112.1ms)
+✔ both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md (110.4164ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json (148.9423ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json (166.9039ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md (159.0109ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json (163.1349ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json (144.4679ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json (158.6796ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md (160.7818ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md (171.8203ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md (168.0613ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json (172.7297ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json (270.4874ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md (221.3864ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml (189.6681ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json (266.4963ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json (212.4638ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json (249.8244ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json (292.5308ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md (355.1285ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md (383.4379ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json (343.539ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json (393.1409ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json (363.5315ms)
+✔ both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md (407.5776ms)
+✔ both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1.json (319.77ms)
+✔ both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1-vectors.json (273.0714ms)
+✔ both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1.json (177.2799ms)
+✔ both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1-vectors.json (226.3297ms)
+✔ both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1.json (291.7635ms)
+✔ both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1-vectors.json (256.6312ms)
+✔ both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1.json (320.7615ms)
+✔ both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1-vectors.json (310.231ms)
+✔ both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-parity-v1.json (308.0343ms)
+✔ contracts-only binds P1–P3, including current vector/profile registries (888.0578ms)
+✔ default requires current P4 and separately owned P5, with no P6 backward prerequisite (734.3908ms)
+✔ historical R2 registry is bound as history without accepting its superseded current hashes (731.5299ms)
+✔ default rejects P5 failed independently of missing physical behavior (943.6389ms)
+✔ default rejects P5 unaccepted independently of missing physical behavior (921.1324ms)
+✔ default rejects P5 stale source independently of missing physical behavior (964.9367ms)
+✔ default rejects P5 missing source independently of missing physical behavior (828.5248ms)
+✔ default rejects P5 stale physical binding independently of missing physical behavior (1027.5978ms)
+✔ default rejects P5 missing race binding independently of missing physical behavior (824.8605ms)
+✔ default rejects P5 stale public proof independently of missing physical behavior (1101.8614ms)
+✔ default rejects P5 stale HEAD independently of missing physical behavior (1157.2377ms)
+✔ default rejects P5 wrong ledger independently of missing physical behavior (1018.5213ms)
+✔ default rejects P5 missing owner independently of missing physical behavior (1082.5415ms)
+✔ default rejects P5 unaccepted owner independently of missing physical behavior (1078.7562ms)
+✔ default rejects P5 stale owner record independently of missing physical behavior (845.266ms)
+✔ default rejects P5 missing owner record independently of missing physical behavior (1086.0802ms)
+✔ default rejects P5 wrong owner role independently of missing physical behavior (886.8519ms)
+✔ default rejects P5 gate closure independently of missing physical behavior (903.9814ms)
+✔ default rejects P5 global waiver independently of missing physical behavior (817.2319ms)
+✔ default rejects P5 P6 backward dependency independently of missing physical behavior (1142.2106ms)
+✔ default rejects P5 unaccepted record despite accepted flag independently of missing physical behavior (2123.5819ms)
+✔ default rejects P5 record outside decisions independently of missing physical behavior (2770.1329ms)
+✔ P5 input set has no circular P6 prerequisite; an incomplete P4 still prevents full PASS (2190.5293ms)
+✔ default rejects current P4 failed result before physical consumer preparation (4562.3574ms)
+✔ default rejects current P4 wrong ledger before physical consumer preparation (3759.5899ms)
+✔ default rejects current P4 stale HEAD before physical consumer preparation (1816.5122ms)
+✔ default rejects current P4 stale Plan before physical consumer preparation (1218.0816ms)
+✔ default rejects current P4 stale generated hash before physical consumer preparation (1051.8404ms)
+✔ default rejects current P4 missing input hash before physical consumer preparation (1071.3966ms)
+✔ default rejects current P4 non-synthetic claim before physical consumer preparation (1311.8357ms)
+✖ approved recovered inputs and fresh ledger produce a pending, fail-closed scope result (128.7821ms)
+✖ rejects added public operation (88.4171ms)
+✖ rejects removed public operation (82.8816ms)
+✖ rejects substituted public operation (82.6812ms)
+✖ rejects changed method or path binding (84.5791ms)
+✖ rejects added a public request header (75.6817ms)
+✖ rejects removed a required mutation header (74.8653ms)
+✖ rejects opened a closed request DTO (83.6938ms)
+✖ rejects changed an existing required DTO field (79.6977ms)
+✖ rejects added NFR (83.4537ms)
+✖ rejects substituted NFR (79.1201ms)
+✖ rejects expanded FR-ADMIN-004 beyond publication (73.14ms)
+✖ rejects added Feature 012 prescription behavior (59.5391ms)
+✖ verifyAllergy entered-in-error reconciliation remains asserted (128.7158ms)
+✖ listClinicalContent metadata-only reconciliation remains asserted (75.7253ms)
+✖ every frozen operation remains bound to its API Catalog method and path (65.2591ms)
+✖ API Catalog request header flags remain frozen for each operation (67.0691ms)
+✖ rejects rewritten fresh Tasks approval record (72.891ms)
+✖ rejects rewritten recovered Plan approval record (64.1975ms)
+✖ rejects rewritten Feature 011 UX decision (66.463ms)
+✖ changed existing generated client bytes are rejected without rewriting generated outputs (61.2049ms)
+✖ Feature 012 remains an explicit exclusion even when counts remain unchanged (70.2715ms)
+✖ toolchain checks use pinned Node, pnpm, and local Supabase CLI without Docker startup (69.8058ms)
+✖ unreadable current scope input fails closed with its path (71.0604ms)
+ℹ tests 145
+ℹ suites 0
+ℹ pass 118
+ℹ fail 27
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59871.0641
+
+✖ failing tests:
+
+test at tools\feature-011-ledger-contract.test.mjs:54:1
+✖ fresh approval binds exact 92-task ledger and recovered 42-input Plan family (4.8678ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '8e97c6927081e596f0169b694bbc87fa9ed771cdd874d028e05131c42b026367'
+  - 'e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957235f9573165'
+  
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-ledger-contract.test.mjs:59:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '8e97c6927081e596f0169b694bbc87fa9ed771cdd874d028e05131c42b026367',
+    expected: 'e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957235f9573165',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools\feature-011-ledger-contract.test.mjs:91:1
+✖ K01 and pending parity assertion resolve only to fresh tasks and K07 T029 (14.1999ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-ledger-contract.test.mjs:107:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\feature-011-ledger-contract.test.mjs:127:1
+✖ scope verifier accepts the current approved family while preserving pending gate limits (971.4435ms)
+  AssertionError [ERR_ASSERTION]: Fresh tasks.md approved hash mismatch
+  Fresh task-map approved hash mismatch
+  Fresh ledger task/status or checkbox state mismatch
+  + actual - expected
+  
+  + [
+  +   'Fresh tasks.md approved hash mismatch',
+  +   'Fresh task-map approved hash mismatch',
+  +   'Fresh ledger task/status or checkbox state mismatch'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-ledger-contract.test.mjs:134:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Fresh tasks.md approved hash mismatch', 'Fresh task-map approved hash mismatch', 'Fresh ledger task/status or checkbox state mismatch' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:126:1
+✖ approved recovered inputs and fresh ledger produce a pending, fail-closed scope result (128.7821ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:127:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:208:3
+✖ rejects added public operation (88.4171ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:209:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:208:3
+✖ rejects removed public operation (82.8816ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:209:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:208:3
+✖ rejects substituted public operation (82.6812ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:209:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:208:3
+✖ rejects changed method or path binding (84.5791ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:209:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:208:3
+✖ rejects added a public request header (75.6817ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:209:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:208:3
+✖ rejects removed a required mutation header (74.8653ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:209:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:208:3
+✖ rejects opened a closed request DTO (83.6938ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:209:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:208:3
+✖ rejects changed an existing required DTO field (79.6977ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:209:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:236:3
+✖ rejects added NFR (83.4537ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:237:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:236:3
+✖ rejects substituted NFR (79.1201ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:237:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:236:3
+✖ rejects expanded FR-ADMIN-004 beyond publication (73.14ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:237:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:236:3
+✖ rejects added Feature 012 prescription behavior (59.5391ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:237:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:255:1
+✖ verifyAllergy entered-in-error reconciliation remains asserted (128.7158ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:256:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:269:1
+✖ listClinicalContent metadata-only reconciliation remains asserted (75.7253ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:270:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:291:1
+✖ every frozen operation remains bound to its API Catalog method and path (65.2591ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:292:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:308:1
+✖ API Catalog request header flags remain frozen for each operation (67.0691ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:309:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:324:3
+✖ rejects rewritten fresh Tasks approval record (72.891ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:325:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:324:3
+✖ rejects rewritten recovered Plan approval record (64.1975ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:325:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:324:3
+✖ rejects rewritten Feature 011 UX decision (66.463ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:325:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:333:1
+✖ changed existing generated client bytes are rejected without rewriting generated outputs (61.2049ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:334:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:344:1
+✖ Feature 012 remains an explicit exclusion even when counts remain unchanged (70.2715ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:345:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:354:1
+✖ toolchain checks use pinned Node, pnpm, and local Supabase CLI without Docker startup (69.8058ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:355:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools\verify-feature-011-scope.test.mjs:359:1
+✖ unreadable current scope input fails closed with its path (71.0604ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(map.tasks.every(({ status }) => status === 'UNCHECKED'))
+  
+      at assertHealthyFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:86:10)
+      at withFixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:61:5)
+      at TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/verify-feature-011-scope.test.mjs:360:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
