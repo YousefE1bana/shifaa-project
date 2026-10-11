@@ -1,0 +1,21 @@
+{
+  "id": "status",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16584_1791733299365\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-9300217f-3688-4e0b-b503-efcdd5ecb8ef.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/logs/status.log",
+    "sha256": "855b58a4cc4ec1414c3012450eb056de87ccd44e3348fc21828e3b118819e8eb"
+  },
+  "original": "tools/run-feature-011-status-test.mjs",
+  "originalSha256": "62a1a33a5459b3d57eb7af08892023c9af6ffb2959fd3ad39df180e0a7e86baf",
+  "substitution": "const evidence =\n  'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20';",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/reruns/status",
+  "temporarySha256": "4f08ea86c97e284d4ba93d7136274aa16e227527593f291ea04fa0a705206d0d",
+  "testAssertionsChanged": false,
+  "preflightSubstitutions": []
+}

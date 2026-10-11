@@ -388,7 +388,7 @@ const stageDefects = [
     (p) => {
       p.head = '0'.repeat(40);
     },
-    /HEAD binding stale/,
+    /HEAD provenance missing or foreign/,
   ],
   [
     'wrong ledger',
@@ -524,7 +524,7 @@ const physicalDefects = [
     (p) => {
       p.head = '0'.repeat(40);
     },
-    /HEAD binding stale/,
+    /HEAD provenance missing or foreign/,
   ],
   [
     'stale Plan',

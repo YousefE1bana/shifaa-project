@@ -263,21 +263,33 @@ describe('K15/K16/K17 generated content route boundary', () => {
       expect(h.publish).not.toHaveBeenCalled();
     });
   }
-  for (const match of ['', '1', '"0"', '"1.5"', '"9007199254740992"']) {
-    it(`signing denies invalid workflow If-Match ${JSON.stringify(match)}`, async () => {
+  for (const endpoint of [endpoints[1], endpoints[2]]) {
+    for (const match of ['', '1', '"0"', '"1.5"', '"2147483648"', '"9007199254740992"']) {
+      it(`${endpoint.operation} denies invalid workflow If-Match ${JSON.stringify(match)}`, async () => {
+        const h = await fixture();
+        const response = await h.app.inject({
+          method: 'POST',
+          url: endpoint.url,
+          payload: endpoint.payload,
+          headers: { ...headers, 'if-match': match },
+        });
+        expect(response.statusCode).toBe(422);
+        if (endpoint.operation === 'sign') expect(h.sign).not.toHaveBeenCalled();
+        else expect(h.publish).not.toHaveBeenCalled();
+      });
+    }
+    it(`${endpoint.operation} accepts the PostgreSQL integer maximum as a quoted version`, async () => {
       const h = await fixture();
-      expect(
-        (
-          await h.app.inject({
-            method: 'POST',
-            url: endpoints[2].url,
-            payload: signRequest,
-            headers: { ...headers, 'if-match': match },
-          })
-        ).statusCode,
-      ).toBe(422);
-      expect(h.sign).not.toHaveBeenCalled();
-      expect(h.publish).not.toHaveBeenCalled();
+      const response = await h.app.inject({
+        method: 'POST',
+        url: endpoint.url,
+        payload: endpoint.payload,
+        headers: { ...headers, 'if-match': '"2147483647"' },
+      });
+      expect(response.statusCode).toBe(201);
+      const expected =
+        endpoint.operation === 'sign' ? h.sign.mock.calls[0]?.[3] : h.publish.mock.calls[0]?.[3];
+      expect(expected).toEqual({ key: headers['idempotency-key'], expectedVersion: 2147483647 });
     });
   }
   it('registers only the approved content mutations in this window', async () => {

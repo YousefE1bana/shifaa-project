@@ -9,6 +9,7 @@ SET search_path = ''
 AS $function$
 DECLARE
   authorization_instant timestamptz := pg_catalog.clock_timestamp();
+  authorization_day date := (authorization_instant AT TIME ZONE 'UTC')::date;
 BEGIN
   -- Multiple currently eligible exact bindings are ambiguous, not approval.
   RETURN (
@@ -177,6 +178,35 @@ BEGIN
             OR authority.evidence_verified_at <> binding.authority_evidence_verified_at
             OR authority.evidence_producer_id <> 'f011.governance_provisioner'
             OR authority.evidence_verified_at > authorization_instant
+            OR NOT EXISTS (
+              SELECT 1 FROM identity.people person
+              WHERE person.id=signature.signer_person_id AND person.profile_status='active'
+            )
+            OR (binding.authority_facility_id IS NOT NULL AND NOT EXISTS (
+              SELECT 1 FROM identity.facilities facility
+              WHERE facility.id=binding.authority_facility_id AND facility.facility_status='active'
+            ))
+            OR (binding.authority_facility_id IS NOT NULL AND NOT EXISTS (
+              SELECT 1 FROM identity.facility_licenses license
+              JOIN identity.private_evidence_objects evidence
+                ON evidence.id=license.evidence_object_id
+              WHERE license.facility_id=binding.authority_facility_id
+                AND license.status='verified' AND license.expires_on>=authorization_day
+                AND evidence.scan_status='released'
+                AND evidence.bucket_code='facility-license-evidence'
+                AND evidence.facility_id=license.facility_id
+            ))
+            OR (binding.authority_facility_id IS NOT NULL AND NOT EXISTS (
+              SELECT 1 FROM identity.facility_memberships membership
+              WHERE membership.facility_id=binding.authority_facility_id
+                AND membership.person_id=signature.signer_person_id
+                AND membership.employment_license_id=binding.credential_id
+                AND membership.role_code=CASE binding.credential_profession
+                  WHEN 'doctor' THEN 'doctor' WHEN 'pharmacist' THEN 'pharmacist' ELSE '' END
+                AND membership.membership_status='active'
+                AND membership.valid_from<=authorization_instant
+                AND (membership.valid_until IS NULL OR membership.valid_until>authorization_instant)
+            ))
           )
       )
   ) = 1;
@@ -347,7 +377,15 @@ BEGIN
   )
   ORDER BY membership.id FOR SHARE;
 
-  PERFORM clinical.f011_lock_medical_reviewer_v1(p_publisher_id);
+  -- Lock reviewer authority at rank 5; validity and revocation are rechecked
+  -- below while these rows remain locked, after the rank-6 identity set.
+  PERFORM grant_row.id FROM identity.admin_role_grants grant_row
+  WHERE grant_row.person_id=p_publisher_id AND grant_row.role_code='medical_reviewer'
+  ORDER BY grant_row.id FOR SHARE;
+  PERFORM revocation.id FROM identity.admin_role_revocation_requests revocation
+  JOIN identity.admin_role_grants grant_row ON grant_row.id=revocation.grant_id
+  WHERE grant_row.person_id=p_publisher_id AND grant_row.role_code='medical_reviewer'
+  ORDER BY revocation.id FOR SHARE OF revocation;
 
   PERFORM evidence.id FROM identity.private_evidence_objects evidence
   WHERE evidence.id IN (

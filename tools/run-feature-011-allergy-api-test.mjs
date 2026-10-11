@@ -539,9 +539,35 @@ async function prove(h) {
   await expected('CROSS_PATIENT_DENIAL', 403, () =>
     h.request('GET', undefined, { actor: 'outsider' }),
   );
-  await expected('NATIVE_AAL1_DENIAL_CLIENT_HEADER_CANNOT_ELEVATE', 403, () =>
+  await expected('NATIVE_PATIENT_AAL1_READ', 200, () =>
     h.request('GET', undefined, {
       headers: { authorization: `Bearer ${h.actors.patient.aal1}`, 'x-aal': '2' },
+    }),
+  );
+  const aal1Report = await expected(
+    'NATIVE_PATIENT_AAL1_REPORT',
+    201,
+    () =>
+      h.request('POST', report, {
+        headers: { authorization: `Bearer ${h.actors.patient.aal1}` },
+      }),
+    false,
+  );
+  check(
+    'AAL1_REPORT_REMAINS_SELF_REPORTED_UNKNOWN',
+    aal1Report.json().status === 'self_reported' &&
+      aal1Report.json().coding.knowledge === 'unknown',
+  );
+  await expected('NATIVE_DELEGATE_AAL1_READ_ONLY', 200, () =>
+    h.request('GET', undefined, {
+      actor: 'delegate',
+      headers: { authorization: `Bearer ${h.actors.delegate.aal1}` },
+    }),
+  );
+  await expected('NATIVE_CLINICIAN_AAL1_DENIAL_CLIENT_HEADER_CANNOT_ELEVATE', 403, () =>
+    h.request('GET', undefined, {
+      actor: 'clinician',
+      headers: { authorization: `Bearer ${h.actors.clinician.aal1}`, 'x-aal': '2' },
     }),
   );
   await expected('MISSING_PURPOSE', 403, () =>

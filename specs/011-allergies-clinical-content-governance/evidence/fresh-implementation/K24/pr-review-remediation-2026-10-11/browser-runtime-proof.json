@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "browserVersion": "153.0.8010.12",
+  "playwrightVersion": "1.63.0",
+  "missingRequiredRevision": 1243,
+  "repairCommand": "pnpm exec playwright install chromium --only-shell --no-remove",
+  "sourceChanged": false,
+  "otherCachedBrowsersRemoved": false,
+  "observedAt": "2026-10-11T14:11:41.173Z"
+}

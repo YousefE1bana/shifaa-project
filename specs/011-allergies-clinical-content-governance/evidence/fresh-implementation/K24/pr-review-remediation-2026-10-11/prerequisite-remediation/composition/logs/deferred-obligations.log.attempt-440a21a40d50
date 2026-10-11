@@ -1,0 +1,4 @@
+K05 storage setup: shifaa-local-postgres
+shifaa-local-postgres: K05 storage PASS (46 invariants)
+K05 storage setup: shifaa-local-supabase
+shifaa-local-supabase: K05 storage PASS (46 invariants)

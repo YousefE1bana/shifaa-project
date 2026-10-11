@@ -57,15 +57,21 @@ export class Feature011Allergies {
     key: string,
   ): Promise<HttpReceipt> {
     this.actor(actor);
+    this.requireAal2(actor);
     return verifyAllergy(this.deps, actor, allergyId, request, expectedVersion, key);
   }
   private actor(actor: AllergyActor): void {
     uuid(actor.personId);
     uuid(actor.requestId);
-    if (actor.aal !== 2)
-      throw new ApiPolicyError('mfa-required', 403, 'Complete the required authentication.');
     if (!actor.purposes.length)
       throw new ApiPolicyError('purpose-required', 403, 'A current purpose is required.');
+  }
+  private requireAal2(actor: AllergyActor): void {
+    if (actor.aal !== 2)
+      throw new ApiPolicyError('mfa-required', 403, 'Complete the required authentication.');
+  }
+  private enforceScopeAal(actor: AllergyActor, role: AllergyScope['role']): void {
+    if (role === 'CLN') this.requireAal2(actor);
   }
   async listAllergies(
     actor: AllergyActor,
@@ -77,6 +83,7 @@ export class Feature011Allergies {
     if (!Value.Check(feature011Schemas.listAllergiesQuery, query))
       throw new ApiPolicyError('validation-failed', 422, 'Invalid allergy filters.');
     const scope = await this.deps.repository.resolve(actor, patientId);
+    this.enforceScopeAal(actor, scope.role);
     const page = await this.deps.repository.read(scope, patientId, query),
       data = [];
     const prepareRow = (row: Record<string, unknown>) => {
@@ -171,6 +178,7 @@ export class Feature011Allergies {
     const authority = await this.deps.repository.resolve(actor, patientId, request.encounterId);
     if (!['PAT', 'CLN'].includes(authority.role))
       throw new ApiPolicyError('forbidden', 403, 'Reporting is not permitted for this context.');
+    this.enforceScopeAal(actor, authority.role);
     const scope: MutationScope = {
       operationId: 'createAllergy',
       targetId: patientId,

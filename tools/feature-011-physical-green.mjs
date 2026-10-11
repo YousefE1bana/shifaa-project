@@ -32,6 +32,7 @@ import { consumerComponents } from './feature-011-consumer-fixtures.mjs';
 import { readDocumentationSuccessor } from './feature-011-documentation-successor.mjs';
 import {
   currentEvidenceRoot,
+  prReviewEvidenceRoot,
   currentPhysicalSourceDigests,
   verifyFeature011Contracts,
 } from './verify-feature-011-contracts.mjs';
@@ -64,6 +65,7 @@ export function acceptedChain() {
   const docRenewal =
     documentation &&
     (evidenceRoot.endsWith('/documentation-renewal') ||
+      evidenceRoot === prReviewEvidenceRoot ||
       evidenceRoot.includes('/K24/prerequisite-remediation'));
   const docAuthorization = docRenewal
     ? JSON.parse(read(`${evidenceRoot}/authorization.json`))

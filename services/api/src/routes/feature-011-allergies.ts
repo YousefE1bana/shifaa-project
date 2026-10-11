@@ -24,6 +24,7 @@ export const registeredFeature011AllergyOperationIds = [
   'createAllergy',
   'verifyAllergy',
 ] as const;
+const POSTGRES_INTEGER_MAX = 2_147_483_647;
 async function actor(
   request: FastifyRequest,
   deps: Feature011AllergyRoutes,
@@ -91,7 +92,8 @@ export async function registerFeature011AllergyRoutes(
         if (
           typeof match !== 'string' ||
           !/^"[1-9][0-9]*"$/.test(match) ||
-          !Number.isSafeInteger(Number(match.slice(1, -1)))
+          !Number.isSafeInteger(Number(match.slice(1, -1))) ||
+          Number(match.slice(1, -1)) > POSTGRES_INTEGER_MAX
         )
           throw new ApiPolicyError(
             'validation-failed',

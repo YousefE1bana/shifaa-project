@@ -1,0 +1,36 @@
+{
+  "mode": "BASELINE_REPRODUCED",
+  "results": [
+    {
+      "scenario": "shifaa-local-postgres:PAT_SUSPENDED_RECEIPT_REPLAY",
+      "result": "PASS",
+      "mode": "BASELINE_REPRODUCED"
+    },
+    {
+      "scenario": "shifaa-local-postgres:MEDICAL_REVIEWER_SUSPENDED_RECEIPT_REPLAY",
+      "result": "PASS",
+      "mode": "BASELINE_REPRODUCED"
+    },
+    {
+      "scenario": "shifaa-local-postgres:FACILITY_SCOPED_CURRENT_ELIGIBILITY",
+      "result": "PASS",
+      "mode": "BASELINE_REPRODUCED"
+    },
+    {
+      "scenario": "shifaa-local-supabase:PAT_SUSPENDED_RECEIPT_REPLAY",
+      "result": "PASS",
+      "mode": "BASELINE_REPRODUCED"
+    },
+    {
+      "scenario": "shifaa-local-supabase:MEDICAL_REVIEWER_SUSPENDED_RECEIPT_REPLAY",
+      "result": "PASS",
+      "mode": "BASELINE_REPRODUCED"
+    },
+    {
+      "scenario": "shifaa-local-supabase:FACILITY_SCOPED_CURRENT_ELIGIBILITY",
+      "result": "PASS",
+      "mode": "BASELINE_REPRODUCED"
+    }
+  ],
+  "failed": 0
+}

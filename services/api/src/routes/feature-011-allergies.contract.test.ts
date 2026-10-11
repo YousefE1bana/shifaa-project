@@ -59,6 +59,11 @@ async function app(enabled = true) {
       },
       body: Buffer.from(JSON.stringify(body)),
     })),
+    verifyAllergy: vi.fn(async () => ({
+      status: 200,
+      headers: { ETag: '"2"' },
+      body: Buffer.from(JSON.stringify({ ...body, status: 'refuted', version: 2 })),
+    })),
   };
   const resolve = vi.fn(async (t: string) =>
     t === 'native-fixture'
@@ -99,6 +104,51 @@ describe('Feature011 generated/native/default-off route boundary', () => {
       expect(r.statusCode).toBe(201);
       expect(r.json()).toEqual(body);
       expect(r.headers.etag).toBe('"1"');
+    } finally {
+      await f.a.close();
+    }
+  });
+  it('accepts the PostgreSQL integer maximum as a quoted verification version', async () => {
+    const f = await app(),
+      allergyId = randomUUID();
+    try {
+      const response = await f.a.inject({
+        method: 'POST',
+        url: `/v1/allergies/${allergyId}/verification`,
+        headers: { ...headers, 'if-match': '"2147483647"' },
+        payload: {
+          targetStatus: 'refuted',
+          reason: 'synthetic verification',
+          verificationEvidenceRef: randomUUID(),
+        },
+      });
+      expect(response.statusCode).toBe(200);
+      expect(f.service.verifyAllergy).toHaveBeenCalledWith(
+        expect.objectContaining({ personId: person, aal: 2 }),
+        allergyId,
+        expect.any(Object),
+        2147483647,
+        headers['idempotency-key'],
+      );
+    } finally {
+      await f.a.close();
+    }
+  });
+  it('rejects a safe JavaScript integer above the PostgreSQL verification version limit', async () => {
+    const f = await app();
+    try {
+      const response = await f.a.inject({
+        method: 'POST',
+        url: `/v1/allergies/${randomUUID()}/verification`,
+        headers: { ...headers, 'if-match': '"2147483648"' },
+        payload: {
+          targetStatus: 'refuted',
+          reason: 'synthetic verification',
+          verificationEvidenceRef: randomUUID(),
+        },
+      });
+      expect(response.statusCode).toBe(422);
+      expect(f.service.verifyAllergy).not.toHaveBeenCalled();
     } finally {
       await f.a.close();
     }

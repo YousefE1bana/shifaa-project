@@ -1,0 +1,685 @@
+{
+  "checkpoint": "K11",
+  "tasks": [
+    "T045",
+    "T046",
+    "T047"
+  ],
+  "result": "PASS",
+  "generatedAt": "2026-10-11T16:00:58.696Z",
+  "inputs": {
+    "services/api/src/modules/feature-011/allergies.ts": "5dbb4d945bb850d2d8b694b1599528340c8fed612974f12cccba2c05a8e11426",
+    "services/api/src/adapters/postgres/feature-011-allergies.ts": "9a5ee57c6264a3481c4b23d2789fa96cca23e491e37a2a2f03c9129a41f8c510",
+    "services/api/src/routes/feature-011-allergies.ts": "39f5e5b271d4e394178a054b18de635f44aaa033af41bf8625523ed166dfb607",
+    "services/api/src/app.ts": "6a9cfcd521da370534902fbd9c79d4f472e1af9dba29aa4d30b1b346ae41434d",
+    "services/api/src/modules/feature-011/allergies.test.ts": "d3eb31cef4ae201db4d34819828c8a727281a4e85606dae863c95abaf40d8551",
+    "services/api/src/routes/feature-011-allergies.contract.test.ts": "1c7e31837e37642e113f8f70dc984693d6b743d140b796a84864ce3262bcc72d",
+    "tools/run-feature-011-allergy-api-test.mjs": "2fdea47d364258622ff7164c10ddaa2f7d16174244204c1ed70a4016de42b19f",
+    "supabase/migrations/20261006175926_f011_allergy_revisions.sql": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+    "supabase/migrations/20261006175932_f011_content_artifacts.sql": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+    "supabase/migrations/20261006175937_f011_governance_evidence.sql": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+    "supabase/migrations/20261006175942_f011_atomic_receipts.sql": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929",
+    "supabase/migrations/20261006185236_f011_allergy_functions.sql": "4ee8c2a5f17fe43f1da5e8f5da42f4dcba1b62b2e35ac05755801a70b306ce86",
+    "supabase/migrations/20261006185237_f011_release_functions.sql": "0ddc26b03d353f3fda36780eca8672779722cfc97d212bba3d0a1022eb6e1019",
+    "supabase/migrations/20261006185239_f011_signing_functions.sql": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550",
+    "supabase/migrations/20261006185240_f011_publication_functions.sql": "976b76033a2a330fe19ddbc2e487981596b331d88c2439d00dcd1ee9b1ea590d",
+    "supabase/migrations/20261006185241_f011_rls_grants.sql": "6c7b6ab99d8b8d00ac6699cdfc8a63d88bd41d6f73e2f5ccd36a7244c1df0236",
+    "supabase/migrations/20261006185242_f011_receipt_functions.sql": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31"
+  },
+  "runtimes": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k08_9d5a6a77dd34b4fe",
+          "owner": "shifaa_owner",
+          "serverVersion": "17.11",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "shifaa_owner",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 8256
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "shifaa_owner",
+          "-d",
+          "f011_k08_9d5a6a77dd34b4fe"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k08_9d5a6a77dd34b4fe"
+        ]
+      },
+      "result": "PASS",
+      "tests": [
+        {
+          "id": "EMPTY_NATIVE_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "EMPTY_NOT_ALLERGY_FREE",
+          "result": "PASS"
+        },
+        {
+          "id": "PAT_REPORT",
+          "result": "PASS",
+          "status": 201
+        },
+        {
+          "id": "INITIAL_SELF_REPORTED_UNKNOWN",
+          "result": "PASS"
+        },
+        {
+          "id": "ORIGINAL_HEADERS",
+          "result": "PASS"
+        },
+        {
+          "id": "CLINICIAN_CREATION_SELF_REPORTED",
+          "result": "PASS",
+          "status": 201
+        },
+        {
+          "id": "AUTHORIZED_patient_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "patient_SCOPED_PLAINTEXT_ONLY",
+          "result": "PASS"
+        },
+        {
+          "id": "AUTHORIZED_clinician_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "clinician_SCOPED_PLAINTEXT_ONLY",
+          "result": "PASS"
+        },
+        {
+          "id": "AUTHORIZED_delegate_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "delegate_SCOPED_PLAINTEXT_ONLY",
+          "result": "PASS"
+        },
+        {
+          "id": "DELEGATE_READ_ONLY",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "CROSS_PATIENT_DENIAL",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "NATIVE_PATIENT_AAL1_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "NATIVE_PATIENT_AAL1_REPORT",
+          "result": "PASS",
+          "status": 201
+        },
+        {
+          "id": "AAL1_REPORT_REMAINS_SELF_REPORTED_UNKNOWN",
+          "result": "PASS"
+        },
+        {
+          "id": "NATIVE_DELEGATE_AAL1_READ_ONLY",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "NATIVE_CLINICIAN_AAL1_DENIAL_CLIENT_HEADER_CANNOT_ELEVATE",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "MISSING_PURPOSE",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "WRONG_CURRENT_CARE_CONTEXT",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "KNOWN_WITHOUT_SOURCE",
+          "result": "PASS",
+          "status": 422
+        },
+        {
+          "id": "EXACT_OPAQUE_CURSOR",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "CURSOR_NO_DUPLICATE",
+          "result": "PASS"
+        },
+        {
+          "id": "CURSOR_CONTEXT_SUBSTITUTION",
+          "result": "PASS",
+          "status": 422
+        },
+        {
+          "id": "CURSOR_TAMPER",
+          "result": "PASS",
+          "status": 422
+        },
+        {
+          "id": "RESOURCE_ADVANCED",
+          "result": "PASS"
+        },
+        {
+          "id": "ORIGINAL_REPLAY_AFTER_ADVANCEMENT",
+          "result": "PASS"
+        },
+        {
+          "id": "NO_SECOND_EFFECT_AUDIT_OUTBOX_RECEIPT_CRYPTO",
+          "result": "PASS"
+        },
+        {
+          "id": "CHANGED_BINDING_CONFLICT",
+          "result": "PASS",
+          "status": 409
+        },
+        {
+          "id": "EXACT_IDEMPOTENCY_PROBLEM",
+          "result": "PASS"
+        },
+        {
+          "id": "CRASH_before",
+          "result": "PASS",
+          "status": 500
+        },
+        {
+          "id": "BEFORE_COMMIT_FULL_ROLLBACK",
+          "result": "PASS"
+        },
+        {
+          "id": "BEFORE_COMMIT_RETRY_FRESH_ONCE",
+          "result": "PASS"
+        },
+        {
+          "id": "CRASH_after",
+          "result": "PASS",
+          "status": 500
+        },
+        {
+          "id": "after_AUTHORITATIVE_SETTLEMENT_NO_SECOND_CRYPTO",
+          "result": "PASS"
+        },
+        {
+          "id": "CRASH_unknown",
+          "result": "PASS",
+          "status": 500
+        },
+        {
+          "id": "unknown_AUTHORITATIVE_SETTLEMENT_NO_SECOND_CRYPTO",
+          "result": "PASS"
+        },
+        {
+          "id": "LOST_CURRENT_FACILITY_AUTHORITY",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "LOST_AUTHORITY_NO_DECRYPT",
+          "result": "PASS"
+        },
+        {
+          "id": "NATIVE_REVOKED_DENIAL",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "id": "KILL_NO_QUEUE",
+          "result": "PASS",
+          "status": 503
+        },
+        {
+          "id": "ONLINE_NONOWNER_NO_SUPER_BYPASS",
+          "result": "PASS"
+        },
+        {
+          "id": "NO_EXTERNAL_WORK_UNDER_LOCKS",
+          "result": "PASS"
+        },
+        {
+          "id": "ALL_FIVE_DURABLE",
+          "result": "PASS"
+        }
+      ],
+      "count": 45,
+      "roles": [
+        {
+          "role": "shifaa_api",
+          "super": false,
+          "bypass": false,
+          "login": true
+        },
+        {
+          "role": "shifaa_f011_executor",
+          "super": false,
+          "bypass": false,
+          "login": false
+        }
+      ],
+      "durable": {
+        "allergies": 6,
+        "revisions": 7,
+        "audit": 7,
+        "outbox": 7,
+        "receipts": 7,
+        "obligations": 7,
+        "idempotency": 7
+      },
+      "counters": {
+        "keyPreparations": 37,
+        "externalUnderLocks": 0,
+        "sqlSinkChecks": 640
+      },
+      "predecessorPreserved": true,
+      "nativeAuth": "Supabase ES256 + native current-session predicate; AAL2 via real TOTP",
+      "mutations": [
+        "createAllergy"
+      ],
+      "read": "listAllergies",
+      "advancement": "Accepted internal verification consumer, no verification route",
+      "faultBoundary": "Injected before actual commit / after actual commit ACK loss",
+      "syntheticClinical": true,
+      "productionKms": false,
+      "cleanup": {
+        "database": "f011_k08_9d5a6a77dd34b4fe",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k08_01f792efc32f176f",
+          "owner": "supabase_admin",
+          "serverVersion": "17.6",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "supabase_admin",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 8971
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "f011_k08_01f792efc32f176f"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k08_01f792efc32f176f"
+        ]
+      },
+      "result": "PASS",
+      "tests": [
+        {
+          "id": "EMPTY_NATIVE_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "EMPTY_NOT_ALLERGY_FREE",
+          "result": "PASS"
+        },
+        {
+          "id": "PAT_REPORT",
+          "result": "PASS",
+          "status": 201
+        },
+        {
+          "id": "INITIAL_SELF_REPORTED_UNKNOWN",
+          "result": "PASS"
+        },
+        {
+          "id": "ORIGINAL_HEADERS",
+          "result": "PASS"
+        },
+        {
+          "id": "CLINICIAN_CREATION_SELF_REPORTED",
+          "result": "PASS",
+          "status": 201
+        },
+        {
+          "id": "AUTHORIZED_patient_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "patient_SCOPED_PLAINTEXT_ONLY",
+          "result": "PASS"
+        },
+        {
+          "id": "AUTHORIZED_clinician_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "clinician_SCOPED_PLAINTEXT_ONLY",
+          "result": "PASS"
+        },
+        {
+          "id": "AUTHORIZED_delegate_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "delegate_SCOPED_PLAINTEXT_ONLY",
+          "result": "PASS"
+        },
+        {
+          "id": "DELEGATE_READ_ONLY",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "CROSS_PATIENT_DENIAL",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "NATIVE_PATIENT_AAL1_READ",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "NATIVE_PATIENT_AAL1_REPORT",
+          "result": "PASS",
+          "status": 201
+        },
+        {
+          "id": "AAL1_REPORT_REMAINS_SELF_REPORTED_UNKNOWN",
+          "result": "PASS"
+        },
+        {
+          "id": "NATIVE_DELEGATE_AAL1_READ_ONLY",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "NATIVE_CLINICIAN_AAL1_DENIAL_CLIENT_HEADER_CANNOT_ELEVATE",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "MISSING_PURPOSE",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "WRONG_CURRENT_CARE_CONTEXT",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "KNOWN_WITHOUT_SOURCE",
+          "result": "PASS",
+          "status": 422
+        },
+        {
+          "id": "EXACT_OPAQUE_CURSOR",
+          "result": "PASS",
+          "status": 200
+        },
+        {
+          "id": "CURSOR_NO_DUPLICATE",
+          "result": "PASS"
+        },
+        {
+          "id": "CURSOR_CONTEXT_SUBSTITUTION",
+          "result": "PASS",
+          "status": 422
+        },
+        {
+          "id": "CURSOR_TAMPER",
+          "result": "PASS",
+          "status": 422
+        },
+        {
+          "id": "RESOURCE_ADVANCED",
+          "result": "PASS"
+        },
+        {
+          "id": "ORIGINAL_REPLAY_AFTER_ADVANCEMENT",
+          "result": "PASS"
+        },
+        {
+          "id": "NO_SECOND_EFFECT_AUDIT_OUTBOX_RECEIPT_CRYPTO",
+          "result": "PASS"
+        },
+        {
+          "id": "CHANGED_BINDING_CONFLICT",
+          "result": "PASS",
+          "status": 409
+        },
+        {
+          "id": "EXACT_IDEMPOTENCY_PROBLEM",
+          "result": "PASS"
+        },
+        {
+          "id": "CRASH_before",
+          "result": "PASS",
+          "status": 500
+        },
+        {
+          "id": "BEFORE_COMMIT_FULL_ROLLBACK",
+          "result": "PASS"
+        },
+        {
+          "id": "BEFORE_COMMIT_RETRY_FRESH_ONCE",
+          "result": "PASS"
+        },
+        {
+          "id": "CRASH_after",
+          "result": "PASS",
+          "status": 500
+        },
+        {
+          "id": "after_AUTHORITATIVE_SETTLEMENT_NO_SECOND_CRYPTO",
+          "result": "PASS"
+        },
+        {
+          "id": "CRASH_unknown",
+          "result": "PASS",
+          "status": 500
+        },
+        {
+          "id": "unknown_AUTHORITATIVE_SETTLEMENT_NO_SECOND_CRYPTO",
+          "result": "PASS"
+        },
+        {
+          "id": "LOST_CURRENT_FACILITY_AUTHORITY",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "id": "LOST_AUTHORITY_NO_DECRYPT",
+          "result": "PASS"
+        },
+        {
+          "id": "NATIVE_REVOKED_DENIAL",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "id": "KILL_NO_QUEUE",
+          "result": "PASS",
+          "status": 503
+        },
+        {
+          "id": "ONLINE_NONOWNER_NO_SUPER_BYPASS",
+          "result": "PASS"
+        },
+        {
+          "id": "NO_EXTERNAL_WORK_UNDER_LOCKS",
+          "result": "PASS"
+        },
+        {
+          "id": "ALL_FIVE_DURABLE",
+          "result": "PASS"
+        }
+      ],
+      "count": 45,
+      "roles": [
+        {
+          "role": "shifaa_f011_executor",
+          "super": false,
+          "bypass": false,
+          "login": false
+        },
+        {
+          "role": "shifaa_api",
+          "super": false,
+          "bypass": false,
+          "login": true
+        }
+      ],
+      "durable": {
+        "allergies": 6,
+        "revisions": 7,
+        "audit": 7,
+        "outbox": 7,
+        "receipts": 7,
+        "obligations": 7,
+        "idempotency": 7
+      },
+      "counters": {
+        "keyPreparations": 37,
+        "externalUnderLocks": 0,
+        "sqlSinkChecks": 640
+      },
+      "predecessorPreserved": true,
+      "nativeAuth": "Supabase ES256 + native current-session predicate; AAL2 via real TOTP",
+      "mutations": [
+        "createAllergy"
+      ],
+      "read": "listAllergies",
+      "advancement": "Accepted internal verification consumer, no verification route",
+      "faultBoundary": "Injected before actual commit / after actual commit ACK loss",
+      "syntheticClinical": true,
+      "productionKms": false,
+      "cleanup": {
+        "database": "f011_k08_01f792efc32f176f",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "scope": "Read/report only; exact seven-operation catalog unchanged; no Feature012; no production/clinical approval",
+  "retainedGates": "Unchanged; all retained OPEN gates remain open"
+}

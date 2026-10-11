@@ -114,6 +114,9 @@ for (const runtime of runtimes) {
             'low-aal',
             'missing-purpose',
           ]) {
+            // AAL2 is mandatory for clinician actions, not PAT read/report.
+            const actor =
+              scenario === 'low-aal' && endpoint.actor === 'patient' ? 'clinician' : endpoint.actor;
             const patch =
               scenario === 'missing-auth'
                 ? { authorization: '' }
@@ -122,12 +125,16 @@ for (const runtime of runtimes) {
                   : scenario === 'claimed-person'
                     ? { authorization: 'Bearer synthetic-person:' + otherPerson, ...spoof }
                     : scenario === 'low-aal'
-                      ? { authorization: 'Bearer ' + h.actors[endpoint.actor].aal1, ...spoof }
+                      ? { authorization: 'Bearer ' + h.actors[actor].aal1, ...spoof }
                       : { 'x-purpose': '' };
             const previous = count();
-            const response = await h.request(endpoint.method, endpoint.body, {
+            const body =
+              scenario === 'low-aal' && endpoint.id === 'createAllergy'
+                ? { ...endpoint.body, encounterId: 'f0110000-0000-4000-8400-000000000001' }
+                : endpoint.body;
+            const response = await h.request(endpoint.method, body, {
               url: endpoint.url,
-              actor: endpoint.actor,
+              actor,
               headers: { 'if-match': '"1"', ...patch },
             });
             assert.equal(

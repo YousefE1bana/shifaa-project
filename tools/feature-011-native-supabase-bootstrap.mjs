@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import {
   currentPhysicalSourceDigests,
   verifyFeature011Contracts,
+  currentEvidenceRoot,
 } from './verify-feature-011-contracts.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -98,13 +99,28 @@ export async function resetFeature011NativeSupabase(runPnpm) {
         "SELECT json_agg(json_build_object('name',rolname,'superuser',rolsuper,'bypassRls',rolbypassrls,'login',rolcanlogin) ORDER BY rolname) FROM pg_roles WHERE rolname IN ('supabase_admin','postgres','shifaa_api','shifaa_worker','service_role');",
       ),
     );
-  const before = roles();
-  assert.equal(before.find((role) => role.name === 'supabase_admin')?.superuser, true);
-  assert.equal(before.find((role) => role.name === 'postgres')?.superuser, false);
+  const beforeBaseline = roles();
+  assert.equal(beforeBaseline.find((role) => role.name === 'supabase_admin')?.superuser, true);
+  assert.equal(beforeBaseline.find((role) => role.name === 'postgres')?.superuser, false);
   const startedAt = new Date().toISOString();
   // Preserve native Auth's official local reset semantics. This is the existing
   // worktree-owned synthetic reset; the exact predecessor chain still uses CLI.
   runPnpm(['exec', 'supabase', 'db', 'reset', '--local', '--version', predecessorVersion]);
+  // A cold native database has no SHIFAA roles until the approved predecessor
+  // chain creates them. Compare the F011 tail against that populated baseline.
+  const before = roles();
+  for (const existing of beforeBaseline)
+    assert.deepEqual(
+      before.find((role) => role.name === existing.name),
+      existing,
+      'Predecessor reset changed an existing runtime role',
+    );
+  for (const name of ['shifaa_api', 'shifaa_worker']) {
+    const role = before.find((role) => role.name === name);
+    assert.ok(role, 'Predecessor online role is missing');
+    assert.equal(role.superuser, false, 'Online role must not be superuser');
+    assert.equal(role.bypassRls, false, 'Online role must not bypass RLS');
+  }
   for (const migration of migrations) {
     const result = psql(
       Buffer.concat([Buffer.from('BEGIN;\n'), migration.bytes, Buffer.from('\nCOMMIT;\n')]),
@@ -150,10 +166,7 @@ export async function resetFeature011NativeSupabase(runPnpm) {
   const after = roles();
   assert.deepEqual(after, before, 'Existing runtime role attributes changed');
   assert.deepEqual(currentPhysicalSourceDigests(root), pins, 'Pinned source changed');
-  const evidence = join(
-    root,
-    'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24',
-  );
+  const evidence = join(root, currentEvidenceRoot(root));
   assert(existsSync(evidence));
   mkdirSync(join(evidence, 'native-bootstrap'), { recursive: true });
   const path = join(evidence, 'native-bootstrap', randomUUID() + '.json');
@@ -174,12 +187,17 @@ export async function resetFeature011NativeSupabase(runPnpm) {
           [
             'tools/feature-011-native-supabase-bootstrap.mjs',
             'tools/feature-011-native-supabase-bootstrap.test.mjs',
+            'tools/start-feature-011-native-supabase.mjs',
+            'tools/start-feature-011-native-supabase.test.mjs',
+            'tools/reset-feature-011-native-supabase.mjs',
+            'tools/reset-feature-011-native-supabase.test.mjs',
             'tools/run-identity-continuity-supabase-test.mjs',
             'tools/run-identity-continuity-mfa-test.mjs',
             'tools/run-identity-continuity-recovery-test.mjs',
           ].map((path) => [path, hash(readFileSync(join(root, path)))]),
         ),
         offlineAdmin: 'supabase_admin',
+        rolesBeforeBaseline: beforeBaseline,
         rolesBefore: before,
         rolesAfter: after,
         executor,

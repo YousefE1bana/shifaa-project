@@ -1,4 +1,3 @@
-import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,6 +9,7 @@ import {
   renderFeature011Contract,
 } from './generate-feature-011-contract.mjs';
 import { renderFeature011Client } from './generate-feature-011-client.mjs';
+import { evidenceHeadBelongsToCurrentHistory } from './feature-011-evidence-head.mjs';
 import {
   readDocumentationSuccessor,
   documentationSuccessorInputPaths,
@@ -20,9 +20,22 @@ const feature = 'specs/011-allergies-clinical-content-governance';
 export const documentationRenewalAuthorizationPath = `${feature}/evidence/fresh-implementation/K24/documentation-renewal/authorization.json`;
 export const nativeDigestAuthorizationPath = `${feature}/evidence/fresh-implementation/K24/prerequisite-remediation/authorization.json`;
 export const nativeDigestRecordPath = `${feature}/decisions/k24-native-receipt-digest-remediation-v3-2026-10-09.md`;
+export const prReviewEvidenceRoot = `${feature}/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation`;
+export const prReviewAuthorizationPath = `${prReviewEvidenceRoot}/authorization.json`;
+export const prReviewRecordPath = `${feature}/decisions/pr-490-remediation-authorized-2026-10-11.md`;
 // An explicitly authorized remediation keeps prior acceptance evidence intact.
 // Once selected, incomplete/stale renewed proofs fail closed; no old fallback.
 export function currentEvidenceRoot(root = defaultRoot) {
+  if (fs.existsSync(path.join(root, prReviewAuthorizationPath))) {
+    if (
+      sha256(fs.readFileSync(path.join(root, prReviewAuthorizationPath))) !==
+        'c6cf223e031d9f09917285ad5e250597b60a6c7cc365cb7ffb897cd562d10afa' ||
+      sha256(fs.readFileSync(path.join(root, prReviewRecordPath))) !==
+        '7fc270ebad449f3198fae1fe21ff42fb5bbbb6b7a3479f25d0daafc9dd278220'
+    )
+      throw new Error('PR review remediation authorization drift');
+    return prReviewEvidenceRoot;
+  }
   if (readDocumentationSuccessor(root)) {
     if (
       sha256(fs.readFileSync(path.join(root, documentationRenewalAuthorizationPath))) !==
@@ -116,6 +129,27 @@ const physicalInputs = [
   'tools/run-feature-011-concurrency-test.mjs',
 ];
 const currentProofInputs = [
+  'tools/feature-011-pr-authority.mjs',
+  'infra/db/tests/feature-011-pr-authority.sql',
+  'tools/feature-011-evidence-head.mjs',
+  'tools/feature-011-evidence-head.test.mjs',
+  'tools/feature-011-native-supabase-bootstrap.mjs',
+  'tools/feature-011-native-supabase-bootstrap.test.mjs',
+  'tools/start-feature-011-native-supabase.mjs',
+  'tools/start-feature-011-native-supabase.test.mjs',
+  'tools/reset-feature-011-native-supabase.mjs',
+  'tools/reset-feature-011-native-supabase.test.mjs',
+  'tools/feature-011-pr-review-binding.test.mjs',
+  'package.json',
+  '.github/workflows/ci.yml',
+  'services/api/src/modules/feature-011/allergies.ts',
+  'services/api/src/modules/feature-011/allergies.test.ts',
+  'services/api/src/routes/feature-011-allergies.ts',
+  'services/api/src/routes/feature-011-allergies.contract.test.ts',
+  'services/api/src/routes/feature-011-content.ts',
+  'services/api/src/routes/feature-011-content.test.ts',
+  'tools/run-feature-011-handoff-test.mjs',
+  'tools/run-feature-011-composition-test.mjs',
   'docs/governance/SHIFAA-Identifier-Handoff-Amendment-2026-10-08.md',
   'docs/architecture/SHIFAA-Data-RLS.md',
   'docs/traceability/SHIFAA-Traceability-Matrix.md',
@@ -148,6 +182,9 @@ export function currentPhysicalSourceDigests(root = defaultRoot, { includeRaces 
   const metadata = readFeature011ProtocolMetadata(root);
   const files = new Set([
     ...contractInputs,
+    ...(fs.existsSync(path.join(root, prReviewAuthorizationPath))
+      ? [prReviewAuthorizationPath, prReviewRecordPath]
+      : []),
     ...(metadata.documentationSuccessor
       ? [
           ...documentationSuccessorInputPaths,
@@ -235,6 +272,10 @@ const canonical = (value) =>
       ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b)))
       : item,
   );
+function currentCaptureBinding(root) {
+  if (currentEvidenceRoot(root) !== prReviewEvidenceRoot) return undefined;
+  return JSON.parse(fs.readFileSync(path.join(root, prReviewAuthorizationPath), 'utf8')).capture;
+}
 const equal = (a, b) => canonical(a) === canonical(b);
 const exactSet = (a, b) =>
   Array.isArray(a) &&
@@ -495,8 +536,11 @@ function verifyPhysical(root, read, inputDigests, current = false) {
   const proof = JSON.parse(read(proofPath));
   require(proof.formatVersion === 1 &&
     proof.syntheticOnly === true, 'versioned synthetic evidence required');
-  const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
-  require(proof.head === head, 'HEAD binding stale');
+  require(evidenceHeadBelongsToCurrentHistory(
+    root,
+    proof.head,
+    current ? currentCaptureBinding(root) : undefined,
+  ), 'HEAD provenance missing or foreign');
   if (current) {
     require(proof.stage === 'P4' &&
       proof.result === 'PASS' &&
@@ -594,7 +638,7 @@ function verifyPhysical(root, read, inputDigests, current = false) {
       races.syntheticOnly === true &&
       equal(races.sourceDigests, raceDigests), 'P4 current race result/source binding stale');
     Object.assign(inputDigests, raceDigests);
-    require(races.head === head &&
+    require(races.head === proof.head &&
       races.ledgerId === 'SHIFAA-F011-FRESH-TASKS@1.0.0', 'P4 race HEAD/ledger binding stale');
     require(exactSet(
       races.runtimes?.map((r) => r.id),
@@ -704,11 +748,11 @@ function verifyStageDisposition(root, read, inputDigests) {
       proof.sourceDigests,
       inputDigests,
     ), 'current source/generated/physical hashes stale or incomplete');
-    require(proof.head ===
-      execFileSync('git', ['rev-parse', 'HEAD'], {
-        cwd: root,
-        encoding: 'utf8',
-      }).trim(), 'HEAD binding stale');
+    require(evidenceHeadBelongsToCurrentHistory(
+      root,
+      proof.head,
+      currentCaptureBinding(root),
+    ), 'HEAD provenance missing or foreign');
     for (const name of ['physical-green', 'physical-races']) {
       const physicalPath = `${currentEvidenceRoot(root)}/${name}.json`;
       require(proof.evidenceDigests?.[physicalPath] ===

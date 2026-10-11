@@ -6,8 +6,10 @@ import { runtimes, sql, digest } from './run-feature-011-postgres-test.mjs';
 import { PostgresIdentityRepository } from '../services/api/src/adapters/postgres/identity-repository.ts';
 import { PostgresFeature010EncounterRepository } from '../services/api/src/adapters/postgres/feature-010-encounters.ts';
 import { PostgresFeature010NotesRepository } from '../services/api/src/adapters/postgres/feature-010-notes.ts';
-const e =
-  'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/identifier-reconciliation';
+import { currentEvidenceRoot } from './verify-feature-011-contracts.mjs';
+const e = `${currentEvidenceRoot()}/handoff-regression`;
+const handoffOnly = process.argv.includes('--handoff-only');
+assert.ok(process.argv.slice(2).every((arg) => arg === '--handoff-only'));
 const encounter = 'f0110000-0000-4000-8400-000000000001',
   facility = 'f0110000-0000-4000-8200-000000000001';
 const q = (v) => `'${String(v).replaceAll("'", "''")}'`;
@@ -71,7 +73,7 @@ for (const runtime of runtimes) {
             .map(([k, v]) => `SELECT set_config('shifaa.${k}',${q(v)},true);`)
             .join(
               '\n',
-            )} SELECT clinical.feature_010_get_encounter_projection_v1(${q(encounter)}::uuid); ROLLBACK;`;
+            )} SELECT COALESCE(clinical.feature_010_get_encounter_projection_v1(${q(encounter)}::uuid),'null'::jsonb); ROLLBACK;`;
           return sql(runtime, h.database, input, { user: 'shifaa_api', allowFailure: true });
         };
         let got = projection();
@@ -82,6 +84,57 @@ for (const runtime of runtimes) {
         assert.equal(parsed.managedPatientId, patient);
         assert.equal(parsed.facilityId, facility);
         tests.push('authorized-F010-canonical-pair');
+        // Existing F010 authorization denies contexts without an active canonical patient.
+        sql(
+          runtime,
+          h.database,
+          `UPDATE identity.patients SET record_status='suspended' WHERE id=${q(patient)}::uuid;`,
+        );
+        got = projection();
+        assert.equal(got.exitCode, 0, got.output);
+        assert.equal(got.stdout.trim().split('\n').at(-1), 'null');
+        tests.push('inactive-patient-denied-by-existing-F010-authorization');
+        sql(
+          runtime,
+          h.database,
+          `UPDATE identity.patients SET record_status='active' WHERE id=${q(patient)}::uuid;`,
+        );
+        // Exercise a pre-existing person-only encounter without deleting a patient row.
+        const personOnly = randomUUID(),
+          personOnlyEncounter = randomUUID();
+        sql(
+          runtime,
+          h.database,
+          `INSERT INTO identity.people(id,user_id,display_name,profile_status) VALUES (${q(personOnly)}::uuid,${q(randomUUID())}::uuid,'Synthetic person-only / اختبار','active');
+          INSERT INTO clinical.encounters(id,patient_person_id,facility_id,encounter_type,responsible_clinician_id,status,started_at)
+          SELECT ${q(personOnlyEncounter)}::uuid,${q(personOnly)}::uuid,facility_id,encounter_type,responsible_clinician_id,status,started_at FROM clinical.encounters WHERE id=${q(encounter)}::uuid;
+          INSERT INTO clinical.encounter_participants(encounter_id,person_id,role_code,started_at)
+          SELECT ${q(personOnlyEncounter)}::uuid,person_id,role_code,started_at FROM clinical.encounter_participants WHERE encounter_id=${q(encounter)}::uuid;`,
+        );
+        const missing = sql(
+          runtime,
+          h.database,
+          `BEGIN; ${Object.entries({
+            person_id: native.personId,
+            actor_role: 'CLN',
+            action: 'getEncounter',
+            environment: 'local',
+            request_id: randomUUID(),
+            trace_id: randomUUID(),
+            aal: '2',
+            purposes: 'synthetic.feature011',
+            facility_id: facility,
+            encounter_id: personOnlyEncounter,
+            principal: native.subjectId,
+          })
+            .map(([k, v]) => `SELECT set_config('shifaa.${k}',${q(v)},true);`)
+            .join(
+              '\n',
+            )} SELECT COALESCE(clinical.feature_010_get_encounter_projection_v1(${q(personOnlyEncounter)}::uuid),'null'::jsonb); ROLLBACK;`,
+          { user: 'shifaa_api' },
+        );
+        assert.equal(missing.stdout.trim().split('\n').at(-1), 'null');
+        tests.push('person-only-encounter-denied-by-existing-F010-authorization');
         for (const [name, ctx] of Object.entries({
           wrongActor: {
             person_id: h.actors.outsider.personId,
@@ -169,7 +222,7 @@ writeFileSync(
   JSON.stringify(
     {
       result: 'PASS',
-      command: 'corepack pnpm exec tsx tools/run-feature-011-handoff-test.mjs',
+      command: `corepack pnpm exec tsx tools/run-feature-011-handoff-test.mjs${handoffOnly ? ' --handoff-only' : ''}`,
       runtimes: results,
       inputs: Object.fromEntries(
         [
@@ -185,4 +238,4 @@ writeFileSync(
     2,
   ) + '\n',
 );
-await runK11({ evidenceDirectory: `${e}/k11-regression` });
+if (!handoffOnly) await runK11({ evidenceDirectory: `${e}/k11-regression` });

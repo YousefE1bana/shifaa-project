@@ -14,15 +14,22 @@ import {
 import { spawn, execFileSync } from 'node:child_process';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { verifyFeature011Contracts } from './verify-feature-011-contracts.mjs';
+import {
+  verifyFeature011Contracts,
+  currentEvidenceRoot,
+  prReviewEvidenceRoot,
+} from './verify-feature-011-contracts.mjs';
 import { runtimeManifest, runtimes } from './run-feature-011-postgres-test.mjs';
 import { readDocumentationSuccessor } from './feature-011-documentation-successor.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 process.chdir(root);
-export const evidence = readDocumentationSuccessor(root)
-  ? 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition'
-  : 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22';
+export const evidence =
+  currentEvidenceRoot(root) === prReviewEvidenceRoot
+    ? `${prReviewEvidenceRoot}/composition`
+    : readDocumentationSuccessor(root)
+      ? 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition'
+      : 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22';
 const logs = evidence + '/logs';
 const hash = (p) => createHash('sha256').update(readFileSync(p)).digest('hex');
 const write = (p, v) => {
@@ -51,7 +58,9 @@ export function inventory() {
   ];
   const suites = dirs.flatMap(testFiles);
   const tooling = readdirSync('tools')
-    .filter((p) => /^(?:feature-011.*|verify-feature-011-scope)\.test\.mjs$/.test(p))
+    .filter((p) =>
+      /^(?:(?:start-|reset-)?feature-011.*|verify-feature-011-scope)\.test\.mjs$/.test(p),
+    )
     .map((p) => 'tools/' + p);
   return {
     suites,

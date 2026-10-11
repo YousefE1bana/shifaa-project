@@ -257,6 +257,17 @@ BEGIN
     IF p_action = 'verifyAllergy' THEN
       RAISE EXCEPTION 'Feature 011 allergy authority denied' USING ERRCODE = '42501';
     END IF;
+    IF p_action = 'createAllergy' THEN
+      PERFORM 1 FROM identity.patients patient
+      WHERE patient.id=p_patient_id AND patient.person_id=patient_person
+        AND patient.record_status='active'
+      FOR SHARE;
+      IF NOT FOUND THEN RAISE EXCEPTION 'Feature 011 allergy authority denied' USING ERRCODE='42501'; END IF;
+      PERFORM 1 FROM identity.people person
+      WHERE person.id=actor AND person.profile_status='active'
+      FOR SHARE;
+      IF NOT FOUND THEN RAISE EXCEPTION 'Feature 011 allergy authority denied' USING ERRCODE='42501'; END IF;
+    END IF;
   ELSIF actor_role = 'CLN' AND native_facility IS NOT NULL AND native_encounter IS NOT NULL
         AND COALESCE(pg_catalog.cardinality(platform.context_purposes()),0) > 0
         AND platform.context_aal() >= (CASE WHEN p_action = 'verifyAllergy' THEN 2 ELSE 1 END) THEN

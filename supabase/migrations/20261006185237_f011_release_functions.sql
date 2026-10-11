@@ -168,6 +168,12 @@ BEGIN
   IF FOUND THEN
     RAISE EXCEPTION 'medical reviewer grant is revoked' USING ERRCODE = '42501';
   END IF;
+  PERFORM 1 FROM identity.people person
+  WHERE person.id=p_person_id AND person.profile_status='active'
+  FOR SHARE;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'active medical reviewer identity required' USING ERRCODE = '42501';
+  END IF;
 END
 $function$;
 
@@ -312,11 +318,6 @@ BEGIN
       RAISE EXCEPTION 'successor artifact allocation is stale' USING ERRCODE = '40001';
     END IF;
   END IF;
-  PERFORM clinical.f011_lock_medical_reviewer_v1(actor);
-  PERFORM person.id FROM identity.people person WHERE person.id = actor
-    AND person.profile_status = 'active' FOR SHARE;
-  IF NOT FOUND THEN RAISE EXCEPTION 'active creator identity required' USING ERRCODE = '42501'; END IF;
-
   FOREACH kind_value IN ARRAY ARRAY['content','code','test_vectors']::text[] LOOP
     binding_key := CASE kind_value WHEN 'test_vectors' THEN 'testVectors' ELSE kind_value END;
     binding := bindings->binding_key;
@@ -378,6 +379,7 @@ BEGIN
       'SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1'
     );
   END LOOP;
+  PERFORM clinical.f011_lock_medical_reviewer_v1(actor);
   result := clinical.f011_record_mutation_effect_v1(
     idem_id,actor,'createClinicalContentRelease','clinical.content_release',release_id,1,
     201::smallint,p_input->>'responseLanguage',(p_input->>'responseRequestId')::uuid

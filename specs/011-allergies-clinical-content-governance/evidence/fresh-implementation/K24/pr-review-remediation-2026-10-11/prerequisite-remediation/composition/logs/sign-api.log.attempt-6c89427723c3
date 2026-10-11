@@ -1,0 +1,3 @@
+shifaa-local-postgres: K16 native signing contention proof
+shifaa-local-supabase: K16 native signing contention proof
+{"result":"PASS","runtimes":[{"runtime":"shifaa-local-postgres","count":41,"races":2},{"runtime":"shifaa-local-supabase","count":41,"races":2}]}

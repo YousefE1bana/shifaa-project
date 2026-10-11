@@ -16,6 +16,12 @@ import type { Feature011Content, ContentActor } from '../modules/feature-011/cre
 import type { Feature011Signing } from '../modules/feature-011/sign-release.js';
 import type { Feature011Publication } from '../modules/feature-011/publish-release.js';
 import type { Feature011Governance } from '../modules/feature-011/list-clinical-content.js';
+const POSTGRES_INTEGER_MAX = 2_147_483_647;
+function parsePostgresIntegerIfMatch(value: unknown): number | undefined {
+  if (typeof value !== 'string' || !/^"[1-9][0-9]*"$/.test(value)) return undefined;
+  const version = Number(value.slice(1, -1));
+  return Number.isSafeInteger(version) && version <= POSTGRES_INTEGER_MAX ? version : undefined;
+}
 export interface Feature011ContentRoutes {
   config: ApiConfig;
   service: Pick<Feature011Content, 'createClinicalContentRelease'>;
@@ -113,12 +119,8 @@ export async function registerFeature011ContentRoutes(
         !Value.Check(feature011Schemas.PublishReleaseRequest, request.body)
       )
         throw new ApiPolicyError('validation-failed', 422, 'Invalid publication request.');
-      const match = request.headers['if-match'];
-      if (
-        typeof match !== 'string' ||
-        !/^"[1-9][0-9]*"$/.test(match) ||
-        !Number.isSafeInteger(Number(match.slice(1, -1)))
-      )
+      const expectedVersion = parsePostgresIntegerIfMatch(request.headers['if-match']);
+      if (expectedVersion === undefined)
         throw new ApiPolicyError(
           'validation-failed',
           422,
@@ -132,7 +134,7 @@ export async function registerFeature011ContentRoutes(
           actor,
           releaseId,
           request.body as Feature011PublishReleaseRequest,
-          { key, expectedVersion: Number(match.slice(1, -1)) },
+          { key, expectedVersion },
         )
         .catch(contentProblem);
       return reply
@@ -156,12 +158,8 @@ export async function registerFeature011ContentRoutes(
           !Value.Check(feature011Schemas.SignReleaseRequest, request.body)
         )
           throw new ApiPolicyError('validation-failed', 422, 'Invalid signing request.');
-        const match = request.headers['if-match'];
-        if (
-          typeof match !== 'string' ||
-          !/^"[1-9][0-9]*"$/.test(match) ||
-          !Number.isSafeInteger(Number(match.slice(1, -1)))
-        )
+        const expectedVersion = parsePostgresIntegerIfMatch(request.headers['if-match']);
+        if (expectedVersion === undefined)
           throw new ApiPolicyError(
             'validation-failed',
             422,
@@ -175,7 +173,7 @@ export async function registerFeature011ContentRoutes(
             actor,
             releaseId,
             request.body as Feature011SignReleaseRequest,
-            { key, expectedVersion: Number(match.slice(1, -1)) },
+            { key, expectedVersion },
           )
           .catch(contentProblem);
         return reply

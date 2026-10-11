@@ -193,6 +193,58 @@ describe('Feature011 scoped report/read', () => {
       expect(f.repository.receipts.mutate).not.toHaveBeenCalled();
       expect(await f.service.listAllergies(actor, patient)).toMatchObject({ data: [] });
     });
+  it('allows native AAL1 patients to read their own allergies', async () => {
+    const f = fixture('PAT');
+    await expect(f.service.listAllergies({ ...actor, aal: 1 }, patient)).resolves.toMatchObject({
+      data: [],
+    });
+    expect(f.repository.resolve).toHaveBeenCalledOnce();
+  });
+  it('allows native AAL1 patients to report for themselves', async () => {
+    const f = fixture('PAT'),
+      patientActor = { ...actor, aal: 1 as const };
+    await expect(
+      f.service.createAllergy(patientActor, patient, request, 'k11-patient-aal1-key-0001'),
+    ).resolves.toMatchObject({ status: 201 });
+    expect(f.repository.resolve).toHaveBeenCalled();
+  });
+  for (const role of ['GUA', 'DEL'] as const)
+    it(`preserves authorized AAL1 ${role} reads`, async () => {
+      const f = fixture(role);
+      await expect(f.service.listAllergies({ ...actor, aal: 1 }, patient)).resolves.toMatchObject({
+        data: [],
+      });
+      expect(f.repository.resolve).toHaveBeenCalledOnce();
+    });
+  it('resolves the authoritative workforce scope before requiring AAL2 for reads and reports', async () => {
+    const f = fixture('CLN'),
+      workforceActor = { ...actor, aal: 1 as const };
+    await expect(f.service.listAllergies(workforceActor, patient)).rejects.toThrow(
+      'Complete the required authentication.',
+    );
+    await expect(
+      f.service.createAllergy(workforceActor, patient, request, 'k11-clinician-aal1-key-0001'),
+    ).rejects.toThrow('Complete the required authentication.');
+    expect(f.repository.resolve).toHaveBeenCalledTimes(2);
+    expect(f.repository.read).not.toHaveBeenCalled();
+    expect(f.repository.receipts.mutate).not.toHaveBeenCalled();
+  });
+  it('continues to require AAL2 for allergy verification', async () => {
+    const f = fixture();
+    await expect(
+      f.service.verifyAllergy(
+        { ...actor, aal: 1 },
+        randomUUID(),
+        {
+          targetStatus: 'refuted',
+          reason: 'synthetic verification',
+          verificationEvidenceRef: randomUUID(),
+        },
+        1,
+        'k11-verification-aal1-key-0001',
+      ),
+    ).rejects.toThrow('Complete the required authentication.');
+  });
   it('new known coding unavailable denies before SQL mutation', async () => {
     const f = fixture();
     await expect(
@@ -212,7 +264,7 @@ describe('Feature011 scoped report/read', () => {
     expect(f.provider.prepare).not.toHaveBeenCalled();
     expect(f.repository.receipts.mutate).not.toHaveBeenCalled();
   });
-  for (const bad of [{ aal: 1 }, { purposes: [] }] as const)
+  for (const bad of [{ purposes: [] }] as const)
     it(`denies missing native AAL/purpose ${JSON.stringify(bad)}`, async () => {
       const f = fixture();
       await expect(

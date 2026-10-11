@@ -1,0 +1,10 @@
+$ vitest run --exclude='dist/**'
+
+ RUN  v4.1.0 D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/packages/api-client
+
+
+ Test Files  10 passed (10)
+      Tests  39 passed (39)
+   Start at  18:01:05
+   Duration  813ms (transform 1.10s, setup 0ms, import 1.72s, tests 612ms, environment 1ms)
+

@@ -7,14 +7,12 @@ import {
   nativeDigestAuthorizationPath,
   nativeDigestRecordPath,
   documentationRenewalAuthorizationPath,
+  prReviewEvidenceRoot,
 } from './verify-feature-011-contracts.mjs';
 import { documentationSuccessorInputPaths } from './feature-011-documentation-successor.mjs';
 const feature = 'specs/011-allergies-clinical-content-governance';
 test('current native SHA repair selects renewed proof boundary with no stale P5 fallback', () =>
-  assert.equal(
-    currentEvidenceRoot(),
-    feature + '/evidence/fresh-implementation/K24/prerequisite-remediation',
-  ));
+  assert.equal(currentEvidenceRoot(), prReviewEvidenceRoot));
 for (const target of [nativeDigestAuthorizationPath, nativeDigestRecordPath])
   test('unapproved native receipt binding drift is denied: ' + target, () => {
     const parent = resolve('artifacts/feature-011/k24/binding-fixtures');

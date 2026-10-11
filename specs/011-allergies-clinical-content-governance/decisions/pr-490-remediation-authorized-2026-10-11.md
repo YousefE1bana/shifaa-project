@@ -1,0 +1,9 @@
+# Feature 011 PR 490 remediation authorization
+
+Authority: Yousef Osama, Product Owner, explicitly requested: "start solve all of this and come with ready to merge". This continues the authorized review/remediation and branch-only PR integration.
+
+Bounded work: repair validated PR review implementation defects; preserve native authentication, RLS, least privileges, current eligibility and approved lock ranks; repair clean native test startup using the existing offline administrator boundary; renew affected K05/K06, both-runtime T027, all 12 T028 categories and bounded T029; run fresh pnpm verify and obtain up-to-date GitHub checks/reviews. No new operation, endpoint, privilege, public wire shape or architecture; no main modification or merge. Historical acceptances and sealed evidence remain intact. Existing engineering acceptance with deferred physical-device/formal review and all retained gates remain unchanged.
+
+Proof capture HEAD is pinned in this authorized successor manifest, together with approved baseline 670b1e0fe15c719b98179805f2628d1b478a55dd. Exact current normative, generated, implementation and SQL hashes remain mandatory. Recording commits and the required squash integration do not invalidate identical tested bytes; altered capture identities, foreign baseline lineage and stale source bindings deny. Required CI consumers fetch baseline history. The pinned capture record can validate provenance after squash even when the original feature commit is unavailable in a fresh clone. This corrects the unsatisfiable exact-HEAD condition without relaxing byte parity.
+
+The prior Product Owner designation of Yousef Osama as API Lead, Data Lead and QA Lead for Feature 011 bounded P5 only remains applicable to conditional renewed parity; no global OPEN-TECH-002 closure. A renewed disposition can be recorded only after both-runtime physical and race proofs pass.

@@ -1,0 +1,22 @@
+$ node --test src/catalogs.test.ts src/clinic-scheduling.test.ts src/feature-010.test.ts src/feature-011.test.ts
+✔ Arabic source and English catalog have exact key parity (1.5855ms)
+✔ direction and bidi isolation are deterministic (0.2075ms)
+✔ family care catalog has authored parity and explicit safety consequences (0.4592ms)
+✔ identity continuity copy preserves security and legal boundaries (0.315ms)
+✔ audit admin copy is Arabic-first, parity-safe, and avoids raw-count disclosure (0.4064ms)
+✔ Feature 009 Arabic source and English catalog have exact parity (2.2183ms)
+✔ all eight route families and canonical state inventories have copy (0.2954ms)
+✔ copy covers cash, confirmation, results, and every degraded state (0.4195ms)
+✔ dynamic values are directionally isolated and missing values remain unchanged (0.4106ms)
+✔ Feature 010 exposes bilingual copy bundles for its six rendered route families (1.5199ms)
+✔ family copy retains approved wording already rendered by Feature 010 routes (0.1862ms)
+✔ K19 complete Arabic-first and English governance copy with identical closed keys (1.4813ms)
+✔ K19 operation-specific confirmations and retained clinical/design limits are explicit (0.2409ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 190.4246
