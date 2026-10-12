@@ -88,12 +88,27 @@ describe('K18 generated current governance read boundary', () => {
     expect((await h.app.inject({ method: 'GET', url, headers })).statusCode).toBe(404);
     expect(h.read).not.toHaveBeenCalled();
   });
+  it('accepts the PostgreSQL integer maximum as a list version', async () => {
+    const h = await fixture(true, true);
+    const response = await h.app.inject({
+      method: 'GET',
+      url: url + '&version=2147483647',
+      headers,
+    });
+    expect(response.statusCode).toBe(200);
+    expect(h.read).toHaveBeenCalledWith(expect.anything(), 'synthetic', {
+      projection: 'governance',
+      version: 2147483647,
+    });
+  });
   it.each([
     '&role=ADM-MEDICAL',
     '&facilityId=' + randomUUID(),
     '&limit=0',
     '&limit=1.1',
     '&version=abc',
+    '&version=2147483648',
+    '&version=9007199254740992',
     '&personId=' + randomUUID(),
   ])('rejects undocumented/invalid filters %s', async (suffix) => {
     const h = await fixture(true, true);

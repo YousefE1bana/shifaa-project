@@ -99,7 +99,11 @@ export async function registerFeature011ContentRoutes(
         if (typeof query[name] === 'string' && /^[1-9][0-9]*$/.test(query[name]))
           query[name] = Number(query[name]);
       }
-      if (!contentType.length || !Value.Check(feature011Schemas.listClinicalContentQuery, query))
+      if (
+        !contentType.length ||
+        !Value.Check(feature011Schemas.listClinicalContentQuery, query) ||
+        (typeof query.version === 'number' && query.version > POSTGRES_INTEGER_MAX)
+      )
         throw new ApiPolicyError('validation-failed', 422, 'Invalid content filters.');
       const result = await reading
         .listClinicalContent(actor, contentType, query as Feature011ListClinicalContentQuery)

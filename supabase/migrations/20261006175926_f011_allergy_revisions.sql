@@ -160,12 +160,29 @@ SET search_path = pg_catalog, clinical
 AS $function$
 DECLARE
   bad boolean;
+  affected_allergy_id uuid;
 BEGIN
+  -- Heads and revisions cannot change identity; support/bindings are immutable.
+  -- Every queued row therefore needs only its own assertion's invariant set.
+  IF TG_OP = 'DELETE' THEN
+    RAISE EXCEPTION USING ERRCODE = '55000', MESSAGE = 'allergy history cannot be deleted';
+  ELSIF TG_TABLE_NAME = 'allergy_heads' THEN
+    affected_allergy_id := NEW.id;
+  ELSIF TG_TABLE_NAME IN ('allergies', 'allergy_verification_support') THEN
+    affected_allergy_id := NEW.allergy_id;
+  ELSIF TG_TABLE_NAME = 'allergy_verification_bindings' THEN
+    SELECT a.allergy_id INTO affected_allergy_id
+    FROM clinical.allergies a WHERE a.id = NEW.revision_id;
+  END IF;
+  IF affected_allergy_id IS NULL THEN
+    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'allergy assertion binding is missing';
+  END IF;
   SELECT EXISTS (
     SELECT 1 FROM clinical.allergies a
     LEFT JOIN clinical.allergy_verification_bindings b ON b.revision_id = a.id
     LEFT JOIN clinical.allergy_verification_support s ON s.id = b.evidence_ref
-    WHERE (a.version = 1 AND (b.revision_id IS NOT NULL OR a.verification_evidence_ref IS NOT NULL))
+    WHERE a.allergy_id = affected_allergy_id AND (
+      (a.version = 1 AND (b.revision_id IS NOT NULL OR a.verification_evidence_ref IS NOT NULL))
        OR (a.version > 1 AND (
          b.revision_id IS NULL OR s.id IS NULL
          OR a.verification_evidence_ref IS DISTINCT FROM s.id
@@ -178,13 +195,14 @@ BEGIN
          OR s.source_evidence_identity IS DISTINCT FROM b.evidence_ref
          OR b.binding_contract_id <> 'SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1'
          OR b.producer_id <> s.producer_id
-       ))
+       )))
   ) OR EXISTS (
     SELECT 1
     FROM clinical.allergies a
     LEFT JOIN clinical.allergies p
       ON p.id = a.supersedes_id AND p.allergy_id = a.allergy_id AND p.patient_id = a.patient_id
-    WHERE (a.version = 1 AND (a.supersedes_id IS NOT NULL OR a.verification_status <> 'self_reported'))
+    WHERE a.allergy_id = affected_allergy_id AND (
+      (a.version = 1 AND (a.supersedes_id IS NOT NULL OR a.verification_status <> 'self_reported'))
        OR (a.version > 1 AND (
          p.id IS NULL OR p.version <> a.version - 1
          OR p.original_recorder_person_id IS DISTINCT FROM a.original_recorder_person_id
@@ -200,7 +218,7 @@ BEGIN
            OR (p.verification_status = 'refuted'
              AND a.verification_status IN ('clinician_confirmed', 'entered_in_error'))
          )
-       ))
+       )))
   ) OR EXISTS (
     SELECT 1
     FROM clinical.allergy_heads h
@@ -214,15 +232,15 @@ BEGIN
      AND corrected_current.allergy_id = corrected.id
      AND corrected_current.patient_id = corrected.patient_id
      AND corrected_current.version = corrected.current_version
-    WHERE initial_revision.id IS NULL
+    WHERE h.id = affected_allergy_id AND (initial_revision.id IS NULL
        OR initial_revision.corrects_allergy_id IS DISTINCT FROM h.corrects_allergy_id
        OR (h.corrects_allergy_id IS NOT NULL AND (
          corrected.id IS NULL OR corrected_current.verification_status <> 'entered_in_error'
-       ))
+       )))
   ) OR EXISTS (
     SELECT 1
     FROM clinical.allergy_heads h
-    WHERE h.current_version IS DISTINCT FROM (
+    WHERE h.id = affected_allergy_id AND h.current_version IS DISTINCT FROM (
       SELECT pg_catalog.max(a.version)
       FROM clinical.allergies a
       WHERE a.allergy_id = h.id AND a.patient_id = h.patient_id

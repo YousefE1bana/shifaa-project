@@ -718,6 +718,7 @@ DECLARE
   version_filter integer;
   status_filter text;
   reviewer_capacity text;
+  global_review_authority boolean;
   rows_value jsonb;
 BEGIN
   IF p_input IS NULL OR pg_catalog.jsonb_typeof(p_input)<>'object'
@@ -747,7 +748,10 @@ BEGIN
   END IF;
   IF p_input ? 'version' THEN
     IF pg_catalog.jsonb_typeof(p_input->'version')<>'number'
-       OR p_input->>'version' !~ '^[1-9][0-9]*$' THEN
+       OR p_input->>'version' !~ '^[1-9][0-9]*$'
+       OR pg_catalog.length(p_input->>'version') > 10
+       OR (pg_catalog.length(p_input->>'version') = 10
+         AND (p_input->>'version') COLLATE "C" > '2147483647') THEN
       RAISE EXCEPTION 'invalid artifact version filter' USING ERRCODE='22023';
     END IF;
     version_filter := (p_input->>'version')::integer;
@@ -823,9 +827,47 @@ BEGIN
       RAISE EXCEPTION 'exact release and current reviewer context required' USING ERRCODE = '42501';
     END IF;
     reviewer_capacity := CASE platform.context_role() WHEN 'CLN' THEN 'physician' ELSE 'pharmacist' END;
+    -- Discover global scope without inventing a facility dependency. Mutable
+    -- facts are locked in the approved workforce -> person -> governance order.
+    SELECT EXISTS (SELECT 1 FROM clinical.content_governance_authorities authority
+      JOIN clinical.content_releases release ON release.id=release_filter
+      JOIN clinical.content_series series ON series.id=release.series_id
+      WHERE authority.person_id=actor AND authority.action='listClinicalContent'
+        AND authority.capacity IS NULL AND authority.status='active'
+        AND authority.facility_id IS NULL AND authority.content_type=series.content_type
+        AND authority.governed_content_key=series.governed_content_key
+        AND authority.effective_scope_key=series.effective_scope_key
+        AND authority.valid_from<=platform.context_now()
+        AND (authority.valid_until IS NULL OR authority.valid_until>platform.context_now()))
+    INTO global_review_authority;
+    IF NOT global_review_authority THEN
+      PERFORM facility.id FROM identity.facilities facility
+      WHERE facility.id=context_facility_id FOR SHARE;
+    END IF;
+    PERFORM credential.id FROM identity.professional_licenses credential
+    WHERE credential.person_id=actor ORDER BY credential.id FOR SHARE;
+    IF NOT global_review_authority THEN
+      PERFORM facility_license.id FROM identity.facility_licenses facility_license
+      WHERE facility_license.facility_id=context_facility_id ORDER BY facility_license.id FOR SHARE;
+      PERFORM membership.id FROM identity.facility_memberships membership
+      WHERE membership.facility_id=context_facility_id AND membership.person_id=actor
+      ORDER BY membership.id FOR SHARE;
+    END IF;
+    PERFORM evidence.id FROM identity.private_evidence_objects evidence
+    WHERE evidence.id IN (SELECT credential.evidence_object_id FROM identity.professional_licenses credential
+      WHERE credential.person_id=actor)
+      OR (NOT global_review_authority AND evidence.id IN (
+        SELECT facility_license.evidence_object_id FROM identity.facility_licenses facility_license
+        WHERE facility_license.facility_id=context_facility_id))
+    ORDER BY evidence.id FOR SHARE;
     PERFORM person.id FROM identity.people person
     WHERE person.id=actor AND person.profile_status='active' FOR SHARE;
     IF NOT FOUND THEN RAISE EXCEPTION 'active reviewer identity required' USING ERRCODE = '42501'; END IF;
+    PERFORM authority.id FROM clinical.content_governance_authorities authority
+    WHERE authority.person_id=actor AND authority.action='listClinicalContent'
+    ORDER BY authority.id FOR SHARE;
+    PERFORM designation.id FROM clinical.content_reviewer_designations designation
+    WHERE designation.person_id=actor ORDER BY designation.id FOR SHARE;
     SELECT COALESCE(pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
       'releaseId',release.id,'source',pg_catalog.jsonb_strip_nulls(pg_catalog.jsonb_build_object(
         'display',release.source_display,'reference',release.source_reference)),
@@ -860,21 +902,40 @@ BEGIN
       AND (version_filter IS NULL OR release.artifact_version=version_filter)
       AND (status_filter IS NULL OR release.status=status_filter)
       AND EXISTS (SELECT 1 FROM clinical.content_governance_authorities authority
+        JOIN identity.professional_licenses credential ON credential.person_id=authority.person_id
+        JOIN clinical.content_reviewer_designations designation
+          ON designation.professional_license_id=credential.id AND designation.person_id=actor
         WHERE authority.person_id=actor AND authority.action='listClinicalContent'
           AND authority.capacity IS NULL AND authority.status='active'
           AND authority.content_type=series.content_type
           AND authority.governed_content_key=series.governed_content_key
           AND authority.effective_scope_key=series.effective_scope_key
-          AND (authority.facility_id IS NULL OR authority.facility_id=context_facility_id)
+          AND (authority.facility_id IS NULL OR (
+            NOT global_review_authority AND authority.facility_id=context_facility_id
+            AND EXISTS (SELECT 1 FROM identity.facilities facility
+              WHERE facility.id=authority.facility_id AND facility.facility_status='active')
+            AND EXISTS (SELECT 1 FROM identity.facility_licenses facility_license
+              JOIN identity.private_evidence_objects evidence ON evidence.id=facility_license.evidence_object_id
+              WHERE facility_license.facility_id=authority.facility_id AND facility_license.status='verified'
+                AND facility_license.expires_on >= (platform.context_now() AT TIME ZONE 'UTC')::date
+                AND evidence.scan_status='released' AND evidence.bucket_code='facility-license-evidence'
+                AND evidence.facility_id=authority.facility_id)
+            AND EXISTS (SELECT 1 FROM identity.facility_memberships membership
+              WHERE membership.facility_id=authority.facility_id AND membership.person_id=actor
+                AND membership.employment_license_id=credential.id
+                AND membership.role_code=credential.profession AND membership.membership_status='active'
+                AND membership.valid_from<=platform.context_now()
+                AND (membership.valid_until IS NULL OR membership.valid_until>platform.context_now()))))
           AND authority.valid_from<=platform.context_now()
-          AND (authority.valid_until IS NULL OR authority.valid_until>platform.context_now()))
-      AND EXISTS (SELECT 1 FROM identity.professional_licenses credential
-        JOIN clinical.content_reviewer_designations designation
-          ON designation.professional_license_id=credential.id
-        WHERE credential.person_id=actor AND credential.profession=(CASE platform.context_role()
+          AND (authority.valid_until IS NULL OR authority.valid_until>platform.context_now())
+          AND credential.profession=(CASE platform.context_role()
             WHEN 'CLN' THEN 'doctor' ELSE 'pharmacist' END)
           AND credential.status='verified'
           AND credential.expires_on >= (platform.context_now() AT TIME ZONE 'UTC')::date
+          AND (credential.evidence_object_id IS NULL OR EXISTS (
+            SELECT 1 FROM identity.private_evidence_objects evidence
+            WHERE evidence.id=credential.evidence_object_id AND evidence.scan_status='released'
+              AND evidence.bucket_code='professional-license-evidence' AND evidence.owner_person_id=actor))
           AND designation.person_id=actor AND designation.reviewer_capacity=review_context.reviewer_capacity
           AND designation.status='active' AND designation.valid_from<=platform.context_now()
           AND (designation.valid_until IS NULL OR designation.valid_until>platform.context_now()))

@@ -1,0 +1,38 @@
+{
+  "id": "core-equivalence",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\3164_1791774162044\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-7b19777c-d057-4978-b60d-da2d8017fe05.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/logs/core-equivalence.log",
+    "sha256": "16462e096fe799a0231dba2d1425e5fc0d6091c9c1849cc3f58c746c741848f5"
+  },
+  "original": "tools/run-feature-011-core-equivalence-test.mjs",
+  "originalSha256": "9a87c64381c1fab55837f88f07d49a3cc6ae856fe0f113ded988ab1e74a520e0",
+  "substitution": "const f = 'specs/011-allergies-clinical-content-governance',\n  e = f + '/evidence/fresh-implementation/K10';",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/reruns/core-equivalence",
+  "temporarySha256": "a3f4142bf73d3af9b1eb34f98cb03229e13d1814eaf5943b8b30b6baa1f165e8",
+  "testAssertionsChanged": false,
+  "preflightSubstitutions": [
+    [
+      "import { verifyFeature011Contracts } from './verify-feature-011-contracts.mjs';",
+      "import { verifyFeature011Contracts, currentEvidenceRoot } from './verify-feature-011-contracts.mjs';"
+    ],
+    [
+      "const stage = read(\n  f + '/evidence/fresh-implementation/K08/prerequisite-remediation/stage-assertion.json',\n);",
+      "const stage = read(currentEvidenceRoot(root) + '/stage-assertion.json');"
+    ],
+    [
+      "  ...stage.sourceDigests,\n  ...unlock.sourceDigests,",
+      "  ...unlock.sourceDigests,\n  ...producers.sourceDigests,\n  ...stage.sourceDigests,"
+    ],
+    [
+      "const paths = [",
+      "const producers = read(\"specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/reruns/evidence/evidence-proof.json\");\nassert.equal(producers.result, 'PASS');\nassert.deepEqual(producers.results.map(r => r.runtime), ['shifaa-local-postgres', 'shifaa-local-supabase']);\nfor (const r of producers.results) assert.equal(r.result, 'PASS');\nconst paths = ["
+    ]
+  ]
+}

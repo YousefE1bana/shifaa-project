@@ -1,0 +1,532 @@
+{
+  "task": "T082",
+  "result": "PASS",
+  "runtimes": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "serverVersion": "17.11",
+      "result": "PASS",
+      "checks": [
+        {
+          "operation": "listAllergies",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "native-person-overrides-client-guc-claims",
+          "result": "PASS"
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "authorized-native-read-positive-control",
+          "result": "PASS"
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "authorized-native-read-positive-control",
+          "result": "PASS"
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "client-role-cannot-elevate-patient",
+          "result": "PASS"
+        }
+      ],
+      "count": 39,
+      "allSeven": [
+        "listAllergies",
+        "createAllergy",
+        "verifyAllergy",
+        "listClinicalContent",
+        "createClinicalContentRelease",
+        "signClinicalContentRelease",
+        "publishClinicalContentRelease"
+      ],
+      "gucValuesAuthenticate": false,
+      "verifiedNativeAttribution": {
+        "person": "f0110000-0000-4000-8000-000000000001",
+        "patient": "f0110000-0000-4000-8100-000000000001"
+      },
+      "zeroEffectsForDenials": true,
+      "prohibitedSinkScan": "PASS",
+      "externalUnderLocks": 0,
+      "cleanup": {
+        "database": "f011_k08_1df65cd71fca647f",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "serverVersion": "17.6",
+      "result": "PASS",
+      "checks": [
+        {
+          "operation": "listAllergies",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "verifyAllergy",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "signClinicalContentRelease",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "missing-auth",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "unrecognized-native",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "claimed-person",
+          "result": "PASS",
+          "status": 401
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "low-aal",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "publishClinicalContentRelease",
+          "scenario": "missing-purpose",
+          "result": "PASS",
+          "status": 403
+        },
+        {
+          "operation": "createAllergy",
+          "scenario": "native-person-overrides-client-guc-claims",
+          "result": "PASS"
+        },
+        {
+          "operation": "listAllergies",
+          "scenario": "authorized-native-read-positive-control",
+          "result": "PASS"
+        },
+        {
+          "operation": "listClinicalContent",
+          "scenario": "authorized-native-read-positive-control",
+          "result": "PASS"
+        },
+        {
+          "operation": "createClinicalContentRelease",
+          "scenario": "client-role-cannot-elevate-patient",
+          "result": "PASS"
+        }
+      ],
+      "count": 39,
+      "allSeven": [
+        "listAllergies",
+        "createAllergy",
+        "verifyAllergy",
+        "listClinicalContent",
+        "createClinicalContentRelease",
+        "signClinicalContentRelease",
+        "publishClinicalContentRelease"
+      ],
+      "gucValuesAuthenticate": false,
+      "verifiedNativeAttribution": {
+        "person": "f0110000-0000-4000-8000-000000000001",
+        "patient": "f0110000-0000-4000-8100-000000000001"
+      },
+      "zeroEffectsForDenials": true,
+      "prohibitedSinkScan": "PASS",
+      "externalUnderLocks": 0,
+      "cleanup": {
+        "database": "f011_k08_a5041b2fb550cbba",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "sourceSha256": "c474c8d92a56426992d13d75e6d293bd0db475e2434a5755b7084ed8a54a0aea",
+  "capturedAt": "2026-10-12T03:48:21.836Z",
+  "syntheticOnly": true,
+  "retainedGates": "UNCHANGED_OPEN"
+}

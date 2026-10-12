@@ -20,18 +20,18 @@ const feature = 'specs/011-allergies-clinical-content-governance';
 export const documentationRenewalAuthorizationPath = `${feature}/evidence/fresh-implementation/K24/documentation-renewal/authorization.json`;
 export const nativeDigestAuthorizationPath = `${feature}/evidence/fresh-implementation/K24/prerequisite-remediation/authorization.json`;
 export const nativeDigestRecordPath = `${feature}/decisions/k24-native-receipt-digest-remediation-v3-2026-10-09.md`;
-export const prReviewEvidenceRoot = `${feature}/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation`;
+export const prReviewEvidenceRoot = `${feature}/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation`;
 export const prReviewAuthorizationPath = `${prReviewEvidenceRoot}/authorization.json`;
-export const prReviewRecordPath = `${feature}/decisions/pr-490-remediation-authorized-2026-10-11.md`;
+export const prReviewRecordPath = `${feature}/decisions/pr-490-remediation-authorized-2026-10-12.md`;
 // An explicitly authorized remediation keeps prior acceptance evidence intact.
 // Once selected, incomplete/stale renewed proofs fail closed; no old fallback.
 export function currentEvidenceRoot(root = defaultRoot) {
   if (fs.existsSync(path.join(root, prReviewAuthorizationPath))) {
     if (
       sha256(fs.readFileSync(path.join(root, prReviewAuthorizationPath))) !==
-        'c6cf223e031d9f09917285ad5e250597b60a6c7cc365cb7ffb897cd562d10afa' ||
+        'c43a1d3f8d868b7a8db396835a2317046c69402c02f304170c4ce1d18ff4ba4f' ||
       sha256(fs.readFileSync(path.join(root, prReviewRecordPath))) !==
-        '7fc270ebad449f3198fae1fe21ff42fb5bbbb6b7a3479f25d0daafc9dd278220'
+        'b8b9fab693c1d2f27e9bd4716bce9f895a3d5b130302c3dbb31e6d1f520718b9'
     )
       throw new Error('PR review remediation authorization drift');
     return prReviewEvidenceRoot;
@@ -130,6 +130,7 @@ const physicalInputs = [
 ];
 const currentProofInputs = [
   'tools/feature-011-pr-authority.mjs',
+  'tools/feature-011-pr-round2.mjs',
   'infra/db/tests/feature-011-pr-authority.sql',
   'tools/feature-011-evidence-head.mjs',
   'tools/feature-011-evidence-head.test.mjs',

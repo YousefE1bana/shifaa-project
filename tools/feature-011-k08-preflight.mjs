@@ -26,6 +26,26 @@ export function preflightConsumers(runtime, database) {
   // The historical component fixture gives only the physician listing authority.
   // Provision the pharmacist's independent synthetic disclosure scope through
   // the harness owner; this is fixture setup, never an API grant or auth bypass.
+  // Its facility-scoped read grant also requires current membership tied to
+  // this exact pharmacist credential. Global signing alone supplies neither.
+  sql(
+    runtime,
+    database,
+    `INSERT INTO identity.facility_memberships
+      (id,facility_id,person_id,role_code,employment_license_id,valid_from,
+       membership_status,created_by_person_id)
+      SELECT gen_random_uuid(),'f0110000-0000-4000-8200-000000000001',credential.person_id,
+        'pharmacist',credential.id,'2020-01-01','active',credential.person_id
+      FROM identity.professional_licenses credential
+      WHERE credential.id='f0110000-0000-4000-8300-000000000003'
+        AND credential.person_id='f0110000-0000-4000-8000-000000000003'
+        AND credential.profession='pharmacist'
+        AND NOT EXISTS (SELECT 1 FROM identity.facility_memberships membership
+          WHERE membership.facility_id='f0110000-0000-4000-8200-000000000001'
+            AND membership.person_id=credential.person_id
+            AND membership.employment_license_id=credential.id
+            AND membership.role_code='pharmacist' AND membership.membership_status='active');`,
+  );
   sql(
     runtime,
     database,
