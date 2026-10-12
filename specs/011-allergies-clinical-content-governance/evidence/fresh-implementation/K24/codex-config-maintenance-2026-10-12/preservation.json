@@ -1,0 +1,20 @@
+{
+  "observedAt": "2026-10-12T15:31:36.220970+00:00",
+  "historicalEvidenceAndDecisionFilesPreserved": 1779,
+  "existingTrackedSpecAndWorkspaceFilesPreserved": 4501,
+  "completedTasksPreserved": 92,
+  "primaryCheckoutConfigurationPreserved": true,
+  "protectedUntrackedFiles": {
+    "specs\\011-allergies-clinical-content-governance\\evidence.zip": "9903071a07567ae3b33cf57f71fd0e86ef36463fb062cad5469575967b41a048",
+    "specs\\011-allergies-clinical-content-governance\\visual-baselines.zip": "01afbae2d1baf3c30d7640ff8954c3396859fe8c9274d03281b49035a16280a4",
+    "test-results\\.last-run.json": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+  },
+  "restoredUntrackedFilesAfterArchivingGeneratedOutputs": [],
+  "workspaceAuditSerializationRestored": false,
+  "compositionCapturesArchivedBeforeAcceptedBytesRestored": 72,
+  "compositionPreservationManifestSha256": "490cb0970a5f78b6de085bbddfd15359840351b4158e921c180187f68829d9a2",
+  "freshVerifyLogSha256": "75534e5595859abcd047be98e908a16df7fddcf60d5e1839739f81af9fe3ed6b",
+  "productCodeOrSqlChanges": false,
+  "reviewWaitWaivedByProductOwner": true,
+  "cleanFinalCodexOrCopilotReviewClaimed": false
+}

@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-10-12T14:43:20.528281+00:00",
+  "baseHead": "ab991dc0b676d4e8bfd50d6a5efd9679aa9c33b0",
+  "proposalHashes": {
+    "config.toml": "e82b1a3c88894b136c8d337196d22dab650c9b843fdbc6426dd311ae52ac74cb",
+    "agents\\deep-worker.toml": "9095927961dc4f94e1f760bdaefea7564604654e0a76e394af2130da9bebd2ac",
+    "agents\\explorer.toml": "ecf4fc63aeb971c70ce2ba5d2d00ad0c8f23f8c4a35b008e123281b6ba3c531a",
+    "agents\\tester.toml": "aa8c9922acaf9addef3a377777edf99719633893efc5571683ae923ca3d85be7",
+    "agents\\ui-worker.toml": "a0047df25b2a45c36d83642699bb7a4144b22e11845c436a0a41e339d2f6402b",
+    "agents\\worker.toml": "9bb6dbfa37524d9f46b4a4172e041d45d1f59d73838528c00b5e641f257b1305"
+  },
+  "roles": {
+    "deep-worker": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "high",
+      "model_verbosity": "low"
+    },
+    "explorer": {
+      "model": "gpt-6-luna",
+      "model_reasoning_effort": "low",
+      "model_verbosity": "low"
+    },
+    "tester": {
+      "model": "gpt-6-luna",
+      "model_reasoning_effort": "medium",
+      "model_verbosity": "low"
+    },
+    "ui-worker": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "low",
+      "model_verbosity": "low"
+    },
+    "worker": {
+      "model": "gpt-6-luna",
+      "model_reasoning_effort": "high",
+      "model_verbosity": "low"
+    }
+  },
+  "tomlFilesParsed": 6,
+  "strictLoaderExitCode": 0,
+  "effectiveRootDefaultsConfirmed": true,
+  "effectiveBothCapsTwo": true,
+  "disabledPluginsPreserved": true,
+  "paidChildProbeExecuted": false,
+  "backendCapSelectionExperimentExecuted": false,
+  "permissionIsolationAdded": false
+}
