@@ -12,6 +12,12 @@
 *.woff binary
 *.woff2 binary
 
+# Feature 011 historical/runtime evidence is SHA-bound as originally captured.
+# Preserve CRLF/mixed capture bytes instead of normalizing sealed evidence.
+specs/011-allergies-clinical-content-governance/evidence/** -text
+# Retain the bundled upstream font licence in its original byte representation.
+specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/ibm-plex-sans-arabic-LICENSE_FONT.txt -text
+
 # Third-party skills are mirrored byte-for-byte from their locked upstream trees.
 # Do not rewrite or reject upstream whitespace; project-authored files remain checked.
 .agents/skills/** -whitespace

@@ -1,0 +1,28 @@
+{
+  "id": "status-ui",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\3948_1791575743567\\node.exe",
+    "--import",
+    "tsx",
+    "tools/.f011-k24-064da8cf-d16d-482d-b615-dd250ef37cc1.mjs"
+  ],
+  "exitCode": 0,
+  "log": {
+    "path": "artifacts/feature-011/k24/status-ui.log",
+    "sha256": "3fe5be878e5f3ac6ea4dc877818804a2329b45dbd75ee44e798e36a7dd20cc61"
+  },
+  "original": "tools/run-feature-011-status-ui-test.mjs",
+  "originalSha256": "f2e9ba64461a5562979fa732645454b3ea44fbfbda79b686b3f09d2fbfbb63f6",
+  "substitutions": [
+    [
+      "const e = 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21'",
+      "const e = \"specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/status\""
+    ],
+    [
+      "a = 'artifacts/feature-011/k21'",
+      "a = \"artifacts/feature-011/k24/status\""
+    ]
+  ],
+  "temporarySha256": "c8f81275cc997a21c8535f0179e20cabc047ad671f09061daf7ac4ec23ffd3de",
+  "assertionsChanged": false
+}

@@ -1,0 +1,76 @@
+{
+  "recordedAt": "2026-10-10T21:35:42.009Z",
+  "result": "INVESTIGATION_NO_PASS_CLAIM",
+  "fullPairs": 696,
+  "identical": 695,
+  "differing": [
+    {
+      "name": "patient-records__success-receipt__ar-EG__360x800__dark.png",
+      "width": 360,
+      "height": 800,
+      "sha256": {
+        "a": "2015884b063d5e8f5b1a86cdcf2c0e4aeabd72985f24c372d546364f2de633f9",
+        "b": "823ed5b6f06a1d58ff04e25b4369d876cf08fe84c71ded76bf764aff1ac553f4"
+      },
+      "changedPixels": 1,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 1
+    }
+  ],
+  "pixel": {
+    "x": 174,
+    "y": 254,
+    "a": [
+      16,
+      52,
+      64,
+      255
+    ],
+    "b": [
+      16,
+      51,
+      64,
+      255
+    ],
+    "location": "Arabic patient allergy title",
+    "source": "Primary-agent PNG decoder inspection using unchanged comparator decoder"
+  },
+  "failedFullComparison": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T212918-122Z-8a8b020d-65bd-4ceb-bf97-bb2bb9d91113/comparison.json",
+    "sha256": "f808bc9edca6c1424c6965dcc41da4dc4545589ab80eb71a0ba3afe5e69286b4"
+  },
+  "failedFullExecution": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T20-37-55-849Z-5bed2003-e772-4f87-80de-97409ca60652.json",
+    "sha256": "b4cca3071483e60ac36a8504a25327b6fbdefbe7f1dca7d6ae998819bd02ae87"
+  },
+  "previousRunner": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-source-2026-10-10T20-37-55-849Z-5bed2003-e772-4f87-80de-97409ca60652.mjs",
+    "sha256": "80ae220bf0eb2532f7cbdba011d954d7e12e76a45adbc1ca1458061ad8375435"
+  },
+  "currentRunner": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-current-app-surfaces.mjs",
+    "sha256": "27a818dad06a8de9958bd41864697222df7d5f0e44b76c6f2089e9c05c184a04"
+  },
+  "before": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T203756-527Z-95e477bf-5644-4624-bdbd-f4d89cb6774d/pre-baseline-renderer.json",
+    "sha256": "07435e00ebc9ec7308b46926c6e04fdda2407d0a71a1070db3669093374a986b"
+  },
+  "diagnosticBefore": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostics/2026-10-10T213128-668Z-550f1730-7785-435e-bf61-b92b1912e094/pre-baseline-renderer.json",
+    "sha256": "2e308b20707bf1ace16ac5a5383faa2574bf327ae7c2b8623cc8cfd2020dbb0b"
+  },
+  "inspectionTool": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/inspect-single-pixel.mjs",
+    "sha256": "ddccc3d6069b978f6fc66f9a49681459658a1dc0c8614935ac5d1bea962350d4"
+  },
+  "observation": "Both recorded target rectangles, nested scroll offsets, active element, loaded font records and environment match. One antialiasing channel differs. GPU rasterization is a hypothesis; browser internal root cause is not established.",
+  "experiment": "Use --disable-gpu-rasterization in the isolated capture runner. Chrome reports disabled_software rasterization; GPU compositing remains enabled. Record actual renderer and launch arguments before any new baseline. No application/CSS/SQL/contract/grant/fixture/comparator/tolerance/mask change.",
+  "authority": "User-authorized technical initiative within the approved bounded visual profile; the profile requires actual renderer/launch-argument metadata rather than a fixed GPU rasterization mode. No physical-device renderer acceptance is claimed.",
+  "diagnosticStatus": "RUNNING_119_PAIRS_NOT_FULL_PROOF",
+  "fullRerunRequired": true,
+  "pinnedInputs": 141,
+  "pinsUnchanged": true,
+  "T091Current": true,
+  "T092Reexecuted": false,
+  "retainedGates": "OPEN"
+}

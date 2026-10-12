@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-10-10T17:17:48.371Z",
+  "result": "PASS_EXISTING_WORKTREE_RUNTIME_REVALIDATED",
+  "failedGate": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/full-verify.json",
+    "sha256": "40ffb1f5b8e9156c74bf339a9f59fb7d2c5a6c59fb54b10784502df49165f3d9"
+  },
+  "failedLog": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/copy-full-verify.log",
+    "sha256": "84dc6ee011557e65e859d8fbe6d79e8770e8da45b14a001ce7be66d7bb44927a"
+  },
+  "cause": "PLAYWRIGHT_BROWSERS_PATH was unset for this retry; the global cache has no required headless build1243 executable. No browser measurement occurred.",
+  "correction": "Set PLAYWRIGHT_BROWSERS_PATH to existing worktree cache BEFORE importing Playwright and inherit it for pnpm verify; no new install/cache deletion/source change",
+  "cache": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k24\\browser-runtime",
+  "priorRecovery": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/browser-recovery.json",
+    "sha256": "7f139fbcc81e7be4f454db22be065ecdaea5a90eb460835a4a1f4dc6fe7a54b9"
+  },
+  "browserVersion": "153.0.8010.12",
+  "executable": {
+    "path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k24\\browser-runtime\\chromium-1243\\chrome-win64\\chrome.exe",
+    "sha256": "9b07943f834485b43c9d54caea2951c78715f9f07070a80ab6658465ebd3e711"
+  },
+  "smoke": {
+    "result": "PASS",
+    "title": "Isolated cache health"
+  },
+  "retryDriver": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/run-copy-full-verify-retry-01.mjs",
+    "sha256": "c68976aa57dc82afdf440ed70276639bf0c3e6f13d17c8abfd37077d95245797"
+  },
+  "retryPreparationFailures": [
+    "Preserve-prior-attempt guard refused an accidentally reused output destination before tests; corrected to a new successor directory",
+    "Playwright module initializes its cache path at import time; preflight exposed static-import-before-env ordering, corrected with dynamic import after explicit cache configuration"
+  ],
+  "fullVerificationPassClaimed": false,
+  "thresholdsWorkloadAssertionsChanged": false,
+  "formalChrome154Comparison": "Separate installed-Chrome visual runner; this cache recovery does not claim that reference run"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "publish-api",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\3212_1791551903329\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-ec109e2e-d1d2-4f76-af10-817245329c36.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/publish-api.log",
+    "sha256": "06a1e8a411a92d830e47ef70cd4c4e71946f64ad7cd81fe5c27aa768ebefb587"
+  },
+  "original": "tools/run-feature-011-publish-api-test.mjs",
+  "originalSha256": "d99d0c0ec6a855bfb1c0403b45934b1da012d12e9e516cc94856c31927730579",
+  "substitution": "const e =\n  f +\n  '/evidence/fresh-implementation/' +\n  (process.argv.includes('--k18-revalidation') ? 'K18/k17-revalidation' : 'K17');",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/reruns/publish-api",
+  "temporarySha256": "bca5fbe3e877d99ffbadfeace0469ca1ed45f6efbf29cf24d5afa2aa2893d2fa",
+  "testAssertionsChanged": false
+}

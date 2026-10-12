@@ -1,0 +1,134 @@
+{
+  "id": "SHIFAA-F011-K24-ENGINEERING-CLOSEOUT-MANIFEST@1.0.0",
+  "recordedAt": "2026-10-11T08:45:08.493Z",
+  "result": "ACCEPTED_ENGINEERING_WITH_DEFERRED_FORMAL_REVIEW",
+  "files": [
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/attempt-1.json",
+      "bytes": 424,
+      "sha256": "0eda45ce8ee3cf55aaf1e6fc3cd4105cc5685da5b926a0889779b90cf0993f1c"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/bookkeep.mjs",
+      "bytes": 7587,
+      "sha256": "0f85a1b1e0cbd3ff566b9c8257dbc4e40a7ee9f3448c0f8c27c7bc94989ba654"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/bookkeeping-attempt-1.json",
+      "bytes": 540,
+      "sha256": "93b9e4d3751b755b1959b38ae3e1501796ec38afa1677f6cd93dc204a561fe53"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/finalize.mjs",
+      "bytes": 6542,
+      "sha256": "031a1b9fb5b48f375fbd697497cac2208e20ecbd6a53c6d69d7e54c14bf6a70b"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/generated-client-1.log",
+      "bytes": 41,
+      "sha256": "d69a2770b3f40f50802ff1d658aad2b53e5d983344c78a0d0b924b4ee626c145"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/generated-client-2.log",
+      "bytes": 41,
+      "sha256": "d69a2770b3f40f50802ff1d658aad2b53e5d983344c78a0d0b924b4ee626c145"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/generated-contract-1.log",
+      "bytes": 45,
+      "sha256": "5f4689cc0ec2811a39030f256834d8c08e27624dfe22d780a1fba76b541821a8"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/generated-contract-2.log",
+      "bytes": 45,
+      "sha256": "5f4689cc0ec2811a39030f256834d8c08e27624dfe22d780a1fba76b541821a8"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/post-bookkeeping-ledger.log",
+      "bytes": 646,
+      "sha256": "e6465cbc811d44dccb5f4ba97890fde5a72b4cbe20c602bd2b6e1900054cc220"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/protocol-ledger-scope.log",
+      "bytes": 19457,
+      "sha256": "8618e9701ba771a37fa035dbb9f5c1dded919a2cc9a2351d6f7321162d763968"
+    },
+    {
+      "path": "artifacts/feature-011/k24/closeout-2026-10-11/revalidate.mjs",
+      "bytes": 6846,
+      "sha256": "3e8f469cc62780f057db82c70d03473f529907011a031ebff047f354896f0fb2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+      "bytes": 400868,
+      "sha256": "d2a03aac8f387db8d8c2666b45f979ebcf74276cf9c001391bf6839a14e4b253"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/acceptance-review.json",
+      "bytes": 25915,
+      "sha256": "d0ec018c44b53bef39eb3a1e2ba29666537204bac5c133c61a1cceae4139615c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/bookkeeping.json",
+      "bytes": 1165,
+      "sha256": "336879a887011372355ff5f8b1e7db8df22c73a8a80641ee8f3aa7ccb83de26e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/current-parity.json",
+      "bytes": 20118,
+      "sha256": "b359928e85753c38f0c6962caae515bde6a3eb3512f0934b792bb4c2c16d579f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/git-status-before.txt",
+      "bytes": 8093,
+      "sha256": "d3b1069c2c971942f2162a92024a1fc0f44699bb7ed9e8ef48f6aba6fd35afd3"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/git-status.txt",
+      "bytes": 8093,
+      "sha256": "d3b1069c2c971942f2162a92024a1fc0f44699bb7ed9e8ef48f6aba6fd35afd3"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/issue-state.json",
+      "bytes": 1251,
+      "sha256": "a190c9bab91423fd6d18ac352d2a292769405e964ac4717fe1ba0cf8e286a719"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/preceding-task-map.json",
+      "bytes": 400878,
+      "sha256": "9ee0719a82bf0df827c5c8803b9229a5de0558a354ad70204323a6fba4d5fe6d"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/preceding-tasks.md",
+      "bytes": 84236,
+      "sha256": "4d7d5b36a61b2b7410ca93be8404f446e53f83f7d52d10043de963e6ca7ff1f8"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/quality-review.json",
+      "bytes": 1451,
+      "sha256": "d6ddd871f85817da4de829c8e7bffa337fd9ba64f1e6d282831af92b702ee13d"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/revalidation.json",
+      "bytes": 6140,
+      "sha256": "98bb9715084fc1ba99fd823f68efd719c8bdb02f458f4ca97b2d6722b2979425"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/review.md",
+      "bytes": 4703,
+      "sha256": "1171fc63b3fd19c3cf52c5b65a7fd99987bcb9c19e85a3c8797098d57250931c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/validation.json",
+      "bytes": 3147,
+      "sha256": "879f456b8214fb9a1b0f4a17436a57e2064a0e5a339403eaf7e34fe6bd88d1fa"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/tasks.md",
+      "bytes": 84236,
+      "sha256": "3d5229dbe80618d78100921e32ed90bf6b85b8ffa3906834dda58618ecd210ad"
+    }
+  ],
+  "retainedGatesClosed": [],
+  "issueClosuresDeferredUntilIntegration": true
+}

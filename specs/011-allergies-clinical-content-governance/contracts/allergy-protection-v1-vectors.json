@@ -1,0 +1,321 @@
+{
+  "formatVersion": 1,
+  "status": "PLAN_RECOVERY_R2_FIXED_TEST_ONLY_INPUTS_NOT_CRYPTO_PROOF",
+  "expectedOutputsPolicy": "Independent authored reference inputs; never regenerate from implementation under test",
+  "payloadPositive": [
+    {
+      "id": "ALG-P01",
+      "logicalInput": {
+        "coding": {
+          "knowledge": "unknown"
+        },
+        "contractId": "SHIFAA-F011-ALLERGY-FACTS/1",
+        "onset": {
+          "knowledge": "unknown"
+        },
+        "reaction": {
+          "knowledge": "unknown"
+        },
+        "severity": {
+          "knowledge": "unknown"
+        },
+        "source": {
+          "display": "SYNTHETIC-SOURCE"
+        },
+        "substance": {
+          "display": "SYNTHETIC-SUBSTANCE",
+          "identity": "synthetic:neutral"
+        }
+      },
+      "expectedBytes": {
+        "utf8": "{\"coding\":{\"knowledge\":\"unknown\"},\"contractId\":\"SHIFAA-F011-ALLERGY-FACTS/1\",\"onset\":{\"knowledge\":\"unknown\"},\"reaction\":{\"knowledge\":\"unknown\"},\"severity\":{\"knowledge\":\"unknown\"},\"source\":{\"display\":\"SYNTHETIC-SOURCE\"},\"substance\":{\"display\":\"SYNTHETIC-SUBSTANCE\",\"identity\":\"synthetic:neutral\"}}",
+        "hex": "7b22636f64696e67223a7b226b6e6f776c65646765223a22756e6b6e6f776e227d2c22636f6e74726163744964223a225348494641412d463031312d414c4c455247592d46414354532f31222c226f6e736574223a7b226b6e6f776c65646765223a22756e6b6e6f776e227d2c227265616374696f6e223a7b226b6e6f776c65646765223a22756e6b6e6f776e227d2c227365766572697479223a7b226b6e6f776c65646765223a22756e6b6e6f776e227d2c22736f75726365223a7b22646973706c6179223a2253594e5448455449432d534f55524345227d2c227375627374616e6365223a7b22646973706c6179223a2253594e5448455449432d5355425354414e4345222c226964656e74697479223a2273796e7468657469633a6e65757472616c227d7d",
+        "octetLength": 296,
+        "sha256": "d8928d24b4ff34b9d003e34684b6319d79ae0307c4bcc43a62f12b2a40343fb1"
+      },
+      "meaning": "TEST-ONLY closed plaintext; no real clinical value"
+    },
+    {
+      "id": "ALG-P02",
+      "logicalInput": {
+        "coding": {
+          "knowledge": "known",
+          "value": {
+            "code": "neutral",
+            "display": "اختبار فقط",
+            "system": "synthetic:system"
+          }
+        },
+        "contractId": "SHIFAA-F011-ALLERGY-FACTS/1",
+        "onset": {
+          "knowledge": "unknown"
+        },
+        "reaction": {
+          "knowledge": "known",
+          "value": "اختبار é\nفقط"
+        },
+        "severity": {
+          "knowledge": "unknown"
+        },
+        "source": {
+          "display": "SYNTHETIC-SOURCE"
+        },
+        "substance": {
+          "display": "اختبار فقط",
+          "identity": "synthetic:neutral"
+        }
+      },
+      "expectedBytes": {
+        "utf8": "{\"coding\":{\"knowledge\":\"known\",\"value\":{\"code\":\"neutral\",\"display\":\"اختبار فقط\",\"system\":\"synthetic:system\"}},\"contractId\":\"SHIFAA-F011-ALLERGY-FACTS/1\",\"onset\":{\"knowledge\":\"unknown\"},\"reaction\":{\"knowledge\":\"known\",\"value\":\"اختبار é\\nفقط\"},\"severity\":{\"knowledge\":\"unknown\"},\"source\":{\"display\":\"SYNTHETIC-SOURCE\"},\"substance\":{\"display\":\"اختبار فقط\",\"identity\":\"synthetic:neutral\"}}",
+        "hex": "7b22636f64696e67223a7b226b6e6f776c65646765223a226b6e6f776e222c2276616c7565223a7b22636f6465223a226e65757472616c222c22646973706c6179223a22d8a7d8aed8aad8a8d8a7d8b120d981d982d8b7222c2273797374656d223a2273796e7468657469633a73797374656d227d7d2c22636f6e74726163744964223a225348494641412d463031312d414c4c455247592d46414354532f31222c226f6e736574223a7b226b6e6f776c65646765223a22756e6b6e6f776e227d2c227265616374696f6e223a7b226b6e6f776c65646765223a226b6e6f776e222c2276616c7565223a22d8a7d8aed8aad8a8d8a7d8b12065cc815c6ed981d982d8b7227d2c227365766572697479223a7b226b6e6f776c65646765223a22756e6b6e6f776e227d2c22736f75726365223a7b22646973706c6179223a2253594e5448455449432d534f55524345227d2c227375627374616e6365223a7b22646973706c6179223a22d8a7d8aed8aad8a8d8a7d8b120d981d982d8b7222c226964656e74697479223a2273796e7468657469633a6e65757472616c227d7d",
+        "octetLength": 414,
+        "sha256": "da10ea7802f3f6d50ae8fca243c7c2ebad1f953f7e60cd90a13a3776f1da2e2c"
+      },
+      "meaning": "TEST-ONLY closed plaintext; no real clinical value"
+    },
+    {
+      "id": "ALG-P03",
+      "logicalInput": {
+        "contractId": "SHIFAA-F011-ALLERGY-REASON/1",
+        "reason": "SYNTHETIC-REASON: اختبار فقط"
+      },
+      "expectedBytes": {
+        "utf8": "{\"contractId\":\"SHIFAA-F011-ALLERGY-REASON/1\",\"reason\":\"SYNTHETIC-REASON: اختبار فقط\"}",
+        "hex": "7b22636f6e74726163744964223a225348494641412d463031312d414c4c455247592d524541534f4e2f31222c22726561736f6e223a2253594e5448455449432d524541534f4e3a20d8a7d8aed8aad8a8d8a7d8b120d981d982d8b7227d",
+        "octetLength": 94,
+        "sha256": "a564fd19f283a17d061f4bccaf5d6d02bd0a3d21f19a0386a2e83560b589a9e3"
+      },
+      "meaning": "TEST-ONLY closed plaintext; no real clinical value"
+    }
+  ],
+  "aadPositive": [
+    {
+      "id": "ALG-A01",
+      "facts": {
+        "resourceType": "clinical.allergy_revision",
+        "allergyId": "f0110000-0000-4000-8500-000000000101",
+        "revisionId": "f0110000-0000-4000-8500-000000000102",
+        "revisionVersion": "1",
+        "fieldId": "facts",
+        "keyRef": "synthetic-kms/allergy/versions/1"
+      },
+      "expectedBytes": {
+        "utf8": "SHIFAA-F011-ALLERGY-AAD/1;S25:clinical.allergy_revision,S36:f0110000-0000-4000-8500-000000000101,S36:f0110000-0000-4000-8500-000000000102,S1:1,S5:facts,S32:synthetic-kms/allergy/versions/1,",
+        "hex": "5348494641412d463031312d414c4c455247592d4141442f313b5332353a636c696e6963616c2e616c6c657267795f7265766973696f6e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303130312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303130322c53313a312c53353a66616374732c5333323a73796e7468657469632d6b6d732f616c6c657267792f76657273696f6e732f312c",
+        "octetLength": 189,
+        "sha256": "373afea865de388e237a9705ff24ceef0dfd6eb7fcda9af44fa803783ad50834"
+      }
+    },
+    {
+      "id": "ALG-A02",
+      "facts": {
+        "resourceType": "clinical.allergy_revision",
+        "allergyId": "f0110000-0000-4000-8500-000000000101",
+        "revisionId": "f0110000-0000-4000-8500-000000000103",
+        "revisionVersion": "2",
+        "fieldId": "verification_reason",
+        "keyRef": "synthetic-kms/allergy/versions/1"
+      },
+      "expectedBytes": {
+        "utf8": "SHIFAA-F011-ALLERGY-AAD/1;S25:clinical.allergy_revision,S36:f0110000-0000-4000-8500-000000000101,S36:f0110000-0000-4000-8500-000000000103,S1:2,S19:verification_reason,S32:synthetic-kms/allergy/versions/1,",
+        "hex": "5348494641412d463031312d414c4c455247592d4141442f313b5332353a636c696e6963616c2e616c6c657267795f7265766973696f6e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303130312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303130332c53313a322c5331393a766572696669636174696f6e5f726561736f6e2c5333323a73796e7468657469632d6b6d732f616c6c657267792f76657273696f6e732f312c",
+        "octetLength": 204,
+        "sha256": "f1f94284db8f89408fd77811ae580a7af62a0b9fe3828b463df2479778148a65"
+      }
+    },
+    {
+      "id": "ALG-A03",
+      "facts": {
+        "resourceType": "clinical.allergy_revision",
+        "allergyId": "f0110000-0000-4000-8500-000000000101",
+        "revisionId": "f0110000-0000-4000-8500-000000000103",
+        "revisionVersion": "2",
+        "fieldId": "facts",
+        "keyRef": "synthetic-kms/مفتاح/versions/2"
+      },
+      "expectedBytes": {
+        "utf8": "SHIFAA-F011-ALLERGY-AAD/1;S25:clinical.allergy_revision,S36:f0110000-0000-4000-8500-000000000101,S36:f0110000-0000-4000-8500-000000000103,S1:2,S5:facts,S35:synthetic-kms/مفتاح/versions/2,",
+        "hex": "5348494641412d463031312d414c4c455247592d4141442f313b5332353a636c696e6963616c2e616c6c657267795f7265766973696f6e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303130312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303130332c53313a322c53353a66616374732c5333353a73796e7468657469632d6b6d732fd985d981d8aad8a7d8ad2f76657273696f6e732f322c",
+        "octetLength": 192,
+        "sha256": "a411a7b8add37e197723f6c1012c8cc6b06185d8289f70585691c95b36e60e9d"
+      }
+    },
+    {
+      "id": "ALG-A04",
+      "facts": {
+        "resourceType": "clinical.allergy_revision",
+        "allergyId": "f0110000-0000-4000-8500-000000000104",
+        "revisionId": "f0110000-0000-4000-8500-000000000105",
+        "revisionVersion": "1",
+        "fieldId": "facts",
+        "keyRef": "synthetic-kms/é:S,/versions/1"
+      },
+      "expectedBytes": {
+        "utf8": "SHIFAA-F011-ALLERGY-AAD/1;S25:clinical.allergy_revision,S36:f0110000-0000-4000-8500-000000000104,S36:f0110000-0000-4000-8500-000000000105,S1:1,S5:facts,S31:synthetic-kms/é:S,/versions/1,",
+        "hex": "5348494641412d463031312d414c4c455247592d4141442f313b5332353a636c696e6963616c2e616c6c657267795f7265766973696f6e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303130342c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303130352c53313a312c53353a66616374732c5333313a73796e7468657469632d6b6d732f65cc813a532c2f76657273696f6e732f312c",
+        "octetLength": 188,
+        "sha256": "3ce255c2d2fa936ac4a7546c53f16b110c26a64fd9892f64fadc02b9c58745a0"
+      }
+    }
+  ],
+  "structuralFixture": {
+    "contractId": "SHIFAA-F011-ALLERGY-PROTECTED/1",
+    "keyRef": "synthetic-kms/allergy/versions/1",
+    "nonce": "000102030405060708090a0b",
+    "ciphertext": "d0d1",
+    "authTag": "808182838485868788898a8b8c8d8e8f",
+    "qualification": "SYNTHETIC STRUCTURAL ONLY; no key/AES acceptance"
+  },
+  "negative": [
+    {
+      "id": "ALG-N01",
+      "scenario": "unknown scalar enum invented",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N02",
+      "scenario": "facts source overwritten during verification",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N03",
+      "scenario": "unknown carries value",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N04",
+      "scenario": "known coding missing system/code",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N05",
+      "scenario": "payload wrong contractId",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N06",
+      "scenario": "duplicate/extra JSON member",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N07",
+      "scenario": "unpaired surrogate or noncanonical payload bytes",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N08",
+      "scenario": "partial reason envelope",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N09",
+      "scenario": "creation has reason/evidence",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N10",
+      "scenario": "verification missing reason",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N11",
+      "scenario": "nonce length 11/13",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N12",
+      "scenario": "tag length 15/17",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N13",
+      "scenario": "empty ciphertext",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N14",
+      "scenario": "mutable keyRef alias",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N15",
+      "scenario": "wrong field/resource/id/version/key AAD",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N16",
+      "scenario": "current head/status used as AAD",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N17",
+      "scenario": "stale head/predecessor/candidate version",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N18",
+      "scenario": "verified to self_reported",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N19",
+      "scenario": "terminal entered_in_error revised",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N20",
+      "scenario": "same-status correction-only edge",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N21",
+      "scenario": "new correction inherits verified status",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "physical/producer according to field ownership"
+    },
+    {
+      "id": "ALG-N22",
+      "scenario": "plaintext clinical scalar SQL input",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "producer/composition"
+    },
+    {
+      "id": "ALG-N23",
+      "scenario": "nonce/envelope reused after rejection",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "producer/composition"
+    },
+    {
+      "id": "ALG-N24",
+      "scenario": "external KMS/network under locks",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "producer/composition"
+    },
+    {
+      "id": "ALG-N25",
+      "scenario": "real adapter acceptance claimed from synthetic envelope",
+      "expected": "REJECT_OR_FAIL_ACCEPTANCE",
+      "owner": "producer/composition"
+    }
+  ]
+}

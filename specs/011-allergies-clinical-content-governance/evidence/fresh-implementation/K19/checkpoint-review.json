@@ -1,0 +1,195 @@
+{
+  "commands": [
+    "pnpm exec tsx --test apps/admin/test/feature-011-clinical-content.test.tsx packages/i18n/src/feature-011.test.ts",
+    "pnpm --filter @shifaa/admin test",
+    "pnpm --filter @shifaa/i18n test",
+    "pnpm exec tsx tools/run-feature-011-admin-ui-test.mjs",
+    "pnpm --filter @shifaa/admin build",
+    "pnpm --filter @shifaa/admin typecheck",
+    "pnpm --filter @shifaa/i18n typecheck",
+    "pnpm --filter @shifaa/api exec vitest run src/feature-011-exposure.test.ts",
+    "pnpm architecture:check",
+    "pnpm secrets:check",
+    "pnpm exec prettier --check [K19 scoped files]",
+    "git diff --check"
+  ],
+  "result": "F011_K19_READY_FOR_REVIEW",
+  "primaryAgentReview": true,
+  "noDelegation": true,
+  "acceptance": "PENDING_PRODUCT_OWNER",
+  "bookkeeping": {
+    "K17": "T063–T066 CHECKED / #460–#463 CLOSED",
+    "K18": "T067–T069 CHECKED / #464–#466 CLOSED",
+    "records": [
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/k17-accepted-2026-10-09.md",
+        "sha256": "a40e44f4a27fdf4d13ccad7cf1989f0abbc529491f8f30948029e400e2435962"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/k18-accepted-2026-10-09.md",
+        "sha256": "669c3ae7bd4576a436fed38baaab25a40dcd96d586525f81c3246f0a13b311d8"
+      }
+    ]
+  },
+  "K19": {
+    "tasks": "T070–T073 UNCHECKED",
+    "issues": "#467–#470 OPEN",
+    "red": 16,
+    "focusedGreen": 21,
+    "liveRuntimeResults": [
+      {
+        "runtime": "shifaa-local-postgres",
+        "checks": 59,
+        "cleanup": {
+          "database": "f011_k08_fde7aa2f5afff8e9",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        }
+      },
+      {
+        "runtime": "shifaa-local-supabase",
+        "checks": 59,
+        "cleanup": {
+          "database": "f011_k08_ef4ea86ffef8671d",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        }
+      }
+    ]
+  },
+  "successor": "T074–T092 untouched/UNCHECKED; K20 not started",
+  "gates": {
+    "OPEN_UX_002": "OPEN",
+    "OPEN_TECH_002": "OPEN; Feature-011 bounded P1–P5 retained",
+    "OPEN_TECH_003": "OPEN",
+    "OPEN_CLIN_001": "OPEN; synthetic only",
+    "legal": "Existing lifecycle effects unchanged"
+  },
+  "parity": {
+    "result": "PASS",
+    "pinnedInputs": 133,
+    "renewalRequired": false,
+    "reason": "No stage-bound SQL/generated/contracts/input hashes changed"
+  },
+  "fixes": [
+    "Separate audited test-only pharmacist read scope; signing-alone disclosure still denied",
+    "Future-predecessor timeline now waits for the real effective boundary",
+    "Stable accessible names for selects and populated reason textarea",
+    "Focus return after React re-enables the initiating control",
+    "Offline/uncertain binding retention, in-flight duplicate denial and read invalidation",
+    "Localized create confirmation and nontechnical date/status presentation",
+    "Successor predecessor labeled accurately in both locales",
+    "Font-face CSS formatting repaired; normalized declarations and URLs proved identical after live proof",
+    "Browser DevTools excluded from product control-size assertion after exact diagnostic"
+  ],
+  "failuresRetried": [
+    "Unavailable pinned Playwright headless shell; existing Chrome used, no download",
+    "Wrong Node test runner for Vitest exposure suite; rerun with pinned Vitest, 27/27 PASS",
+    "Live fixture/accessibility failures were corrected and entire both-runtime proof rerun; none counted as success"
+  ],
+  "limitations": "Pinned Playwright headless shell absent; installed Chrome engineering evidence, not a reference-environment or final visual acceptance claim",
+  "changedExisting": [
+    "packages/i18n/src/index.ts",
+    "packages/i18n/src/feature-011.ts",
+    "packages/i18n/package.json",
+    "specs/011-allergies-clinical-content-governance/tasks.md",
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+    "apps/admin/test/run-tests.mjs"
+  ],
+  "addedFiles": [
+    "tools/run-feature-011-admin-ui-test.mjs",
+    "packages/i18n/src/feature-011.test.ts",
+    "apps/admin/test/feature-011-clinical-content.test.tsx",
+    "apps/admin/public/fonts/Inter-LICENSE.txt",
+    "apps/admin/public/fonts/inter-latin-700-normal.woff2",
+    "apps/admin/public/fonts/inter-latin-600-normal.woff2",
+    "apps/admin/public/fonts/inter-latin-400-normal.woff2",
+    "apps/admin/public/fonts/IBM-Plex-Sans-Arabic-LICENSE.txt",
+    "apps/admin/public/fonts/ibm-plex-sans-arabic-latin-700-normal.woff2",
+    "apps/admin/public/fonts/ibm-plex-sans-arabic-latin-600-normal.woff2",
+    "apps/admin/public/fonts/ibm-plex-sans-arabic-latin-400-normal.woff2",
+    "apps/admin/public/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2",
+    "apps/admin/public/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2",
+    "apps/admin/public/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2",
+    "apps/admin/public/fonts/feature-011-fonts.css",
+    "apps/admin/src/app/clinical-content/page.tsx",
+    "apps/admin/src/app/clinical-content/content-controller.ts",
+    "apps/admin/src/app/clinical-content/ClinicalContentWorkspace.tsx",
+    "apps/admin/src/app/clinical-content/clinical-content.css",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/us3-demo.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/font-css-formatting.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/checkpoint-review.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/checkpoint-review.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-ui.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-ui-red.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-i18n.json",
+    "specs/011-allergies-clinical-content-governance/decisions/k18-accepted-2026-10-09.md",
+    "specs/011-allergies-clinical-content-governance/decisions/k17-accepted-2026-10-09.md"
+  ],
+  "proofs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-ui-red.json",
+      "sha256": "a21e0436c7e867d4bf9cab047d4f0bf0d3086e210d2ed78a6e818adca37499f8"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-ui.json",
+      "sha256": "658ac14b4e4c735e14be2b32d9c3fc3ab7ea1924f407c55968b4e5f392de0e1b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-i18n.json",
+      "sha256": "1c05a094873fed7f6eb263f39a6fa6896a707479dd023c4c7536a68bee334230"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/us3-demo.json",
+      "sha256": "ad02a1994be448e942b16cb1d52ab434948e07f50cdf94977ecf4cace7a385ad"
+    }
+  ],
+  "verification": [
+    {
+      "name": "admin-regression",
+      "count": 41,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/checks/admin-regression.log",
+        "sha256": "fee2c235717f8fa5b352d40d9319094c7b06ba2ec3ab5168e968373756cc53a6"
+      }
+    },
+    {
+      "name": "i18n-regression",
+      "count": 13,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/checks/i18n-regression.log",
+        "sha256": "c7f5a8fa794e41adb59e2f2815377c663ce3cf6517dfecdfb8f0e5516fb3e8c0"
+      }
+    },
+    {
+      "name": "shared-copy-regression",
+      "count": 29,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/checks/shared-copy-regression.log",
+        "sha256": "99da4263ff88602f41d24c2d8e356dd038c692df32706cfdb5e8faa6c17d6af4"
+      }
+    },
+    {
+      "name": "ui-final-green",
+      "count": 21,
+      "result": "PASS",
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/checks/ui-final-green.log",
+        "sha256": "2c8137b5e56228070ee26467065f91223c867dfe1b066421d2d1869717d0be8e"
+      }
+    }
+  ],
+  "git": {
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "status": " M apps/admin/test/run-tests.mjs\n M apps/clinic/src/app/patients/[id]/summary/page.tsx\n M apps/clinic/src/components/feature-010/EncounterWorkspace.tsx\n M apps/patient/app/care-switcher.tsx\n M apps/patient/app/records.tsx\n M apps/patient/app/relationships.tsx\n M apps/patient/src/family-care-api.ts\n M apps/patient/src/patient-session-runtime.tsx\n M docs/architecture/SHIFAA-API-Catalog.md\n M docs/architecture/SHIFAA-Data-RLS.md\n M docs/traceability/SHIFAA-Traceability-Matrix.md\n M packages/api-client/package.json\n M packages/api-client/src/identity-onboarding.ts\n M packages/api-client/tsconfig.json\n M packages/contracts/package.json\n M packages/contracts/src/feature-010.ts\n M packages/contracts/src/identity-onboarding.ts\n M packages/contracts/src/index.ts\n M packages/core/src/index.ts\n M packages/i18n/package.json\n M packages/i18n/src/index.ts\n M services/api/src/adapters/postgres/identity-repository.ts\n M services/api/src/app.ts\n M services/api/src/config.ts\n M services/api/src/modules/identity-onboarding/identity-onboarding.unit.test.ts\n M services/api/src/modules/identity-onboarding/in-memory-repository.ts\n M services/api/src/modules/identity-onboarding/ports.ts\n M services/api/src/modules/identity-onboarding/service.ts\n M specs/001-identity-onboarding/contracts/openapi.yaml\n M specs/010-encounters-referrals-contextual-chat/contracts/openapi.yaml\n?? apps/admin/public/\n?? apps/admin/src/app/clinical-content/\n?? apps/admin/test/feature-011-clinical-content.test.tsx\n?? apps/clinic/src/app/patients/[id]/summary/AllergyHistory.tsx\n?? apps/clinic/src/components/feature-011/\n?? apps/clinic/src/lib/feature-011-allergies.ts\n?? apps/clinic/src/lib/feature-011-context.ts\n?? apps/clinic/test/feature-011-summary.test.tsx\n?? apps/clinic/test/feature-011-verification.test.tsx\n?? apps/patient/src/AllergyRecordsPanel.tsx\n?? apps/patient/src/feature-011-allergies.ts\n?? apps/patient/src/feature-011-allergy-history.ts\n?? apps/patient/src/managed-care-context.ts\n?? apps/patient/test/feature-011-history.test.tsx\n?? apps/patient/test/feature-011-managed-handoff.test.ts\n?? apps/patient/test/feature-011-records.test.tsx\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? docs/governance/SHIFAA-Identifier-Handoff-Amendment-2026-10-08.md\n?? infra/db/fixtures/feature-011-k04.sql\n?? infra/db/fixtures/feature-011-k06.sql\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-concurrency.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-k05-storage.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-receipts.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011-allergy-state.ts\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? packages/core/src/feature-011/\n?? packages/i18n/src/feature-011.test.ts\n?? packages/i18n/src/feature-011.ts\n?? packages/test-kit/src/feature-011/\n?? services/api/src/adapters/postgres/feature-011-allergies.ts\n?? services/api/src/adapters/postgres/feature-011-content.ts\n?? services/api/src/adapters/postgres/feature-011-receipts.ts\n?? services/api/src/feature-011-exposure.test.ts\n?? services/api/src/feature-011-exposure.ts\n?? services/api/src/modules/feature-011/\n?? services/api/src/routes/feature-011-allergies.contract.test.ts\n?? services/api/src/routes/feature-011-allergies.ts\n?? services/api/src/routes/feature-011-content.test.ts\n?? services/api/src/routes/feature-011-content.ts\n?? specs/011-allergies-clinical-content-governance/\n?? supabase/migrations/20261006175926_f011_allergy_revisions.sql\n?? supabase/migrations/20261006175932_f011_content_artifacts.sql\n?? supabase/migrations/20261006175937_f011_governance_evidence.sql\n?? supabase/migrations/20261006175942_f011_atomic_receipts.sql\n?? supabase/migrations/20261006185236_f011_allergy_functions.sql\n?? supabase/migrations/20261006185237_f011_release_functions.sql\n?? supabase/migrations/20261006185239_f011_signing_functions.sql\n?? supabase/migrations/20261006185240_f011_publication_functions.sql\n?? supabase/migrations/20261006185241_f011_rls_grants.sql\n?? supabase/migrations/20261006185242_f011_receipt_functions.sql\n?? supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql\n?? test-results/\n?? tests/e2e/feature-011-handoff.test.ts\n?? tests/e2e/feature-011-ui.spec.ts\n?? tests/e2e/feature-011-verification.spec.ts\n?? tools/feature-011-consumer-fixtures.mjs\n?? tools/feature-011-content-fixtures.mjs\n?? tools/feature-011-evidence-fixtures.mjs\n?? tools/feature-011-harness.test.mjs\n?? tools/feature-011-k08-preflight.mjs\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/feature-011-offline-proof.mjs\n?? tools/feature-011-physical-green.mjs\n?? tools/feature-011-physical-races.mjs\n?? tools/feature-011-physical-red.test.mjs\n?? tools/feature-011-predecessor-races.mjs\n?? tools/feature-011-protection-fixtures.mjs\n?? tools/feature-011-protocol-parity.test.mjs\n?? tools/feature-011-publication-fixtures.mjs\n?? tools/feature-011-source-negatives.mjs\n?? tools/feature-011-support-lifecycle.mjs\n?? tools/feature-011-ui-playwright.config.ts\n?? tools/feature-011-verification-playwright.config.ts\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/provision-feature-011-evidence.mjs\n?? tools/run-feature-011-admin-ui-test.mjs\n?? tools/run-feature-011-allergy-api-test.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-consumer-test.mjs\n?? tools/run-feature-011-content-api-test.mjs\n?? tools/run-feature-011-core-equivalence-test.mjs\n?? tools/run-feature-011-evidence-test.mjs\n?? tools/run-feature-011-handoff-test.mjs\n?? tools/run-feature-011-physical-red.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/run-feature-011-protection-test.mjs\n?? tools/run-feature-011-publication-boundary-test.mjs\n?? tools/run-feature-011-publish-api-test.mjs\n?? tools/run-feature-011-review-test.mjs\n?? tools/run-feature-011-sign-api-test.mjs\n?? tools/run-feature-011-storage-test.mjs\n?? tools/run-feature-011-verify-api-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs\n"
+  },
+  "blockers": [],
+  "capturedAt": "2026-10-09T09:13:53.953Z"
+}

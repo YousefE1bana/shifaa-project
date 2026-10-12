@@ -1,0 +1,27 @@
+[
+  {
+    "number": 489,
+    "state": "OPEN",
+    "title": "[011-allergies-clinical-content-governance] T092: Record owner-stage disposition requests and retained gate limits then stop for review"
+  },
+  {
+    "number": 488,
+    "state": "OPEN",
+    "title": "[011-allergies-clinical-content-governance] T091: Run fresh pnpm verify and required dependency/security/quality checks"
+  },
+  {
+    "number": 487,
+    "state": "OPEN",
+    "title": "[011-allergies-clinical-content-governance] T090: Verify final operation/NFR/AC traceability and deterministic current evidence manifests"
+  },
+  {
+    "number": 486,
+    "state": "OPEN",
+    "title": "[011-allergies-clinical-content-governance] T089: Refresh deferred installation checklist and evidence-backed roadmap progress/traceability"
+  },
+  {
+    "number": 485,
+    "state": "OPEN",
+    "title": "[011-allergies-clinical-content-governance] T088: Capture live four-route AR/EN state/accessibility engineering acceptance"
+  }
+]

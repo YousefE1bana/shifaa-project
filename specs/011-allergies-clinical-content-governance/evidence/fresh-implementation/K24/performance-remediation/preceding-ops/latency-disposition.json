@@ -1,0 +1,78 @@
+{
+  "result": "LOCAL_THRESHOLD_MISSES_RECORDED_FORMAL_ACCEPTANCE_BLOCKED",
+  "capturedAt": "2026-10-09T20:19:51.639Z",
+  "misses": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "operation": "verifyAllergy",
+      "p95Ms": 1188.1605000000054,
+      "targetMs": 800,
+      "priorEngineeringP95Ms": 502.6038000000008
+    },
+    {
+      "runtime": "shifaa-local-postgres",
+      "operation": "listAllergies",
+      "p95Ms": 562.9709999999977,
+      "targetMs": 400,
+      "priorEngineeringP95Ms": 262.3263999999981
+    },
+    {
+      "runtime": "shifaa-local-postgres",
+      "operation": "signClinicalContentRelease",
+      "p95Ms": 1258.6913000000059,
+      "targetMs": 800,
+      "priorEngineeringP95Ms": 607.1925999999949
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "operation": "verifyAllergy",
+      "p95Ms": 954.7390000000014,
+      "targetMs": 800,
+      "priorEngineeringP95Ms": 496.8256999999867
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "operation": "listAllergies",
+      "p95Ms": 480.711100000015,
+      "targetMs": 400,
+      "priorEngineeringP95Ms": 244.77350000001024
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "operation": "signClinicalContentRelease",
+      "p95Ms": 1161.0436999999802,
+      "targetMs": 800,
+      "priorEngineeringP95Ms": 626.8603999999759
+    }
+  ],
+  "actualExitCode": 1,
+  "source": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops/performance-proof.json",
+    "sha256": "35550c2aca893808deb9a1755031135618335292aa266a74d0886c63a2f79f7d"
+  },
+  "functionalAssertions": "All expected responses and zero-external-under-lock assertions completed; 160 measured samples plus 24 warmups per runtime; no setup failure counted as outcome",
+  "measurementBoundary": {
+    "synthetic": true,
+    "topology": "Windows host -> Fastify inject -> native Supabase Auth HTTP loopback -> non-owner postgres pool -> Docker PostgreSQL",
+    "node": "v24.18.0",
+    "os": "Windows_NT",
+    "release": "10.0.26300",
+    "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
+    "logicalCpus": 16,
+    "memoryBytes": 16850108416,
+    "concurrency": 1,
+    "samplesPerOperation": 20,
+    "signingSamples": 40,
+    "warmups": 3,
+    "network": "loopback; no WAN/region/device emulation",
+    "transport": "in-process Fastify injection; not browser or WAN load",
+    "vendors": "none; local real AES and synthetic immutable Evidence Port",
+    "vendorTimeExcludedMs": 0,
+    "testControlOverhead": "private provenance/context source uses owner docker psql; included in elapsed time",
+    "workload": "fresh mutations; independently signed successive past-effective releases; separate synthetic patient reports/confirmations; narrow reads"
+  },
+  "diagnosis": "Timing alone does not identify a product defect. Owner docker-psql test-control work is included in elapsed time; growing read cardinality is explicit in raw samples. Host/environment causality has not been proven. No threshold or measurement boundary changed.",
+  "disposition": "Preserve actual failures; continue independent restore/observability and required native/full regressions. No timing pass, formal reference acceptance, SLO/DR approval or gate waiver.",
+  "ownerReferenceResponse": "No approved profile exists; exact local engineering workload/measurements/limitations required; reference fields and acceptance decisions remain pending",
+  "newProductChange": false
+}

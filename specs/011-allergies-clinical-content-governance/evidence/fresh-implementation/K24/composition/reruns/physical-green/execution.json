@@ -1,0 +1,42 @@
+{
+  "id": "physical-green",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\464_1791613898202\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-9b2f65fa-655d-4a44-8126-087e3bff6495.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/physical-green.log",
+    "sha256": "6bcdcc1c293791596a07ea1629b0994a69982bdae24eeda4ae5518343d29a587"
+  },
+  "original": "tools/feature-011-physical-green.mjs",
+  "originalSha256": "fbb13d54c5fd243f2ddee9481fa455bb5a1037f2d0dad36b00d39b0413bfb5df",
+  "substitutions": [
+    [
+      "const path = `${evidenceRoot}/${name}`;",
+      "const path = \"specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green\" + '/' + name;"
+    ],
+    [
+      "mkdirSync(resolve(root, evidenceRoot), { recursive: true });",
+      "mkdirSync(resolve(root, \"specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green\"), { recursive: true });"
+    ]
+  ],
+  "lifecycleSubstitutions": [
+    [
+      "for (let i = 0; i < 92; i++)",
+      "const firstUnchecked = map.tasks.findIndex(t => t.status === 'UNCHECKED');\n  const acceptedBoundary = firstUnchecked < 0 ? 92 : firstUnchecked;\n  assert.ok(acceptedBoundary >= 79 && acceptedBoundary >= boundary, 'K21/current accepted prefix required');\n  for (let i = 0; i < 92; i++)"
+    ],
+    [
+      "i < boundary ? 'CHECKED' : 'UNCHECKED'",
+      "i < acceptedBoundary ? 'CHECKED' : 'UNCHECKED'"
+    ]
+  ],
+  "lifecycleSource": {
+    "path": "tools/feature-011-physical-green.mjs",
+    "sha256": "fbb13d54c5fd243f2ddee9481fa455bb5a1037f2d0dad36b00d39b0413bfb5df"
+  },
+  "lifecyclePreflightAdaptedToCurrentAcceptedPrefix": true,
+  "physicalAssertionsChanged": false
+}

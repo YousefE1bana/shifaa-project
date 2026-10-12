@@ -1,0 +1,25 @@
+{
+  "result": "VALID_RED",
+  "task": "T074",
+  "checkpoint": "K20",
+  "failed": 9,
+  "passed": 20,
+  "total": 29,
+  "setupFailures": 0,
+  "cause": "Preserved pre-K20 implementation explicitly denied status composition with 403; nine intended positive status/cursor/HTTP scenarios failed. Denial/privacy negatives remained green.",
+  "baseline": {
+    "path": "services/api/src/modules/feature-011/list-clinical-content.ts",
+    "sha256": "597a33abb3d54be4e2ba3d0cc6ffe547a409b0a3bc861dcc5b337b202f4168ee"
+  },
+  "method": "Exact pre-K20 bytes were hash-verified and replayed after fixture corrections, then GREEN bytes restored and verified in finally. This is a controlled baseline RED recapture; not a claim that the corrected run preceded implementation.",
+  "excludedCandidate": "The original attempt used non-UUID Fastify req-1 request IDs and is not authoritative RED. Corrected fixture generates UUIDs.",
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/status-red.log",
+    "sha256": "149ab90dbd5e13f22dcbab7303f19f808cc413696c4ee7776376d05196b9b064"
+  },
+  "test": {
+    "path": "services/api/src/modules/feature-011/clinical-status.test.ts",
+    "sha256": "107c7fef6fa432ed97bc11a4bd3c47392454d7c83cff9ecc37176900f3e0e87c"
+  },
+  "capturedAt": "2026-10-09T10:03:33.940Z"
+}

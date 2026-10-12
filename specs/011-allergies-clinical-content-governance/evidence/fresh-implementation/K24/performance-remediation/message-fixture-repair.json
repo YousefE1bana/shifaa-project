@@ -1,0 +1,44 @@
+{
+  "result": "PASS_TEST_FIXTURE_REPAIR",
+  "capturedAt": "2026-10-09T21:53:31.293Z",
+  "rootCause": "Fixed future participant start 2026-10-01 was in the past; existing production wall clock behaved correctly",
+  "fix": "Only the negative matrix uses the controller existing now hook with 2026-09-29 fixture instant; all denials retained",
+  "file": "apps/clinic/test/feature-010-messages.test.tsx",
+  "before": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/before-message-test.txt",
+    "sha256": "33e5ea049e11c77018c832fdaf01ab27755ed9320b2bceef0cd5edb9ea904f10"
+  },
+  "after": {
+    "path": "apps/clinic/test/feature-010-messages.test.tsx",
+    "sha256": "b9f99b1e8b48a05c155d054c6363fe51466f43193a2a41c0f1ee1d8145be8df6"
+  },
+  "diagnosis": {
+    "path": "artifacts/feature-011/k24/message-fixture-diagnosis.log",
+    "sha256": "cf25f0630232306899397b3dd2a81118369cb911fc27acc8a2528690b64a363f"
+  },
+  "messageRegression": {
+    "path": "artifacts/feature-011/k24/message-fixture-green.log",
+    "sha256": "cc5e7beeb14065370081d45b1e94535d3eb280610a9527197a279f4227c8d66b"
+  },
+  "uiRegression": {
+    "path": "artifacts/feature-011/k24/message-fixture-ui-regression.log",
+    "sha256": "63a7ee08073817a4569fe8504afbff80b82a8eee91d560504352dfc2f166aa5c"
+  },
+  "messageTests": 14,
+  "uiTests": 57,
+  "negativeVariants": 8,
+  "productArchitectureContractsSecurityUnchanged": true,
+  "failedFullVerification": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-expired-fixture.json",
+    "sha256": "427164a5939e74eeb14f9a53ea5967fc53d6b16376a89305f2a000f3298b5cef"
+  },
+  "failedFullLog": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-expired-fixture.log",
+    "sha256": "a7c9d48d0f5d4c40a9e7646673a3b521c706cff9b58eb6738f9c9e2a8510e716"
+  },
+  "precedingOutputs": {
+    "path": "artifacts/feature-011/k24/previous-full-runs/messages-fixture/archive-index.json",
+    "sha256": "28e9807cf2144783030175b7426bf437411d4f6a92ef24a21632e69afe734483"
+  },
+  "formalGateAcceptance": false
+}

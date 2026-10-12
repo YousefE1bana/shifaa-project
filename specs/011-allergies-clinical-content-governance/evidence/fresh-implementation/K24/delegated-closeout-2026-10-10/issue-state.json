@@ -1,0 +1,31 @@
+{
+  "capturedAt": "2026-10-10T12:54:06.386Z",
+  "readOnly": true,
+  "issues": [
+    {
+      "number": 485,
+      "title": "[011-allergies-clinical-content-governance] T088: Capture live four-route AR/EN state/accessibility engineering acceptance",
+      "state": "OPEN"
+    },
+    {
+      "number": 486,
+      "title": "[011-allergies-clinical-content-governance] T089: Refresh deferred installation checklist and evidence-backed roadmap progress/traceability",
+      "state": "OPEN"
+    },
+    {
+      "number": 487,
+      "title": "[011-allergies-clinical-content-governance] T090: Verify final operation/NFR/AC traceability and deterministic current evidence manifests",
+      "state": "OPEN"
+    },
+    {
+      "number": 488,
+      "title": "[011-allergies-clinical-content-governance] T091: Run fresh pnpm verify and required dependency/security/quality checks",
+      "state": "OPEN"
+    },
+    {
+      "number": 489,
+      "title": "[011-allergies-clinical-content-governance] T092: Record owner-stage disposition requests and retained gate limits then stop for review",
+      "state": "OPEN"
+    }
+  ]
+}

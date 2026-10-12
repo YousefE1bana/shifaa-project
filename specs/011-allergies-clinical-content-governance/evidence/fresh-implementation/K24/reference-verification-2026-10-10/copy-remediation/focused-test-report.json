@@ -1,0 +1,47 @@
+{
+  "recordedAt": "2026-10-10T14:53:32.253Z",
+  "worker": "/root/f011_eligibility_copy_fix",
+  "source": "Attributable worker report; original focused console outputs exist in worker turn but were not saved as filesystem logs",
+  "red": {
+    "command": "pnpm test -- feature-011-clinical-content",
+    "cwd": "apps/admin",
+    "passed": 19,
+    "failed": 1,
+    "reason": "Ready row lacks independently expected eligibility-specific message; setup passed other19 tests",
+    "capturedBeforeFix": true,
+    "rawLog": null
+  },
+  "green": [
+    {
+      "command": "pnpm --filter @shifaa/admin test -- feature-011-clinical-content",
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "command": "pnpm --filter @shifaa/i18n exec node --import tsx --test src/feature-011.test.ts",
+      "passed": 2,
+      "failed": 0
+    }
+  ],
+  "typechecks": [
+    {
+      "command": "pnpm --filter @shifaa/admin typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm --filter @shifaa/i18n typecheck",
+      "exitCode": 0
+    }
+  ],
+  "observedDefectScreenshot": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T142313-632Z-efee061b-7f79-41d4-be03-df1eaaeade2e/capture-a/admin-content__governance-ready__en-EG__1440x900__normal.png",
+    "sha256": "4db6290d5f1f68a6840501a299ab381598cad687c7a44e7703f3ba62bfa570a2"
+  },
+  "rootReview": "Exact expected AR/EN copy asserted for draft and published-unavailable; actual source-error message retained. No evidence reason, medical rule, auth, route, grant, SQL or wire change. Full pnpm verify separately recorded.",
+  "preFixSourceDigests": "Not recorded by worker; do not claim observed before hashes",
+  "qualityGuards": [
+    "clean-code-guard",
+    "test-guard"
+  ],
+  "formalAcceptance": false
+}

@@ -1,0 +1,24 @@
+{
+  "id": "SHIFAA-F011-REFERENCE-CAPTURE-RUNNER-REMEDIATION@1.0.0",
+  "date": "2026-10-10",
+  "scope": "Ignored local capture harness and new supplementary evidence only",
+  "applicationSqlContractGrantChanges": false,
+  "failureCountedAsPass": false,
+  "preservation": "Each failed execution log and available raw screenshots remain in unique attempt directories. Immutable executed source copies begin with the 13:41:00 attempt; first two attempts have source hashes but no retained full source copy.",
+  "repairs": [
+    {"defect": "Chrome launch-argument CDP inspection requires --enable-automation", "correction": "Explicit automation flag; record actual returned arguments"},
+    {"defect": "Font resource predicate assumed every Expo font had a .ttf/.woff network timing URL", "correction": "Inspect actual CSS FontFaceRule sources and hash their bytes, including inline data URI sources; retain loaded-face checks"},
+    {"defect": "Prepared browser callback referred to Node assert", "correction": "Browser-local throw checks; repaired before that callback executed"},
+    {"defect": "Next CSS relative font URLs were resolved against page URL", "correction": "Resolve each source against its owning stylesheet URL; all hashes and nonempty-byte assertions retained"},
+    {"defect": "Offline source hashing could request network after going offline", "correction": "Capture actual loaded font provenance before offline transition; verify loaded faces remain identical after transition; never toggle online to make an offline case pass"},
+    {"defect": "Admin denied state was treated as status-only and generic selector included tooling live regions", "correction": "Scope exact status/alert assertion to main.f011-content; separate confirmation-dialog assertion; viewport check retained"},
+    {"defect": "Next development indicator contaminated clinic/admin screenshots", "correction": "Before new preflight, use installed Next Hide indicator middleware on harness-owned dev servers only; require HTTP204 and fail visible tooling buttons. No application CSS masking, tolerances or product edits."}
+  ],
+  "intentionalAbort": {
+    "executionStamp": "2026-10-10T13-44-23-916Z-2f098ed0-b257-4aa7-917b-fc257f058009",
+    "reason": "Read-only sampled visual review found tooling overlay; do not continue a contaminated reference",
+    "control": "Verified pnpm clinic server PID19948 parent20388 belonged to this immutable capture-source process and port18313, then stopped only its owned process tree. Capture failed and its finally cleanup stopped remaining owned servers/browser and restored known generated Next type files.",
+    "result": "ABORTED_REFERENCE_ATTEMPT_NOT_A_PRODUCT_FAILURE_OR_PASS"
+  },
+  "unchanged": ["141 pinned application/SQL/contract inputs", "Historical evidence and approvals", "Zero pixel/channel tolerance", "No masks", "T088-T092 unchecked", "Issues485-489 open", "All retained OPEN gates", "No native AT acceptance claim"]
+}

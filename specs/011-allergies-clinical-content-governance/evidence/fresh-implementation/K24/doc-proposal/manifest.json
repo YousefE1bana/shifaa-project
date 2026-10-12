@@ -1,0 +1,30 @@
+{
+  "status": "PROPOSED_NOT_APPROVED",
+  "task": "T089",
+  "files": [
+    {
+      "path": "docs/TEAM-INSTALLATION-CHECKLIST.md",
+      "currentSha256": "634796d61540453117a480ed974c9f9173a12726630886c7c56c2193808d1a3a",
+      "proposedSha256": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c",
+      "candidate": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/TEAM-INSTALLATION-CHECKLIST.md",
+      "change": "Append dated maintenance section only"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+      "currentSha256": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+      "proposedSha256": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757",
+      "candidate": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/SHIFAA-Remaining-Specs-Roadmap.md",
+      "change": "Append dated maintenance section only"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-Traceability-Matrix.md",
+      "currentSha256": "fe251d155e7de76297753fefdb6d500db9d0e737e76581084a240e9521d07a54",
+      "proposedSha256": "1e86808e8825ebe3ba6563952b52de00a71be70b6bee9ae71e163702f511673e",
+      "candidate": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/SHIFAA-Traceability-Matrix.md",
+      "change": "Append dated maintenance section only"
+    }
+  ],
+  "originalManifestPreserved": true,
+  "requestedDisposition": "Explicit Product Owner/Architecture disposition for documentation-only maintenance and versioned successor binding before final parity",
+  "successor": "Bind original approval manifest unchanged, exact current/proposed hashes for these three documents only, attributable owner decision; fail closed for every other input. Renew affected generated metadata/current P1-P5 proof; no SQL/public contract/scope/gate change."
+}

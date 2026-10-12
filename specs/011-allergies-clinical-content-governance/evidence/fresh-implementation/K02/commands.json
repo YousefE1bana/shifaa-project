@@ -1,0 +1,337 @@
+[
+  {
+    "label": "generate-contract",
+    "command": [
+      "node",
+      "tools/generate-feature-011-contract.mjs"
+    ],
+    "startedAt": "2026-10-06T15:44:56.243Z",
+    "finishedAt": "2026-10-06T15:44:56.547Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/generate-contract.log",
+      "sha256": "bda87ac630811a21b953cbf4446eb267aa0977967502b3498b4117fb82db9e39"
+    }
+  },
+  {
+    "label": "generate-client",
+    "command": [
+      "node",
+      "tools/generate-feature-011-client.mjs"
+    ],
+    "startedAt": "2026-10-06T15:44:56.554Z",
+    "finishedAt": "2026-10-06T15:44:56.827Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/generate-client.log",
+      "sha256": "919eb15feeb19ce416002f423327b024ca93169998713c21802bc93ad72b2e2e"
+    }
+  },
+  {
+    "label": "check-contract",
+    "command": [
+      "node",
+      "tools/generate-feature-011-contract.mjs",
+      "--check"
+    ],
+    "startedAt": "2026-10-06T15:44:56.833Z",
+    "finishedAt": "2026-10-06T15:44:57.146Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/check-contract.log",
+      "sha256": "5f4689cc0ec2811a39030f256834d8c08e27624dfe22d780a1fba76b541821a8"
+    }
+  },
+  {
+    "label": "check-client",
+    "command": [
+      "node",
+      "tools/generate-feature-011-client.mjs",
+      "--check"
+    ],
+    "startedAt": "2026-10-06T15:44:57.151Z",
+    "finishedAt": "2026-10-06T15:44:57.423Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/check-client.log",
+      "sha256": "d69a2770b3f40f50802ff1d658aad2b53e5d983344c78a0d0b924b4ee626c145"
+    }
+  },
+  {
+    "label": "repeat-contract",
+    "command": [
+      "node",
+      "tools/generate-feature-011-contract.mjs"
+    ],
+    "startedAt": "2026-10-06T15:44:57.429Z",
+    "finishedAt": "2026-10-06T15:44:57.770Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/repeat-contract.log",
+      "sha256": "bda87ac630811a21b953cbf4446eb267aa0977967502b3498b4117fb82db9e39"
+    }
+  },
+  {
+    "label": "repeat-client",
+    "command": [
+      "node",
+      "tools/generate-feature-011-client.mjs"
+    ],
+    "startedAt": "2026-10-06T15:44:57.772Z",
+    "finishedAt": "2026-10-06T15:44:58.025Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/repeat-client.log",
+      "sha256": "919eb15feeb19ce416002f423327b024ca93169998713c21802bc93ad72b2e2e"
+    }
+  },
+  {
+    "label": "repeat-check-contract",
+    "command": [
+      "node",
+      "tools/generate-feature-011-contract.mjs",
+      "--check"
+    ],
+    "startedAt": "2026-10-06T15:44:58.028Z",
+    "finishedAt": "2026-10-06T15:44:58.341Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/repeat-check-contract.log",
+      "sha256": "5f4689cc0ec2811a39030f256834d8c08e27624dfe22d780a1fba76b541821a8"
+    }
+  },
+  {
+    "label": "repeat-check-client",
+    "command": [
+      "node",
+      "tools/generate-feature-011-client.mjs",
+      "--check"
+    ],
+    "startedAt": "2026-10-06T15:44:58.343Z",
+    "finishedAt": "2026-10-06T15:44:58.616Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/repeat-check-client.log",
+      "sha256": "d69a2770b3f40f50802ff1d658aad2b53e5d983344c78a0d0b924b4ee626c145"
+    }
+  },
+  {
+    "label": "protocol-final",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tools/feature-011-protocol-parity.test.mjs"
+    ],
+    "startedAt": "2026-10-06T15:44:58.639Z",
+    "finishedAt": "2026-10-06T15:45:26.385Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/protocol-final.log",
+      "sha256": "ac44188e90210087feb3ad7b81c2ff2c23f85b77b16157508796bfea6bc64933"
+    }
+  },
+  {
+    "label": "legacy-contracts",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@shifaa/contracts",
+      "exec",
+      "vitest",
+      "run",
+      "src/feature-011.test.ts"
+    ],
+    "startedAt": "2026-10-06T15:45:26.392Z",
+    "finishedAt": "2026-10-06T15:45:37.436Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/legacy-contracts.log",
+      "sha256": "17fcd37f57a88b0e2215da5bca9675aa88e14c6dc0ed7558578373798bc8d722"
+    }
+  },
+  {
+    "label": "legacy-client",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@shifaa/api-client",
+      "exec",
+      "vitest",
+      "run",
+      "src/feature-011.test.ts"
+    ],
+    "startedAt": "2026-10-06T15:45:37.443Z",
+    "finishedAt": "2026-10-06T15:45:39.232Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/legacy-client.log",
+      "sha256": "ab94de53b071902b3a568b34f1d6ebc2d1d3fb37116c4de23c2a1d7fd67f7f6d"
+    }
+  },
+  {
+    "label": "contracts-typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@shifaa/contracts",
+      "typecheck"
+    ],
+    "startedAt": "2026-10-06T15:45:39.237Z",
+    "finishedAt": "2026-10-06T15:45:40.783Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/contracts-typecheck.log",
+      "sha256": "38ac890c60e7f38d59ddfb410325cdfb5fca83c9411765c5481754e01c021630"
+    }
+  },
+  {
+    "label": "client-typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@shifaa/api-client",
+      "typecheck"
+    ],
+    "startedAt": "2026-10-06T15:45:40.789Z",
+    "finishedAt": "2026-10-06T15:45:41.850Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/client-typecheck.log",
+      "sha256": "38ac890c60e7f38d59ddfb410325cdfb5fca83c9411765c5481754e01c021630"
+    }
+  },
+  {
+    "label": "format-check",
+    "command": [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "tools/feature-011-protocol-parity.test.mjs",
+      "tools/generate-feature-011-contract.mjs",
+      "tools/generate-feature-011-client.mjs",
+      "tools/verify-feature-011-contracts.mjs",
+      "packages/contracts/src/feature-011.test.ts",
+      "packages/contracts/src/feature-011.ts",
+      "packages/api-client/src/feature-011.ts"
+    ],
+    "startedAt": "2026-10-06T15:45:41.851Z",
+    "finishedAt": "2026-10-06T15:45:43.176Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/format-check.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  },
+  {
+    "label": "contracts-only",
+    "command": [
+      "node",
+      "tools/verify-feature-011-contracts.mjs",
+      "--contracts-only"
+    ],
+    "startedAt": "2026-10-06T15:45:43.181Z",
+    "finishedAt": "2026-10-06T15:45:43.640Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/contracts-only.log",
+      "sha256": "726a7105ae44b29ec810ae47f8cf8073c467e9589dd0a0f4ca89c0f8f2b43c3d"
+    }
+  },
+  {
+    "label": "default-fail-closed",
+    "command": [
+      "node",
+      "tools/verify-feature-011-contracts.mjs"
+    ],
+    "startedAt": "2026-10-06T15:45:43.647Z",
+    "finishedAt": "2026-10-06T15:45:44.105Z",
+    "exitCode": 1,
+    "expectedExitCode": 1,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/default-fail-closed.log",
+      "sha256": "eb0f40cb2b2607d885fdf3288499ccc7ee2544641725bf1e1270c52393bb03e5"
+    }
+  },
+  {
+    "label": "git-diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "startedAt": "2026-10-06T15:45:44.112Z",
+    "finishedAt": "2026-10-06T15:45:44.155Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/git-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "label": "node-version",
+    "command": [
+      "node",
+      "--version"
+    ],
+    "startedAt": "2026-10-06T15:45:44.155Z",
+    "finishedAt": "2026-10-06T15:45:44.182Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/node-version.log",
+      "sha256": "b447734bea5971cc4beed4007192e4cf2e07a9f04fdaff5d9df3bb307e61987e"
+    }
+  },
+  {
+    "label": "pnpm-version",
+    "command": [
+      "pnpm",
+      "--version"
+    ],
+    "startedAt": "2026-10-06T15:45:44.187Z",
+    "finishedAt": "2026-10-06T15:45:44.924Z",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "result": "PASS",
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/pnpm-version.log",
+      "sha256": "3dbc807e13de125e909bea5877613d5d67989a43fb8e982fd79ba0efa46ac952"
+    }
+  }
+]

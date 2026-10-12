@@ -1,0 +1,259 @@
+{
+  "result": "PASS",
+  "recordedAt": "2026-10-10T13:44:49.156Z",
+  "actualWarmups": 144,
+  "rows": [
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "createAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "verifyAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "listAllergies",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "createClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "signClinicalContentRelease",
+      "warmups": 6
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "publishClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "listClinicalContent",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "createAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "verifyAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "listAllergies",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "createClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "signClinicalContentRelease",
+      "warmups": 6
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "publishClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-01\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "listClinicalContent",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "createAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "verifyAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "listAllergies",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "createClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "signClinicalContentRelease",
+      "warmups": 6
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "publishClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "listClinicalContent",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "createAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "verifyAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "listAllergies",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "createClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "signClinicalContentRelease",
+      "warmups": 6
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "publishClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-02\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "listClinicalContent",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "createAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "verifyAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "listAllergies",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "createClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "signClinicalContentRelease",
+      "warmups": 6
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "publishClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-postgres",
+      "operation": "listClinicalContent",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "createAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "verifyAllergy",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "listAllergies",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "createClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "signClinicalContentRelease",
+      "warmups": 6
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "publishClinicalContentRelease",
+      "warmups": 3
+    },
+    {
+      "proof": "specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\reference-verification-2026-10-10\\performance\\run-03\\performance-proof.json",
+      "runtime": "shifaa-local-supabase",
+      "operation": "listClinicalContent",
+      "warmups": 3
+    }
+  ]
+}

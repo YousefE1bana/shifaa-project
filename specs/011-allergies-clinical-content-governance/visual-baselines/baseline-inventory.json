@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageId": "SHIFAA-F011-OPEN-UX-001-CANDIDATE@0.1.1-test-only",
+  "sourceVersion": "SHIFAA-F011-P0-SOURCE@0.1.1-test-only",
+  "status": "CANDIDATE_PENDING_REQUIRED_APPROVALS",
+  "recordedAt": "2026-10-01T12:00:00+03:00",
+  "locales": [
+    "ar-EG",
+    "en-EG"
+  ],
+  "routes": [
+    {
+      "baselineId": "F011-P0-PAT-RECORDS-001",
+      "app": "patient",
+      "route": "/records",
+      "viewports": [
+        "360x800",
+        "412x915",
+        "768x1024"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "error-recoverable",
+        "error-terminal",
+        "permission-denied",
+        "offline",
+        "stale",
+        "success",
+        "allergy-self-reported",
+        "allergy-confirmed",
+        "allergy-refuted",
+        "allergy-entered-in-error",
+        "unknown-fields",
+        "report-form",
+        "report-review",
+        "submitting",
+        "history",
+        "correction-link",
+        "guardian-read-only",
+        "delegate-read-only",
+        "conflict",
+        "receipt-reconciliation",
+        "authority-lost"
+      ]
+    },
+    {
+      "baselineId": "F011-P0-CLN-SUMMARY-001",
+      "app": "clinic",
+      "route": "/patients/:id/summary",
+      "viewports": [
+        "360x800",
+        "412x915",
+        "768x1024",
+        "1440x900"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "error-recoverable",
+        "error-terminal",
+        "permission-denied",
+        "offline",
+        "stale",
+        "success",
+        "allergy-self-reported",
+        "allergy-confirmed",
+        "allergy-refuted",
+        "allergy-entered-in-error",
+        "unknown-fields",
+        "create-form",
+        "create-review",
+        "verify-confirm-review",
+        "verify-refute-review",
+        "verify-revision-review",
+        "entered-in-error-review",
+        "correction-review",
+        "history",
+        "conflict",
+        "receipt-reconciliation",
+        "context-ended",
+        "authority-lost",
+        "aal2-required"
+      ]
+    },
+    {
+      "baselineId": "F011-P0-CLN-CONTENT-STATUS-001",
+      "app": "clinic",
+      "route": "/clinical-content/status",
+      "viewports": [
+        "360x800",
+        "412x915",
+        "768x1024",
+        "1440x900"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "error-recoverable",
+        "error-terminal",
+        "permission-denied",
+        "offline",
+        "stale",
+        "success",
+        "effective",
+        "future-effective",
+        "superseded",
+        "synthetic-gated",
+        "aal2-required",
+        "authority-lost",
+        "dependency-unavailable"
+      ]
+    },
+    {
+      "baselineId": "F011-P0-ADM-CONTENT-001",
+      "app": "admin",
+      "route": "/clinical-content",
+      "viewports": [
+        "360x800",
+        "412x915",
+        "768x1024",
+        "1440x900"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "error-recoverable",
+        "error-terminal",
+        "permission-denied",
+        "offline",
+        "stale",
+        "success",
+        "draft",
+        "create-review",
+        "initial-release",
+        "assigned-physician-review",
+        "assigned-pharmacist-review",
+        "signature-review",
+        "physician-signed",
+        "pharmacist-signed",
+        "signatures-complete",
+        "rejected",
+        "qualification-unresolved",
+        "authority-lost",
+        "self-approval-denied",
+        "duty-conflict",
+        "digest-conflict",
+        "version-conflict",
+        "receipt-reconciliation",
+        "publish-review",
+        "published-effective",
+        "future-effective",
+        "supersession-review",
+        "superseded",
+        "rollback-review",
+        "overlap-conflict",
+        "synthetic-gated",
+        "real-content-gated",
+        "aal2-required"
+      ]
+    }
+  ]
+}

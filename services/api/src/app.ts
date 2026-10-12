@@ -26,6 +26,19 @@ import {
 } from './adapters/index.js';
 import { loadConfig, type ApiConfig } from './config.js';
 import {
+  registerFeature011ContentRoutes,
+  type Feature011ContentRoutes,
+} from './routes/feature-011-content.js';
+import { installFeature011ExposureGuard } from './feature-011-exposure.js';
+import {
+  installFeature011Telemetry,
+  type Feature011Telemetry,
+} from './modules/feature-011/observability.js';
+import {
+  registerFeature011AllergyRoutes,
+  type Feature011AllergyRoutes,
+} from './routes/feature-011-allergies.js';
+import {
   IdentityOnboardingService,
   InMemoryIdentityRepository,
   defaultPortUtilities,
@@ -118,6 +131,12 @@ export async function buildApp(
     feature010ReferralService?: Feature010ReferralRouteService;
     feature010MessageService?: Feature010MessagesRouteService;
     recoveryProofGrants?: RecoveryProofGrantAuthority;
+    feature011Allergies?: Feature011AllergyRoutes['service'];
+    feature011Content?: Feature011ContentRoutes['service'];
+    feature011Signing?: Feature011ContentRoutes['signing'];
+    feature011Publication?: Feature011ContentRoutes['publication'];
+    feature011Governance?: Feature011ContentRoutes['reading'];
+    feature011Telemetry?: (record: Feature011Telemetry) => void;
   } = {},
 ): Promise<AppHarness> {
   const config = options.config ?? loadConfig({ NODE_ENV: 'test' });
@@ -179,6 +198,8 @@ export async function buildApp(
       return typeof supplied === 'string' && UUID.test(supplied) ? supplied : randomUUID();
     },
   });
+  installFeature011ExposureGuard(app, config);
+  installFeature011Telemetry(app, options.feature011Telemetry);
   const facilityService =
     repository instanceof PostgresIdentityRepository
       ? new PostgresFacilityOnboardingService(
@@ -319,6 +340,27 @@ export async function buildApp(
     ],
   });
   installIdentityErrorHandler(app);
+  if (options.feature011Content) {
+    await registerFeature011ContentRoutes(app, {
+      config,
+      service: options.feature011Content,
+      ...(options.feature011Signing ? { signing: options.feature011Signing } : {}),
+      ...(options.feature011Publication ? { publication: options.feature011Publication } : {}),
+      ...(options.feature011Governance ? { reading: options.feature011Governance } : {}),
+      ...(continuityRuntime
+        ? { resolveNativePatient: (token: string) => service.actorFromAccessToken(token) }
+        : {}),
+    });
+  }
+  if (options.feature011Allergies) {
+    await registerFeature011AllergyRoutes(app, {
+      config,
+      service: options.feature011Allergies,
+      ...(continuityRuntime
+        ? { resolveNativePatient: (token: string) => service.actorFromAccessToken(token) }
+        : {}),
+    });
+  }
   app.get('/v1/health', async () => ({ status: 'ok', feature: 'identity-onboarding' }));
   const approvedSyntheticMode =
     config.syntheticMode && config.authAdapter === 'local' && config.environment !== 'production';

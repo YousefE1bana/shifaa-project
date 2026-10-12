@@ -83,6 +83,7 @@ async function createController(
     aal?: 1 | 2;
     isOnline?: () => boolean;
     locale?: 'ar-EG' | 'en-EG';
+    now?: () => number;
   } = {},
 ) {
   if (!fs.existsSync(sourcePath))
@@ -100,6 +101,7 @@ async function createController(
     apiBaseUrl: 'https://synthetic.invalid',
     fetch: fetcher,
     isOnline: options.isOnline,
+    now: options.now,
   });
 }
 
@@ -229,17 +231,21 @@ test('identity, encounter, participant, and appointment mismatch fail closed bef
   ];
   for (const variant of cases) {
     const requests: string[] = [];
-    const controller = await createController(async (input) => {
-      const url = new URL(String(input));
-      requests.push(url.pathname);
-      if (url.pathname === '/v1/people/me') return response(profile(variant.profileId));
-      if (url.pathname === `/v1/encounters/${encounterId}`)
-        return response(encounter(variant.encounter));
-      if (url.pathname.endsWith('/messages')) return response(messagePage());
-      return response({ code: 'unexpected-request' }, 404);
-    });
+    const controller = await createController(
+      async (input) => {
+        const url = new URL(String(input));
+        requests.push(url.pathname);
+        if (url.pathname === '/v1/people/me') return response(profile(variant.profileId));
+        if (url.pathname === `/v1/encounters/${encounterId}`)
+          return response(encounter(variant.encounter));
+        if (url.pathname.endsWith('/messages')) return response(messagePage());
+        return response({ code: 'unexpected-request' }, 404);
+      },
+      // Keep the fixed negative intervals relative to an explicit fixture clock.
+      { now: () => Date.parse('2026-09-29T09:30:00+03:00') },
+    );
     setExplicitSelection(controller);
-    await assert.rejects(controller.confirmContext(), /context-request-failed/);
+    await assert.rejects(controller.confirmContext(), /context-request-failed/, variant.name);
     assert.notEqual(controller.state.kind, 'active', variant.name);
     assert.deepEqual(controller.state.messages, [], variant.name);
     assert.equal(

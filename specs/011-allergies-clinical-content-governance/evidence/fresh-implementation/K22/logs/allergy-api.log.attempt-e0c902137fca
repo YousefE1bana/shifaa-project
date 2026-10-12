@@ -1,0 +1,16 @@
+shifaa-local-postgres: clean K11 native/application proof
+Stopped services: [supabase_realtime_shifaa-local-supabase supabase_imgproxy_shifaa-local-supabase supabase_vector_shifaa-local-supabase]
+<anonymous_script>:1
+Scope: all 18 workspace projects
+^
+
+SyntaxError: Unexpected token 'S', "Scope: all"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at supabaseStatus (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\services\api\test\identity-continuity-mfa-harness.ts:34:15)
+    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-4039ca23-3489-4065-b80e-83823af41cdf.mjs:83:22
+    at withDatabase (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\run-feature-011-postgres-test.mjs:107:20)
+    at withAllergyApi (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-4039ca23-3489-4065-b80e-83823af41cdf.mjs:71:10)
+    at runK11 (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-4039ca23-3489-4065-b80e-83823af41cdf.mjs:695:24)
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-4039ca23-3489-4065-b80e-83823af41cdf.mjs:720:3
+
+Node.js v24.18.0

@@ -1,0 +1,24 @@
+{
+  "failures": [
+    "Fresh tasks.md approved hash mismatch",
+    "Fresh task-map approved hash mismatch",
+    "Fresh ledger task/status or checkbox state mismatch"
+  ],
+  "parity": {
+    "gate": "OPEN-TECH-002",
+    "status": "PENDING",
+    "affectedConsumersAllowed": false,
+    "assertionTask": "T029",
+    "checkpoint": "K07",
+    "runtimes": [
+      "shifaa-local-postgres",
+      "shifaa-local-supabase"
+    ],
+    "requiredEvidence": [
+      "generated-contract-client",
+      "physical-schema-rls-grants-functions",
+      "both-runtime-non-owner-races",
+      "owner-stage-disposition"
+    ]
+  }
+}

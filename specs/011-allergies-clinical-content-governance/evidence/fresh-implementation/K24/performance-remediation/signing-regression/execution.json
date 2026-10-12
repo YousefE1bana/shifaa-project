@@ -1,0 +1,11 @@
+{
+  "source": "tools/run-feature-011-sign-api-test.mjs",
+  "sourceHash": "0f225c78fa9930590191071be8264c81eadf1ed63f4efbe4eb5232afd091dc56",
+  "executedHash": "15a5160b4aed727efb24ecdef1173b8856f0903372096c37e6b1da0345fbb138",
+  "transformation": "Exact output destination replacement only",
+  "exitCode": 0,
+  "log": {
+    "path": "artifacts/feature-011/k24/performance-signing-regression.log",
+    "sha256": "6c89427723c3be2b052402f692449800edae121814948adfc0bc1ed101892dab"
+  }
+}

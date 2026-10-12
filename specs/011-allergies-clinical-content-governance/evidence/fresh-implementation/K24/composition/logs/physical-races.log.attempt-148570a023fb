@@ -1,0 +1,103 @@
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: allergy-head-cas
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: signature-independence
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: initial-published-root
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: release-allocation-version
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: published-successor-lineage
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: effective-time-after-wait
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: idempotency-replay
+K07 T028 shifaa-local-postgres/f011_k07_a93104f3575abbdc: receipt-fault-atomicity
+K07 T028 shifaa-local-postgres: current-authority-revoke-first-action-first / action-first
+K07 T028 shifaa-local-postgres/f011_k07_1531c325715ff464: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_1531c325715ff464: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres: actual authority writer / action-first
+K07 T028 shifaa-local-postgres/f011_k07_1531c325715ff464: actual authority writer / action-first
+K07 T028 shifaa-local-postgres: current-authority-revoke-first-action-first / writer-first
+K07 T028 shifaa-local-postgres/f011_k07_45022eeb8453f2cc: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_45022eeb8453f2cc: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres: actual authority writer / writer-first
+K07 T028 shifaa-local-postgres/f011_k07_45022eeb8453f2cc: actual authority writer / writer-first
+K07 T028 shifaa-local-postgres: actual-facility-writer / action-first
+K07 T028 shifaa-local-postgres/f011_k07_01081dbc7a85460f: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_01081dbc7a85460f: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres: actual facility writer / action-first
+K07 T028 shifaa-local-postgres/f011_k07_01081dbc7a85460f: actual facility writer / action-first
+K07 T028 shifaa-local-postgres: actual-facility-writer / writer-first
+K07 T028 shifaa-local-postgres/f011_k07_26830a675c4b2efd: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_26830a675c4b2efd: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres: actual facility writer / writer-first
+K07 T028 shifaa-local-postgres/f011_k07_26830a675c4b2efd: actual facility writer / writer-first
+K07 T028 shifaa-local-postgres: actual-continuity-writer / action-first
+K07 T028 shifaa-local-postgres/f011_k07_b2aa0d84d37eed71: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_b2aa0d84d37eed71: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres: actual continuity writer / action-first
+K07 T028 shifaa-local-postgres/f011_k07_b2aa0d84d37eed71: actual continuity writer / action-first
+K07 T028 shifaa-local-postgres: actual-continuity-writer / writer-first
+K07 T028 shifaa-local-postgres/f011_k07_0826f0b56dc14455: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_0826f0b56dc14455: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres: actual continuity writer / writer-first
+K07 T028 shifaa-local-postgres/f011_k07_0826f0b56dc14455: actual continuity writer / writer-first
+K07 T028 shifaa-local-postgres: actual-encounter-writer / action-first
+K07 T028 shifaa-local-postgres/f011_k07_0294d8a71d71fc22: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_0294d8a71d71fc22: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres: actual encounter writer / action-first
+K07 T028 shifaa-local-postgres/f011_k07_0294d8a71d71fc22: actual encounter writer / action-first
+K07 T028 shifaa-local-postgres: actual-encounter-writer / writer-first
+K07 T028 shifaa-local-postgres/f011_k07_6b13f6eae8d5b54b: fresh baseline and physical health
+K07 T028 shifaa-local-postgres/f011_k07_6b13f6eae8d5b54b: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-postgres: actual encounter writer / writer-first
+K07 T028 shifaa-local-postgres/f011_k07_6b13f6eae8d5b54b: actual encounter writer / writer-first
+K07 T028 shifaa-local-postgres: runtime suite complete; continue to the other PostgreSQL runtime before PASS artifacts
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: allergy-head-cas
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: signature-independence
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: initial-published-root
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: release-allocation-version
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: published-successor-lineage
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: effective-time-after-wait
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: idempotency-replay
+K07 T028 shifaa-local-supabase/f011_k07_66ea5f032f584afb: receipt-fault-atomicity
+K07 T028 shifaa-local-supabase: current-authority-revoke-first-action-first / action-first
+K07 T028 shifaa-local-supabase/f011_k07_669cbc9c2717f559: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_669cbc9c2717f559: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase: actual authority writer / action-first
+K07 T028 shifaa-local-supabase/f011_k07_669cbc9c2717f559: actual authority writer / action-first
+K07 T028 shifaa-local-supabase: current-authority-revoke-first-action-first / writer-first
+K07 T028 shifaa-local-supabase/f011_k07_f1e9b98defc2e39c: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_f1e9b98defc2e39c: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase: actual authority writer / writer-first
+K07 T028 shifaa-local-supabase/f011_k07_f1e9b98defc2e39c: actual authority writer / writer-first
+K07 T028 shifaa-local-supabase: actual-facility-writer / action-first
+K07 T028 shifaa-local-supabase/f011_k07_c9b9d3aa4fd13528: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_c9b9d3aa4fd13528: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase: actual facility writer / action-first
+K07 T028 shifaa-local-supabase/f011_k07_c9b9d3aa4fd13528: actual facility writer / action-first
+K07 T028 shifaa-local-supabase: actual-facility-writer / writer-first
+K07 T028 shifaa-local-supabase/f011_k07_2f466badc682a611: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_2f466badc682a611: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase: actual facility writer / writer-first
+K07 T028 shifaa-local-supabase/f011_k07_2f466badc682a611: actual facility writer / writer-first
+K07 T028 shifaa-local-supabase: actual-continuity-writer / action-first
+K07 T028 shifaa-local-supabase/f011_k07_bf42b0b94e338f55: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_bf42b0b94e338f55: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase: actual continuity writer / action-first
+K07 T028 shifaa-local-supabase/f011_k07_bf42b0b94e338f55: actual continuity writer / action-first
+K07 T028 shifaa-local-supabase: actual-continuity-writer / writer-first
+K07 T028 shifaa-local-supabase/f011_k07_32e425ea6eb4c36a: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_32e425ea6eb4c36a: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase: actual continuity writer / writer-first
+K07 T028 shifaa-local-supabase/f011_k07_32e425ea6eb4c36a: actual continuity writer / writer-first
+K07 T028 shifaa-local-supabase: actual-encounter-writer / action-first
+K07 T028 shifaa-local-supabase/f011_k07_90c58a57c04525ff: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_90c58a57c04525ff: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase: actual encounter writer / action-first
+K07 T028 shifaa-local-supabase/f011_k07_90c58a57c04525ff: actual encounter writer / action-first
+K07 T028 shifaa-local-supabase: actual-encounter-writer / writer-first
+K07 T028 shifaa-local-supabase/f011_k07_20b28aa87e8352dc: fresh baseline and physical health
+K07 T028 shifaa-local-supabase/f011_k07_20b28aa87e8352dc: apply accepted physical chain and K06 synthetic fixture
+K07 T028 shifaa-local-supabase: actual encounter writer / writer-first
+K07 T028 shifaa-local-supabase/f011_k07_20b28aa87e8352dc: actual encounter writer / writer-first
+K07 T028 shifaa-local-supabase: runtime suite complete; continue to the other PostgreSQL runtime before PASS artifacts
+Complete physical races both-runtime PASS

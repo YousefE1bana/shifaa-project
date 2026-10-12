@@ -1,0 +1,40 @@
+{
+  "bindingId": "SHIFAA-F011-DOCUMENTATION-SUCCESSOR@1.0.0",
+  "disposition": "APPROVED_DOCUMENTATION_MAINTENANCE_ONLY",
+  "date": "2026-10-09",
+  "authorizer": "Yousef Osama",
+  "roles": [
+    "Product Owner",
+    "Architecture (documentation maintenance only)"
+  ],
+  "originalApprovalManifestSha256": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548",
+  "decision": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/k24-documentation-maintenance-approved-2026-10-09.md",
+    "sha256": "1a02dc567e2f989f69058c58068fa334f5c1c8fa13636b7cca9af1bf5ccb329f"
+  },
+  "proposal": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/manifest.json",
+    "sha256": "436ffcd24166846d796eb71b64c0158d60b1d845da5a9a29f0090a391fab3e91"
+  },
+  "inputs": [
+    {
+      "path": "docs/TEAM-INSTALLATION-CHECKLIST.md",
+      "previousSha256": "634796d61540453117a480ed974c9f9173a12726630886c7c56c2193808d1a3a",
+      "sha256": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+      "previousSha256": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+      "sha256": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-Traceability-Matrix.md",
+      "previousSha256": "fe251d155e7de76297753fefdb6d500db9d0e737e76581084a240e9521d07a54",
+      "sha256": "1e86808e8825ebe3ba6563952b52de00a71be70b6bee9ae71e163702f511673e"
+    }
+  ],
+  "publicScopeChanged": false,
+  "architectureChanged": false,
+  "gatesClosed": false,
+  "historicalApprovalPreserved": true
+}

@@ -1,0 +1,155 @@
+{
+  "id": "SHIFAA-F011-VISUAL-REFERENCE-PROPOSAL@1.0.0",
+  "capturedAt": "2026-10-10T12:49:11.600Z",
+  "status": "PROPOSED_NOT_FORMALLY_APPROVED_NOT_EXECUTED",
+  "scope": "Bounded regression of functional/test-only Feature 011. No permanent pixel lock or post-026 final styling approval.",
+  "authority": "PO delegated technical proposal preparation; formal OPEN-UX-002 disposition remains separately attributable",
+  "observed": {
+    "chromeVersion": "154.0.8037.93",
+    "captureRecord": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/browser-execution.json",
+      "sha256": "42b6690e5ccec0d7a15980af7ad3152d6f8b710eaf3894ad5baac723dd28d3cb"
+    },
+    "candidate": {
+      "path": "specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json",
+      "sha256": "59ea1788edbae023533a9e08da97bc3884e0e098ec6e80721272822b6439c432",
+      "status": "CANDIDATE_PENDING_REQUIRED_APPROVALS",
+      "states": 99,
+      "references": 746
+    },
+    "fontPackages": [
+      {
+        "package": "@fontsource/ibm-plex-sans-arabic",
+        "version": "5.3.0",
+        "packageJsonSha256": "817166158d4c4be8b8f39f634b31510cea2c31d571173e781f1eefb26b0afd19",
+        "role": "Current installed app font dependency; not a capture-time asset identity claim"
+      },
+      {
+        "package": "@fontsource/inter",
+        "version": "5.3.0",
+        "packageJsonSha256": "05d03ec21754e37cf7da007c840e2f0a893c8161a53ee782d7c810e8a99c7cc5",
+        "role": "Current installed app font dependency; not a capture-time asset identity claim"
+      }
+    ],
+    "candidateFontBindings": [
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/IBMPlexSansArabic_400Regular.ttf",
+        "sha256": "93ac94c4b3174176d410381b86c19891086a091c3c8da940ca65d85aa6a4f8a4"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/IBMPlexSansArabic_600SemiBold.ttf",
+        "sha256": "a45026a12d679d08bc1c28ca454aeb6aede0548e34addcc8a1141a6ef74dcbe4"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/IBMPlexSansArabic_700Bold.ttf",
+        "sha256": "44f73c1db689f2aac357cae39ef439d0705bd700b7d02e8d3f0079cda5a95e5f"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/Inter_400Regular.ttf",
+        "sha256": "a414b48aa577ef2c62ebb135341ddeef33ee26a4f5dc9f787f93c1aab08ebb50"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/Inter_600SemiBold.ttf",
+        "sha256": "f30e9d2574c3bec5144347ff965f9841c8f06857f0b7383000f8c9489a161841"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/Inter_700Bold.ttf",
+        "sha256": "fbe825cbfc749317f57a1433d3905aa9d3f388732fd29b8e8a36f34845e3bc3e"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/ibm-plex-sans-arabic-LICENSE_FONT.txt",
+        "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/inter-LICENSE_FONT.txt",
+        "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57"
+      }
+    ]
+  },
+  "proposedFixedConfiguration": {
+    "os": "Windows 11 Pro 26300.9550",
+    "browser": "Chrome 154.0.8037.93 64-bit",
+    "locales": [
+      "ar-EG",
+      "en-EG"
+    ],
+    "viewports": [
+      {
+        "width": 360,
+        "height": 800
+      },
+      {
+        "width": 412,
+        "height": 915
+      },
+      {
+        "width": 768,
+        "height": 1024
+      },
+      {
+        "width": 1440,
+        "height": 900
+      }
+    ],
+    "deviceScaleFactor": 1,
+    "timezone": "Africa/Cairo",
+    "clock": "Fixture clock/IDs must be frozen before comparison; never mask actual effect/status/history",
+    "fontReady": "Require exact bundled font load, resolve font faces and hash rendered font assets at capture",
+    "motion": "reducedMotion reduce; safety surfaces no decorative animation",
+    "colorModes": [
+      "normal",
+      "forced-colors active as separate reference"
+    ],
+    "renderer": "Record actual browser executable SHA, rendering backend/GPU/flags, OS update, Playwright version and emitted build/asset hashes before baseline run"
+  },
+  "proposedComparison": {
+    "numericThreshold": {
+      "changedPixels": 0,
+      "perChannelTolerance": 0
+    },
+    "masks": [],
+    "comparison": "Compare two captures from the SAME deterministic fixture/build/environment; no comparison result claimed for saved historical captures",
+    "baseline": "New owner-approved ephemeral functional regression baseline. Existing 746 candidate references remain design review context; they are not promoted automatically.",
+    "mismatchRule": "Any pixel mismatch fails automated comparison and goes to named Design/QA review. Correct fixture/render noise or approved implementation defect; do not silently raise tolerance or mask actions/context/history/privacy.",
+    "reviewRule": "Review every failed diff and route/state association in AR/EN with original/candidate/diff and recorded disposition. Baseline changes require explicit bounded owner decision."
+  },
+  "unresolvedForFormalAcceptance": [
+    "Named Feature 011 formal Design Lead and QA Lead, plus Product Owner disposition",
+    "Actual capture-time renderer/backend/executable/config and rendered-font asset hashes for future approved baseline",
+    "Owner approval of this proposed threshold/mask/diff-review rule",
+    "Baseline execution and archived raw comparisons under approved configuration",
+    "Native device display/font/speech settings and attributable execution detail where formal device evidence is required"
+  ],
+  "formalGateClosure": false,
+  "finalStylingOrPixelLock": false,
+  "sourceBindings": [
+    {
+      "path": "tools/run-feature-011-final-ui-test.mjs",
+      "sha256": "80a334b80114e8685e1f5b43acef871d019ee197a8fd720a902eb1b9c0b3332f"
+    },
+    {
+      "path": "tools/run-feature-011-admin-ui-test.mjs",
+      "sha256": "d800ce270fe3ea55e3e78901c3e900bef8e44d16d806137473e4bc2bf63c87aa"
+    },
+    {
+      "path": "tools/run-feature-011-status-ui-test.mjs",
+      "sha256": "f2e9ba64461a5562979fa732645454b3ea44fbfbda79b686b3f09d2fbfbb63f6"
+    },
+    {
+      "path": "tools/feature-011-ui-playwright.config.ts",
+      "sha256": "2e9822383a684ec43039c5d3973142760fdc254d694ff73dc3c1f12f9398d447"
+    },
+    {
+      "path": "apps/clinic/src/app/globals.css",
+      "sha256": "4617cedac90f705a04fb9ce6639da0e78c7fa30698058d96c4228d797f7a9880"
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "sha256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "sha256": "3ed11d8f3d3185415898de3393393f898a4d8dd08e232a60a2e08e82ce5f3a42"
+    }
+  ]
+}

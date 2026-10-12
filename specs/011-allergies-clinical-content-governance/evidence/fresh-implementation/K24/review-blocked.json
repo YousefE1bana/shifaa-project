@@ -1,0 +1,190 @@
+{
+  "result": "F011_K23_K24_BLOCKED",
+  "reviewer": "Primary Codex",
+  "capturedAt": "2026-10-09T20:38:22.633Z",
+  "docMaintenance": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-maintenance.json",
+    "sha256": "70543804638a63ed1a91943815affd90a0092e5f2374f03c8358683dd99fed43"
+  },
+  "docSuccessor": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/documentation-successor-v1.json",
+    "sha256": "cc8b2024129325404bf745e55f6ee3183922e9244fe11f7687699e18e2ed9e62"
+  },
+  "originalApprovalManifestUnchanged": true,
+  "scope": {
+    "operations": 7,
+    "frTargets": 4,
+    "nfrs": 19,
+    "tasks": 92,
+    "checkpoints": 24,
+    "currentPins": 141
+  },
+  "remediation": {
+    "record": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/repair.json",
+      "sha256": "1efcab799b7e42db04c7617e4b77bace06cc66de7b8eb43a8a18ec51c592f442"
+    },
+    "authorization": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/authorization.json",
+      "sha256": "15deca786329aa6632d92b9317605e5c65edc1e57b8a83b15bb5ecb2bed35b8b"
+    },
+    "qualityReview": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/quality-review.json",
+      "sha256": "a8db2c6b137aea20f47b5dd547f84ccc55acfd08dd8f5554c58b6c647e14a4cf"
+    },
+    "change": "Five SHA primitive call sites across four F011 SQL migrations; exact bytes/hash/security boundaries preserved",
+    "nativeRegressionExitCode": 0
+  },
+  "proofs": {
+    "physical": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/physical-green.json",
+      "sha256": "828eabf6e2e18bb90f16cfd236d5d7bcd362dde5734d32966864d43bec619d2f"
+    },
+    "races": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/physical-races.json",
+      "sha256": "b22ecb06e819aa5f1311cf9ca2f2c8c61a852b471516e5f46405f4165c2ddeb4"
+    },
+    "boundedP5": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/stage-assertion.json",
+      "sha256": "85a98255fb39f3a0f641f6eae8a5f73d06cc8b4f779ea0fd04ea229c0ba01d55"
+    },
+    "ui": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/bilingual-acceptance.json",
+      "sha256": "71f55b69e156020043556d4da6d7c0404a9d026fea9577cef9d7400213a4e889"
+    },
+    "performance": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops/performance-proof.json",
+      "sha256": "35550c2aca893808deb9a1755031135618335292aa266a74d0886c63a2f79f7d"
+    },
+    "restore": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops/restore-proof.json",
+      "sha256": "ffef0c75cc0c22ea1d47812ae77fdc849dbee2cb52848ec862c41d8a27722daf"
+    },
+    "observabilityDiagnostic": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops/observability-proof.json",
+      "sha256": "888596770fa337965aa79d49daa96743cc5d6eb803ea4def1bae0c88887532ca"
+    },
+    "observabilityStrictRunner": "Blocked at latency prerequisite; preserved failure log, no full T087 reacceptance claimed",
+    "generatedTraceability": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/final-parity.json",
+      "sha256": "c22e21d3247e47d8d57dfb3cd585a163c6ae25013e6bcdb5a047d6fa13a4846f"
+    }
+  },
+  "blockers": {
+    "mandatoryVerify": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/full-verify.json",
+      "sha256": "1204616359727816ce977e8f0089015510de179713e2c9ebd9f440b645aeb77c"
+    },
+    "failure": "Unchanged F006 benchmark read p95 423.23ms >400ms",
+    "unchangedFocusedRetry": {
+      "report": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/predecessor-reruns/f006-focused-retry/performance.json",
+        "sha256": "47742bbbcd7679adba85cafac67b42d82b8c7bf929e75a438628ac831536ce1f"
+      },
+      "execution": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/predecessor-reruns/f006-focused-retry/execution.json",
+        "sha256": "2cd6bc76f97e010e2a471477da71cb4ee1ec67922039a24a16a1c763b77a9b6f"
+      },
+      "readP95Ms": 365.89,
+      "mutationP95Ms": 833.41,
+      "mutationTargetMs": 800
+    },
+    "f011LocalLatency": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops/latency-disposition.json",
+      "sha256": "69485452d29ed71445f20c6b3d00e2862ab2a0a086018e30ca9b397edc7f393f"
+    },
+    "rootCause": "Unresolved timing variability; predecessor benchmark baseline inspected at PostgreSQL17.11 with no F011 allergy/content tables; neither workload/threshold nor product behavior altered to force a pass",
+    "formalProfile": "OPEN-TECH-003: no approved reference profile/owner disposition; no invented acceptance",
+    "formalUx": "OPEN-UX-002:18 candidate variants without distinct live scenario; native screenreader and native zoom unexecuted"
+  },
+  "taskDisposition": {
+    "accepted": "T001-T087",
+    "pending": "T088-T092",
+    "T091": "FAIL_BLOCKED",
+    "T092": "NOT_EXECUTED_DEPENDENCY_T091_NOT_PASSED",
+    "K24Accepted": false
+  },
+  "gates": {
+    "OPEN-UX-001": {
+      "status": "SATISFIED_FOR_F011_AFFECTED_UI_PLAN_ONLY",
+      "limit": "0.1.1-test-only candidate; no global closure/final design/pixel lock"
+    },
+    "OPEN-UX-002": {
+      "status": "OPEN",
+      "stage": "VERIFYING",
+      "evidence": [
+        "T088",
+        "T092"
+      ],
+      "limit": "Separate owner design/reference/accessibility disposition; engineering evidence alone insufficient"
+    },
+    "OPEN-TECH-002": {
+      "status": "OPEN",
+      "stage": "affected IMPLEMENTING",
+      "preparation": [
+        "T005",
+        "T007",
+        "T027",
+        "T028"
+      ],
+      "assertion": [
+        "T029"
+      ],
+      "limit": "Evidence before owner assertion before consumers; no P6 backward dependency/global closure"
+    },
+    "OPEN-TECH-003": {
+      "status": "OPEN",
+      "stage": "affected VERIFYING",
+      "evidence": [
+        "T085",
+        "T092"
+      ],
+      "limit": "Approved reference environment required; no local-only acceptance"
+    },
+    "OPEN-CLIN-001": {
+      "status": "OPEN",
+      "stage": "real clinical/production admission",
+      "limit": "Neutral synthetic clinical fixtures only; actual local crypto/evidence logic is not real medical/source approval"
+    },
+    "OPEN-LEGAL-001": {
+      "status": "OPEN",
+      "stage": "production",
+      "limit": "Current legal owner/effects unchanged"
+    },
+    "OPEN-LEGAL-002": {
+      "status": "OPEN",
+      "stage": "production retention/deletion",
+      "limit": "No guessed retention duration/deletion automation"
+    },
+    "OPEN-LEGAL-007": {
+      "status": "OPEN",
+      "stage": "production",
+      "limit": "Current legal owner/effects unchanged"
+    },
+    "otherApplicableGates": {
+      "status": "UNCHANGED",
+      "limit": "No task waives release/verification gates"
+    }
+  },
+  "issues": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/issue-states-current.json",
+    "sha256": "a7f367377b8e7d51aaa03f44eace460005a8d5b344907b0bcf813dfb5e638abe"
+  },
+  "historicalEvidencePreserved": true,
+  "noProductionClinicalKmsEvidenceSourceFinalStyleOrMvpApproval": true,
+  "delegationUsed": false,
+  "git": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "status": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/git-status.txt",
+      "sha256": "0f69b4224ae457306fc9976dc76d4b45346e8af88d34882c5cd49c4b254b981e"
+    },
+    "commit": false,
+    "push": false,
+    "pr": false,
+    "mainModified": false
+  },
+  "stop": "K24 blocked review package only; no integration or Feature012"
+}

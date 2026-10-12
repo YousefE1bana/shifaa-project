@@ -1,0 +1,21 @@
+{
+  "id": "verify-api",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16584_1791733299365\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-3b3a4dd2-b58e-45d0-913d-e8c0a71548db.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/logs/verify-api.log",
+    "sha256": "6cab81d1795d9b62e6e598bc16b6e52fa0b42237a1620fb2d112c9c2f7033b74"
+  },
+  "original": "tools/run-feature-011-verify-api-test.mjs",
+  "originalSha256": "9c64133e7945176340b4ff877efa01c3f16aa54bee6fe699c78b5e3bc02993a4",
+  "substitution": "const e = 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13';",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/reruns/verify-api",
+  "temporarySha256": "08088eb5fcc04dc3f39552cc1746c9dacb7fda5832b89d42705ea0a1bf706ba6",
+  "testAssertionsChanged": false,
+  "preflightSubstitutions": []
+}

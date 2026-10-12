@@ -82,7 +82,12 @@ export class InMemoryIdentityRepository implements IdentityRepository {
   }
 
   public profileByAuthSubject(authSubjectId: string): ProfileRecord | undefined {
-    return [...this.profiles.values()].find((profile) => profile.authSubjectId === authSubjectId);
+    const profile = [...this.profiles.values()].find(
+      (value) => value.authSubjectId === authSubjectId,
+    );
+    return profile
+      ? { ...profile, managedPatientId: this.aggregates.get(authSubjectId)?.patientId ?? null }
+      : undefined;
   }
 
   public updateProfile(

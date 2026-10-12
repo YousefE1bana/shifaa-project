@@ -1,0 +1,31 @@
+{
+  "result": "PASS",
+  "task": "T078",
+  "inputs": {
+    "apps/clinic/src/app/clinical-content/status/page.tsx": "e9057bed5e082ffdaedd65a0ea7b02065ddb4de36206321e951e945b0c0d6cf9",
+    "apps/clinic/src/app/clinical-content/status/StatusWorkspace.tsx": "83ed26ca5595c5437211b836a9ed3e0507c4d1f34deafdd935cad4663a5b64b1",
+    "apps/clinic/src/lib/feature-011-status.ts": "31557ba052b385419a938870200a68dea2a702916d630069fe8e77f8b7893500",
+    "apps/clinic/test/feature-011-status.test.tsx": "8182d773882565c0bc8cd2478cb2ff79df2153415405b77138c5a051a973f1a2",
+    "packages/i18n/src/feature-011-status.ts": "eca3073e1aaf538639e5a869a2e69eeacff602e120e4a500e2d9671b8db4fedb",
+    "packages/i18n/src/index.ts": "a7f078d0437c9297d63255924f1a777a62a6c2edb87cc0f4ee87136bc3dda072",
+    "packages/api-client/src/feature-011.ts": "5bc88ac79575a3628d6feee44d1547fa3a8380ae50b41ddec0e9865efa1ab16f",
+    "packages/contracts/src/feature-011.ts": "e5320aede7768a5b66797a7802cfc2e831467e520f5fd2f87cd26f078062862c",
+    "services/api/src/modules/feature-011/clinical-status.ts": "8268979a920db4c5a1105a2cba24acf88c0cd70bf6e07b90aa2ec48960a29659",
+    "services/api/src/modules/feature-011/list-clinical-content.ts": "ff139388604fd57ed173ac23f366adc282d478a5c7df204ba3a91799365448c9",
+    "tools/run-feature-011-status-ui-test.mjs": "f2e9ba64461a5562979fa732645454b3ea44fbfbda79b686b3f09d2fbfbb63f6",
+    "tools/feature-011-publication-fixtures.mjs": "e0207fc5581a04cc3b345c5c4f1b9994028f3e3eb0d89e119a375c21ff2ff1b1"
+  },
+  "implementation": [
+    "Existing planned clinic /clinical-content/status composition; generated listClinicalContent status projection only",
+    "Native login/session/OTP client; AAL2, purpose and server-selected facility/grants are independently checked by current API/SQL",
+    "Closed metadata page display boundary rejects entire surplus/private/unsigned/bad-lineage response",
+    "Clears rows for offline/stale/denied/error, context change and hidden document; abort/epoch discards late reads; explicit recovery without queue or storage",
+    "Arabic RTL / English LTR copy, bundled fonts, localized Cairo dates, isolated identifiers, read-only lineage/status, focus/live recovery",
+    "Existing patient-app privacy/consent menu guidance; no invented clinic privacy route"
+  ],
+  "syntheticOnly": true,
+  "finalStyling": false,
+  "retainedGates": "UNCHANGED_OPEN",
+  "acceptance": "PENDING_PRODUCT_OWNER",
+  "capturedAt": "2026-10-09T11:12:35.724Z"
+}

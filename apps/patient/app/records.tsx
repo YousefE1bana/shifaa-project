@@ -32,6 +32,10 @@ import { usePatientLocaleController } from '../src/locale-context';
 import { feature010CommonCopy } from '@shifaa/i18n';
 import { patientPlatform } from '../src/patient-auth-store';
 import { resolvePatientApiBaseUrl } from '../src/patient-api-base-url';
+import { AllergyRecordsPanel } from '../src/AllergyRecordsPanel';
+import { revalidateManagedCareContext } from '../src/managed-care-context';
+import { allergyCopy } from '@shifaa/i18n';
+import { Feature011ApiError } from '@shifaa/api-client/feature-011';
 
 type ScreenState =
   | 'loading'
@@ -119,6 +123,9 @@ export default function PatientRecordsRoute() {
   const [actorRole, setActorRole] = useState<PatientReferralActorRole>(initialRole);
   const [state, setState] = useState<ScreenState>('loading');
   const [patientId, setPatientId] = useState('');
+  const [managedPatientId, setManagedPatientId] = useState('');
+  const [allergyPurpose, setAllergyPurpose] = useState('care');
+  const [allergyContextLoading, setAllergyContextLoading] = useState(true);
   const [referrals, setReferrals] = useState<PendingSubjectReferralProjection[]>([]);
   const [selectedReferral, setSelectedReferral] = useState<PendingSubjectReferralProjection | null>(
     null,
@@ -160,6 +167,67 @@ export default function PatientRecordsRoute() {
     setSelectedTarget(null);
     setBooked(null);
   }, []);
+  const reauthorizeAllergies = useCallback(async () => {
+    if (actorRole === 'PAT') {
+      const profile = await patientOnboardingApi.getProfile();
+      if (!managedPatientId || profile.managedPatientId !== managedPatientId)
+        throw new Feature011ApiError(403, null);
+    } else {
+      const context = await revalidateManagedCareContext(locale, apiBaseUrl);
+      if (
+        context.role !== actorRole ||
+        context.managedPatientId !== managedPatientId ||
+        context.purpose !== allergyPurpose
+      )
+        throw new Feature011ApiError(403, null);
+    }
+  }, [actorRole, managedPatientId, allergyPurpose, locale, apiBaseUrl]);
+  useEffect(() => {
+    let current = true,
+      resolution = 0;
+    setManagedPatientId('');
+    setAllergyContextLoading(true);
+    const resolve = async () => {
+      const generation = ++resolution;
+      try {
+        const context =
+          actorRole === 'PAT'
+            ? {
+                managedPatientId: (await patientOnboardingApi.getProfile()).managedPatientId,
+                purpose: 'care',
+              }
+            : await revalidateManagedCareContext(locale, apiBaseUrl);
+        if (current && generation === resolution) {
+          if (typeof context.managedPatientId === 'string' && uuid.test(context.managedPatientId)) {
+            setManagedPatientId(context.managedPatientId);
+            setAllergyPurpose(context.purpose);
+          } else setManagedPatientId('');
+        }
+      } catch {
+        if (current && generation === resolution) setManagedPatientId('');
+      } finally {
+        if (current && generation === resolution) setAllergyContextLoading(false);
+      }
+    };
+    void resolve();
+    const reconnect = () => {
+      if (current) {
+        setAllergyContextLoading(true);
+        void resolve();
+      }
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', reconnect);
+      window.addEventListener('shifaa-session-reconciled', reconnect);
+    }
+    return () => {
+      current = false;
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('online', reconnect);
+        window.removeEventListener('shifaa-session-reconciled', reconnect);
+      }
+    };
+  }, [actorRole, locale, apiBaseUrl]);
 
   const load = useCallback(async () => {
     const generation = ++requestGeneration.current;
@@ -516,6 +584,23 @@ export default function PatientRecordsRoute() {
         </Text>
       </View>
 
+      {!!managedPatientId && (
+        <AllergyRecordsPanel
+          locale={locale}
+          role={actorRole}
+          baseUrl={apiBaseUrl}
+          purpose={allergyPurpose}
+          managedPatientId={managedPatientId}
+          reauthorize={reauthorizeAllergies}
+        />
+      )}
+      {!managedPatientId && (
+        <RouteStatePanel
+          title={allergyCopy[locale].title}
+          detail={allergyContextLoading ? allergyCopy[locale].loading : allergyCopy[locale].denied}
+          direction={direction}
+        />
+      )}
       {state === 'loading' && <RouteStatePanel title={copy.loading} direction={direction} />}
       {state === 'offline' && <OfflineNoQueueBanner text={copy.offline} direction={direction} />}
       {(state === 'pending' || state === 'review' || state === 'slots') && (

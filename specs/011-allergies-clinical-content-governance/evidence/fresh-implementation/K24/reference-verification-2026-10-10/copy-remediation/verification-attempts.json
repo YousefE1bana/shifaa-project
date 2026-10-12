@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-10-10T17:20:47.486Z",
+  "attempts": [
+    {
+      "proof": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/full-verify.json",
+        "sha256": "40ffb1f5b8e9156c74bf339a9f59fb7d2c5a6c59fb54b10784502df49165f3d9"
+      },
+      "result": "FAIL",
+      "reason": "Chromium launch required executable absent from global cache; no browser performance measurement"
+    },
+    {
+      "proof": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-copy-r01/full-verify.json",
+        "sha256": "cda78a6b368a9d0567ec62dce7c1332f4a8ab6890425dd1187e81200bfb755f4"
+      },
+      "result": "FAIL",
+      "reason": "Git path-length warning from harness-created archive caused agent-skills self-test to fail before implementation verification"
+    }
+  ],
+  "relocation": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/artifact-relocation.json",
+    "sha256": "439fa2f52391d779200012013f940dcf6d1b139af32f6795b2d0660f6994f830"
+  },
+  "runtimeRecovery": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-verification-2026-10-10/copy-remediation/test-runtime-recovery.json",
+    "sha256": "d432c3db579f0d158a479a15a4137304100081972cb38d6528c5031d8cd7677c"
+  },
+  "currentAttempt": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-copy-r02/full-verify.json",
+  "currentDriver": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/run-copy-full-verify-retry-02.mjs",
+    "sha256": "831eb3a8bc23bf6759c9f990222870d11608c3ee8768bc5b95a0ffbdbae08693"
+  },
+  "thresholdsAssertionsAndWorkloadUnchanged": true,
+  "failedAttemptsPreserved": true
+}

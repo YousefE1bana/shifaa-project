@@ -1,0 +1,16 @@
+shifaa-local-postgres: K22 native/GUC attribution and API abuse
+D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\services\api\src\modules\feature-011\list-clinical-content.ts:47
+    if (deps.cursorKey.length < 32) throw Error('F011_CURSOR_KEY_REQUIRED');
+                       ^
+
+TypeError: Cannot read properties of undefined (reading 'length')
+    at new Feature011Governance (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\services\api\src\modules\feature-011\list-clinical-content.ts:47:24)
+    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-composition-security.mjs:212:18
+    at setup.configure (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-publication-fixtures.mjs:76:52)
+    at Object.configureApp (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/run-feature-011-content-api-test.mjs:163:59)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/run-feature-011-allergy-api-test.mjs:296:9
+    at async withDatabase (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\run-feature-011-postgres-test.mjs:107:14)
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-composition-security.mjs:36:5
+
+Node.js v24.18.0

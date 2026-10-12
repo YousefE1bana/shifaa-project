@@ -1,0 +1,10 @@
+$ vitest run --exclude='dist/**' --exclude='test/supabase-runtime.integration.test.ts'
+
+ RUN  v4.1.0 D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api
+
+
+ Test Files  56 passed | 16 skipped (72)
+      Tests  672 passed | 65 skipped (737)
+   Start at  16:03:30
+   Duration  10.68s (transform 14.42s, setup 0ms, import 63.75s, tests 52.43s, environment 23ms)
+

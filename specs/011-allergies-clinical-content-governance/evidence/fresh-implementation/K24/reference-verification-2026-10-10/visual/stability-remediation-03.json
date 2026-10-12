@@ -1,0 +1,116 @@
+{
+  "recordedAt": "2026-10-10T19:36:20.550Z",
+  "scope": "test-only browser capture readiness",
+  "failedFullComparison": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T193011-225Z-d06e976e-a092-48a5-a556-55becfd5635d/comparison.json",
+    "sha256": "9d2d29a6944e9c646bf1a13d419b54f43d013804055b716e84d964c245c02888"
+  },
+  "failedFullExecution": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual-execution-2026-10-10T18-38-45-172Z-283cc1dd-dff6-4834-83df-12cf3650590c.json",
+    "sha256": "b5938e71e94cb9d87224d625f253b23f192a919c7769914e8d1282b26c315083"
+  },
+  "fullPairs": 696,
+  "identical": 690,
+  "differing": [
+    {
+      "name": "admin-content__governance-ready__ar-EG__360x800__dark.png",
+      "width": 360,
+      "height": 3065,
+      "sha256": {
+        "a": "cc27ecf54cd1b8a57f32f64f57711efcdf3a9a36490eb2d998874a2b57f4c0ae",
+        "b": "581ada3d7fe5d58cf62b615d59ecf4d32e72a651ae1772e93be9862c7699a3ee"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    },
+    {
+      "name": "admin-content__governance-ready__ar-EG__768x1024__normal.png",
+      "width": 768,
+      "height": 2855,
+      "sha256": {
+        "a": "8dc009f626988f19d3a62f1f07f438048a8158bb803fcdeac5f6c02f8f0bb208",
+        "b": "72ff0743834b24c01d5a6f115f7e34ea4ed77b720626a689a76f636cfb08e7be"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    },
+    {
+      "name": "admin-content__permission-denied__ar-EG__360x800__normal.png",
+      "width": 360,
+      "height": 1045,
+      "sha256": {
+        "a": "7b3fbc518f77eb709d34f97bcab509d2124b14c47607293ad1bda98133a51c81",
+        "b": "8db550439e119a6443c3ebbefeda55ee36e8b9c19ce889d5c6b10e7e60ca9520"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    },
+    {
+      "name": "admin-content__permission-denied__ar-EG__412x915__dark.png",
+      "width": 412,
+      "height": 1021,
+      "sha256": {
+        "a": "0cf940bf8c0903032a2c31438a0561f0a0cdcbb40835e3de478d89664840f1ac",
+        "b": "a2448da4249a046d332a01b000d5bf936b794ffa9dd2386d9816c19003d656bf"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    },
+    {
+      "name": "admin-content__recoverable-error__ar-EG__360x800__dark.png",
+      "width": 360,
+      "height": 1045,
+      "sha256": {
+        "a": "c0b3c7924609f6186dbb7e0360a7ecc3f52e562e3b48b1a2d64440b460012145",
+        "b": "2066fa0bad30b10adc3f2e50cd48652e9a065d13d370660a3b2038a64fffa225"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    },
+    {
+      "name": "admin-content__recoverable-error__ar-EG__360x800__normal.png",
+      "width": 360,
+      "height": 1045,
+      "sha256": {
+        "a": "2066fa0bad30b10adc3f2e50cd48652e9a065d13d370660a3b2038a64fffa225",
+        "b": "c0b3c7924609f6186dbb7e0360a7ecc3f52e562e3b48b1a2d64440b460012145"
+      },
+      "changedPixels": 888,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 239
+    }
+  ],
+  "observation": "Native Arabic locale-select label differs; recorded select value/text/geometry, active element, scroll and font status matched in the inspected pair. Browser-internal cache/font first-paint cause is a hypothesis, not established instrumentation.",
+  "failedPreparation": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T19-32-36-990Z-28f6a58d-9a35-4fcc-b2db-887a0c341ffa.json",
+    "sha256": "e623475a45a39f7b230b2d17397050a51292e0b696d4b2cb2742348f3cebf2c7"
+  },
+  "failedPreparationReason": "Attempt to load workspace-specific font faces before workspace mount failed readiness assertion; excluded from passing evidence.",
+  "repair": "Preload both existing bundled Inter/IBM Plex Sans Arabic faces after workspace mount and use existing locale select to explicitly select ar-EG before fixture actions; record native before/after values and font state. No CSS, masks, matrix, fixture response, product source or comparator threshold change.",
+  "currentRunner": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-current-app-surfaces.mjs",
+    "sha256": "50342ab2a8bb7fac242ebe4e29b6697bbb8b72175257ba8f1c3d92348a35b2b6"
+  },
+  "previousRunner": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-source-2026-10-10T18-38-45-172Z-283cc1dd-dff6-4834-83df-12cf3650590c.mjs",
+    "sha256": "f73c65026c6f96ca7c19439da86d6619cc11a18078e4976e478d0b92a63f3fc0"
+  },
+  "diagnostic": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostics/2026-10-10T193331-325Z-45bc6610-dce6-4e2e-9d10-66d0a8f03919/strict-comparison.json",
+    "sha256": "198e0c245472c4450bfe5a0d20cf9e3dffff5c806e121d8a302f43a50a56aa61"
+  },
+  "diagnosticPairs": 29,
+  "diagnosticResult": "PASS_IDENTICAL_29_DIAGNOSTIC_PAIRS_ONLY",
+  "formalPass": false,
+  "fullRerunRequired": true,
+  "pinnedInputs": 141,
+  "pinsUnchanged": true,
+  "T091Current": true,
+  "T092Reexecuted": false,
+  "retainedGates": "OPEN"
+}

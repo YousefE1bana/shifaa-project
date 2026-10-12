@@ -1,0 +1,22 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Completion boundary T063
++ actual - expected
+
++ 'CHECKED'
+- 'UNCHECKED'
+
+    at acceptedChain (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-physical-green.mjs:104:12)
+    at runPhysicalRaces (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\.f011-k22-7228fe01-b808-468e-87f8-3f3e1786a2d1.mjs:1677:22)
+    at <anonymous> (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\.f011-k22-7228fe01-b808-468e-87f8-3f3e1786a2d1.mjs:1865:21) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'CHECKED',
+  expected: 'UNCHECKED',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0

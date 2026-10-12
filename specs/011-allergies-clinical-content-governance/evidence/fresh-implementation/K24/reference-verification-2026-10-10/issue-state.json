@@ -1,0 +1,36 @@
+{
+  "capturedAt": "2026-10-10T21:52:45.701Z",
+  "issues": [
+    {
+      "number": 485,
+      "state": "OPEN",
+      "title": "[011-allergies-clinical-content-governance] T088: Capture live four-route AR/EN state/accessibility engineering acceptance",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/485"
+    },
+    {
+      "number": 486,
+      "state": "OPEN",
+      "title": "[011-allergies-clinical-content-governance] T089: Refresh deferred installation checklist and evidence-backed roadmap progress/traceability",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/486"
+    },
+    {
+      "number": 487,
+      "state": "OPEN",
+      "title": "[011-allergies-clinical-content-governance] T090: Verify final operation/NFR/AC traceability and deterministic current evidence manifests",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/487"
+    },
+    {
+      "number": 488,
+      "state": "OPEN",
+      "title": "[011-allergies-clinical-content-governance] T091: Run fresh pnpm verify and required dependency/security/quality checks",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/488"
+    },
+    {
+      "number": 489,
+      "state": "OPEN",
+      "title": "[011-allergies-clinical-content-governance] T092: Record owner-stage disposition requests and retained gate limits then stop for review",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/489"
+    }
+  ],
+  "mutated": false
+}

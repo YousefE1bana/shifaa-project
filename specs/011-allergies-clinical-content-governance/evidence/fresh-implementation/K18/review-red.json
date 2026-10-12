@@ -1,0 +1,38 @@
+{
+  "task": "T067",
+  "checkpoint": "K18",
+  "result": "VALID_RED",
+  "capturedAt": "2026-10-08T07:34:13.8427833Z",
+  "total": 17,
+  "failed": 17,
+  "setupFailures": 0,
+  "reason": "Approved application exact-material governance/assigned-review composition intentionally absent; explicit behavior prerequisite after test discovery, no syntax/import/runtime failure.",
+  "testSource": {
+    "sha256": "d896e93667f33a7ec39a6ec5db66252565fd5674ee86db4e4f90c6b3954b0a15",
+    "path": "services/api/src/modules/feature-011/artifact-review.test.ts"
+  },
+  "report": {
+    "sha256": "b46c2f72e94999af170add91ed6ef16d97c625c384e5d821bbcdfabc52eae7f1",
+    "path": "artifacts/feature-011/k18/review-red-vitest.json"
+  },
+  "cases": [
+    "K18 exact authorized artifact review preserves exact lossless UTF-8 bytes and generated closed projection",
+    "K18 exact authorized artifact review rejects missing source atomically",
+    "K18 exact authorized artifact review rejects reference source atomically",
+    "K18 exact authorized artifact review rejects hash source atomically",
+    "K18 exact authorized artifact review rejects type source atomically",
+    "K18 exact authorized artifact review rejects source source atomically",
+    "K18 exact authorized artifact review rejects correlation source atomically",
+    "K18 exact authorized artifact review rejects binary source atomically",
+    "K18 exact authorized artifact review rechecks current authority after external resolution",
+    "K18 exact authorized artifact review rechecks the immutable tuple and rejects resource substitution",
+    "K18 exact authorized artifact review denies signing-only access before resolving material",
+    "K18 exact authorized artifact review denies invalid native context {\"aal\":1} without material resolution",
+    "K18 exact authorized artifact review denies invalid native context {\"purposes\":[]} without material resolution",
+    "K18 exact authorized artifact review fails the entire page if a later row has wrong bound material",
+    "K18 exact authorized artifact review rejects clinic status without invoking the resolver in this checkpoint",
+    "K18 exact authorized artifact review rejects caller-claimed role/context outside the generated query",
+    "K18 exact authorized artifact review requires exact-release assigned review and preserves its narrower DTO"
+  ],
+  "acceptance": "PENDING_PRODUCT_OWNER"
+}

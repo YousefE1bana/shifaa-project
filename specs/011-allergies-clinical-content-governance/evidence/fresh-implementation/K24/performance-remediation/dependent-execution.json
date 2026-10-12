@@ -1,0 +1,72 @@
+{
+  "runs": [
+    {
+      "id": "performance",
+      "startedAt": "2026-10-09T20:53:57.965Z",
+      "finishedAt": "2026-10-09T20:59:39.456Z",
+      "exitCode": 0,
+      "originalRunnerHash": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c",
+      "executedHash": "de4f90406eb06de9bf8caa02f21059e1d93084494bad471584b2e2deee1fd8a3",
+      "transformation": "Output destination only; original samples/warmups/workload/thresholds/assertions unchanged",
+      "log": {
+        "path": "artifacts/feature-011/k24/performance-remediation.log",
+        "sha256": "f5f08aa81cc62a4629505715f094c88614b5712e4616d32ffec1b8e2e5ee311e"
+      },
+      "currentChanges": {
+        "tools/feature-011-content-fixtures.mjs": {
+          "before": "df51c06c18964fa59984d944fae3d0c0d238b4a617771b80d2de77f5a887dbe8",
+          "after": "3c85ddb42638fc8e45f801fdeaa5d6dbf5a65910dd75d36d1afc796f48f53e54"
+        },
+        "tools/run-feature-011-sign-api-test.mjs": {
+          "before": "95b7a26c378fd344548ad5f7d864efab00c8dbf80398eba5f34d345dd5a3d9c7",
+          "after": "0f225c78fa9930590191071be8264c81eadf1ed63f4efbe4eb5232afd091dc56"
+        },
+        "tools/feature-011-ops-fixtures.mjs": {
+          "before": "9fe6b76e10ca53671bb7b359ba27380efefd446a515e76db186153e597d5b803",
+          "after": "787e616b0bf365bfe294a284a723a87fefc6a3f248a4cf99bffd40666f997fc0"
+        },
+        "services/api/src/adapters/postgres/feature-011-allergies.ts": {
+          "before": "b0cf0768c75c2068c053bb18afb61bb6b48ffc890cc792510e4037a81b614c12",
+          "after": "9a5ee57c6264a3481c4b23d2789fa96cca23e491e37a2a2f03c9129a41f8c510"
+        },
+        "tools/run-feature-011-performance.mjs": {
+          "before": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c",
+          "after": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c"
+        },
+        "tools/discovery-sos-performance.ts": {
+          "before": "11304051a635a13607fc5082a139e143d1d480c12eee8a7263cba27550326261",
+          "after": "11304051a635a13607fc5082a139e143d1d480c12eee8a7263cba27550326261"
+        }
+      },
+      "physicalInputsUnchanged": true
+    },
+    {
+      "id": "restore",
+      "source": "tools/run-feature-011-restore.mjs",
+      "originalSha256": "9321675ef914bbc1bafa697fc0f467b0b10770a367c4ad373ea85816301c5964",
+      "executedSha256": "c4f32f87450d82a38838015d4a33c2207bae22852542db3038fb9aa733a31beb",
+      "transformation": "Output directory only; original strict assertions/prerequisites unchanged",
+      "startedAt": "2026-10-09T21:03:58.756Z",
+      "finishedAt": "2026-10-09T21:06:40.154Z",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/performance-restore-renewal.log",
+        "sha256": "8859152130fa2c1e8ee79b856d993d5b5724cda879fb3f8febbb9ff0ebcc6dc5"
+      }
+    },
+    {
+      "id": "observability",
+      "source": "tools/run-feature-011-observability.mjs",
+      "originalSha256": "e10002040b540fb06e82b84d03d2f9fae3d1e6289c5dd5f60abe5f75a88565c0",
+      "executedSha256": "1f68da0e829ef2f14d27f3bda824ee0212dee2575bf62033f56e6cca73735d98",
+      "transformation": "Output directory only; original strict assertions/prerequisites unchanged",
+      "startedAt": "2026-10-09T21:06:40.161Z",
+      "finishedAt": "2026-10-09T21:07:48.405Z",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/performance-observability-renewal.log",
+        "sha256": "b402d956f8a3c2ac33ed61206a5346f76d4dc393d17ae657d7d1e570f4739266"
+      }
+    }
+  ]
+}

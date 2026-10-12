@@ -1,0 +1,1426 @@
+openapi: 3.1.1
+info:
+  title: SHIFAA Feature 011 API planning contract
+  version: 0.1.0-plan
+  description: Exactly seven existing operations; design only. No generated/physical enforcement or
+    real clinical approval. Canonical routes, retained OPEN gates and synthetic-only mechanism
+    engineering.
+servers:
+  - url: /v1
+security:
+  - bearerAuth: []
+paths:
+  /patients/{managedPatientId}/allergies:
+    get:
+      operationId: listAllergies
+      x-shifaa-requirements:
+        - FR-SAFE-008
+      description: Current authorized PAT self, GUA/DEL existing record read, or current clinician
+        patient/care/facility read. Current or complete paged history. No risk assessment; empty is
+        unknown, not allergy-free.
+      parameters:
+        - $ref: '#/components/parameters/ManagedPatientId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: view
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - current
+              - history
+            default: current
+        - name: allergyId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: &a1
+              - self_reported
+              - clinician_confirmed
+              - refuted
+              - entered_in_error
+      responses:
+        '200':
+          description: Authorized result; mutations return the canonical recorded snapshot.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+                format: uuid
+            Cache-Control:
+              description: Sensitive results must use no-store.
+              schema:
+                type: string
+                const: private, no-store
+            Content-Language:
+              schema:
+                type: string
+                enum:
+                  - ar-EG
+                  - en-EG
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllergyList'
+        default:
+          $ref: '#/components/responses/Problem'
+      x-shifaa-problem-codes:
+        - authentication-required
+        - mfa-required
+        - purpose-required
+        - forbidden
+        - not-found
+        - validation-failed
+        - state-transition-invalid
+        - version-conflict
+        - idempotency-key-reused
+        - idempotency-in-progress
+        - rate-limited
+    post:
+      operationId: createAllergy
+      x-shifaa-requirements:
+        - FR-SAFE-008
+      description:
+        PAT self or current authorized clinician only; GUA/DEL denied. Derive recorder. All
+        creates self_reported; absent optional values normalize explicitly unknown. Validate coding
+        when supplied. Correction link only to a same-patient terminal erroneous assertion. Optional
+        encounter consumes live Feature 010 context, never grants authority.
+      parameters:
+        - $ref: '#/components/parameters/ManagedPatientId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAllergyRequest'
+      responses:
+        '201':
+          description: Created; authorized same-key replay returns this recorded status.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+                format: uuid
+            Cache-Control:
+              description: Sensitive results must use no-store.
+              schema:
+                type: string
+                const: private, no-store
+            ETag:
+              description: Quoted allergy revision or content workflow version.
+              schema:
+                type: string
+                pattern: ^"[1-9][0-9]*"$
+            Content-Language:
+              schema:
+                type: string
+                enum:
+                  - ar-EG
+                  - en-EG
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllergyRevision'
+        default:
+          $ref: '#/components/responses/Problem'
+      x-shifaa-problem-codes:
+        - authentication-required
+        - mfa-required
+        - purpose-required
+        - forbidden
+        - not-found
+        - validation-failed
+        - state-transition-invalid
+        - version-conflict
+        - idempotency-key-reused
+        - idempotency-in-progress
+        - rate-limited
+  /allergies/{allergyId}/verification:
+    post:
+      operationId: verifyAllergy
+      x-shifaa-requirements:
+        - FR-SAFE-008
+      description:
+        Current authorized clinician only with purpose/AAL2/care/facility and current revision.
+        Append reason/evidence/new version for allowed edge; confirmed/refuted may switch both
+        directions. No verified-to-self_reported or terminal error exit. Error correction creates a
+        new linked assertion using createAllergy.
+      parameters:
+        - $ref: '#/components/parameters/AllergyId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyAllergyRequest'
+      responses:
+        '200':
+          description: Authorized result; mutations return the canonical recorded snapshot.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+                format: uuid
+            Cache-Control:
+              description: Sensitive results must use no-store.
+              schema:
+                type: string
+                const: private, no-store
+            ETag:
+              description: Quoted allergy revision or content workflow version.
+              schema:
+                type: string
+                pattern: ^"[1-9][0-9]*"$
+            Content-Language:
+              schema:
+                type: string
+                enum:
+                  - ar-EG
+                  - en-EG
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllergyRevision'
+        default:
+          $ref: '#/components/responses/Problem'
+      x-shifaa-problem-codes:
+        - authentication-required
+        - mfa-required
+        - purpose-required
+        - forbidden
+        - not-found
+        - validation-failed
+        - state-transition-invalid
+        - version-conflict
+        - idempotency-key-reused
+        - idempotency-in-progress
+        - rate-limited
+  /admin/clinical-content/{contentType}:
+    get:
+      operationId: listClinicalContent
+      x-shifaa-requirements:
+        - FR-SAFE-002
+        - FR-SAFE-012
+      description:
+        Server-authorized projection only. ADM-MEDICAL governance detail; separately explicitly
+        authorized exact assigned-artifact reviewer inspection; or explicit clinic status-read grant
+        with current workforce/facility/purpose/AAL2. Clinic returns only fully signed published
+        metadata, including future/ineligible status, no drafts/unsigned/body/signer identities.
+        Signing alone does not grant general draft/admin access. Recheck each page; no approved
+        eligible release yields empty/unavailable, never fallback.
+      parameters:
+        - $ref: '#/components/parameters/ContentType'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: projection
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - status
+              - governance
+              - assigned_review
+          description: Requested projection cannot expand authority.
+        - name: releaseId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Required for exact assigned-review inspection.
+        - name: governedContentKey
+          in: query
+          required: false
+          schema:
+            type: string
+            minLength: 1
+        - name: effectiveScopeKey
+          in: query
+          required: false
+          schema:
+            type: string
+            minLength: 1
+        - name: version
+          in: query
+          required: false
+          description: Artifact version filter, not workflow version.
+          schema:
+            type: integer
+            minimum: 1
+        - name: status
+          in: query
+          required: false
+          description:
+            Requested publication-state filter cannot expand projection authority; clinic never
+            receives drafts or unsigned detail.
+          schema:
+            type: string
+            enum:
+              - draft
+              - published
+      responses:
+        '200':
+          description: Authorized result; mutations return the canonical recorded snapshot.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+                format: uuid
+            Cache-Control:
+              description: Sensitive results must use no-store.
+              schema:
+                type: string
+                const: private, no-store
+            Content-Language:
+              schema:
+                type: string
+                enum:
+                  - ar-EG
+                  - en-EG
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalContentList'
+        default:
+          $ref: '#/components/responses/Problem'
+      x-shifaa-problem-codes:
+        - authentication-required
+        - mfa-required
+        - purpose-required
+        - forbidden
+        - not-found
+        - validation-failed
+        - state-transition-invalid
+        - version-conflict
+        - idempotency-key-reused
+        - idempotency-in-progress
+        - rate-limited
+        - separation-of-duties
+        - clinical-content-not-approved
+  /admin/clinical-content/{contentType}/releases:
+    post:
+      operationId: createClinicalContentRelease
+      x-shifaa-requirements:
+        - FR-SAFE-002
+        - FR-ADMIN-004
+      description: Current ADM-MEDICAL create authority, purpose/AAL2. Create immutable
+        source/effective/artifact draft. Resolve approved series identity and evidence; compute
+        digest server-side, verify declared digest if present. Explicit initial/no predecessor valid
+        only for first published root; every replacement names currently applicable same-series
+        predecessor. Synthetic fixtures only while retained gates open. No client claims approve
+        real content.
+      parameters:
+        - $ref: '#/components/parameters/ContentType'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReleaseRequest'
+      responses:
+        '201':
+          description: Created; authorized same-key replay returns this recorded status.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+                format: uuid
+            Cache-Control:
+              description: Sensitive results must use no-store.
+              schema:
+                type: string
+                const: private, no-store
+            ETag:
+              description: Quoted allergy revision or content workflow version.
+              schema:
+                type: string
+                pattern: ^"[1-9][0-9]*"$
+            Content-Language:
+              schema:
+                type: string
+                enum:
+                  - ar-EG
+                  - en-EG
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceRelease'
+        default:
+          $ref: '#/components/responses/Problem'
+      x-shifaa-problem-codes:
+        - authentication-required
+        - mfa-required
+        - purpose-required
+        - forbidden
+        - not-found
+        - validation-failed
+        - state-transition-invalid
+        - version-conflict
+        - idempotency-key-reused
+        - idempotency-in-progress
+        - rate-limited
+        - separation-of-duties
+        - clinical-content-not-approved
+  /admin/clinical-content/releases/{releaseId}/signatures:
+    post:
+      operationId: signClinicalContentRelease
+      x-shifaa-requirements:
+        - FR-SAFE-012
+      description: No ADM-MEDICAL requirement. Require verified physician/pharmacist credentials,
+        evidence-backed required-capacity designation, explicit current signing authority,
+        purpose/AAL2 and independent person from creator/other signer. Bind exact immutable artifact
+        version/digest. Append one decision and increment workflow CAS version; signatures do not
+        change artifact version. No create/publish/admin authority derived.
+      parameters:
+        - $ref: '#/components/parameters/ReleaseId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignReleaseRequest'
+      responses:
+        '200':
+          description: Authorized result; mutations return the canonical recorded snapshot.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+                format: uuid
+            Cache-Control:
+              description: Sensitive results must use no-store.
+              schema:
+                type: string
+                const: private, no-store
+            ETag:
+              description: Quoted allergy revision or content workflow version.
+              schema:
+                type: string
+                pattern: ^"[1-9][0-9]*"$
+            Content-Language:
+              schema:
+                type: string
+                enum:
+                  - ar-EG
+                  - en-EG
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignReleaseResponse'
+        default:
+          $ref: '#/components/responses/Problem'
+      x-shifaa-problem-codes:
+        - authentication-required
+        - mfa-required
+        - purpose-required
+        - forbidden
+        - not-found
+        - validation-failed
+        - state-transition-invalid
+        - version-conflict
+        - idempotency-key-reused
+        - idempotency-in-progress
+        - rate-limited
+        - separation-of-duties
+        - clinical-content-not-approved
+  /admin/clinical-content/releases/{releaseId}/publish:
+    post:
+      operationId: publishClinicalContentRelease
+      x-shifaa-requirements:
+        - FR-SAFE-002
+        - FR-SAFE-012
+        - FR-ADMIN-004
+      description:
+        Current ADM-MEDICAL publish authority, purpose/AAL2, creator differs. Lock series and
+        exact candidate/predecessor; require two current independent approved signatures for exact
+        immutable artifact and approved admissibility/gates. Enforce one initial root or explicit
+        currently applicable predecessor, no competing successor/overlap/cycle. Future release stays
+        ineligible until effective. Rollback is a fresh signed superseding release; no bypass.
+      parameters:
+        - $ref: '#/components/parameters/ReleaseId'
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishReleaseRequest'
+      responses:
+        '200':
+          description: Authorized result; mutations return the canonical recorded snapshot.
+          headers:
+            X-Request-Id:
+              schema:
+                type: string
+                format: uuid
+            Cache-Control:
+              description: Sensitive results must use no-store.
+              schema:
+                type: string
+                const: private, no-store
+            ETag:
+              description: Quoted allergy revision or content workflow version.
+              schema:
+                type: string
+                pattern: ^"[1-9][0-9]*"$
+            Content-Language:
+              schema:
+                type: string
+                enum:
+                  - ar-EG
+                  - en-EG
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceRelease'
+        default:
+          $ref: '#/components/responses/Problem'
+      x-shifaa-problem-codes:
+        - authentication-required
+        - mfa-required
+        - purpose-required
+        - forbidden
+        - not-found
+        - validation-failed
+        - state-transition-invalid
+        - version-conflict
+        - idempotency-key-reused
+        - idempotency-in-progress
+        - rate-limited
+        - separation-of-duties
+        - clinical-content-not-approved
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ManagedPatientId:
+      name: managedPatientId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AllergyId:
+      name: allergyId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ReleaseId:
+      name: releaseId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ContentType:
+      name: contentType
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+      description: Opaque governed category; real admissibility requires separate clinical-owner approval.
+    Locale:
+      name: Accept-Language
+      in: header
+      required: false
+      schema:
+        type: string
+        enum:
+          - ar-EG
+          - en-EG
+        default: ar-EG
+    RequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+    Purpose:
+      name: X-Purpose
+      in: header
+      required: false
+      schema:
+        type: string
+        minLength: 1
+      description: Requested purpose only; never grants authority. Required for
+        workforce/admin/sign/status actions.
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 1
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: ^"[1-9][0-9]*"$
+      description:
+        Quoted current allergy revision or release workflow version; immutable artifact version
+        is distinct.
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+        minLength: 1
+      description:
+        Opaque signed cursor binds subject/series/projection/filters and stable page order;
+        reauthorize each page.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+  responses:
+    Problem:
+      description: Canonical baseline problem; no unauthorized resource existence/clinical detail.
+      headers:
+        X-Request-Id:
+          schema:
+            type: string
+            format: uuid
+        Cache-Control:
+          description: Sensitive results must use no-store.
+          schema:
+            type: string
+            const: private, no-store
+        Content-Language:
+          schema:
+            type: string
+            enum:
+              - ar-EG
+              - en-EG
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Uuid:
+      type: string
+      format: uuid
+    Version:
+      type: integer
+      minimum: 1
+    Instant:
+      type: string
+      format: date-time
+    ArtifactDigest:
+      type: string
+      pattern: ^[a-f0-9]{64}$
+    KnownUnknownText:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required:
+            - knowledge
+            - value
+          properties:
+            knowledge:
+              const: known
+            value:
+              type: string
+              minLength: 1
+        - type: object
+          additionalProperties: false
+          required:
+            - knowledge
+          properties:
+            knowledge:
+              const: unknown
+    KnownUnknownCoding:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required:
+            - knowledge
+            - value
+          properties:
+            knowledge:
+              const: known
+            value:
+              type: object
+              additionalProperties: false
+              required:
+                - system
+                - code
+              properties:
+                system:
+                  type: string
+                  minLength: 1
+                code:
+                  type: string
+                  minLength: 1
+                display:
+                  type: string
+                  minLength: 1
+        - type: object
+          additionalProperties: false
+          required:
+            - knowledge
+          properties:
+            knowledge:
+              const: unknown
+    Substance:
+      type: object
+      additionalProperties: false
+      required:
+        - identity
+        - display
+      properties:
+        identity:
+          type: string
+          minLength: 1
+        display:
+          type: string
+          minLength: 1
+    Source:
+      type: object
+      additionalProperties: false
+      required:
+        - display
+      properties:
+        display:
+          type: string
+          minLength: 1
+        reference:
+          type: string
+          minLength: 1
+    AllergyState:
+      type: string
+      enum: *a1
+    CreateAllergyRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - substance
+        - source
+      properties:
+        substance:
+          $ref: '#/components/schemas/Substance'
+        source:
+          $ref: '#/components/schemas/Source'
+        coding:
+          $ref: '#/components/schemas/KnownUnknownCoding'
+        reaction:
+          $ref: '#/components/schemas/KnownUnknownText'
+        severity:
+          $ref: '#/components/schemas/KnownUnknownText'
+        onset:
+          $ref: '#/components/schemas/KnownUnknownText'
+        encounterId:
+          type: string
+          format: uuid
+        correctsAllergyId:
+          type: string
+          format: uuid
+    AllergyCorrections:
+      type: object
+      additionalProperties: false
+      required: []
+      properties:
+        substance:
+          $ref: '#/components/schemas/Substance'
+        coding:
+          $ref: '#/components/schemas/KnownUnknownCoding'
+        reaction:
+          $ref: '#/components/schemas/KnownUnknownText'
+        severity:
+          $ref: '#/components/schemas/KnownUnknownText'
+        onset:
+          $ref: '#/components/schemas/KnownUnknownText'
+    VerifyAllergyRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - targetStatus
+        - reason
+        - verificationEvidenceRef
+      properties:
+        targetStatus:
+          type: string
+          enum:
+            - clinician_confirmed
+            - refuted
+            - entered_in_error
+        reason:
+          type: string
+          minLength: 1
+        verificationEvidenceRef:
+          type: string
+          format: uuid
+        corrections:
+          $ref: '#/components/schemas/AllergyCorrections'
+        encounterId:
+          type: string
+          format: uuid
+    AllergyRevision:
+      type: object
+      additionalProperties: false
+      required:
+        - revisionId
+        - allergyId
+        - patientId
+        - version
+        - previousRevisionId
+        - status
+        - substance
+        - source
+        - coding
+        - reaction
+        - severity
+        - onset
+        - recorderPersonId
+        - recordedAt
+        - actionActorPersonId
+        - actionAt
+        - verification
+        - correctsAllergyId
+      properties:
+        revisionId:
+          type: string
+          format: uuid
+        allergyId:
+          type: string
+          format: uuid
+        patientId:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          minimum: 1
+        previousRevisionId:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+        status:
+          $ref: '#/components/schemas/AllergyState'
+        substance:
+          $ref: '#/components/schemas/Substance'
+        source:
+          $ref: '#/components/schemas/Source'
+        coding:
+          $ref: '#/components/schemas/KnownUnknownCoding'
+        reaction:
+          $ref: '#/components/schemas/KnownUnknownText'
+        severity:
+          $ref: '#/components/schemas/KnownUnknownText'
+        onset:
+          $ref: '#/components/schemas/KnownUnknownText'
+        recorderPersonId:
+          type: string
+          format: uuid
+        recordedAt:
+          type: string
+          format: date-time
+        actionActorPersonId:
+          type: string
+          format: uuid
+        actionAt:
+          type: string
+          format: date-time
+        verification:
+          anyOf:
+            - type: object
+              additionalProperties: false
+              required:
+                - reason
+                - evidenceRef
+                - verifierPersonId
+              properties:
+                reason:
+                  type: string
+                  minLength: 1
+                evidenceRef:
+                  type: string
+                  format: uuid
+                verifierPersonId:
+                  type: string
+                  format: uuid
+            - type: 'null'
+        correctsAllergyId:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+    Artifact:
+      type: object
+      additionalProperties: false
+      required:
+        - contentEvidenceRef
+        - codeEvidenceRef
+        - testVectorEvidenceRef
+      properties:
+        contentEvidenceRef:
+          type: string
+          format: uuid
+        codeEvidenceRef:
+          type: string
+          format: uuid
+        testVectorEvidenceRef:
+          type: string
+          format: uuid
+        declaredDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+    CreateReleaseRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - governedContentKey
+        - effectiveScopeKey
+        - source
+        - effectiveAt
+        - artifact
+        - predecessor
+      properties:
+        governedContentKey:
+          type: string
+          minLength: 1
+        effectiveScopeKey:
+          type: string
+          minLength: 1
+        source:
+          $ref: '#/components/schemas/Source'
+        effectiveAt:
+          type: string
+          format: date-time
+        artifact:
+          $ref: '#/components/schemas/Artifact'
+        predecessor:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required:
+                - initial
+                - supersedesReleaseId
+              properties:
+                initial:
+                  const: true
+                supersedesReleaseId:
+                  type: 'null'
+            - type: object
+              additionalProperties: false
+              required:
+                - initial
+                - supersedesReleaseId
+              properties:
+                initial:
+                  const: false
+                supersedesReleaseId:
+                  type: string
+                  format: uuid
+    SignReleaseRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - capacity
+        - decision
+        - artifactVersion
+        - artifactDigest
+        - signingEvidenceRef
+      properties:
+        capacity:
+          type: string
+          enum:
+            - physician
+            - pharmacist
+        decision:
+          type: string
+          enum:
+            - approved
+            - rejected
+        artifactVersion:
+          type: integer
+          minimum: 1
+        artifactDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        signingEvidenceRef:
+          type: string
+          format: uuid
+        reason:
+          type: string
+          minLength: 1
+    PublishReleaseRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - artifactVersion
+        - artifactDigest
+        - confirmPublication
+      properties:
+        artifactVersion:
+          type: integer
+          minimum: 1
+        artifactDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        confirmPublication:
+          type: boolean
+          const: true
+    SignatureEvidence:
+      type: object
+      additionalProperties: false
+      required:
+        - signatureId
+        - capacity
+        - decision
+        - artifactVersion
+        - artifactDigest
+        - signerPersonId
+        - signedAt
+        - evidenceRef
+      properties:
+        signatureId:
+          type: string
+          format: uuid
+        capacity:
+          type: string
+          enum:
+            - physician
+            - pharmacist
+        decision:
+          type: string
+          enum:
+            - approved
+            - rejected
+        artifactVersion:
+          type: integer
+          minimum: 1
+        artifactDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        signerPersonId:
+          type: string
+          format: uuid
+        signedAt:
+          type: string
+          format: date-time
+        evidenceRef:
+          type: string
+          format: uuid
+    SignatureStatus:
+      type: object
+      additionalProperties: false
+      required:
+        - physicianApproved
+        - pharmacistApproved
+      properties:
+        physicianApproved:
+          type: boolean
+        pharmacistApproved:
+          type: boolean
+    Eligibility:
+      type: string
+      enum:
+        - effective
+        - future
+        - superseded
+        - unavailable
+    StatusRelease:
+      type: object
+      additionalProperties: false
+      required:
+        - releaseId
+        - source
+        - artifactVersion
+        - effectiveAt
+        - publicationState
+        - eligibility
+        - supersedesReleaseId
+        - initial
+        - signatureStatus
+      properties:
+        releaseId:
+          type: string
+          format: uuid
+        source:
+          $ref: '#/components/schemas/Source'
+        artifactVersion:
+          type: integer
+          minimum: 1
+        effectiveAt:
+          type: string
+          format: date-time
+        publicationState:
+          const: published
+        eligibility:
+          $ref: '#/components/schemas/Eligibility'
+        supersedesReleaseId:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+        initial:
+          type: boolean
+        signatureStatus:
+          $ref: '#/components/schemas/SignatureStatus'
+    GovernanceRelease:
+      type: object
+      additionalProperties: false
+      required:
+        - releaseId
+        - contentType
+        - governedContentKey
+        - effectiveScopeKey
+        - source
+        - effectiveAt
+        - artifactVersion
+        - artifactDigest
+        - workflowVersion
+        - publicationState
+        - eligibility
+        - initial
+        - supersedesReleaseId
+        - creatorPersonId
+        - createdAt
+        - publisherPersonId
+        - publishedAt
+        - artifact
+        - signatures
+        - syntheticOnly
+        - artifactReview
+      properties:
+        releaseId:
+          type: string
+          format: uuid
+        contentType:
+          type: string
+          minLength: 1
+        governedContentKey:
+          type: string
+          minLength: 1
+        effectiveScopeKey:
+          type: string
+          minLength: 1
+        source:
+          $ref: '#/components/schemas/Source'
+        effectiveAt:
+          type: string
+          format: date-time
+        artifactVersion:
+          type: integer
+          minimum: 1
+        artifactDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        workflowVersion:
+          type: integer
+          minimum: 1
+        publicationState:
+          type: string
+          enum:
+            - draft
+            - published
+        eligibility:
+          $ref: '#/components/schemas/Eligibility'
+        initial:
+          type: boolean
+        supersedesReleaseId:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+        creatorPersonId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        publisherPersonId:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+        publishedAt:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        artifact:
+          $ref: '#/components/schemas/Artifact'
+        signatures:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignatureEvidence'
+        syntheticOnly:
+          type: boolean
+        artifactReview:
+          $ref: '#/components/schemas/ArtifactReview'
+    AssignedReviewRelease:
+      type: object
+      additionalProperties: false
+      required:
+        - releaseId
+        - source
+        - effectiveAt
+        - artifactVersion
+        - artifactDigest
+        - workflowVersion
+        - publicationState
+        - artifact
+        - initial
+        - supersedesReleaseId
+        - signatureStatus
+        - syntheticOnly
+        - artifactReview
+      properties:
+        releaseId:
+          type: string
+          format: uuid
+        source:
+          $ref: '#/components/schemas/Source'
+        effectiveAt:
+          type: string
+          format: date-time
+        artifactVersion:
+          type: integer
+          minimum: 1
+        artifactDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        workflowVersion:
+          type: integer
+          minimum: 1
+        publicationState:
+          type: string
+          enum:
+            - draft
+            - published
+        artifact:
+          $ref: '#/components/schemas/Artifact'
+        initial:
+          type: boolean
+        supersedesReleaseId:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+        signatureStatus:
+          $ref: '#/components/schemas/SignatureStatus'
+        syntheticOnly:
+          type: boolean
+        artifactReview:
+          $ref: '#/components/schemas/ArtifactReview'
+    SignReleaseResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - releaseId
+        - workflowVersion
+        - signature
+      properties:
+        releaseId:
+          type: string
+          format: uuid
+        workflowVersion:
+          type: integer
+          minimum: 1
+        signature:
+          $ref: '#/components/schemas/SignatureEvidence'
+    Problem:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+          description: Localized, redacted; no hidden clinical data.
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+        request_id:
+          $ref: '#/components/schemas/Uuid'
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - pointer
+              - code
+            properties:
+              pointer:
+                type: string
+              code:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    AllergyList:
+      type: object
+      additionalProperties: false
+      required:
+        - view
+        - data
+        - meta
+      properties:
+        view:
+          type: string
+          enum:
+            - current
+            - history
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllergyRevision'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+    StatusList:
+      type: object
+      additionalProperties: false
+      required:
+        - projection
+        - data
+        - meta
+      properties:
+        projection:
+          const: status
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusRelease'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+    GovernanceList:
+      type: object
+      additionalProperties: false
+      required:
+        - projection
+        - data
+        - meta
+      properties:
+        projection:
+          const: governance
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GovernanceRelease'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+    AssignedReviewList:
+      type: object
+      additionalProperties: false
+      required:
+        - projection
+        - data
+        - meta
+      properties:
+        projection:
+          const: assigned_review
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssignedReviewRelease'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+    ClinicalContentList:
+      oneOf:
+        - $ref: '#/components/schemas/StatusList'
+        - $ref: '#/components/schemas/GovernanceList'
+        - $ref: '#/components/schemas/AssignedReviewList'
+    PageMeta:
+      type: object
+      additionalProperties: false
+      required:
+        - nextCursor
+        - lastUpdatedAt
+        - stale
+      properties:
+        nextCursor:
+          type:
+            - string
+            - 'null'
+        lastUpdatedAt:
+          $ref: '#/components/schemas/Instant'
+        stale:
+          type: boolean
+    ArtifactReview:
+      type: object
+      additionalProperties: false
+      required:
+        - content
+        - code
+        - testVectors
+      description:
+        Exact reviewed opaque artifact materials from the evidence port; encrypted at rest.
+        Only separately authorized governance/assigned-review DTO; never clinic status.
+      properties:
+        content:
+          type: string
+        code:
+          type: string
+        testVectors:
+          type: string

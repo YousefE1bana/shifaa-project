@@ -120,6 +120,7 @@ export class PostgresIdentityRepository implements IdentityRepository {
       });
       const [row] = await sql<any[]>`
         select p.id, p.user_id, p.display_name, p.birth_date::text, p.nationality_code,
+               (select patient.id from identity.patients patient where patient.person_id=p.id) managed_patient_id,
                p.preferred_locale, p.version,
                coalesce((select i.verification_status from identity.identities i where i.person_id=p.id order by i.created_at desc limit 1), 'unverified') verification_status
         from identity.people p where p.id=${mapping.person_id}::uuid`;
@@ -306,6 +307,7 @@ export class PostgresIdentityRepository implements IdentityRepository {
   private profile(r: any): ProfileRecord {
     return {
       id: r.id,
+      managedPatientId: r.managed_patient_id ?? null,
       authSubjectId: r.user_id,
       displayName: r.display_name,
       birthDate: r.birth_date ?? null,

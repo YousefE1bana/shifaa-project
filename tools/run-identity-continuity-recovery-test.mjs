@@ -1,19 +1,23 @@
 import { execFileSync } from 'node:child_process';
 import process from 'node:process';
+import { resetFeature011NativeSupabase } from './feature-011-native-supabase-bootstrap.mjs';
 
-function runPnpm(args, env = {}) {
+function runPnpm(args, env = {}, capture = false) {
   const command = process.platform === 'win32' ? (process.env.ComSpec ?? 'cmd.exe') : 'corepack';
   const commandArgs =
     process.platform === 'win32'
       ? ['/d', '/s', '/c', `corepack pnpm ${args.join(' ')}`]
       : ['pnpm', ...args];
-  execFileSync(command, commandArgs, {
-    stdio: 'inherit',
+  return execFileSync(command, commandArgs, {
+    encoding: capture ? 'utf8' : undefined,
+    stdio: capture ? ['ignore', 'pipe', 'ignore'] : 'inherit',
     env: { ...process.env, ...env },
   });
 }
 
-runPnpm(['exec', 'supabase', 'db', 'reset', '--local']);
+await resetFeature011NativeSupabase((args, capture = false) => {
+  return runPnpm(args, {}, capture);
+});
 runPnpm(
   [
     'exec',

@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "capturedAt": "2026-10-10T13:05:44.725Z",
+  "ownerIdentityBlocker": "RESOLVED",
+  "formalProfiles": "PENDING_EXPLICIT_APPROVAL",
+  "priorEvidencePreserved": 29,
+  "pinnedInputs": 141,
+  "currentParity": "PASS",
+  "documentationLinks": 7,
+  "taskLedgerUnchanged": true,
+  "T088_T092": "UNCHECKED",
+  "formalGateClosure": false,
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "statusEntries": 170
+}

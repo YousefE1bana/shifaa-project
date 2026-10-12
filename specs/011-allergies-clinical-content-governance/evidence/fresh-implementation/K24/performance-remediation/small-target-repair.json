@@ -1,0 +1,67 @@
+{
+  "result": "PASS_FOCUSED_ENGINEERING",
+  "capturedAt": "2026-10-10T06:31:25.022Z",
+  "rootCause": "The existing F011 summary link in EncounterWorkspace had no target sizing; measured native anchor height was 24 CSS px against the unchanged 44 px minimum.",
+  "before": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/before-encounter-workspace.txt",
+    "sha256": "200d544baf0ff8c69b93f3eeadca45a526c607ced7e5bc9fcf20aa3bf595e3dc"
+  },
+  "after": {
+    "path": "apps/clinic/src/components/feature-010/EncounterWorkspace.tsx",
+    "sha256": "b4d50633333bcefd669b1139408a651fbc54f4413e5c45aab9ea8dbae4e49ea6"
+  },
+  "fix": "Inline-flex alignment and existing minimumTargetSize token for both axes; max-width retained within parent. Existing href, identifiers, copy, authorization and semantics unchanged.",
+  "redFull": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-small-target.json",
+    "sha256": "6cc6561f7165feeef891aed578707d89d8837187341337daa6aac784a92a4982"
+  },
+  "redLog": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-small-target.log",
+    "sha256": "b1b64eae7825bb04496fb827de79c24179eb918e9999dd58865115433f2e8c81"
+  },
+  "command": "pnpm exec playwright test --config tools/feature-010-accessibility-playwright.config.ts --grep \"clinic-encounter live route keeps semantics\"",
+  "focused": {
+    "exitCode": 0,
+    "tests": 1,
+    "locales": [
+      "ar-EG",
+      "en-EG"
+    ],
+    "includes": [
+      "44x44 targets",
+      "keyboard/focus",
+      "semantics",
+      "200% text",
+      "400% CSS text/reflow engineering proxy"
+    ],
+    "log": {
+      "path": "artifacts/feature-011/k24/small-target-focused.log",
+      "sha256": "b93eef1d17868edbeefba9b5cd47a12e781c90abbdbbfad0868984796c10433b"
+    }
+  },
+  "captures": [
+    {
+      "path": "artifacts/feature-011/k24/small-target-captures/clinic-encounter-ar-EG-320x800.png",
+      "sha256": "34978694a097c49e720baf0efe3e68f390e4bc8940b6ff08cd623eca91c9f17e"
+    },
+    {
+      "path": "artifacts/feature-011/k24/small-target-captures/clinic-encounter-ar-EG-320x800.aria.yml",
+      "sha256": "e2839d8f50972378b60a057ca0cdec65f9a303e65d274500f394038ce882adf7"
+    },
+    {
+      "path": "artifacts/feature-011/k24/small-target-captures/clinic-encounter-en-EG-320x800.png",
+      "sha256": "36a76cd72bad86ec6ccd92bb6669f34bef38c0d5de35b6d46c25a1fafb6d76fa"
+    },
+    {
+      "path": "artifacts/feature-011/k24/small-target-captures/clinic-encounter-en-EG-320x800.aria.yml",
+      "sha256": "fceecc6ecbef63de8de013cd245a3631d6a499433ea3dd5216e5d56cf552ac46"
+    }
+  ],
+  "priorPredecessorOutputs": {
+    "path": "artifacts/feature-011/k24/previous-full-runs/small-target/archive-index.json",
+    "sha256": "b931763a8c9f1ef6ea5167872907e041f7b6d91b25eaab5a676fb2fdd3c167f6"
+  },
+  "physicalPinsUnchanged": 141,
+  "noSqlContractPrivilegeArchitectureChange": true,
+  "formalUxAcceptance": false
+}

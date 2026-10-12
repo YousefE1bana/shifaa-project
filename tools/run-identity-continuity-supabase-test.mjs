@@ -1,5 +1,9 @@
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import {
+  assertNativeSupabaseOwnership,
+  resetFeature011NativeSupabase,
+} from './feature-011-native-supabase-bootstrap.mjs';
 
 const workspace = new URL('../services/api/package.json', import.meta.url);
 const requireFromApi = createRequire(workspace);
@@ -26,9 +30,10 @@ const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, mill
 // local project with the repository's safe startup profile so those containers
 // load this checkout's templates without deleting its volumes on stop. The
 // reset below rebuilds this project's synthetic database from checked-in files.
+assertNativeSupabaseOwnership(runPnpm);
 runPnpm(['supabase:stop']);
 runPnpm(['supabase:start'], true);
-runPnpm(['exec', 'supabase', 'db', 'reset', '--local']);
+await resetFeature011NativeSupabase(runPnpm);
 const status = JSON.parse(runPnpm(['exec', 'supabase', 'status', '-o', 'json'], true));
 const client = createClient(status.API_URL, status.ANON_KEY, {
   auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },

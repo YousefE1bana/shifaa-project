@@ -1,0 +1,50 @@
+$ node test/run-tests.mjs
+✔ dashboard fails closed for inactive metrics and count-bearing suppressed cells (1.668ms)
+✔ dashboard distinguishes empty, suppressed, released, stale, permission, and error states (0.8679ms)
+✔ dashboard provides Arabic RTL and English LTR accessible, reflow-safe controls (1.6006ms)
+✔ export is never queued offline and has no polling or toast-only success (1.6753ms)
+✔ queued, retrying, dead-letter, proven, digest, and retention evidence derive from audit events (1.5448ms)
+✔ audit workspace defers role authority to the server and blocks AAL1, stale AAL2, and no-purpose states (1.5156ms)
+✔ audit page installs the real Feature 007 session and step-up boundaries (0.4255ms)
+✔ audit parser keeps only fixed redacted evidence and opaque bounded cursors (1.5787ms)
+✔ audit workspace has bilingual keyboard, focus-return, reflow, and non-color integrity states (0.6368ms)
+✔ governance UI exposes minimum projection, AAL2, purpose, and independent actor copy (1.6098ms)
+✔ guardianship worklist is minimum, AAL2, purpose-bound, independent, and versioned (1.4167ms)
+✔ guardianship page has Arabic and English parity plus accessible live state and targets (0.3297ms)
+✔ K19 load through generated governance projection keeps exact review and workflow (23.5136ms)
+✔ K19 assigned reviewer uses exact release and never gains create/publish (2.3453ms)
+✔ K19 explicit create confirmation precedes any generated write (1.687ms)
+✔ K19 successor/rollback must bind the exact separate predecessor (1.8055ms)
+✔ K19 signing binds exact immutable artifact and latest workflow CAS (2.2701ms)
+✔ K19 rejected decision requires reason and is distinct from unavailable (1.5339ms)
+✔ K19 offline confirmation sends nothing and creates no queue (1.4361ms)
+✔ K19 uncertain receipt retains immutable body/key/version for explicit reconciliation (2.4266ms)
+✔ K19 going offline cannot discard an uncertain original receipt binding (1.6141ms)
+✔ K19 in-flight read cannot repopulate the protected projection after connectivity loss (1.4286ms)
+✔ K19 in-flight mutation remains non-cancellable and duplicate sends are blocked while offline (1.8262ms)
+✔ K19 offline before confirmation never makes an unconfirmed draft eligible for replay (1.3847ms)
+✔ K19 403 yields permission with no stale protected read (1.5444ms)
+✔ K19 409 yields stale with no stale protected read (1.3135ms)
+✔ K19 422 yields unavailable with no stale protected read (1.2055ms)
+✔ K19 503 yields reconciling with no stale protected read (1.3075ms)
+✔ K19 AAL2 is checked before read or mutation but never grants authority (0.961ms)
+✔ K19 full AR/EN state markup includes announcements, retained gates and no private material (41.6254ms)
+✔ K19 a successor labels its preserved predecessor as predecessor rather than initial release (21.2785ms)
+✔ admin shell denies incomplete privileged context and resumes through existing auth flow (1.7228ms)
+✔ the executable admin route installs a real OTP-authenticated staff JWT (0.9821ms)
+✔ admin relationships uses the assigned transition read mode and continuity version (0.4192ms)
+✔ admin transition states remain bilingual, assigned-only, and non-inferential (0.3022ms)
+✔ admin security surfaces require current assigned authority after reconnect (1.1591ms)
+✔ review requires AAL2, purpose, assignment and separation of duties (0.7175ms)
+✔ minimum projection contains no unrelated patient fields and reason is mandatory (0.7091ms)
+✔ live admin review is bilingual and permits the documented local dev origin (5.9927ms)
+✔ DPO worklist is AAL2, purpose-bound, assigned-only, minimum, and versioned (1.082ms)
+✔ template governance pairs Arabic and English with independent AAL2 publication (0.1881ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 563.3357

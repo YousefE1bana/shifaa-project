@@ -1,0 +1,65 @@
+Scope: all 18 workspace projects
+✓ Lockfile passes supply-chain policies (verified 3d ago)
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+   ╭───────────────────────────────────────────────╮
+   │                                               │
+   │     Update available! 11.13.0 → 12.10.1.      │
+   │     Changelog: https://pnpm.io/v/12.10.1      │
+   │   To update, run: corepack use pnpm@12.10.1   │
+   │                                               │
+   ╰───────────────────────────────────────────────╯
+
+
+Done in 1.4s using pnpm v11.13.0
+$ node test/run-tests.mjs
+✔ dashboard fails closed for inactive metrics and count-bearing suppressed cells (4.4817ms)
+✔ dashboard distinguishes empty, suppressed, released, stale, permission, and error states (1.2703ms)
+✔ dashboard provides Arabic RTL and English LTR accessible, reflow-safe controls (1.9732ms)
+✔ export is never queued offline and has no polling or toast-only success (1.8714ms)
+✔ queued, retrying, dead-letter, proven, digest, and retention evidence derive from audit events (2.0922ms)
+✔ audit workspace defers role authority to the server and blocks AAL1, stale AAL2, and no-purpose states (1.5807ms)
+✔ audit page installs the real Feature 007 session and step-up boundaries (0.4715ms)
+✔ audit parser keeps only fixed redacted evidence and opaque bounded cursors (1.6988ms)
+✔ audit workspace has bilingual keyboard, focus-return, reflow, and non-color integrity states (0.7237ms)
+✔ governance UI exposes minimum projection, AAL2, purpose, and independent actor copy (1.8972ms)
+✔ guardianship worklist is minimum, AAL2, purpose-bound, independent, and versioned (2.1595ms)
+✔ guardianship page has Arabic and English parity plus accessible live state and targets (0.4038ms)
+✔ K19 load through generated governance projection keeps exact review and workflow (33.6161ms)
+✔ K19 assigned reviewer uses exact release and never gains create/publish (3.3382ms)
+✔ K19 explicit create confirmation precedes any generated write (2.3731ms)
+✔ K19 successor/rollback must bind the exact separate predecessor (2.395ms)
+✔ K19 signing binds exact immutable artifact and latest workflow CAS (3.0726ms)
+✔ K19 rejected decision requires reason and is distinct from unavailable (2.0848ms)
+✔ K19 offline confirmation sends nothing and creates no queue (1.8518ms)
+✔ K19 uncertain receipt retains immutable body/key/version for explicit reconciliation (2.6977ms)
+✔ K19 going offline cannot discard an uncertain original receipt binding (2.2287ms)
+✔ K19 in-flight read cannot repopulate the protected projection after connectivity loss (2.0625ms)
+✔ K19 in-flight mutation remains non-cancellable and duplicate sends are blocked while offline (2.441ms)
+✔ K19 offline before confirmation never makes an unconfirmed draft eligible for replay (1.7716ms)
+✔ K19 403 yields permission with no stale protected read (2.0017ms)
+✔ K19 409 yields stale with no stale protected read (1.6112ms)
+✔ K19 422 yields unavailable with no stale protected read (1.5476ms)
+✔ K19 503 yields reconciling with no stale protected read (1.5399ms)
+✔ K19 AAL2 is checked before read or mutation but never grants authority (1.4124ms)
+✔ K19 full AR/EN state markup includes announcements, retained gates and no private material (50.6318ms)
+✔ K19 a successor labels its preserved predecessor as predecessor rather than initial release (23.7722ms)
+✔ admin shell denies incomplete privileged context and resumes through existing auth flow (3.2221ms)
+✔ the executable admin route installs a real OTP-authenticated staff JWT (3.1975ms)
+✔ admin relationships uses the assigned transition read mode and continuity version (0.6233ms)
+✔ admin transition states remain bilingual, assigned-only, and non-inferential (0.4159ms)
+✔ admin security surfaces require current assigned authority after reconnect (1.6425ms)
+✔ review requires AAL2, purpose, assignment and separation of duties (1.8988ms)
+✔ minimum projection contains no unrelated patient fields and reason is mandatory (0.8551ms)
+✔ live admin review is bilingual and permits the documented local dev origin (6.9406ms)
+✔ DPO worklist is AAL2, purpose-bound, assigned-only, minimum, and versioned (1.2609ms)
+✔ template governance pairs Arabic and English with independent AAL2 publication (0.2232ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 737.7143

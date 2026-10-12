@@ -1,0 +1,207 @@
+{
+  "result": "F011_K17_K18_READY_FOR_REVIEW",
+  "primaryAgentVerified": true,
+  "noDelegation": true,
+  "acceptance": "PENDING_PRODUCT_OWNER",
+  "k15k16": {
+    "tasks": "T057–T062 CHECKED",
+    "issues": "#454–#459 CLOSED",
+    "records": [
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/k15-accepted-2026-10-08.md",
+        "sha256": "27e29352b6622f45c96aa916921a3f3f687fbeb7d8813083955866f2e56adc26"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/decisions/k16-accepted-2026-10-08.md",
+        "sha256": "247bdafc67038116a613b496604cc9e87e31941db2261cd01df0dd4a1a1f00a2"
+      }
+    ]
+  },
+  "K17": {
+    "tasks": "T063–T066 UNCHECKED",
+    "validRed": 24,
+    "checksPerRuntime": 66,
+    "independentRacesPerRuntime": 6,
+    "eligibilityCasesPerRuntime": 13,
+    "ambiguityDenies": true,
+    "historyVisibleAfterBasisLoss": true
+  },
+  "K18": {
+    "unlockedAfterK17Passed": true,
+    "tasks": "T067–T069 UNCHECKED",
+    "validRed": 17,
+    "checksPerRuntime": 42,
+    "resolverLookupsPerRuntime": 110,
+    "externalNetworkUnderLocks": 0,
+    "exactUtf8AndAtomicDisclosure": true,
+    "publicPrivateSeparation": true
+  },
+  "renewedPrerequisites": {
+    "K05": "BOTH PASS, 46 invariants each",
+    "K06": "BOTH PASS, five mutation paths and narrow projections",
+    "T027": "BOTH PASS",
+    "T028": "12/12 BOTH PASS",
+    "T029": "BOUNDED_P5_PASS",
+    "physicalPinnedInputs": 132,
+    "fullPinnedInputs": 133,
+    "sql": {
+      "path": "supabase/migrations/20261006185240_f011_publication_functions.sql",
+      "sha256": "1b24172abd84dc8ba4b7ce33970433b5af174760a2a95f85f099402968d11297"
+    },
+    "currentStageRoot": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/prerequisite-remediation"
+  },
+  "focusedVerification": {
+    "apiTests": 295,
+    "apiFailed": 0,
+    "contractsTests": 40,
+    "clientTests": 4,
+    "typecheck": "PASS",
+    "architecture": "PASS",
+    "secrets": "PASS",
+    "historicalK01Diagnostic": "Preexisting initial-unchecked checker incompatible with accepted completion state; 27 fail/2 pass, separately recorded; not modified"
+  },
+  "issues": [
+    {
+      "number": 454,
+      "state": "CLOSED"
+    },
+    {
+      "number": 455,
+      "state": "CLOSED"
+    },
+    {
+      "number": 456,
+      "state": "CLOSED"
+    },
+    {
+      "number": 457,
+      "state": "CLOSED"
+    },
+    {
+      "number": 458,
+      "state": "CLOSED"
+    },
+    {
+      "number": 459,
+      "state": "CLOSED"
+    },
+    {
+      "number": 460,
+      "state": "OPEN"
+    },
+    {
+      "number": 461,
+      "state": "OPEN"
+    },
+    {
+      "number": 462,
+      "state": "OPEN"
+    },
+    {
+      "number": 463,
+      "state": "OPEN"
+    },
+    {
+      "number": 464,
+      "state": "OPEN"
+    },
+    {
+      "number": 465,
+      "state": "OPEN"
+    },
+    {
+      "number": 466,
+      "state": "OPEN"
+    }
+  ],
+  "proofs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publish-api-red.json",
+      "sha256": "27ac4c2e054e80bf007d07a4f29180299d0e62a12d33847227725db5d1c37879"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publish-api.json",
+      "sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publish-races.json",
+      "sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/eligibility-proof.json",
+      "sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publication-boundaries.json",
+      "sha256": "26a9d3e4c9994ed0d03f50d055fa7a0ea204edcd5febafc791d7749ff88792c6"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/k17-unlock.json",
+      "sha256": "76ed5482df8ab5cb8fe97510276fd230af5ec6fdcde73737b92ba03680622e76"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/review-red.json",
+      "sha256": "be7cba2e380f0ad7b84ce76846555150f6e5b6c07afe929525ba169150f3facd"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/governance-read.json",
+      "sha256": "96ca6efd24b029a4e31b939d1baf94be772b076840b9a11c0044d0f4dd077bc3"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/review-proof.json",
+      "sha256": "96ca6efd24b029a4e31b939d1baf94be772b076840b9a11c0044d0f4dd077bc3"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/local-remediation-and-review.json",
+      "sha256": "1adeb83448daedd819f34021441130ac6c89762c7f8a68781568d73c2eb19259"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/prerequisite-remediation/admission-ambiguity-red.json",
+      "sha256": "edaee66d0e1781170b381536775273234865a806a15e604b914b6fe22f0d16be"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/prerequisite-remediation/k05/storage-proof.json",
+      "sha256": "72a6e5d0c7bb2b2502ec79221b2884f25552f8e3de0f3a46ba7dc5331498afed"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/prerequisite-remediation/k06/consumer-proof.json",
+      "sha256": "0587225f054f2207f09f27258adb92afbd2e82d304a47f4d07d6b03883cbbc6c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/prerequisite-remediation/physical-green.json",
+      "sha256": "49a334898fa053dfddeb91ff459433c58e74d9b30629691fc860db661900c698"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/prerequisite-remediation/physical-races.json",
+      "sha256": "323e5df10537b61d288bfd7f4331ffe8856379b6706a555d82321a94461b0e9f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/prerequisite-remediation/stage-assertion.json",
+      "sha256": "8155f8065ae57b884db8d5fc51f6a2680467a9206647ced8eb3b70e3f94af5f9"
+    }
+  ],
+  "scope": {
+    "operations": 7,
+    "nfr": 19,
+    "boundedFr": 4
+  },
+  "ledger": {
+    "checked": "T001–T062",
+    "unchecked": "T063–T092",
+    "freshDefinitionsDependenciesUnchanged": true,
+    "T070toT092Untouched": true,
+    "tasksSha256": "deda6a9d742533510cd7bf176680f3580ff4899e5291137b47c254e3ba5afe14",
+    "taskMapSha256": "9527849582742499b8c736ec8705bb81ce713029d63b4b2702547e9c0a0c51b8"
+  },
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "gates": "ALL_RETAINED_GATES_UNCHANGED_OPEN",
+  "syntheticOnly": true,
+  "clinicalProductionApproval": false,
+  "blockers": [],
+  "K19Started": false,
+  "T070toT092Untouched": true,
+  "gitIntegration": false,
+  "capturedAt": "2026-10-09T07:53:03.024Z"
+}

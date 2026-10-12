@@ -1,0 +1,5471 @@
+{
+  "checkpoint": "K06",
+  "result": "PASS_COMPONENT_VERIFICATION",
+  "completedAt": "2026-10-11T09:44:42.265Z",
+  "k05Unlock": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/k05/k05-before-k06.json",
+    "sha256": "4c7c8a0088ffe570f3e6ba8aac3826c90d86f4cf95fd1698d9356cb63a8f4f3d"
+  },
+  "inputs": {
+    "cli": {
+      "command": "pnpm exec supabase --version",
+      "version": "2.113.0",
+      "packageVersion": "2.113.0",
+      "packageSha256": "30eaabae63471c5d3fd1b668d77cf97bacd690f6c88a23416b6afb0cfca84af1"
+    },
+    "baselineCount": 27,
+    "inputDigests": {
+      "infra/db/migrations/001_identity_onboarding.sql": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+      "supabase/migrations/20260811000300_facility_onboarding_rbac.sql": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+      "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+      "supabase/migrations/20260811000500_family_care_relationships.sql": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+      "supabase/migrations/20260811000600_family_care_storage.sql": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+      "supabase/migrations/20260813000500_privacy_dsr_notifications.sql": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+      "supabase/migrations/20260813000600_privacy_dsr_storage.sql": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+      "supabase/migrations/20260820000600_discovery_sos_foundation.sql": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+      "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+      "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+      "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+      "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+      "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+      "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+      "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+      "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+      "supabase/migrations/20260929001001_f010_c10_encounter_api.sql": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+      "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+      "supabase/migrations/20260929001003_f010_c12_note_signing.sql": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+      "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+      "supabase/migrations/20260929001005_f010_c17_referrals_api.sql": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+      "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+      "supabase/migrations/20260929001007_f010_c19_referral_projections.sql": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+      "supabase/migrations/20260929001008_f010_c22_context_messages.sql": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+      "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+      "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+      "supabase/migrations/20261001001002_f010_f04_completion_authority.sql": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+      "package.json": "2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200",
+      "pnpm-lock.yaml": "a49eea490e48af9a9452841cf88e0373719bfe3afef525a80b8d81a75792fda6",
+      "compose.yml": "bfab38e14aeb8d3fa527637833b131df1b8a65ff627517cf84824cb911afcf5e",
+      "infra/db/Dockerfile.postgis": "99e801a9e225f0b4a32d849c4cd878d94fc472c004404b0de928b97b5fe8d2d8",
+      "supabase/config.toml": "f6dbb7071faa4c94d0d52d11c9b1618daf6895149cd86ae6ad31b213aa2c0417",
+      "infra/db/fixtures/feature-011.sql": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+      "packages/test-kit/src/feature-011/fixtures.ts": "f294c5711fc60fc8247388cd3a089330f62aa60863d383a992336b44d627213e",
+      "tools/run-feature-011-postgres-test.mjs": "23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b",
+      "tools/run-feature-011-concurrency-test.mjs": "5b441a5e30627e1a473ac4cc75fc55f97548a5f111c0ab5df0e5bd4b797ee207"
+    },
+    "fixture": {
+      "kind": "SYNTHETIC_ENGINEERING_ONLY",
+      "personId": "f0110000-0000-4000-8000-000000000001",
+      "patientId": "f0110000-0000-4000-8100-000000000001",
+      "facilityId": "f0110000-0000-4000-8200-000000000001",
+      "clinicianId": "f0110000-0000-4000-8000-000000000002",
+      "encounterId": "f0110000-0000-4000-8400-000000000001",
+      "actorCount": 8,
+      "lockNamespace": 11003,
+      "lockKey": 1,
+      "missingBehaviorMessage": "F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)",
+      "rawEvidenceSqlAllowed": false,
+      "realClinicalApproval": false
+    },
+    "feature011MigrationFiles": [
+      "20261006175926_f011_allergy_revisions.sql",
+      "20261006175932_f011_content_artifacts.sql",
+      "20261006175937_f011_governance_evidence.sql",
+      "20261006175942_f011_atomic_receipts.sql",
+      "20261006185236_f011_allergy_functions.sql",
+      "20261006185237_f011_release_functions.sql",
+      "20261006185239_f011_signing_functions.sql",
+      "20261006185240_f011_publication_functions.sql",
+      "20261006185241_f011_rls_grants.sql",
+      "20261006185242_f011_receipt_functions.sql"
+    ]
+  },
+  "sourceDigests": {
+    "supabase/migrations/20261006175926_f011_allergy_revisions.sql": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+    "supabase/migrations/20261006175932_f011_content_artifacts.sql": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+    "supabase/migrations/20261006175937_f011_governance_evidence.sql": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+    "supabase/migrations/20261006175942_f011_atomic_receipts.sql": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929",
+    "supabase/migrations/20261006185236_f011_allergy_functions.sql": "4ee8c2a5f17fe43f1da5e8f5da42f4dcba1b62b2e35ac05755801a70b306ce86",
+    "supabase/migrations/20261006185237_f011_release_functions.sql": "0ddc26b03d353f3fda36780eca8672779722cfc97d212bba3d0a1022eb6e1019",
+    "supabase/migrations/20261006185239_f011_signing_functions.sql": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550",
+    "supabase/migrations/20261006185240_f011_publication_functions.sql": "976b76033a2a330fe19ddbc2e487981596b331d88c2439d00dcd1ee9b1ea590d",
+    "supabase/migrations/20261006185241_f011_rls_grants.sql": "6c7b6ab99d8b8d00ac6699cdfc8a63d88bd41d6f73e2f5ccd36a7244c1df0236",
+    "supabase/migrations/20261006185242_f011_receipt_functions.sql": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31"
+  },
+  "results": [
+    {
+      "runtime": {
+        "name": "shifaa-local-postgres",
+        "container": "shifaa-local-postgres-postgres-1",
+        "user": "shifaa_owner",
+        "adminDatabase": "shifaa",
+        "running": true,
+        "image": "shifaa/postgis:17-3.5-006-local",
+        "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7"
+      },
+      "baseline": {
+        "applied": [
+          {
+            "path": "infra/db/migrations/001_identity_onboarding.sql",
+            "sha256": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+            "sha256": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
+            "sha256": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000500_family_care_relationships.sql",
+            "sha256": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000600_family_care_storage.sql",
+            "sha256": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260813000500_privacy_dsr_notifications.sql",
+            "sha256": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260813000600_privacy_dsr_storage.sql",
+            "sha256": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260820000600_discovery_sos_foundation.sql",
+            "sha256": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+            "sha256": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+            "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+            "sha256": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql",
+            "sha256": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+            "sha256": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql",
+            "sha256": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+            "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+            "sha256": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+            "sha256": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql",
+            "sha256": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001003_f010_c12_note_signing.sql",
+            "sha256": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql",
+            "sha256": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001005_f010_c17_referrals_api.sql",
+            "sha256": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql",
+            "sha256": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001007_f010_c19_referral_projections.sql",
+            "sha256": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001008_f010_c22_context_messages.sql",
+            "sha256": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql",
+            "sha256": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+            "sha256": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+            "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql",
+            "sha256": "b12eda7e4cdf6b9096833a0a19b96d61dedd16bb3c57cb8bc9cf463089f1a90b",
+            "exitCode": 0
+          }
+        ],
+        "fixtureSha256": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+        "legacyFeatureHelpersUsed": false
+      },
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k06_0ca33ca23b73c38c",
+          "owner": "shifaa_owner",
+          "serverVersion": "17.11",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "shifaa_owner",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 293767
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "shifaa_owner",
+          "-d",
+          "f011_k06_0ca33ca23b73c38c"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k06_0ca33ca23b73c38c"
+        ]
+      },
+      "applied": [
+        {
+          "path": "supabase/migrations/20261006175926_f011_allergy_revisions.sql",
+          "sha256": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175932_f011_content_artifacts.sql",
+          "sha256": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+          "sha256": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175942_f011_atomic_receipts.sql",
+          "sha256": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185236_f011_allergy_functions.sql",
+          "sha256": "4ee8c2a5f17fe43f1da5e8f5da42f4dcba1b62b2e35ac05755801a70b306ce86",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185237_f011_release_functions.sql",
+          "sha256": "0ddc26b03d353f3fda36780eca8672779722cfc97d212bba3d0a1022eb6e1019",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185239_f011_signing_functions.sql",
+          "sha256": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185240_f011_publication_functions.sql",
+          "sha256": "976b76033a2a330fe19ddbc2e487981596b331d88c2439d00dcd1ee9b1ea590d",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185241_f011_rls_grants.sql",
+          "sha256": "6c7b6ab99d8b8d00ac6699cdfc8a63d88bd41d6f73e2f5ccd36a7244c1df0236",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185242_f011_receipt_functions.sql",
+          "sha256": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31",
+          "exitCode": 0
+        }
+      ],
+      "populatedPredecessorTablesPreserved": 53,
+      "outboxEvents": {
+        "predecessor": [
+          "admin_role.changed",
+          "audit.export.requested",
+          "clinical.appointment.changed.v1",
+          "clinical.context_message.created.v1",
+          "clinical.doctor_absence.declared.v1",
+          "clinical.doctor_delay.declared.v1",
+          "clinical.encounter.completed.v1",
+          "clinical.encounter.opened.v1",
+          "clinical.encounter.updated.v1",
+          "clinical.note.signed.v1",
+          "clinical.queue.changed.v1",
+          "clinical.referral.accepted.v1",
+          "clinical.referral.pending.v1",
+          "clinical.schedule.changed.v1",
+          "consent.changed",
+          "emergency_contact.changed",
+          "emergency_contact.confirmed",
+          "emergency_contact.created",
+          "emergency_contact.declined",
+          "emergency_contact.revoked",
+          "facility.changed",
+          "identity.factor.changed",
+          "identity.manual_review.requested",
+          "identity.recovery.completed",
+          "identity.transition.decided",
+          "identity.transition.submitted",
+          "identity.verification.changed",
+          "membership.changed",
+          "notification.delivery.receipt_recorded",
+          "notification.delivery.replay_requested",
+          "notification.delivery.requested",
+          "notification.template.drafted",
+          "notification.template.published",
+          "privacy.dsr.export_consumed",
+          "privacy.dsr.export_ready",
+          "privacy.dsr.identity_required",
+          "privacy.dsr.status_changed",
+          "privacy.dsr.submitted",
+          "professional_license.changed",
+          "relationship.delegation.accepted",
+          "relationship.delegation.changed",
+          "relationship.delegation.created",
+          "relationship.delegation.revoked",
+          "relationship.delegation.updated",
+          "relationship.guardianship.active",
+          "relationship.guardianship.changed",
+          "relationship.guardianship.created",
+          "relationship.guardianship.rejected",
+          "relationship.guardianship.revoked",
+          "sos.emergency_contact.denied",
+          "sos.emergency_contact.requested",
+          "sos.incident.accepted",
+          "sos.incident.closed",
+          "sos.incident.created",
+          "sos.share.created",
+          "sos.share.revoked",
+          "sos.share.viewed"
+        ],
+        "current": [
+          "admin_role.changed",
+          "audit.export.requested",
+          "clinical.allergy.changed.v1",
+          "clinical.appointment.changed.v1",
+          "clinical.content_release.changed.v1",
+          "clinical.context_message.created.v1",
+          "clinical.doctor_absence.declared.v1",
+          "clinical.doctor_delay.declared.v1",
+          "clinical.encounter.completed.v1",
+          "clinical.encounter.opened.v1",
+          "clinical.encounter.updated.v1",
+          "clinical.note.signed.v1",
+          "clinical.queue.changed.v1",
+          "clinical.referral.accepted.v1",
+          "clinical.referral.pending.v1",
+          "clinical.schedule.changed.v1",
+          "consent.changed",
+          "emergency_contact.changed",
+          "emergency_contact.confirmed",
+          "emergency_contact.created",
+          "emergency_contact.declined",
+          "emergency_contact.revoked",
+          "facility.changed",
+          "identity.factor.changed",
+          "identity.manual_review.requested",
+          "identity.recovery.completed",
+          "identity.transition.decided",
+          "identity.transition.submitted",
+          "identity.verification.changed",
+          "membership.changed",
+          "notification.delivery.receipt_recorded",
+          "notification.delivery.replay_requested",
+          "notification.delivery.requested",
+          "notification.template.drafted",
+          "notification.template.published",
+          "privacy.dsr.export_consumed",
+          "privacy.dsr.export_ready",
+          "privacy.dsr.identity_required",
+          "privacy.dsr.status_changed",
+          "privacy.dsr.submitted",
+          "professional_license.changed",
+          "relationship.delegation.accepted",
+          "relationship.delegation.changed",
+          "relationship.delegation.created",
+          "relationship.delegation.revoked",
+          "relationship.delegation.updated",
+          "relationship.guardianship.active",
+          "relationship.guardianship.changed",
+          "relationship.guardianship.created",
+          "relationship.guardianship.rejected",
+          "relationship.guardianship.revoked",
+          "sos.emergency_contact.denied",
+          "sos.emergency_contact.requested",
+          "sos.incident.accepted",
+          "sos.incident.closed",
+          "sos.incident.created",
+          "sos.share.created",
+          "sos.share.revoked",
+          "sos.share.viewed"
+        ],
+        "predecessorValuesPreserved": true,
+        "exactlyTwoFeature011EventsAdded": true
+      },
+      "catalog": {
+        "executor": {
+          "login": false,
+          "superuser": false,
+          "bypassRls": false
+        },
+        "apiCanAssumeExecutor": false,
+        "executorSchemaCreate": 0,
+        "tables": [
+          {
+            "name": "allergies",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "allergy_heads",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "allergy_verification_bindings",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "allergy_verification_support",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_admissibility_evidence",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_artifact_admissibility_bindings",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_governance_authorities",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_material_bindings",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_releases",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_reviewer_designations",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_series",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_signature_bindings",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "mutation_commit_obligations",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "mutation_receipts",
+            "owner": "shifaa_owner",
+            "rls": true,
+            "force": true
+          }
+        ],
+        "functions": [
+          {
+            "signature": "clinical.list_allergies_api_v1(uuid,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.create_allergy_api_v1(uuid,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.verify_allergy_api_v1(uuid,integer,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.create_clinical_content_release_api_v1(text,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.sign_clinical_content_release_api_v1(uuid,integer,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.publish_clinical_content_release_api_v1(uuid,integer,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.list_clinical_content_api_v1(text,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          }
+        ],
+        "allConsumerFunctions": [
+          {
+            "name": "f011_decode_envelope_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "list_allergies_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "create_allergy_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "verify_allergy_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "f011_assert_response_context_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_record_mutation_effect_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_lock_clinician_scope_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_frame_nullable_text_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_assert_exact_keys_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_frame_text_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "create_clinical_content_release_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "sign_clinical_content_release_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "f011_release_current_eligibility_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_lock_clinic_content_scope_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_lock_publication_current_basis_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "publish_clinical_content_release_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "list_clinical_content_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "f011_artifact_canonical_bytes_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_allergy_current_authority_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_lock_medical_reviewer_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_finalize_receipt_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "f011_signer_receipt_basis_current_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_receipt_replay_metadata_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          }
+        ],
+        "allGuardFunctions": [
+          {
+            "name": "f011_guard_admissibility_insert_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_admissibility_update_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_allergy_head_update_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_allergy_verification_binding_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_admissibility_binding_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_material_bindings_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_release_update_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_signature_binding_insert_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_signature_bindings_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_governance_version_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_reject_immutable_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_require_mutation_commit_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          }
+        ],
+        "auditReadColumns": [
+          "actor_person_id",
+          "id",
+          "occurred_at",
+          "outcome",
+          "request_id",
+          "resource_id",
+          "resource_type",
+          "resource_version"
+        ],
+        "publicExecute": 0,
+        "directGrants": 0
+      },
+      "directRoles": [
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_heads",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergies",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_support",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_series",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_releases",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_material_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_governance_authorities",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_reviewer_designations",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_signature_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_admissibility_evidence",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_artifact_admissibility_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_receipts",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_commit_obligations",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_heads",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergies",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_support",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_series",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_releases",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_material_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_governance_authorities",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_reviewer_designations",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_signature_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_admissibility_evidence",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_artifact_admissibility_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_receipts",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_commit_obligations",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_heads",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_heads",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_heads",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergies",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergies",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergies",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_support",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_support",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_support",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_series",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_series",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_series",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_releases",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_releases",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_releases",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_material_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_material_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_material_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_governance_authorities",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_governance_authorities",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_governance_authorities",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_reviewer_designations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_reviewer_designations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_reviewer_designations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_signature_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_signature_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_signature_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_admissibility_evidence",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_admissibility_evidence",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_admissibility_evidence",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_receipts",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_receipts",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_receipts",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_commit_obligations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_commit_obligations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_commit_obligations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_heads",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_heads",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_heads",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergies",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergies",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergies",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_support",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_support",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_support",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_series",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_series",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_series",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_releases",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_releases",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_releases",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_material_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_material_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_material_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_governance_authorities",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_governance_authorities",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_governance_authorities",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_reviewer_designations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_reviewer_designations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_reviewer_designations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_signature_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_signature_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_signature_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_admissibility_evidence",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_admissibility_evidence",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_admissibility_evidence",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_receipts",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_receipts",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_receipts",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_commit_obligations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_commit_obligations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_commit_obligations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_heads",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_heads",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_heads",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergies",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergies",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergies",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_support",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_support",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_support",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_series",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_series",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_series",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_releases",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_releases",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_releases",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_material_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_material_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_material_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_governance_authorities",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_governance_authorities",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_governance_authorities",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_reviewer_designations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_reviewer_designations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_reviewer_designations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_signature_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_signature_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_signature_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_admissibility_evidence",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_admissibility_evidence",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_admissibility_evidence",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_receipts",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_receipts",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_receipts",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_commit_obligations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_commit_obligations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_commit_obligations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "shifaa_api",
+          "assumeExecutor": "DENIED_42501"
+        },
+        {
+          "role": "shifaa_api",
+          "privateCanonicalHelper": "DENIED_42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "entrypoint": "DENIED_42501"
+        }
+      ],
+      "auditGuards": {
+        "result": "PASS",
+        "actorClinicalEvents": 2,
+        "otherActorEventsHidden": 9,
+        "noActorVisible": 0,
+        "allAuditColumnsDenied": "42501",
+        "transport": "owner-session SET LOCAL ROLE",
+        "gucIsAuthentication": false
+      },
+      "prerequisiteSweep": {
+        "result": "PASS",
+        "mutations": [
+          "createAllergy",
+          "createClinicalContentRelease",
+          "publishClinicalContentRelease",
+          "signClinicalContentRelease",
+          "verifyAllergy"
+        ],
+        "checks": [
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          }
+        ],
+        "components": {
+          "results": [
+            {
+              "id": "ALG_NO_GUC_ROLE_AUTHORITY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_CLOSED_PROTECTION",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "ALG_CREATE_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DOMAIN_ONLY_COMMIT",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "RECEIPT_CLOSED_ENVELOPE_ROLLBACK",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "RECEIPT_OTHER_PRINCIPAL_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_CLN_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DEL_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DELEGATE_READ_ONLY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_PATIENT_CANNOT_VERIFY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_EXACT_SUPPORT_SOURCE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "ALG_APPEND_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_APPEND_PROVENANCE",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_HISTORY_KEYSET_CONTINUATION",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_CURSOR_FILTER_BINDING",
+              "result": "DENIED_INVALID_CURSOR",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "RECEIPT_ORIGINAL_TUPLE_AFTER_RESOURCE_AND_LANGUAGE_CHANGE",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_REPLAY_NO_SECOND_EFFECT",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_SAME_KEY_CHANGED_REQUEST_HASH_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23505"
+            },
+            {
+              "id": "ALG_CLINICIAN_ORIGINAL_PROVENANCE",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_STALE_CAS",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "40001"
+            },
+            {
+              "id": "ALG_ENTERED_IN_ERROR_WITHIN_VERIFY",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_TERMINAL_APPEND_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "ALG_CORRECTION_NEW_SELF_REPORTED_ASSERTION",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_NONTERMINAL_CORRECTION_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_DECLARED_DIGEST_EQUALITY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_FULL_MATERIAL_PROFILE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_DRAFT_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "CONTENT_SQL_OWNED_FROZEN_DIGEST",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_EXACT_CURRENT_BASIS",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "SIGN_CREATOR_CANNOT_CLAIM_SIGNER",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "SIGN_PHYSICIAN_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_PHARMACIST_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_IMMUTABLE_50_COLUMN_BASIS",
+              "result": "PASS"
+            },
+            {
+              "id": "CONTENT_SAME_VERSION_COMPETING_DRAFT",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_VALID_REJECTION_SAME_VERIFIED_BASIS",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_VALID_REJECTION_REPLAY",
+              "result": "PASS"
+            },
+            {
+              "id": "PUB_EXACT_ADMISSION_REQUIRED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "PUB_CREATOR_INDEPENDENCE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "PUB_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "CLINIC_PUBLISHED_METADATA_VISIBLE",
+              "result": "PASS"
+            },
+            {
+              "id": "CLINIC_PRIVATE_DATA_ABSENT",
+              "result": "PASS"
+            },
+            {
+              "id": "PUB_NO_REHABILITATION_AFTER_BASIS_VERSION_CHANGE",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_CURRENT_SIGNER_AUTHORITY_LOSS_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "RECEIPT_ALL_FIVE_EXACT_COMPLETION_TUPLE",
+              "result": "PASS"
+            }
+          ],
+          "state": {
+            "allergies": 5,
+            "releases": 2,
+            "signatures": 3,
+            "receipts": 11,
+            "obligations": 11,
+            "outbox": 11
+          },
+          "actualOnlineRole": "shifaa_api",
+          "syntheticOnly": true,
+          "fullRaceProofExecuted": false
+        },
+        "syntheticStructuralOnly": true,
+        "cryptoExecuted": false
+      },
+      "canonical": {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+        "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133",
+        "results": [
+          {
+            "id": "V01",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "d6527da9019430db441226d26efdeca86dfd6c4da55d81d4429e603dff3fe9b0",
+            "octets": 481
+          },
+          {
+            "id": "V02",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c5332313a73796e7468657469633a7265666572656e63653a322c5332373a323032362d31302d30325430303a30303a30302e3030303030305a2c53393a737563636573736f722c5333363a66303131303030302d303030302d343030302d383730302d3030303030303030303030312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "ddcd8088b2cecb01405822c7b580b0e1f54d7f9ab9a47d4fdd59c4e05765f383",
+            "octets": 546
+          },
+          {
+            "id": "V03",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323039392d30312d30315431323a33343a35362e3132333435365a2c53393a737563636573736f722c5333363a66303131303030302d303030302d343030302d383730302d3030303030303030303030312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "84bff6dd164dd9d1e011b0f64489de10630eb8016d651c3bb39d4d6dcbf39f2a",
+            "octets": 522
+          },
+          {
+            "id": "V04",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5332373ad8a7d8aed8aad8a8d8a7d8b12dd8a7d8b5d8b7d986d8a7d8b9d98a2c5331353a73796e7468657469632d73636f70652c5335303ad985d8b5d8afd8b120d8a7d8b5d8b7d986d8a7d8b9d98a20e2809420d984d8a720d985d8add8aad988d98920d8b7d8a8d98a2c5332343ad985d8b1d8acd8b93ad8a7d8aed8aad8a8d8a7d8b12cd9a12c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "a7150b3d395f228dca8d27a1ed02f191d8f425b4344a977f1e5e296345808afb",
+            "octets": 547
+          },
+          {
+            "id": "V05",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331363a6e65757472616c3a2c3b7365726965732c5331353a73796e7468657469632d73636f70652c5332353a53796e74686574696320223a2c3b5c0a0d0920736f757263652c53343a6e756c6c2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "c3bd2728a634d5ba15407eac0e6fbcafbcf78a4ea267b54a4da38d6afa09cdf3",
+            "octets": 490
+          },
+          {
+            "id": "V06",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5331353a53796e74686574696320436166c3a92c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "dbedcabeeb37038c9ba44b0ae98aa2fb17283baae2ce76231ea4441b5cb6f0fe",
+            "octets": 472
+          },
+          {
+            "id": "V07",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5331363a53796e7468657469632043616665cc812c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "7f73e509bd1569bb769e0b7f30aa60dbd9edc106d89e63ee9685d0cf753baf17",
+            "octets": 473
+          }
+        ],
+        "negatives": [
+          {
+            "id": "N01",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N02",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N03",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N04",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N05",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N06",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N07",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22008"
+          },
+          {
+            "id": "N08",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N09",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N10",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N11",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N12",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N15",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N16",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N17",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N18",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          }
+        ],
+        "materialBytesPassedIntoSql": false,
+        "upstreamOnly": [
+          "N13 NUL and N14 surrogate are rejected before PostgreSQL representation; protocol tests cover that boundary",
+          "N19-N23 decoder vectors: SQL encodes typed facts rather than consuming externally supplied canonical bytes",
+          "N24 declaredDigest equality is checked by the release-consumer component fixture",
+          "N25 wire timestamp normalization is upstream of canonical SQL facts"
+        ]
+      },
+      "behavior": {
+        "authorityFixture": "infra/db/fixtures/feature-011-k06.sql",
+        "authorityFixtureSha256": "36ca700e4d039f65a2904a97b255c3765fd6b47bdca0ff66b169633af51d0405",
+        "fixture": "tools/feature-011-consumer-fixtures.mjs",
+        "sha256": "4df750503dfcf33b1dbf10cef2e307a67485d988fb4742e67a15293b3dbe4d36",
+        "results": [
+          {
+            "id": "ALG_NO_GUC_ROLE_AUTHORITY",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "ALG_CLOSED_PROTECTION",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "ALG_CREATE_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_DOMAIN_ONLY_COMMIT",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "RECEIPT_CLOSED_ENVELOPE_ROLLBACK",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "RECEIPT_OTHER_PRINCIPAL_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "ALG_CURRENT_READ",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_CLN_CURRENT_READ",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_DEL_CURRENT_READ",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_DELEGATE_READ_ONLY",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "ALG_PATIENT_CANNOT_VERIFY",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "ALG_EXACT_SUPPORT_SOURCE",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "ALG_APPEND_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_APPEND_PROVENANCE",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_HISTORY_KEYSET_CONTINUATION",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_CURSOR_FILTER_BINDING",
+            "result": "DENIED_INVALID_CURSOR",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "RECEIPT_ORIGINAL_TUPLE_AFTER_RESOURCE_AND_LANGUAGE_CHANGE",
+            "result": "PASS"
+          },
+          {
+            "id": "RECEIPT_REPLAY_NO_SECOND_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "id": "RECEIPT_SAME_KEY_CHANGED_REQUEST_HASH_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23505"
+          },
+          {
+            "id": "ALG_CLINICIAN_ORIGINAL_PROVENANCE",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_STALE_CAS",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "40001"
+          },
+          {
+            "id": "ALG_ENTERED_IN_ERROR_WITHIN_VERIFY",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_TERMINAL_APPEND_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "ALG_CORRECTION_NEW_SELF_REPORTED_ASSERTION",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_NONTERMINAL_CORRECTION_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "CONTENT_DECLARED_DIGEST_EQUALITY",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "CONTENT_FULL_MATERIAL_PROFILE",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "CONTENT_DRAFT_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "CONTENT_SQL_OWNED_FROZEN_DIGEST",
+            "result": "PASS"
+          },
+          {
+            "id": "SIGN_EXACT_CURRENT_BASIS",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "SIGN_CREATOR_CANNOT_CLAIM_SIGNER",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "SIGN_PHYSICIAN_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "SIGN_PHARMACIST_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "SIGN_IMMUTABLE_50_COLUMN_BASIS",
+            "result": "PASS"
+          },
+          {
+            "id": "CONTENT_SAME_VERSION_COMPETING_DRAFT",
+            "result": "PASS"
+          },
+          {
+            "id": "SIGN_VALID_REJECTION_SAME_VERIFIED_BASIS",
+            "result": "PASS"
+          },
+          {
+            "id": "RECEIPT_VALID_REJECTION_REPLAY",
+            "result": "PASS"
+          },
+          {
+            "id": "PUB_EXACT_ADMISSION_REQUIRED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "PUB_CREATOR_INDEPENDENCE",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "PUB_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "CLINIC_PUBLISHED_METADATA_VISIBLE",
+            "result": "PASS"
+          },
+          {
+            "id": "CLINIC_PRIVATE_DATA_ABSENT",
+            "result": "PASS"
+          },
+          {
+            "id": "PUB_NO_REHABILITATION_AFTER_BASIS_VERSION_CHANGE",
+            "result": "PASS"
+          },
+          {
+            "id": "RECEIPT_CURRENT_SIGNER_AUTHORITY_LOSS_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "RECEIPT_ALL_FIVE_EXACT_COMPLETION_TUPLE",
+            "result": "PASS"
+          }
+        ],
+        "state": {
+          "allergies": 5,
+          "releases": 2,
+          "signatures": 3,
+          "receipts": 11,
+          "obligations": 11,
+          "outbox": 11
+        },
+        "actualOnlineRole": "shifaa_api",
+        "syntheticOnly": true,
+        "fullRaceProofExecuted": false
+      },
+      "fullRaceProofExecuted": false,
+      "cleanup": {
+        "database": "f011_k06_0ca33ca23b73c38c",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": {
+        "name": "shifaa-local-supabase",
+        "container": "supabase_db_shifaa-local-supabase",
+        "user": "supabase_admin",
+        "adminDatabase": "postgres",
+        "running": true,
+        "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+        "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+      },
+      "baseline": {
+        "applied": [
+          {
+            "path": "infra/db/migrations/001_identity_onboarding.sql",
+            "sha256": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+            "sha256": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
+            "sha256": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000500_family_care_relationships.sql",
+            "sha256": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000600_family_care_storage.sql",
+            "sha256": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260813000500_privacy_dsr_notifications.sql",
+            "sha256": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260813000600_privacy_dsr_storage.sql",
+            "sha256": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260820000600_discovery_sos_foundation.sql",
+            "sha256": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+            "sha256": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+            "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+            "sha256": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql",
+            "sha256": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+            "sha256": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql",
+            "sha256": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+            "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+            "sha256": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+            "sha256": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql",
+            "sha256": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001003_f010_c12_note_signing.sql",
+            "sha256": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql",
+            "sha256": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001005_f010_c17_referrals_api.sql",
+            "sha256": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql",
+            "sha256": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001007_f010_c19_referral_projections.sql",
+            "sha256": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001008_f010_c22_context_messages.sql",
+            "sha256": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql",
+            "sha256": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+            "sha256": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+            "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql",
+            "sha256": "b12eda7e4cdf6b9096833a0a19b96d61dedd16bb3c57cb8bc9cf463089f1a90b",
+            "exitCode": 0
+          }
+        ],
+        "fixtureSha256": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+        "legacyFeatureHelpersUsed": false
+      },
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k06_42144415a7a23550",
+          "owner": "supabase_admin",
+          "serverVersion": "17.6",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "supabase_admin",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 122680
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "f011_k06_42144415a7a23550"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k06_42144415a7a23550"
+        ]
+      },
+      "applied": [
+        {
+          "path": "supabase/migrations/20261006175926_f011_allergy_revisions.sql",
+          "sha256": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175932_f011_content_artifacts.sql",
+          "sha256": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+          "sha256": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175942_f011_atomic_receipts.sql",
+          "sha256": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185236_f011_allergy_functions.sql",
+          "sha256": "4ee8c2a5f17fe43f1da5e8f5da42f4dcba1b62b2e35ac05755801a70b306ce86",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185237_f011_release_functions.sql",
+          "sha256": "0ddc26b03d353f3fda36780eca8672779722cfc97d212bba3d0a1022eb6e1019",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185239_f011_signing_functions.sql",
+          "sha256": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185240_f011_publication_functions.sql",
+          "sha256": "976b76033a2a330fe19ddbc2e487981596b331d88c2439d00dcd1ee9b1ea590d",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185241_f011_rls_grants.sql",
+          "sha256": "6c7b6ab99d8b8d00ac6699cdfc8a63d88bd41d6f73e2f5ccd36a7244c1df0236",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006185242_f011_receipt_functions.sql",
+          "sha256": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31",
+          "exitCode": 0
+        }
+      ],
+      "populatedPredecessorTablesPreserved": 53,
+      "outboxEvents": {
+        "predecessor": [
+          "admin_role.changed",
+          "audit.export.requested",
+          "clinical.appointment.changed.v1",
+          "clinical.context_message.created.v1",
+          "clinical.doctor_absence.declared.v1",
+          "clinical.doctor_delay.declared.v1",
+          "clinical.encounter.completed.v1",
+          "clinical.encounter.opened.v1",
+          "clinical.encounter.updated.v1",
+          "clinical.note.signed.v1",
+          "clinical.queue.changed.v1",
+          "clinical.referral.accepted.v1",
+          "clinical.referral.pending.v1",
+          "clinical.schedule.changed.v1",
+          "consent.changed",
+          "emergency_contact.changed",
+          "emergency_contact.confirmed",
+          "emergency_contact.created",
+          "emergency_contact.declined",
+          "emergency_contact.revoked",
+          "facility.changed",
+          "identity.factor.changed",
+          "identity.manual_review.requested",
+          "identity.recovery.completed",
+          "identity.transition.decided",
+          "identity.transition.submitted",
+          "identity.verification.changed",
+          "membership.changed",
+          "notification.delivery.receipt_recorded",
+          "notification.delivery.replay_requested",
+          "notification.delivery.requested",
+          "notification.template.drafted",
+          "notification.template.published",
+          "privacy.dsr.export_consumed",
+          "privacy.dsr.export_ready",
+          "privacy.dsr.identity_required",
+          "privacy.dsr.status_changed",
+          "privacy.dsr.submitted",
+          "professional_license.changed",
+          "relationship.delegation.accepted",
+          "relationship.delegation.changed",
+          "relationship.delegation.created",
+          "relationship.delegation.revoked",
+          "relationship.delegation.updated",
+          "relationship.guardianship.active",
+          "relationship.guardianship.changed",
+          "relationship.guardianship.created",
+          "relationship.guardianship.rejected",
+          "relationship.guardianship.revoked",
+          "sos.emergency_contact.denied",
+          "sos.emergency_contact.requested",
+          "sos.incident.accepted",
+          "sos.incident.closed",
+          "sos.incident.created",
+          "sos.share.created",
+          "sos.share.revoked",
+          "sos.share.viewed"
+        ],
+        "current": [
+          "admin_role.changed",
+          "audit.export.requested",
+          "clinical.allergy.changed.v1",
+          "clinical.appointment.changed.v1",
+          "clinical.content_release.changed.v1",
+          "clinical.context_message.created.v1",
+          "clinical.doctor_absence.declared.v1",
+          "clinical.doctor_delay.declared.v1",
+          "clinical.encounter.completed.v1",
+          "clinical.encounter.opened.v1",
+          "clinical.encounter.updated.v1",
+          "clinical.note.signed.v1",
+          "clinical.queue.changed.v1",
+          "clinical.referral.accepted.v1",
+          "clinical.referral.pending.v1",
+          "clinical.schedule.changed.v1",
+          "consent.changed",
+          "emergency_contact.changed",
+          "emergency_contact.confirmed",
+          "emergency_contact.created",
+          "emergency_contact.declined",
+          "emergency_contact.revoked",
+          "facility.changed",
+          "identity.factor.changed",
+          "identity.manual_review.requested",
+          "identity.recovery.completed",
+          "identity.transition.decided",
+          "identity.transition.submitted",
+          "identity.verification.changed",
+          "membership.changed",
+          "notification.delivery.receipt_recorded",
+          "notification.delivery.replay_requested",
+          "notification.delivery.requested",
+          "notification.template.drafted",
+          "notification.template.published",
+          "privacy.dsr.export_consumed",
+          "privacy.dsr.export_ready",
+          "privacy.dsr.identity_required",
+          "privacy.dsr.status_changed",
+          "privacy.dsr.submitted",
+          "professional_license.changed",
+          "relationship.delegation.accepted",
+          "relationship.delegation.changed",
+          "relationship.delegation.created",
+          "relationship.delegation.revoked",
+          "relationship.delegation.updated",
+          "relationship.guardianship.active",
+          "relationship.guardianship.changed",
+          "relationship.guardianship.created",
+          "relationship.guardianship.rejected",
+          "relationship.guardianship.revoked",
+          "sos.emergency_contact.denied",
+          "sos.emergency_contact.requested",
+          "sos.incident.accepted",
+          "sos.incident.closed",
+          "sos.incident.created",
+          "sos.share.created",
+          "sos.share.revoked",
+          "sos.share.viewed"
+        ],
+        "predecessorValuesPreserved": true,
+        "exactlyTwoFeature011EventsAdded": true
+      },
+      "catalog": {
+        "executor": {
+          "login": false,
+          "superuser": false,
+          "bypassRls": false
+        },
+        "apiCanAssumeExecutor": false,
+        "executorSchemaCreate": 0,
+        "tables": [
+          {
+            "name": "allergies",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "allergy_heads",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "allergy_verification_bindings",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "allergy_verification_support",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_admissibility_evidence",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_artifact_admissibility_bindings",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_governance_authorities",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_material_bindings",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_releases",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_reviewer_designations",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_series",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "content_signature_bindings",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "mutation_commit_obligations",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          },
+          {
+            "name": "mutation_receipts",
+            "owner": "supabase_admin",
+            "rls": true,
+            "force": true
+          }
+        ],
+        "functions": [
+          {
+            "signature": "clinical.list_allergies_api_v1(uuid,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.create_allergy_api_v1(uuid,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.verify_allergy_api_v1(uuid,integer,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.create_clinical_content_release_api_v1(text,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.sign_clinical_content_release_api_v1(uuid,integer,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.publish_clinical_content_release_api_v1(uuid,integer,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          },
+          {
+            "signature": "clinical.list_clinical_content_api_v1(text,jsonb)",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true,
+            "workerExecute": false
+          }
+        ],
+        "allConsumerFunctions": [
+          {
+            "name": "create_allergy_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "create_clinical_content_release_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "f011_allergy_current_authority_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_artifact_canonical_bytes_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_assert_exact_keys_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_assert_response_context_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_decode_envelope_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_finalize_receipt_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "f011_frame_nullable_text_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_frame_text_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_lock_clinic_content_scope_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_lock_clinician_scope_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_lock_medical_reviewer_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_lock_publication_current_basis_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_receipt_replay_metadata_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_record_mutation_effect_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_release_current_eligibility_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "f011_signer_receipt_basis_current_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": false
+          },
+          {
+            "name": "list_allergies_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "list_clinical_content_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "publish_clinical_content_release_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "sign_clinical_content_release_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          },
+          {
+            "name": "verify_allergy_api_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "apiExecute": true
+          }
+        ],
+        "allGuardFunctions": [
+          {
+            "name": "f011_guard_admissibility_insert_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_admissibility_update_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_allergy_head_update_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_allergy_verification_binding_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_admissibility_binding_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_material_bindings_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_release_update_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_signature_binding_insert_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_content_signature_bindings_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_guard_governance_version_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_reject_immutable_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          },
+          {
+            "name": "f011_require_mutation_commit_v1",
+            "owner": "shifaa_f011_executor",
+            "definer": true,
+            "config": [
+              "search_path=\"\""
+            ],
+            "onlineExecute": 0
+          }
+        ],
+        "auditReadColumns": [
+          "actor_person_id",
+          "id",
+          "occurred_at",
+          "outcome",
+          "request_id",
+          "resource_id",
+          "resource_type",
+          "resource_version"
+        ],
+        "publicExecute": 0,
+        "directGrants": 0
+      },
+      "directRoles": [
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_heads",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergies",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_support",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_series",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_releases",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_material_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_governance_authorities",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_reviewer_designations",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_signature_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_admissibility_evidence",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_artifact_admissibility_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_receipts",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_commit_obligations",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_heads",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergies",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_support",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_series",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_releases",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_material_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_governance_authorities",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_reviewer_designations",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_signature_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_admissibility_evidence",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_artifact_admissibility_bindings",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_receipts",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_commit_obligations",
+          "sqlstate": "42501"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_heads",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_heads",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_heads",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergies",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergies",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergies",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_support",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_support",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_support",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "allergy_verification_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_series",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_series",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_series",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_releases",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_releases",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_releases",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_material_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_material_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_material_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_governance_authorities",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_governance_authorities",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_governance_authorities",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_reviewer_designations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_reviewer_designations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_reviewer_designations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_signature_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_signature_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_signature_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_admissibility_evidence",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_admissibility_evidence",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_admissibility_evidence",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_receipts",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_receipts",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_receipts",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_commit_obligations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_commit_obligations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_api",
+          "relation": "mutation_commit_obligations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_heads",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_heads",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_heads",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergies",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergies",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergies",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_support",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_support",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_support",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "allergy_verification_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_series",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_series",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_series",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_releases",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_releases",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_releases",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_material_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_material_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_material_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_governance_authorities",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_governance_authorities",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_governance_authorities",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_reviewer_designations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_reviewer_designations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_reviewer_designations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_signature_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_signature_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_signature_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_admissibility_evidence",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_admissibility_evidence",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_admissibility_evidence",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_receipts",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_receipts",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_receipts",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_commit_obligations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_commit_obligations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "shifaa_worker",
+          "relation": "mutation_commit_obligations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "independent role login"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_heads",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_heads",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_heads",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergies",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergies",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergies",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_support",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_support",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_support",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "allergy_verification_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_series",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_series",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_series",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_releases",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_releases",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_releases",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_material_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_material_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_material_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_governance_authorities",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_governance_authorities",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_governance_authorities",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_reviewer_designations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_reviewer_designations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_reviewer_designations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_signature_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_signature_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_signature_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_admissibility_evidence",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_admissibility_evidence",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_admissibility_evidence",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "content_artifact_admissibility_bindings",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_receipts",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_receipts",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_receipts",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_commit_obligations",
+          "operation": "INSERT",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_commit_obligations",
+          "operation": "UPDATE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "service_role",
+          "relation": "mutation_commit_obligations",
+          "operation": "DELETE",
+          "sqlstate": "42501",
+          "transport": "owner-session SET LOCAL ROLE"
+        },
+        {
+          "role": "shifaa_api",
+          "assumeExecutor": "DENIED_42501"
+        },
+        {
+          "role": "shifaa_api",
+          "privateCanonicalHelper": "DENIED_42501"
+        },
+        {
+          "role": "shifaa_worker",
+          "entrypoint": "DENIED_42501"
+        }
+      ],
+      "auditGuards": {
+        "result": "PASS",
+        "actorClinicalEvents": 2,
+        "otherActorEventsHidden": 9,
+        "noActorVisible": 0,
+        "allAuditColumnsDenied": "42501",
+        "transport": "owner-session SET LOCAL ROLE",
+        "gucIsAuthentication": false
+      },
+      "prerequisiteSweep": {
+        "result": "PASS",
+        "mutations": [
+          "createAllergy",
+          "createClinicalContentRelease",
+          "publishClinicalContentRelease",
+          "signClinicalContentRelease",
+          "verifyAllergy"
+        ],
+        "checks": [
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          }
+        ],
+        "components": {
+          "results": [
+            {
+              "id": "ALG_NO_GUC_ROLE_AUTHORITY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_CLOSED_PROTECTION",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "ALG_CREATE_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DOMAIN_ONLY_COMMIT",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "RECEIPT_CLOSED_ENVELOPE_ROLLBACK",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "RECEIPT_OTHER_PRINCIPAL_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_CLN_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DEL_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DELEGATE_READ_ONLY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_PATIENT_CANNOT_VERIFY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_EXACT_SUPPORT_SOURCE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "ALG_APPEND_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_APPEND_PROVENANCE",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_HISTORY_KEYSET_CONTINUATION",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_CURSOR_FILTER_BINDING",
+              "result": "DENIED_INVALID_CURSOR",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "RECEIPT_ORIGINAL_TUPLE_AFTER_RESOURCE_AND_LANGUAGE_CHANGE",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_REPLAY_NO_SECOND_EFFECT",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_SAME_KEY_CHANGED_REQUEST_HASH_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23505"
+            },
+            {
+              "id": "ALG_CLINICIAN_ORIGINAL_PROVENANCE",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_STALE_CAS",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "40001"
+            },
+            {
+              "id": "ALG_ENTERED_IN_ERROR_WITHIN_VERIFY",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_TERMINAL_APPEND_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "ALG_CORRECTION_NEW_SELF_REPORTED_ASSERTION",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_NONTERMINAL_CORRECTION_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_DECLARED_DIGEST_EQUALITY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_FULL_MATERIAL_PROFILE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_DRAFT_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "CONTENT_SQL_OWNED_FROZEN_DIGEST",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_EXACT_CURRENT_BASIS",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "SIGN_CREATOR_CANNOT_CLAIM_SIGNER",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "SIGN_PHYSICIAN_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_PHARMACIST_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_IMMUTABLE_50_COLUMN_BASIS",
+              "result": "PASS"
+            },
+            {
+              "id": "CONTENT_SAME_VERSION_COMPETING_DRAFT",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_VALID_REJECTION_SAME_VERIFIED_BASIS",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_VALID_REJECTION_REPLAY",
+              "result": "PASS"
+            },
+            {
+              "id": "PUB_EXACT_ADMISSION_REQUIRED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "PUB_CREATOR_INDEPENDENCE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "PUB_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "CLINIC_PUBLISHED_METADATA_VISIBLE",
+              "result": "PASS"
+            },
+            {
+              "id": "CLINIC_PRIVATE_DATA_ABSENT",
+              "result": "PASS"
+            },
+            {
+              "id": "PUB_NO_REHABILITATION_AFTER_BASIS_VERSION_CHANGE",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_CURRENT_SIGNER_AUTHORITY_LOSS_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "RECEIPT_ALL_FIVE_EXACT_COMPLETION_TUPLE",
+              "result": "PASS"
+            }
+          ],
+          "state": {
+            "allergies": 5,
+            "releases": 2,
+            "signatures": 3,
+            "receipts": 11,
+            "obligations": 11,
+            "outbox": 11
+          },
+          "actualOnlineRole": "shifaa_api",
+          "syntheticOnly": true,
+          "fullRaceProofExecuted": false
+        },
+        "syntheticStructuralOnly": true,
+        "cryptoExecuted": false
+      },
+      "canonical": {
+        "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+        "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133",
+        "results": [
+          {
+            "id": "V01",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "d6527da9019430db441226d26efdeca86dfd6c4da55d81d4429e603dff3fe9b0",
+            "octets": 481
+          },
+          {
+            "id": "V02",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c5332313a73796e7468657469633a7265666572656e63653a322c5332373a323032362d31302d30325430303a30303a30302e3030303030305a2c53393a737563636573736f722c5333363a66303131303030302d303030302d343030302d383730302d3030303030303030303030312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "ddcd8088b2cecb01405822c7b580b0e1f54d7f9ab9a47d4fdd59c4e05765f383",
+            "octets": 546
+          },
+          {
+            "id": "V03",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323039392d30312d30315431323a33343a35362e3132333435365a2c53393a737563636573736f722c5333363a66303131303030302d303030302d343030302d383730302d3030303030303030303030312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "84bff6dd164dd9d1e011b0f64489de10630eb8016d651c3bb39d4d6dcbf39f2a",
+            "octets": 522
+          },
+          {
+            "id": "V04",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5332373ad8a7d8aed8aad8a8d8a7d8b12dd8a7d8b5d8b7d986d8a7d8b9d98a2c5331353a73796e7468657469632d73636f70652c5335303ad985d8b5d8afd8b120d8a7d8b5d8b7d986d8a7d8b9d98a20e2809420d984d8a720d985d8add8aad988d98920d8b7d8a8d98a2c5332343ad985d8b1d8acd8b93ad8a7d8aed8aad8a8d8a7d8b12cd9a12c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "a7150b3d395f228dca8d27a1ed02f191d8f425b4344a977f1e5e296345808afb",
+            "octets": 547
+          },
+          {
+            "id": "V05",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331363a6e65757472616c3a2c3b7365726965732c5331353a73796e7468657469632d73636f70652c5332353a53796e74686574696320223a2c3b5c0a0d0920736f757263652c53343a6e756c6c2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "c3bd2728a634d5ba15407eac0e6fbcafbcf78a4ea267b54a4da38d6afa09cdf3",
+            "octets": 490
+          },
+          {
+            "id": "V06",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5331353a53796e74686574696320436166c3a92c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "dbedcabeeb37038c9ba44b0ae98aa2fb17283baae2ce76231ea4441b5cb6f0fe",
+            "octets": 472
+          },
+          {
+            "id": "V07",
+            "result": "PASS_FROZEN_SQL_BYTES_AND_DIGEST",
+            "hex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5331363a53796e7468657469632043616665cc812c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+            "sha256": "7f73e509bd1569bb769e0b7f30aa60dbd9edc106d89e63ee9685d0cf753baf17",
+            "octets": 473
+          }
+        ],
+        "negatives": [
+          {
+            "id": "N01",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N02",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N03",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N04",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N05",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N06",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N07",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22008"
+          },
+          {
+            "id": "N08",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N09",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N10",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N11",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N12",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N15",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N16",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N17",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "N18",
+            "result": "DENIED_INVALID_CANONICAL_FACTS",
+            "sqlstate": "22023"
+          }
+        ],
+        "materialBytesPassedIntoSql": false,
+        "upstreamOnly": [
+          "N13 NUL and N14 surrogate are rejected before PostgreSQL representation; protocol tests cover that boundary",
+          "N19-N23 decoder vectors: SQL encodes typed facts rather than consuming externally supplied canonical bytes",
+          "N24 declaredDigest equality is checked by the release-consumer component fixture",
+          "N25 wire timestamp normalization is upstream of canonical SQL facts"
+        ]
+      },
+      "behavior": {
+        "authorityFixture": "infra/db/fixtures/feature-011-k06.sql",
+        "authorityFixtureSha256": "36ca700e4d039f65a2904a97b255c3765fd6b47bdca0ff66b169633af51d0405",
+        "fixture": "tools/feature-011-consumer-fixtures.mjs",
+        "sha256": "4df750503dfcf33b1dbf10cef2e307a67485d988fb4742e67a15293b3dbe4d36",
+        "results": [
+          {
+            "id": "ALG_NO_GUC_ROLE_AUTHORITY",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "ALG_CLOSED_PROTECTION",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "ALG_CREATE_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_DOMAIN_ONLY_COMMIT",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "RECEIPT_CLOSED_ENVELOPE_ROLLBACK",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "RECEIPT_OTHER_PRINCIPAL_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "ALG_CURRENT_READ",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_CLN_CURRENT_READ",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_DEL_CURRENT_READ",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_DELEGATE_READ_ONLY",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "ALG_PATIENT_CANNOT_VERIFY",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "ALG_EXACT_SUPPORT_SOURCE",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "ALG_APPEND_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_APPEND_PROVENANCE",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_HISTORY_KEYSET_CONTINUATION",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_CURSOR_FILTER_BINDING",
+            "result": "DENIED_INVALID_CURSOR",
+            "sqlstate": "22023"
+          },
+          {
+            "id": "RECEIPT_ORIGINAL_TUPLE_AFTER_RESOURCE_AND_LANGUAGE_CHANGE",
+            "result": "PASS"
+          },
+          {
+            "id": "RECEIPT_REPLAY_NO_SECOND_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "id": "RECEIPT_SAME_KEY_CHANGED_REQUEST_HASH_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23505"
+          },
+          {
+            "id": "ALG_CLINICIAN_ORIGINAL_PROVENANCE",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_STALE_CAS",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "40001"
+          },
+          {
+            "id": "ALG_ENTERED_IN_ERROR_WITHIN_VERIFY",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_TERMINAL_APPEND_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "ALG_CORRECTION_NEW_SELF_REPORTED_ASSERTION",
+            "result": "PASS"
+          },
+          {
+            "id": "ALG_NONTERMINAL_CORRECTION_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "CONTENT_DECLARED_DIGEST_EQUALITY",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "CONTENT_FULL_MATERIAL_PROFILE",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "23514"
+          },
+          {
+            "id": "CONTENT_DRAFT_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "CONTENT_SQL_OWNED_FROZEN_DIGEST",
+            "result": "PASS"
+          },
+          {
+            "id": "SIGN_EXACT_CURRENT_BASIS",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "SIGN_CREATOR_CANNOT_CLAIM_SIGNER",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "SIGN_PHYSICIAN_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "SIGN_PHARMACIST_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "SIGN_IMMUTABLE_50_COLUMN_BASIS",
+            "result": "PASS"
+          },
+          {
+            "id": "CONTENT_SAME_VERSION_COMPETING_DRAFT",
+            "result": "PASS"
+          },
+          {
+            "id": "SIGN_VALID_REJECTION_SAME_VERIFIED_BASIS",
+            "result": "PASS"
+          },
+          {
+            "id": "RECEIPT_VALID_REJECTION_REPLAY",
+            "result": "PASS"
+          },
+          {
+            "id": "PUB_EXACT_ADMISSION_REQUIRED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "PUB_CREATOR_INDEPENDENCE",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "PUB_FINALIZED",
+            "result": "PASS"
+          },
+          {
+            "id": "CLINIC_PUBLISHED_METADATA_VISIBLE",
+            "result": "PASS"
+          },
+          {
+            "id": "CLINIC_PRIVATE_DATA_ABSENT",
+            "result": "PASS"
+          },
+          {
+            "id": "PUB_NO_REHABILITATION_AFTER_BASIS_VERSION_CHANGE",
+            "result": "PASS"
+          },
+          {
+            "id": "RECEIPT_CURRENT_SIGNER_AUTHORITY_LOSS_DENIED",
+            "result": "DENIED_WITHOUT_EFFECT",
+            "sqlstate": "42501"
+          },
+          {
+            "id": "RECEIPT_ALL_FIVE_EXACT_COMPLETION_TUPLE",
+            "result": "PASS"
+          }
+        ],
+        "state": {
+          "allergies": 5,
+          "releases": 2,
+          "signatures": 3,
+          "receipts": 11,
+          "obligations": 11,
+          "outbox": 11
+        },
+        "actualOnlineRole": "shifaa_api",
+        "syntheticOnly": true,
+        "fullRaceProofExecuted": false
+      },
+      "fullRaceProofExecuted": false,
+      "cleanup": {
+        "database": "f011_k06_42144415a7a23550",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "syntheticOnly": true,
+  "k07Started": false,
+  "k07Accepted": false
+}

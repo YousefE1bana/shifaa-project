@@ -1,0 +1,45 @@
+{
+  "recordedAt": "2026-10-10T17:47:54.906Z",
+  "result": "PASS_TWO_UNCHANGED_FOCUSED_RUNS",
+  "priorFailure": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ref-copy-r03/full-verify.json",
+    "sha256": "81e5ab83162900b11c779b966111d1703a9c170bb8f0a9872fd6670247a0361a"
+  },
+  "failedTiming": {
+    "existingP95Ms": 115.934,
+    "nonexistentP95Ms": 51.966,
+    "deltaMs": 63.968,
+    "thresholdMs": 50
+  },
+  "runs": [
+    {
+      "command": "node tools/run-identity-continuity-recovery-test.mjs",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/recovery-focused-01.log",
+        "sha256": "2cb393d94b2867095e7d854d15b76fd93d7d907ffe594a0cb09f30f6f1d96324"
+      },
+      "integrationPassed": 7,
+      "e2ePassed": 1,
+      "p95DeltaMs": null,
+      "reasonNoNumericMetric": "Passing test stdout is suppressed by current Vitest reporting; no numeric measurement inferred"
+    },
+    {
+      "command": "node tools/run-identity-continuity-recovery-test.mjs",
+      "exitCode": 0,
+      "log": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/recovery-focused-02.log",
+        "sha256": "9f5f0874ccf853c3498e640a6e83564d83138a802a6d7ddcb18cb198c12b6318"
+      },
+      "integrationPassed": 7,
+      "e2ePassed": 1,
+      "p95DeltaMs": null,
+      "reasonNoNumericMetric": "Passing test stdout is suppressed by current Vitest reporting; no numeric measurement inferred"
+    }
+  ],
+  "interpretation": "Failure was not reproduced in two focused clean native runs. Timing variance is a candidate explanation, not a proven root cause or formal no-oracle acceptance. Failed full attempt remains failed; fresh full verification required.",
+  "sourceChanges": false,
+  "thresholdAssertionWarmupSampleCountChanges": false,
+  "formalAcceptance": false,
+  "T092Reexecuted": false
+}

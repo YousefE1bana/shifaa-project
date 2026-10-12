@@ -1,0 +1,40 @@
+{
+  "id": "SHIFAA-F011-VERIFICATION-OWNERS-2026-10-10",
+  "recordedAt": "2026-10-10T13:05:06.708Z",
+  "authority": "DIRECT_PRODUCT_OWNER_REPLY",
+  "verbatim": "Yousef Osama acts in all three roles for Feature 011 verification only",
+  "effective": "PROSPECTIVE_FROM_CURRENT_REPLY",
+  "roles": [
+    "QA Lead",
+    "Platform Lead",
+    "Design Lead"
+  ],
+  "person": "Yousef Osama",
+  "scope": "Feature 011 verification only",
+  "productOwner": "Yousef Osama",
+  "decision": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/feature-011-verification-owners-2026-10-10.md",
+    "sha256": "c8da9b2d41327671682288c381a6d5964fbfed787fd8a185fcb9c0fa13b4a15a"
+  },
+  "priorEngineeringManifest": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/delegated-closeout-2026-10-10/manifest.json",
+    "sha256": "f91f5dde0075502afcbf8ba9a95b870ac3e038ac4f56e01adcbd3f2351319c1d"
+  },
+  "priorDesignDesignation": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md",
+    "sha256": "b3dcef629ed2e3b80f1ef07a73369664314c4da4c623f1d80a78141942bba269"
+  },
+  "ownerIdentityBlocker": "RESOLVED_FOR_FEATURE_011_VERIFICATION",
+  "remaining": {
+    "referenceProfileApproval": "PENDING",
+    "visualProfileApproval": "PENDING",
+    "formalBaselineExecution": "PENDING",
+    "ownerEvidenceDisposition": "PENDING"
+  },
+  "formalGateClosure": false,
+  "checkpointAcceptance": false,
+  "taskState": "T088-T092 UNCHECKED",
+  "issues": "485-489 remain OPEN; no GitHub mutation performed",
+  "retainedGates": "UNCHANGED_OPEN",
+  "gitIntegration": "NONE"
+}

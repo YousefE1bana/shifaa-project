@@ -1,0 +1,20 @@
+{
+  "checkpoint": "K14",
+  "task": "T054",
+  "result": "VALID_RED",
+  "tests": 17,
+  "failed": 17,
+  "setupFailures": 0,
+  "reason": "12 intended missing clinician verification state assertions and five missing authorized history metadata assertions. Existing generated client executes against initialized synthetic HTTP fixtures; no import/setup/syntax failure counted.",
+  "command": "pnpm --filter @shifaa/api exec tsx --test ../../apps/clinic/test/feature-011-verification.test.tsx ../../apps/patient/test/feature-011-history.test.tsx",
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/checks/ui-red.log",
+    "sha256": "98df7446bf49f351612f2fdf7564e91bc295a0737d2c46f6825c32e0108a63d2"
+  },
+  "redTestDigests": {
+    "apps/clinic/test/feature-011-verification.test.tsx": "527b7bd64b9bde03dc0e66cfc0fcc71ca05734b9631c549f8b243d1ebb19e4c2",
+    "apps/patient/test/feature-011-history.test.tsx": "4b584aff52416ef74e4c9ae9b32425ae0cdc17b02ac2f9c5a287a1ee5869f1e4"
+  },
+  "scope": "Functional/test-only synthetic engineering. Bilingual rendered CTA/focus/history coverage is captured separately by T055/T056.",
+  "acceptance": "PENDING_PRODUCT_OWNER"
+}

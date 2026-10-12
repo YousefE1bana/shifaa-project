@@ -1,0 +1,1909 @@
+{
+  "crosswalkId": "SHIFAA-F011-HISTORICAL-CROSSWALK@1.0.0",
+  "date": "2026-10-06",
+  "newLedgerId": "SHIFAA-F011-FRESH-TASKS@1.0.0",
+  "createdAfter": "Fresh canonical tasks.md and independent graph already written; old descriptions/evidence inspected only afterward",
+  "scope": "95 historical task records plus 10 preserved implementation captures; counts are crosswalk items, not reusable completed fresh tasks",
+  "historicalState": "C01/C02/C02A accepted bounded evidence; C02B design/recovery only; C03 RED/missing DDL only, no physical schema",
+  "counts": {
+    "REUSABLE_CANDIDATE": 7,
+    "PARTIALLY_REUSABLE": 13,
+    "SUPERSEDED": 84,
+    "NOT_APPLICABLE": 1
+  },
+  "completionTransferred": false,
+  "items": [
+    {
+      "item": "historical-ledger:T001",
+      "oldCheckpoint": "C01",
+      "oldTask": "T001",
+      "classification": "REUSABLE_CANDIDATE",
+      "newTasks": [
+        "T001",
+        "T002",
+        "T003"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Rerun current mapped tests/toolchain/approval input hashes; confirm unchanged normative subset and scope; record fresh input/output evidence and obtain new checkpoint acceptance. Does not prove new evidence/allergy/receipt protocols.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T002",
+      "oldCheckpoint": "C01",
+      "oldTask": "T002",
+      "classification": "REUSABLE_CANDIDATE",
+      "newTasks": [
+        "T001",
+        "T002",
+        "T003"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Rerun current mapped tests/toolchain/approval input hashes; confirm unchanged normative subset and scope; record fresh input/output evidence and obtain new checkpoint acceptance. Does not prove new evidence/allergy/receipt protocols.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T003",
+      "oldCheckpoint": "C01",
+      "oldTask": "T003",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T001",
+        "T002",
+        "T003"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Retain useful source/RED/harness metadata only. Extend against recovered profiles, typed basis/envelopes/receipts, current approvals/gates and both-runtime roles; capture new RED/GREEN/parity and explicit checkpoint acceptance.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T004",
+      "oldCheckpoint": "C02",
+      "oldTask": "T004",
+      "classification": "REUSABLE_CANDIDATE",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T006",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Rerun current mapped tests/toolchain/approval input hashes; confirm unchanged normative subset and scope; record fresh input/output evidence and obtain new checkpoint acceptance. Does not prove new evidence/allergy/receipt protocols.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T005",
+      "oldCheckpoint": "C02",
+      "oldTask": "T005",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T006",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Retain useful source/RED/harness metadata only. Extend against recovered profiles, typed basis/envelopes/receipts, current approvals/gates and both-runtime roles; capture new RED/GREEN/parity and explicit checkpoint acceptance.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T006",
+      "oldCheckpoint": "C02",
+      "oldTask": "T006",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T006",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Retain useful source/RED/harness metadata only. Extend against recovered profiles, typed basis/envelopes/receipts, current approvals/gates and both-runtime roles; capture new RED/GREEN/parity and explicit checkpoint acceptance.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T007",
+      "oldCheckpoint": "C02",
+      "oldTask": "T007",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T006",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Retain useful source/RED/harness metadata only. Extend against recovered profiles, typed basis/envelopes/receipts, current approvals/gates and both-runtime roles; capture new RED/GREEN/parity and explicit checkpoint acceptance.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T090",
+      "oldCheckpoint": "C02A",
+      "oldTask": "T090",
+      "classification": "REUSABLE_CANDIDATE",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Rerun current mapped tests/toolchain/approval input hashes; confirm unchanged normative subset and scope; record fresh input/output evidence and obtain new checkpoint acceptance. Does not prove new evidence/allergy/receipt protocols.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T091",
+      "oldCheckpoint": "C02A",
+      "oldTask": "T091",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Retain useful source/RED/harness metadata only. Extend against recovered profiles, typed basis/envelopes/receipts, current approvals/gates and both-runtime roles; capture new RED/GREEN/parity and explicit checkpoint acceptance.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T092",
+      "oldCheckpoint": "C02A",
+      "oldTask": "T092",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Bounded previous-checkpoint acceptance preserved; not fresh acceptance",
+      "revalidation": "Retain useful source/RED/harness metadata only. Extend against recovered profiles, typed basis/envelopes/receipts, current approvals/gates and both-runtime roles; capture new RED/GREEN/parity and explicit checkpoint acceptance.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T093",
+      "oldCheckpoint": "C02B",
+      "oldTask": "T093",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T094",
+      "oldCheckpoint": "C02B",
+      "oldTask": "T094",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T095",
+      "oldCheckpoint": "C02B",
+      "oldTask": "T095",
+      "classification": "NOT_APPLICABLE",
+      "newTasks": [
+        "T004",
+        "T005",
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Historical C02B review task was not executed. Contracts are now approved normative Plan inputs, not an implementation task to recreate; fresh metadata/physical/producer proof still required.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T008",
+      "oldCheckpoint": "C03",
+      "oldTask": "T008",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T010",
+        "T012",
+        "T013",
+        "T014",
+        "T015",
+        "T016"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "Partial C03 missing-DDL RED only; no GREEN or schema implementation",
+      "revalidation": "Retain useful source/RED/harness metadata only. Extend against recovered profiles, typed basis/envelopes/receipts, current approvals/gates and both-runtime roles; capture new RED/GREEN/parity and explicit checkpoint acceptance.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T009",
+      "oldCheckpoint": "C03",
+      "oldTask": "T009",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T017",
+        "T018",
+        "T019",
+        "T020",
+        "T025"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T010",
+      "oldCheckpoint": "C03",
+      "oldTask": "T010",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T021"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T011",
+      "oldCheckpoint": "C03",
+      "oldTask": "T011",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T021"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T012",
+      "oldCheckpoint": "C03",
+      "oldTask": "T012",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T022",
+        "T068"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T013",
+      "oldCheckpoint": "C03",
+      "oldTask": "T013",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T019",
+        "T023"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T014",
+      "oldCheckpoint": "C03",
+      "oldTask": "T014",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T024",
+        "T064"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T015",
+      "oldCheckpoint": "C03",
+      "oldTask": "T015",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T024",
+        "T075"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T016",
+      "oldCheckpoint": "C03",
+      "oldTask": "T016",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T027",
+        "T028"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T017",
+      "oldCheckpoint": "C03",
+      "oldTask": "T017",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T029"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T018",
+      "oldCheckpoint": "C04",
+      "oldTask": "T018",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T030",
+        "T031",
+        "T032",
+        "T033",
+        "T034",
+        "T035",
+        "T036",
+        "T037",
+        "T038",
+        "T039",
+        "T040"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T019",
+      "oldCheckpoint": "C04",
+      "oldTask": "T019",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T030",
+        "T031",
+        "T032",
+        "T033",
+        "T034",
+        "T035",
+        "T036",
+        "T037",
+        "T038",
+        "T039",
+        "T040"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T020",
+      "oldCheckpoint": "C04",
+      "oldTask": "T020",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T030",
+        "T031",
+        "T032",
+        "T033",
+        "T034",
+        "T035",
+        "T036",
+        "T037",
+        "T038",
+        "T039",
+        "T040"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T021",
+      "oldCheckpoint": "C05",
+      "oldTask": "T021",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T045",
+        "T033",
+        "T025",
+        "T047"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T022",
+      "oldCheckpoint": "C05",
+      "oldTask": "T022",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T045",
+        "T033",
+        "T025",
+        "T047"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T023",
+      "oldCheckpoint": "C05",
+      "oldTask": "T023",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T045",
+        "T033",
+        "T025",
+        "T047"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T024",
+      "oldCheckpoint": "C06",
+      "oldTask": "T024",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T008",
+        "T009",
+        "T011"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T025",
+      "oldCheckpoint": "C06",
+      "oldTask": "T025",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T008",
+        "T009",
+        "T011"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T026",
+      "oldCheckpoint": "C06",
+      "oldTask": "T026",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T008",
+        "T009",
+        "T011"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T027",
+      "oldCheckpoint": "C07",
+      "oldTask": "T027",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T039"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T028",
+      "oldCheckpoint": "C07",
+      "oldTask": "T028",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T039"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T029",
+      "oldCheckpoint": "C07",
+      "oldTask": "T029",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T039"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T030",
+      "oldCheckpoint": "C08",
+      "oldTask": "T030",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T044",
+        "T045",
+        "T046",
+        "T047"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T031",
+      "oldCheckpoint": "C08",
+      "oldTask": "T031",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T044",
+        "T045",
+        "T046",
+        "T047"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T032",
+      "oldCheckpoint": "C08",
+      "oldTask": "T032",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T044",
+        "T045",
+        "T046",
+        "T047"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T033",
+      "oldCheckpoint": "C09",
+      "oldTask": "T033",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T048",
+        "T049",
+        "T050"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T034",
+      "oldCheckpoint": "C09",
+      "oldTask": "T034",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T048",
+        "T049",
+        "T050"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T035",
+      "oldCheckpoint": "C09",
+      "oldTask": "T035",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T048",
+        "T049",
+        "T050"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T036",
+      "oldCheckpoint": "C10",
+      "oldTask": "T036",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T051"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T037",
+      "oldCheckpoint": "C10",
+      "oldTask": "T037",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T051"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T038",
+      "oldCheckpoint": "C10",
+      "oldTask": "T038",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T051"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T039",
+      "oldCheckpoint": "C11",
+      "oldTask": "T039",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T051",
+        "T052",
+        "T053"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T040",
+      "oldCheckpoint": "C11",
+      "oldTask": "T040",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T051",
+        "T052",
+        "T053"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T041",
+      "oldCheckpoint": "C11",
+      "oldTask": "T041",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T051",
+        "T052",
+        "T053"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T042",
+      "oldCheckpoint": "C12",
+      "oldTask": "T042",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T054",
+        "T055",
+        "T056"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T043",
+      "oldCheckpoint": "C12",
+      "oldTask": "T043",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T054",
+        "T055",
+        "T056"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T044",
+      "oldCheckpoint": "C12",
+      "oldTask": "T044",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T054",
+        "T055",
+        "T056"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T045",
+      "oldCheckpoint": "C13",
+      "oldTask": "T045",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T043"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T046",
+      "oldCheckpoint": "C13",
+      "oldTask": "T046",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T043"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T047",
+      "oldCheckpoint": "C13",
+      "oldTask": "T047",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T043"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T048",
+      "oldCheckpoint": "C14",
+      "oldTask": "T048",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T057",
+        "T058",
+        "T059",
+        "T067",
+        "T068",
+        "T069"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T049",
+      "oldCheckpoint": "C14",
+      "oldTask": "T049",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T057",
+        "T058",
+        "T059",
+        "T067",
+        "T068",
+        "T069"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T050",
+      "oldCheckpoint": "C14",
+      "oldTask": "T050",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T057",
+        "T058",
+        "T059",
+        "T067",
+        "T068",
+        "T069"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T051",
+      "oldCheckpoint": "C15",
+      "oldTask": "T051",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T037"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T052",
+      "oldCheckpoint": "C15",
+      "oldTask": "T052",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T037"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T053",
+      "oldCheckpoint": "C15",
+      "oldTask": "T053",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T037"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T054",
+      "oldCheckpoint": "C16",
+      "oldTask": "T054",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T060",
+        "T061",
+        "T062"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T055",
+      "oldCheckpoint": "C16",
+      "oldTask": "T055",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T060",
+        "T061",
+        "T062"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T056",
+      "oldCheckpoint": "C16",
+      "oldTask": "T056",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T060",
+        "T061",
+        "T062"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T057",
+      "oldCheckpoint": "C17",
+      "oldTask": "T057",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T063"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T058",
+      "oldCheckpoint": "C17",
+      "oldTask": "T058",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T063"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T059",
+      "oldCheckpoint": "C17",
+      "oldTask": "T059",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T041",
+        "T042",
+        "T063"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T060",
+      "oldCheckpoint": "C18",
+      "oldTask": "T060",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T063",
+        "T064",
+        "T065"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T061",
+      "oldCheckpoint": "C18",
+      "oldTask": "T061",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T063",
+        "T064",
+        "T065"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T062",
+      "oldCheckpoint": "C18",
+      "oldTask": "T062",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T063",
+        "T064",
+        "T065"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T063",
+      "oldCheckpoint": "C19",
+      "oldTask": "T063",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T070",
+        "T071",
+        "T072",
+        "T073"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T064",
+      "oldCheckpoint": "C19",
+      "oldTask": "T064",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T070",
+        "T071",
+        "T072",
+        "T073"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T065",
+      "oldCheckpoint": "C19",
+      "oldTask": "T065",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T070",
+        "T071",
+        "T072",
+        "T073"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T066",
+      "oldCheckpoint": "C20",
+      "oldTask": "T066",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T074",
+        "T075",
+        "T076"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T067",
+      "oldCheckpoint": "C20",
+      "oldTask": "T067",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T074",
+        "T075",
+        "T076"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T068",
+      "oldCheckpoint": "C20",
+      "oldTask": "T068",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T074",
+        "T075",
+        "T076"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T069",
+      "oldCheckpoint": "C21",
+      "oldTask": "T069",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T077",
+        "T078",
+        "T079"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T070",
+      "oldCheckpoint": "C21",
+      "oldTask": "T070",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T077",
+        "T078",
+        "T079"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T071",
+      "oldCheckpoint": "C21",
+      "oldTask": "T071",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T077",
+        "T078",
+        "T079"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T072",
+      "oldCheckpoint": "C22",
+      "oldTask": "T072",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T063",
+        "T064",
+        "T065",
+        "T066"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T073",
+      "oldCheckpoint": "C22",
+      "oldTask": "T073",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T063",
+        "T064",
+        "T065",
+        "T066"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T074",
+      "oldCheckpoint": "C22",
+      "oldTask": "T074",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T063",
+        "T064",
+        "T065",
+        "T066"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T075",
+      "oldCheckpoint": "C23",
+      "oldTask": "T075",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T033",
+        "T081",
+        "T083"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T076",
+      "oldCheckpoint": "C23",
+      "oldTask": "T076",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T033",
+        "T081",
+        "T083"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T077",
+      "oldCheckpoint": "C23",
+      "oldTask": "T077",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T033",
+        "T081",
+        "T083"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T078",
+      "oldCheckpoint": "C24",
+      "oldTask": "T078",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T020",
+        "T026",
+        "T086",
+        "T087"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T079",
+      "oldCheckpoint": "C24",
+      "oldTask": "T079",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T020",
+        "T026",
+        "T086",
+        "T087"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T080",
+      "oldCheckpoint": "C24",
+      "oldTask": "T080",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T020",
+        "T026",
+        "T086",
+        "T087"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T081",
+      "oldCheckpoint": "C25",
+      "oldTask": "T081",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T082",
+        "T084",
+        "T087"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T082",
+      "oldCheckpoint": "C25",
+      "oldTask": "T082",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T082",
+        "T084",
+        "T087"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T083",
+      "oldCheckpoint": "C25",
+      "oldTask": "T083",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T082",
+        "T084",
+        "T087"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T084",
+      "oldCheckpoint": "C26",
+      "oldTask": "T084",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T088",
+        "T085"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T085",
+      "oldCheckpoint": "C26",
+      "oldTask": "T085",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T088",
+        "T085"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T086",
+      "oldCheckpoint": "C26",
+      "oldTask": "T086",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T088",
+        "T085"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T087",
+      "oldCheckpoint": "C27",
+      "oldTask": "T087",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T089",
+        "T090",
+        "T091",
+        "T092"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T088",
+      "oldCheckpoint": "C27",
+      "oldTask": "T088",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T089",
+        "T090",
+        "T091",
+        "T092"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-ledger:T089",
+      "oldCheckpoint": "C27",
+      "oldTask": "T089",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T089",
+        "T090",
+        "T091",
+        "T092"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/task-map.json",
+        "sha256": "a71e6237b43ad150f739cc5ed7a699ed761d3cc3b46acc92a6646539e419fe8e"
+      },
+      "historicalAcceptance": "No executed implementation acceptance; old planned work/design history only",
+      "revalidation": "Old unexecuted task/obsolete ordering has no completion to transfer. New tasks implement reviewed architecture independently; historical design/description alone cannot satisfy them.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:C01-red.md",
+      "classification": "REUSABLE_CANDIDATE",
+      "newTasks": [
+        "T002"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/C01-red.md",
+        "sha256": "1b711fb1e700fe2a565f8073d94e45a00294e0ed8abef97d858c2e988f12bb0a"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:C02-red.md",
+      "classification": "REUSABLE_CANDIDATE",
+      "newTasks": [
+        "T004"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/C02-red.md",
+        "sha256": "5f214037e52e43f64cf3b936ecc01035c80ba94edbd1cf32e772af1c7b76c757"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:C02A-red.md",
+      "classification": "REUSABLE_CANDIDATE",
+      "newTasks": [
+        "T004"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/C02A-red.md",
+        "sha256": "52c2378baa01f3d7f21deabe365c10fa39dd6053fa2f79d874344e7629344a52"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:scope-gates.md",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T001",
+        "T029"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/scope-gates.md",
+        "sha256": "743136ad8a2c46d377dae14a5a74046b812e4f9988c417fa51bd68ab4db4e801"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:gates.md",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T001",
+        "T029"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/gates.md",
+        "sha256": "e4a13c7c20056c7af6916bdaeb821b034fe7279fe943e1960823ff978fe4ae7c"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:contracts.md",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T007"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/contracts.md",
+        "sha256": "9466c4cb5a8b70ed318984c8116c2772c5f72da26fb65e295450bbbfbf73f11e"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:canonical-contract-parity.md",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T007",
+        "T043"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/canonical-contract-parity.md",
+        "sha256": "e9ba5e03e479123aa35dffbfa05cda75b00eb56dc81f995b1935fe261c5a1c11"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:C03-red.md",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T010",
+        "T016"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/C03-red.md",
+        "sha256": "fd33324e3ebf5ee25833ab7324179342d289a8ccf0affd13663ae96ea1521b89"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:C03-resume-readiness.md",
+      "classification": "PARTIALLY_REUSABLE",
+      "newTasks": [
+        "T011",
+        "T016"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/C03-resume-readiness.md",
+        "sha256": "938b6959109aa0187b67576c2df25d5b34b43d8baed3af70a8b472515bce7e21"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    },
+    {
+      "item": "historical-capture:C03-blocker.md",
+      "classification": "SUPERSEDED",
+      "newTasks": [
+        "T007",
+        "T016"
+      ],
+      "historicalSource": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/implementation/C03-blocker.md",
+        "sha256": "250a125a14a707f2f8988c63301ba4d0e2d963a747181e652e6c8fb26168bbba"
+      },
+      "revalidation": "Original capture remains unchanged. Verify exact current inputs/source/role/runtime/expected failure cause; rerun mapped evidence with recovered contracts. C03 captures prove only missing physical behavior/setup, never DDL/AES/source/receipt/evidence foundation acceptance. Historical blocker resolution is design history, not completed implementation.",
+      "completionTransferred": false
+    }
+  ]
+}

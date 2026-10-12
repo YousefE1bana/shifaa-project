@@ -1,0 +1,47 @@
+{
+  "result": "PASS",
+  "task": "T075",
+  "checkpoint": "K20",
+  "sources": {
+    "services/api/src/modules/feature-011/clinical-status.ts": "8268979a920db4c5a1105a2cba24acf88c0cd70bf6e07b90aa2ec48960a29659",
+    "services/api/src/modules/feature-011/clinical-status.test.ts": "107c7fef6fa432ed97bc11a4bd3c47392454d7c83cff9ecc37176900f3e0e87c",
+    "services/api/src/modules/feature-011/list-clinical-content.ts": "ff139388604fd57ed173ac23f366adc282d478a5c7df204ba3a91799365448c9",
+    "services/api/src/routes/feature-011-content.ts": "9096d5b4812c677930108df6528a60fb634f2f00b624405d83fc45411cb3a640",
+    "services/api/src/adapters/postgres/feature-011-content.ts": "679de79eae247e1a356af4067fd1979c7e80f9684e9d03db0c6913971bd98903",
+    "packages/contracts/src/feature-011.ts": "e5320aede7768a5b66797a7802cfc2e831467e520f5fd2f87cd26f078062862c",
+    "packages/api-client/src/feature-011.ts": "5bc88ac79575a3628d6feee44d1547fa3a8380ae50b41ddec0e9865efa1ab16f",
+    "tools/run-feature-011-status-test.mjs": "62a1a33a5459b3d57eb7af08892023c9af6ffb2959fd3ad39df180e0a7e86baf",
+    "tools/feature-011-publication-fixtures.mjs": "e0207fc5581a04cc3b345c5c4f1b9994028f3e3eb0d89e119a375c21ff2ff1b1",
+    "services/api/src/modules/feature-011/artifact-review.test.ts": "b34a369d55d6e4b5b703df7d92ffd9828d4cd4512e5e1afb1d4913d437069e67"
+  },
+  "composition": "Existing listClinicalContent status projection: trusted clinic context; current non-owner SQL status authority/eligibility; closed generated StatusRelease allowlist; no material resolver/protection capability; final current SQL/context reauthorization; closed StatusList response.",
+  "cursor": "Existing HMAC continuation binds actor/AAL/purpose/locale/type/facility/context/filters/projection/limit. Tampering or changed binding fails.",
+  "reused": [
+    "Existing feature-011-content route and native/exposure guard",
+    "Existing non-owner PostgreSQL readContext adapter/current K17 SQL status branch",
+    "Existing generated contracts/client"
+  ],
+  "unavailable": "Future or ineligible current rows remain an empty authorized set under accepted SQL; no inferred safety, invented unavailable row, or ancestor fallback. Schema-supported authoritative future/superseded/unavailable values are preserved in composition tests.",
+  "focusedTests": 119,
+  "runtimeProof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/status-proof.json",
+    "sha256": "ed534d102b6f47705de441c0b2ef8c46fb880ada34007533a9d0c59639de0b7e"
+  },
+  "boundaries": {
+    "operations": 7,
+    "boundedFRs": 4,
+    "NFRs": 19,
+    "sqlUnchanged": true,
+    "generatedUnchanged": true,
+    "publicContractUnchanged": true,
+    "noNewRoute": true,
+    "noNewGrant": true,
+    "noK21": true,
+    "syntheticOnly": true,
+    "clinicalApproval": false,
+    "productionApproval": false,
+    "retainedGates": "UNCHANGED_OPEN"
+  },
+  "acceptance": "PENDING_PRODUCT_OWNER",
+  "capturedAt": "2026-10-09T10:03:33.942Z"
+}

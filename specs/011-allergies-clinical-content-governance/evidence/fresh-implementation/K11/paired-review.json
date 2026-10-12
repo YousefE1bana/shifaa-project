@@ -1,0 +1,555 @@
+{
+  "result": "F011_K11_K12_BLOCKED",
+  "generatedAt": "2026-10-07T18:29:24.665Z",
+  "K09K10": {
+    "accepted": true,
+    "checked": "T035-T043",
+    "issuesClosed": [
+      {
+        "number": 432,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/432"
+      },
+      {
+        "number": 433,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/433"
+      },
+      {
+        "number": 434,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/434"
+      },
+      {
+        "number": 435,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/435"
+      },
+      {
+        "number": 436,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/436"
+      },
+      {
+        "number": 437,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/437"
+      },
+      {
+        "number": 438,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/438"
+      },
+      {
+        "number": 439,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/439"
+      },
+      {
+        "number": 440,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/440"
+      }
+    ]
+  },
+  "K11": {
+    "result": "PASS",
+    "unitTests": 28,
+    "apiTypecheck": "PASS",
+    "runtimes": [
+      {
+        "name": "shifaa-local-postgres",
+        "version": "17.11",
+        "checks": 41,
+        "result": "PASS"
+      },
+      {
+        "name": "shifaa-local-supabase",
+        "version": "17.6",
+        "checks": 41,
+        "result": "PASS"
+      }
+    ],
+    "evidence": [
+      "allergy-api-red.json",
+      "allergy-read-create.json",
+      "allergy-routes.json",
+      "allergy-api-proof.json"
+    ]
+  },
+  "K12": {
+    "checkpoint": "K12",
+    "result": "BLOCKED",
+    "tasks": {
+      "T048": "Initial valid RED preparation only; full coverage not accepted",
+      "T049": "Not implemented",
+      "T050": "Not run"
+    },
+    "context": "Existing records/profile and clinic summary use identity.people.id. Feature011 public path requires identity.patients.id; data-model section 1 forbids interchange. Existing care switcher has separate synthetic IDs, no handoff to these routes, and a synthetic-person client rather than native current-care composition.",
+    "requiredResolution": "Identify the approved selected managed-patient and current encounter/facility handoff into the existing routes, including explicit person-to-patient mapping. No public mapping endpoint, profile wire field, hardcoded ID substitution, or client-claimed care authority was invented.",
+    "sourceHashes": {
+      "apps/patient/app/records.tsx": "3d35f810670ca541f738fb5ac7d0717fc4fcaa786101519af91a5d7a24b9e901",
+      "apps/clinic/src/app/patients/[id]/summary/page.tsx": "a942acc6e383a88768f0d8647212759d42792dd5543ecdef2b8e5cbec093fb90",
+      "apps/patient/app/care-switcher.tsx": "068c2b859f60333aa13138dad90259dfc2514a6ee4d21eebd9391d397ff7ab43",
+      "apps/patient/src/family-care-api.ts": "22e1977bf84de23991790b8cacedae7dfee079fea9244f4e492173c4eb61a320",
+      "packages/contracts/src/identity-onboarding.ts": "c9ffb34863bd18b8009035efb839cfd3737e827f80f328c73505975a14c333f0",
+      "services/api/src/adapters/postgres/identity-repository.ts": "33010b3fb04d285ca7b60d656c2ba5ee054dbf43ec566556f781f8a8c30c0999",
+      "specs/011-allergies-clinical-content-governance/data-model.md": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f",
+      "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59"
+    },
+    "implementationStopped": true,
+    "architectureChanged": false,
+    "publicContractChanged": false,
+    "liveArEnDemo": false,
+    "accessibilityAccepted": false,
+    "uiRoutesChanged": false,
+    "syntheticOnly": true,
+    "productionReady": false,
+    "clinicalReady": false,
+    "shippableMvp": false,
+    "retainedGates": "Unchanged; OPEN-UX-002 remains OPEN; all retained OPEN gates remain open"
+  },
+  "checkboxes": [
+    {
+      "id": "T001",
+      "checked": true
+    },
+    {
+      "id": "T002",
+      "checked": true
+    },
+    {
+      "id": "T003",
+      "checked": true
+    },
+    {
+      "id": "T004",
+      "checked": true
+    },
+    {
+      "id": "T005",
+      "checked": true
+    },
+    {
+      "id": "T006",
+      "checked": true
+    },
+    {
+      "id": "T007",
+      "checked": true
+    },
+    {
+      "id": "T008",
+      "checked": true
+    },
+    {
+      "id": "T009",
+      "checked": true
+    },
+    {
+      "id": "T010",
+      "checked": true
+    },
+    {
+      "id": "T011",
+      "checked": true
+    },
+    {
+      "id": "T012",
+      "checked": true
+    },
+    {
+      "id": "T013",
+      "checked": true
+    },
+    {
+      "id": "T014",
+      "checked": true
+    },
+    {
+      "id": "T015",
+      "checked": true
+    },
+    {
+      "id": "T016",
+      "checked": true
+    },
+    {
+      "id": "T017",
+      "checked": true
+    },
+    {
+      "id": "T018",
+      "checked": true
+    },
+    {
+      "id": "T019",
+      "checked": true
+    },
+    {
+      "id": "T020",
+      "checked": true
+    },
+    {
+      "id": "T021",
+      "checked": true
+    },
+    {
+      "id": "T022",
+      "checked": true
+    },
+    {
+      "id": "T023",
+      "checked": true
+    },
+    {
+      "id": "T024",
+      "checked": true
+    },
+    {
+      "id": "T025",
+      "checked": true
+    },
+    {
+      "id": "T026",
+      "checked": true
+    },
+    {
+      "id": "T027",
+      "checked": true
+    },
+    {
+      "id": "T028",
+      "checked": true
+    },
+    {
+      "id": "T029",
+      "checked": true
+    },
+    {
+      "id": "T030",
+      "checked": true
+    },
+    {
+      "id": "T031",
+      "checked": true
+    },
+    {
+      "id": "T032",
+      "checked": true
+    },
+    {
+      "id": "T033",
+      "checked": true
+    },
+    {
+      "id": "T034",
+      "checked": true
+    },
+    {
+      "id": "T035",
+      "checked": true
+    },
+    {
+      "id": "T036",
+      "checked": true
+    },
+    {
+      "id": "T037",
+      "checked": true
+    },
+    {
+      "id": "T038",
+      "checked": true
+    },
+    {
+      "id": "T039",
+      "checked": true
+    },
+    {
+      "id": "T040",
+      "checked": true
+    },
+    {
+      "id": "T041",
+      "checked": true
+    },
+    {
+      "id": "T042",
+      "checked": true
+    },
+    {
+      "id": "T043",
+      "checked": true
+    },
+    {
+      "id": "T044",
+      "checked": false
+    },
+    {
+      "id": "T045",
+      "checked": false
+    },
+    {
+      "id": "T046",
+      "checked": false
+    },
+    {
+      "id": "T047",
+      "checked": false
+    },
+    {
+      "id": "T048",
+      "checked": false
+    },
+    {
+      "id": "T049",
+      "checked": false
+    },
+    {
+      "id": "T050",
+      "checked": false
+    },
+    {
+      "id": "T051",
+      "checked": false
+    },
+    {
+      "id": "T052",
+      "checked": false
+    },
+    {
+      "id": "T053",
+      "checked": false
+    },
+    {
+      "id": "T054",
+      "checked": false
+    },
+    {
+      "id": "T055",
+      "checked": false
+    },
+    {
+      "id": "T056",
+      "checked": false
+    },
+    {
+      "id": "T057",
+      "checked": false
+    },
+    {
+      "id": "T058",
+      "checked": false
+    },
+    {
+      "id": "T059",
+      "checked": false
+    },
+    {
+      "id": "T060",
+      "checked": false
+    },
+    {
+      "id": "T061",
+      "checked": false
+    },
+    {
+      "id": "T062",
+      "checked": false
+    },
+    {
+      "id": "T063",
+      "checked": false
+    },
+    {
+      "id": "T064",
+      "checked": false
+    },
+    {
+      "id": "T065",
+      "checked": false
+    },
+    {
+      "id": "T066",
+      "checked": false
+    },
+    {
+      "id": "T067",
+      "checked": false
+    },
+    {
+      "id": "T068",
+      "checked": false
+    },
+    {
+      "id": "T069",
+      "checked": false
+    },
+    {
+      "id": "T070",
+      "checked": false
+    },
+    {
+      "id": "T071",
+      "checked": false
+    },
+    {
+      "id": "T072",
+      "checked": false
+    },
+    {
+      "id": "T073",
+      "checked": false
+    },
+    {
+      "id": "T074",
+      "checked": false
+    },
+    {
+      "id": "T075",
+      "checked": false
+    },
+    {
+      "id": "T076",
+      "checked": false
+    },
+    {
+      "id": "T077",
+      "checked": false
+    },
+    {
+      "id": "T078",
+      "checked": false
+    },
+    {
+      "id": "T079",
+      "checked": false
+    },
+    {
+      "id": "T080",
+      "checked": false
+    },
+    {
+      "id": "T081",
+      "checked": false
+    },
+    {
+      "id": "T082",
+      "checked": false
+    },
+    {
+      "id": "T083",
+      "checked": false
+    },
+    {
+      "id": "T084",
+      "checked": false
+    },
+    {
+      "id": "T085",
+      "checked": false
+    },
+    {
+      "id": "T086",
+      "checked": false
+    },
+    {
+      "id": "T087",
+      "checked": false
+    },
+    {
+      "id": "T088",
+      "checked": false
+    },
+    {
+      "id": "T089",
+      "checked": false
+    },
+    {
+      "id": "T090",
+      "checked": false
+    },
+    {
+      "id": "T091",
+      "checked": false
+    },
+    {
+      "id": "T092",
+      "checked": false
+    }
+  ],
+  "issuesPending": [
+    {
+      "number": 441,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/441"
+    },
+    {
+      "number": 442,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/442"
+    },
+    {
+      "number": 443,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/443"
+    },
+    {
+      "number": 444,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/444"
+    },
+    {
+      "number": 445,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/445"
+    },
+    {
+      "number": 446,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/446"
+    },
+    {
+      "number": 447,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/447"
+    }
+  ],
+  "preservation": {
+    "checkedPriorFiles": 3691,
+    "changedExisting": [
+      "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+      "specs/011-allergies-clinical-content-governance/tasks.md",
+      "services/api/src/app.ts"
+    ],
+    "allOtherPriorFilesByteIdentical": true,
+    "definitionsDependenciesRequirementsUnchanged": true,
+    "T051T092Untouched": true,
+    "acceptedSqlGeneratedVectorsEvidenceZipUnchanged": true
+  },
+  "git": {
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "indexUnchanged": true,
+    "statusArtifact": "artifacts/feature-011/k11/git-status.txt"
+  },
+  "verificationLimits": "No full pnpm verify: it includes destructive shared db:reset, outside checkpoint authorization. No live AR/EN or accessibility success claimed. All work performed by primary agent; no subagents/delegates."
+}

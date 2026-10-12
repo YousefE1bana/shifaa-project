@@ -1,0 +1,152 @@
+{
+  "checkpoint": "K12",
+  "result": "PASS",
+  "capturedAt": "2026-10-08T02:39:06.730Z",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "ledgerId": "SHIFAA-F011-FRESH-TASKS@1.0.0",
+  "acceptance": "PENDING_PRODUCT_OWNER",
+  "syntheticEngineeringOnly": true,
+  "inputs": {
+    "apps/patient/app/records.tsx": "ed26cded80ebd0fbb91422de11cd6508b53bb2f411e8a22bce936d529f91a22d",
+    "apps/patient/app/care-switcher.tsx": "a31e5a962119561c782d0fc3734c5782dfd727fe1b3a7b6816b175e387742d31",
+    "apps/patient/app/relationships.tsx": "579be854dd4048a6cdae41cd446d8dd86e73f83f535ace65df75e6620d7848d2",
+    "apps/patient/src/AllergyRecordsPanel.tsx": "d9c3a2436f2f53aa5b5fc687ef291d1253f724302b75c7b6062666e353ff36c3",
+    "apps/patient/src/managed-care-context.ts": "e3c4b126db3f106af2502c9be5395bfc8d4299b4698c327fa8ae36652f4f2a1d",
+    "apps/patient/src/family-care-api.ts": "c90309e4252f852a539634c60771713e48dfda60160ffafd4089dd7ac4986e3d",
+    "apps/patient/src/patient-session-runtime.tsx": "0a85e476829f43779611c566a4c313f75d78ab09ee9537d91264f92cc012d630",
+    "apps/clinic/src/app/patients/[id]/summary/page.tsx": "7a984375fc93f53c738e5d0ddcf2aa586a9e31d731d4ac665e16b36eaab94140",
+    "apps/clinic/src/components/feature-010/EncounterWorkspace.tsx": "200d544baf0ff8c69b93f3eeadca45a526c607ced7e5bc9fcf20aa3bf595e3dc",
+    "apps/clinic/src/components/feature-011/AllergySummaryPanel.tsx": "a5eb7c35f359ad5a8c7749fed650f70a9cb1d99961979cd112c6755f7cb8f545",
+    "apps/clinic/src/lib/feature-011-context.ts": "75f3ccd5237bb90c4289327172f4d14314f36bb1a440a7a222517e3ec44c80e6",
+    "packages/api-client/src/feature-011-allergy-state.ts": "ebf599ccdabf547c1530c2e97636be3b700deb77a531e7cfbe22db502ac8edd3",
+    "packages/i18n/src/feature-011.ts": "8cdff2863e6299ae9d8a0d1cd02f58f65845c0ab573210f88fb3b52a8b26de7a",
+    "tests/e2e/feature-011-ui.spec.ts": "7a8f8c39a2dd04de26391d82004d3e85709f43b4e55a5fe12c36774e67671c0e",
+    "tools/feature-011-ui-playwright.config.ts": "2e9822383a684ec43039c5d3973142760fdc254d694ff73dc3c1f12f9398d447",
+    "tools/run-feature-011-handoff-test.mjs": "92b2de4e2c39c3bf2f3283f54a85c9de05b2227d8b328d3730600b8fcd6c30fa",
+    "apps/patient/test/feature-011-records.test.tsx": "7208246a74e2e2a65df0660453994bc51e5d4681dc17cff23eb373dd3a70f2ff",
+    "apps/clinic/test/feature-011-summary.test.tsx": "ea2fc93981a38b83d996f71c3ca1a74a8073f9e63f37db01d1aa41597f55e72d",
+    "apps/patient/test/feature-011-managed-handoff.test.ts": "c2e2541c244abde40c0c8b983205e1057c32961f2012e4c0ad5533ca1a642f0d",
+    "tests/e2e/feature-011-handoff.test.ts": "1bc12f8ba2dd20d77cb5efe495c69facfc98bd5b613f36e2f2c48372d11c1c83"
+  },
+  "task": "T050",
+  "journey": "J-01",
+  "coverage": "US1 only",
+  "browser": {
+    "patient": {
+      "startTime": "2026-10-08T02:36:56.845Z",
+      "duration": 19237.237999999998,
+      "expected": 20,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0,
+      "evidence": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/checks/patient-browser-results.json",
+        "sha256": "92f3ea840e4184837fd32039ea4194248eeb6bfa6e7e823d4d3fc142b96ee8dd"
+      }
+    },
+    "clinic": {
+      "startTime": "2026-10-08T02:37:07.176Z",
+      "duration": 18093.735,
+      "expected": 19,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0,
+      "evidence": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/checks/clinic-browser-results.json",
+        "sha256": "b34a906eb90f874e1f0b022810d63b7f48b40308ae210abb49c03d03064dc375"
+      }
+    },
+    "boundary": "Live compiled Expo React Native web and Next browser screens with deterministic synthetic HTTP boundary; not a physical iOS/Android device or live browser-to-DB deployment"
+  },
+  "nativeApplication": {
+    "proof": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/identifier-reconciliation/handoff-proof.json",
+      "sha256": "b50f0aed441404156acd4798d8c8704b14f4c1fb4c9db23377f2ddea32597f30"
+    },
+    "runtimeCases": [
+      {
+        "runtime": "shifaa-local-postgres",
+        "count": 14,
+        "result": "PASS",
+        "locales": [
+          "ar-EG",
+          "en-EG"
+        ],
+        "actors": [
+          "patient",
+          "clinician"
+        ]
+      },
+      {
+        "runtime": "shifaa-local-supabase",
+        "count": 14,
+        "result": "PASS",
+        "locales": [
+          "ar-EG",
+          "en-EG"
+        ],
+        "actors": [
+          "patient",
+          "clinician"
+        ]
+      }
+    ],
+    "boundary": "Real native Supabase ES256/TOTP AAL2 and non-owner SQL; synthetic clinical records, engineering protection capability"
+  },
+  "k11Regression": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/identifier-reconciliation/k11-regression/allergy-api-proof.json",
+    "sha256": "fc8f7df243cfd1968d498d92f8302cdd70405af68986064fba817ad32719c22b"
+  },
+  "negatives": {
+    "defaultOff": "Live API exposure tests plus HTTP boundary browser denial",
+    "killSwitch": "Live API exposure tests plus browser denial; no queued mutation",
+    "offline": "Explicit manual retry only",
+    "substitution": "Own native identity / same server F010 pair / F004 wrong-actor and revocation denial"
+  },
+  "captures": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/browser/clinic-ar-EG-reflow-contrast.png",
+      "sha256": "0cfd7c510bc65b8d25534f65b6e9fc6bda1a54cdf8de3a295fefb27a2594be95"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/browser/clinic-ar-EG-source-history.png",
+      "sha256": "97469f4a89ec55c74fd868efb52fc9352eaae8d1563cb61a947170361d6fb12b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/browser/clinic-en-EG-reflow-contrast.png",
+      "sha256": "79e581d157e8592a3272539a98c79460288a72cd27ce144ad0972ef09c30e383"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/browser/clinic-en-EG-source-history.png",
+      "sha256": "ed39d7a7a9996789ceb1ff0dfe5c45f00430ccc6b1e5cc74fd854c94b7b1826e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/browser/patient-ar-EG-reflow-contrast.png",
+      "sha256": "b3a3d15c72ec1aeefa14ff29ea64eddf2fea79bf9cad2257c5abfba61f7e3887"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/browser/patient-ar-EG-source-history.png",
+      "sha256": "c10425e551d04a5c997433e9e4c6dff31b795407b0b8f34422d3792d39ce376f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/browser/patient-en-EG-reflow-contrast.png",
+      "sha256": "e12dd712d93f8c5fe11f5acbc57bafc911bacac5b858e1939191dc96071e27d7"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/browser/patient-en-EG-source-history.png",
+      "sha256": "804796de570e4cf4949a20904f5af20a3020120c68267f03650c6686dc580910"
+    }
+  ],
+  "notProductionReady": true,
+  "notClinicalReady": true,
+  "notShippableMvp": true,
+  "noFinalDesignApproval": true,
+  "retainedGates": {
+    "OPEN-UX-001": "Satisfied only for F011 affected-UI Plan prerequisite",
+    "OPEN-UX-002": "OPEN — VERIFYING",
+    "OPEN-TECH-002": "OPEN globally; bounded F011 P1–P5 disposition only",
+    "OPEN-TECH-003": "OPEN — VERIFYING/reference environment",
+    "OPEN-CLIN-001": "OPEN — synthetic engineering only",
+    "OPEN-LEGAL-001/002/007": "OPEN with existing lifecycle effects"
+  }
+}

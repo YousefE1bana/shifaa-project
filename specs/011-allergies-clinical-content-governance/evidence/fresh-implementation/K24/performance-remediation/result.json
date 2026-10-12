@@ -1,0 +1,362 @@
+{
+  "result": "T091_PASS_EVIDENCE_REVIEW_PENDING",
+  "capturedAt": "2026-10-10T07:23:42.799Z",
+  "authorization": "USER_LIMITED_PERFORMANCE_REMEDIATION_AND_REVERIFICATION",
+  "performance": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops/performance-proof.json",
+    "sha256": "8eeedf2d2aa163ce49443ec61a08e5197bffd53f43712fc63fe8f170330f4cd1"
+  },
+  "performanceExecution": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/performance-execution.json",
+    "sha256": "7c1e606d9689914bcff6510170d9c166fca51460ba85f3c4367b0ad414caef57"
+  },
+  "operations": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "measurements": {
+        "createAllergy": {
+          "p95Ms": 122.09719999999652,
+          "targetMs": 800,
+          "samples": 20
+        },
+        "verifyAllergy": {
+          "p95Ms": 490.74750000000495,
+          "targetMs": 800,
+          "samples": 20
+        },
+        "listAllergies": {
+          "p95Ms": 191.1652000000031,
+          "targetMs": 400,
+          "samples": 20
+        },
+        "createClinicalContentRelease": {
+          "p95Ms": 148.6993999999977,
+          "targetMs": 800,
+          "samples": 20
+        },
+        "signClinicalContentRelease": {
+          "p95Ms": 425.5138999999908,
+          "targetMs": 800,
+          "samples": 40
+        },
+        "publishClinicalContentRelease": {
+          "p95Ms": 286.6923999999999,
+          "targetMs": 800,
+          "samples": 20
+        },
+        "listClinicalContent": {
+          "p95Ms": 55.82529999999679,
+          "targetMs": 400,
+          "samples": 20
+        }
+      }
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "measurements": {
+        "createAllergy": {
+          "p95Ms": 101.04399999999441,
+          "targetMs": 800,
+          "samples": 20
+        },
+        "verifyAllergy": {
+          "p95Ms": 426.96510000000126,
+          "targetMs": 800,
+          "samples": 20
+        },
+        "listAllergies": {
+          "p95Ms": 162.2231000000029,
+          "targetMs": 400,
+          "samples": 20
+        },
+        "createClinicalContentRelease": {
+          "p95Ms": 139.34879999997793,
+          "targetMs": 800,
+          "samples": 20
+        },
+        "signClinicalContentRelease": {
+          "p95Ms": 356.8084000000381,
+          "targetMs": 800,
+          "samples": 40
+        },
+        "publishClinicalContentRelease": {
+          "p95Ms": 255.14889999997104,
+          "targetMs": 800,
+          "samples": 20
+        },
+        "listClinicalContent": {
+          "p95Ms": 53.42109999997774,
+          "targetMs": 400,
+          "samples": 20
+        }
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-diagnostics/owner-boundaries.json",
+      "sha256": "a7e6d5171809f26670294a1ac0432e21ebf67bb01fb762d5568f84ea76066b4c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-diagnostics/context-roundtrips.json",
+      "sha256": "5feb84f6131731b80b7727e48d5a6fa5df4e6b9ca90f7a99ecfe6cbd98528ceb"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-diagnostics/f006-diagnostic-performance.json",
+      "sha256": "ee349a1cc094dfc767ea120545d5b8449e74184d6f45e492b2e1d11cad10ada1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-diagnostics/f006-boundaries.json",
+      "sha256": "9d858ce0bea51f36ab490e4ecbe7c3f801712a4032add47557586f00d8769f89"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-diagnostics/audit-head-plan.json",
+      "sha256": "31be3d754b2ac0124a40d817dd89ba19ab3a0684b888f6a3f3f77e21bc25a956"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-diagnostics/host-resources.json",
+      "sha256": "38e1e972ff8ab6cbcf2fc0a24ed9f7e844acd9c315cf8fef548d8c066bf3d4cc"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-diagnostics/docker-resources.txt",
+      "sha256": "85496b52529bb60f0a0f9f6aef361b6d617acc38978eef475ecda2db4dab2f9c"
+    }
+  ],
+  "focusedRegressions": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/allergy-regression/allergy-api-proof.json",
+      "sha256": "e8d3a201daa6a2bda3dbd695b94f98ff5a2b98093fb8e79af9969c9d8b50d7ed"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/signing-regression/sign-api-proof.json",
+      "sha256": "46e409ee0c00da9b6e5cb797611f76d1b622b1164f7d2f68441ac216f44c1c81"
+    }
+  ],
+  "unitChecks": {
+    "contextTests": 4,
+    "result": "PASS",
+    "redLog": {
+      "path": "artifacts/feature-011/k24/performance-context-red.log",
+      "sha256": "8e8b62f68a63ca1eeac859fe5648d40641f223299212935885ecfcedb5f92ef1"
+    },
+    "greenLog": {
+      "path": "artifacts/feature-011/k24/performance-context-final.log",
+      "sha256": "3e700ee166b55decd9bdc04c04d1b8cd1a7c2103f76aa943dbe987483d8c0f1a"
+    },
+    "typecheck": {
+      "path": "artifacts/feature-011/k24/performance-typecheck-green.log",
+      "sha256": "d66548006c5c7c54f315f252a8864713f539323f6c6187c23bb7db83274361fa"
+    }
+  },
+  "addedUnitTest": {
+    "path": "services/api/src/adapters/postgres/feature-011-allergies.test.ts",
+    "sha256": "9086a14c4b07e84a3211b235e53fcb056070a02295891c8c59c80d11c56ba445"
+  },
+  "dependentProofs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops/restore-proof.json",
+      "sha256": "a68c0b56ab3f496d2efffebacd204680d36770e89144aaece2f4782cdf3dbf23"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops/observability-proof.json",
+      "sha256": "69d04536c468a1787de69fdb6f7079bb836e2919a5737fb76594d9ac9c8c5449"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/dependent-execution.json",
+      "sha256": "617d574ce73e4d9eac8c406c0dbe47b879f2c352393524a79d3d1a27cd61792f"
+    }
+  ],
+  "sourceChanges": {
+    "tools/feature-011-content-fixtures.mjs": {
+      "before": "df51c06c18964fa59984d944fae3d0c0d238b4a617771b80d2de77f5a887dbe8",
+      "after": "3c85ddb42638fc8e45f801fdeaa5d6dbf5a65910dd75d36d1afc796f48f53e54"
+    },
+    "tools/run-feature-011-sign-api-test.mjs": {
+      "before": "95b7a26c378fd344548ad5f7d864efab00c8dbf80398eba5f34d345dd5a3d9c7",
+      "after": "0f225c78fa9930590191071be8264c81eadf1ed63f4efbe4eb5232afd091dc56"
+    },
+    "tools/feature-011-ops-fixtures.mjs": {
+      "before": "9fe6b76e10ca53671bb7b359ba27380efefd446a515e76db186153e597d5b803",
+      "after": "787e616b0bf365bfe294a284a723a87fefc6a3f248a4cf99bffd40666f997fc0"
+    },
+    "services/api/src/adapters/postgres/feature-011-allergies.ts": {
+      "before": "b0cf0768c75c2068c053bb18afb61bb6b48ffc890cc792510e4037a81b614c12",
+      "after": "9a5ee57c6264a3481c4b23d2789fa96cca23e491e37a2a2f03c9129a41f8c510"
+    },
+    "tools/run-feature-011-performance.mjs": {
+      "before": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c",
+      "after": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c"
+    },
+    "tools/discovery-sos-performance.ts": {
+      "before": "11304051a635a13607fc5082a139e143d1d480c12eee8a7263cba27550326261",
+      "after": "11304051a635a13607fc5082a139e143d1d480c12eee8a7263cba27550326261"
+    }
+  },
+  "contractTestRepair": {
+    "path": "packages/contracts/src/feature-011.test.ts",
+    "beforeSha256": "7a35a6f75526d2c67d6724c75dce0502cc34923c130fc344a4c45ee804d83490",
+    "afterSha256": "768b4f4cb226849ad02b39384ae57695a8d57680457ec78d72c0255656160075",
+    "change": "Only the preparation correctness test setup budget: 5000 to 15000 ms; assertions and performance thresholds unchanged",
+    "firstAttempt": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-contract-timeout.json",
+      "sha256": "0a1d92131d4e479603ca9437eeb266599e672530e97d95137dc32ab64c975d76"
+    },
+    "firstAttemptLog": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-contract-timeout.log",
+      "sha256": "d6a79810a4ae41328dd124de032bfe14d9577e4bb4b3a270ab4982a2e2da8420"
+    },
+    "unchangedIsolatedTest": {
+      "path": "artifacts/feature-011/k24/contract-preparation-isolated.log",
+      "sha256": "579815ee52e7743878fee3befa0cc33a41a24792555872a6135d5e0bc6e36acb"
+    },
+    "repairedFullContractSuite": {
+      "path": "artifacts/feature-011/k24/contract-preparation-regression.log",
+      "sha256": "238291f2e21a36df16b8801fd49d5a04cb3d25de24c97a0994f808d8ff6993be"
+    }
+  },
+  "browserRuntimeRecovery": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/browser-recovery.json",
+    "sha256": "7f139fbcc81e7be4f454db22be065ecdaea5a90eb460835a4a1f4dc6fe7a54b9"
+  },
+  "browserBenchmarkRecovery": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/browser-benchmark-recovery.json",
+    "sha256": "9444210e05b8232a43f7fe69d217a398d4cb6210b8bddd9a1649b3af77a06f01"
+  },
+  "messageFixtureRepair": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/message-fixture-repair.json",
+    "sha256": "23fa70e34fe52bbb27864145c2fe33e82448e5ff12b0278b1322dadd16393b17"
+  },
+  "interruptedRun": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-interrupted.json",
+    "sha256": "21b4e0d677912e17e086586533476f547d90ecb4aba70c3f9e600dc42cfc0c1e"
+  },
+  "smallTargetRepair": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/small-target-repair.json",
+    "sha256": "2c21139d98cd39777151053e7cf8a7cb4d44f9b9334a0fc00446acc40ef28607"
+  },
+  "physicalInputs": {
+    "count": 141,
+    "unchanged": true,
+    "currentStageVerifier": "PASS",
+    "sqlSchemaGrantsContractsUnchanged": true
+  },
+  "fullVerification": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/full-verify.json",
+    "sha256": "f247792cef5a17625bdf21f30d6a8b525804683785f676f8b6f1467aab2f7c73",
+    "result": "PASS",
+    "exitCode": 0,
+    "log": {
+      "path": "artifacts/feature-011/k24/pnpm-verify.log",
+      "sha256": "c2105495c56c4b63e572d1bfa94a285885cd2aed29632f1983dec006fc5b405e"
+    }
+  },
+  "fullComposition": {
+    "evidence": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/composition.json",
+      "sha256": "e6c9624a59f55182fc2711dc423fede8c72329168f676c6758549d372cb1c38d"
+    },
+    "stages": 27,
+    "result": "PASS",
+    "physicalGreen": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green/proof.json",
+      "sha256": "ed84fb33c7ca3e935943acf7e86a1bb1906986e1ac00a0b779fef02ca2fc4f97"
+    },
+    "physicalRaces": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-races/proof.json",
+      "sha256": "d4bf72108e2f3ac5d22a63667d1b6c7ebf4a4acf87f3c8ad1214563cd2591338"
+    },
+    "raceCategoriesPerRuntime": 12
+  },
+  "primaryReview": {
+    "result": "NO_ADDITIONAL_BLOCKING_DEFECT_IN_BOUNDED_REMEDIATION",
+    "acceptanceOrGateClosure": false
+  },
+  "freshPredecessorPerformance": [
+    {
+      "evidence": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/predecessor-reruns/specs/006-discovery-sos-foundation/evidence/performance.json",
+        "sha256": "36c9178a93a4891dc113430cdac754340f45a21cc74b829da2163ba32ee7452a"
+      },
+      "result": "PASS",
+      "measurements": {
+        "read_p95": 161,
+        "mutation_p95": 366.18,
+        "sos_matching_p95": 366.18,
+        "worker_claim_p95": 35.09
+      }
+    },
+    {
+      "evidence": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/predecessor-reruns/specs/007-identity-continuity-sessions-mfa-recovery/evidence/performance.json",
+        "sha256": "bb06392628f1bf9f607d279151a983a1df9a2e6bf0bda5e590c931252e808816"
+      },
+      "result": "PASS",
+      "measurements": {
+        "native_session_check_read_p95": 27.89,
+        "recovery_intake_mutation_p95": 39.27,
+        "dependent_transition_mutation_p95": 511.66,
+        "combined_mutation_p95": 403.32,
+        "transition_worker_mutation_p95": 24.37
+      }
+    }
+  ],
+  "precedingAttemptMeasurementLimitation": {
+    "note": "In the Chromium-failed full attempt, F007 existing combined mutation p95 criterion passed at 646.96 ms; transition-only p95 was 863.52 ms. No per-operation/formal performance acceptance inferred; benchmark unchanged.",
+    "evidence": {
+      "path": "artifacts/feature-011/k24/previous-full-runs/browser-missing/F007-performance.json",
+      "sha256": "03591f6cfbf89e39406a80a7e78edef06b9b4bbf661f0ce459b97b4736ad6be6"
+    },
+    "archive": {
+      "path": "artifacts/feature-011/k24/previous-full-runs/browser-missing/archive-index.json",
+      "sha256": "50b26f98897dcccdaf0266df38f23277ace82c9fb308b7f2e8b7a1139fb9b001"
+    }
+  },
+  "currentF007MeasurementLimitation": {
+    "benchmarkCriterion": "Existing combined mutation p95; no benchmark or threshold change",
+    "combinedP95Ms": 403.32,
+    "transitionOnlyP95Ms": 511.66,
+    "transitionOnlyAbove800": false,
+    "noPerOperationOrFormalAcceptance": true
+  },
+  "qualityReview": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/review.md",
+    "sha256": "e7dd6d983bc536eaac1c7b293402a2469ab23cb5cb2a35230bcd343bbb738c3b"
+  },
+  "ledgerUnchanged": {
+    "specs/011-allergies-clinical-content-governance/tasks.md": "4d7d5b36a61b2b7410ca93be8404f446e53f83f7d52d10043de963e6ca7ff1f8",
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json": "9ee0719a82bf0df827c5c8803b9229a5de0558a354ad70204323a6fba4d5fe6d"
+  },
+  "unchecked": [
+    "T088",
+    "T089",
+    "T090",
+    "T091",
+    "T092"
+  ],
+  "openIssues": [
+    485,
+    486,
+    487,
+    488,
+    489
+  ],
+  "T092": "NOT_EXECUTED",
+  "K24Acceptance": "WITHHELD_PENDING_T091_SUCCESS_AND_EVIDENCE_REVIEW",
+  "formalAcceptance": "WITHHELD; OPEN-TECH-003 reference profile/owner decision and OPEN-UX-002 evidence remain unresolved; all other retained gates unchanged",
+  "pendingReferenceProfile": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/k23-reference-environment-pending-2026-10-09.md",
+    "sha256": "cfe6faff3eb1a4f2d82b801959053bc6619f9be005a923ee46dade4d74f1db07"
+  },
+  "noDelegation": true,
+  "noCommitPushPrMainChange": true,
+  "git": {
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "status": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/git-status.txt",
+      "sha256": "7307d6b6946f5127021f150ced0f69ea738826e7a35cc0d1944408a47445838b"
+    }
+  },
+  "priorFailedResultsPreserved": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/preceding-ops"
+}

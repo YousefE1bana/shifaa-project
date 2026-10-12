@@ -1,0 +1,203 @@
+{
+  "result": "PASS",
+  "task": "T083",
+  "stage": "--atomic",
+  "inventory": {
+    "suites": [
+      "packages/core/src/feature-011/allergy-policy.test.ts",
+      "packages/core/src/feature-011/artifact.test.ts",
+      "packages/core/src/feature-011/content-policy.test.ts",
+      "packages/contracts/src/feature-011.test.ts",
+      "packages/api-client/src/feature-011.test.ts",
+      "packages/i18n/src/feature-011.test.ts",
+      "services/api/src/feature-011-exposure.test.ts",
+      "services/api/src/routes/feature-011-allergies.contract.test.ts",
+      "services/api/src/routes/feature-011-content.test.ts",
+      "services/api/src/adapters/postgres/feature-011-allergies.test.ts",
+      "services/api/src/modules/feature-011/allergies.test.ts",
+      "services/api/src/modules/feature-011/artifact-review.test.ts",
+      "services/api/src/modules/feature-011/clinical-status.test.ts",
+      "services/api/src/modules/feature-011/create-release.test.ts",
+      "services/api/src/modules/feature-011/evidence.test.ts",
+      "services/api/src/modules/feature-011/observability.test.ts",
+      "services/api/src/modules/feature-011/protection.test.ts",
+      "services/api/src/modules/feature-011/publish-release.test.ts",
+      "services/api/src/modules/feature-011/receipts.test.ts",
+      "services/api/src/modules/feature-011/sign-release.test.ts",
+      "services/api/src/modules/feature-011/verify-allergy.test.ts",
+      "apps/patient/test/feature-011-history.test.tsx",
+      "apps/patient/test/feature-011-managed-handoff.test.ts",
+      "apps/patient/test/feature-011-records.test.tsx",
+      "apps/clinic/test/feature-011-status.test.tsx",
+      "apps/clinic/test/feature-011-summary.test.tsx",
+      "apps/clinic/test/feature-011-verification.test.tsx",
+      "apps/admin/test/feature-011-clinical-content.test.tsx",
+      "tests/e2e/feature-011-handoff.test.ts",
+      "tests/e2e/feature-011-ui.spec.ts",
+      "tests/e2e/feature-011-verification.spec.ts"
+    ],
+    "tooling": [
+      "tools/feature-011-documentation-successor.test.mjs",
+      "tools/feature-011-evidence-head.test.mjs",
+      "tools/feature-011-harness.test.mjs",
+      "tools/feature-011-ledger-contract.test.mjs",
+      "tools/feature-011-native-digest-binding.test.mjs",
+      "tools/feature-011-native-supabase-bootstrap.test.mjs",
+      "tools/feature-011-physical-red.test.mjs",
+      "tools/feature-011-pr-review-binding.test.mjs",
+      "tools/feature-011-protocol-parity.test.mjs",
+      "tools/reset-feature-011-native-supabase.test.mjs",
+      "tools/start-feature-011-native-supabase.test.mjs",
+      "tools/verify-feature-011-scope.test.mjs"
+    ],
+    "hashes": {
+      "packages/core/src/feature-011/allergy-policy.test.ts": "ebb706cac734111b705b9667bfadfe03cb48013fc74a63b8ad85a6a36a87c93f",
+      "packages/core/src/feature-011/artifact.test.ts": "7d2af5b4fbe23d7ff0b79ed76b9071ebc2f32aa8607bf174b730ec900c7d04dd",
+      "packages/core/src/feature-011/content-policy.test.ts": "fe8d7c7b475c67a7deaeefd79fd716040aa253f48ab809e2d305bfb180755071",
+      "packages/contracts/src/feature-011.test.ts": "768b4f4cb226849ad02b39384ae57695a8d57680457ec78d72c0255656160075",
+      "packages/api-client/src/feature-011.test.ts": "018bab1060cd5f9ea8f108ffb2f31a4a03eb2bc680185f7959b3870947ebc822",
+      "packages/i18n/src/feature-011.test.ts": "3cc1f15f652ffc3977a80cd36b66e2f2bfb6844241765bc9b550f3bb2121ab3d",
+      "services/api/src/feature-011-exposure.test.ts": "ad8cf52597e74889e39f8bf6be1cd6efbe3d2255e2bfa0a7cd4fdc3da05ca124",
+      "services/api/src/routes/feature-011-allergies.contract.test.ts": "1c7e31837e37642e113f8f70dc984693d6b743d140b796a84864ce3262bcc72d",
+      "services/api/src/routes/feature-011-content.test.ts": "8a72a6ff1c894a40c46ef0b412f301663e69c0671ccd15479414bccae8651220",
+      "services/api/src/adapters/postgres/feature-011-allergies.test.ts": "9086a14c4b07e84a3211b235e53fcb056070a02295891c8c59c80d11c56ba445",
+      "services/api/src/modules/feature-011/allergies.test.ts": "d3eb31cef4ae201db4d34819828c8a727281a4e85606dae863c95abaf40d8551",
+      "services/api/src/modules/feature-011/artifact-review.test.ts": "b34a369d55d6e4b5b703df7d92ffd9828d4cd4512e5e1afb1d4913d437069e67",
+      "services/api/src/modules/feature-011/clinical-status.test.ts": "107c7fef6fa432ed97bc11a4bd3c47392454d7c83cff9ecc37176900f3e0e87c",
+      "services/api/src/modules/feature-011/create-release.test.ts": "4fde744340f28605f73a67133aeaf28409287edf55223f0ec14b72a57eecf6cd",
+      "services/api/src/modules/feature-011/evidence.test.ts": "dc094a0e9b3b117d791a25eec8d3e2521ad637cdf634958d8b3cbb7ccd9fed41",
+      "services/api/src/modules/feature-011/observability.test.ts": "5383f06636afd2572888710e13cffa93cd6ebc90354cb5592e02fadd350f8608",
+      "services/api/src/modules/feature-011/protection.test.ts": "37656674243a121bbed6f38c37c19ea869148cfa5305a98362a7ade2ddc4057d",
+      "services/api/src/modules/feature-011/publish-release.test.ts": "f42d0af99ca4e74745a793f3c3d802c89ce876f43eaf22e6c0c2aa2aff6b2c6f",
+      "services/api/src/modules/feature-011/receipts.test.ts": "78451ef32420a064ad052b4aabe8ed6c7eb482b57337b67fdbe900637b26c8ae",
+      "services/api/src/modules/feature-011/sign-release.test.ts": "c20329d0182623adb9864428baa4349074f1df90efd14c1deb6822918175b6c1",
+      "services/api/src/modules/feature-011/verify-allergy.test.ts": "a96c1e330d9a5c467e34a805bf8425b184a0bbd85c5127777b5dbe16d2445094",
+      "apps/patient/test/feature-011-history.test.tsx": "13a26cae13e07d35398aa7d86b98e91cfda0b56dc929fa13a67f6aa6ddd38eaf",
+      "apps/patient/test/feature-011-managed-handoff.test.ts": "c2e2541c244abde40c0c8b983205e1057c32961f2012e4c0ad5533ca1a642f0d",
+      "apps/patient/test/feature-011-records.test.tsx": "7208246a74e2e2a65df0660453994bc51e5d4681dc17cff23eb373dd3a70f2ff",
+      "apps/clinic/test/feature-011-status.test.tsx": "8182d773882565c0bc8cd2478cb2ff79df2153415405b77138c5a051a973f1a2",
+      "apps/clinic/test/feature-011-summary.test.tsx": "ea2fc93981a38b83d996f71c3ca1a74a8073f9e63f37db01d1aa41597f55e72d",
+      "apps/clinic/test/feature-011-verification.test.tsx": "c33212ee322b52cb8619ba2bf989ce6a35c5acc58fe5a2d3a95e6f885b588039",
+      "apps/admin/test/feature-011-clinical-content.test.tsx": "6aa89fe25c07cd0406eaf69559b27006d6414a381ef97147d1abe799c95a831f",
+      "tests/e2e/feature-011-handoff.test.ts": "1bc12f8ba2dd20d77cb5efe495c69facfc98bd5b613f36e2f2c48372d11c1c83",
+      "tests/e2e/feature-011-ui.spec.ts": "94373b4d61d484a82b8ae679acb5ba5ef1162e1ef64ea55c5695ade5e291a65f",
+      "tests/e2e/feature-011-verification.spec.ts": "2b55c2f856b35a9d989c097648e585d6e801137d86152f5f5b845ea059652ce5",
+      "tools/feature-011-documentation-successor.test.mjs": "05bf41b0c3ab18a36e3db28e7a68b2455e1067d2c730b6110fba81e3c2bfe5f4",
+      "tools/feature-011-evidence-head.test.mjs": "fa2d3e7c4a9cef5fdf4f06b3aed25addb87fbda3235c52601c0cb1a5e03cb5af",
+      "tools/feature-011-harness.test.mjs": "886ecac88a96c0320b9a5ac9107bddc6e7ccc2c5f5fa618dbcb5ed62e5247280",
+      "tools/feature-011-ledger-contract.test.mjs": "36d4e37870959e4cbb8fd1b7c2d5cdc6c3d5bb60cdedee2bb425d6fadf8fb717",
+      "tools/feature-011-native-digest-binding.test.mjs": "54029f61c7888a6d0cc18c362973afd09abf07e828bd13f9261e9868e63fff2b",
+      "tools/feature-011-native-supabase-bootstrap.test.mjs": "76d5dd9d67f462d65da09461b5494e4a27a23a5ade268c22a1d7dfe4bb490e93",
+      "tools/feature-011-physical-red.test.mjs": "a319e5fdacf4a4810cf1d1c2b3b8d9880cd2514e37eba473a30d2ac0a68047ef",
+      "tools/feature-011-pr-review-binding.test.mjs": "322d5f1514f8c4fbbf7c5894771abfb3fa84f6d629b39c9dedb00e801c994cc4",
+      "tools/feature-011-protocol-parity.test.mjs": "8a14240f3a587d705600177b824f1039db71005b1908f037f4092d7921809f91",
+      "tools/reset-feature-011-native-supabase.test.mjs": "fe361890834db061748cc250dc061a6b3641830b149538b276a9bf41b7eae370",
+      "tools/start-feature-011-native-supabase.test.mjs": "ad867848acd3d6914533582ed04eca8dbdb7b90556b7b64b644b3dcec6d31bad",
+      "tools/verify-feature-011-scope.test.mjs": "90398024006de2dc41a9e24f08a64bdac04e432224c4abbea9fa076e433ca2da"
+    }
+  },
+  "runtimes": [
+    {
+      "name": "shifaa-local-postgres",
+      "container": "shifaa-local-postgres-postgres-1",
+      "user": "shifaa_owner",
+      "adminDatabase": "shifaa",
+      "running": true,
+      "image": "shifaa/postgis:17-3.5-006-local",
+      "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7",
+      "serverVersion": "17.11"
+    },
+    {
+      "name": "shifaa-local-supabase",
+      "container": "supabase_db_shifaa-local-supabase",
+      "user": "supabase_admin",
+      "adminDatabase": "postgres",
+      "running": true,
+      "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+      "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+      "serverVersion": "17.6"
+    }
+  ],
+  "records": [
+    {
+      "id": "protection",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\15544_1791732711320\\node.exe",
+        "--import",
+        "tsx",
+        "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-e17709d8-51a4-49d9-a898-015d5a1e36d5.mjs"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/logs/protection.log",
+        "sha256": "8a02b025b015f660afecd1395f75d8841ad8c036e12605de4715f7e5ce4dbc32"
+      },
+      "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/reruns/protection",
+      "transformation": {
+        "original": "tools/run-feature-011-protection-test.mjs",
+        "originalSha256": "0e57d04e9dc9c6103c53683ea1bd76538e5e76637a04323413206d62bb28bd82",
+        "substitution": "const f = 'specs/011-allergies-clinical-content-governance',\n  e = `${f}/evidence/fresh-implementation/K08`;",
+        "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/reruns/protection",
+        "temporarySha256": "a5112e87143721616686b131f161fb125510636388c9733ca24d50157e4caf67",
+        "testAssertionsChanged": false,
+        "preflightSubstitutions": []
+      }
+    },
+    {
+      "id": "atomic-boundaries",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\15544_1791732711320\\node.exe",
+        "--import",
+        "tsx",
+        "tools/.f011-k22-de3a8246-670a-4c6b-9734-eeb38c8c7f5c.mjs"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/logs/atomic-boundaries.log",
+        "sha256": "8a02b025b015f660afecd1395f75d8841ad8c036e12605de4715f7e5ce4dbc32"
+      },
+      "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/reruns/atomic-boundaries",
+      "extension": {
+        "original": "tools/run-feature-011-protection-test.mjs",
+        "originalSha256": "0e57d04e9dc9c6103c53683ea1bd76538e5e76637a04323413206d62bb28bd82",
+        "temporarySha256": "f90312dd6a3919660ecc4687564d11e5474888ecef3de10f8a55ed6eaf001668",
+        "testAssertionsChanged": true,
+        "addedScenarios": [
+          "real canonical serialization failure",
+          "real local AES failure"
+        ],
+        "expectedValuesRegenerated": false
+      }
+    },
+    {
+      "id": "deferred-obligations",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\15544_1791732711320\\node.exe",
+        "--import",
+        "tsx",
+        "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-1332ddb3-2776-4ab3-bb79-80c4e6f40c87.mjs",
+        "k05"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/logs/deferred-obligations.log",
+        "sha256": "440a21a40d50b1b1e28889b1615e31c02e595cccbbb4be8f09a55cd1538052b5"
+      },
+      "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/reruns/deferred-obligations",
+      "transformation": {
+        "original": "tools/run-feature-011-storage-test.mjs",
+        "originalSha256": "62dc149fa7899de9a3e68dfb2600dba6ad47aa7a94d089c70022109710d71b6d",
+        "substitution": "const output =\n    process.argv[3] === 'k17-remediation'\n      ? `${currentEvidenceRoot(root)}/k05`\n      : process.argv[3] === 'k08-remediation'\n        ? 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/k05'\n        : 'artifacts/feature-011/k05-k06';",
+        "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation/composition/reruns/deferred-obligations",
+        "temporarySha256": "8b83493200d77b55fb93233535d32465e1cb9b38e480c0a0e1094e0164b9e62d",
+        "testAssertionsChanged": false,
+        "preflightSubstitutions": []
+      }
+    }
+  ],
+  "parityPins": 164,
+  "failMissingRuntime": true,
+  "expectedVectorsRegenerated": false,
+  "sharedReset": false,
+  "capturedAt": "2026-10-11T15:35:55.615Z"
+}

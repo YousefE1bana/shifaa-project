@@ -31,6 +31,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: 11.13.0
@@ -44,7 +46,9 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      - run: node --test tools/start-feature-011-native-supabase.test.mjs tools/reset-feature-011-native-supabase.test.mjs tools/feature-011-native-supabase-bootstrap.test.mjs tools/feature-011-evidence-head.test.mjs tools/feature-011-pr-review-binding.test.mjs
       - run: pnpm contracts:check
+      - run: node tools/verify-feature-011-contracts.mjs
       - run: pnpm architecture:check
       - run: pnpm secrets:check
 
@@ -81,6 +85,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: 11.13.0

@@ -1,58 +1,67 @@
+# Defaults for new trusted-project sessions; CLI/task overrides can supersede them.
+model = "gpt-6.1-sol"
+model_reasoning_effort = "high"
+
 [agents]
 enabled = true
 default_subagent_model = "gpt-6-luna"
 default_subagent_reasoning_effort = "high"
-max_concurrent_threads_per_session = 4
-interrupt_message = false
+max_concurrent_threads_per_session = 2
+interrupt_message = true
 
 [agents.explorer]
-description = "Cheap read-only repo exploration, search, tracing, and context gathering."
+description = "Read-only bounded reconnaissance with file:line evidence and explicit search limits."
 config_file = "agents/explorer.toml"
 
 [agents.worker]
-description = "Normal bounded non-UI implementation, mechanical edits, and simple fixes."
+description = "Bounded routine implementation, including mechanical React work; escalate security-sensitive logic."
 config_file = "agents/worker.toml"
 
 [agents.deep-worker]
-description = "Difficult but bounded non-UI implementation requiring maximum worker reasoning."
+description = "Bounded RLS, authorization, migration, concurrency, transaction and state-machine implementation."
 config_file = "agents/deep-worker.toml"
 
 [agents.tester]
-description = "Focused tests, verification, debugging, fixtures, and failure triage."
+description = "Focused execution, failure triage and test fixtures; not independent security sign-off."
 config_file = "agents/tester.toml"
 
 [agents.ui-worker]
-description = "UI implementation and visual judgment against approved SHIFAA design contracts and baselines."
+description = "Bounded rendered visual/accessibility review and refinement under the SHIFAA UI Contract."
 config_file = "agents/ui-worker.toml"
 
 [features.multi_agent_v2]
 enabled = true
-expose_spawn_agent_model_overrides = true
-max_concurrent_threads_per_session = 3
+expose_spawn_agent_model_overrides = false
+max_concurrent_threads_per_session = 2
 root_agent_usage_hint_text = """
-SHIFAA token-efficient orchestration:
-
-SpecKit phase routing:
-- specify, clarify, plan, tasks, analyze, taskstoissues, and post-implementation analysis stay owned by the root.
-- Explorer may assist those phases only with bounded read-only repository reconnaissance.
-- During implementation, the root decomposes the approved checkpoint and delegates routine coding instead of implementing it itself.
-- Use worker for normal bounded implementation, including normal UI implementation and mechanical React work.
-- Use deep-worker directly for already-bounded concurrency, transaction, RLS, or difficult state-machine work.
-- Use tester for focused verification, failure diagnosis, fixtures, and targeted debugging.
-- Reserve ui-worker for bounded visual, design, or accessibility judgment and refinement, not full-page implementation by default.
-- Specialized spawns use fork_turns="none" and receive a small self-contained task packet. Explicitly name any required skill.
-- Keep at most two workers active, and only when their file/state ownership is independent.
-- Do not delegate tiny tasks when delegation overhead is larger than the work.
-- Do not run parallel workers against shared DB/test-harness state when they can interfere.
-- Workers do not edit specs, task ledgers, governance decisions, or lifecycle approvals unless explicitly assigned.
-- Root reviews worker diff/evidence rather than repeating the worker's entire exploration.
-- Root owns checkpoint acceptance, task-ledger updates after evidence, final verification decisions, commits, pushes, PRs, and integration.
+Use delegation only when authorized by the user or applicable project/skill instructions.
+Root owns Specify, Clarify, Plan, Tasks, Analyze, taskstoissues and post-implementation analysis;
+explorer may provide bounded read-only evidence. Never advance a checkpoint or integrate Git
+without the applicable authorization. Do not merge main on the user's behalf.
+Delegate substantial bounded routine coding to worker, including mechanical React work.
+Do tiny work directly. Use deep-worker for RLS, authorization, migrations, concurrency,
+transactions and difficult state machines. Use tester for focused execution and fixture triage.
+Use ui-worker for rendered visual/accessibility judgment, not routine full-page implementation.
+Use fork_turns="none" only with a self-contained brief containing the absolute worktree,
+branch/HEAD, approved checkpoint, allowed files, forbidden changes, normative artifacts and
+required skill paths, explicit invariants, verification commands, expected outcomes and evidence path.
+Child agents must read AGENTS.md and the named applicable skills; naming a skill is not loading it.
+At most two child threads may be open. Give each disjoint file ownership; serialize shared DB,
+Docker, baseline reset and test-harness work. Separate folders alone do not isolate shared resources.
+Keep lifecycle decisions, acceptance, task-ledger edits and Git integration with the root.
+For every security-sensitive change, derive a negative-case matrix independently from approved
+contracts before reviewing the worker's tests. Review affected callers, policies, grants, functions
+and migrations beyond the patch where necessary. Execute actual non-owner role negatives, identity
+substitution, authority-loss, CAS/idempotency, rollback and independent-session race cases as applicable.
+Tester PASS is execution evidence, not security acceptance. Root must review raw results and
+coverage omissions; use the authorized isolated harness and both required runtimes where contracted.
+Review worker diffs and evidence efficiently, but retrace security-sensitive paths when needed.
+No browser screenshot/automation result is native NVDA/TalkBack or physical-device acceptance.
 """
 subagent_developer_instructions = """
-Stay inside the assigned bounded task.
-Do not spawn subagents.
-Do not commit, push, merge, create PRs, switch branches, or broaden scope.
-Return concise evidence to the parent.
+Stay inside the bounded assignment. Read AGENTS.md and required skill files.
+Do not spawn subagents or perform Git integration. Do not edit lifecycle/acceptance/task ledgers.
+Return changed paths, exact commands, exit codes, counts, evidence paths and untested cases.
 """
 
 [plugins."warp@codex-warp"]

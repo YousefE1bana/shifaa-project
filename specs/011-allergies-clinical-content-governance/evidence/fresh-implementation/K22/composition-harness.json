@@ -1,0 +1,344 @@
+{
+  "checkpoint": "K22",
+  "task": "T080",
+  "result": "PASS",
+  "capturedAt": "2026-10-09T14:07:02.876Z",
+  "discovered": {
+    "suites": [
+      "packages/core/src/feature-011/allergy-policy.test.ts",
+      "packages/core/src/feature-011/artifact.test.ts",
+      "packages/core/src/feature-011/content-policy.test.ts",
+      "packages/contracts/src/feature-011.test.ts",
+      "packages/api-client/src/feature-011.test.ts",
+      "packages/i18n/src/feature-011.test.ts",
+      "services/api/src/feature-011-exposure.test.ts",
+      "services/api/src/routes/feature-011-allergies.contract.test.ts",
+      "services/api/src/routes/feature-011-content.test.ts",
+      "services/api/src/modules/feature-011/allergies.test.ts",
+      "services/api/src/modules/feature-011/artifact-review.test.ts",
+      "services/api/src/modules/feature-011/clinical-status.test.ts",
+      "services/api/src/modules/feature-011/create-release.test.ts",
+      "services/api/src/modules/feature-011/evidence.test.ts",
+      "services/api/src/modules/feature-011/protection.test.ts",
+      "services/api/src/modules/feature-011/publish-release.test.ts",
+      "services/api/src/modules/feature-011/receipts.test.ts",
+      "services/api/src/modules/feature-011/sign-release.test.ts",
+      "services/api/src/modules/feature-011/verify-allergy.test.ts",
+      "apps/patient/test/feature-011-history.test.tsx",
+      "apps/patient/test/feature-011-managed-handoff.test.ts",
+      "apps/patient/test/feature-011-records.test.tsx",
+      "apps/clinic/test/feature-011-status.test.tsx",
+      "apps/clinic/test/feature-011-summary.test.tsx",
+      "apps/clinic/test/feature-011-verification.test.tsx",
+      "apps/admin/test/feature-011-clinical-content.test.tsx",
+      "tests/e2e/feature-011-handoff.test.ts",
+      "tests/e2e/feature-011-ui.spec.ts",
+      "tests/e2e/feature-011-verification.spec.ts"
+    ],
+    "tooling": [
+      "tools/feature-011-harness.test.mjs",
+      "tools/feature-011-ledger-contract.test.mjs",
+      "tools/feature-011-physical-red.test.mjs",
+      "tools/feature-011-protocol-parity.test.mjs",
+      "tools/verify-feature-011-scope.test.mjs"
+    ],
+    "hashes": {
+      "packages/core/src/feature-011/allergy-policy.test.ts": "ebb706cac734111b705b9667bfadfe03cb48013fc74a63b8ad85a6a36a87c93f",
+      "packages/core/src/feature-011/artifact.test.ts": "7d2af5b4fbe23d7ff0b79ed76b9071ebc2f32aa8607bf174b730ec900c7d04dd",
+      "packages/core/src/feature-011/content-policy.test.ts": "fe8d7c7b475c67a7deaeefd79fd716040aa253f48ab809e2d305bfb180755071",
+      "packages/contracts/src/feature-011.test.ts": "23141c28b7b13f2419253cf3b8c3e938091a75d6191856bbb3d42ef184721cff",
+      "packages/api-client/src/feature-011.test.ts": "018bab1060cd5f9ea8f108ffb2f31a4a03eb2bc680185f7959b3870947ebc822",
+      "packages/i18n/src/feature-011.test.ts": "f32b7fd1eb33fdaf7e39fcdb372f16536c6c8b68bb68a2c9ab73bf66b933556c",
+      "services/api/src/feature-011-exposure.test.ts": "ad8cf52597e74889e39f8bf6be1cd6efbe3d2255e2bfa0a7cd4fdc3da05ca124",
+      "services/api/src/routes/feature-011-allergies.contract.test.ts": "13f38ea3c3fb16b413dbd18be34eb014c07b88649d43650b12b959bebd2b2df4",
+      "services/api/src/routes/feature-011-content.test.ts": "3d784a9555abb995fd5d25b247c3038a87625876ea11c03593dd49cbd27ea1a7",
+      "services/api/src/modules/feature-011/allergies.test.ts": "d1ca9c5afc9afae9015575f39f3a12bd76d3a6745561fdc37b6aa947aca87d3f",
+      "services/api/src/modules/feature-011/artifact-review.test.ts": "b34a369d55d6e4b5b703df7d92ffd9828d4cd4512e5e1afb1d4913d437069e67",
+      "services/api/src/modules/feature-011/clinical-status.test.ts": "107c7fef6fa432ed97bc11a4bd3c47392454d7c83cff9ecc37176900f3e0e87c",
+      "services/api/src/modules/feature-011/create-release.test.ts": "4fde744340f28605f73a67133aeaf28409287edf55223f0ec14b72a57eecf6cd",
+      "services/api/src/modules/feature-011/evidence.test.ts": "dc094a0e9b3b117d791a25eec8d3e2521ad637cdf634958d8b3cbb7ccd9fed41",
+      "services/api/src/modules/feature-011/protection.test.ts": "37656674243a121bbed6f38c37c19ea869148cfa5305a98362a7ade2ddc4057d",
+      "services/api/src/modules/feature-011/publish-release.test.ts": "f42d0af99ca4e74745a793f3c3d802c89ce876f43eaf22e6c0c2aa2aff6b2c6f",
+      "services/api/src/modules/feature-011/receipts.test.ts": "78451ef32420a064ad052b4aabe8ed6c7eb482b57337b67fdbe900637b26c8ae",
+      "services/api/src/modules/feature-011/sign-release.test.ts": "c20329d0182623adb9864428baa4349074f1df90efd14c1deb6822918175b6c1",
+      "services/api/src/modules/feature-011/verify-allergy.test.ts": "a96c1e330d9a5c467e34a805bf8425b184a0bbd85c5127777b5dbe16d2445094",
+      "apps/patient/test/feature-011-history.test.tsx": "13a26cae13e07d35398aa7d86b98e91cfda0b56dc929fa13a67f6aa6ddd38eaf",
+      "apps/patient/test/feature-011-managed-handoff.test.ts": "c2e2541c244abde40c0c8b983205e1057c32961f2012e4c0ad5533ca1a642f0d",
+      "apps/patient/test/feature-011-records.test.tsx": "7208246a74e2e2a65df0660453994bc51e5d4681dc17cff23eb373dd3a70f2ff",
+      "apps/clinic/test/feature-011-status.test.tsx": "8182d773882565c0bc8cd2478cb2ff79df2153415405b77138c5a051a973f1a2",
+      "apps/clinic/test/feature-011-summary.test.tsx": "ea2fc93981a38b83d996f71c3ca1a74a8073f9e63f37db01d1aa41597f55e72d",
+      "apps/clinic/test/feature-011-verification.test.tsx": "c33212ee322b52cb8619ba2bf989ce6a35c5acc58fe5a2d3a95e6f885b588039",
+      "apps/admin/test/feature-011-clinical-content.test.tsx": "a3eda9a615fdb81a83b0322f1a8966f586fb10f849b80c3aa90be9b16fe267d7",
+      "tests/e2e/feature-011-handoff.test.ts": "1bc12f8ba2dd20d77cb5efe495c69facfc98bd5b613f36e2f2c48372d11c1c83",
+      "tests/e2e/feature-011-ui.spec.ts": "9621c1e265dc0edb053fe7d4cdc7b1de6bd4205aeac6c8d6d22a0a0999139c5b",
+      "tests/e2e/feature-011-verification.spec.ts": "3a5dab34fa8837ac5388fb5c510a876e941517ff7628c41fbbc2326a564595a7",
+      "tools/feature-011-harness.test.mjs": "4cbc5f0eb6396b0a67e0bf067cc09278f9f83705c84b62c18dc67fc978bed823",
+      "tools/feature-011-ledger-contract.test.mjs": "c0b2b33fb2126bc2faa055e5a55c7ce3f159dce0acd620ec5a75876eb733553a",
+      "tools/feature-011-physical-red.test.mjs": "a319e5fdacf4a4810cf1d1c2b3b8d9880cd2514e37eba473a30d2ac0a68047ef",
+      "tools/feature-011-protocol-parity.test.mjs": "4cf8203b2434ea12f0d9c2d1f905b446a6e0283e76816b1addb39c732f3f524e",
+      "tools/verify-feature-011-scope.test.mjs": "72190a9bc1f17063d1543701fa148df02d5a933b9bb495875e1253f185f95ff8"
+    }
+  },
+  "packageDiscovery": [
+    {
+      "id": "package-core",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node_modules\\corepack\\dist\\pnpm.js",
+        "--filter",
+        "@shifaa/core",
+        "test"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-core.log",
+        "sha256": "cb76c516370cc2f658ad33df91e1e137e5bcbdac7af184b1ed4b8cce80073965"
+      }
+    },
+    {
+      "id": "package-contracts",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node_modules\\corepack\\dist\\pnpm.js",
+        "--filter",
+        "@shifaa/contracts",
+        "test"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-contracts.log",
+        "sha256": "4e1435c170f4309da5b3c661e6bd6a11fa8c531b4d3c3ae9d9b5aba324abf175"
+      }
+    },
+    {
+      "id": "package-api-client",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node_modules\\corepack\\dist\\pnpm.js",
+        "--filter",
+        "@shifaa/api-client",
+        "test"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api-client.log",
+        "sha256": "94eb43fbe5a16129506230a72c98702d14ad4c29b32a10c62a70d7bccd18af87"
+      }
+    },
+    {
+      "id": "package-i18n",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node_modules\\corepack\\dist\\pnpm.js",
+        "--filter",
+        "@shifaa/i18n",
+        "test"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-i18n.log",
+        "sha256": "cc5fe84ad07634b67aee7062673361dfbbac3ddeab392b673e6ca1c5f5431c80"
+      }
+    },
+    {
+      "id": "package-api",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node_modules\\corepack\\dist\\pnpm.js",
+        "--filter",
+        "@shifaa/api",
+        "test"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-api.log",
+        "sha256": "66aeda1c3ef62ba4ea510b882bcb540860afc8a521e9103e8be39ffff75ee44c"
+      }
+    },
+    {
+      "id": "package-patient",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node_modules\\corepack\\dist\\pnpm.js",
+        "--filter",
+        "@shifaa/patient",
+        "test"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-patient.log",
+        "sha256": "9a7100753c398509eb8b52f1f4e2f3d36f0ae0e0ae012927ddd9f7e104f5cf86"
+      }
+    },
+    {
+      "id": "package-clinic",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node_modules\\corepack\\dist\\pnpm.js",
+        "--filter",
+        "@shifaa/clinic",
+        "test"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-clinic.log",
+        "sha256": "5f4b49afcc20133362529a8c16964451623ac4fc02bfe9b35b2e1c353c85a097"
+      }
+    },
+    {
+      "id": "package-admin",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node_modules\\corepack\\dist\\pnpm.js",
+        "--filter",
+        "@shifaa/admin",
+        "test"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/package-admin.log",
+        "sha256": "e3dfb5e45cd8b79303035cb4469994297f967801f7f72879871c3f322fa634fe"
+      }
+    },
+    {
+      "id": "tooling",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "--test",
+        "tools/feature-011-harness.test.mjs",
+        "tools/feature-011-ledger-contract.test.mjs",
+        "tools/feature-011-physical-red.test.mjs",
+        "tools/feature-011-protocol-parity.test.mjs",
+        "tools/verify-feature-011-scope.test.mjs"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/tooling.log",
+        "sha256": "34f23f5eff4b756309a99a1e3bd6051258f58171722089b5ac1c70c30f5d99cd"
+      }
+    },
+    {
+      "id": "native-handoff",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\16080_1791551564625\\node.exe",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/e2e/feature-011-handoff.test.ts"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/native-handoff.log",
+        "sha256": "df68b87cece313cde9a29caf9df4c5b140d60859c8c01148842144ab8992c902"
+      }
+    }
+  ],
+  "browserDiscovery": [
+    {
+      "id": "browser-patient",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\9372_1791551582512\\node.exe",
+        "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\node_modules\\playwright\\cli.js",
+        "test",
+        "--config",
+        "tools/feature-011-composition-playwright.config.ts",
+        "--max-failures=1"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/browser-patient.log",
+        "sha256": "ceaa875642755be0e5321b67f3f980e48828f6a5280507995af4e23fb846ac79"
+      }
+    },
+    {
+      "id": "browser-clinic",
+      "result": "PASS",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\9372_1791551582512\\node.exe",
+        "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\node_modules\\playwright\\cli.js",
+        "test",
+        "--config",
+        "tools/feature-011-composition-playwright.config.ts",
+        "--max-failures=1"
+      ],
+      "log": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/logs/browser-clinic.log",
+        "sha256": "abf9de282860f48a24c8ad9c555d958daa6cea384b0e4bcae100bff057765efc"
+      }
+    }
+  ],
+  "browserCounts": {
+    "patient": 38,
+    "clinic": 49
+  },
+  "runtimeRequirements": [
+    {
+      "name": "shifaa-local-postgres",
+      "container": "shifaa-local-postgres-postgres-1",
+      "user": "shifaa_owner",
+      "adminDatabase": "shifaa",
+      "running": true,
+      "image": "shifaa/postgis:17-3.5-006-local",
+      "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7",
+      "serverVersion": "17.11"
+    },
+    {
+      "name": "shifaa-local-supabase",
+      "container": "supabase_db_shifaa-local-supabase",
+      "user": "supabase_admin",
+      "adminDatabase": "postgres",
+      "running": true,
+      "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+      "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+      "serverVersion": "17.6"
+    }
+  ],
+  "failMissingRuntime": true,
+  "fullVerifyCommand": "pnpm test:feature-011:composition",
+  "preservesPredecessorVerifyPrefix": true,
+  "runtimeStages": [
+    "allergy-api",
+    "verify-api",
+    "create-api",
+    "sign-api",
+    "publish-api",
+    "physical-races",
+    "physical-green",
+    "evidence",
+    "core-equivalence",
+    "review",
+    "status",
+    "native-abuse",
+    "protection",
+    "atomic-boundaries",
+    "deferred-obligations"
+  ],
+  "repairs": [
+    "Exact initial ledger reconstructed in isolated K01 fixtures; current checked state separately consistent. Original approved definition hashes unchanged.",
+    "Diagnostic assertions recognize exact approved-input hash denial. No setup failures counted as success.",
+    "Patient TSX loader; new F011 TSX discovery retains predecessor Node/Playwright separation.",
+    "Browser CSRF fixture host derives from configured baseURL; screenshots redirected to K22 only."
+  ],
+  "additionalRepairs": [
+    "Native status reads the pinned project-local CLI directly; package-manager banner/setup errors never count as behavior proof.",
+    "Disposable physical harness lifecycle preflight accepts the exact current checked prefix; original pinned SQL/vector/role/race assertions remain unchanged.",
+    "Browser-generated Next type import restored to exact pre-run bytes; any unexpected concurrent drift fails."
+  ],
+  "productOwnerAcceptance": "PENDING",
+  "sources": {
+    "tools/run-feature-011-composition-test.mjs": "a6b0a2eb5a74c0eade33abcf3b44e9eb00d032c55896d8b1ab2cdbf4f1618dbc",
+    "tools/feature-011-composition-playwright.config.ts": "f2b33f9cc045d16ce34f43f9701684429e849b12a3195dbc997c4d833baf2385",
+    "tools/verify-feature-011-scope.test.mjs": "72190a9bc1f17063d1543701fa148df02d5a933b9bb495875e1253f185f95ff8",
+    "tools/feature-011-ledger-contract.test.mjs": "c0b2b33fb2126bc2faa055e5a55c7ce3f159dce0acd620ec5a75876eb733553a",
+    "package.json": "a02bd813edde4bb9b3b7b4f3edced296a4700dd40dbcdcd128a04a556f2d76b3",
+    "apps/patient/package.json": "fe14f2c2216fecd63ab5959c5b6e1dc76e9c90f40b8b135bc07ea28aa8ffe452",
+    "apps/clinic/package.json": "d0ac31485d3fc7ffee9f3c3e26bf398aa1a3ab3cdc93e64a13706e90a2f9fd3c",
+    "tools/feature-011-composition-atomic.mjs": "dba6f6c30d35edcafd04e6e45fda704e7e021f110927ab07f300760014c7f501",
+    "tools/feature-011-composition-security.mjs": "26c04c9c32e77fa826f005b1637dbdea7a92c5749ebf4ca738d21b469342261e",
+    "services/api/test/identity-continuity-mfa-harness.ts": "488a34be1fcf7e753d1b210ceb3dd39f6594a0fcbc676782a48883c8d6bc2e27"
+  },
+  "parityPins": 133,
+  "expectedVectorsRegenerated": false,
+  "sharedReset": false,
+  "retainedGates": "UNCHANGED_OPEN"
+}

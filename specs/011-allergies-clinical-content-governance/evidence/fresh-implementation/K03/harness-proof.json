@@ -1,0 +1,1274 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "K03",
+  "ledgerId": "SHIFAA-F011-FRESH-TASKS@1.0.0",
+  "authorization": "Direct Product Owner K02_ACCEPTED + K03_APPROVED; T008-T011 only",
+  "disposition": "IMPLEMENTED_PENDING_PRODUCT_OWNER_REVIEW_AND_ACCEPTANCE",
+  "capturedAt": "2026-10-06T16:21:02.419Z",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "delegationUsed": false,
+  "planManifest": {
+    "path": "specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json",
+    "sha256": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548"
+  },
+  "normativeInputDigests": {
+    ".specify/memory/constitution.md": "25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a",
+    "docs/design/SHIFAA-UI-Contract.md": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+    "docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md": "9feadc0b489857c66533d20f1829c9826d8ea7ae8ea7bf8e683968276e1cad04",
+    "docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md": "51fdac8ecd2710bc13a53c89f9d09d4d486ad36631056e7171521d5e16b6abd6",
+    "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+    "packages/design-system/src/tokens.ts": "39fb80ef2c702aab3663b46dd98d92cc747c9ff694b4a8161005cc4ca317201d",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json": "b0f8d4ba2ad5f30bbdf6ec963a6dc4e16677236b3ed0fbc6aa263ee81a2ed6ed",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json": "f031aa09edddf8c60ebe4cc8165fa35afee7e3875551ca2f6136e68a31bf7f25",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md": "03dbaeccfc4342136c6f6623f8613157e51806ddf0f07fea85a8ecb3374da257",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md": "b203e00aaf3e2cc689b2ccc60e0b846ca206942de9b660d1d185ba4006d0a57e",
+    "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md": "c053e28f529ecea784917ab38028b599f45f0a4b58e517970a644ed7e2a268b5",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json": "4eff01a61b485f0616b69480a979f3024da21b464cf768771055bb2694e56050",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json": "2bf23cae34648742f995edced1008f7988efdbaf9dd12d9e1c46aa83e10d68ec",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49",
+    "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e",
+    "specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json": "53e46fbbbf79526749e0786c1630a2c2b6ad515ec3ac33d8755d2730df0842ac",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json": "2948f78fd1fb92ee9d411092da30f577b9215c2543182c2e85f56b306da30291",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json": "03945dbb8f323f480f1a93f09340936f5623f7c1feeea6f2fcce98211b4b3a11",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md": "e8f43933311ba5430d758504675162aca86d0537205eda95febbf3d6ab0bc5db",
+    "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json": "9f3be0aa5f5b3aa62b3505ea40d8b142b31f25a228a6b0bb19f221b28748ffa9",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json": "8326cde913c59e4c899b16ba73193d9a48a99191f5eb7dba66883d904b1523b0",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json": "782b32e23764c7ecf9b5114f387be174591c0d0ef6b2eed04749520991eee6cc",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md": "e75f95ea9daef89918083be8ea66b8fce896bf55c8d323a1bdffef07e37bd1eb",
+    "specs/011-allergies-clinical-content-governance/data-model.md": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f",
+    "specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md": "b3dcef629ed2e3b80f1ef07a73369664314c4da4c623f1d80a78141942bba269",
+    "specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md": "a46d7f12480819c7649998729ba9149499cf66e33dcfcef335151d712710d817",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md": "4f8bf26bdfb43cd016b62cd572f21bc9f2a81477dcd2b1a067314cb95887ba3f",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md": "1fc278a00df5b46115374d1f435d1168f5de0977df3e21c9dabdb76b726c2989",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md": "b9632b94dfb136b35d0b3bcef89a2cee47002836ed7db679a56cc4a000c0b48b",
+    "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md": "8d3fe1ae977bb99e3d24d1cf1f5548dafc0ecdb350f7e681b89acb04488e0bab",
+    "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md": "03eaf4a9ace7d26fbbf977309774728531e763f13dc1bf06f726957838092709",
+    "specs/011-allergies-clinical-content-governance/plan.md": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca",
+    "specs/011-allergies-clinical-content-governance/quickstart.md": "71e377027f3aee5385e3c079e288498ea9e5597ae657dd07eecd5bf11e25ec5a",
+    "specs/011-allergies-clinical-content-governance/research.md": "d862cfb3698f7651e0b63c80910107ee4c43e136bb417d079294f5e5451967c5",
+    "specs/011-allergies-clinical-content-governance/spec.md": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0",
+    "specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json": "59ea1788edbae023533a9e08da97bc3884e0e098ec6e80721272822b6439c432"
+  },
+  "ledgerDigests": {
+    "specs/011-allergies-clinical-content-governance/tasks.md": "78ae4467e89df9610f1e7e0ba796d968ba5a697e9f038d3dae7f8fce43b362cf",
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json": "ebbfc1c6bd60ec2083d0da475a052abf465305dc32bd16ec8390a31bf933bdda"
+  },
+  "sourceDigests": {
+    "services/api/src/config.ts": "6e75d8d66bac6e9b49921feb9a65d2055616d028bfe5bce20d84a2dd6ce71a77",
+    "services/api/src/app.ts": "4cfbd5f67ce3ae913977b41d26432506f2870206108cf9d1d664d0665ab3c61b",
+    "services/api/src/feature-011-exposure.ts": "c242b0d39d349ffd74294c5bb36afa0089a2e0a65b58fe154377f1ea055b6bf0",
+    "services/api/src/feature-011-exposure.test.ts": "ad8cf52597e74889e39f8bf6be1cd6efbe3d2255e2bfa0a7cd4fdc3da05ca124",
+    "tools/run-feature-011-postgres-test.mjs": "252d2296e68671deed3499bfc0d8f23551de999081a5ffdf2671ed714b79d922",
+    "tools/run-feature-011-concurrency-test.mjs": "95cc74c03c52c3df91e11928d8ea9ee565b658357e99a33ff08c28e14e49dab0",
+    "tools/feature-011-harness.test.mjs": "edeedcaabeb857a91e46f41a6293c126f94638817f51d3fc9ec58bfad46936ec",
+    "packages/test-kit/src/feature-011/fixtures.ts": "f294c5711fc60fc8247388cd3a089330f62aa60863d383a992336b44d627213e"
+  },
+  "retainedGates": {
+    "OPEN-UX-001": "SATISFIED_FOR_F011_AFFECTED_UI_PLAN_ONLY",
+    "OPEN-UX-002": "OPEN",
+    "OPEN-TECH-002": "OPEN",
+    "OPEN-TECH-003": "OPEN",
+    "OPEN-CLIN-001": "OPEN_SYNTHETIC_ENGINEERING_ONLY",
+    "OPEN-LEGAL-001": "OPEN",
+    "OPEN-LEGAL-002": "OPEN",
+    "OPEN-LEGAL-007": "OPEN"
+  },
+  "scope": {
+    "operations": 7,
+    "nfrs": 19,
+    "boundedFrTargets": 4,
+    "feature010DependencyPreserved": true,
+    "feature012Excluded": true,
+    "frozenProtocolBytesUnchanged": true
+  },
+  "limitations": "Synthetic isolated engineering only; no Feature 011 DDL/routes/domain behavior; no actual AES/KMS or evidence-source acceptance, clinical approval, production readiness, gate closure or later checkpoint execution.",
+  "task": "T011",
+  "result": "PASS",
+  "T008": "VALID_RED",
+  "T009": "GREEN",
+  "T010": "PASS",
+  "T011": "PASS",
+  "runtimeProofs": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "version": "17.11",
+      "setup": "PASS_27_CURRENT_BASELINE_MIGRATIONS",
+      "owner": "shifaa_owner",
+      "executor": "shifaa_api",
+      "missingBehavior": "VALID_RED",
+      "sqlstate": "P0001",
+      "exitCode": 3,
+      "connections": {
+        "result": "PASS",
+        "kind": "BASELINE_ONLY_CONNECTION_AND_BARRIER_HEALTH",
+        "identities": [
+          {
+            "user": "shifaa_api",
+            "pid": 4584,
+            "database": "f011_k03_fd8450008bcff9d0"
+          },
+          {
+            "user": "shifaa_api",
+            "pid": 4585,
+            "database": "f011_k03_fd8450008bcff9d0"
+          }
+        ],
+        "locks": {
+          "holderPid": 4584,
+          "contenderPid": 4585,
+          "holderGranted": true,
+          "contenderWaiting": true,
+          "blockingPids": [
+            4584
+          ],
+          "contenderWaitEvent": "Lock",
+          "observerCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "shifaa_owner",
+            "-d",
+            "f011_k03_fd8450008bcff9d0"
+          ]
+        },
+        "holder": {
+          "code": 0,
+          "output": "{\"user\" : \"shifaa_api\", \"pid\" : 4584, \"database\" : \"f011_k03_fd8450008bcff9d0\"}\nREADY\n\nHELD\nRELEASED\n",
+          "command": [
+            "docker",
+            "exec",
+            "-i",
+            "-e",
+            "PGPASSWORD",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "shifaa_api",
+            "-d",
+            "f011_k03_fd8450008bcff9d0"
+          ]
+        },
+        "contender": {
+          "code": 0,
+          "output": "{\"user\" : \"shifaa_api\", \"pid\" : 4585, \"database\" : \"f011_k03_fd8450008bcff9d0\"}\nREADY\n\nACQUIRED\nFINISHED\n",
+          "command": [
+            "docker",
+            "exec",
+            "-i",
+            "-e",
+            "PGPASSWORD",
+            "shifaa-local-postgres-postgres-1",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "shifaa_api",
+            "-d",
+            "f011_k03_fd8450008bcff9d0"
+          ]
+        },
+        "domainMutationExecuted": false
+      },
+      "cleanup": [
+        {
+          "database": "f011_k03_eb0c977dcd1e9086",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        },
+        {
+          "database": "f011_k03_fd8450008bcff9d0",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        }
+      ]
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "version": "17.6",
+      "setup": "PASS_27_CURRENT_BASELINE_MIGRATIONS",
+      "owner": "supabase_admin",
+      "executor": "shifaa_api",
+      "missingBehavior": "VALID_RED",
+      "sqlstate": "P0001",
+      "exitCode": 3,
+      "connections": {
+        "result": "PASS",
+        "kind": "BASELINE_ONLY_CONNECTION_AND_BARRIER_HEALTH",
+        "identities": [
+          {
+            "user": "shifaa_api",
+            "pid": 9982,
+            "database": "f011_k03_26102d1a2c9a58ae"
+          },
+          {
+            "user": "shifaa_api",
+            "pid": 9983,
+            "database": "f011_k03_26102d1a2c9a58ae"
+          }
+        ],
+        "locks": {
+          "holderPid": 9982,
+          "contenderPid": 9983,
+          "holderGranted": true,
+          "contenderWaiting": true,
+          "blockingPids": [
+            9982
+          ],
+          "contenderWaitEvent": "Lock",
+          "observerCommand": [
+            "docker",
+            "exec",
+            "-i",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-U",
+            "supabase_admin",
+            "-d",
+            "f011_k03_26102d1a2c9a58ae"
+          ]
+        },
+        "holder": {
+          "code": 0,
+          "output": "{\"user\" : \"shifaa_api\", \"pid\" : 9982, \"database\" : \"f011_k03_26102d1a2c9a58ae\"}\nREADY\n\nHELD\nRELEASED\n",
+          "command": [
+            "docker",
+            "exec",
+            "-i",
+            "-e",
+            "PGPASSWORD",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "shifaa_api",
+            "-d",
+            "f011_k03_26102d1a2c9a58ae"
+          ]
+        },
+        "contender": {
+          "code": 0,
+          "output": "{\"user\" : \"shifaa_api\", \"pid\" : 9983, \"database\" : \"f011_k03_26102d1a2c9a58ae\"}\nREADY\n\nACQUIRED\nFINISHED\n",
+          "command": [
+            "docker",
+            "exec",
+            "-i",
+            "-e",
+            "PGPASSWORD",
+            "supabase_db_shifaa-local-supabase",
+            "psql",
+            "-X",
+            "-qAt",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-v",
+            "VERBOSITY=verbose",
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "shifaa_api",
+            "-d",
+            "f011_k03_26102d1a2c9a58ae"
+          ]
+        },
+        "domainMutationExecuted": false
+      },
+      "cleanup": [
+        {
+          "database": "f011_k03_29c87e9a41d86f9a",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        },
+        {
+          "database": "f011_k03_26102d1a2c9a58ae",
+          "dropped": true,
+          "absenceVerified": true,
+          "forced": false
+        }
+      ]
+    }
+  ],
+  "productFeature011RoutesAbsent": true,
+  "tests": {
+    "exposureConfig": {
+      "passed": 38,
+      "failed": 0,
+      "skipped": 0
+    },
+    "harnessUnit": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "apiRegression": {
+      "passed": 374,
+      "failed": 0,
+      "conditionalPredecessorSkips": 65,
+      "focusedSuiteIncluded": true
+    }
+  },
+  "verification": {
+    "commands": [
+      {
+        "label": "harness-negative-unit",
+        "command": [
+          "node",
+          "--test",
+          "--test-reporter=tap",
+          "tools/feature-011-harness.test.mjs"
+        ],
+        "startedAt": "2026-10-06T16:17:23.461Z",
+        "finishedAt": "2026-10-06T16:17:24.019Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/harness-negative-unit.log",
+          "sha256": "05f507c9bf74df4b8c9ac7a0b7039e66392665daa38556bd063bf458b4703692"
+        }
+      },
+      {
+        "label": "api-typecheck",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@shifaa/api",
+          "typecheck"
+        ],
+        "startedAt": "2026-10-06T16:17:24.027Z",
+        "finishedAt": "2026-10-06T16:17:25.608Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/api-typecheck.log",
+          "sha256": "38ac890c60e7f38d59ddfb410325cdfb5fca83c9411765c5481754e01c021630"
+        }
+      },
+      {
+        "label": "test-kit-typecheck",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@shifaa/test-kit",
+          "typecheck"
+        ],
+        "startedAt": "2026-10-06T16:17:25.614Z",
+        "finishedAt": "2026-10-06T16:17:26.351Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/test-kit-typecheck.log",
+          "sha256": "38ac890c60e7f38d59ddfb410325cdfb5fca83c9411765c5481754e01c021630"
+        }
+      },
+      {
+        "label": "format",
+        "command": [
+          "pnpm",
+          "exec",
+          "prettier",
+          "--check",
+          "services/api/src/config.ts",
+          "services/api/src/app.ts",
+          "services/api/src/feature-011-exposure.ts",
+          "services/api/src/feature-011-exposure.test.ts",
+          "tools/run-feature-011-postgres-test.mjs",
+          "tools/run-feature-011-concurrency-test.mjs",
+          "tools/feature-011-harness.test.mjs",
+          "packages/test-kit/src/feature-011/fixtures.ts"
+        ],
+        "startedAt": "2026-10-06T16:17:26.352Z",
+        "finishedAt": "2026-10-06T16:17:27.304Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      },
+      {
+        "label": "postgres-both-runtime",
+        "command": [
+          "node",
+          "tools/run-feature-011-postgres-test.mjs",
+          "health"
+        ],
+        "startedAt": "2026-10-06T16:17:27.310Z",
+        "finishedAt": "2026-10-06T16:17:39.782Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/postgres-both-runtime.log",
+          "sha256": "1e76f537fda981c4e0f282d91c4a915d8485769328dded70a023c2d5b0fad545"
+        }
+      },
+      {
+        "label": "concurrency-both-runtime",
+        "command": [
+          "node",
+          "tools/run-feature-011-concurrency-test.mjs",
+          "health"
+        ],
+        "startedAt": "2026-10-06T16:17:39.790Z",
+        "finishedAt": "2026-10-06T16:17:53.464Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/concurrency-both-runtime.log",
+          "sha256": "aac10d067b41d26f9e5a8f28dd33a974a4f183de0070a423a1e4b1f8b3a1f4c4"
+        }
+      },
+      {
+        "label": "contracts-only",
+        "command": [
+          "node",
+          "tools/verify-feature-011-contracts.mjs",
+          "--contracts-only"
+        ],
+        "startedAt": "2026-10-06T16:17:53.473Z",
+        "finishedAt": "2026-10-06T16:17:54.041Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/contracts-only.log",
+          "sha256": "726a7105ae44b29ec810ae47f8cf8073c467e9589dd0a0f4ca89c0f8f2b43c3d"
+        }
+      },
+      {
+        "label": "default-fail-closed",
+        "command": [
+          "node",
+          "tools/verify-feature-011-contracts.mjs"
+        ],
+        "startedAt": "2026-10-06T16:17:54.049Z",
+        "finishedAt": "2026-10-06T16:17:54.750Z",
+        "exitCode": 1,
+        "expectedExitCode": 1,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/default-fail-closed.log",
+          "sha256": "eb0f40cb2b2607d885fdf3288499ccc7ee2544641725bf1e1270c52393bb03e5"
+        }
+      },
+      {
+        "label": "architecture",
+        "command": [
+          "node",
+          "tools/verify-architecture.mjs"
+        ],
+        "startedAt": "2026-10-06T16:17:54.762Z",
+        "finishedAt": "2026-10-06T16:17:54.968Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/architecture.log",
+          "sha256": "a012fe1a8f90af827da9e1b0a2b9617c2ae8926233a09fc8b32db65bcd671ae5"
+        }
+      },
+      {
+        "label": "secrets",
+        "command": [
+          "node",
+          "tools/verify-secrets.mjs"
+        ],
+        "startedAt": "2026-10-06T16:17:54.980Z",
+        "finishedAt": "2026-10-06T16:17:55.425Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/secrets.log",
+          "sha256": "fb385c6898a9f2933966649bff5373b3366eb8dae2ed70435318954656606c53"
+        }
+      },
+      {
+        "label": "diff",
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "startedAt": "2026-10-06T16:17:55.433Z",
+        "finishedAt": "2026-10-06T16:17:55.516Z",
+        "exitCode": 0,
+        "expectedExitCode": 0,
+        "result": "PASS",
+        "log": {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/logs/diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "contractsOnlyResult": "PASS",
+    "defaultResult": "FAIL",
+    "defaultExpectedFailClosed": true,
+    "defaultFailures": [
+      "Physical parity evidence missing/invalid: ENOENT: no such file or directory, open 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K07\\physical-green.json'",
+      "P5 stage disposition: missing specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/stage-assertion.json"
+    ],
+    "requiredStages": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5"
+    ],
+    "fullPnpmVerifyRun": false,
+    "reason": "Full pnpm verify invokes shared database reset and stages outside K03; focused checks and isolated full predecessor-chain harness proof were run."
+  },
+  "K02Bookkeeping": {
+    "acceptanceRecord": {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/k02-accepted-2026-10-06.md",
+      "sha256": "e9e794f21c1aee95877efa64857984c11d0aa23ad3c7ea2ec944ca7b2c407bb3"
+    },
+    "checked": [
+      "T004",
+      "T005",
+      "T006",
+      "T007"
+    ],
+    "issueStates": [
+      {
+        "number": 401,
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/401",
+        "title": "[011-allergies-clinical-content-governance] T004: Add RED stale/missing/input-inconsistent protocol metadata and vector tests",
+        "state": "closed",
+        "stateReason": "completed",
+        "updatedAt": "2026-10-06T16:02:01Z",
+        "bodySha256": "4e9d1cd34612a31c129fb700e72185fffc8867a533aeb6ac1270c5f7d444b074",
+        "acceptanceCommentUrl": "https://github.com/YousefE1bana/shifaa-project/issues/401#issuecomment-6020259664"
+      },
+      {
+        "number": 402,
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/402",
+        "title": "[011-allergies-clinical-content-governance] T005: Extend metadata-only generators from unchanged public contract",
+        "state": "closed",
+        "stateReason": "completed",
+        "updatedAt": "2026-10-06T16:02:04Z",
+        "bodySha256": "2c081619dc17682edc2c85a7c9cd72c541e95eb62e3c3f671b4de752e9e08944",
+        "acceptanceCommentUrl": "https://github.com/YousefE1bana/shifaa-project/issues/402#issuecomment-6020260576"
+      },
+      {
+        "number": 403,
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/403",
+        "title": "[011-allergies-clinical-content-governance] T006: Extend contracts-only/default verifier for current P1–P4 and separate P5 stage disposition",
+        "state": "closed",
+        "stateReason": "completed",
+        "updatedAt": "2026-10-06T16:02:07Z",
+        "bodySha256": "bcecf5bd4d0dd3d19b9cdee8fc822f93a3109df01266038109d46d0113fe3468",
+        "acceptanceCommentUrl": "https://github.com/YousefE1bana/shifaa-project/issues/403#issuecomment-6020261560"
+      },
+      {
+        "number": 404,
+        "url": "https://github.com/YousefE1bana/shifaa-project/issues/404",
+        "title": "[011-allergies-clinical-content-governance] T007: Capture current metadata/vector/schema/client parity before physical consumers",
+        "state": "closed",
+        "stateReason": "completed",
+        "updatedAt": "2026-10-06T16:02:10Z",
+        "bodySha256": "726bc239187a13d498515c1b0c73f2a0c325ec165ba0c004b3dd80c837ae80ed",
+        "acceptanceCommentUrl": "https://github.com/YousefE1bana/shifaa-project/issues/404#issuecomment-6020262516"
+      }
+    ]
+  },
+  "issues": [
+    {
+      "number": 401,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/401",
+      "title": "[011-allergies-clinical-content-governance] T004: Add RED stale/missing/input-inconsistent protocol metadata and vector tests",
+      "state": "closed",
+      "stateReason": "completed",
+      "updatedAt": "2026-10-06T16:02:01Z",
+      "bodySha256": "4e9d1cd34612a31c129fb700e72185fffc8867a533aeb6ac1270c5f7d444b074",
+      "acceptanceCommentUrl": "https://github.com/YousefE1bana/shifaa-project/issues/401#issuecomment-6020259664"
+    },
+    {
+      "number": 402,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/402",
+      "title": "[011-allergies-clinical-content-governance] T005: Extend metadata-only generators from unchanged public contract",
+      "state": "closed",
+      "stateReason": "completed",
+      "updatedAt": "2026-10-06T16:02:04Z",
+      "bodySha256": "2c081619dc17682edc2c85a7c9cd72c541e95eb62e3c3f671b4de752e9e08944",
+      "acceptanceCommentUrl": "https://github.com/YousefE1bana/shifaa-project/issues/402#issuecomment-6020260576"
+    },
+    {
+      "number": 403,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/403",
+      "title": "[011-allergies-clinical-content-governance] T006: Extend contracts-only/default verifier for current P1–P4 and separate P5 stage disposition",
+      "state": "closed",
+      "stateReason": "completed",
+      "updatedAt": "2026-10-06T16:02:07Z",
+      "bodySha256": "bcecf5bd4d0dd3d19b9cdee8fc822f93a3109df01266038109d46d0113fe3468",
+      "acceptanceCommentUrl": "https://github.com/YousefE1bana/shifaa-project/issues/403#issuecomment-6020261560"
+    },
+    {
+      "number": 404,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/404",
+      "title": "[011-allergies-clinical-content-governance] T007: Capture current metadata/vector/schema/client parity before physical consumers",
+      "state": "closed",
+      "stateReason": "completed",
+      "updatedAt": "2026-10-06T16:02:10Z",
+      "bodySha256": "726bc239187a13d498515c1b0c73f2a0c325ec165ba0c004b3dd80c837ae80ed",
+      "acceptanceCommentUrl": "https://github.com/YousefE1bana/shifaa-project/issues/404#issuecomment-6020262516"
+    },
+    {
+      "number": 405,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/405",
+      "title": "[011-allergies-clinical-content-governance] T008: Add RED default-off/kill-switch tests before any Feature 011 route registration",
+      "state": "open",
+      "stateReason": null,
+      "updatedAt": "2026-10-06T15:07:48Z",
+      "bodySha256": "752985a859bb002841c62f81975233032757684384a6ac9c29b9d5355f4fd09a",
+      "handoff": {
+        "schema_version": 1,
+        "repository": "YousefE1bana/shifaa-project",
+        "issue_number": 405,
+        "issue_url": "https://github.com/YousefE1bana/shifaa-project/issues/405",
+        "feature_path": "specs/011-allergies-clinical-content-governance",
+        "task_id": "T008",
+        "baseline_commit": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+        "dependencies": "T007",
+        "acceptance_evidence": "`specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure-red.json` — Unset/invalid/disabled configuration exposes none of seven routes; kill switch denies and does not queue mutation; no excluded routes.",
+        "task_line": 107
+      }
+    },
+    {
+      "number": 406,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/406",
+      "title": "[011-allergies-clinical-content-governance] T009: Install disabled-by-default Feature 011 exposure guard through existing configuration",
+      "state": "open",
+      "stateReason": null,
+      "updatedAt": "2026-10-06T15:07:48Z",
+      "bodySha256": "05f0c3a246fc1a036b0f18f7ad575466d25088b73834c2b9776d88a965be14ce",
+      "handoff": {
+        "schema_version": 1,
+        "repository": "YousefE1bana/shifaa-project",
+        "issue_number": 406,
+        "issue_url": "https://github.com/YousefE1bana/shifaa-project/issues/406",
+        "feature_path": "specs/011-allergies-clinical-content-governance",
+        "task_id": "T009",
+        "baseline_commit": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+        "dependencies": "T008",
+        "acceptance_evidence": "`specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure.json` — RED→GREEN; only explicitly isolated synthetic test exposure. Every later registration depends on this prerequisite; late observability does not own exposure safety.",
+        "task_line": 111
+      }
+    },
+    {
+      "number": 407,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/407",
+      "title": "[011-allergies-clinical-content-governance] T010: Prepare both-runtime isolated SQL runners, barriers and neutral fixtures",
+      "state": "open",
+      "stateReason": null,
+      "updatedAt": "2026-10-06T15:07:49Z",
+      "bodySha256": "febe14ddb0f6ad3029f0e1ccdd7e4a601676fee0834d0d021a314ff21e08d8b8",
+      "handoff": {
+        "schema_version": 1,
+        "repository": "YousefE1bana/shifaa-project",
+        "issue_number": 407,
+        "issue_url": "https://github.com/YousefE1bana/shifaa-project/issues/407",
+        "feature_path": "specs/011-allergies-clinical-content-governance",
+        "task_id": "T010",
+        "baseline_commit": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+        "dependencies": "T009",
+        "acceptance_evidence": "`specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/harness.json` — Pinned pnpm exec supabase only, full baseline/owners, exact harness-owned temporary names/cleanup, independent connections and pg_locks, runtime/role/hash manifests; no shared reset, PHI or raw evidence SQL input.",
+        "task_line": 115
+      }
+    },
+    {
+      "number": 408,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/408",
+      "title": "[011-allergies-clinical-content-governance] T011: Prove healthy harness/exposure distinct from missing Feature 011 behavior",
+      "state": "open",
+      "stateReason": null,
+      "updatedAt": "2026-10-06T15:07:50Z",
+      "bodySha256": "5f5a2267b4566fcceb4444d9718c235fbed4f330593c586dcf27434737223587",
+      "handoff": {
+        "schema_version": 1,
+        "repository": "YousefE1bana/shifaa-project",
+        "issue_number": 408,
+        "issue_url": "https://github.com/YousefE1bana/shifaa-project/issues/408",
+        "feature_path": "specs/011-allergies-clinical-content-governance",
+        "task_id": "T011",
+        "baseline_commit": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+        "dependencies": "T010",
+        "acceptance_evidence": "`specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/harness-proof.json` — Both runtimes setup/smoke healthy; baseline-only intended absent-behavior assertion fails; missing/syntax-broken setup is a blocker, never accepted RED. Routes remain absent.",
+        "task_line": 119
+      }
+    }
+  ],
+  "checkboxes": [
+    {
+      "id": "T001",
+      "checked": true
+    },
+    {
+      "id": "T002",
+      "checked": true
+    },
+    {
+      "id": "T003",
+      "checked": true
+    },
+    {
+      "id": "T004",
+      "checked": true
+    },
+    {
+      "id": "T005",
+      "checked": true
+    },
+    {
+      "id": "T006",
+      "checked": true
+    },
+    {
+      "id": "T007",
+      "checked": true
+    },
+    {
+      "id": "T008",
+      "checked": false
+    },
+    {
+      "id": "T009",
+      "checked": false
+    },
+    {
+      "id": "T010",
+      "checked": false
+    },
+    {
+      "id": "T011",
+      "checked": false
+    },
+    {
+      "id": "T012",
+      "checked": false
+    },
+    {
+      "id": "T013",
+      "checked": false
+    },
+    {
+      "id": "T014",
+      "checked": false
+    },
+    {
+      "id": "T015",
+      "checked": false
+    },
+    {
+      "id": "T016",
+      "checked": false
+    },
+    {
+      "id": "T017",
+      "checked": false
+    },
+    {
+      "id": "T018",
+      "checked": false
+    },
+    {
+      "id": "T019",
+      "checked": false
+    },
+    {
+      "id": "T020",
+      "checked": false
+    },
+    {
+      "id": "T021",
+      "checked": false
+    },
+    {
+      "id": "T022",
+      "checked": false
+    },
+    {
+      "id": "T023",
+      "checked": false
+    },
+    {
+      "id": "T024",
+      "checked": false
+    },
+    {
+      "id": "T025",
+      "checked": false
+    },
+    {
+      "id": "T026",
+      "checked": false
+    },
+    {
+      "id": "T027",
+      "checked": false
+    },
+    {
+      "id": "T028",
+      "checked": false
+    },
+    {
+      "id": "T029",
+      "checked": false
+    },
+    {
+      "id": "T030",
+      "checked": false
+    },
+    {
+      "id": "T031",
+      "checked": false
+    },
+    {
+      "id": "T032",
+      "checked": false
+    },
+    {
+      "id": "T033",
+      "checked": false
+    },
+    {
+      "id": "T034",
+      "checked": false
+    },
+    {
+      "id": "T035",
+      "checked": false
+    },
+    {
+      "id": "T036",
+      "checked": false
+    },
+    {
+      "id": "T037",
+      "checked": false
+    },
+    {
+      "id": "T038",
+      "checked": false
+    },
+    {
+      "id": "T039",
+      "checked": false
+    },
+    {
+      "id": "T040",
+      "checked": false
+    },
+    {
+      "id": "T041",
+      "checked": false
+    },
+    {
+      "id": "T042",
+      "checked": false
+    },
+    {
+      "id": "T043",
+      "checked": false
+    },
+    {
+      "id": "T044",
+      "checked": false
+    },
+    {
+      "id": "T045",
+      "checked": false
+    },
+    {
+      "id": "T046",
+      "checked": false
+    },
+    {
+      "id": "T047",
+      "checked": false
+    },
+    {
+      "id": "T048",
+      "checked": false
+    },
+    {
+      "id": "T049",
+      "checked": false
+    },
+    {
+      "id": "T050",
+      "checked": false
+    },
+    {
+      "id": "T051",
+      "checked": false
+    },
+    {
+      "id": "T052",
+      "checked": false
+    },
+    {
+      "id": "T053",
+      "checked": false
+    },
+    {
+      "id": "T054",
+      "checked": false
+    },
+    {
+      "id": "T055",
+      "checked": false
+    },
+    {
+      "id": "T056",
+      "checked": false
+    },
+    {
+      "id": "T057",
+      "checked": false
+    },
+    {
+      "id": "T058",
+      "checked": false
+    },
+    {
+      "id": "T059",
+      "checked": false
+    },
+    {
+      "id": "T060",
+      "checked": false
+    },
+    {
+      "id": "T061",
+      "checked": false
+    },
+    {
+      "id": "T062",
+      "checked": false
+    },
+    {
+      "id": "T063",
+      "checked": false
+    },
+    {
+      "id": "T064",
+      "checked": false
+    },
+    {
+      "id": "T065",
+      "checked": false
+    },
+    {
+      "id": "T066",
+      "checked": false
+    },
+    {
+      "id": "T067",
+      "checked": false
+    },
+    {
+      "id": "T068",
+      "checked": false
+    },
+    {
+      "id": "T069",
+      "checked": false
+    },
+    {
+      "id": "T070",
+      "checked": false
+    },
+    {
+      "id": "T071",
+      "checked": false
+    },
+    {
+      "id": "T072",
+      "checked": false
+    },
+    {
+      "id": "T073",
+      "checked": false
+    },
+    {
+      "id": "T074",
+      "checked": false
+    },
+    {
+      "id": "T075",
+      "checked": false
+    },
+    {
+      "id": "T076",
+      "checked": false
+    },
+    {
+      "id": "T077",
+      "checked": false
+    },
+    {
+      "id": "T078",
+      "checked": false
+    },
+    {
+      "id": "T079",
+      "checked": false
+    },
+    {
+      "id": "T080",
+      "checked": false
+    },
+    {
+      "id": "T081",
+      "checked": false
+    },
+    {
+      "id": "T082",
+      "checked": false
+    },
+    {
+      "id": "T083",
+      "checked": false
+    },
+    {
+      "id": "T084",
+      "checked": false
+    },
+    {
+      "id": "T085",
+      "checked": false
+    },
+    {
+      "id": "T086",
+      "checked": false
+    },
+    {
+      "id": "T087",
+      "checked": false
+    },
+    {
+      "id": "T088",
+      "checked": false
+    },
+    {
+      "id": "T089",
+      "checked": false
+    },
+    {
+      "id": "T090",
+      "checked": false
+    },
+    {
+      "id": "T091",
+      "checked": false
+    },
+    {
+      "id": "T092",
+      "checked": false
+    }
+  ],
+  "taskMapStatuses": {
+    "T001": "CHECKED",
+    "T002": "CHECKED",
+    "T003": "CHECKED",
+    "T004": "CHECKED",
+    "T005": "CHECKED",
+    "T006": "CHECKED",
+    "T007": "CHECKED",
+    "T008": "UNCHECKED",
+    "T009": "UNCHECKED",
+    "T010": "UNCHECKED",
+    "T011": "UNCHECKED",
+    "T012": "UNCHECKED",
+    "T013": "UNCHECKED",
+    "T014": "UNCHECKED",
+    "T015": "UNCHECKED",
+    "T016": "UNCHECKED",
+    "T017": "UNCHECKED",
+    "T018": "UNCHECKED",
+    "T019": "UNCHECKED",
+    "T020": "UNCHECKED",
+    "T021": "UNCHECKED",
+    "T022": "UNCHECKED",
+    "T023": "UNCHECKED",
+    "T024": "UNCHECKED",
+    "T025": "UNCHECKED",
+    "T026": "UNCHECKED",
+    "T027": "UNCHECKED",
+    "T028": "UNCHECKED",
+    "T029": "UNCHECKED",
+    "T030": "UNCHECKED",
+    "T031": "UNCHECKED",
+    "T032": "UNCHECKED",
+    "T033": "UNCHECKED",
+    "T034": "UNCHECKED",
+    "T035": "UNCHECKED",
+    "T036": "UNCHECKED",
+    "T037": "UNCHECKED",
+    "T038": "UNCHECKED",
+    "T039": "UNCHECKED",
+    "T040": "UNCHECKED",
+    "T041": "UNCHECKED",
+    "T042": "UNCHECKED",
+    "T043": "UNCHECKED",
+    "T044": "UNCHECKED",
+    "T045": "UNCHECKED",
+    "T046": "UNCHECKED",
+    "T047": "UNCHECKED",
+    "T048": "UNCHECKED",
+    "T049": "UNCHECKED",
+    "T050": "UNCHECKED",
+    "T051": "UNCHECKED",
+    "T052": "UNCHECKED",
+    "T053": "UNCHECKED",
+    "T054": "UNCHECKED",
+    "T055": "UNCHECKED",
+    "T056": "UNCHECKED",
+    "T057": "UNCHECKED",
+    "T058": "UNCHECKED",
+    "T059": "UNCHECKED",
+    "T060": "UNCHECKED",
+    "T061": "UNCHECKED",
+    "T062": "UNCHECKED",
+    "T063": "UNCHECKED",
+    "T064": "UNCHECKED",
+    "T065": "UNCHECKED",
+    "T066": "UNCHECKED",
+    "T067": "UNCHECKED",
+    "T068": "UNCHECKED",
+    "T069": "UNCHECKED",
+    "T070": "UNCHECKED",
+    "T071": "UNCHECKED",
+    "T072": "UNCHECKED",
+    "T073": "UNCHECKED",
+    "T074": "UNCHECKED",
+    "T075": "UNCHECKED",
+    "T076": "UNCHECKED",
+    "T077": "UNCHECKED",
+    "T078": "UNCHECKED",
+    "T079": "UNCHECKED",
+    "T080": "UNCHECKED",
+    "T081": "UNCHECKED",
+    "T082": "UNCHECKED",
+    "T083": "UNCHECKED",
+    "T084": "UNCHECKED",
+    "T085": "UNCHECKED",
+    "T086": "UNCHECKED",
+    "T087": "UNCHECKED",
+    "T088": "UNCHECKED",
+    "T089": "UNCHECKED",
+    "T090": "UNCHECKED",
+    "T091": "UNCHECKED",
+    "T092": "UNCHECKED"
+  },
+  "preservation": {
+    "changedExisting": [
+      "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+      "specs/011-allergies-clinical-content-governance/tasks.md",
+      "tools/run-feature-011-concurrency-test.mjs",
+      "tools/run-feature-011-postgres-test.mjs",
+      "services/api/src/app.ts",
+      "services/api/src/config.ts"
+    ],
+    "newFiles": [
+      "packages/test-kit/src/feature-011/fixtures.ts",
+      "services/api/src/feature-011-exposure.test.ts",
+      "services/api/src/feature-011-exposure.ts",
+      "specs/011-allergies-clinical-content-governance/decisions/k02-accepted-2026-10-06.md",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure-red-results.json",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure-red.json",
+      "tools/feature-011-harness.test.mjs"
+    ],
+    "allOtherInitialFilesByteIdentical": true,
+    "activeFeaturePointerByteIdentical": true,
+    "definitionsDependenciesRequirementsUnchanged": true,
+    "T008ThroughT011Unchecked": true,
+    "T012ThroughT092UntouchedAndUnchecked": true,
+    "noNewFeature011Migrations": true,
+    "noSubagentDelegateOrBackgroundAgentUsed": true,
+    "gitIntegration": false
+  },
+  "review": {
+    "by": "primary Codex agent",
+    "guardSkills": [
+      "shifaa-project-guardrails",
+      "shifaa-speckit-overlay",
+      "tdd",
+      "clean-code-guard",
+      "test-guard",
+      "docs-guard",
+      "verification-before-completion"
+    ],
+    "blockingFindings": 0,
+    "preexistingLimitation": "K01 scope verifier/tests retain original unchecked-ledger pins; unchanged and documented in K01 acceptance. K02 historical evidence ledger digests represent its accepted pre-bookkeeping capture."
+  },
+  "evidenceDigests": {
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure-red.json": "510bdbfe205282a40c2a56c563d060080b3f91f959152371e3dc24d612a66086",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure-red-results.json": "82f6651a702b1b9ad031d4bfb1ff75a82f880d1e015f09191b5a163955cca332",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure.json": "b18efde92d9a9ad98cf0fc2352f59cbb7a337c48bf22d4499639993de6a88b6e",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/harness.json": "2b846a66f238774dd853678794de53bbb9a6b7a614a1b05a4e5e793fed646b8e",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/commands.json": "ed257f35021d09391081327fa8d2761fb860893c7b4d43554daeee3033a77a36"
+  },
+  "git": {
+    "status": "M docs/architecture/SHIFAA-API-Catalog.md\n M packages/api-client/package.json\n M packages/contracts/package.json\n M packages/contracts/src/index.ts\n M services/api/src/app.ts\n M services/api/src/config.ts\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? packages/test-kit/src/feature-011/\n?? services/api/src/feature-011-exposure.test.ts\n?? services/api/src/feature-011-exposure.ts\n?? specs/011-allergies-clinical-content-governance/\n?? tools/feature-011-harness.test.mjs\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/feature-011-protocol-parity.test.mjs\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs",
+    "stagedFiles": [],
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "commitPushPrMainChange": false
+  },
+  "blockers": [],
+  "nextState": "STOP_BEFORE_K04; T012 not executed; K03 Product Owner acceptance pending"
+}

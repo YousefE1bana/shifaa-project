@@ -47,6 +47,9 @@ export function PatientSessionLifecycle() {
         patientSessionRuntime.controller.reconcile(undefined);
       } finally {
         refreshing = false;
+        // Notification carries no identity or authority; consumers re-read their authorized context.
+        if (!disposed && typeof window !== 'undefined')
+          window.dispatchEvent(new Event('shifaa-session-reconciled'));
         scheduleRefresh();
       }
     };

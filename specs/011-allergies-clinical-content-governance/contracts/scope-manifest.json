@@ -1,0 +1,93 @@
+{
+  "feature": "011-allergies-clinical-content-governance",
+  "status": "PLAN_DRAFTED",
+  "startingHead": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "fr": ["FR-SAFE-002", "FR-SAFE-008", "FR-SAFE-012"],
+  "frSlices": {
+    "FR-ADMIN-004": "clinical-content publication only"
+  },
+  "nfr": [
+    "NFR-SEC-001",
+    "NFR-SEC-002",
+    "NFR-SEC-004",
+    "NFR-SEC-005",
+    "NFR-SEC-006",
+    "NFR-SEC-007",
+    "NFR-PRIV-002",
+    "NFR-PRIV-004",
+    "NFR-I18N-001",
+    "NFR-A11Y-001",
+    "NFR-PERF-002",
+    "NFR-DATA-001",
+    "NFR-DATA-002",
+    "NFR-API-001",
+    "NFR-API-002",
+    "NFR-OBS-001",
+    "NFR-QUALITY-001",
+    "NFR-PORT-001",
+    "NFR-PRIV-001"
+  ],
+  "operations": [
+    {
+      "id": "listAllergies",
+      "method": "get",
+      "path": "/patients/{managedPatientId}/allergies"
+    },
+    {
+      "id": "createAllergy",
+      "method": "post",
+      "path": "/patients/{managedPatientId}/allergies"
+    },
+    {
+      "id": "verifyAllergy",
+      "method": "post",
+      "path": "/allergies/{allergyId}/verification"
+    },
+    {
+      "id": "listClinicalContent",
+      "method": "get",
+      "path": "/admin/clinical-content/{contentType}"
+    },
+    {
+      "id": "createClinicalContentRelease",
+      "method": "post",
+      "path": "/admin/clinical-content/{contentType}/releases"
+    },
+    {
+      "id": "signClinicalContentRelease",
+      "method": "post",
+      "path": "/admin/clinical-content/releases/{releaseId}/signatures"
+    },
+    {
+      "id": "publishClinicalContentRelease",
+      "method": "post",
+      "path": "/admin/clinical-content/releases/{releaseId}/publish"
+    }
+  ],
+  "allergyStates": ["self_reported", "clinician_confirmed", "refuted", "entered_in_error"],
+  "retainedGates": [
+    "OPEN-CLIN-001",
+    "OPEN-TECH-002",
+    "OPEN-TECH-003",
+    "OPEN-UX-001",
+    "OPEN-UX-002",
+    "OPEN-LEGAL-001",
+    "OPEN-LEGAL-002",
+    "OPEN-LEGAL-007"
+  ],
+  "exclusions": [
+    "prescriptions",
+    "safety evaluation",
+    "warnings/contraindications",
+    "override/break-glass execution",
+    "dispensing",
+    "Feature 012",
+    "fabricated medical rules/content",
+    "production enablement"
+  ],
+  "clinicalFixtures": "neutral synthetic only; no real clinical approval",
+  "deferredMaintenance": [
+    "docs/TEAM-INSTALLATION-CHECKLIST.md",
+    "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md"
+  ]
+}

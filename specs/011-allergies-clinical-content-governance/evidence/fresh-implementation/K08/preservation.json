@@ -1,0 +1,120 @@
+{
+  "result": "PASS",
+  "checkedInitialFiles": 3606,
+  "missing": [],
+  "changedExistingFiles": [
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+    "specs/011-allergies-clinical-content-governance/tasks.md",
+    "supabase/migrations/20261006185236_f011_allergy_functions.sql",
+    "supabase/migrations/20261006185237_f011_release_functions.sql",
+    "supabase/migrations/20261006185239_f011_signing_functions.sql",
+    "supabase/migrations/20261006185240_f011_publication_functions.sql",
+    "tools/feature-011-consumer-fixtures.mjs",
+    "tools/feature-011-harness.test.mjs",
+    "tools/feature-011-physical-green.mjs",
+    "tools/feature-011-physical-races.mjs",
+    "tools/run-feature-011-consumer-test.mjs",
+    "tools/run-feature-011-postgres-test.mjs",
+    "tools/run-feature-011-storage-test.mjs",
+    "tools/verify-feature-011-contracts.mjs"
+  ],
+  "taskHash": "815b619cc28a369d6a29b77ad1486fd4222d564388d39cf6cde9fa39856682cd",
+  "taskMapHash": "bfa13551ef4d5b8af840eeab1d6806904bfb3b587cd9e648698b4feced15273b",
+  "historicalAcceptanceAndEvidence": "Byte-identical except authorized K07 bookkeeping predating this sweep",
+  "checked": "T001–T029",
+  "unchecked": "T030–T092",
+  "issues": [
+    {
+      "number": 427,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/427"
+    },
+    {
+      "number": 428,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/428"
+    },
+    {
+      "number": 429,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/429"
+    },
+    {
+      "number": 430,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/430"
+    },
+    {
+      "number": 431,
+      "state": "OPEN",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/431"
+    }
+  ],
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "stagedFiles": [],
+  "gitStatus": "M docs/architecture/SHIFAA-API-Catalog.md\n M packages/api-client/package.json\n M packages/contracts/package.json\n M packages/contracts/src/index.ts\n M services/api/src/app.ts\n M services/api/src/config.ts\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? infra/db/fixtures/feature-011-k04.sql\n?? infra/db/fixtures/feature-011-k06.sql\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-concurrency.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-k05-storage.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-receipts.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? packages/test-kit/src/feature-011/\n?? services/api/src/adapters/postgres/feature-011-receipts.ts\n?? services/api/src/feature-011-exposure.test.ts\n?? services/api/src/feature-011-exposure.ts\n?? services/api/src/modules/feature-011/\n?? specs/011-allergies-clinical-content-governance/\n?? supabase/migrations/20261006175926_f011_allergy_revisions.sql\n?? supabase/migrations/20261006175932_f011_content_artifacts.sql\n?? supabase/migrations/20261006175937_f011_governance_evidence.sql\n?? supabase/migrations/20261006175942_f011_atomic_receipts.sql\n?? supabase/migrations/20261006185236_f011_allergy_functions.sql\n?? supabase/migrations/20261006185237_f011_release_functions.sql\n?? supabase/migrations/20261006185239_f011_signing_functions.sql\n?? supabase/migrations/20261006185240_f011_publication_functions.sql\n?? supabase/migrations/20261006185241_f011_rls_grants.sql\n?? supabase/migrations/20261006185242_f011_receipt_functions.sql\n?? tools/feature-011-consumer-fixtures.mjs\n?? tools/feature-011-harness.test.mjs\n?? tools/feature-011-k08-preflight.mjs\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/feature-011-physical-green.mjs\n?? tools/feature-011-physical-races.mjs\n?? tools/feature-011-physical-red.test.mjs\n?? tools/feature-011-predecessor-races.mjs\n?? tools/feature-011-protection-fixtures.mjs\n?? tools/feature-011-protocol-parity.test.mjs\n?? tools/feature-011-support-lifecycle.mjs\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-consumer-test.mjs\n?? tools/run-feature-011-physical-red.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/run-feature-011-protection-test.mjs\n?? tools/run-feature-011-storage-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs",
+  "gates": {
+    "OPEN-UX-001": {
+      "status": "SATISFIED_FOR_F011_AFFECTED_UI_PLAN_ONLY",
+      "limit": "0.1.1-test-only candidate; no global closure/final design/pixel lock"
+    },
+    "OPEN-UX-002": {
+      "status": "OPEN",
+      "stage": "VERIFYING",
+      "evidence": [
+        "T088",
+        "T092"
+      ],
+      "limit": "Separate owner design/reference/accessibility disposition; engineering evidence alone insufficient"
+    },
+    "OPEN-TECH-002": {
+      "status": "OPEN",
+      "stage": "affected IMPLEMENTING",
+      "preparation": [
+        "T005",
+        "T007",
+        "T027",
+        "T028"
+      ],
+      "assertion": [
+        "T029"
+      ],
+      "limit": "Evidence before owner assertion before consumers; no P6 backward dependency/global closure"
+    },
+    "OPEN-TECH-003": {
+      "status": "OPEN",
+      "stage": "affected VERIFYING",
+      "evidence": [
+        "T085",
+        "T092"
+      ],
+      "limit": "Approved reference environment required; no local-only acceptance"
+    },
+    "OPEN-CLIN-001": {
+      "status": "OPEN",
+      "stage": "real clinical/production admission",
+      "limit": "Neutral synthetic clinical fixtures only; actual local crypto/evidence logic is not real medical/source approval"
+    },
+    "OPEN-LEGAL-001": {
+      "status": "OPEN",
+      "stage": "production",
+      "limit": "Current legal owner/effects unchanged"
+    },
+    "OPEN-LEGAL-002": {
+      "status": "OPEN",
+      "stage": "production retention/deletion",
+      "limit": "No guessed retention duration/deletion automation"
+    },
+    "OPEN-LEGAL-007": {
+      "status": "OPEN",
+      "stage": "production",
+      "limit": "Current legal owner/effects unchanged"
+    },
+    "otherApplicableGates": {
+      "status": "UNCHANGED",
+      "limit": "No task waives release/verification gates"
+    }
+  }
+}

@@ -1,0 +1,775 @@
+{
+  "result": "PASS",
+  "results": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "database": "f011_k06_67d8220e5960ed67",
+      "restrictedExtensionsBefore": "f|f",
+      "restrictedExtensionsAfter": "f|f",
+      "sha256ByteEquality": true,
+      "sweep": {
+        "result": "PASS",
+        "mutations": [
+          "createAllergy",
+          "createClinicalContentRelease",
+          "publishClinicalContentRelease",
+          "signClinicalContentRelease",
+          "verifyAllergy"
+        ],
+        "checks": [
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          }
+        ],
+        "components": {
+          "results": [
+            {
+              "id": "ALG_NO_GUC_ROLE_AUTHORITY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_CLOSED_PROTECTION",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "ALG_CREATE_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DOMAIN_ONLY_COMMIT",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "RECEIPT_CLOSED_ENVELOPE_ROLLBACK",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "RECEIPT_OTHER_PRINCIPAL_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_CLN_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DEL_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DELEGATE_READ_ONLY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_PATIENT_CANNOT_VERIFY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_EXACT_SUPPORT_SOURCE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "ALG_APPEND_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_APPEND_PROVENANCE",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_HISTORY_KEYSET_CONTINUATION",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_CURSOR_FILTER_BINDING",
+              "result": "DENIED_INVALID_CURSOR",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "RECEIPT_ORIGINAL_TUPLE_AFTER_RESOURCE_AND_LANGUAGE_CHANGE",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_REPLAY_NO_SECOND_EFFECT",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_SAME_KEY_CHANGED_REQUEST_HASH_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23505"
+            },
+            {
+              "id": "ALG_CLINICIAN_ORIGINAL_PROVENANCE",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_STALE_CAS",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "40001"
+            },
+            {
+              "id": "ALG_ENTERED_IN_ERROR_WITHIN_VERIFY",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_TERMINAL_APPEND_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "ALG_CORRECTION_NEW_SELF_REPORTED_ASSERTION",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_NONTERMINAL_CORRECTION_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_DECLARED_DIGEST_EQUALITY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_FULL_MATERIAL_PROFILE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_DRAFT_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "CONTENT_SQL_OWNED_FROZEN_DIGEST",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_EXACT_CURRENT_BASIS",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "SIGN_CREATOR_CANNOT_CLAIM_SIGNER",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "SIGN_PHYSICIAN_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_PHARMACIST_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_IMMUTABLE_50_COLUMN_BASIS",
+              "result": "PASS"
+            },
+            {
+              "id": "CONTENT_SAME_VERSION_COMPETING_DRAFT",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_VALID_REJECTION_SAME_VERIFIED_BASIS",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_VALID_REJECTION_REPLAY",
+              "result": "PASS"
+            },
+            {
+              "id": "PUB_EXACT_ADMISSION_REQUIRED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "PUB_CREATOR_INDEPENDENCE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "PUB_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "CLINIC_PUBLISHED_METADATA_VISIBLE",
+              "result": "PASS"
+            },
+            {
+              "id": "CLINIC_PRIVATE_DATA_ABSENT",
+              "result": "PASS"
+            },
+            {
+              "id": "PUB_NO_REHABILITATION_AFTER_BASIS_VERSION_CHANGE",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_CURRENT_SIGNER_AUTHORITY_LOSS_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "RECEIPT_ALL_FIVE_EXACT_COMPLETION_TUPLE",
+              "result": "PASS"
+            }
+          ],
+          "state": {
+            "allergies": 5,
+            "releases": 2,
+            "signatures": 3,
+            "receipts": 11,
+            "obligations": 11,
+            "outbox": 11
+          },
+          "actualOnlineRole": "shifaa_api",
+          "syntheticOnly": true,
+          "fullRaceProofExecuted": false
+        },
+        "syntheticStructuralOnly": true,
+        "cryptoExecuted": false
+      },
+      "cleanup": {
+        "database": "f011_k06_67d8220e5960ed67",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "database": "f011_k06_41320fa19d94158e",
+      "restrictedExtensionsBefore": "f|f",
+      "restrictedExtensionsAfter": "f|f",
+      "sha256ByteEquality": true,
+      "sweep": {
+        "result": "PASS",
+        "mutations": [
+          "createAllergy",
+          "createClinicalContentRelease",
+          "publishClinicalContentRelease",
+          "signClinicalContentRelease",
+          "verifyAllergy"
+        ],
+        "checks": [
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "verifyAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createAllergy",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "createClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "signClinicalContentRelease",
+            "assertion": "PERSISTED_SIGNATURE_MAPPING_AND_BOUNDED_ASSIGNED_REVIEW",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "AUTHORITATIVE_CLAIM_SETTLED_ABSENCE_AND_NO_EFFECT",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "ORIGINAL_REPLAY_TUPLE",
+            "result": "PASS"
+          },
+          {
+            "operation": "publishClinicalContentRelease",
+            "assertion": "EXACT_RELEASE_GOVERNANCE_PROJECTION",
+            "result": "PASS"
+          }
+        ],
+        "components": {
+          "results": [
+            {
+              "id": "ALG_NO_GUC_ROLE_AUTHORITY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_CLOSED_PROTECTION",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "ALG_CREATE_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DOMAIN_ONLY_COMMIT",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "RECEIPT_CLOSED_ENVELOPE_ROLLBACK",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "RECEIPT_OTHER_PRINCIPAL_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_CLN_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DEL_CURRENT_READ",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_DELEGATE_READ_ONLY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_PATIENT_CANNOT_VERIFY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "ALG_EXACT_SUPPORT_SOURCE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "ALG_APPEND_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_APPEND_PROVENANCE",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_HISTORY_KEYSET_CONTINUATION",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_CURSOR_FILTER_BINDING",
+              "result": "DENIED_INVALID_CURSOR",
+              "sqlstate": "22023"
+            },
+            {
+              "id": "RECEIPT_ORIGINAL_TUPLE_AFTER_RESOURCE_AND_LANGUAGE_CHANGE",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_REPLAY_NO_SECOND_EFFECT",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_SAME_KEY_CHANGED_REQUEST_HASH_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23505"
+            },
+            {
+              "id": "ALG_CLINICIAN_ORIGINAL_PROVENANCE",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_STALE_CAS",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "40001"
+            },
+            {
+              "id": "ALG_ENTERED_IN_ERROR_WITHIN_VERIFY",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_TERMINAL_APPEND_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "ALG_CORRECTION_NEW_SELF_REPORTED_ASSERTION",
+              "result": "PASS"
+            },
+            {
+              "id": "ALG_NONTERMINAL_CORRECTION_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_DECLARED_DIGEST_EQUALITY",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_FULL_MATERIAL_PROFILE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "23514"
+            },
+            {
+              "id": "CONTENT_DRAFT_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "CONTENT_SQL_OWNED_FROZEN_DIGEST",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_EXACT_CURRENT_BASIS",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "SIGN_CREATOR_CANNOT_CLAIM_SIGNER",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "SIGN_PHYSICIAN_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_PHARMACIST_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_IMMUTABLE_50_COLUMN_BASIS",
+              "result": "PASS"
+            },
+            {
+              "id": "CONTENT_SAME_VERSION_COMPETING_DRAFT",
+              "result": "PASS"
+            },
+            {
+              "id": "SIGN_VALID_REJECTION_SAME_VERIFIED_BASIS",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_VALID_REJECTION_REPLAY",
+              "result": "PASS"
+            },
+            {
+              "id": "PUB_EXACT_ADMISSION_REQUIRED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "PUB_CREATOR_INDEPENDENCE",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "PUB_FINALIZED",
+              "result": "PASS"
+            },
+            {
+              "id": "CLINIC_PUBLISHED_METADATA_VISIBLE",
+              "result": "PASS"
+            },
+            {
+              "id": "CLINIC_PRIVATE_DATA_ABSENT",
+              "result": "PASS"
+            },
+            {
+              "id": "PUB_NO_REHABILITATION_AFTER_BASIS_VERSION_CHANGE",
+              "result": "PASS"
+            },
+            {
+              "id": "RECEIPT_CURRENT_SIGNER_AUTHORITY_LOSS_DENIED",
+              "result": "DENIED_WITHOUT_EFFECT",
+              "sqlstate": "42501"
+            },
+            {
+              "id": "RECEIPT_ALL_FIVE_EXACT_COMPLETION_TUPLE",
+              "result": "PASS"
+            }
+          ],
+          "state": {
+            "allergies": 5,
+            "releases": 2,
+            "signatures": 3,
+            "receipts": 11,
+            "obligations": 11,
+            "outbox": 11
+          },
+          "actualOnlineRole": "shifaa_api",
+          "syntheticOnly": true,
+          "fullRaceProofExecuted": false
+        },
+        "syntheticStructuralOnly": true,
+        "cryptoExecuted": false
+      },
+      "cleanup": {
+        "database": "f011_k06_41320fa19d94158e",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "testSource": {
+    "path": "artifacts/feature-011/k24/native-digest-layout-proof.mjs",
+    "sha256": "a18b9d0fd0d08857d892113cd3f341b24d27ba30c3080029f919012b80155198"
+  },
+  "syntheticOnly": true,
+  "newPrivileges": false
+}

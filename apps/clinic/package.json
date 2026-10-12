@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev -p 3011",
     "build": "next build",
-    "test": "node --test test/*.test.ts",
+    "test": "node --test test/*.test.ts && node --import tsx --test test/feature-011*.test.tsx",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },

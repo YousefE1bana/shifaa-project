@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-10-10T14:51:51.614Z",
+  "authority": "Product Owner delegated authority to resolve ordinary scoped implementation defects",
+  "defect": "Governance Release reused material-source failure copy for current eligibility unavailable",
+  "correction": "Dedicated AR/EN eligibilityUnavailable only for release eligibility; actual unavailable phase unchanged",
+  "changedSourceHashes": {
+    "apps/admin/src/app/clinical-content/ClinicalContentWorkspace.tsx": "5459bf22e068a4e3f367980a46f2acdb8f60effc86857d1494f358c1dd6ca719",
+    "packages/i18n/src/feature-011.ts": "9b89f9597f610e5d6cb5aaf8e34724d722dfedd2d29685e03f8bba817fd210d2",
+    "apps/admin/test/feature-011-clinical-content.test.tsx": "6aa89fe25c07cd0406eaf69559b27006d6414a381ef97147d1abe799c95a831f",
+    "packages/i18n/src/feature-011.test.ts": "3cc1f15f652ffc3977a80cd36b66e2f2bfb6844241765bc9b550f3bb2121ab3d"
+  },
+  "physicalPinsUnchanged": 141,
+  "currentT029": "PASS",
+  "t029RenewalRequired": false,
+  "reason": "None of the four changed UI/test files belongs to the physical/P1-P5 input set; exact set and hashes remain unchanged",
+  "sqlOrContractChange": false,
+  "clinicalOrSafetyInference": false,
+  "T092Reexecuted": false
+}

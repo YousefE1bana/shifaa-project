@@ -1,0 +1,28 @@
+{
+  "result": "PASS_DIAGNOSTIC_ONLY",
+  "exitCode": 0,
+  "source": "tools/run-feature-011-observability.mjs",
+  "originalSha256": "e10002040b540fb06e82b84d03d2f9fae3d1e6289c5dd5f60abe5f75a88565c0",
+  "executedSha256": "fa99d3ea95cef3e9bb1bae13f2d1749713f66a781f79eda44383d09edcb5cf8c",
+  "transforms": [
+    [
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K23",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ops"
+    ],
+    [
+      "assert(proof.result.startsWith('PASS_'), 'Local prerequisite did not pass');\n    if (proof.task === 'T085') assert.equal(proof.allLocalThresholdsMet, true);",
+      "if (proof.task === 'T085') { assert.equal(proof.result, 'FAIL_LOCAL_THRESHOLDS'); assert.equal(proof.allLocalThresholdsMet, false); } else assert(proof.result.startsWith('PASS_'), 'Restore prerequisite did not pass');"
+    ],
+    [
+      "result: 'PASS',",
+      "result: 'PASS_SECURITY_OBSERVABILITY_ONLY_LATENCY_PREREQUISITE_BLOCKED',\n    acceptance: 'Diagnostic assertions only; original T087 prerequisite remains blocked, no timing pass or gate waiver',"
+    ]
+  ],
+  "sourceAndSecurityAssertionsUnchanged": true,
+  "latencyPrerequisiteNotPassed": true,
+  "originalStrictRunnerPreserved": true,
+  "log": {
+    "path": "artifacts/feature-011/k24/observability-diagnostic.log",
+    "sha256": "b402d956f8a3c2ac33ed61206a5346f76d4dc393d17ae657d7d1e570f4739266"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "result": "PASS_LOCAL_PR_REMEDIATION_ROUND2",
+  "completed": {
+    "exitCode": 0,
+    "finishedAt": "2026-10-12T03:52:20.7936083Z",
+    "command": "pnpm verify",
+    "startedAt": "2026-10-12T03:02:42.6306130Z"
+  },
+  "captureHead": "22ef2a5121c3a9c1e2afb94433b549f46c9eb551",
+  "parity": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/parity-stage-verifier.json",
+    "sha256": "ddd87a526d6d0389b11fa19126c1605fea7934f9e56f0daf4ca24cd04ed37e8e"
+  },
+  "regressions": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/regression-green.json",
+    "sha256": "f851567563346a0ff8515ce4512596623a39dd80deab9d189d1223779f42a1f5"
+  },
+  "validMissingBehaviorRed": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/regression-red.json",
+    "sha256": "2f543c567312de05285f7a68ccc395139e261eaf743b74e3fa1457b72ecdaf14"
+  },
+  "publicOperations": 7,
+  "publicContractsChanged": false,
+  "newGrants": false,
+  "historicalFilesPreserved": 1779,
+  "composition": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/composition.json",
+    "sha256": "1d25905a0e519b706b2b2a204f1cd9313df45e61b89aa709498a9c7e92543be4"
+  },
+  "retainedGates": "UNCHANGED_OPEN",
+  "deferredPhysicalDeviceFormalReview": true,
+  "fixes": [
+    {
+      "comment": 4242370581,
+      "fix": "List version PostgreSQL integer bound before consumer; direct SQL rejects overflow as 22023"
+    },
+    {
+      "comment": 4242370586,
+      "fix": "Facility/license/exact credential membership and current evidence; approved ordered SHARE locks; global authority preserved"
+    },
+    {
+      "comment": 4242370589,
+      "fix": "All four deferred reciprocal/lineage/head checks scoped to affected assertion; immutable/one-use/unused-support invariants retained"
+    }
+  ],
+  "tests": {
+    "contentRoute": {
+      "command": "pnpm --filter @shifaa/api exec vitest run src/routes/feature-011-content.test.ts",
+      "red": {
+        "passed": 52,
+        "failed": 2,
+        "reason": "Oversized version accepted, expected 422"
+      },
+      "green": {
+        "passed": 55,
+        "failed": 0
+      }
+    },
+    "authorizationBinding": {
+      "passed": 3,
+      "failed": 0
+    },
+    "actualSqlRegression": {
+      "passedPerRuntime": 9,
+      "runtimes": 2,
+      "allFiveCorpusMutationsPerRuntime": 120
+    }
+  },
+  "fixtureRepairs": [
+    {
+      "file": "tools/feature-011-k08-preflight.mjs",
+      "reason": "Facility-scoped pharmacist read required missing exact licensed membership; owner-only synthetic setup, no product grant"
+    },
+    {
+      "file": "tools/feature-011-pr-round2.mjs",
+      "reason": "Domain-only corpus seed rejected by all-five; replaced with real protected native API. Row-lock barrier replaced advisory-only helper; restore conditioned on actual suspended state. None counted as valid RED/race success."
+    }
+  ],
+  "acceptance": "ENGINEERING_ONLY_EXISTING_PO_DISPOSITION; FINAL_PR_REVIEW_PENDING",
+  "mainChanged": false,
+  "mergePerformed": false
+}

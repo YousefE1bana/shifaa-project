@@ -1,0 +1,21 @@
+{
+  "id": "sign-api",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\3164_1791774162044\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-4e72b3e4-963f-445a-b165-cce21f4078c7.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/logs/sign-api.log",
+    "sha256": "6c89427723c3be2b052402f692449800edae121814948adfc0bc1ed101892dab"
+  },
+  "original": "tools/run-feature-011-sign-api-test.mjs",
+  "originalSha256": "0f225c78fa9930590191071be8264c81eadf1ed63f4efbe4eb5232afd091dc56",
+  "substitution": "const e = f + '/evidence/fresh-implementation/K16';",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/reruns/sign-api",
+  "temporarySha256": "b176ca5eafff0e79203e2a48db2c959ffdabbb084b37c5637ef344f6360eb9cf",
+  "testAssertionsChanged": false,
+  "preflightSubstitutions": []
+}

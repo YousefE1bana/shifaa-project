@@ -1,0 +1,188 @@
+// Harness-only predecessor setup. Synthetic receipt envelopes are structural,
+// separate from K15 real application encryption proof. No trigger/grant bypass.
+import { randomUUID } from 'node:crypto';
+import { sql } from './run-feature-011-postgres-test.mjs';
+import { governedOfflineProof } from './feature-011-offline-proof.mjs';
+const quote = (v) => "'" + String(v).replaceAll("'", "''") + "'";
+const json = (v) => quote(JSON.stringify(v)) + '::jsonb';
+const person = (n) => 'f0110000-0000-4000-8000-' + String(n).padStart(12, '0');
+export function signingBasis(owner, n, capacity = n === 2 ? 'physician' : 'pharmacist') {
+  const timestamp = (value) =>
+    value === null ? null : new Date(value).toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
+  const basis = (n) => {
+    const raw = owner(
+      `SELECT json_build_object('credential',to_jsonb(c),'designation',to_jsonb(d),'authority',to_jsonb(a)) FROM identity.professional_licenses c JOIN clinical.content_reviewer_designations d ON d.professional_license_id=c.id JOIN clinical.content_governance_authorities a ON a.person_id=c.person_id AND a.action='signClinicalContentRelease' AND a.capacity=d.reviewer_capacity WHERE c.person_id=${quote(person(n))}::uuid AND d.reviewer_capacity=${quote(capacity)} ORDER BY (a.status='active') DESC,a.id LIMIT 1;`,
+    );
+    const c = raw.credential,
+      d = raw.designation,
+      a = raw.authority;
+    return {
+      credentialBasis: {
+        id: c.id,
+        version: c.version,
+        personId: c.person_id,
+        profession: c.profession,
+        status: c.status,
+        expiresOn: c.expires_on,
+        issuer: c.issuer,
+        evidenceObjectId: c.evidence_object_id,
+        reviewedByPersonId: c.reviewed_by_person_id,
+        reviewedAt: timestamp(c.reviewed_at),
+      },
+      designationBasis: {
+        id: d.id,
+        version: d.version,
+        personId: d.person_id,
+        professionalLicenseId: d.professional_license_id,
+        capacity: d.reviewer_capacity,
+        evidenceRef: d.evidence_ref,
+        designatedBy: d.designated_by,
+        status: d.status,
+        validFrom: timestamp(d.valid_from),
+        validUntil: timestamp(d.valid_until),
+        sourceIdentity: d.source_identity,
+        sourceEvidenceIdentity: d.source_evidence_identity,
+        sourceEvidenceVersion: d.source_evidence_version,
+        sourceEvidenceSha256:
+          d.source_evidence_sha256 === null ? null : d.source_evidence_sha256.slice(2),
+        evidenceProducerId: d.evidence_producer_id,
+        evidenceVerifiedAt: timestamp(d.evidence_verified_at),
+      },
+      authorityBasis: {
+        id: a.id,
+        version: a.version,
+        personId: a.person_id,
+        action: a.action,
+        capacity: a.capacity,
+        contentType: a.content_type,
+        governedContentKey: a.governed_content_key,
+        effectiveScopeKey: a.effective_scope_key,
+        facilityId: a.facility_id,
+        issuedBy: a.issued_by,
+        evidenceRef: a.evidence_ref,
+        status: a.status,
+        validFrom: timestamp(a.valid_from),
+        validUntil: timestamp(a.valid_until),
+        sourceIdentity: a.source_identity,
+        sourceEvidenceIdentity: a.source_evidence_identity,
+        sourceEvidenceVersion: a.source_evidence_version,
+        sourceEvidenceSha256:
+          a.source_evidence_sha256 === null ? null : a.source_evidence_sha256.slice(2),
+        evidenceProducerId: a.evidence_producer_id,
+        evidenceVerifiedAt: timestamp(a.evidence_verified_at),
+      },
+    };
+  };
+
+  return basis(n);
+}
+export async function publishedPredecessor(h, row, request) {
+  const now = () => new Date().toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
+  const call = (n, role, action, expression, input) => {
+    const ctx = {
+      environment: 'local',
+      person_id: person(n),
+      actor_role: role,
+      action,
+      aal: '2',
+      purposes: 'synthetic.feature011',
+      facility_id: 'f0110000-0000-4000-8200-000000000001',
+      encounter_id: '',
+      request_id: input.responseRequestId,
+      idempotency_key: randomUUID(),
+      request_hash: 'a'.repeat(64),
+    };
+    const context = Object.entries(ctx)
+      .map(([k, v]) => 'SELECT set_config(' + quote('shifaa.' + k) + ',' + quote(v) + ',true);')
+      .join('');
+    const envelope = {
+      contractId: 'SHIFAA-F011-RECEIPT-PROTECTED/1',
+      keyRef: 'synthetic/predecessor/versions/1',
+      nonce: '0102030405060708090a0b0c',
+      ciphertext: 'aabb',
+      authTag: '0102030405060708090a0b0c0d0e0f10',
+    };
+    sql(
+      h.runtime,
+      h.database,
+      `BEGIN;${context}DO $fixture$ DECLARE r jsonb; BEGIN r:=${expression}; PERFORM clinical.f011_finalize_receipt_v1((r->>'receiptId')::uuid,${json(envelope)}); END $fixture$;COMMIT;`,
+      { user: 'shifaa_api' },
+    );
+  };
+  const approval = randomUUID();
+  sql(
+    h.runtime,
+    h.database,
+    `INSERT INTO clinical.content_admissibility_evidence(id,release_id,artifact_version,artifact_digest,content_type,governed_content_key,effective_scope_key,policy_ref,policy_version,policy_sha256,source_admission_ref,category_admission_ref,code_admission_ref,test_vector_admission_ref,source_identity,source_evidence_identity,source_evidence_version,source_evidence_sha256,synthetic,status,valid_from,valid_until,version) VALUES(${quote(approval)}::uuid,${quote(row.releaseId)}::uuid,1,decode(${quote(row.artifactDigest)},'hex'),'synthetic',${quote(request.governedContentKey)},${quote(request.effectiveScopeKey)},${quote(randomUUID())}::uuid,'synthetic-policy-v1',decode(repeat('b',64),'hex'),${quote(randomUUID())}::uuid,${quote(randomUUID())}::uuid,${quote(randomUUID())}::uuid,${quote(randomUUID())}::uuid,'synthetic.exact-admission',${quote(randomUUID())},NULL,NULL,true,'active','2020-01-01T00:00:00Z',NULL,1);`,
+  );
+  const offline = await governedOfflineProof(
+    h.runtime,
+    h.database,
+    (identity) => ({ mode: 'isolated-synthetic', sourceIdentity: identity, now }),
+    () => {},
+  );
+  try {
+    await offline.admission(approval);
+  } finally {
+    await offline.finish();
+  }
+  for (const [n, capacity, role, version] of [
+    [2, 'physician', 'CLN', 1],
+    [3, 'pharmacist', 'PHA', 2],
+  ]) {
+    const input = {
+      responseLanguage: 'en-EG',
+      responseRequestId: randomUUID(),
+      signing: {
+        contractId: 'SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1',
+        profile: 'signing',
+        bindingId: randomUUID(),
+        producerId: 'f011.signing_port',
+        verifiedAt: now(),
+        releaseId: row.releaseId,
+        artifactVersion: 1,
+        artifactDigest: row.artifactDigest,
+        signerPersonId: person(n),
+        capacity,
+        decision: 'approved',
+        evidenceRef: randomUUID(),
+        sourceIdentity: 'synthetic.signing',
+        sourceEvidenceIdentity: randomUUID(),
+        sourceEvidenceVersion: null,
+        sourceEvidenceSha256: null,
+        ...signingBasis(h.owner, n),
+      },
+    };
+    call(
+      n,
+      role,
+      'signClinicalContentRelease',
+      'clinical.sign_clinical_content_release_api_v1(' +
+        quote(row.releaseId) +
+        '::uuid,' +
+        version +
+        ',' +
+        json(input) +
+        ')',
+      input,
+    );
+  }
+  const input = {
+    responseLanguage: 'en-EG',
+    responseRequestId: randomUUID(),
+    artifactVersion: 1,
+    artifactDigest: row.artifactDigest,
+    confirmPublication: true,
+  };
+  call(
+    6,
+    'ADM-MEDICAL',
+    'publishClinicalContentRelease',
+    'clinical.publish_clinical_content_release_api_v1(' +
+      quote(row.releaseId) +
+      '::uuid,3,' +
+      json(input) +
+      ')',
+    input,
+  );
+}

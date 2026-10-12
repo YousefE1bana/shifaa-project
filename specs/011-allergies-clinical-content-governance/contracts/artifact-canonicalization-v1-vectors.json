@@ -1,0 +1,1070 @@
+{
+  "contractId": "SHIFAA-F011-ARTIFACT/1",
+  "version": 1,
+  "status": "PROPOSED_PENDING_PRODUCT_OWNER_ARCHITECTURE_REVIEW",
+  "syntheticOnly": true,
+  "positive": [
+    {
+      "id": "V01",
+      "scenario": "initial release; absent optional source reference maps to null",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "materialBytesHex": {
+        "content": "53594e54484554494320434f4e54454e54202d204e4f204d45444943414c20415353455254494f4e0a",
+        "code": "53594e54484554494320434f4445202d204e4f542045584543555441424c450a",
+        "testVectors": "53594e54484554494320564543544f5253202d204e4f204d45444943414c20415353455254494f4e0a"
+      },
+      "canonicalUtf8": "SHIFAA-F011-ARTIFACT/1;S9:synthetic,S14:neutral-series,S15:synthetic-scope,S24:Neutral synthetic source,N,S27:2026-10-01T00:00:00.000000Z,S7:initial,N,S36:f0110000-0000-4000-8500-000000000002,S64:373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5,S36:f0110000-0000-4000-8500-000000000003,S64:ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5,S36:f0110000-0000-4000-8500-000000000004,S64:408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8,",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "octetLength": 481,
+      "sha256": "d6527da9019430db441226d26efdeca86dfd6c4da55d81d4429e603dff3fe9b0"
+    },
+    {
+      "id": "V02",
+      "scenario": "successor with explicit predecessor",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": "synthetic:reference:2"
+        },
+        "effectiveAt": "2026-10-02T00:00:00.000000Z",
+        "predecessor": {
+          "initial": false,
+          "supersedesReleaseId": "f0110000-0000-4000-8700-000000000001"
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "materialBytesHex": {
+        "content": "53594e54484554494320434f4e54454e54202d204e4f204d45444943414c20415353455254494f4e0a",
+        "code": "53594e54484554494320434f4445202d204e4f542045584543555441424c450a",
+        "testVectors": "53594e54484554494320564543544f5253202d204e4f204d45444943414c20415353455254494f4e0a"
+      },
+      "canonicalUtf8": "SHIFAA-F011-ARTIFACT/1;S9:synthetic,S14:neutral-series,S15:synthetic-scope,S24:Neutral synthetic source,S21:synthetic:reference:2,S27:2026-10-02T00:00:00.000000Z,S9:successor,S36:f0110000-0000-4000-8700-000000000001,S36:f0110000-0000-4000-8500-000000000002,S64:373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5,S36:f0110000-0000-4000-8500-000000000003,S64:ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5,S36:f0110000-0000-4000-8500-000000000004,S64:408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8,",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c5332313a73796e7468657469633a7265666572656e63653a322c5332373a323032362d31302d30325430303a30303a30302e3030303030305a2c53393a737563636573736f722c5333363a66303131303030302d303030302d343030302d383730302d3030303030303030303030312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "octetLength": 546,
+      "sha256": "ddcd8088b2cecb01405822c7b580b0e1f54d7f9ab9a47d4fdd59c4e05765f383"
+    },
+    {
+      "id": "V03",
+      "scenario": "future-effective successor; exact microsecond precision",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2099-01-01T12:34:56.123456Z",
+        "predecessor": {
+          "initial": false,
+          "supersedesReleaseId": "f0110000-0000-4000-8700-000000000001"
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "materialBytesHex": {
+        "content": "53594e54484554494320434f4e54454e54202d204e4f204d45444943414c20415353455254494f4e0a",
+        "code": "53594e54484554494320434f4445202d204e4f542045584543555441424c450a",
+        "testVectors": "53594e54484554494320564543544f5253202d204e4f204d45444943414c20415353455254494f4e0a"
+      },
+      "canonicalUtf8": "SHIFAA-F011-ARTIFACT/1;S9:synthetic,S14:neutral-series,S15:synthetic-scope,S24:Neutral synthetic source,N,S27:2099-01-01T12:34:56.123456Z,S9:successor,S36:f0110000-0000-4000-8700-000000000001,S36:f0110000-0000-4000-8500-000000000002,S64:373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5,S36:f0110000-0000-4000-8500-000000000003,S64:ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5,S36:f0110000-0000-4000-8500-000000000004,S64:408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8,",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323039392d30312d30315431323a33343a35362e3132333435365a2c53393a737563636573736f722c5333363a66303131303030302d303030302d343030302d383730302d3030303030303030303030312c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "octetLength": 522,
+      "sha256": "84bff6dd164dd9d1e011b0f64489de10630eb8016d651c3bb39d4d6dcbf39f2a"
+    },
+    {
+      "id": "V04",
+      "scenario": "Arabic Unicode uses UTF-8 octet lengths",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "اختبار-اصطناعي",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "مصدر اصطناعي — لا محتوى طبي",
+          "reference": "مرجع:اختبار,١"
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "materialBytesHex": {
+        "content": "53594e54484554494320434f4e54454e54202d204e4f204d45444943414c20415353455254494f4e0a",
+        "code": "53594e54484554494320434f4445202d204e4f542045584543555441424c450a",
+        "testVectors": "53594e54484554494320564543544f5253202d204e4f204d45444943414c20415353455254494f4e0a"
+      },
+      "canonicalUtf8": "SHIFAA-F011-ARTIFACT/1;S9:synthetic,S27:اختبار-اصطناعي,S15:synthetic-scope,S50:مصدر اصطناعي — لا محتوى طبي,S24:مرجع:اختبار,١,S27:2026-10-01T00:00:00.000000Z,S7:initial,N,S36:f0110000-0000-4000-8500-000000000002,S64:373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5,S36:f0110000-0000-4000-8500-000000000003,S64:ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5,S36:f0110000-0000-4000-8500-000000000004,S64:408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8,",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5332373ad8a7d8aed8aad8a8d8a7d8b12dd8a7d8b5d8b7d986d8a7d8b9d98a2c5331353a73796e7468657469632d73636f70652c5335303ad985d8b5d8afd8b120d8a7d8b5d8b7d986d8a7d8b9d98a20e2809420d984d8a720d985d8add8aad988d98920d8b7d8a8d98a2c5332343ad985d8b1d8acd8b93ad8a7d8aed8aad8a8d8a7d8b12cd9a12c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "octetLength": 547,
+      "sha256": "a7150b3d395f228dca8d27a1ed02f191d8f425b4344a977f1e5e296345808afb"
+    },
+    {
+      "id": "V05",
+      "scenario": "embedded delimiters, quote, backslash and line/control characters require no escaping",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral:,;series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Synthetic \":,;\\\n\r\t source",
+          "reference": "null"
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "materialBytesHex": {
+        "content": "53594e54484554494320434f4e54454e54202d204e4f204d45444943414c20415353455254494f4e0a",
+        "code": "53594e54484554494320434f4445202d204e4f542045584543555441424c450a",
+        "testVectors": "53594e54484554494320564543544f5253202d204e4f204d45444943414c20415353455254494f4e0a"
+      },
+      "canonicalUtf8": "SHIFAA-F011-ARTIFACT/1;S9:synthetic,S16:neutral:,;series,S15:synthetic-scope,S25:Synthetic \":,;\\\n\r\t source,S4:null,S27:2026-10-01T00:00:00.000000Z,S7:initial,N,S36:f0110000-0000-4000-8500-000000000002,S64:373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5,S36:f0110000-0000-4000-8500-000000000003,S64:ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5,S36:f0110000-0000-4000-8500-000000000004,S64:408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8,",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331363a6e65757472616c3a2c3b7365726965732c5331353a73796e7468657469632d73636f70652c5332353a53796e74686574696320223a2c3b5c0a0d0920736f757263652c53343a6e756c6c2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "octetLength": 490,
+      "sha256": "c3bd2728a634d5ba15407eac0e6fbcafbcf78a4ea267b54a4da38d6afa09cdf3"
+    },
+    {
+      "id": "V06",
+      "scenario": "precomposed Unicode is preserved exactly",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Synthetic Café",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "materialBytesHex": {
+        "content": "53594e54484554494320434f4e54454e54202d204e4f204d45444943414c20415353455254494f4e0a",
+        "code": "53594e54484554494320434f4445202d204e4f542045584543555441424c450a",
+        "testVectors": "53594e54484554494320564543544f5253202d204e4f204d45444943414c20415353455254494f4e0a"
+      },
+      "canonicalUtf8": "SHIFAA-F011-ARTIFACT/1;S9:synthetic,S14:neutral-series,S15:synthetic-scope,S15:Synthetic Café,N,S27:2026-10-01T00:00:00.000000Z,S7:initial,N,S36:f0110000-0000-4000-8500-000000000002,S64:373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5,S36:f0110000-0000-4000-8500-000000000003,S64:ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5,S36:f0110000-0000-4000-8500-000000000004,S64:408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8,",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5331353a53796e74686574696320436166c3a92c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "octetLength": 472,
+      "sha256": "dbedcabeeb37038c9ba44b0ae98aa2fb17283baae2ce76231ea4441b5cb6f0fe"
+    },
+    {
+      "id": "V07",
+      "scenario": "decomposed Unicode is preserved and has a distinct digest",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Synthetic Café",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "materialBytesHex": {
+        "content": "53594e54484554494320434f4e54454e54202d204e4f204d45444943414c20415353455254494f4e0a",
+        "code": "53594e54484554494320434f4445202d204e4f542045584543555441424c450a",
+        "testVectors": "53594e54484554494320564543544f5253202d204e4f204d45444943414c20415353455254494f4e0a"
+      },
+      "canonicalUtf8": "SHIFAA-F011-ARTIFACT/1;S9:synthetic,S14:neutral-series,S15:synthetic-scope,S16:Synthetic Café,N,S27:2026-10-01T00:00:00.000000Z,S7:initial,N,S36:f0110000-0000-4000-8500-000000000002,S64:373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5,S36:f0110000-0000-4000-8500-000000000003,S64:ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5,S36:f0110000-0000-4000-8500-000000000004,S64:408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8,",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5331363a53796e7468657469632043616665cc812c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "octetLength": 473,
+      "sha256": "7f73e509bd1569bb769e0b7f30aa60dbd9edc106d89e63ee9685d0cf753baf17"
+    }
+  ],
+  "normalization": [
+    {
+      "id": "B01",
+      "wireEffectiveAt": "2026-10-01T02:00:00+02:00",
+      "canonicalEffectiveAt": "2026-10-01T00:00:00.000000Z"
+    },
+    {
+      "id": "B02",
+      "wireEffectiveAt": "2026-09-30T20:00:00.123456-04:00",
+      "canonicalEffectiveAt": "2026-10-01T00:00:00.123456Z"
+    },
+    {
+      "id": "B03",
+      "wireEffectiveAt": "2026-10-01t00:00:00.1z",
+      "canonicalEffectiveAt": "2026-10-01T00:00:00.100000Z"
+    },
+    {
+      "id": "B04",
+      "wireSource": {
+        "display": "Neutral synthetic source"
+      },
+      "canonicalSource": {
+        "display": "Neutral synthetic source",
+        "reference": null
+      }
+    }
+  ],
+  "equivalence": [
+    {
+      "id": "E01",
+      "scenario": "JSON object key permutation does not affect bytes",
+      "positiveVector": "V01",
+      "rule": "all fact object keys reversed recursively; array/field positions are not used from JSON insertion order",
+      "expectedSha256": "d6527da9019430db441226d26efdeca86dfd6c4da55d81d4429e603dff3fe9b0"
+    }
+  ],
+  "negative": [
+    {
+      "id": "N01",
+      "scenario": "unknown envelope version",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/2",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "unsupported-contract-version"
+    },
+    {
+      "id": "N02",
+      "scenario": "unknown top-level field",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        },
+        "workflowVersion": 1
+      },
+      "expectedRejection": "closed-facts-shape"
+    },
+    {
+      "id": "N03",
+      "scenario": "missing required fact",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "closed-facts-shape"
+    },
+    {
+      "id": "N04",
+      "scenario": "initial marker with predecessor",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": "f0110000-0000-4000-8700-000000000001"
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "inconsistent-initial-predecessor"
+    },
+    {
+      "id": "N05",
+      "scenario": "successor without predecessor",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": false,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "inconsistent-initial-predecessor"
+    },
+    {
+      "id": "N06",
+      "scenario": "non-UTC timestamp in canonical facts",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T02:00:00.000000+02:00",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "non-canonical-instant"
+    },
+    {
+      "id": "N07",
+      "scenario": "impossible Gregorian date",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-02-30T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "invalid-instant"
+    },
+    {
+      "id": "N08",
+      "scenario": "submicrosecond timestamp",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.0000001Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "precision-not-representable"
+    },
+    {
+      "id": "N09",
+      "scenario": "leap second",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:60.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "invalid-instant"
+    },
+    {
+      "id": "N10",
+      "scenario": "uppercase evidence digest",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113CF90BB3A769B788E3A3DD2886A9BF488F5A3B603B71597C6D09305F2F5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "non-canonical-digest"
+    },
+    {
+      "id": "N11",
+      "scenario": "short digest",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "non-canonical-digest"
+    },
+    {
+      "id": "N12",
+      "scenario": "uppercase UUID",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "F0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "non-canonical-uuid"
+    },
+    {
+      "id": "N13",
+      "scenario": "NUL text cannot cross PostgreSQL text boundary",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Synthetic\u0000source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "invalid-scalar-text"
+    },
+    {
+      "id": "N14",
+      "scenario": "lone UTF-16 surrogate must not become replacement bytes",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Synthetic\ud800source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "invalid-scalar-text"
+    },
+    {
+      "id": "N15",
+      "scenario": "empty source reference differs from absence but violates Source minLength",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": ""
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "empty-required-text"
+    },
+    {
+      "id": "N16",
+      "scenario": "unknown source property",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null,
+          "url": "synthetic:unbound"
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "closed-facts-shape"
+    },
+    {
+      "id": "N17",
+      "scenario": "canonical timestamp missing zero-padding to six fractions",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source",
+          "reference": null
+        },
+        "effectiveAt": "2026-10-01T00:00:00Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "non-canonical-instant"
+    },
+    {
+      "id": "N18",
+      "scenario": "missing explicit source absence marker",
+      "stage": "canonical-facts",
+      "facts": {
+        "contractId": "SHIFAA-F011-ARTIFACT/1",
+        "series": {
+          "contentType": "synthetic",
+          "governedContentKey": "neutral-series",
+          "effectiveScopeKey": "synthetic-scope"
+        },
+        "source": {
+          "display": "Neutral synthetic source"
+        },
+        "effectiveAt": "2026-10-01T00:00:00.000000Z",
+        "predecessor": {
+          "initial": true,
+          "supersedesReleaseId": null
+        },
+        "evidence": {
+          "content": {
+            "ref": "f0110000-0000-4000-8500-000000000002",
+            "sha256": "373113cf90bb3a769b788e3a3dd2886a9bf488f5a3b603b71597c6d09305f2f5"
+          },
+          "code": {
+            "ref": "f0110000-0000-4000-8500-000000000003",
+            "sha256": "ea2c3a69726ee6f34e24f55ab22d798421f826f3985e1dfe7a0823aa33decbe5"
+          },
+          "testVectors": {
+            "ref": "f0110000-0000-4000-8500-000000000004",
+            "sha256": "408a33ccd8f2a9c00550bf03ac4221554502229ceb64979d17860f6f3895d8b8"
+          }
+        }
+      },
+      "expectedRejection": "closed-facts-shape"
+    },
+    {
+      "id": "N19",
+      "scenario": "length with leading zero",
+      "stage": "canonical-bytes",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b5330393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "expectedRejection": "non-canonical-length"
+    },
+    {
+      "id": "N20",
+      "scenario": "wrong field byte length",
+      "stage": "canonical-bytes",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b5331303a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "expectedRejection": "invalid-frame"
+    },
+    {
+      "id": "N21",
+      "scenario": "trailing newline",
+      "stage": "canonical-bytes",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c4e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c0a",
+      "expectedRejection": "trailing-bytes"
+    },
+    {
+      "id": "N22",
+      "scenario": "wrong null marker",
+      "stage": "canonical-bytes",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53393a73796e7468657469632c5331343a6e65757472616c2d7365726965732c5331353a73796e7468657469632d73636f70652c5332343a4e65757472616c2073796e74686574696320736f757263652c6e2c5332373a323032362d31302d30315430303a30303a30302e3030303030305a2c53373a696e697469616c2c4e2c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030322c5336343a333733313133636639306262336137363962373838653361336464323838366139626634383866356133623630336237313539376336643039333035663266352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030332c5336343a656132633361363937323665653666333465323466353561623232643739383432316638323666333938356531646665376130383233616133336465636265352c5333363a66303131303030302d303030302d343030302d383530302d3030303030303030303030342c5336343a343038613333636364386632613963303035353062663033616334323231353534353032323239636562363439373964313738363066366633383935643862382c",
+      "expectedRejection": "invalid-frame-tag"
+    },
+    {
+      "id": "N23",
+      "scenario": "invalid UTF-8 overlong sequence",
+      "stage": "canonical-bytes",
+      "canonicalHex": "5348494641412d463031312d41525449464143542f313b53323ac0802c",
+      "expectedRejection": "invalid-utf8"
+    },
+    {
+      "id": "N24",
+      "scenario": "caller declared digest differs from server result",
+      "stage": "declared-digest-equality",
+      "positiveVector": "V01",
+      "declaredDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+      "expectedRejection": "declared-digest-mismatch"
+    },
+    {
+      "id": "N25",
+      "scenario": "unknown timezone offset in wire normalization",
+      "stage": "wire-normalization",
+      "wireEffectiveAt": "2026-10-01T00:00:00-00:00",
+      "expectedRejection": "unknown-offset"
+    }
+  ]
+}

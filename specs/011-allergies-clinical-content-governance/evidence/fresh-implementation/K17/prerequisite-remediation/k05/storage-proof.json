@@ -1,0 +1,2101 @@
+{
+  "checkpoint": "K05",
+  "result": "PASS",
+  "completedAt": "2026-10-08T08:04:13.442Z",
+  "inputs": {
+    "cli": {
+      "command": "pnpm exec supabase --version",
+      "version": "2.113.0",
+      "packageVersion": "2.113.0",
+      "packageSha256": "30eaabae63471c5d3fd1b668d77cf97bacd690f6c88a23416b6afb0cfca84af1"
+    },
+    "baselineCount": 27,
+    "inputDigests": {
+      "infra/db/migrations/001_identity_onboarding.sql": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+      "supabase/migrations/20260811000300_facility_onboarding_rbac.sql": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+      "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+      "supabase/migrations/20260811000500_family_care_relationships.sql": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+      "supabase/migrations/20260811000600_family_care_storage.sql": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+      "supabase/migrations/20260813000500_privacy_dsr_notifications.sql": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+      "supabase/migrations/20260813000600_privacy_dsr_storage.sql": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+      "supabase/migrations/20260820000600_discovery_sos_foundation.sql": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+      "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+      "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+      "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+      "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+      "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+      "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+      "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+      "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+      "supabase/migrations/20260929001001_f010_c10_encounter_api.sql": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+      "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+      "supabase/migrations/20260929001003_f010_c12_note_signing.sql": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+      "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+      "supabase/migrations/20260929001005_f010_c17_referrals_api.sql": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+      "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+      "supabase/migrations/20260929001007_f010_c19_referral_projections.sql": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+      "supabase/migrations/20260929001008_f010_c22_context_messages.sql": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+      "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+      "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+      "supabase/migrations/20261001001002_f010_f04_completion_authority.sql": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+      "package.json": "88fb16d2a3313a19b3e25ac1bf68421942de876a7e0ae0c041932c67a2d3ea60",
+      "pnpm-lock.yaml": "a49eea490e48af9a9452841cf88e0373719bfe3afef525a80b8d81a75792fda6",
+      "compose.yml": "bfab38e14aeb8d3fa527637833b131df1b8a65ff627517cf84824cb911afcf5e",
+      "infra/db/Dockerfile.postgis": "99e801a9e225f0b4a32d849c4cd878d94fc472c004404b0de928b97b5fe8d2d8",
+      "supabase/config.toml": "f6dbb7071faa4c94d0d52d11c9b1618daf6895149cd86ae6ad31b213aa2c0417",
+      "infra/db/fixtures/feature-011.sql": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+      "packages/test-kit/src/feature-011/fixtures.ts": "f294c5711fc60fc8247388cd3a089330f62aa60863d383a992336b44d627213e",
+      "tools/run-feature-011-postgres-test.mjs": "ade201abf26f9dddb184084330280521151311ab6bbb3f222bf0f8dda0786810",
+      "tools/run-feature-011-concurrency-test.mjs": "5b441a5e30627e1a473ac4cc75fc55f97548a5f111c0ab5df0e5bd4b797ee207"
+    },
+    "fixture": {
+      "kind": "SYNTHETIC_ENGINEERING_ONLY",
+      "personId": "f0110000-0000-4000-8000-000000000001",
+      "patientId": "f0110000-0000-4000-8100-000000000001",
+      "facilityId": "f0110000-0000-4000-8200-000000000001",
+      "clinicianId": "f0110000-0000-4000-8000-000000000002",
+      "encounterId": "f0110000-0000-4000-8400-000000000001",
+      "actorCount": 8,
+      "lockNamespace": 11003,
+      "lockKey": 1,
+      "missingBehaviorMessage": "F011_K03_EXPECTED_MISSING_BEHAVIOR: clinical.verify_allergy_api_v1(uuid,integer,jsonb)",
+      "rawEvidenceSqlAllowed": false,
+      "realClinicalApproval": false
+    },
+    "feature011MigrationFiles": [
+      "20261006175926_f011_allergy_revisions.sql",
+      "20261006175932_f011_content_artifacts.sql",
+      "20261006175937_f011_governance_evidence.sql",
+      "20261006175942_f011_atomic_receipts.sql",
+      "20261006185236_f011_allergy_functions.sql",
+      "20261006185237_f011_release_functions.sql",
+      "20261006185239_f011_signing_functions.sql",
+      "20261006185240_f011_publication_functions.sql",
+      "20261006185241_f011_rls_grants.sql",
+      "20261006185242_f011_receipt_functions.sql"
+    ]
+  },
+  "sourceDigests": {
+    "supabase/migrations/20261006175926_f011_allergy_revisions.sql": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+    "supabase/migrations/20261006175932_f011_content_artifacts.sql": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+    "supabase/migrations/20261006175937_f011_governance_evidence.sql": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+    "supabase/migrations/20261006175942_f011_atomic_receipts.sql": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d"
+  },
+  "results": [
+    {
+      "runtime": {
+        "name": "shifaa-local-postgres",
+        "container": "shifaa-local-postgres-postgres-1",
+        "user": "shifaa_owner",
+        "adminDatabase": "shifaa",
+        "running": true,
+        "image": "shifaa/postgis:17-3.5-006-local",
+        "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7"
+      },
+      "baseline": {
+        "applied": [
+          {
+            "path": "infra/db/migrations/001_identity_onboarding.sql",
+            "sha256": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+            "sha256": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
+            "sha256": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000500_family_care_relationships.sql",
+            "sha256": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000600_family_care_storage.sql",
+            "sha256": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260813000500_privacy_dsr_notifications.sql",
+            "sha256": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260813000600_privacy_dsr_storage.sql",
+            "sha256": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260820000600_discovery_sos_foundation.sql",
+            "sha256": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+            "sha256": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+            "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+            "sha256": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql",
+            "sha256": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+            "sha256": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql",
+            "sha256": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+            "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+            "sha256": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+            "sha256": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql",
+            "sha256": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001003_f010_c12_note_signing.sql",
+            "sha256": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql",
+            "sha256": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001005_f010_c17_referrals_api.sql",
+            "sha256": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql",
+            "sha256": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001007_f010_c19_referral_projections.sql",
+            "sha256": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001008_f010_c22_context_messages.sql",
+            "sha256": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql",
+            "sha256": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+            "sha256": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+            "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql",
+            "sha256": "b12eda7e4cdf6b9096833a0a19b96d61dedd16bb3c57cb8bc9cf463089f1a90b",
+            "exitCode": 0
+          }
+        ],
+        "fixtureSha256": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+        "legacyFeatureHelpersUsed": false
+      },
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k05_7ffd656b06e28bc8",
+          "owner": "shifaa_owner",
+          "serverVersion": "17.11",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "shifaa_owner",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 472219
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "shifaa_owner",
+          "-d",
+          "f011_k05_7ffd656b06e28bc8"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "shifaa-local-postgres-postgres-1",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k05_7ffd656b06e28bc8"
+        ]
+      },
+      "applied": [
+        {
+          "path": "supabase/migrations/20261006175926_f011_allergy_revisions.sql",
+          "sha256": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175932_f011_content_artifacts.sql",
+          "sha256": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+          "sha256": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175942_f011_atomic_receipts.sql",
+          "sha256": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d",
+          "exitCode": 0
+        }
+      ],
+      "populatedPredecessorTablesPreserved": 53,
+      "predecessorRowDigests": {
+        "audit.events": "{\"count\" : 1, \"digest\" : \"ed55340abbb9457cbb96b5caf774198c\"}",
+        "audit.export_batches": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "audit.signature_evidence": "{\"count\" : 1, \"digest\" : \"09c1e7ab0108bf9ee3f2df7cc0f4170f\"}",
+        "clinical.appointments": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.clinical_notes": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.conditions": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.encounter_participants": "{\"count\" : 1, \"digest\" : \"9c4dad2cdf77083b3824fa413cfe4071\"}",
+        "clinical.encounters": "{\"count\" : 1, \"digest\" : \"5d7fa2ff3288f59fffe7917f7e607bbb\"}",
+        "clinical.queue_entries": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.queue_scopes": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.referrals": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.schedule_exceptions": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.schedule_windows": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.schedules": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "consent.data_subject_request_events": "{\"count\" : 2, \"digest\" : \"bc408bad7e039b26a14f356016fa4a23\"}",
+        "consent.data_subject_requests": "{\"count\" : 1, \"digest\" : \"67f74db704cf45b7874622f1c4ea75c5\"}",
+        "consent.dsr_assignments": "{\"count\" : 1, \"digest\" : \"06e9f8b42b4b7968f6afe761dfa0aa4f\"}",
+        "consent.dsr_export_capabilities": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "consent.notice_versions": "{\"count\" : 2, \"digest\" : \"a4a4a992a2aa7b0629c25f40acfe7c45\"}",
+        "consent.processing_inventory": "{\"count\" : 10, \"digest\" : \"651fd6b7bf7d2ace8ada4348d2bd7108\"}",
+        "consent.purpose_versions": "{\"count\" : 2, \"digest\" : \"bc5d8a86d6347961be1b394dea34c98e\"}",
+        "consent.records": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.admin_role_grants": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.admin_role_revocation_requests": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.callback_contact_verifications": "{\"count\" : 9, \"digest\" : \"4558b18cf8dda139eab3296430fcd980\"}",
+        "identity.care_relationship_permissions": "{\"count\" : 9, \"digest\" : \"47c3088e18cbc79de8cdb463fd0af7c0\"}",
+        "identity.care_relationships": "{\"count\" : 13, \"digest\" : \"c7ff4ce0c1ff8f7c5ee762f367b9d3d8\"}",
+        "identity.continuity_cases": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.emergency_contacts": "{\"count\" : 1, \"digest\" : \"b0fc6f79ad3339bfa308992d8303d702\"}",
+        "identity.facilities": "{\"count\" : 1, \"digest\" : \"f3e4d954cf8b0a396144d3e2121bc241\"}",
+        "identity.facility_licenses": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.facility_memberships": "{\"count\" : 1, \"digest\" : \"b311abcee8d9561413eea2d76ec5adf4\"}",
+        "identity.governance_designations": "{\"count\" : 2, \"digest\" : \"f0e07c1d974fa15b5ff217fd8b425082\"}",
+        "identity.identities": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.patients": "{\"count\" : 8, \"digest\" : \"391d08c36f0402866fe7e9a12d70d7e1\"}",
+        "identity.people": "{\"count\" : 34, \"digest\" : \"a32692987472784e85fcb0df61030a46\"}",
+        "identity.private_evidence_objects": "{\"count\" : 8, \"digest\" : \"ed1d0f63339c02c91efec86ecd32c178\"}",
+        "identity.professional_licenses": "{\"count\" : 2, \"digest\" : \"85ce564ecc4189ee77a327ea249bca68\"}",
+        "identity.relationship_authorization_uses": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.role_permissions": "{\"count\" : 24, \"digest\" : \"a0ac7f5d9a4f50bfbab7d385469e03a2\"}",
+        "identity.verification_cases": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.emergency_share_links": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.event_receipts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.feature_flags": "{\"count\" : 39, \"digest\" : \"0b4edd93857f98a1473b4654d24d5ef3\"}",
+        "platform.idempotency_records": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.notification_delivery_attempts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.notification_template_releases": "{\"count\" : 6, \"digest\" : \"3a9ea0aff1f6f6baab3265a41fb6567f\"}",
+        "platform.notifications": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.outbox_events": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.outbox_replay_attempts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.provider_callback_receipts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.sos_incidents": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.synthetic_message_receipts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}"
+      },
+      "catalog": [
+        {
+          "id": "ALG-FACTS",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-PLAINTEXT",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-HEAD",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-REASON",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-SUPPORT",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-ONE-USE",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-APPEND",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-PREDECESSOR-CONTEXT",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-ENVELOPE-LENGTHS",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-TERMINAL-CORRECTION",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-BODY",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-MATERIAL",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-COMPETING-DRAFTS",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-BASIS-50",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-STABLE-BASIS",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-RECIPROCAL",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": "Use authoritative audit.signature_evidence; accepted fixture bytes preserved"
+        },
+        {
+          "id": "SIGN-REJECTED-PRESERVED",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-credential-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-designation-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-grant-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-EXACT-ADMISSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-IMMUTABLE-ADMISSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-LINEAGE",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-APPROVAL-VERSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RECEIPT-TUPLE",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "OBLIGATION-TUPLE",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RECEIPT-HISTORY",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_heads",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergies",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-mutation_receipts",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-mutation_commit_obligations",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_series",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_releases",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_governance_authorities",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_reviewer_designations",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_material_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_signature_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_admissibility_evidence",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_artifact_admissibility_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_verification_support",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_verification_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-shifaa_api",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-shifaa_worker",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-anon",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-authenticated",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-service_role",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        }
+      ],
+      "directAccess": [
+        {
+          "relation": "clinical.allergy_heads",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_heads",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergies",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergies",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_support",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_support",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_series",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_series",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_releases",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_releases",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_material_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_material_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_governance_authorities",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_governance_authorities",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_reviewer_designations",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_reviewer_designations",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_signature_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_signature_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_admissibility_evidence",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_admissibility_evidence",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_artifact_admissibility_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_artifact_admissibility_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_receipts",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_receipts",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_commit_obligations",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_commit_obligations",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        }
+      ],
+      "privateBoundary": {
+        "publicFunctionExecute": 0,
+        "onlineTableGrants": 0
+      },
+      "behavior": {
+        "fixture": "infra/db/tests/feature-011-k05-storage.sql",
+        "sha256": "fcdfd61abe0a7ec7b4d0e3617b55944c66e2978dcbb268769282ef2cabb9b012",
+        "competingDrafts": true,
+        "threeMaterialBindings": true,
+        "missingMaterialBindingsDeniedAtDeferredCheck": true,
+        "immutableBodyAndBindings": true,
+        "contiguousAllergyHistoryAndReciprocalBindings": true,
+        "immutableAllergyHistory": true,
+        "terminalAllergyResurrectionDenied": true,
+        "crossSeriesPredecessorDenied": true,
+        "secondPublishedRootDenied": true,
+        "domainOnlyCommitDenied": true,
+        "partialCommitSqlstate": "23514",
+        "partialCommitDiagnostic": "ERROR:  23514: domain mutation lacks its atomic Feature 011 commit obligation\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 120 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n",
+        "completeSyntheticAllFiveCommit": true,
+        "neutralFixtureIsNotProductEventAcceptance": true,
+        "testReceiptUsesAuthoritativeObligationTimestamp": true,
+        "deferredFaults": [
+          {
+            "fault": "missing-receipt",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "incomplete-idempotency",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "wrong-pointer",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "wrong-tuple",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "wrong-audit",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "fault": "wrong-outbox",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          }
+        ],
+        "transactionCleanup": "Rollback / failed COMMIT; no durable test domain effect"
+      },
+      "supportLifecycle": {
+        "results": [
+          {
+            "id": "UNCONSUMED_SUPPORT_COMMIT",
+            "result": "PASS"
+          },
+          {
+            "id": "SUPPORT_SOURCE_SUBSTITUTION",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: new row for relation \"allergy_verification_support\" violates check constraint \"allergy_verification_support_check\"\nDETAIL:  Failing row contains (f011c000-0000-4000-8800-000000000002, f0110000-0000-4000-8100-000000000001, 178b48ac-2b2d-49a2-acb1-4ef459cec51c, ebe4596c-b742-4294-8d70-f35ed2cba793, 1, clinician_confirmed, f0110000-0000-4000-8000-000000000002, synthetic.internal_clinician_provenance, f011c000-0000-4000-8800-000000000001, f011.allergy_evidence_boundary, 2026-10-06 10:00:00+00, t).\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_check\nLOCATION:  ExecConstraints, execMain.c:2074\n"
+          },
+          {
+            "id": "SUPPORT_INVALID_PRODUCER",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: new row for relation \"allergy_verification_support\" violates check constraint \"allergy_verification_support_producer_id_check\"\nDETAIL:  Failing row contains (f011c000-0000-4000-8800-000000000002, f0110000-0000-4000-8100-000000000001, 178b48ac-2b2d-49a2-acb1-4ef459cec51c, ebe4596c-b742-4294-8d70-f35ed2cba793, 1, clinician_confirmed, f0110000-0000-4000-8000-000000000002, synthetic.internal_clinician_provenance, f011c000-0000-4000-8800-000000000002, unapproved.producer, 2026-10-06 10:00:00+00, t).\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_producer_id_check\nLOCATION:  ExecConstraints, execMain.c:2074\n"
+          },
+          {
+            "id": "SUPPORT_INVALID_TARGET",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: new row for relation \"allergy_verification_support\" violates check constraint \"allergy_verification_support_target_status_check\"\nDETAIL:  Failing row contains (f011c000-0000-4000-8800-000000000002, f0110000-0000-4000-8100-000000000001, 178b48ac-2b2d-49a2-acb1-4ef459cec51c, ebe4596c-b742-4294-8d70-f35ed2cba793, 1, self_reported, f0110000-0000-4000-8000-000000000002, synthetic.internal_clinician_provenance, f011c000-0000-4000-8800-000000000002, f011.allergy_evidence_boundary, 2026-10-06 10:00:00+00, t).\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_target_status_check\nLOCATION:  ExecConstraints, execMain.c:2074\n"
+          },
+          {
+            "id": "SUPPORT_WRONG_PREDECESSOR_VERSION",
+            "result": "DENIED",
+            "sqlstate": "23503",
+            "diagnostic": "ERROR:  23503: insert or update on table \"allergy_verification_support\" violates foreign key constraint \"allergy_verification_support_previous_revision_id_allergy__fkey\"\nDETAIL:  Key (previous_revision_id, allergy_id, patient_id, previous_version)=(ebe4596c-b742-4294-8d70-f35ed2cba793, 178b48ac-2b2d-49a2-acb1-4ef459cec51c, f0110000-0000-4000-8100-000000000001, 2) is not present in table \"allergies\".\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_previous_revision_id_allergy__fkey\nLOCATION:  ri_ReportViolation, ri_triggers.c:2599\n"
+          },
+          {
+            "id": "SUPPORT_CROSS_ASSERTION",
+            "result": "DENIED",
+            "sqlstate": "23503",
+            "diagnostic": "ERROR:  23503: insert or update on table \"allergy_verification_support\" violates foreign key constraint \"allergy_verification_support_previous_revision_id_allergy__fkey\"\nDETAIL:  Key (previous_revision_id, allergy_id, patient_id, previous_version)=(ebe4596c-b742-4294-8d70-f35ed2cba793, f011c000-0000-4000-8800-000000000002, f0110000-0000-4000-8100-000000000001, 1) is not present in table \"allergies\".\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_previous_revision_id_allergy__fkey\nLOCATION:  ri_ReportViolation, ri_triggers.c:2599\n"
+          },
+          {
+            "id": "SUPPORT_CROSS_PATIENT",
+            "result": "DENIED",
+            "sqlstate": "23503",
+            "diagnostic": "ERROR:  23503: insert or update on table \"allergy_verification_support\" violates foreign key constraint \"allergy_verification_support_allergy_id_patient_id_fkey\"\nDETAIL:  Key (allergy_id, patient_id)=(178b48ac-2b2d-49a2-acb1-4ef459cec51c, f011c000-0000-4000-8800-000000000002) is not present in table \"allergy_heads\".\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_allergy_id_patient_id_fkey\nLOCATION:  ri_ReportViolation, ri_triggers.c:2599\n"
+          },
+          {
+            "id": "SUPPORT_IMMUTABLE_UPDATE",
+            "result": "DENIED",
+            "sqlstate": "55000",
+            "diagnostic": "ERROR:  55000: feature 011 evidence rows are immutable\nCONTEXT:  PL/pgSQL function f011_reject_immutable_v1() line 3 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "id": "SUPPORT_IMMUTABLE_DELETE",
+            "result": "DENIED",
+            "sqlstate": "55000",
+            "diagnostic": "ERROR:  55000: feature 011 evidence rows are immutable\nCONTEXT:  PL/pgSQL function f011_reject_immutable_v1() line 3 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "id": "CONSUMPTION_WRONG_TARGET",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: allergy verification support binding is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_guard_allergy_verification_binding_v1() line 73 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "id": "CONSUMPTION_WRONG_ATTESTOR",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: allergy verification support binding is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_guard_allergy_verification_binding_v1() line 73 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "id": "CONSUMPTION_MISSING_BINDING",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: allergy verification support binding is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_guard_allergy_verification_binding_v1() line 73 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3897\n"
+          },
+          {
+            "id": "EXACT_RECIPROCAL_CONSUMPTION",
+            "result": "PASS_DEFERRED_CONSTRAINTS_ROLLBACK"
+          },
+          {
+            "id": "SUPPORT_CONSUMED_ONLY_ONCE",
+            "result": "DENIED",
+            "sqlstate": "23505",
+            "diagnostic": "ERROR:  23505: duplicate key value violates unique constraint \"allergy_verification_bindings_evidence_ref_key\"\nDETAIL:  Key (evidence_ref)=(f011c000-0000-4000-8800-000000000001) already exists.\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_bindings\nCONSTRAINT NAME:  allergy_verification_bindings_evidence_ref_key\nLOCATION:  _bt_check_unique, nbtinsert.c:666\n"
+          },
+          {
+            "id": "FAILED_CONSUMPTION_PRESERVES_UNUSED_SUPPORT",
+            "result": "PASS"
+          }
+        ],
+        "syntheticOnly": true,
+        "provisioningCommittedSeparately": true,
+        "verificationMutationCommitOwnedByAllFiveConsumerProof": "K06",
+        "durableSupportRemainsUnconsumed": true
+      },
+      "consumerEntrypointsStillAbsent": true,
+      "cleanup": {
+        "database": "f011_k05_7ffd656b06e28bc8",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    },
+    {
+      "runtime": {
+        "name": "shifaa-local-supabase",
+        "container": "supabase_db_shifaa-local-supabase",
+        "user": "supabase_admin",
+        "adminDatabase": "postgres",
+        "running": true,
+        "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+        "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+      },
+      "baseline": {
+        "applied": [
+          {
+            "path": "infra/db/migrations/001_identity_onboarding.sql",
+            "sha256": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+            "sha256": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql",
+            "sha256": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000500_family_care_relationships.sql",
+            "sha256": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260811000600_family_care_storage.sql",
+            "sha256": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260813000500_privacy_dsr_notifications.sql",
+            "sha256": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260813000600_privacy_dsr_storage.sql",
+            "sha256": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260820000600_discovery_sos_foundation.sql",
+            "sha256": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+            "sha256": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql",
+            "sha256": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+            "sha256": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql",
+            "sha256": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+            "sha256": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql",
+            "sha256": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql",
+            "sha256": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+            "sha256": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+            "sha256": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql",
+            "sha256": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001003_f010_c12_note_signing.sql",
+            "sha256": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql",
+            "sha256": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001005_f010_c17_referrals_api.sql",
+            "sha256": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql",
+            "sha256": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001007_f010_c19_referral_projections.sql",
+            "sha256": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260929001008_f010_c22_context_messages.sql",
+            "sha256": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql",
+            "sha256": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+            "sha256": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+            "sha256": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+            "exitCode": 0
+          },
+          {
+            "path": "supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql",
+            "sha256": "b12eda7e4cdf6b9096833a0a19b96d61dedd16bb3c57cb8bc9cf463089f1a90b",
+            "exitCode": 0
+          }
+        ],
+        "fixtureSha256": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+        "legacyFeatureHelpersUsed": false
+      },
+      "health": {
+        "result": "PASS",
+        "manifest": {
+          "database": "f011_k05_77226944a8dc411b",
+          "owner": "supabase_admin",
+          "serverVersion": "17.6",
+          "actors": 8,
+          "encounters": 1,
+          "feature010Entrypoint": true,
+          "roles": [
+            {
+              "name": "shifaa_api",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            },
+            {
+              "name": "shifaa_worker",
+              "superuser": false,
+              "bypassRls": false,
+              "login": true
+            }
+          ],
+          "peopleOwner": "supabase_admin",
+          "peopleForceRls": true
+        },
+        "nonOwner": {
+          "user": "shifaa_api",
+          "visiblePeople": 0,
+          "backendPid": 174444
+        },
+        "setupCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "f011_k05_77226944a8dc411b"
+        ],
+        "nonOwnerCommand": [
+          "docker",
+          "exec",
+          "-i",
+          "-e",
+          "PGPASSWORD",
+          "supabase_db_shifaa-local-supabase",
+          "psql",
+          "-X",
+          "-qAt",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-v",
+          "VERBOSITY=verbose",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "shifaa_api",
+          "-d",
+          "f011_k05_77226944a8dc411b"
+        ]
+      },
+      "applied": [
+        {
+          "path": "supabase/migrations/20261006175926_f011_allergy_revisions.sql",
+          "sha256": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175932_f011_content_artifacts.sql",
+          "sha256": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+          "sha256": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+          "exitCode": 0
+        },
+        {
+          "path": "supabase/migrations/20261006175942_f011_atomic_receipts.sql",
+          "sha256": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d",
+          "exitCode": 0
+        }
+      ],
+      "populatedPredecessorTablesPreserved": 53,
+      "predecessorRowDigests": {
+        "audit.events": "{\"count\" : 1, \"digest\" : \"453f811873ddc91a1c77b6d15a547653\"}",
+        "audit.export_batches": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "audit.signature_evidence": "{\"count\" : 1, \"digest\" : \"02fdc1f9beb4e71ceb2ea703df6d0722\"}",
+        "clinical.appointments": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.clinical_notes": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.conditions": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.encounter_participants": "{\"count\" : 1, \"digest\" : \"5d60acbce39249dcd351a740953bdef3\"}",
+        "clinical.encounters": "{\"count\" : 1, \"digest\" : \"9dfce7512c5f81362ff9aafeae19ad3e\"}",
+        "clinical.queue_entries": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.queue_scopes": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.referrals": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.schedule_exceptions": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.schedule_windows": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "clinical.schedules": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "consent.data_subject_request_events": "{\"count\" : 2, \"digest\" : \"bc408bad7e039b26a14f356016fa4a23\"}",
+        "consent.data_subject_requests": "{\"count\" : 1, \"digest\" : \"87fcf10bc90aa7ce07c002453368b925\"}",
+        "consent.dsr_assignments": "{\"count\" : 1, \"digest\" : \"06e9f8b42b4b7968f6afe761dfa0aa4f\"}",
+        "consent.dsr_export_capabilities": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "consent.notice_versions": "{\"count\" : 2, \"digest\" : \"c19a6eb676e553cdee2c3360c106234e\"}",
+        "consent.processing_inventory": "{\"count\" : 10, \"digest\" : \"53a823da98172d0b4e7fb362a0e18224\"}",
+        "consent.purpose_versions": "{\"count\" : 2, \"digest\" : \"8843066ee3b0d729dd3e302d0e6c761b\"}",
+        "consent.records": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.admin_role_grants": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.admin_role_revocation_requests": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.callback_contact_verifications": "{\"count\" : 9, \"digest\" : \"2c9b9b740a40b2b710f9b380c96c17f2\"}",
+        "identity.care_relationship_permissions": "{\"count\" : 9, \"digest\" : \"1aa4baed1bd9fe6edffce0e216a2865d\"}",
+        "identity.care_relationships": "{\"count\" : 13, \"digest\" : \"a550f74cfb5cbd5ffeb28f2629ab0f47\"}",
+        "identity.continuity_cases": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.emergency_contacts": "{\"count\" : 1, \"digest\" : \"e7dd85a281b0e9ffa8e3e03b54997b20\"}",
+        "identity.facilities": "{\"count\" : 1, \"digest\" : \"7854b194b9bff34a005fc52c99116d51\"}",
+        "identity.facility_licenses": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.facility_memberships": "{\"count\" : 1, \"digest\" : \"374b7bbce9f4fddafa485e7ac65c0cb6\"}",
+        "identity.governance_designations": "{\"count\" : 2, \"digest\" : \"81b7f7b7b53462951b61177a8762f6c7\"}",
+        "identity.identities": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.patients": "{\"count\" : 8, \"digest\" : \"338d8d5935fbd6cfd037eae144d916ce\"}",
+        "identity.people": "{\"count\" : 34, \"digest\" : \"ce1da8f48add20a44b7112b85e104138\"}",
+        "identity.private_evidence_objects": "{\"count\" : 8, \"digest\" : \"40794da79c98ae34086ce86dc1814ed5\"}",
+        "identity.professional_licenses": "{\"count\" : 2, \"digest\" : \"6ea9e9284ff232d7d531b23fd62259cc\"}",
+        "identity.relationship_authorization_uses": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "identity.role_permissions": "{\"count\" : 24, \"digest\" : \"74eac62a4f1e4c039ba0d605fa7ccb81\"}",
+        "identity.verification_cases": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.emergency_share_links": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.event_receipts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.feature_flags": "{\"count\" : 39, \"digest\" : \"b0786797fae360cda519060154a3ece2\"}",
+        "platform.idempotency_records": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.notification_delivery_attempts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.notification_template_releases": "{\"count\" : 6, \"digest\" : \"b2d4ee7187e7ff43a2ce4d6da4b9d937\"}",
+        "platform.notifications": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.outbox_events": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.outbox_replay_attempts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.provider_callback_receipts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.sos_incidents": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}",
+        "platform.synthetic_message_receipts": "{\"count\" : 0, \"digest\" : \"d41d8cd98f00b204e9800998ecf8427e\"}"
+      },
+      "catalog": [
+        {
+          "id": "ALG-FACTS",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-PLAINTEXT",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-HEAD",
+          "source": "infra/db/tests/feature-011-allergy-create-read.sql",
+          "sourceSha256": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-REASON",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-SUPPORT",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-ONE-USE",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-APPEND",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-PREDECESSOR-CONTEXT",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-ENVELOPE-LENGTHS",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "ALG-TERMINAL-CORRECTION",
+          "source": "infra/db/tests/feature-011-allergy-verification.sql",
+          "sourceSha256": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-BODY",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-MATERIAL",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "CONTENT-COMPETING-DRAFTS",
+          "source": "infra/db/tests/feature-011-content-draft.sql",
+          "sourceSha256": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-BASIS-50",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-STABLE-BASIS",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-RECIPROCAL",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": "Use authoritative audit.signature_evidence; accepted fixture bytes preserved"
+        },
+        {
+          "id": "SIGN-REJECTED-PRESERVED",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-credential-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-designation-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "SIGN-EXACT-grant-VERSION",
+          "source": "infra/db/tests/feature-011-signatures.sql",
+          "sourceSha256": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-EXACT-ADMISSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-IMMUTABLE-ADMISSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-LINEAGE",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "PUB-APPROVAL-VERSION",
+          "source": "infra/db/tests/feature-011-publication.sql",
+          "sourceSha256": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RECEIPT-TUPLE",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "OBLIGATION-TUPLE",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RECEIPT-HISTORY",
+          "source": "infra/db/tests/feature-011-receipts.sql",
+          "sourceSha256": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_heads",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergies",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-mutation_receipts",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-mutation_commit_obligations",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_series",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_releases",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_governance_authorities",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_reviewer_designations",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_material_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_signature_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_admissibility_evidence",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-content_artifact_admissibility_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_verification_support",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "RLS-allergy_verification_bindings",
+          "source": "infra/db/tests/feature-011-schema.sql",
+          "sourceSha256": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-shifaa_api",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-shifaa_worker",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-anon",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-authenticated",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        },
+        {
+          "id": "GRANT-service_role",
+          "source": "infra/db/tests/feature-011-rls.sql",
+          "sourceSha256": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+          "result": "PASS_STORAGE_INVARIANT",
+          "exitCode": 0,
+          "correction": null
+        }
+      ],
+      "directAccess": [
+        {
+          "relation": "clinical.allergy_heads",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_heads",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergies",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergies",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_support",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_support",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.allergy_verification_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_series",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_series",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_releases",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_releases",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_material_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_material_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_governance_authorities",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_governance_authorities",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_reviewer_designations",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_reviewer_designations",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_signature_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_signature_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_admissibility_evidence",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_admissibility_evidence",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_artifact_admissibility_bindings",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.content_artifact_admissibility_bindings",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_receipts",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_receipts",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_commit_obligations",
+          "role": "shifaa_api",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        },
+        {
+          "relation": "clinical.mutation_commit_obligations",
+          "role": "shifaa_worker",
+          "directRead": "DENIED_42501",
+          "directDmlGrants": false
+        }
+      ],
+      "privateBoundary": {
+        "publicFunctionExecute": 0,
+        "onlineTableGrants": 0
+      },
+      "behavior": {
+        "fixture": "infra/db/tests/feature-011-k05-storage.sql",
+        "sha256": "fcdfd61abe0a7ec7b4d0e3617b55944c66e2978dcbb268769282ef2cabb9b012",
+        "competingDrafts": true,
+        "threeMaterialBindings": true,
+        "missingMaterialBindingsDeniedAtDeferredCheck": true,
+        "immutableBodyAndBindings": true,
+        "contiguousAllergyHistoryAndReciprocalBindings": true,
+        "immutableAllergyHistory": true,
+        "terminalAllergyResurrectionDenied": true,
+        "crossSeriesPredecessorDenied": true,
+        "secondPublishedRootDenied": true,
+        "domainOnlyCommitDenied": true,
+        "partialCommitSqlstate": "23514",
+        "partialCommitDiagnostic": "ERROR:  23514: domain mutation lacks its atomic Feature 011 commit obligation\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 120 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n",
+        "completeSyntheticAllFiveCommit": true,
+        "neutralFixtureIsNotProductEventAcceptance": true,
+        "testReceiptUsesAuthoritativeObligationTimestamp": true,
+        "deferredFaults": [
+          {
+            "fault": "missing-receipt",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "incomplete-idempotency",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "wrong-pointer",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "wrong-tuple",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "wrong-audit",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "fault": "wrong-outbox",
+            "result": "DENIED_AT_COMMIT",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          }
+        ],
+        "transactionCleanup": "Rollback / failed COMMIT; no durable test domain effect"
+      },
+      "supportLifecycle": {
+        "results": [
+          {
+            "id": "UNCONSUMED_SUPPORT_COMMIT",
+            "result": "PASS"
+          },
+          {
+            "id": "SUPPORT_SOURCE_SUBSTITUTION",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: new row for relation \"allergy_verification_support\" violates check constraint \"allergy_verification_support_check\"\nDETAIL:  Failing row contains (f011c000-0000-4000-8800-000000000002, f0110000-0000-4000-8100-000000000001, 638f4f57-b957-48e0-b3c8-b0d8bdd72373, 7e97d619-1a59-481e-b7e9-11a4f749cb2c, 1, clinician_confirmed, f0110000-0000-4000-8000-000000000002, synthetic.internal_clinician_provenance, f011c000-0000-4000-8800-000000000001, f011.allergy_evidence_boundary, 2026-10-06 10:00:00+00, t).\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_check\nLOCATION:  ExecConstraints, execMain.c:2033\n"
+          },
+          {
+            "id": "SUPPORT_INVALID_PRODUCER",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: new row for relation \"allergy_verification_support\" violates check constraint \"allergy_verification_support_producer_id_check\"\nDETAIL:  Failing row contains (f011c000-0000-4000-8800-000000000002, f0110000-0000-4000-8100-000000000001, 638f4f57-b957-48e0-b3c8-b0d8bdd72373, 7e97d619-1a59-481e-b7e9-11a4f749cb2c, 1, clinician_confirmed, f0110000-0000-4000-8000-000000000002, synthetic.internal_clinician_provenance, f011c000-0000-4000-8800-000000000002, unapproved.producer, 2026-10-06 10:00:00+00, t).\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_producer_id_check\nLOCATION:  ExecConstraints, execMain.c:2033\n"
+          },
+          {
+            "id": "SUPPORT_INVALID_TARGET",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: new row for relation \"allergy_verification_support\" violates check constraint \"allergy_verification_support_target_status_check\"\nDETAIL:  Failing row contains (f011c000-0000-4000-8800-000000000002, f0110000-0000-4000-8100-000000000001, 638f4f57-b957-48e0-b3c8-b0d8bdd72373, 7e97d619-1a59-481e-b7e9-11a4f749cb2c, 1, self_reported, f0110000-0000-4000-8000-000000000002, synthetic.internal_clinician_provenance, f011c000-0000-4000-8800-000000000002, f011.allergy_evidence_boundary, 2026-10-06 10:00:00+00, t).\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_target_status_check\nLOCATION:  ExecConstraints, execMain.c:2033\n"
+          },
+          {
+            "id": "SUPPORT_WRONG_PREDECESSOR_VERSION",
+            "result": "DENIED",
+            "sqlstate": "23503",
+            "diagnostic": "ERROR:  23503: insert or update on table \"allergy_verification_support\" violates foreign key constraint \"allergy_verification_support_previous_revision_id_allergy__fkey\"\nDETAIL:  Key (previous_revision_id, allergy_id, patient_id, previous_version)=(7e97d619-1a59-481e-b7e9-11a4f749cb2c, 638f4f57-b957-48e0-b3c8-b0d8bdd72373, f0110000-0000-4000-8100-000000000001, 2) is not present in table \"allergies\".\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_previous_revision_id_allergy__fkey\nLOCATION:  ri_ReportViolation, ri_triggers.c:2599\n"
+          },
+          {
+            "id": "SUPPORT_CROSS_ASSERTION",
+            "result": "DENIED",
+            "sqlstate": "23503",
+            "diagnostic": "ERROR:  23503: insert or update on table \"allergy_verification_support\" violates foreign key constraint \"allergy_verification_support_previous_revision_id_allergy__fkey\"\nDETAIL:  Key (previous_revision_id, allergy_id, patient_id, previous_version)=(7e97d619-1a59-481e-b7e9-11a4f749cb2c, f011c000-0000-4000-8800-000000000002, f0110000-0000-4000-8100-000000000001, 1) is not present in table \"allergies\".\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_previous_revision_id_allergy__fkey\nLOCATION:  ri_ReportViolation, ri_triggers.c:2599\n"
+          },
+          {
+            "id": "SUPPORT_CROSS_PATIENT",
+            "result": "DENIED",
+            "sqlstate": "23503",
+            "diagnostic": "ERROR:  23503: insert or update on table \"allergy_verification_support\" violates foreign key constraint \"allergy_verification_support_allergy_id_patient_id_fkey\"\nDETAIL:  Key (allergy_id, patient_id)=(638f4f57-b957-48e0-b3c8-b0d8bdd72373, f011c000-0000-4000-8800-000000000002) is not present in table \"allergy_heads\".\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_support\nCONSTRAINT NAME:  allergy_verification_support_allergy_id_patient_id_fkey\nLOCATION:  ri_ReportViolation, ri_triggers.c:2599\n"
+          },
+          {
+            "id": "SUPPORT_IMMUTABLE_UPDATE",
+            "result": "DENIED",
+            "sqlstate": "55000",
+            "diagnostic": "ERROR:  55000: feature 011 evidence rows are immutable\nCONTEXT:  PL/pgSQL function f011_reject_immutable_v1() line 3 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "id": "SUPPORT_IMMUTABLE_DELETE",
+            "result": "DENIED",
+            "sqlstate": "55000",
+            "diagnostic": "ERROR:  55000: feature 011 evidence rows are immutable\nCONTEXT:  PL/pgSQL function f011_reject_immutable_v1() line 3 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "id": "CONSUMPTION_WRONG_TARGET",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: allergy verification support binding is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_guard_allergy_verification_binding_v1() line 73 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "id": "CONSUMPTION_WRONG_ATTESTOR",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: allergy verification support binding is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_guard_allergy_verification_binding_v1() line 73 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "id": "CONSUMPTION_MISSING_BINDING",
+            "result": "DENIED",
+            "sqlstate": "23514",
+            "diagnostic": "ERROR:  23514: allergy verification support binding is incomplete or mismatched\nCONTEXT:  PL/pgSQL function f011_guard_allergy_verification_binding_v1() line 73 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+          },
+          {
+            "id": "EXACT_RECIPROCAL_CONSUMPTION",
+            "result": "PASS_DEFERRED_CONSTRAINTS_ROLLBACK"
+          },
+          {
+            "id": "SUPPORT_CONSUMED_ONLY_ONCE",
+            "result": "DENIED",
+            "sqlstate": "23505",
+            "diagnostic": "ERROR:  23505: duplicate key value violates unique constraint \"allergy_verification_bindings_evidence_ref_key\"\nDETAIL:  Key (evidence_ref)=(f011c000-0000-4000-8800-000000000001) already exists.\nSCHEMA NAME:  clinical\nTABLE NAME:  allergy_verification_bindings\nCONSTRAINT NAME:  allergy_verification_bindings_evidence_ref_key\nLOCATION:  _bt_check_unique, nbtinsert.c:666\n"
+          },
+          {
+            "id": "FAILED_CONSUMPTION_PRESERVES_UNUSED_SUPPORT",
+            "result": "PASS"
+          }
+        ],
+        "syntheticOnly": true,
+        "provisioningCommittedSeparately": true,
+        "verificationMutationCommitOwnedByAllFiveConsumerProof": "K06",
+        "durableSupportRemainsUnconsumed": true
+      },
+      "consumerEntrypointsStillAbsent": true,
+      "cleanup": {
+        "database": "f011_k05_77226944a8dc411b",
+        "dropped": true,
+        "absenceVerified": true,
+        "forced": false
+      }
+    }
+  ],
+  "k06UnlockedByThisVerification": true,
+  "k07Accepted": false,
+  "syntheticOnly": true
+}

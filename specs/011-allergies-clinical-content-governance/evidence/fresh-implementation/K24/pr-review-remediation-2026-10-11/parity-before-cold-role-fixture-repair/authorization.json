@@ -1,0 +1,60 @@
+{
+  "authorization": "F011_PR_490_REMEDIATION_APPROVED",
+  "authorizer": "Yousef Osama",
+  "record": "specs/011-allergies-clinical-content-governance/decisions/pr-490-remediation-authorized-2026-10-11.md",
+  "recordSha256": "7fc270ebad449f3198fae1fe21ff42fb5bbbb6b7a3479f25d0daafc9dd278220",
+  "componentRoot": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-11/prerequisite-remediation",
+  "historicalEvidencePreserved": true,
+  "noNewPrivileges": true,
+  "mainChange": false,
+  "retainedGatesUnchanged": true,
+  "ancestorAuthorization": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/authorization.json",
+    "sha256": "15deca786329aa6632d92b9317605e5c65edc1e57b8a83b15bb5ecb2bed35b8b"
+  },
+  "generatedChanges": {
+    "packages/contracts/src/feature-011.ts": {
+      "before": "e5320aede7768a5b66797a7802cfc2e831467e520f5fd2f87cd26f078062862c",
+      "after": "da8088c84192407df4742e6215d7d250b998297ac7b2810cbd26ddb7e0c35591"
+    },
+    "packages/api-client/src/feature-011.ts": {
+      "before": "5bc88ac79575a3628d6feee44d1547fa3a8380ae50b41ddec0e9865efa1ab16f",
+      "after": "932487255c33087386c97c01c895a78a073c7c3b7bdd3353234150a37ea1c835"
+    }
+  },
+  "completionBoundary": 92,
+  "sqlChanges": {
+    "supabase/migrations/20261006185239_f011_signing_functions.sql": {
+      "before": "60a3dcbc086b31671142aa7f3b5b6e4029bebf474379d0ca51d8d1e60243ac29",
+      "after": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550"
+    },
+    "supabase/migrations/20261006185240_f011_publication_functions.sql": {
+      "before": "286e48f1cdc1ed64d9bcd6a3f1bde3438779e631615cef264ac452e8a3cad2d1",
+      "after": "976b76033a2a330fe19ddbc2e487981596b331d88c2439d00dcd1ee9b1ea590d"
+    },
+    "supabase/migrations/20261006185236_f011_allergy_functions.sql": {
+      "before": "51c6f718a1ea0bb0947d86265751b1e50e9aed71e93995cc380c0f1c9200f94e",
+      "after": "4ee8c2a5f17fe43f1da5e8f5da42f4dcba1b62b2e35ac05755801a70b306ce86"
+    },
+    "supabase/migrations/20261006185237_f011_release_functions.sql": {
+      "before": "93c4eeee80279066fb90271d4d2ded3fdbbe1df2e6f16b19680065f283283117",
+      "after": "0ddc26b03d353f3fda36780eca8672779722cfc97d212bba3d0a1022eb6e1019"
+    },
+    "supabase/migrations/20261006175942_f011_atomic_receipts.sql": {
+      "before": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d",
+      "after": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929"
+    },
+    "supabase/migrations/20261006185242_f011_receipt_functions.sql": {
+      "before": "850335b5acfc51eed3076a74b07acd3989b2ae08ba926d99f8489ed18ff9ac39",
+      "after": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31"
+    },
+    "supabase/migrations/20261006185241_f011_rls_grants.sql": {
+      "before": "368d9b19425451b1031de65780cb7ff36063eac795d71de925194df069fba26d",
+      "after": "6c7b6ab99d8b8d00ac6699cdfc8a63d88bd41d6f73e2f5ccd36a7244c1df0236"
+    }
+  },
+  "capture": {
+    "head": "bea8fad786b387fe39b7a9aabd2e60dd2df7cc53",
+    "baseline": "670b1e0fe15c719b98179805f2628d1b478a55dd"
+  }
+}

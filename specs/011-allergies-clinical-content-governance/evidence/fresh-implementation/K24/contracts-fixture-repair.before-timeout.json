@@ -1,0 +1,26 @@
+{
+  "checkpoint": "K24",
+  "task": "T091",
+  "result": "PASS_TEST_FIXTURE_REPAIR",
+  "capturedAt": "2026-10-09T16:38:34.389Z",
+  "defect": "Current Roadmap copied without exact approved documentation successor and renewal authorization; setup failure obscured intended contract negatives.",
+  "repair": "Copy strict successor inputs, helper and current authorization into disposable mini fixture before applying test mutation. No physical evidence is copied or synthesized as valid.",
+  "file": {
+    "path": "packages/contracts/src/feature-011.test.ts",
+    "sha256": "e89fde905ef390caa73a4d1f8385eb779c668fdbedd594abd898bd5bc27eb54e"
+  },
+  "command": "pnpm --filter @shifaa/contracts test",
+  "tests": 76,
+  "passed": 76,
+  "failed": 0,
+  "log": {
+    "path": "artifacts/feature-011/k24/contracts-fixture-repair.log",
+    "sha256": "238f097c275b2454698e0449a0858b5ee8b1aa18c1a4d418ff79ad4b864dec82"
+  },
+  "originalNegativeAssertionsUnchanged": true,
+  "physicalConsumersRemainDeniedInPreparation": true,
+  "publicContractOrImplementationChanged": false,
+  "pinnedSourceChanged": false,
+  "sourcePinCount": 139,
+  "qualityReview": "Real verifier with isolated filesystem fixture; mutation assertions preserved; no mocks, bypass or runtime evidence fallback."
+}

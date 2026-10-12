@@ -1,0 +1,209 @@
+{
+  "formatVersion": 1,
+  "status": "PLAN_RECOVERY_R2_DRAFT_REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+  "consumptionAllowed": false,
+  "contractId": "SHIFAA-F011-ALLERGY-PROTECTED/1",
+  "facts": {
+    "contractId": "SHIFAA-F011-ALLERGY-FACTS/1",
+    "closedKeys": [
+      "contractId",
+      "substance",
+      "source",
+      "coding",
+      "reaction",
+      "severity",
+      "onset"
+    ],
+    "publicSchemaBindings": {
+      "substance": "Substance",
+      "source": "Source",
+      "coding": "KnownUnknownCoding",
+      "reaction": "KnownUnknownText",
+      "severity": "KnownUnknownText",
+      "onset": "KnownUnknownText"
+    },
+    "unknownOnOmittedOptionalCreation": true,
+    "originalSourceImmutable": true,
+    "correctionsSchema": "AllergyCorrections",
+    "noNewClinicalEnums": true
+  },
+  "reason": {
+    "contractId": "SHIFAA-F011-ALLERGY-REASON/1",
+    "closedKeys": [
+      "contractId",
+      "reason"
+    ],
+    "reasonSchema": "VerifyAllergyRequest.properties.reason"
+  },
+  "canonicalJson": {
+    "keyOrder": "Unicode scalar ascending, recursive",
+    "arrayOrder": "preserved",
+    "encoding": "strict UTF-8",
+    "whitespace": "none outside strings; no BOM/terminator",
+    "strings": "quote/backslash escape; short b/f/n/r/t; other U+0000-001F lowercase u00xx; other Unicode scalar literal; no normalization",
+    "integers": "minimal decimal ASCII",
+    "rejection": [
+      "duplicate/unknown fields",
+      "unpaired surrogates/invalid UTF-8",
+      "noncanonical serialized bytes",
+      "floats in these schemas"
+    ]
+  },
+  "protectedFacts": {
+    "contractId": "SHIFAA-F011-ALLERGY-PROTECTED/1",
+    "algorithm": "AES-256-GCM",
+    "closedFields": [
+      "contractId",
+      "keyRef",
+      "nonce",
+      "ciphertext",
+      "authTag"
+    ],
+    "nonceBytes": 12,
+    "tagBytes": 16,
+    "ciphertextMinBytes": 1,
+    "keyRef": "immutable/versioned exact external key reference; trusted producer rejects mutable aliases; opaque nonempty no-NUL strict UTF-8 to SQL",
+    "columns": {
+      "contractId": [
+        "facts_contract_id",
+        "text"
+      ],
+      "keyRef": [
+        "facts_key_ref",
+        "text"
+      ],
+      "nonce": [
+        "facts_nonce",
+        "bytea"
+      ],
+      "ciphertext": [
+        "facts_ciphertext",
+        "bytea"
+      ],
+      "authTag": [
+        "facts_auth_tag",
+        "bytea"
+      ]
+    },
+    "byteCarrier": "lowercase even-length hex decoded once; no serialized durable envelope",
+    "sqlCrypto": false,
+    "keyMaterialInSql": false
+  },
+  "protectedReason": {
+    "contractId": "SHIFAA-F011-ALLERGY-PROTECTED/1",
+    "algorithm": "AES-256-GCM",
+    "closedFields": [
+      "contractId",
+      "keyRef",
+      "nonce",
+      "ciphertext",
+      "authTag"
+    ],
+    "nonceBytes": 12,
+    "tagBytes": 16,
+    "ciphertextMinBytes": 1,
+    "keyRef": "immutable/versioned exact external key reference; trusted producer rejects mutable aliases; opaque nonempty no-NUL strict UTF-8 to SQL",
+    "columns": {
+      "contractId": [
+        "reason_contract_id",
+        "text"
+      ],
+      "keyRef": [
+        "reason_key_ref",
+        "text"
+      ],
+      "nonce": [
+        "reason_nonce",
+        "bytea"
+      ],
+      "ciphertext": [
+        "reason_ciphertext",
+        "bytea"
+      ],
+      "authTag": [
+        "reason_auth_tag",
+        "bytea"
+      ]
+    },
+    "byteCarrier": "lowercase even-length hex decoded once; no serialized durable envelope",
+    "sqlCrypto": false,
+    "keyMaterialInSql": false
+  },
+  "physicalTable": "clinical.allergies",
+  "nullability": {
+    "facts": "all NOT NULL",
+    "reason": "all NULL only initial self_reported version 1; all NOT NULL every verification revision"
+  },
+  "aad": {
+    "contractId": "SHIFAA-F011-ALLERGY-AAD/1",
+    "prefix": "SHIFAA-F011-ALLERGY-AAD/1;",
+    "frameOrder": [
+      "resourceType",
+      "allergyId",
+      "revisionId",
+      "revisionVersion",
+      "fieldId",
+      "keyRef"
+    ],
+    "resourceType": "clinical.allergy_revision",
+    "fields": [
+      "facts",
+      "verification_reason"
+    ],
+    "framing": "S<minimal UTF-8 octet length>:<exact UTF-8 payload>,",
+    "frameCount": 6,
+    "nullAllowed": false,
+    "reconstruction": [
+      "allergy_id",
+      "id",
+      "version",
+      "constant fieldId",
+      "envelope keyRef"
+    ],
+    "excluded": [
+      "current_head",
+      "current_status",
+      "workflowVersion",
+      "current_authority"
+    ]
+  },
+  "trustedPreparation": {
+    "closedKeys": [
+      "allergyId",
+      "revisionId",
+      "revisionVersion",
+      "previousRevisionId",
+      "protectedFacts",
+      "protectedReason"
+    ],
+    "externalCallerAuthored": false,
+    "create": "fresh allergyId/revisionId, version 1, predecessor/reason null",
+    "verify": "fresh revisionId, predecessor current ID, version current+1, both fresh protected envelopes",
+    "sqlAuthority": "locked head/If-Match/exact predecessor/version/allowed transition/current authority; terminal error forbidden"
+  },
+  "ownership": {
+    "producer": "trusted service Protection Port outside DB locks",
+    "consumer": "narrow non-owner forced-RLS SQL",
+    "decrypt": "authorized exact revision application boundary only",
+    "physical": "synthetic both-runtime structure/nullability/immutability/CAS and receipt atomicity only",
+    "realProducer": "exact plaintext/AAD/AES-GCM/key/context/tamper/nonce/preserve/correct + both-runtime SQL composition"
+  },
+  "noExternalWorkUnderLocks": true,
+  "noPlaintextDurableSinks": true,
+  "evidenceFoundation": {
+    "contractId": "SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1",
+    "profile": "verified-evidence-binding-v1.json",
+    "status": "REVIEW_REQUIRED_IMPLEMENTATION_PAUSED",
+    "existingMembersChanged": false,
+    "privatePreparation": {
+      "name": "VerifyAllergyPhysicalPreparation",
+      "members": [
+        "protectedRevision",
+        "verifiedEvidence"
+      ],
+      "bindingProfiles": [
+        "allergy_verification"
+      ]
+    }
+  }
+}

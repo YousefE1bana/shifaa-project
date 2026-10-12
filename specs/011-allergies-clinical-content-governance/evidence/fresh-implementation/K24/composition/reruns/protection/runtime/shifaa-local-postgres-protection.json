@@ -1,0 +1,265 @@
+{
+  "result": "PASS",
+  "runtime": "shifaa-local-postgres",
+  "serverVersion": "17.11",
+  "actualOnlineRole": "shifaa_api",
+  "migrations": {
+    "supabase/migrations/20261006175926_f011_allergy_revisions.sql": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+    "supabase/migrations/20261006175932_f011_content_artifacts.sql": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+    "supabase/migrations/20261006175937_f011_governance_evidence.sql": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+    "supabase/migrations/20261006175942_f011_atomic_receipts.sql": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929",
+    "supabase/migrations/20261006185236_f011_allergy_functions.sql": "64d10b422ab4711a3f327d2e8984718bc3c8e2149aa76e0dbc36fbbe2b1e56b3",
+    "supabase/migrations/20261006185237_f011_release_functions.sql": "3871489179a618a277c598c142786343514c738751e4b03b443352ba047b34a9",
+    "supabase/migrations/20261006185239_f011_signing_functions.sql": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550",
+    "supabase/migrations/20261006185240_f011_publication_functions.sql": "1b24172abd84dc8ba4b7ce33970433b5af174760a2a95f85f099402968d11297",
+    "supabase/migrations/20261006185241_f011_rls_grants.sql": "6c7b6ab99d8b8d00ac6699cdfc8a63d88bd41d6f73e2f5ccd36a7244c1df0236",
+    "supabase/migrations/20261006185242_f011_receipt_functions.sql": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31"
+  },
+  "sourceDigests": {
+    "tools/run-feature-011-protection-test.mjs": "0e57d04e9dc9c6103c53683ea1bd76538e5e76637a04323413206d62bb28bd82",
+    "tools/feature-011-protection-fixtures.mjs": "dbdd535c5381788f745b4b5717b4d982b06474aaa939287e7f499da8362b89bb",
+    "services/api/src/modules/feature-011/protection.ts": "090e7be543396eb3e92f0923ae3915f9bdcc55abcb379e5e55322cddd7b899a3",
+    "services/api/src/modules/feature-011/release-protection.ts": "39c6299f50a8b089c2b3aeb2451be772a7385b31e0070e90ac8d32d9f6cf0982",
+    "services/api/src/modules/feature-011/allergy-protection.ts": "2a5a2e4ec4928694fabc9be51e3f73f9f231f993151e044be0371f49758d971f",
+    "services/api/src/modules/feature-011/mutation-receipts.ts": "a7995e1adaeec30c0ac41cb93a8af7ec8a4aa4050faf640fa61a109c62603ccc",
+    "services/api/src/modules/feature-011/response-composition.ts": "2dee45d01bf4dda00cbe07f35781e174843d7493fad53a1b7d9f46eaaf7de161",
+    "services/api/src/adapters/postgres/feature-011-receipts.ts": "4b6c3a0b710bbb1211eab60b74230d0fd698b4f70e073e17082e9ebc076b3f52"
+  },
+  "components": [
+    {
+      "id": "ALG_NO_GUC_ROLE_AUTHORITY",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "ALG_CLOSED_PROTECTION",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "22023"
+    },
+    {
+      "id": "ALG_CREATE_FINALIZED",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_DOMAIN_ONLY_COMMIT",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "23514"
+    },
+    {
+      "id": "RECEIPT_CLOSED_ENVELOPE_ROLLBACK",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "22023"
+    },
+    {
+      "id": "RECEIPT_OTHER_PRINCIPAL_DENIED",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "ALG_CURRENT_READ",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_CLN_CURRENT_READ",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_DEL_CURRENT_READ",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_DELEGATE_READ_ONLY",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "ALG_PATIENT_CANNOT_VERIFY",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "ALG_EXACT_SUPPORT_SOURCE",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "23514"
+    },
+    {
+      "id": "ALG_APPEND_FINALIZED",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_APPEND_PROVENANCE",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_HISTORY_KEYSET_CONTINUATION",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_CURSOR_FILTER_BINDING",
+      "result": "DENIED_INVALID_CURSOR",
+      "sqlstate": "22023"
+    },
+    {
+      "id": "RECEIPT_ORIGINAL_TUPLE_AFTER_RESOURCE_AND_LANGUAGE_CHANGE",
+      "result": "PASS"
+    },
+    {
+      "id": "RECEIPT_REPLAY_NO_SECOND_EFFECT",
+      "result": "PASS"
+    },
+    {
+      "id": "RECEIPT_SAME_KEY_CHANGED_REQUEST_HASH_DENIED",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "23505"
+    },
+    {
+      "id": "ALG_CLINICIAN_ORIGINAL_PROVENANCE",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_STALE_CAS",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "40001"
+    },
+    {
+      "id": "ALG_ENTERED_IN_ERROR_WITHIN_VERIFY",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_TERMINAL_APPEND_DENIED",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "23514"
+    },
+    {
+      "id": "ALG_CORRECTION_NEW_SELF_REPORTED_ASSERTION",
+      "result": "PASS"
+    },
+    {
+      "id": "ALG_NONTERMINAL_CORRECTION_DENIED",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "23514"
+    },
+    {
+      "id": "CONTENT_DECLARED_DIGEST_EQUALITY",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "23514"
+    },
+    {
+      "id": "CONTENT_FULL_MATERIAL_PROFILE",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "23514"
+    },
+    {
+      "id": "CONTENT_DRAFT_FINALIZED",
+      "result": "PASS"
+    },
+    {
+      "id": "CONTENT_SQL_OWNED_FROZEN_DIGEST",
+      "result": "PASS"
+    },
+    {
+      "id": "SIGN_EXACT_CURRENT_BASIS",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "SIGN_CREATOR_CANNOT_CLAIM_SIGNER",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "SIGN_PHYSICIAN_FINALIZED",
+      "result": "PASS"
+    },
+    {
+      "id": "SIGN_PHARMACIST_FINALIZED",
+      "result": "PASS"
+    },
+    {
+      "id": "SIGN_IMMUTABLE_50_COLUMN_BASIS",
+      "result": "PASS"
+    },
+    {
+      "id": "CONTENT_SAME_VERSION_COMPETING_DRAFT",
+      "result": "PASS"
+    },
+    {
+      "id": "SIGN_VALID_REJECTION_SAME_VERIFIED_BASIS",
+      "result": "PASS"
+    },
+    {
+      "id": "RECEIPT_VALID_REJECTION_REPLAY",
+      "result": "PASS"
+    },
+    {
+      "id": "PUB_EXACT_ADMISSION_REQUIRED",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "PUB_CREATOR_INDEPENDENCE",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "PUB_FINALIZED",
+      "result": "PASS"
+    },
+    {
+      "id": "CLINIC_PUBLISHED_METADATA_VISIBLE",
+      "result": "PASS"
+    },
+    {
+      "id": "CLINIC_PRIVATE_DATA_ABSENT",
+      "result": "PASS"
+    },
+    {
+      "id": "PUB_NO_REHABILITATION_AFTER_BASIS_VERSION_CHANGE",
+      "result": "PASS"
+    },
+    {
+      "id": "RECEIPT_CURRENT_SIGNER_AUTHORITY_LOSS_DENIED",
+      "result": "DENIED_WITHOUT_EFFECT",
+      "sqlstate": "42501"
+    },
+    {
+      "id": "RECEIPT_ALL_FIVE_EXACT_COMPLETION_TUPLE",
+      "result": "PASS"
+    }
+  ],
+  "realMutationOperations": [
+    "createAllergy",
+    "verifyAllergy",
+    "createClinicalContentRelease",
+    "signClinicalContentRelease",
+    "publishClinicalContentRelease"
+  ],
+  "faultCases": 44,
+  "replayCases": 15,
+  "commitUnknownCases": 11,
+  "unknownLookupCases": 11,
+  "replayCryptoNegatives": 65,
+  "sqlArgumentChecks": 4478,
+  "durableCounts": {
+    "allergies": 5,
+    "releases": 2,
+    "signatures": 3,
+    "audit": 11,
+    "outbox": 11,
+    "receipts": 11,
+    "obligations": 11,
+    "idempotency": 11
+  },
+  "keyPreparations": 190,
+  "keyReleases": 190,
+  "externalNetworkKmsUnderLocks": 0,
+  "roundtrip": "Exact intended frozen neutral BODY and closed allergy plaintext; every complete response authenticated in actual SQL receipt",
+  "syntheticAuthorityAndEvidenceOnly": true,
+  "productionKmsAccepted": false,
+  "cleanup": {
+    "database": "f011_k08_37a31a5ab98ce510",
+    "dropped": true,
+    "absenceVerified": true,
+    "forced": false
+  }
+}

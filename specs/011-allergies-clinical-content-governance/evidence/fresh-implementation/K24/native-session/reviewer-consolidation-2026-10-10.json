@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-10-10T09:46:13.344Z",
+  "result": "ENGINEERING_REVIEWER_REPORT_RECORDED_FORMAL_DISPOSITION_PENDING",
+  "observations": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/reviewer-observation-2026-10-10-400-percent-confirmed.json",
+      "sha256": "4c605532a22380879db57fc31d7f9d4bafbc2faf0fbc3b719e5c5d31838838a0"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/reviewer-observation-2026-10-10-access-readability.json",
+      "sha256": "59c5f23d8f6dad5bca8a4bd34c822264a53935775c479009fb82078a32b71277"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/reviewer-observation-2026-10-10-enlarged-screen.json",
+      "sha256": "cabbb6e7d91c4fa975fb9374d3a465606ecb2ef58ce0c2097b4b3f34324b3a19"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/reviewer-observation-2026-10-10-review-cancel.json",
+      "sha256": "77d89633e06b45a1ba0de61a79a1b34a16c8446ba29e476af73032263942ada1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/reviewer-observation-2026-10-10-remaining-checks.json",
+      "sha256": "5d2bf41e74c31440eb2d1b09964bf69df245832fda7064780cdc895d8adb7c97"
+    }
+  ],
+  "browserSupplement": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/ui-gap-scenarios/execution.json",
+    "sha256": "16b8f3f8f0d8cf53c5939ef1652eae90ba90af301bb3b17d7b3370bcb055b413",
+    "result": "PASS_SUPPLEMENTARY_TRANSPORT_SCENARIOS",
+    "cases": 36,
+    "limitations": "HTTP fixture reactions, not independent SQL/Auth cause or native AT evidence"
+  },
+  "evidenceReferenceVerification": {
+    "checked": 97,
+    "mismatches": []
+  },
+  "currentInputVerification": {
+    "count": 141,
+    "drift": []
+  },
+  "fullVerify": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/full-verify.json",
+    "sha256": "f247792cef5a17625bdf21f30d6a8b525804683785f676f8b6f1467aab2f7c73",
+    "result": "PASS",
+    "exitCode": 0,
+    "finishedAt": "2026-10-10T07:22:02.098Z",
+    "log": {
+      "path": "artifacts/feature-011/k24/pnpm-verify.log",
+      "sha256": "c2105495c56c4b63e572d1bfa94a285885cd2aed29632f1983dec006fc5b405e"
+    }
+  },
+  "ledgerHashes": {
+    "tasks": "4d7d5b36a61b2b7410ca93be8404f446e53f83f7d52d10043de963e6ca7ff1f8",
+    "taskMap": "9ee0719a82bf0df827c5c8803b9229a5de0558a354ad70204323a6fba4d5fe6d"
+  },
+  "remainingFormalLimits": [
+    "OPEN-UX-002 still requires separate attributable bounded owner disposition and review of evidence detail; no final design acceptance inferred",
+    "OPEN-TECH-003 formal performance reference profile remains unapproved; local engineering measurements do not select deployment/network/load profile",
+    "Reviewer summary is not a per-case speech transcript, device settings record or independently verified 99-state native matrix",
+    "T092 remains held by explicit prior user instruction; no final-gates artifact created"
+  ],
+  "historicalRecords": "Preserved; later reports supplement older NOT EXECUTED and gap summaries rather than rewriting capture history",
+  "T088_T092": "UNCHANGED_UNCHECKED",
+  "issues": "No issue mutations",
+  "T092": "NOT_EXECUTED",
+  "K24": "NOT_ACCEPTED",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd"
+}

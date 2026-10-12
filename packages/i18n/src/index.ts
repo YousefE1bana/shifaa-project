@@ -1,4 +1,5 @@
 import { catalogs, type Locale, type MessageKey } from './catalogs.ts';
+export { allergyCopy, allergyDate, verificationCopy, contentCopy } from './feature-011.ts';
 
 export { auditAdminArEG, auditAdminEnEG } from './audit-admin.ts';
 export {
@@ -34,3 +35,5 @@ export const privilegedStepUpMessages = (locale: Locale) => ({
 
 /** Isolate mixed-direction values such as masked IDs and request references. */
 export const isolateLtr = (value: string) => `\u2066${value}\u2069`;
+
+export { clinicalStatusCopy } from './feature-011-status.ts';

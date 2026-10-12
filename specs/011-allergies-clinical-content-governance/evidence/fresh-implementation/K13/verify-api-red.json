@@ -1,0 +1,16 @@
+{
+  "checkpoint": "K13",
+  "task": "T051",
+  "result": "VALID_RED",
+  "count": 25,
+  "failed": 25,
+  "setupFailures": 0,
+  "reason": "Missing existing verifyAllergy application composition. Real AES fixtures initialized; no tooling, syntax or SQL failure counted.",
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/checks/api-red.log",
+    "sha256": "5dc50546c10ea757bb145b64899fe21ecb139438b54169589b4119cf8a0014f4"
+  },
+  "testSha256": "743b2e95477cd2bc015a9ed993f0dc58ad4638189613cc4fd2cd44ac138d9fea",
+  "acceptance": "PENDING_PRODUCT_OWNER",
+  "syntheticEngineeringOnly": true
+}

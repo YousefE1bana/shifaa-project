@@ -1,0 +1,70 @@
+{
+  "result": "PASS_BROWSER_PREFLIGHT_ONLY",
+  "capturedAt": "2026-10-10T09:09:15.988Z",
+  "browser": "154.0.8037.93",
+  "records": [
+    {
+      "locale": "ar-EG",
+      "result": "PASS_BROWSER_PREFLIGHT_ONLY",
+      "secureContext": true,
+      "readReviewCancel": true,
+      "focusReturn": true,
+      "api": [
+        {
+          "path": "/v1/auth/session/refresh",
+          "status": 200
+        },
+        {
+          "path": "/v1/people/me",
+          "status": 200
+        },
+        {
+          "path": "/v1/people/me",
+          "status": 200
+        },
+        {
+          "path": "/v1/patients/f0110000-0000-4000-8100-000000000001/allergies",
+          "status": 200
+        }
+      ],
+      "screenshot": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/patient-ar-EG-preflight.png",
+        "sha256": "1e7cc738f35b91c03f0edabc67a1b931f55ea7b127d565edfb539affececd116"
+      },
+      "nativeScreenReader": false
+    },
+    {
+      "locale": "en-EG",
+      "result": "PASS_BROWSER_PREFLIGHT_ONLY",
+      "secureContext": true,
+      "readReviewCancel": true,
+      "focusReturn": true,
+      "api": [
+        {
+          "path": "/v1/auth/session/refresh",
+          "status": 200
+        },
+        {
+          "path": "/v1/people/me",
+          "status": 200
+        },
+        {
+          "path": "/v1/people/me",
+          "status": 200
+        },
+        {
+          "path": "/v1/patients/f0110000-0000-4000-8100-000000000001/allergies",
+          "status": 200
+        }
+      ],
+      "screenshot": {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/patient-en-EG-preflight.png",
+        "sha256": "04cffe1a9e53ee82cf22a124f88bdce9218380eb3a270fdae736f835a62f1f5a"
+      },
+      "nativeScreenReader": false
+    }
+  ],
+  "nativeResults": "NOT_EXECUTED",
+  "emulatedViewport": "412x915; not physical-device acceptance",
+  "certificateException": "Only this isolated Playwright context; no device trust-store change"
+}

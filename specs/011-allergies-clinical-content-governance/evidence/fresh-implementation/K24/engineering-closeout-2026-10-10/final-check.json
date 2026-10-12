@@ -1,0 +1,19 @@
+{
+  "capturedAt": "2026-10-10T09:53:17.897Z",
+  "result": "PASS",
+  "errors": [],
+  "manifestReferences": 8,
+  "gateEvidenceReferences": 8,
+  "pinnedInputs": 141,
+  "ledgerUnchanged": true,
+  "T088_T092": "UNCHECKED",
+  "T092": "OWNER_DISPOSITION_REQUESTS_RECORDED_PENDING_ACCEPTANCE",
+  "gitStatus": {
+    "trackedModified": 40,
+    "untrackedEntries": 130
+  },
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "noCommitPushPr": true
+}

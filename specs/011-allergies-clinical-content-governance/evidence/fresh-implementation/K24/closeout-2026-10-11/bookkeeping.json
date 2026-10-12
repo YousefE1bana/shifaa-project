@@ -1,0 +1,33 @@
+{
+  "result": "PASS_ENGINEERING_COMPLETION_ONLY",
+  "tasksChanged": ["T088", "T089", "T090", "T091", "T092"],
+  "tasksChecked": 92,
+  "tasksUnchecked": 0,
+  "statusOnlyChanges": true,
+  "taskDefinitionsDependenciesRequirementsUnchanged": true,
+  "before": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/tasks.md",
+      "sha256": "4d7d5b36a61b2b7410ca93be8404f446e53f83f7d52d10043de963e6ca7ff1f8"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+      "sha256": "9ee0719a82bf0df827c5c8803b9229a5de0558a354ad70204323a6fba4d5fe6d"
+    }
+  ],
+  "after": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/tasks.md",
+      "sha256": "3d5229dbe80618d78100921e32ed90bf6b85b8ffa3906834dda58618ecd210ad"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+      "sha256": "d2a03aac8f387db8d8c2666b45f979ebcf74276cf9c001391bf6839a14e4b253"
+    }
+  ],
+  "currentParityAfterLedgerUpdate": "PASS",
+  "issuesChanged": false,
+  "issuesRemainOpen": [485, 486, 487, 488, 489],
+  "retainedGatesClosed": [],
+  "T092Reexecuted": false
+}

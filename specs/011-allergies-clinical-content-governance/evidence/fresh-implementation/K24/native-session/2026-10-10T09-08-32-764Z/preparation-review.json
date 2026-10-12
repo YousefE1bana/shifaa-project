@@ -1,0 +1,32 @@
+{
+  "capturedAt": "2026-10-10T09:12:11.957Z",
+  "result": "ENGINEERING_SETUP_PASS_NATIVE_OBSERVATIONS_PENDING",
+  "transportTests": 2,
+  "browserLocalePreflights": 2,
+  "fixtureServer": {
+    "path": "artifacts/feature-011/k24/native-session/patient-fixture-server.mjs",
+    "sha256": "682a493dc9999c7c562fe524ebd7103fa9ab18435da9cc27ad72484662aa972b"
+  },
+  "currentTestSuite": {
+    "path": "artifacts/feature-011/k24/native-session/patient-fixture-server.test.mjs",
+    "sha256": "7ff43a6b460dc72c7e967cc6a821c772b2b9d5eb397ff88f7a776601623dcbff"
+  },
+  "initialSetupTestHash": "Historical startup snapshot; strengthened device-denial test added afterwards without changing running server",
+  "browserProof": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/browser-preflight.json",
+    "sha256": "e8d1428de68e47ab4fefc9c7068e0394701e53525e8657f4539d64c0ea3f3aac"
+  },
+  "firstCase": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/../first-patient-case.md",
+    "sha256": "e8c25c6ddd7420b2f382780d9a3bc039d38765e2942420166b5fc31b79e2fede"
+  },
+  "reviews": {
+    "cleanCodeGuard": "Small isolated HTTP/static boundary, exact peer/host/origin restrictions; no product imports or external connections",
+    "testGuard": "Black-box HTTPS request and real unchanged UI/browser checks; no native PASS inferred",
+    "docsGuard": "URLs, public certificate identity, source/evidence links and case labels verified"
+  },
+  "nativeTests": "NOT_EXECUTED",
+  "T092": "NOT_EXECUTED",
+  "gates": "UNCHANGED_OPEN",
+  "K24": "BLOCKED"
+}

@@ -1,0 +1,10 @@
+D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\run-feature-011-postgres-test.mjs:175
+    throw new Error('Pinned project-local pnpm exec supabase 2.113.0 is required.');
+          ^
+
+Error: Pinned project-local pnpm exec supabase 2.113.0 is required.
+    at harnessInputs (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\tools\run-feature-011-postgres-test.mjs:175:11)
+    at runPhysicalGreen (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-638a96b7-8fdf-41c0-8dc1-bf1e00c59746.mjs:216:18)
+    at async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/.f011-k22-638a96b7-8fdf-41c0-8dc1-bf1e00c59746.mjs:345:15
+
+Node.js v24.18.0

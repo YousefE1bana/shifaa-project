@@ -1,0 +1,119 @@
+{
+  "task": "T030",
+  "result": "VALID_RED",
+  "tests": 32,
+  "passed": 7,
+  "failed": 25,
+  "reason": "Compilable explicit missing producer behavior. Every failing assertion reached F011_K08_NOT_IMPLEMENTED; no import/setup/SQL errors. Negative scaffold tests that throw are not acceptance evidence.",
+  "sourceDigests": {
+    "services/api/src/modules/feature-011/allergy-protection.ts": "7a6acf4cb30c64d67b55ca1e69bd3cd8669dc529e071129c936304440bc8234f",
+    "services/api/src/modules/feature-011/mutation-receipts.ts": "87cab170663a9edfe46102b92b6424f6fedc6225407005f14f561cf4cf9d20a6",
+    "services/api/src/modules/feature-011/protection.test.ts": "3e21de44c91e9e06aa9a7a5d5bed5c33a31f91f51c6e54947a91d0a68093f077",
+    "services/api/src/modules/feature-011/protection.ts": "3357df9f4722eaa819e829cf94928e1f5c3f38344571d1b286107306e577efaa",
+    "services/api/src/modules/feature-011/receipts.test.ts": "61d2b990c3c5f0c9fc0d8e17952cfdcc6446ade00c059a319313ac0567b6305a",
+    "services/api/src/modules/feature-011/release-protection.ts": "e646fe22e00bce729b809b08737d658104b49cbe27aff228c4909b239688c611"
+  },
+  "failures": [
+    {
+      "test": "K08 frozen protection contracts and real local AES ALG-P01",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES ALG-P02",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES ALG-P03",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES ALG-A01",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES ALG-A02",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES ALG-A03",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES ALG-A04",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES AAD-P01",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES AAD-P02",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES AAD-P03",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES AAD-P04",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES AAD-P05",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES AAD-P06",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES AAD-P07",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES Unicode scalar ordering and exact strings",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES real BODY roundtrip, intended association and opaque capability",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES fresh nonces, tag/cipher/key/version/context substitution deny",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "K08 frozen protection contracts and real local AES separate fresh allergy facts/reason and authorized reconstruction",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "RCP-P01 exact generated body bytes/AAD/header tuple",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "RCP-P02 exact generated body bytes/AAD/header tuple",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "RCP-P03 exact generated body bytes/AAD/header tuple",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "RCP-P04 exact generated body bytes/AAD/header tuple",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "RCP-P05 exact generated body bytes/AAD/header tuple",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "receipt local AES only; exact tuple/context/version tamper denial",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    },
+    {
+      "test": "serializer failure rolls back all components and disposes capability",
+      "reason": "F011_K08_NOT_IMPLEMENTED"
+    }
+  ],
+  "command": "pnpm --filter @shifaa/api exec vitest run src/modules/feature-011/protection.test.ts src/modules/feature-011/receipts.test.ts"
+}

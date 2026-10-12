@@ -1,0 +1,18 @@
+{
+  "checkpoint": "K17",
+  "task": "T063",
+  "result": "VALID_RED",
+  "runtime": "PostgreSQL 17.11",
+  "scenario": "TWO_DISTINCT_VALID_EXACT_ADMISSIONS",
+  "actualCurrentlyEligible": true,
+  "expectedCurrentlyEligible": false,
+  "reason": "EXISTS accepts ambiguous admission instead of exactly one current binding",
+  "setupFailure": false,
+  "diagnostic": {
+    "path": "artifacts/feature-011/k18/k17-renewed-boundary.log",
+    "sha256": "207a3ee4a1ba987a31864dd76579551f4d53d5b5a67b2265c11f95e3db348e93"
+  },
+  "beforeSqlSha256": "34584f7d9de0b72cf35900cb1f0b817177be57a761e9cc22454685bd481e497d",
+  "afterSqlSha256": "1b24172abd84dc8ba4b7ce33970433b5af174760a2a95f85f099402968d11297",
+  "historicalAcceptancePreserved": true
+}

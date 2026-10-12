@@ -1,0 +1,26 @@
+{
+  "recordedAt": "2026-10-11T03:58:10.9935736Z",
+  "type": "READ_ONLY_LOCAL_CONFIGURATION_OBSERVATION_NOT_NATIVE_EXECUTION",
+  "nvdaProcessRunning": false,
+  "config": {
+    "path": "C:\\Users\\Yousef\\AppData\\Roaming\\nvda\\nvda.ini",
+    "sha256": "c573e37a32ba0644cd8a1d78722295cbeb28b38c12209b99c7025250c66a6f5d",
+    "lastWriteUtc": "2026-10-11T03:41:27.6624682Z",
+    "selectedNonsecretLines": [
+      "[[speech]]",
+      "[general]",
+      "language = en",
+      "[speech]",
+      "synth = oneCore",
+      "[[oneCore]]",
+      "voice = HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Speech_OneCore\\Voices\\Tokens\\MSTTS_V110_enUS_DavidM",
+      "volume = 100"
+    ],
+    "scope": "Only language and speech configuration keys selected; full user configuration is not copied."
+  },
+  "androidSdkDefaultAdbPresent": false,
+  "nativeUiControlAvailable": false,
+  "nativeSpeechFocusTestExecuted": false,
+  "formalAccessibilityAcceptance": false,
+  "limitation": "Saved preferences are not a physical-device test or proof of currently spoken output. Missing settings are not inferred from defaults. Native computer APIs are disabled in the available UI tool."
+}

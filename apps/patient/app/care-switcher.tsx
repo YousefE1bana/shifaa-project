@@ -6,6 +6,13 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { createPatientFamilyClient, syntheticFamilyIds } from '../src/family-care-api';
 import { usePatientLocaleController } from '../src/locale-context';
+import { patientOnboardingApi } from '../src/identity-onboarding-api';
+import {
+  currentManagedCareContext,
+  revalidateManagedCareContext,
+} from '../src/managed-care-context';
+import { resolvePatientApiBaseUrl } from '../src/patient-api-base-url';
+import { patientPlatform } from '../src/patient-auth-store';
 
 type State =
   | 'loading'
@@ -23,12 +30,36 @@ export default function CareSwitcher() {
   const [state, setState] = useState<State>('loading');
   const [patientId, setPatientId] = useState<string>(syntheticFamilyIds.selfPatient);
   const [confirmed, setConfirmed] = useState(false);
+  const [managedSelection, setManagedSelection] = useState(currentManagedCareContext());
+  const [ownManagedId, setOwnManagedId] = useState('');
   const mounted = useRef(true);
   useEffect(() => {
     mounted.current = true;
-    createPatientFamilyClient(locale)
-      .listRelationships(syntheticFamilyIds.selfPatient)
-      .then(() => mounted.current && setState('ready'))
+    patientOnboardingApi
+      .getProfile()
+      .then(async (profile) => {
+        const prior = currentManagedCareContext();
+        if (prior) {
+          const baseUrl = resolvePatientApiBaseUrl({
+            platform: patientPlatform,
+            configuredBaseUrl: process.env['EXPO_PUBLIC_API_BASE_URL'],
+            ...(typeof location !== 'undefined' ? { webOrigin: location.origin } : {}),
+          });
+          const context = await revalidateManagedCareContext(locale, baseUrl);
+          if (mounted.current) {
+            setManagedSelection(context);
+            setPatientId(context.managedPatientId);
+          }
+        }
+        if (profile.managedPatientId) {
+          if (mounted.current) {
+            setOwnManagedId(profile.managedPatientId);
+            if (!prior) setPatientId(profile.managedPatientId);
+          }
+          await createPatientFamilyClient(locale).listRelationships(profile.managedPatientId);
+        } else if (!prior) throw Error('patient-context-required');
+        if (mounted.current) setState('ready');
+      })
       .catch(
         (error: unknown) =>
           mounted.current && setState(error instanceof TypeError ? 'offline' : 'error'),
@@ -37,7 +68,7 @@ export default function CareSwitcher() {
       mounted.current = false;
     };
   }, [locale]);
-  const dependent = patientId === syntheticFamilyIds.dependentPatient;
+  const dependent = patientId !== ownManagedId;
   const patientName = dependent
     ? locale === 'ar-EG'
       ? 'مريض اصطناعي تابع'
@@ -62,28 +93,30 @@ export default function CareSwitcher() {
         {translate(locale, 'family.context.title')}
       </Text>
       <View accessibilityRole="radiogroup" style={{ gap: 12 }}>
-        {[syntheticFamilyIds.selfPatient, syntheticFamilyIds.dependentPatient].map((id) => (
-          <Pressable
-            key={id}
-            accessibilityRole="radio"
-            accessibilityState={{ checked: patientId === id }}
-            onPress={() => {
-              setPatientId(id);
-              setConfirmed(false);
-            }}
-            style={{ minHeight: 44, borderWidth: 1, padding: 12 }}
-          >
-            <Text>
-              {id === syntheticFamilyIds.selfPatient
-                ? locale === 'ar-EG'
-                  ? 'الرعاية الذاتية الاصطناعية'
-                  : 'Synthetic self care'
-                : locale === 'ar-EG'
-                  ? 'رعاية تابع اصطناعي'
-                  : 'Synthetic dependent care'}
-            </Text>
-          </Pressable>
-        ))}
+        {[ownManagedId, managedSelection?.managedPatientId]
+          .filter((id): id is string => !!id)
+          .map((id) => (
+            <Pressable
+              key={id}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: patientId === id }}
+              onPress={() => {
+                setPatientId(id);
+                setConfirmed(false);
+              }}
+              style={{ minHeight: 44, borderWidth: 1, padding: 12 }}
+            >
+              <Text>
+                {id === ownManagedId
+                  ? locale === 'ar-EG'
+                    ? 'الرعاية الذاتية الاصطناعية'
+                    : 'Synthetic self care'
+                  : locale === 'ar-EG'
+                    ? 'رعاية تابع اصطناعي'
+                    : 'Synthetic dependent care'}
+              </Text>
+            </Pressable>
+          ))}
       </View>
       <FamilyContextBanner
         patientName={patientName}
@@ -126,6 +159,18 @@ export default function CareSwitcher() {
       >
         <Text>{translate(locale, 'nav.continue')}</Text>
       </Pressable>
+      {managedSelection && patientId === managedSelection.managedPatientId && (
+        <Pressable
+          accessibilityRole="button"
+          disabled={!confirmed || state !== 'ready'}
+          onPress={() =>
+            router.push({ pathname: '/records', params: { actingRole: managedSelection.role } })
+          }
+          style={{ minHeight: 48 }}
+        >
+          <Text>{locale === 'ar-EG' ? 'عرض السجل للتابع' : 'View managed records'}</Text>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }

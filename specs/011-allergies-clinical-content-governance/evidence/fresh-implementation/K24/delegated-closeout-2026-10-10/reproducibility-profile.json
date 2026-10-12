@@ -1,0 +1,229 @@
+{
+  "id": "F011-LOCAL-SERVER-ENGINEERING-REPEAT-3",
+  "capturedAt": "2026-10-10",
+  "status": "EXECUTION PROFILE; NOT FORMAL ACCEPTANCE",
+  "scope": "Feature 011 local synthetic server workload only",
+  "decisionSource": "technical-selection.json; owner authorization permits this bounded engineering procedure, not a gate disposition",
+  "repeatProcedure": {
+    "command": "node artifacts/feature-011/k24/delegated-closeout/run-performance-repeats.mjs",
+    "workingDirectory": "repository/worktree root",
+    "invocations": 3,
+    "runtimeOrder": [
+      "shifaa-local-postgres",
+      "shifaa-local-supabase"
+    ],
+    "databaseIsolation": "Each invocation runs the existing harness separately on both runtimes; each allergy/content phase creates a random harness-owned database from template0, applies setup, and drops/verifies exact database absence in finally cleanup.",
+    "outputs": {
+      "proofs": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/delegated-closeout-2026-10-10/performance/run-01..03/performance-proof.json",
+      "logs": "artifacts/feature-011/k24/delegated-closeout/run-01..03.log",
+      "executedSources": "artifacts/feature-011/k24/delegated-closeout/run-01..03-source.mjs",
+      "executionManifest": "artifacts/feature-011/k24/delegated-closeout/execution.json"
+    },
+    "wrapperTransformations": [
+      "Remap runner relative imports to their source file URLs so the retained temporary execution copy can live in ignored artifacts.",
+      "Replace only the runner's single K23 proof directory declaration with the unique run-01, run-02, or run-03 K24 destination; preserve surrounding bytes/newline style.",
+      "Record exact before/after substitutions and original/transformed source hashes. The helper refuses existing run outputs and writes logs/source/manifest with exclusive-create semantics."
+    ],
+    "correctnessHandling": "Keep all source assertions, setup assertions, HTTP status assertions, cleanup checks, counters and 400/800 ms thresholds unchanged. Preserve every completed threshold miss. A setup/assertion failure before proof creation stops later repeats and remains recorded as failure."
+  },
+  "hostSnapshot": {
+    "source": "environment-before.json",
+    "os": "Windows_NT 10.0.26300 (edition not recorded in this snapshot)",
+    "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
+    "logicalCPUs": 16,
+    "hostMemoryBytes": 16850108416,
+    "freeMemoryBytesAtSnapshot": 6324396032,
+    "freeMemoryInterpretation": "Transient observation at 2026-10-10T12:36:26.661Z; not an allocation or capacity guarantee",
+    "node": "v24.18.0",
+    "pnpm": "11.13.0"
+  },
+  "databaseRuntimes": [
+    {
+      "name": "shifaa-local-postgres",
+      "container": "shifaa-local-postgres-postgres-1",
+      "serverVersion": "PostgreSQL 17.11",
+      "image": "shifaa/postgis:17-3.5-006-local",
+      "imageId": "sha256:2a60f970249f8b1ed79c2cd5ff5d82bf4805ecc98386a4b3bbac428e25901cd7",
+      "fixtureAdminUser": "shifaa_owner",
+      "onlinePoolUser": "shifaa_api",
+      "dockerCpuAndMemoryLimits": "Unset (Docker zero quota/limit fields); actual consumed resources and host contention during repeats are not captured by the before snapshot"
+    },
+    {
+      "name": "shifaa-local-supabase",
+      "container": "supabase_db_shifaa-local-supabase",
+      "serverVersion": "Supabase PostgreSQL 17.6",
+      "image": "public.ecr.aws/supabase/postgres:17.6.1.158",
+      "imageId": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+      "fixtureAdminUser": "supabase_admin",
+      "onlinePoolUser": "shifaa_api",
+      "dockerCpuAndMemoryLimits": "Unset (Docker zero quota/limit fields); actual consumed resources and host contention during repeats are not captured by the before snapshot"
+    }
+  ],
+  "workload": {
+    "topology": "Windows host -> Fastify inject -> native Supabase Auth HTTP loopback -> non-owner PostgreSQL pool -> Docker PostgreSQL",
+    "network": "Loopback only; no WAN, RTT, bandwidth, loss, or region emulation",
+    "concurrency": 1,
+    "arrivalModel": "Serial completion-driven; each next request follows completion and fixture preparation",
+    "duration": "Observed per complete run; no fixed sustained-load interval or throughput claim",
+    "warmupAndOrder": "For each runtime, allergy loop is 3 warmup iterations followed by 20 measured iterations; each iteration measures createAllergy, verifyAllergy, listAllergies in order. Then the content loop uses 3 warmup iterations followed by 20 measured iterations; each measures createClinicalContentRelease, two signClinicalContentRelease calls, publishClinicalContentRelease, and listClinicalContent, in that order. No cache flush is performed.",
+    "samplesPerRuntime": {
+      "createAllergy": 20,
+      "verifyAllergy": 20,
+      "listAllergies": 20,
+      "createClinicalContentRelease": 20,
+      "signClinicalContentRelease": 40,
+      "publishClinicalContentRelease": 20,
+      "listClinicalContent": 20,
+      "totalMeasuredRequests": 160,
+      "warmupRequests": 24
+    },
+    "syntheticInputs": {
+      "allergyReport": "The exact report object in the bound source, compact JSON UTF-8 serialization: 170 bytes; report contains synthetic-neutral test substance and bilingual synthetic self-report display strings.",
+      "canonicalContentMaterials": {
+        "source": "First positive vector in artifact-canonicalization-v1-vectors.json",
+        "materialBytes": {
+          "content": 41,
+          "code": 32,
+          "testVectors": 41
+        },
+        "totalBytes": 114,
+        "interpretation": "Raw fixture material byte lengths; request carries material evidence references and does not directly carry these material byte strings."
+      },
+      "allergyDataset": "Per runtime, 23 report iterations are created (3 warmup + 20 measured); verification and reads are also exercised. Exact durable count fields are captured by each proof after execution.",
+      "contentDataset": "Per runtime, 23 successive synthetic past-effective releases, each admitted and signed twice, are created (3 warmup + 20 measured); publication and narrow governance reads are exercised. Exact durable count fields are captured by each proof after execution."
+    },
+    "syntheticActors": [
+      "patient (default allergy create/read)",
+      "clinician (allergy verification and physician signature)",
+      "medical (content create/read)",
+      "pharmacist (second signature)",
+      "publisher (publication)"
+    ],
+    "localEvidenceAndCrypto": "No production vendor or KMS. Real local application AES and synthetic private evidence/admission sources are exercised.",
+    "instrumentation": {
+      "clock": "performance.now around each application request callback; setup and explicit private fixture provisioning between requests are outside that request timer.",
+      "inRequestControl": "Private synthetic provenance/support lookup can use owner Docker psql during request execution and is included in elapsed request time; the runner documents this test-control overhead.",
+      "vendorTimeExcludedMs": 0,
+      "counters": [
+        "keyPreparations",
+        "externalUnderLocks",
+        "sqlSinkChecks"
+      ],
+      "correctness": "Expected HTTP status per measured operation; exact harness setup/cleanup and source pin checks; externalUnderLocks must be 0 for each runtime; proof retains dataset snapshots/counts and raw samples."
+    },
+    "percentile": "Nearest-rank: sorted samples at index ceil(0.95*n)-1; for n=20 this is the 19th sorted sample, and for signing n=40 this is the 38th.",
+    "fixedTargetsMs": {
+      "readsP95": 400,
+      "mutationsP95": 800
+    },
+    "targetAuthority": "Existing NFR-PERF-002; targets remain unchanged, and each operation is evaluated in each run on both runtimes.",
+    "cacheState": "Warmup then measured samples; cache is not flushed, so this is not cold-cache evidence."
+  },
+  "clientAndFormalProfile": {
+    "reportedPhysicalDevice": "Yousef Osama supplied the Windows/NVDA and Reno 13/TalkBack software versions and later no-issue engineering observations. These are reviewer-reported physical client facts, not measured load-test clients.",
+    "reportedDeviceDetailsMissing": [
+      "CPU/RAM of physical Android client",
+      "viewport/display/font/speech settings",
+      "per-state native utterances and settings/session records"
+    ],
+    "benchmarkClient": "No physical browser/mobile client participates: Fastify inject measures server application responses. Browser rendering, native app behavior, device CPU/RAM, assistive-technology latency and WAN are excluded.",
+    "unknownOrUnset": [
+      "Deployment region and production topology",
+      "API/database capacity sizing",
+      "WAN RTT/bandwidth/loss",
+      "representative production dataset volume/material sizes/history",
+      "sustained arrival rate and concurrency above 1",
+      "cold-cache behavior",
+      "container consumption during repeats",
+      "formal acceptance tolerance/disposition"
+    ],
+    "formalDisposition": "NOT_ASSERTED; OPEN-TECH-003 remains open. This profile is local synthetic engineering evidence and does not establish client/network performance acceptance, production SLO, or release approval.",
+    "reportedDevices": {
+      "windows": {
+        "os": "Windows 11 Pro 26300.9550",
+        "nvda": "2026.2",
+        "chrome": "154.0.8037.93 Official Build 64-bit"
+      },
+      "reno13": {
+        "os": "Android 16",
+        "build": "CPH2689 Build/BP2A.250605.015",
+        "software": "CPH2689_16.0.5.1001(EX01C10P02)",
+        "chrome": "154.0.8037.92",
+        "talkBack": "17.0.1.926549743",
+        "talkBackVersionCode": 60215178
+      },
+      "attribution": "USER_REPORTED; see version record and subsequent reviewer consolidation"
+    }
+  },
+  "sources": [
+    {
+      "path": "tools/run-feature-011-performance.mjs",
+      "sha256": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c"
+    },
+    {
+      "path": "tools/feature-011-ops-fixtures.mjs",
+      "sha256": "787e616b0bf365bfe294a284a723a87fefc6a3f248a4cf99bffd40666f997fc0"
+    },
+    {
+      "path": "tools/run-feature-011-postgres-test.mjs",
+      "sha256": "23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b"
+    },
+    {
+      "path": "tools/run-feature-011-allergy-api-test.mjs",
+      "sha256": "492ce3996fce3d4cc0b4e2419bca68021cc4e57bd87087bd8466dca6b6ac2dde"
+    },
+    {
+      "path": "tools/run-feature-011-content-api-test.mjs",
+      "sha256": "913611bae882219a150fe2a4ae7b65bf6f018b11d529ec0cd45c197798dac88e"
+    },
+    {
+      "path": "tools/run-feature-011-sign-api-test.mjs",
+      "sha256": "0f225c78fa9930590191071be8264c81eadf1ed63f4efbe4eb5232afd091dc56"
+    },
+    {
+      "path": "tools/feature-011-publication-fixtures.mjs",
+      "sha256": "e0207fc5581a04cc3b345c5c4f1b9994028f3e3eb0d89e119a375c21ff2ff1b1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+      "sha256": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/delegated-closeout-2026-10-10/environment-before.json",
+      "sha256": "7f71a2949107df107e3a3828cc4d4d4542a42688b2cd0876d8e636817371fb4f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/delegated-closeout-2026-10-10/technical-selection.json",
+      "sha256": "4e973e01a082a6a2d8603b234b3d867488f7ca9629afdec286785bbfdc9d2c26"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/k23-reference-environment-pending-2026-10-09.md",
+      "sha256": "cfe6faff3eb1a4f2d82b801959053bc6619f9be005a923ee46dade4d74f1db07"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/first-patient-case.md",
+      "sha256": "e8c25c6ddd7420b2f382780d9a3bc039d38765e2942420166b5fc31b79e2fede"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/2026-10-10T09-08-32-764Z/reviewer-observation-2026-10-10-access-readability.json",
+      "sha256": "59c5f23d8f6dad5bca8a4bd34c822264a53935775c479009fb82078a32b71277"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/reference-profile-proposal.md",
+      "sha256": "82207417fbf8fcd6ca110ca51682ed646d22a89b9e1bcb2373f3f8af59c1b52f"
+    },
+    {
+      "path": "artifacts/feature-011/k24/delegated-closeout/run-performance-repeats.mjs",
+      "sha256": "863571b9192caf7db99146244c403b24f8bb7ee93921a604a71198a4a84e8330"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/physical-device-versions-2026-10-10.md",
+      "sha256": "0f4e4bdf62a0d0b09deaf28a703dec300cdbdb2bec8be3bc756eb35e742e4c68"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/native-session/reviewer-consolidation-2026-10-10.json",
+      "sha256": "e766bb0c462f99d43d18b12150fadecf4917e5466215760576cabdc7b6ee2370"
+    }
+  ],
+  "rootReviewCorrection": "Replaced stale device-version unknowns with current user-reported version bindings; no additional native observation claimed."
+}

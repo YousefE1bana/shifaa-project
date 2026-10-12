@@ -1,0 +1,22 @@
+{
+  "id": "deferred-obligations",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\3164_1791774162044\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-c16ce81f-1154-483b-a6fb-795e99cac164.mjs",
+    "k05"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/logs/deferred-obligations.log",
+    "sha256": "440a21a40d50b1b1e28889b1615e31c02e595cccbbb4be8f09a55cd1538052b5"
+  },
+  "original": "tools/run-feature-011-storage-test.mjs",
+  "originalSha256": "62dc149fa7899de9a3e68dfb2600dba6ad47aa7a94d089c70022109710d71b6d",
+  "substitution": "const output =\n    process.argv[3] === 'k17-remediation'\n      ? `${currentEvidenceRoot(root)}/k05`\n      : process.argv[3] === 'k08-remediation'\n        ? 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/k05'\n        : 'artifacts/feature-011/k05-k06';",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/reruns/deferred-obligations",
+  "temporarySha256": "b00b2348dfa78fb327cc47170d3459b7f3dcc297bafc1a1b35c82c9f06a04607",
+  "testAssertionsChanged": false,
+  "preflightSubstitutions": []
+}

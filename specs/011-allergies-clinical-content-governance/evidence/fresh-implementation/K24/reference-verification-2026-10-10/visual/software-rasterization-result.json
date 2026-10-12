@@ -1,0 +1,45 @@
+{
+  "recordedAt": "2026-10-10T21:41:23.872Z",
+  "result": "FAIL_DIAGNOSTIC_NOT_ACCEPTANCE",
+  "diagnostic": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostics/2026-10-10T213128-668Z-550f1730-7785-435e-bf61-b92b1912e094/strict-comparison.json",
+    "sha256": "d12ac624b2300c457a89b9b4f1ffc8b3aa76c07c218454c5cac2f93a7079653f"
+  },
+  "comparison": {
+    "path": "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\archives\\2026-10-10T214031-408Z-4b6387e6-24ac-4a97-856b-5ad64fe8cb1e\\comparison.json",
+    "sha256": "a2018fddcf019e3e28abc0d6b8c1271e07ddb8aa33b9abcf7105942a5dc7b846"
+  },
+  "log": {
+    "path": "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\2026-10-10T213128-668Z-550f1730-7785-435e-bf61-b92b1912e094/strict-comparison.log",
+    "sha256": "b9ce5c22c4d2073c4192ac032bd19ed3b76a67a36291d47be3482dd6e6e99fc7"
+  },
+  "execution": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T21-31-27-981Z-b70c5732-09b1-4acf-84d3-0a19d8f563c7.json",
+    "sha256": "c98b91512d0d501fd2908625c294cf6dddbe124434ec22f65b1f6c5cc48894ba"
+  },
+  "executedSource": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T21-31-27-981Z-b70c5732-09b1-4acf-84d3-0a19d8f563c7.mjs",
+    "sha256": "27a818dad06a8de9958bd41864697222df7d5f0e44b76c6f2089e9c05c184a04"
+  },
+  "pairedCaptures": 119,
+  "identical": 118,
+  "differing": [
+    {
+      "name": "admin-content__aal2-required__ar-EG__768x1024__dark.png",
+      "width": 768,
+      "height": 1024,
+      "sha256": {
+        "a": "6ba456c2ed92ab16153cd8f35c80ad65648d4a3ceb4cc67dc00c4810803169a9",
+        "b": "5d4e829d95fbfc835051b863ab5b30f380a90e26432359d64f5b9104c6956678"
+      },
+      "changedPixels": 18,
+      "perChannelTolerance": 0,
+      "maxChannelDelta": 1
+    }
+  ],
+  "conclusion": "Disabling GPU rasterization alone did not satisfy strict equality. It does not establish rasterization as the root cause. No full pass is claimed.",
+  "nextExperiment": "Isolated full software rendering with --disable-gpu; record actual renderer and launch arguments before capture. No mask/tolerance/source/fixture/product change.",
+  "checkpointAccepted": false,
+  "T092Reexecuted": false,
+  "retainedGates": "OPEN"
+}

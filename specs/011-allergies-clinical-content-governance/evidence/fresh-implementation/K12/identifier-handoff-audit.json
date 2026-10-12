@@ -1,0 +1,610 @@
+{
+  "result": "BASELINE_RECONCILIATION_REQUIRED",
+  "checkpoint": "K12",
+  "generatedAt": "2026-10-08T01:23:43.595Z",
+  "date": "2026-10-08 Africa/Cairo",
+  "auditOnly": true,
+  "authoritativeManagedIdPresentInF004": true,
+  "completeExistingHandoffToBothK12Screens": false,
+  "missing": "Server-issued person/managed-patient pair plus clinic current encounter/facility binding, delivered through an existing approved projection to the existing screens.",
+  "internalMappingExists": true,
+  "publicMappingAdded": false,
+  "operationsInspected": [
+    {
+      "feature": "004-family-care-relationships",
+      "path": "specs/004-family-care-relationships/contracts/openapi.yaml",
+      "operations": [
+        "listRelationships",
+        "createGuardianship",
+        "listGuardianshipCases",
+        "reviewGuardianship",
+        "createDelegation",
+        "acceptDelegation",
+        "updateDelegation",
+        "revokeRelationship",
+        "listEmergencyContacts",
+        "createEmergencyContact",
+        "respondEmergencyContact",
+        "revokeEmergencyContact"
+      ]
+    },
+    {
+      "feature": "009-clinic-scheduling-appointments-queue",
+      "path": "specs/009-clinic-scheduling-appointments-queue/contracts/openapi.yaml",
+      "operations": [
+        "searchDoctors",
+        "listDoctorAvailability",
+        "createSchedule",
+        "updateSchedule",
+        "createScheduleException",
+        "createAppointment",
+        "listAppointments",
+        "getAppointment",
+        "cancelAppointment",
+        "rescheduleAppointment",
+        "checkInAppointment",
+        "getQueue",
+        "getMyQueuePosition",
+        "callQueueEntry",
+        "reorderQueueEntry",
+        "completeQueueEntry",
+        "sendDoctorDelay",
+        "declareDoctorAbsence"
+      ]
+    },
+    {
+      "feature": "010-encounters-referrals-contextual-chat",
+      "path": "specs/010-encounters-referrals-contextual-chat/contracts/openapi.yaml",
+      "operations": [
+        "createEncounter",
+        "getEncounter",
+        "updateEncounter",
+        "signEncounterNote",
+        "completeEncounter",
+        "createReferral",
+        "listReferrals",
+        "acceptReferral",
+        "listContextMessages",
+        "sendContextMessage"
+      ]
+    }
+  ],
+  "sourceHashes": {
+    "AGENTS.md": "238d90b76e36e9056407a6e9997330c0965010f2d65daefca69049a467b8acf3",
+    "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+    "docs/architecture/SHIFAA-API-Catalog.md": "8e7f5cbea6d36d1d6a89f2920f0871db361b8b10f650301f22cbbbc9556d5d0f",
+    "docs/architecture/SHIFAA-Data-RLS.md": "a3f60b81f8d1e405884005fac7fbbfb049b5d90b0cea4fdd6bf1cd860432cb81",
+    "specs/001-identity-onboarding/contracts/openapi.yaml": "fac57ba4fed91cf81d109d633b0c202c25bd663967eb49703aab29ae3ed97059",
+    "packages/contracts/src/identity-onboarding.ts": "c9ffb34863bd18b8009035efb839cfd3737e827f80f328c73505975a14c333f0",
+    "packages/api-client/src/identity-onboarding.ts": "20bf8d5c566a35d31a749ad77f31001f32f3f5758bea7aae1c37bc9877935b5b",
+    "services/api/src/modules/identity-onboarding/service.ts": "12fc65eddda0e4500748c62d76474653fd65cd9a76577a3e9e682e070529cfee",
+    "services/api/src/adapters/postgres/identity-repository.ts": "33010b3fb04d285ca7b60d656c2ba5ee054dbf43ec566556f781f8a8c30c0999",
+    "apps/patient/src/identity-onboarding-api.ts": "73cd6f1c8f7a39016d82e0623b593b5c58ddd55bfc481f4e20fe384d0d725d03",
+    "specs/004-family-care-relationships/data-model.md": "d53dc6d31fa07337c523e1126ba4836a545629c1a49da03f62ffe18989aa45a7",
+    "specs/004-family-care-relationships/contracts/openapi.yaml": "3d3b2d99dbf559c15c9b593921edee16a3f56f76680078cae8cc3f4e6327e701",
+    "packages/contracts/src/family-care.ts": "df3b57cf24c93e9cc301c95c3be9c1ebee66ad32a8625e35fa729052c9ee3905",
+    "packages/api-client/src/family-care.ts": "2b85996a337b10be57f45c4350736e2f6abdd6db155b7ed8bff42575e91d141c",
+    "services/api/src/routes/family-care.ts": "f49d78229dbf2b8fda9e1be16a4f263311e73f5e0ae9c7754d009f126c7eb87d",
+    "services/api/src/modules/family-care/service.ts": "a79436b1a47494f2a00b40dbd98c58b2786446cecb538c6d4d5e11e28bad42e6",
+    "services/api/src/adapters/postgres/family-service.ts": "424d1ee53437647d0f11f5c28e32aa49df9a79f8628bcabf7d69e1ad03a5610f",
+    "apps/patient/app/care-switcher.tsx": "068c2b859f60333aa13138dad90259dfc2514a6ee4d21eebd9391d397ff7ab43",
+    "apps/patient/app/relationships.tsx": "70cecadc4cd51e9e3cb4ed235b66d5c35cf9e9bed9f52ee0d05c5a5b5d21ef17",
+    "apps/patient/src/family-care-api.ts": "22e1977bf84de23991790b8cacedae7dfee079fea9244f4e492173c4eb61a320",
+    "specs/009-clinic-scheduling-appointments-queue/data-model.md": "1331214a23ad28b9d156597f19977e5839d4d144bef9a25b36e2049b52c94686",
+    "specs/009-clinic-scheduling-appointments-queue/contracts/openapi.yaml": "c4e148105c82d8b4e46c3433da5a6b906c4dddda66906ee559200e0cc4e5dbdb",
+    "packages/contracts/src/clinic-scheduling.ts": "f58b9ae6e93d66f04927a6cfa60afb818dccc24ac7a9db801bcbb6aae124ce68",
+    "packages/api-client/src/clinic-scheduling.ts": "8035760d981a21836b6d35591e8daad90b5abdbd5153278ad6c63aaf6b7e30e1",
+    "services/api/src/routes/clinic-scheduling.ts": "fb51864e0f379d140e538655708acc522711dee2b81eb9add627fce447475a87",
+    "services/api/src/adapters/postgres/clinic-scheduling-service.ts": "2e79464286b3efe562f320a55501fc9c228eedc7e438b9405ae04169fba886c3",
+    "apps/patient/src/clinic-scheduling-booking.ts": "bee29b2cd9172c9ca8d184ff1e8a736acf07bd00816d7b582a6a45949b9f4f1a",
+    "apps/clinic/src/components/clinic-scheduling/QueueWorkspace.tsx": "02fe3cedbba77c8f02ac1b0a94b3009da99b67e7a1a12793fa55beccdf6e1721",
+    "specs/010-encounters-referrals-contextual-chat/data-model.md": "d39ffe16b9550f9749ce0afe428904095b9da368c4b5c27a65310d6953e1d779",
+    "specs/010-encounters-referrals-contextual-chat/contracts/openapi.yaml": "73ed9b254cab0070e766f8d01c7ad4c969ee3eee983c90608da9d58d1554e223",
+    "packages/contracts/src/feature-010.ts": "9223c92162d287a09871e40f04ccccb2c334c2333e0ba5623d9913e0f548edbc",
+    "packages/api-client/src/feature-010.ts": "d26111ca4e32bd4ae15cb18f65aa52638573d3fdcabe9b696db0820d38cd5f66",
+    "services/api/src/adapters/postgres/feature-010-encounters.ts": "94ccea18b40ccacfca6e43daabf9063fd229a4bba38ca797b8260ccc40cf3729",
+    "services/api/src/adapters/postgres/feature-010-referrals.ts": "ecdf5b68c45aa0fbb6cf28be367bb14743922adc88441d8eeeefab4137c952ee",
+    "apps/patient/src/feature-010-referrals.ts": "318a98c49e6d130bad020cb9503d98102adda7c04703e0840ca3d624c37e189d",
+    "apps/patient/src/feature-010-session.ts": "e540727ea8f642927ef6c9b69cc4e60a927fa3486693aff86565a5af96857992",
+    "apps/clinic/src/lib/feature-010-api.ts": "d849a5d53434a4dca2076098bc3caf83e9f48d754e0d5f2a9c4b581f6626cdc0",
+    "apps/clinic/src/components/feature-010/EncounterWorkspace.tsx": "b883477d393fad33d8b9264a026f22c75bea4b48498e53809c0c065bbe42114b",
+    "apps/patient/app/records.tsx": "3d35f810670ca541f738fb5ac7d0717fc4fcaa786101519af91a5d7a24b9e901",
+    "apps/clinic/src/app/patients/[id]/summary/page.tsx": "a942acc6e383a88768f0d8647212759d42792dd5543ecdef2b8e5cbec093fb90",
+    "packages/contracts/src/identity-continuity.ts": "86b60676f8e9aac8d81ed4f314afdda288f388947927b5b06b80f32f73540171",
+    "packages/api-client/src/identity-continuity.ts": "08354b0beac9052d5c555b693d11135e6a8f7ede7b872d3f6d730d7b1abe66b9",
+    "supabase/migrations/20260811000100_identity_onboarding_baseline.sql": "61e37b6737374e71e8771cf0a387440dc1ae4851250504fa98b6ffec8c29e13e",
+    "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+    "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+    "supabase/migrations/20260929001001_f010_c10_encounter_api.sql": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+    "supabase/migrations/20260929001007_f010_c19_referral_projections.sql": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+    "supabase/migrations/20261006185236_f011_allergy_functions.sql": "64d10b422ab4711a3f327d2e8984718bc3c8e2149aa76e0dbc36fbbe2b1e56b3",
+    "supabase/migrations/20261006185241_f011_rls_grants.sql": "368d9b19425451b1031de65780cb7ff36063eac795d71de925194df069fba26d",
+    "services/api/src/adapters/postgres/feature-011-allergies.ts": "b0cf0768c75c2068c053bb18afb61bb6b48ffc890cc792510e4037a81b614c12",
+    "specs/011-allergies-clinical-content-governance/spec.md": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0",
+    "specs/011-allergies-clinical-content-governance/plan.md": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca",
+    "specs/011-allergies-clinical-content-governance/data-model.md": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f",
+    "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59",
+    "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e"
+  },
+  "reportPath": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/identifier-handoff-audit-2026-10-08.md",
+  "rankedOptions": [
+    {
+      "rank": 1,
+      "summary": "Reconcile existing self profile, scoped F004 record-view relationship pair, and authorized F010 encounter projection; preserve person fields and F011 managed-ID routes."
+    },
+    {
+      "rank": 2,
+      "summary": "Same self/F004 reconciliation; use F009 appointment projection for clinic pair while independently consuming and reauthorizing existing F010 current encounter context."
+    }
+  ],
+  "K11Acceptance": {
+    "before": {
+      "tasks": "47234616e49724eeedc734eec601dbcb9eb0f12e1a0bfb563a65cc6e40349fb5",
+      "map": "40424fed452336706dbf7f31a32ade059dd319cfb33dd090ecebfa4029a831e7"
+    },
+    "after": {
+      "tasks": "8a87aac651a80e578796f3265c99aa4fdc207c5d95f647e1a90df73fd1cd65f6",
+      "map": "210de86fc6822fb78f18e6afc1d02128bcefc10b456d48599f95b1f1e3eec80d"
+    },
+    "evidence": {
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-api-red.json": "62d817537549c1b1c9a7ff712940a0f49755a03822d7aba742cbd569a56c88ef",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-read-create.json": "363bae92d96177414d0730c82073e559b760ff456d105e09996997db5544ec64",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-routes.json": "363bae92d96177414d0730c82073e559b760ff456d105e09996997db5544ec64",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-api-proof.json": "363bae92d96177414d0730c82073e559b760ff456d105e09996997db5544ec64"
+    },
+    "acceptance": "specs/011-allergies-clinical-content-governance/decisions/k11-accepted-2026-10-08.md",
+    "issues": [
+      441,
+      442,
+      443,
+      444
+    ]
+  },
+  "taskCheckboxes": [
+    {
+      "id": "T001",
+      "checked": true
+    },
+    {
+      "id": "T002",
+      "checked": true
+    },
+    {
+      "id": "T003",
+      "checked": true
+    },
+    {
+      "id": "T004",
+      "checked": true
+    },
+    {
+      "id": "T005",
+      "checked": true
+    },
+    {
+      "id": "T006",
+      "checked": true
+    },
+    {
+      "id": "T007",
+      "checked": true
+    },
+    {
+      "id": "T008",
+      "checked": true
+    },
+    {
+      "id": "T009",
+      "checked": true
+    },
+    {
+      "id": "T010",
+      "checked": true
+    },
+    {
+      "id": "T011",
+      "checked": true
+    },
+    {
+      "id": "T012",
+      "checked": true
+    },
+    {
+      "id": "T013",
+      "checked": true
+    },
+    {
+      "id": "T014",
+      "checked": true
+    },
+    {
+      "id": "T015",
+      "checked": true
+    },
+    {
+      "id": "T016",
+      "checked": true
+    },
+    {
+      "id": "T017",
+      "checked": true
+    },
+    {
+      "id": "T018",
+      "checked": true
+    },
+    {
+      "id": "T019",
+      "checked": true
+    },
+    {
+      "id": "T020",
+      "checked": true
+    },
+    {
+      "id": "T021",
+      "checked": true
+    },
+    {
+      "id": "T022",
+      "checked": true
+    },
+    {
+      "id": "T023",
+      "checked": true
+    },
+    {
+      "id": "T024",
+      "checked": true
+    },
+    {
+      "id": "T025",
+      "checked": true
+    },
+    {
+      "id": "T026",
+      "checked": true
+    },
+    {
+      "id": "T027",
+      "checked": true
+    },
+    {
+      "id": "T028",
+      "checked": true
+    },
+    {
+      "id": "T029",
+      "checked": true
+    },
+    {
+      "id": "T030",
+      "checked": true
+    },
+    {
+      "id": "T031",
+      "checked": true
+    },
+    {
+      "id": "T032",
+      "checked": true
+    },
+    {
+      "id": "T033",
+      "checked": true
+    },
+    {
+      "id": "T034",
+      "checked": true
+    },
+    {
+      "id": "T035",
+      "checked": true
+    },
+    {
+      "id": "T036",
+      "checked": true
+    },
+    {
+      "id": "T037",
+      "checked": true
+    },
+    {
+      "id": "T038",
+      "checked": true
+    },
+    {
+      "id": "T039",
+      "checked": true
+    },
+    {
+      "id": "T040",
+      "checked": true
+    },
+    {
+      "id": "T041",
+      "checked": true
+    },
+    {
+      "id": "T042",
+      "checked": true
+    },
+    {
+      "id": "T043",
+      "checked": true
+    },
+    {
+      "id": "T044",
+      "checked": true
+    },
+    {
+      "id": "T045",
+      "checked": true
+    },
+    {
+      "id": "T046",
+      "checked": true
+    },
+    {
+      "id": "T047",
+      "checked": true
+    },
+    {
+      "id": "T048",
+      "checked": false
+    },
+    {
+      "id": "T049",
+      "checked": false
+    },
+    {
+      "id": "T050",
+      "checked": false
+    },
+    {
+      "id": "T051",
+      "checked": false
+    },
+    {
+      "id": "T052",
+      "checked": false
+    },
+    {
+      "id": "T053",
+      "checked": false
+    },
+    {
+      "id": "T054",
+      "checked": false
+    },
+    {
+      "id": "T055",
+      "checked": false
+    },
+    {
+      "id": "T056",
+      "checked": false
+    },
+    {
+      "id": "T057",
+      "checked": false
+    },
+    {
+      "id": "T058",
+      "checked": false
+    },
+    {
+      "id": "T059",
+      "checked": false
+    },
+    {
+      "id": "T060",
+      "checked": false
+    },
+    {
+      "id": "T061",
+      "checked": false
+    },
+    {
+      "id": "T062",
+      "checked": false
+    },
+    {
+      "id": "T063",
+      "checked": false
+    },
+    {
+      "id": "T064",
+      "checked": false
+    },
+    {
+      "id": "T065",
+      "checked": false
+    },
+    {
+      "id": "T066",
+      "checked": false
+    },
+    {
+      "id": "T067",
+      "checked": false
+    },
+    {
+      "id": "T068",
+      "checked": false
+    },
+    {
+      "id": "T069",
+      "checked": false
+    },
+    {
+      "id": "T070",
+      "checked": false
+    },
+    {
+      "id": "T071",
+      "checked": false
+    },
+    {
+      "id": "T072",
+      "checked": false
+    },
+    {
+      "id": "T073",
+      "checked": false
+    },
+    {
+      "id": "T074",
+      "checked": false
+    },
+    {
+      "id": "T075",
+      "checked": false
+    },
+    {
+      "id": "T076",
+      "checked": false
+    },
+    {
+      "id": "T077",
+      "checked": false
+    },
+    {
+      "id": "T078",
+      "checked": false
+    },
+    {
+      "id": "T079",
+      "checked": false
+    },
+    {
+      "id": "T080",
+      "checked": false
+    },
+    {
+      "id": "T081",
+      "checked": false
+    },
+    {
+      "id": "T082",
+      "checked": false
+    },
+    {
+      "id": "T083",
+      "checked": false
+    },
+    {
+      "id": "T084",
+      "checked": false
+    },
+    {
+      "id": "T085",
+      "checked": false
+    },
+    {
+      "id": "T086",
+      "checked": false
+    },
+    {
+      "id": "T087",
+      "checked": false
+    },
+    {
+      "id": "T088",
+      "checked": false
+    },
+    {
+      "id": "T089",
+      "checked": false
+    },
+    {
+      "id": "T090",
+      "checked": false
+    },
+    {
+      "id": "T091",
+      "checked": false
+    },
+    {
+      "id": "T092",
+      "checked": false
+    }
+  ],
+  "issues": [
+    {
+      "number": 441,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/441"
+    },
+    {
+      "number": 442,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/442"
+    },
+    {
+      "number": 443,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/443"
+    },
+    {
+      "number": 444,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/444"
+    },
+    {
+      "number": 445,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/445"
+    },
+    {
+      "number": 446,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/446"
+    },
+    {
+      "number": 447,
+      "state": "OPEN",
+      "stateReason": null,
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/447"
+    }
+  ],
+  "preservation": {
+    "priorFiles": 3711,
+    "changedExisting": [
+      "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+      "specs/011-allergies-clinical-content-governance/tasks.md"
+    ],
+    "newFiles": [
+      "specs/011-allergies-clinical-content-governance/decisions/k11-accepted-2026-10-08.md",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/identifier-handoff-audit-2026-10-08.md",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/identifier-handoff-audit.json"
+    ],
+    "allOtherPriorFilesByteIdentical": true,
+    "definitionsDependenciesRequirementsUnchanged": true,
+    "T048T092Untouched": true,
+    "oldEvidenceAndAcceptanceUnchanged": true,
+    "sqlGeneratedPublicContractsSpecPlanRoadmapArchitectureUnchanged": true
+  },
+  "retainedGates": "All retained gates unchanged; OPEN-UX-002 OPEN. No production/clinical/design approval or live UI evidence claimed.",
+  "git": {
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "indexUnchanged": true,
+    "statusFile": "artifacts/feature-011/k12-handoff/git-status.txt"
+  },
+  "checks": {
+    "acceptanceInputHashes": "PASS",
+    "taskDefinitionAndStatePreservation": "PASS",
+    "issueFinalState": "PASS",
+    "staticIdentifierTrace": "PASS",
+    "docReview": "Claims checked against current contracts/server producers/client/screen consumers; options are prospective and require canonical approval."
+  },
+  "limits": "No product implementation, database operation, reset, migration, K13, commit/push/PR/main change. No subagent/delegate used."
+}

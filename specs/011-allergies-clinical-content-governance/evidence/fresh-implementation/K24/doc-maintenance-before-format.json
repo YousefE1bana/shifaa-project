@@ -1,0 +1,108 @@
+{
+  "task": "T089",
+  "checkpoint": "K24",
+  "result": "PASS_APPROVED_DOCUMENTATION_MAINTENANCE",
+  "capturedAt": "2026-10-09T16:05:00.626Z",
+  "files": [
+    {
+      "path": "docs/TEAM-INSTALLATION-CHECKLIST.md",
+      "currentSha256": "634796d61540453117a480ed974c9f9173a12726630886c7c56c2193808d1a3a",
+      "proposedSha256": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c",
+      "candidate": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/TEAM-INSTALLATION-CHECKLIST.md",
+      "change": "Append dated maintenance section only",
+      "actualSha256": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c",
+      "originalPrefixSha256": "634796d61540453117a480ed974c9f9173a12726630886c7c56c2193808d1a3a",
+      "originalPrefixPreserved": true
+    },
+    {
+      "path": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+      "currentSha256": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+      "proposedSha256": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757",
+      "candidate": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/SHIFAA-Remaining-Specs-Roadmap.md",
+      "change": "Append dated maintenance section only",
+      "actualSha256": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757",
+      "originalPrefixSha256": "ed5a256e1f46ceae9f7e779cf3821cccec8e28e32b2b3b1a15858a00f5f2e580",
+      "originalPrefixPreserved": true
+    },
+    {
+      "path": "docs/traceability/SHIFAA-Traceability-Matrix.md",
+      "currentSha256": "fe251d155e7de76297753fefdb6d500db9d0e737e76581084a240e9521d07a54",
+      "proposedSha256": "1e86808e8825ebe3ba6563952b52de00a71be70b6bee9ae71e163702f511673e",
+      "candidate": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/SHIFAA-Traceability-Matrix.md",
+      "change": "Append dated maintenance section only",
+      "actualSha256": "1e86808e8825ebe3ba6563952b52de00a71be70b6bee9ae71e163702f511673e",
+      "originalPrefixSha256": "fe251d155e7de76297753fefdb6d500db9d0e737e76581084a240e9521d07a54",
+      "originalPrefixPreserved": true
+    }
+  ],
+  "successor": {
+    "bindingId": "SHIFAA-F011-DOCUMENTATION-SUCCESSOR@1.0.0",
+    "binding": {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/documentation-successor-v1.json",
+      "sha256": "cc8b2024129325404bf745e55f6ee3183922e9244fe11f7687699e18e2ed9e62"
+    },
+    "decision": {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/k24-documentation-maintenance-approved-2026-10-09.md",
+      "sha256": "1a02dc567e2f989f69058c58068fa334f5c1c8fa13636b7cca9af1bf5ccb329f"
+    },
+    "inputDigests": {
+      "docs/TEAM-INSTALLATION-CHECKLIST.md": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c",
+      "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757",
+      "docs/traceability/SHIFAA-Traceability-Matrix.md": "1e86808e8825ebe3ba6563952b52de00a71be70b6bee9ae71e163702f511673e"
+    }
+  },
+  "originalManifestPreserved": true,
+  "proposalStatusIsHistorical": true,
+  "review": {
+    "docsGuard": "Commands, versions, paths, checkpoint counts and restrictions verified against current repository and executed proofs",
+    "testGuard": "141 protocol/scope/successor tests; drift and deletion fail closed; valid intended RED retained",
+    "cleanCodeGuard": "One strictly pinned successor reader; no generic hash-refresh bypass; generated changes metadata-only"
+  },
+  "toolchain": {
+    "node": "24.18.0",
+    "pnpm": "11.13.0",
+    "supabaseCli": "2.113.0",
+    "postgres": [
+      "17.11",
+      "17.6"
+    ]
+  },
+  "tests": {
+    "protocolTestsPassed": 141,
+    "log": {
+      "path": "artifacts/feature-011/k24/documentation-tests-final.log",
+      "sha256": "64b6e8d47643dc2f2f940036b9d85a27efcb1897ab9b4c1d4a22de4ab2b9cfa9"
+    }
+  },
+  "renewedParity": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/documentation-renewal/parity-stage-verifier.json",
+    "sha256": "9ba9cc57a2c405b332e88891bbb888a10767f0c6994d2a835607d4924567d59b"
+  },
+  "currentPins": 139,
+  "privacyOwners": {
+    "AC-14": {
+      "direct": [
+        "T048",
+        "T049"
+      ],
+      "supporting": [
+        "T050"
+      ],
+      "finalTraceability": [
+        "T089",
+        "T090"
+      ]
+    }
+  },
+  "noArchitectureScopeOperationGrantSqlChange": true,
+  "retainedGates": "UNCHANGED_OPEN",
+  "formalAcceptance": "BLOCKED_OPEN_UX_002_OPEN_TECH_003",
+  "integration": "NOT_AUTHORIZED",
+  "tasksRemainUnchecked": [
+    "T088",
+    "T089",
+    "T090",
+    "T091",
+    "T092"
+  ]
+}

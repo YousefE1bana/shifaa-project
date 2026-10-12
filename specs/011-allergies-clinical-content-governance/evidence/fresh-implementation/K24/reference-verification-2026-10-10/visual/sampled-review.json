@@ -1,0 +1,95 @@
+{
+  "result": "NO_NEW_VISIBLE_DEFECT_IN_SAMPLED_COVERAGE",
+  "recordedAt": "2026-10-10T14:01:14.286Z",
+  "reviewer": "/root/f011_reference_capture_review",
+  "role": "Bounded read-only ui-worker; root owns disposition",
+  "images": [
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/smoke/clinic-summary-ready-ar-EG.png",
+      "sha256": "0c18f6879b6693cccd6117512f1bf4e66f8e7c1065df01adf8b7ab959e91c5a7"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/smoke/clinic-summary-ready-en-EG.png",
+      "sha256": "fa988a90aee5a77d8a44ab66660ba9c0de60e312177d607590e2c07a53a22e3b"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/smoke/patient-records-history-open-ar-EG.png",
+      "sha256": "3f9c032b560dc08e726c7a2da73b6e49121f30b70e426542196015110ba564b1"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/smoke/admin-content-confirmation-dialog-en-EG.png",
+      "sha256": "3d62aacabf07fa6aefa84b432e532ab6fa515d6a277680285a38cc906c3b2730"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/smoke/clinic-status-ready-ar-EG.png",
+      "sha256": "51dcfa8cba62a6712f06ba606e63fffa222d5598cfbbd3c59da2f48e0b07d526"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/smoke/clinic-status-stale-en-EG.png",
+      "sha256": "b65319d58ea99ce29e153a06061957086c3a960e0f1e97049b10a3d0704ee367"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/patient-records__ready__en-EG__1440x900__dark.png",
+      "sha256": "cd1213e57e2da39ee815298b9e11960ccf9cc5b6922957ebfdafc128305ecea1"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/patient-records__history-open__ar-EG__412x915__forced-colors-active.png",
+      "sha256": "5a95cc9d93fbb9b898b304813ecbaf610a1073205ff143b4968c53f8c46b1acb"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/clinic-summary__ready__en-EG__1440x900__dark.png",
+      "sha256": "1d3d007a406cb5ddd7fc55bcf71d856979b518be7b503d947b923b848ced3b11"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/clinic-summary__ready__ar-EG__412x915__forced-colors-active.png",
+      "sha256": "b4a7350b5b40be6b5465a5941190708e74edd9834dece7fc64779e11ee22ab4b"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/admin-content__assigned-review__ar-EG__1440x900__dark.png",
+      "sha256": "b72187208bac11bbfabc4bf914ec902dfc0e4cb1afde151d5fafeb9c6b2c7ada"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/admin-content__assigned-review__en-EG__360x800__forced-colors-active.png",
+      "sha256": "cc4bf54e9dca67e1161850b73ad4170b749b68457a8ebc5e637d7796427b2df4"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/admin-content__confirmation-dialog__ar-EG__1440x900__forced-colors-active.png",
+      "sha256": "9c3f8fcdbc8090f5e39cda267c2a16fe02f855db312d7c194374da43ece377d9"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/admin-content__confirmation-dialog__en-EG__360x800__normal.png",
+      "sha256": "3d62aacabf07fa6aefa84b432e532ab6fa515d6a277680285a38cc906c3b2730"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/clinic-status__ready__ar-EG__1440x900__dark.png",
+      "sha256": "cb1cc379cdf7ad84bfa4e8ef4d1cfb10bece350835eca0561f3afccd780edae8"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/clinic-status__ready__en-EG__360x800__forced-colors-active.png",
+      "sha256": "3fac005c68f14aa9a2c9676348598985943892d65bed360a45b6349a77f8bc7e"
+    },
+    {
+      "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/2026-10-10T135043-105Z-530ddd9b-7108-4620-893e-5f0667515a8f/capture-a/clinic-status__stale__ar-EG__768x1024__normal.png",
+      "sha256": "75e2536a56fac7cfbd9e0202dfa9a50a1853360c9d2c7a6b3cb26cee57fd757e"
+    }
+  ],
+  "findings": [
+    "All four surfaces sampled collectively across AR/EN,narrow/wide and color media profiles",
+    "Next dev overlay removed in replacement",
+    "No visible horizontal clipping or new bidi defect in inspected images",
+    "Ready status visibly includes effective time and Last checked",
+    "Forced-color labels/control outlines visible"
+  ],
+  "limitations": [
+    "17 images sampled, not all1392 captures or99 candidate states",
+    "Dialog screenshots end before actions; no reachability/scroll/focus-return acceptance from those images",
+    "Patient nested scroll images expose viewport state only",
+    "Conflict-only stale HTTP409 has no authorized timestamp/data; does not prove stale-successful-page timestamp coverage",
+    "Native narrow inputs/selects expose partial long values visually; full-value access not proven by screenshots",
+    "Dark labels record emulated media only; no new dark-theme approval",
+    "No actual NVDA/TalkBack,speech,full accessibility,clinical or production acceptance"
+  ],
+  "rootSourceDisposition": "Conflict fixture returns409 without meta; approved controller clears data. Successful authorized status renders Last checked from meta.lastUpdatedAt. Do not invent timestamp or retain protected data after authority loss. Broader formal freshness coverage is not established by this bounded image.",
+  "formalOwnerDisposition": "PENDING_REVIEW",
+  "productSourceChanges": false
+}

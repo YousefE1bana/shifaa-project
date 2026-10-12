@@ -1,0 +1,33 @@
+{
+  "result": "PASS",
+  "checkpoint": "K17",
+  "rootVerifiedAt": "2026-10-09T07:50:38.797Z",
+  "k18Unlocked": true,
+  "proofs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/k17-revalidation/publish-api.json",
+      "sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/k17-revalidation/publish-races.json",
+      "sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/k17-revalidation/eligibility-proof.json",
+      "sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/k17-revalidation/publication-boundaries.json",
+      "sha256": "26a9d3e4c9994ed0d03f50d055fa7a0ea204edcd5febafc791d7749ff88792c6"
+    }
+  ],
+  "perRuntime": {
+    "checks": 66,
+    "independentRaces": 6,
+    "eligibilityCases": 13
+  },
+  "pinnedInputs": 133,
+  "sqlChanged": true,
+  "retainedGates": "UNCHANGED_OPEN",
+  "acceptance": "PENDING_PRODUCT_OWNER"
+}

@@ -1,0 +1,13 @@
+{
+  "result": "INTERRUPTED_AT_USER_REQUEST",
+  "currentFullRunPassed": false,
+  "priorProductVerification": {
+    "exitCode": 0,
+    "head": "ab991dc0b676d4e8bfd50d6a5efd9679aa9c33b0",
+    "completedAt": "2026-10-12T03:52:00Z"
+  },
+  "observedAt": "2026-10-12T15:29:45.2686824Z",
+  "focusedConfigurationValidation": "PASS",
+  "reason": "User requested finishing configuration edits without extra broad testing",
+  "exitCode": null
+}

@@ -1,0 +1,442 @@
+{
+  "recordedAt": "2026-10-10T14:24:10.747Z",
+  "scope": "TEST_CAPTURE_HELPER_ONLY",
+  "productChanges": false,
+  "priorFullComparison": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T141015-521Z-06df30ed-f413-410e-be02-57435b588a9f/comparison.json",
+    "sha256": "88f70ef925c9738e37ff19f8992e618827829c3d2668e3c9db2602fabb9992ab"
+  },
+  "priorIdentical": 673,
+  "priorDifferent": 23,
+  "observedPatterns": [
+    {
+      "pairs": 20,
+      "pattern": "Admin EN selected native-control text painted differently despite matching final computed fonts and loaded face/source hashes"
+    },
+    {
+      "pairs": 3,
+      "pattern": "Patient AR1440 history expansion left different nested scroll positions"
+    }
+  ],
+  "repairs": [
+    "Wait for repeated stable focus/scroll/geometry/font-status samples after approved UI actions and viewport positioning",
+    "Load exact approved Inter using target native-select label before locale/projection selection; retain before/after values, computed fonts, face status and glyph checks",
+    "Retain stable element handle across the locale change because the accessible label changes; fail if disconnected",
+    "Move diagnostic runRoot initialization after diagnosticOnly declaration"
+  ],
+  "inferredMechanism": "Font loading relative to native-select locale actions and asynchronous nested scrolling were capture synchronization factors. Browser internal font cache behavior is not independently established.",
+  "diagnosticExecutions": [
+    {
+      "record": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T14-15-48-541Z-211dd878-37a6-4f84-86ef-49518fecf0aa.json",
+        "sha256": "4f6bbace0f7ba89a93be195fdc7d832a0e8e643fba0063e2ee8d13511598f3d8"
+      },
+      "startedAt": "2026-10-10T14:15:48.543Z",
+      "finishedAt": "2026-10-10T14:15:49.412Z",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\2936_1791641748398\\node.exe",
+        "--import",
+        "tsx",
+        "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T14-15-48-541Z-211dd878-37a6-4f84-86ef-49518fecf0aa.mjs"
+      ],
+      "exitCode": 1,
+      "diagnosticOnly": true,
+      "keys": [
+        "admin-content__aal2-required__en-EG__1440x900__dark",
+        "admin-content__aal2-required__en-EG__1440x900__forced-colors-active",
+        "admin-content__aal2-required__en-EG__412x915__dark",
+        "admin-content__aal2-required__en-EG__412x915__forced-colors-active",
+        "admin-content__assigned-review__en-EG__1440x900__normal",
+        "admin-content__assigned-review__en-EG__360x800__normal",
+        "admin-content__assigned-review__en-EG__768x1024__normal",
+        "admin-content__empty__en-EG__360x800__normal",
+        "admin-content__empty__en-EG__412x915__normal",
+        "admin-content__governance-ready__en-EG__412x915__dark",
+        "admin-content__governance-ready__en-EG__768x1024__dark",
+        "admin-content__governance-ready__en-EG__768x1024__normal",
+        "admin-content__permission-denied__en-EG__1440x900__dark",
+        "admin-content__permission-denied__en-EG__360x800__dark",
+        "admin-content__permission-denied__en-EG__360x800__normal",
+        "admin-content__permission-denied__en-EG__412x915__dark",
+        "admin-content__permission-denied__en-EG__768x1024__dark",
+        "admin-content__permission-denied__en-EG__768x1024__normal",
+        "admin-content__recoverable-error__en-EG__1440x900__dark",
+        "admin-content__recoverable-error__en-EG__360x800__normal",
+        "patient-records__history-open__ar-EG__1440x900__dark",
+        "patient-records__history-open__ar-EG__1440x900__forced-colors-active",
+        "patient-records__history-open__ar-EG__1440x900__normal"
+      ],
+      "prior": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T141015-521Z-06df30ed-f413-410e-be02-57435b588a9f/comparison.json",
+        "sha256": "88f70ef925c9738e37ff19f8992e618827829c3d2668e3c9db2602fabb9992ab"
+      },
+      "executedSource": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T14-15-48-541Z-211dd878-37a6-4f84-86ef-49518fecf0aa.mjs",
+      "runnerSha256": "a1a4a06bf841956fdcba32aed1404c62a5e74e5df9bc3d96d7d1660a1ae7bc9d",
+      "log": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T14-15-48-541Z-211dd878-37a6-4f84-86ef-49518fecf0aa.log",
+        "sha256": "7acdbf155e4eafdf68bd516b2b53c41740ecb3d7089f4a0191102b3e2316ae5e"
+      }
+    },
+    {
+      "record": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T14-15-58-402Z-75bdc680-5c2c-4305-b2b2-616974ae7a11.json",
+        "sha256": "91f63fb7fa785e7c4a4d9d0043f1e9d8bac7c4c3874762fcdbd8697b39f8ce28"
+      },
+      "startedAt": "2026-10-10T14:15:58.404Z",
+      "finishedAt": "2026-10-10T14:17:44.493Z",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\2596_1791641758292\\node.exe",
+        "--import",
+        "tsx",
+        "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T14-15-58-402Z-75bdc680-5c2c-4305-b2b2-616974ae7a11.mjs"
+      ],
+      "exitCode": 0,
+      "diagnosticOnly": true,
+      "keys": [
+        "admin-content__aal2-required__en-EG__1440x900__dark",
+        "admin-content__aal2-required__en-EG__1440x900__forced-colors-active",
+        "admin-content__aal2-required__en-EG__412x915__dark",
+        "admin-content__aal2-required__en-EG__412x915__forced-colors-active",
+        "admin-content__assigned-review__en-EG__1440x900__normal",
+        "admin-content__assigned-review__en-EG__360x800__normal",
+        "admin-content__assigned-review__en-EG__768x1024__normal",
+        "admin-content__empty__en-EG__360x800__normal",
+        "admin-content__empty__en-EG__412x915__normal",
+        "admin-content__governance-ready__en-EG__412x915__dark",
+        "admin-content__governance-ready__en-EG__768x1024__dark",
+        "admin-content__governance-ready__en-EG__768x1024__normal",
+        "admin-content__permission-denied__en-EG__1440x900__dark",
+        "admin-content__permission-denied__en-EG__360x800__dark",
+        "admin-content__permission-denied__en-EG__360x800__normal",
+        "admin-content__permission-denied__en-EG__412x915__dark",
+        "admin-content__permission-denied__en-EG__768x1024__dark",
+        "admin-content__permission-denied__en-EG__768x1024__normal",
+        "admin-content__recoverable-error__en-EG__1440x900__dark",
+        "admin-content__recoverable-error__en-EG__360x800__normal",
+        "patient-records__history-open__ar-EG__1440x900__dark",
+        "patient-records__history-open__ar-EG__1440x900__forced-colors-active",
+        "patient-records__history-open__ar-EG__1440x900__normal"
+      ],
+      "prior": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T141015-521Z-06df30ed-f413-410e-be02-57435b588a9f/comparison.json",
+        "sha256": "88f70ef925c9738e37ff19f8992e618827829c3d2668e3c9db2602fabb9992ab"
+      },
+      "executedSource": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T14-15-58-402Z-75bdc680-5c2c-4305-b2b2-616974ae7a11.mjs",
+      "runnerSha256": "eb195973da856f086c0ae29586b7f990db5799d092d25b03e06533235d2da794",
+      "log": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T14-15-58-402Z-75bdc680-5c2c-4305-b2b2-616974ae7a11.log",
+        "sha256": "07c0caa2599545c1d1d8fd7a3bd07cbbe70993456ef935b98f155597574aee34"
+      }
+    },
+    {
+      "record": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T14-20-05-831Z-1906649f-257e-4d13-91d6-b2e6075d49e7.json",
+        "sha256": "f9a195da27b65956f522099fcec616e022c8a5b046b308e0763b168123213201"
+      },
+      "startedAt": "2026-10-10T14:20:05.833Z",
+      "finishedAt": "2026-10-10T14:20:52.484Z",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\22660_1791642005715\\node.exe",
+        "--import",
+        "tsx",
+        "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T14-20-05-831Z-1906649f-257e-4d13-91d6-b2e6075d49e7.mjs"
+      ],
+      "exitCode": 1,
+      "diagnosticOnly": true,
+      "keys": [
+        "admin-content__aal2-required__en-EG__1440x900__dark",
+        "admin-content__aal2-required__en-EG__1440x900__forced-colors-active",
+        "admin-content__aal2-required__en-EG__412x915__dark",
+        "admin-content__aal2-required__en-EG__412x915__forced-colors-active",
+        "admin-content__assigned-review__en-EG__1440x900__normal",
+        "admin-content__assigned-review__en-EG__360x800__normal",
+        "admin-content__assigned-review__en-EG__768x1024__normal",
+        "admin-content__empty__en-EG__360x800__normal",
+        "admin-content__empty__en-EG__412x915__normal",
+        "admin-content__governance-ready__en-EG__412x915__dark",
+        "admin-content__governance-ready__en-EG__768x1024__dark",
+        "admin-content__governance-ready__en-EG__768x1024__normal",
+        "admin-content__permission-denied__en-EG__1440x900__dark",
+        "admin-content__permission-denied__en-EG__360x800__dark",
+        "admin-content__permission-denied__en-EG__360x800__normal",
+        "admin-content__permission-denied__en-EG__412x915__dark",
+        "admin-content__permission-denied__en-EG__768x1024__dark",
+        "admin-content__permission-denied__en-EG__768x1024__normal",
+        "admin-content__recoverable-error__en-EG__1440x900__dark",
+        "admin-content__recoverable-error__en-EG__360x800__normal",
+        "patient-records__history-open__ar-EG__1440x900__dark",
+        "patient-records__history-open__ar-EG__1440x900__forced-colors-active",
+        "patient-records__history-open__ar-EG__1440x900__normal"
+      ],
+      "prior": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T141015-521Z-06df30ed-f413-410e-be02-57435b588a9f/comparison.json",
+        "sha256": "88f70ef925c9738e37ff19f8992e618827829c3d2668e3c9db2602fabb9992ab"
+      },
+      "executedSource": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T14-20-05-831Z-1906649f-257e-4d13-91d6-b2e6075d49e7.mjs",
+      "runnerSha256": "8d6b215c6df512dcf6b671c61b7cccfae5a778369ad4971f913d2f660fbf53cd",
+      "log": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T14-20-05-831Z-1906649f-257e-4d13-91d6-b2e6075d49e7.log",
+        "sha256": "6e655747a57c112973121290697243bbe4969f28c455b632ff38012880e6f512"
+      }
+    },
+    {
+      "record": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T14-21-10-011Z-7a81a0bb-cb28-42f4-a5de-92f380f1e18f.json",
+        "sha256": "14b094bf5c093788cda2c020b0bfb2ae5286c8c684bbb6b62d586dc18696ccf7"
+      },
+      "startedAt": "2026-10-10T14:21:10.013Z",
+      "finishedAt": "2026-10-10T14:22:56.162Z",
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\5164_1791642069894\\node.exe",
+        "--import",
+        "tsx",
+        "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T14-21-10-011Z-7a81a0bb-cb28-42f4-a5de-92f380f1e18f.mjs"
+      ],
+      "exitCode": 0,
+      "diagnosticOnly": true,
+      "keys": [
+        "admin-content__aal2-required__en-EG__1440x900__dark",
+        "admin-content__aal2-required__en-EG__1440x900__forced-colors-active",
+        "admin-content__aal2-required__en-EG__412x915__dark",
+        "admin-content__aal2-required__en-EG__412x915__forced-colors-active",
+        "admin-content__assigned-review__en-EG__1440x900__normal",
+        "admin-content__assigned-review__en-EG__360x800__normal",
+        "admin-content__assigned-review__en-EG__768x1024__normal",
+        "admin-content__empty__en-EG__360x800__normal",
+        "admin-content__empty__en-EG__412x915__normal",
+        "admin-content__governance-ready__en-EG__412x915__dark",
+        "admin-content__governance-ready__en-EG__768x1024__dark",
+        "admin-content__governance-ready__en-EG__768x1024__normal",
+        "admin-content__permission-denied__en-EG__1440x900__dark",
+        "admin-content__permission-denied__en-EG__360x800__dark",
+        "admin-content__permission-denied__en-EG__360x800__normal",
+        "admin-content__permission-denied__en-EG__412x915__dark",
+        "admin-content__permission-denied__en-EG__768x1024__dark",
+        "admin-content__permission-denied__en-EG__768x1024__normal",
+        "admin-content__recoverable-error__en-EG__1440x900__dark",
+        "admin-content__recoverable-error__en-EG__360x800__normal",
+        "patient-records__history-open__ar-EG__1440x900__dark",
+        "patient-records__history-open__ar-EG__1440x900__forced-colors-active",
+        "patient-records__history-open__ar-EG__1440x900__normal"
+      ],
+      "prior": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/archives/2026-10-10T141015-521Z-06df30ed-f413-410e-be02-57435b588a9f/comparison.json",
+        "sha256": "88f70ef925c9738e37ff19f8992e618827829c3d2668e3c9db2602fabb9992ab"
+      },
+      "executedSource": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostic-source-2026-10-10T14-21-10-011Z-7a81a0bb-cb28-42f4-a5de-92f380f1e18f.mjs",
+      "runnerSha256": "be8111580c665094f77458dcb57af60659c8431c04eddbca769938e55ea72a53",
+      "log": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/diagnostic-execution-2026-10-10T14-21-10-011Z-7a81a0bb-cb28-42f4-a5de-92f380f1e18f.log",
+        "sha256": "6a37a13ad9b84d896508bb9e790e30f7c735f5bcd7cfea251823b6e3df4e869a"
+      }
+    }
+  ],
+  "diagnosticComparisons": [
+    {
+      "record": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostics/2026-10-10T141559-114Z-7cd44ca0-5dcc-497b-81e0-8dfb51be28e1/strict-comparison.json",
+        "sha256": "c2f4fa3d7769bbf13e3c0caa5751f25683888f7ba2d6ef10c7258ec7c0eb7627"
+      },
+      "recordedAt": "2026-10-10T14:18:17.538Z",
+      "diagnosticOnly": true,
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\20980_1791641895320\\node.exe",
+        "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/compare-deterministic-captures.mjs",
+        "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\2026-10-10T141559-114Z-7cd44ca0-5dcc-497b-81e0-8dfb51be28e1\\capture-a",
+        "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\2026-10-10T141559-114Z-7cd44ca0-5dcc-497b-81e0-8dfb51be28e1\\capture-b",
+        "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\archives"
+      ],
+      "exitCode": 1,
+      "result": "FAIL_PIXEL_DIFFERENCE",
+      "pairs": 23,
+      "differences": [
+        {
+          "name": "admin-content__aal2-required__en-EG__1440x900__dark.png",
+          "width": 1440,
+          "height": 957,
+          "sha256": {
+            "a": "635d28ec344332ec4db61a11213d667854b05e5ee8cdcc122a51cdcfe8902652",
+            "b": "6904a7f2d4b068f83cc5a648649ed01bb010a157795d6c29856a2dfc38ae3a68"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__assigned-review__en-EG__1440x900__normal.png",
+          "width": 1440,
+          "height": 2394,
+          "sha256": {
+            "a": "1da9f0f5fb7b9fe6c1f32559d43761217c70d1199c02b37cb18e4b087a402927",
+            "b": "cefb75ca9d049e8038239c11dfcad6eb407217bc44c6c2b04c7354aa5fd78e7f"
+          },
+          "changedPixels": 2226,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__assigned-review__en-EG__768x1024__normal.png",
+          "width": 768,
+          "height": 2483,
+          "sha256": {
+            "a": "6911845bec98493a33a124c83079be7fa318eaf969c38418ba6d26d5b046413b",
+            "b": "14b587e934c1991969a21fe476bbcb6437fdb1eb4b38a86e49218d7d197f728f"
+          },
+          "changedPixels": 2226,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__governance-ready__en-EG__412x915__dark.png",
+          "width": 412,
+          "height": 3174,
+          "sha256": {
+            "a": "8b95a746ab1cc39d28f7b364cc5b6a4350d345f442d517c8ea9676e7e4c8ef32",
+            "b": "bcebf9b4172643426f763cd2601e220dd742ab55bb3c1f030e9da1d4748832b9"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__governance-ready__en-EG__768x1024__dark.png",
+          "width": 768,
+          "height": 2901,
+          "sha256": {
+            "a": "6f8cad7924fa9ab8b401056fef1f2f60c8eaf9feb8ee47424ed704a4cbfdf5fb",
+            "b": "c8e7363b2b4c2e5aedac84bf3100ce711d08ae8f1e3ee67b3b218282054c6fcb"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__governance-ready__en-EG__768x1024__normal.png",
+          "width": 768,
+          "height": 2901,
+          "sha256": {
+            "a": "c8e7363b2b4c2e5aedac84bf3100ce711d08ae8f1e3ee67b3b218282054c6fcb",
+            "b": "6f8cad7924fa9ab8b401056fef1f2f60c8eaf9feb8ee47424ed704a4cbfdf5fb"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__permission-denied__en-EG__1440x900__dark.png",
+          "width": 1440,
+          "height": 957,
+          "sha256": {
+            "a": "6110b84bb3fa4d24c6ba9957357d489cd854a7c000a75617318ec31f841cd1e2",
+            "b": "8f752e43e86eecb0a8db3ff270ee4c211327bfe554187c6bfa7580835debd99c"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__permission-denied__en-EG__412x915__dark.png",
+          "width": 412,
+          "height": 1157,
+          "sha256": {
+            "a": "6684617a9f57dda3b991896d4376ba1f025976d026dd813fedea6310059482ed",
+            "b": "64430c5388e1b5d287802f6e43bb4f85e07b0585e7c6e822af982d8b302c2acc"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__permission-denied__en-EG__768x1024__dark.png",
+          "width": 768,
+          "height": 1024,
+          "sha256": {
+            "a": "3711868db637ae53bc0f7adee5998e1a6a06153e4018b006013a283a0036b4b3",
+            "b": "63b14eea44d480f39fa0c13ba981a9333c973f35a03cd87a6305fdac41c51cee"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__permission-denied__en-EG__768x1024__normal.png",
+          "width": 768,
+          "height": 1024,
+          "sha256": {
+            "a": "63b14eea44d480f39fa0c13ba981a9333c973f35a03cd87a6305fdac41c51cee",
+            "b": "3711868db637ae53bc0f7adee5998e1a6a06153e4018b006013a283a0036b4b3"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        },
+        {
+          "name": "admin-content__recoverable-error__en-EG__1440x900__dark.png",
+          "width": 1440,
+          "height": 957,
+          "sha256": {
+            "a": "2b15b4e46bfb782950ccdbd7deb82211bfef3085346a33bf5f481f84efde8e80",
+            "b": "4940404259ebbe64b7056e1a563a69e3b4109d4ce95147b26b237dfc7192cb7d"
+          },
+          "changedPixels": 1744,
+          "perChannelTolerance": 0,
+          "maxChannelDelta": 239
+        }
+      ],
+      "comparison": {
+        "path": "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\archives\\2026-10-10T141815-506Z-5c3db60f-6c43-4b92-9c8c-57121c5e2824\\comparison.json",
+        "sha256": "51ecacafe99281a14f30c49055e01b0fdeda8c644a276f6bef390eac0e3c8ba0"
+      },
+      "log": {
+        "path": "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\2026-10-10T141559-114Z-7cd44ca0-5dcc-497b-81e0-8dfb51be28e1/strict-comparison.log",
+        "sha256": "4fdb6402326f262985e7eb55c5d5c88e8e2b1ae851f5ed81355f48671b543a73"
+      }
+    },
+    {
+      "record": {
+        "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/diagnostics/2026-10-10T142110-698Z-b3e8d7ec-e400-4132-ad68-c847e84108fc/strict-comparison.json",
+        "sha256": "7a4f0e2218c27ef83b60cba268b3013d38a5f3cda443164441d4e09437024802"
+      },
+      "recordedAt": "2026-10-10T14:23:04.430Z",
+      "diagnosticOnly": true,
+      "command": [
+        "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\21288_1791642182141\\node.exe",
+        "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/compare-deterministic-captures.mjs",
+        "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\2026-10-10T142110-698Z-b3e8d7ec-e400-4132-ad68-c847e84108fc\\capture-a",
+        "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\2026-10-10T142110-698Z-b3e8d7ec-e400-4132-ad68-c847e84108fc\\capture-b",
+        "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\archives"
+      ],
+      "exitCode": 0,
+      "result": "PASS_IDENTICAL",
+      "pairs": 23,
+      "differences": [],
+      "comparison": {
+        "path": "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\archives\\2026-10-10T142302-314Z-1c4051d9-e1a0-46e2-babe-02b738cf5fce\\comparison.json",
+        "sha256": "bf8ddbfbe8a72bba76765e7eb6a3a9b7077a18086b7a79cd65ca75b7709860cd"
+      },
+      "log": {
+        "path": "artifacts\\feature-011\\k24\\reference-verification-2026-10-10\\visual\\diagnostics\\2026-10-10T142110-698Z-b3e8d7ec-e400-4132-ad68-c847e84108fc/strict-comparison.log",
+        "sha256": "2db62165970ecb42ef62e65a0987a3f327c16f731c89c9f3762f4fc5265a94dc"
+      }
+    }
+  ],
+  "diagnosticResult": "PASS_IDENTICAL_23_FOCUSED_PAIRS_ONLY",
+  "fullVerification": "STILL_REQUIRED_SEPARATELY",
+  "unchanged": [
+    "Approved matrix/profile",
+    "Zero tolerance/no masks",
+    "Application code/CSS",
+    "SQL/schema/grants",
+    "Public contracts",
+    "Task ledgers",
+    "Retained gates"
+  ],
+  "helper": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-current-app-surfaces.mjs",
+    "sha256": "be8111580c665094f77458dcb57af60659c8431c04eddbca769938e55ea72a53"
+  },
+  "note": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/visual/capture-stability-diagnostic.md",
+    "sha256": "105967c65989ea4b6ebf715cd59b48969fb1b8397d1517395e0ce0568c3883d8"
+  }
+}

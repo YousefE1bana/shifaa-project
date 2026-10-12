@@ -1,0 +1,21 @@
+{
+  "result": "PASS",
+  "capturedAt": "2026-10-09T14:08:23.786Z",
+  "runtimes": [
+    {
+      "runtime": "shifaa-local-postgres",
+      "serverVersion": "17.11",
+      "ownedNamesObservedInProof": 56,
+      "remainingOwnedDatabases": [],
+      "readOnlyInspection": true
+    },
+    {
+      "runtime": "shifaa-local-supabase",
+      "serverVersion": "17.6",
+      "ownedNamesObservedInProof": 56,
+      "remainingOwnedDatabases": [],
+      "readOnlyInspection": true
+    }
+  ],
+  "destructiveRecovery": false
+}

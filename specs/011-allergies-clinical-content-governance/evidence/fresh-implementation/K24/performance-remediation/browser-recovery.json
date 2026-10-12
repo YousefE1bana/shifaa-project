@@ -1,0 +1,37 @@
+{
+  "result": "PASS_TEST_RUNTIME_RECOVERY",
+  "capturedAt": "2026-10-09T21:33:11.187Z",
+  "rootCause": "Pinned Playwright 1.63.0 requires browser build 1243. Global cache had only headless build 1248; required executable was absent.",
+  "command": "pnpm exec playwright install chromium --no-remove --no-progress",
+  "version": "1.63.0",
+  "cache": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k24\\browser-runtime",
+  "browserVersion": "153.0.8010.12",
+  "executable": {
+    "path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\artifacts\\feature-011\\k24\\browser-runtime\\chromium-1243\\chrome-win64\\chrome.exe",
+    "sha256": "9b07943f834485b43c9d54caea2951c78715f9f07070a80ab6658465ebd3e711"
+  },
+  "pinnedBrowserManifest": {
+    "path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\node_modules\\.pnpm\\playwright-core@1.63.0\\node_modules\\playwright-core\\browsers.json",
+    "sha256": "545d52f8382c391e605562c330e9c1c534a16045898203037a49bb8bd769a946"
+  },
+  "installationLog": {
+    "path": "artifacts/feature-011/k24/chromium-install.log",
+    "sha256": "f38c67ca9df515b1cd9f13324037b0aad24eb37eda0e707cd67b813142092a97"
+  },
+  "failedPreflight": {
+    "path": "artifacts/feature-011/k24/chromium-preflight.log",
+    "sha256": "f575af644b1cbf35c87fc31f0ce6341967ab04d979607f8b6e235a6d2533b43b"
+  },
+  "failedFullVerification": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-chromium-missing.json",
+    "sha256": "20db7d78fd7e2f73d86043d8646128b4f6bc83557c0d2c570e592ea640bea5f7"
+  },
+  "failedFullVerificationLog": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/performance-remediation/full-verify-chromium-missing.log",
+    "sha256": "4bd9ad4760f885ca203aa4d3b3848fc6055e98541f53944d169f2b15a6b1df38"
+  },
+  "repositoryPackageAndLockUnchanged": true,
+  "globalCacheModified": false,
+  "assertionsThresholdsWorkloadUnchanged": true,
+  "formalGateAcceptance": false
+}

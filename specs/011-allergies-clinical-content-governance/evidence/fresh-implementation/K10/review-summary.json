@@ -1,0 +1,285 @@
+{
+  "result": "READY_FOR_REVIEW",
+  "checkpoints": [
+    "K09",
+    "K10"
+  ],
+  "k08Bookkeeping": {
+    "before": {
+      "tasks": "815b619cc28a369d6a29b77ad1486fd4222d564388d39cf6cde9fa39856682cd",
+      "map": "bfa13551ef4d5b8af840eeab1d6806904bfb3b587cd9e648698b4feced15273b"
+    },
+    "after": {
+      "tasks": "ad64b97060c3a5b46d4daa324e1fe6fa5ef11621127a408d3ffbc06efe303d54",
+      "map": "205a6b3e9269f5e77e9b735c6624875b199b3b22c2a1f099956b7c284b82e73c"
+    },
+    "record": "specs/011-allergies-clinical-content-governance/decisions/k08-accepted-2026-10-07.md",
+    "evidence": [
+      {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-red.json",
+        "sha256": "430e6b099688b0857c054f4b234d6f26d845c817cdbbc0de240f146f89310a4e"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/release-protection.json",
+        "sha256": "ca02101f33cef2419e6af93c55d39df4f73fefdb1c6d9e43329e0bdf0cab4927"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/allergy-protection.json",
+        "sha256": "eb6e0d432e58a32750d16f0686fee5f6383c841396c42abbbd0d0e83840aeedf"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/receipt-producer.json",
+        "sha256": "cc962c3daaaa499bbd7352cecdf7586417f9d73d80dbe4adfa900ad74abea1a5"
+      },
+      {
+        "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-proof.json",
+        "sha256": "181c75d6e31c63688424e8eb7e73cc6462e48ed76c25411ca2aac25808b0509f"
+      }
+    ],
+    "closed": [
+      427,
+      428,
+      429,
+      430,
+      431
+    ]
+  },
+  "k09": {
+    "requiredEvidence": {
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/evidence-red.json": "9af3f39beeeede9f43d7ce5cd4e0d826c8e42fef48a110cda6f1b57f0c2704cb",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/material-producer.json": "1addcec7fc0f95b24a2096bbff467f4fd7e4530b4a8099cb5c0c3b6bf78e57b3",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/signing-producer.json": "446cd7e56f0617aab625fdb3fd3ac4de4c68efe6a85e90c38b99db2bda3b60eb",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/governed-provisioner.json": "aa82b7dc6f2da58751a80df86ed4fdfdbd6aa96df3e00f8789abad163f826ee3",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/allergy-provenance.json": "df0328c7dc441e1e1e91bf05a6b087515c42663706cc6d9fa107c13c4ade8010",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/evidence-proof.json": "3e32d709a6d9cb8d0344de61eb4b2a3bba3b04fac021b57500c0663cb56fb94e"
+    },
+    "unlockedBeforeK10": true,
+    "unitTests": 55,
+    "eachRuntime": {
+      "components": 49,
+      "sourceDenials": 28,
+      "offlineProvisioningCases": 11,
+      "materialResolutions": 30,
+      "signingVerifications": 15,
+      "supportLookups": 10
+    },
+    "syntheticOnly": true
+  },
+  "k10": {
+    "requiredEvidence": {
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/core-red.json": "34479ca3f97bb11579e3be66c50f8a358d73847b07aa254da5504c9f90ab3b1e",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/core.json": "297613278ca897fae2635bcf2b4741f714a60332c1850ee132fe624d2e1cf616",
+      "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/equivalence.json": "cfccd7aedc17da014bb3a6a03b697a61b2e97cfd8c4a1f8084a53926a26c39c3"
+    },
+    "eachRuntime": {
+      "frozenVectors": 7,
+      "coreNegatives": 25,
+      "sqlRepresentableFactNegatives": 16,
+      "boundaryNormalizationCases": 4
+    },
+    "unitTests": 109,
+    "sqlCoreFrozenByteAndShaEquality": true
+  },
+  "tests": {
+    "api": {
+      "total": 122,
+      "passed": 122
+    },
+    "core": {
+      "total": 260,
+      "passed": 260
+    },
+    "contracts": {
+      "total": 40,
+      "passed": 40
+    },
+    "client": {
+      "total": 4,
+      "passed": 4
+    }
+  },
+  "commands": [
+    {
+      "command": "pnpm --filter @shifaa/api exec tsx ../../tools/run-feature-011-evidence-test.mjs",
+      "result": "PASS_BOTH_17.11_AND_17.6"
+    },
+    {
+      "command": "pnpm --filter @shifaa/api exec tsx ../../tools/run-feature-011-core-equivalence-test.mjs",
+      "result": "PASS_BOTH_17.11_AND_17.6"
+    },
+    {
+      "command": "pnpm --filter @shifaa/api typecheck; pnpm --filter @shifaa/core typecheck",
+      "result": "PASS"
+    },
+    {
+      "command": "vitest API protection/receipt/evidence/exposure; full core; Feature011 contracts/client",
+      "result": "426_PASS"
+    },
+    {
+      "command": "pnpm architecture:check; pnpm secrets:check; changed-file prettier --check; git diff --check",
+      "result": "PASS"
+    },
+    {
+      "command": "node tools/verify-feature-011-contracts.mjs",
+      "result": "PASS_CURRENT_P1_P5_123_PINS"
+    }
+  ],
+  "failuresAndRepairs": [
+    "K09 offline pool cleanup on failure repaired; exact owned leftover scratch DB dropped after zero sessions, no forced/shared reset",
+    "K09 consumed SQL boolean correctly JSON-wrapped; no setup failure counted as evidence",
+    "Added eligibility fixtures use privileged orchestration then SET LOCAL SESSION AUTHORIZATION shifaa_api, never direct API protected-table access",
+    "Source semantic calendar validation matches approved metadata date patterns; canonical UUID without invented version limits",
+    "Core missing brace and widened fixture TypeScript literals repaired; syntax/type failures excluded from RED",
+    "B01/B03 variable-precision wire notation rendered to independently literal six-digit canonical facts per approved contract section4; vector bytes untouched",
+    "Pure wire Source null rejection aligned existing generated Source; safe revision integer checked"
+  ],
+  "scopeDiagnostic": {
+    "command": "node tools/verify-feature-011-scope.mjs",
+    "exitCode": 1,
+    "failures": [
+      "Fresh tasks.md approved hash mismatch",
+      "Fresh task-map approved hash mismatch",
+      "Fresh ledger task/status or checkbox state mismatch"
+    ],
+    "preexisting": true,
+    "beforeThisTurnLedgerHashes": {
+      "tasks": "815b619cc28a369d6a29b77ad1486fd4222d564388d39cf6cde9fa39856682cd",
+      "map": "bfa13551ef4d5b8af840eeab1d6806904bfb3b587cd9e648698b4feced15273b"
+    },
+    "guardUnchanged": true,
+    "reason": "K01 guard pins raw initially-unchecked ledger hashes and demands all 92 UNCHECKED. Authorized earlier acceptance had already advanced T001–T029 before this turn. K08 acceptance advances only T030–T034. No task definition drift: in-memory unchecked normalization matches both original approved hashes exactly.",
+    "normalizedOriginalHashes": {
+      "tasks": "e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957235f9573165",
+      "taskMap": "5a6037838bc644a5dbb61c17a5504a662822f8d5ee0925379b823737f17b738d"
+    },
+    "remediated": false,
+    "scopeInventory": {
+      "publicOperations": 7,
+      "FR": 4,
+      "NFR": 19
+    }
+  },
+  "qualityReview": {
+    "cleanCodeGuard": "Closed typed trust boundaries, no fallback approvals/new dependency, disposal/failure propagation, pure core verified",
+    "testGuard": "Real both-runtime persistence and ports; exact denial reasons; no setup failures counted; frozen expected values never generated",
+    "docsGuard": "Accepted evidence references and every numeric proof claim checked against current artifacts"
+  },
+  "checkboxState": {
+    "checked": "T001–T034",
+    "pendingAcceptance": "T035–T043",
+    "untouchedUnchecked": "T044–T092"
+  },
+  "issues": [
+    {
+      "number": 427,
+      "state": "CLOSED"
+    },
+    {
+      "number": 428,
+      "state": "CLOSED"
+    },
+    {
+      "number": 429,
+      "state": "CLOSED"
+    },
+    {
+      "number": 430,
+      "state": "CLOSED"
+    },
+    {
+      "number": 431,
+      "state": "CLOSED"
+    },
+    {
+      "number": 432,
+      "state": "OPEN"
+    },
+    {
+      "number": 433,
+      "state": "OPEN"
+    },
+    {
+      "number": 434,
+      "state": "OPEN"
+    },
+    {
+      "number": 435,
+      "state": "OPEN"
+    },
+    {
+      "number": 436,
+      "state": "OPEN"
+    },
+    {
+      "number": 437,
+      "state": "OPEN"
+    },
+    {
+      "number": 438,
+      "state": "OPEN"
+    },
+    {
+      "number": 439,
+      "state": "OPEN"
+    },
+    {
+      "number": 440,
+      "state": "OPEN"
+    }
+  ],
+  "retainedGates": "OPEN-TECH-002/003, OPEN-UX-002, OPEN-CLIN-001, OPEN-LEGAL-001/002/007 retained; OPEN-UX-001 satisfied only for affected UI Plan prerequisite",
+  "architectureContractSecurityScopeBlocker": null,
+  "productOrMigrationChanges": false,
+  "sourceAndSqlDrift": false,
+  "changedExistingFiles": [
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+    "specs/011-allergies-clinical-content-governance/tasks.md"
+  ],
+  "newFiles": [
+    "packages/core/src/feature-011/allergy-policy.test.ts",
+    "packages/core/src/feature-011/allergy-policy.ts",
+    "packages/core/src/feature-011/artifact.test.ts",
+    "packages/core/src/feature-011/artifact.ts",
+    "packages/core/src/feature-011/content-policy.test.ts",
+    "packages/core/src/feature-011/content-policy.ts",
+    "services/api/src/modules/feature-011/allergy-evidence.ts",
+    "services/api/src/modules/feature-011/evidence-profiles.ts",
+    "services/api/src/modules/feature-011/evidence-types.ts",
+    "services/api/src/modules/feature-011/evidence-validation.ts",
+    "services/api/src/modules/feature-011/evidence.test.ts",
+    "services/api/src/modules/feature-011/material-evidence.ts",
+    "services/api/src/modules/feature-011/signing-evidence.ts",
+    "specs/011-allergies-clinical-content-governance/decisions/k08-accepted-2026-10-07.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/allergy-provenance.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/evidence-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/evidence-red.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/governed-provisioner.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/k09-before-k10.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/material-producer.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/review-summary.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/runtime/shifaa-local-postgres-evidence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/runtime/shifaa-local-supabase-evidence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/signing-producer.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/core-red.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/core.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/equivalence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/review-summary.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/runtime/shifaa-local-postgres-equivalence.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/runtime/shifaa-local-supabase-equivalence.json",
+    "tools/feature-011-evidence-fixtures.mjs",
+    "tools/feature-011-offline-proof.mjs",
+    "tools/feature-011-source-negatives.mjs",
+    "tools/provision-feature-011-evidence.mjs",
+    "tools/run-feature-011-core-equivalence-test.mjs",
+    "tools/run-feature-011-evidence-test.mjs"
+  ],
+  "preservedExistingFiles": 3653,
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "localMain": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "gitStatus": "M docs/architecture/SHIFAA-API-Catalog.md\n M packages/api-client/package.json\n M packages/contracts/package.json\n M packages/contracts/src/index.ts\n M services/api/src/app.ts\n M services/api/src/config.ts\n?? docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md\n?? infra/db/fixtures/feature-011-k04.sql\n?? infra/db/fixtures/feature-011-k06.sql\n?? infra/db/fixtures/feature-011.sql\n?? infra/db/tests/feature-011-allergy-create-read.sql\n?? infra/db/tests/feature-011-allergy-verification.sql\n?? infra/db/tests/feature-011-concurrency.sql\n?? infra/db/tests/feature-011-content-draft.sql\n?? infra/db/tests/feature-011-content-projections.sql\n?? infra/db/tests/feature-011-k05-storage.sql\n?? infra/db/tests/feature-011-publication.sql\n?? infra/db/tests/feature-011-receipts.sql\n?? infra/db/tests/feature-011-rls.sql\n?? infra/db/tests/feature-011-schema.sql\n?? infra/db/tests/feature-011-signatures.sql\n?? packages/api-client/src/feature-011.test.ts\n?? packages/api-client/src/feature-011.ts\n?? packages/contracts/src/feature-011.test.ts\n?? packages/contracts/src/feature-011.ts\n?? packages/core/src/feature-011/\n?? packages/test-kit/src/feature-011/\n?? services/api/src/adapters/postgres/feature-011-receipts.ts\n?? services/api/src/feature-011-exposure.test.ts\n?? services/api/src/feature-011-exposure.ts\n?? services/api/src/modules/feature-011/\n?? specs/011-allergies-clinical-content-governance/\n?? supabase/migrations/20261006175926_f011_allergy_revisions.sql\n?? supabase/migrations/20261006175932_f011_content_artifacts.sql\n?? supabase/migrations/20261006175937_f011_governance_evidence.sql\n?? supabase/migrations/20261006175942_f011_atomic_receipts.sql\n?? supabase/migrations/20261006185236_f011_allergy_functions.sql\n?? supabase/migrations/20261006185237_f011_release_functions.sql\n?? supabase/migrations/20261006185239_f011_signing_functions.sql\n?? supabase/migrations/20261006185240_f011_publication_functions.sql\n?? supabase/migrations/20261006185241_f011_rls_grants.sql\n?? supabase/migrations/20261006185242_f011_receipt_functions.sql\n?? tools/feature-011-consumer-fixtures.mjs\n?? tools/feature-011-evidence-fixtures.mjs\n?? tools/feature-011-harness.test.mjs\n?? tools/feature-011-k08-preflight.mjs\n?? tools/feature-011-ledger-contract.test.mjs\n?? tools/feature-011-offline-proof.mjs\n?? tools/feature-011-physical-green.mjs\n?? tools/feature-011-physical-races.mjs\n?? tools/feature-011-physical-red.test.mjs\n?? tools/feature-011-predecessor-races.mjs\n?? tools/feature-011-protection-fixtures.mjs\n?? tools/feature-011-protocol-parity.test.mjs\n?? tools/feature-011-source-negatives.mjs\n?? tools/feature-011-support-lifecycle.mjs\n?? tools/generate-feature-011-client.mjs\n?? tools/generate-feature-011-contract.mjs\n?? tools/provision-feature-011-evidence.mjs\n?? tools/run-feature-011-concurrency-test.mjs\n?? tools/run-feature-011-consumer-test.mjs\n?? tools/run-feature-011-core-equivalence-test.mjs\n?? tools/run-feature-011-evidence-test.mjs\n?? tools/run-feature-011-physical-red.mjs\n?? tools/run-feature-011-postgres-test.mjs\n?? tools/run-feature-011-protection-test.mjs\n?? tools/run-feature-011-storage-test.mjs\n?? tools/verify-feature-011-contracts.mjs\n?? tools/verify-feature-011-scope.mjs\n?? tools/verify-feature-011-scope.test.mjs",
+  "stagedDiff": "",
+  "noDelegatesUsed": true,
+  "noCommitPushPrMainChange": true,
+  "stoppedBefore": "K11/T044"
+}

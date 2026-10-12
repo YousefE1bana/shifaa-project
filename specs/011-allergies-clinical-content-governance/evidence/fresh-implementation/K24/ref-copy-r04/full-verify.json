@@ -1,0 +1,983 @@
+{
+  "task": "T091",
+  "checkpoint": "K24",
+  "result": "PASS",
+  "startedAt": "2026-10-10T17:47:59.113Z",
+  "finishedAt": "2026-10-10T18:38:30.696Z",
+  "command": "pnpm verify",
+  "exitCode": 0,
+  "log": {
+    "path": "artifacts/feature-011/k24/reference-verification-2026-10-10/copy-full-verify-retry-04.log",
+    "sha256": "6bc566053ab8d9cafedf8e8c03a472e7b8067912b1a29085fda76e6c85a9a991"
+  },
+  "sourceDigests": {
+    "specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json": "79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548",
+    "specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md": "665824ab1180ef0ebb5d864584e4b58921428e0c172d3e97244fd5222bf9948c",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md": "f131fefe06a21ceac85b77349193c8c40b7965b8ef79dc6248b35e78144751a9",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json": "88fc3961c18b868d38fda8b8f0d93c49e3cc8ccba64de4a63b66a2081c7f52f2",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json": "7b0a99e183aba2d6e60f2effc7821124a8460b53f67c55c9466cdfddd5ec8133",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json": "b382986544a607a930197d107d114ff5256486b1227a38c0e584ee544a0ec523",
+    "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml": "2c20eef7029079e5f174d09f84b7c042b7c8347e125c05755a3bdf26dc45880e",
+    "specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json": "53e46fbbbf79526749e0786c1630a2c2b6ad515ec3ac33d8755d2730df0842ac",
+    "specs/011-allergies-clinical-content-governance/data-model.md": "b09f410a1289ab3633338ee2aee2a2e43ba1bfae351c7dd9dd850642fb51078f",
+    "docs/architecture/SHIFAA-API-Catalog.md": "ba6dd9177ee07410ebde92140ea086b06a86750e146a267625bbff498e832490",
+    "docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md": "51fdac8ecd2710bc13a53c89f9d09d4d486ad36631056e7171521d5e16b6abd6",
+    "tools/generate-feature-011-contract.mjs": "9f3f030df595c7c9acee0e549a9c5e39cd5dfd1323ed08a47c61bd7df11ab569",
+    "tools/generate-feature-011-client.mjs": "d12e7a6881d64050cb62ed4a2b9ee57c57e4f663a8bc5423a8c28808cea29fa2",
+    "tools/verify-feature-011-contracts.mjs": "9abc2c4676acbd05992e096cdd998c4d9bbe08264a119cfe6daf7e6136529e4a",
+    "packages/contracts/src/feature-011.ts": "da8088c84192407df4742e6215d7d250b998297ac7b2810cbd26ddb7e0c35591",
+    "packages/contracts/src/index.ts": "4de8805dac48f897710071db36eb175c2aa65b758af8a81596a7e537bfb3c3f6",
+    "packages/contracts/package.json": "de33203c197aa6e5ce0479b2243b8cc0c94ae2e47007fbaeaf842a1ab4cefc10",
+    "packages/api-client/src/feature-011.ts": "932487255c33087386c97c01c895a78a073c7c3b7bdd3353234150a37ea1c835",
+    "packages/api-client/package.json": "dff296db30d4afc4067b2b3cead136679c21da3fcbb866707994f6f7405b4ca8",
+    "specs/011-allergies-clinical-content-governance/decisions/documentation-successor-v1.json": "cc8b2024129325404bf745e55f6ee3183922e9244fe11f7687699e18e2ed9e62",
+    "specs/011-allergies-clinical-content-governance/decisions/k24-documentation-maintenance-approved-2026-10-09.md": "1a02dc567e2f989f69058c58068fa334f5c1c8fa13636b7cca9af1bf5ccb329f",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/manifest.json": "436ffcd24166846d796eb71b64c0158d60b1d845da5a9a29f0090a391fab3e91",
+    "docs/TEAM-INSTALLATION-CHECKLIST.md": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c",
+    "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757",
+    "docs/traceability/SHIFAA-Traceability-Matrix.md": "1e86808e8825ebe3ba6563952b52de00a71be70b6bee9ae71e163702f511673e",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/documentation-renewal/authorization.json": "02d46d6ebdbd6a48c9f3fc2fa1bc0703cd20b5bb953638eb981088f7a56be264",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/prerequisite-remediation/authorization.json": "15deca786329aa6632d92b9317605e5c65edc1e57b8a83b15bb5ecb2bed35b8b",
+    "specs/011-allergies-clinical-content-governance/decisions/k24-native-receipt-digest-remediation-v3-2026-10-09.md": "d7030c8028c84598f9819919cf349ec362a381c3efaa938c1c016c7fdc81895e",
+    "tools/feature-011-documentation-successor.mjs": "f8982d8c51be29315d636aa11989a3080a436e92644d3cddeeeddffdb58c456c",
+    ".specify/memory/constitution.md": "25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a",
+    "docs/design/SHIFAA-UI-Contract.md": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+    "docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md": "9feadc0b489857c66533d20f1829c9826d8ea7ae8ea7bf8e683968276e1cad04",
+    "packages/design-system/src/tokens.ts": "39fb80ef2c702aab3663b46dd98d92cc747c9ff694b4a8161005cc4ca317201d",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json": "b0f8d4ba2ad5f30bbdf6ec963a6dc4e16677236b3ed0fbc6aa263ee81a2ed6ed",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json": "f031aa09edddf8c60ebe4cc8165fa35afee7e3875551ca2f6136e68a31bf7f25",
+    "specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md": "03dbaeccfc4342136c6f6623f8613157e51806ddf0f07fea85a8ecb3374da257",
+    "specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md": "b203e00aaf3e2cc689b2ccc60e0b846ca206942de9b660d1d185ba4006d0a57e",
+    "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md": "c053e28f529ecea784917ab38028b599f45f0a4b58e517970a644ed7e2a268b5",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json": "4eff01a61b485f0616b69480a979f3024da21b464cf768771055bb2694e56050",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json": "2bf23cae34648742f995edced1008f7988efdbaf9dd12d9e1c46aa83e10d68ec",
+    "specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md": "2bc44368ddf306a89c29332b922e46bdd5ab9387b6d6bf2ed78e237351261c49",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json": "2948f78fd1fb92ee9d411092da30f577b9215c2543182c2e85f56b306da30291",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json": "e8c85abed8d13096f180282dab439f2f6b7a29c7a6fa628af46141d163998709",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json": "03945dbb8f323f480f1a93f09340936f5623f7c1feeea6f2fcce98211b4b3a11",
+    "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md": "e8f43933311ba5430d758504675162aca86d0537205eda95febbf3d6ab0bc5db",
+    "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md": "5c47a0e08caf22cdfa5a195503bcc79c5642054168966ed1ce7dd5af4b822a59",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json": "9f3be0aa5f5b3aa62b3505ea40d8b142b31f25a228a6b0bb19f221b28748ffa9",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json": "8326cde913c59e4c899b16ba73193d9a48a99191f5eb7dba66883d904b1523b0",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json": "782b32e23764c7ecf9b5114f387be174591c0d0ef6b2eed04749520991eee6cc",
+    "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md": "e75f95ea9daef89918083be8ea66b8fce896bf55c8d323a1bdffef07e37bd1eb",
+    "specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md": "b3dcef629ed2e3b80f1ef07a73369664314c4da4c623f1d80a78141942bba269",
+    "specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md": "a46d7f12480819c7649998729ba9149499cf66e33dcfcef335151d712710d817",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md": "4f8bf26bdfb43cd016b62cd572f21bc9f2a81477dcd2b1a067314cb95887ba3f",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md": "1fc278a00df5b46115374d1f435d1168f5de0977df3e21c9dabdb76b726c2989",
+    "specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md": "b9632b94dfb136b35d0b3bcef89a2cee47002836ed7db679a56cc4a000c0b48b",
+    "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md": "8d3fe1ae977bb99e3d24d1cf1f5548dafc0ecdb350f7e681b89acb04488e0bab",
+    "specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md": "03eaf4a9ace7d26fbbf977309774728531e763f13dc1bf06f726957838092709",
+    "specs/011-allergies-clinical-content-governance/plan.md": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca",
+    "specs/011-allergies-clinical-content-governance/quickstart.md": "71e377027f3aee5385e3c079e288498ea9e5597ae657dd07eecd5bf11e25ec5a",
+    "specs/011-allergies-clinical-content-governance/research.md": "d862cfb3698f7651e0b63c80910107ee4c43e136bb417d079294f5e5451967c5",
+    "specs/011-allergies-clinical-content-governance/spec.md": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0",
+    "specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json": "59ea1788edbae023533a9e08da97bc3884e0e098ec6e80721272822b6439c432",
+    "infra/db/migrations/001_identity_onboarding.sql": "3605e264652c1d45e3c10e054dce0b8649c8a92d1e61d654938d22c5030313a9",
+    "supabase/config.toml": "f6dbb7071faa4c94d0d52d11c9b1618daf6895149cd86ae6ad31b213aa2c0417",
+    "compose.yml": "bfab38e14aeb8d3fa527637833b131df1b8a65ff627517cf84824cb911afcf5e",
+    "infra/db/fixtures/feature-011.sql": "97a52c39331c576e09611284941d329d99debc4b2f2220931ae45606b2284ddc",
+    "infra/db/tests/feature-011-schema.sql": "39ac3dd11f04517d08d4b030b27d72d53bfabc5ec96725e8ef35c4e39eab9b88",
+    "infra/db/tests/feature-011-rls.sql": "b554c519fbd320b257fcc5bc232afa9f9af2026701b33e1c181fa89040a8db79",
+    "infra/db/tests/feature-011-allergy-create-read.sql": "ef22f2761f6db47ca3839d44a8ab228529ca93f0403fd0a10846a5a7f47bd802",
+    "infra/db/tests/feature-011-allergy-verification.sql": "8f8f485bbca2a606dcdec7e60793eb1fcf464a4bcce81ef7b0d2c751357510da",
+    "infra/db/tests/feature-011-content-draft.sql": "50a9799074497404e5f8aba656732a3c3eee29e2835c55f8ec06b6f79dad86c6",
+    "infra/db/tests/feature-011-signatures.sql": "23e3838c4c21d615567edc8229bee5c30ace91a07d9ccfbb0b0852f2fb058dd9",
+    "infra/db/tests/feature-011-publication.sql": "37937175563258803382be28297728c081a0ca82ff456bd75950127267484cee",
+    "infra/db/tests/feature-011-content-projections.sql": "f2ccfe109bd8e62a75c3e849591c4bb74233deeb90e835ce4facd8568752d68a",
+    "tools/run-feature-011-postgres-test.mjs": "23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b",
+    "tools/run-feature-011-concurrency-test.mjs": "5b441a5e30627e1a473ac4cc75fc55f97548a5f111c0ab5df0e5bd4b797ee207",
+    "infra/db/tests/feature-011-receipts.sql": "a3ef6f63f1ea927be8c02e9231b80c6c4cf52ca5e520a22af427a8d47df4f876",
+    "infra/db/tests/feature-011-concurrency.sql": "ca2e69dfc8ed8927f22edb02f38c96139e416aed4e6ab8e48b82d052af1d0613",
+    "docs/governance/SHIFAA-Identifier-Handoff-Amendment-2026-10-08.md": "b0fb879e16129c0f2da56465c6b531d146cf9b5651c963f0f6f3889d7edf942f",
+    "docs/architecture/SHIFAA-Data-RLS.md": "0df367f69aa016bcfd2d345b727d7dcc3539e4fdbb7b69f44dc0d171a950de2b",
+    "specs/001-identity-onboarding/contracts/openapi.yaml": "fa0120408c939bc1f895cceedf415f930fee50134a26d161953404d22e0649da",
+    "specs/010-encounters-referrals-contextual-chat/contracts/openapi.yaml": "543eee80625779cf52f754a5bbd69bbb63658960414ee5260254e8f1c0c82dd8",
+    "packages/contracts/src/identity-onboarding.ts": "d06186f72c8fccd6d3c92ec7097f42b0e12ede820fb975a5b0808ef567613580",
+    "packages/contracts/src/feature-010.ts": "d5be14bd357f9b73a81227aadc868be10275f47ea7661620087a406e88e6096e",
+    "packages/api-client/src/identity-onboarding.ts": "e4fadd0f3467e8ceeec65d4bcd3a73747cc76fbddef4e8695d3576a7c932ae7d",
+    "packages/api-client/src/feature-010.ts": "d26111ca4e32bd4ae15cb18f65aa52638573d3fdcabe9b696db0820d38cd5f66",
+    "services/api/src/adapters/postgres/identity-repository.ts": "5ccdc43ab2192748722d3348984eafc44297f2277f31dcf90bfe963dc1196cda",
+    "tools/feature-011-k08-preflight.mjs": "d0c994a544bd4e985ab0693a90c43fae62e22587314f0df995ebfb5dd34298c0",
+    "tools/feature-011-physical-green.mjs": "fbb13d54c5fd243f2ddee9481fa455bb5a1037f2d0dad36b00d39b0413bfb5df",
+    "tools/feature-011-physical-races.mjs": "ec5a14e11d68330ee0c6cee0607ac28af23404bb2f659f3f3333c89b18b2e7fd",
+    "tools/feature-011-consumer-fixtures.mjs": "4df750503dfcf33b1dbf10cef2e307a67485d988fb4742e67a15293b3dbe4d36",
+    "tools/run-feature-011-consumer-test.mjs": "2e2d34da0f220d1d666c6be41ed49494ddd52a58c468f3d7df3f413d1fd7a3c4",
+    "tools/run-feature-011-storage-test.mjs": "62dc149fa7899de9a3e68dfb2600dba6ad47aa7a94d089c70022109710d71b6d",
+    "tools/feature-011-support-lifecycle.mjs": "1e64b06ba9a441b4f1c4c40e995dc7b03fa9372ac3ee80899a0605117aa2cd83",
+    "infra/db/fixtures/feature-011-k04.sql": "10016d18cf565400f383557d61cf6a4b4685ae1fd4b546d107ef27c56415e233",
+    "infra/db/fixtures/feature-011-k06.sql": "36ca700e4d039f65a2904a97b255c3765fd6b47bdca0ff66b169633af51d0405",
+    "infra/db/tests/feature-011-k05-storage.sql": "fcdfd61abe0a7ec7b4d0e3617b55944c66e2978dcbb268769282ef2cabb9b012",
+    "packages/test-kit/src/feature-011/fixtures.ts": "f294c5711fc60fc8247388cd3a089330f62aa60863d383a992336b44d627213e",
+    "services/api/src/feature-011-exposure.ts": "c242b0d39d349ffd74294c5bb36afa0089a2e0a65b58fe154377f1ea055b6bf0",
+    "services/api/src/feature-011-exposure.test.ts": "ad8cf52597e74889e39f8bf6be1cd6efbe3d2255e2bfa0a7cd4fdc3da05ca124",
+    "tools/feature-011-predecessor-races.mjs": "99930b2f785b1502a33b9cbb92e3f3e10e47b127954ffcc82388e0deccc84f04",
+    "infra/db/tests/feature-010-api.sql": "5e0b5242bcec4354de2dd51e8dabbd8e0b1d3e4a7ec71712c26e43e2e35df724",
+    "services/api/src/adapters/postgres/facility-service.ts": "f9b334be8aafefcc28ae82eaeca5ba17d5483f473839f2fba11c1ad1bb2863e4",
+    "supabase/migrations/20260811000100_identity_onboarding_baseline.sql": "61e37b6737374e71e8771cf0a387440dc1ae4851250504fa98b6ffec8c29e13e",
+    "supabase/migrations/20260811000300_facility_onboarding_rbac.sql": "874711dc23763ab86bda43a4e2c89c2a9655e997e90688191b29306cc9ac9589",
+    "supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql": "4ff4c82a0c24c4c99e30712a3ab2f5fe7be556d01b56099fd6e19866c58bcf72",
+    "supabase/migrations/20260811000500_family_care_relationships.sql": "ebe83d982039af7e382e96a1f5d136b00abeffc186f2e5a4fdb475c43903325e",
+    "supabase/migrations/20260811000600_family_care_storage.sql": "021efa741cad55dd5f1e03fa97ffaf4e15144e6393a26c117c0b95fd5964300a",
+    "supabase/migrations/20260813000500_privacy_dsr_notifications.sql": "82acee0d625f539c6b1697e88b2bdd46ea1dca3599cc487d2e449b3f9c5a35a9",
+    "supabase/migrations/20260813000600_privacy_dsr_storage.sql": "1b8636e4129f7d7e0c404ad8120483e86d163ddeea1e7a835f41cc34b84fb4a7",
+    "supabase/migrations/20260820000600_discovery_sos_foundation.sql": "4abc8b3bece34e74f47635b98474a03a25910ae060172b93cb46b0ee84a1b766",
+    "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql": "d06913004e67657b23bd2a3e9082b84e602bca286823ee607a1ce8a9cb581713",
+    "supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql": "f2485921eb622ed08fcca88d7ccbc6a1500399c449f04f65b220903894116fed",
+    "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql": "85f625ffe21f397dcd485403341463526be404709380f7685f3e55c2fb870674",
+    "supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql": "d18dcaf6c7c74682edb129fefdb4dffeb72692743deb0baf2b9ee7340c0c1eb0",
+    "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql": "17a5c214a72f7fdb11c531a7c7b338e875d7c11fe1639059e549a7f712706ee9",
+    "supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql": "29881695e360af2fcd55b1712448696c9ce8a3b21a495948bfe9d23c73e04d05",
+    "supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql": "5bb0b4124c01fb948570e6cdc95e49cb4dd529f67ce8e0b4b6a5a1858c1c7cbc",
+    "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql": "a4b86f5a050ffd6d74d68f7fe2dd5eeeaedfd8509bd83aa691f5b944687758ce",
+    "supabase/migrations/20260929001001_f010_c10_encounter_api.sql": "29323b2d4339d2c7bf2609f0f7baf2b09d28b9d3736009bda848d3af78a11056",
+    "supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql": "bce352b3c44a3a3c1e7e18a2d64a103884abe2f8909ee1311e3b5aed17a769b7",
+    "supabase/migrations/20260929001003_f010_c12_note_signing.sql": "6d1c6d578a97dd762a27e77618e0b6f14f80f3a81f6df8601a6f709ab5de10ba",
+    "supabase/migrations/20260929001004_f010_c13_encounter_completion.sql": "fcb378a8e82b7e1badb8d5579cf6e544676ae407d8671338df2dab15306a6528",
+    "supabase/migrations/20260929001005_f010_c17_referrals_api.sql": "94ef56950f289f90fb713660b50c2273bc9502ed722212968737d6b871744d87",
+    "supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql": "8b70cab31e5903a31815a76c0b5f8f0436b26cef6381f6faa3b385cce0b02a36",
+    "supabase/migrations/20260929001007_f010_c19_referral_projections.sql": "67c87a24e8fb14937425202f6b26b29925d60617a165e9b4840847d12d3e7d0c",
+    "supabase/migrations/20260929001008_f010_c22_context_messages.sql": "d5970e67602974a881b51e8da8347b584d13434e7cf05a151e12fb9594511ded",
+    "supabase/migrations/20260930001000_f010_c23_realtime_hint.sql": "3f2273da7cf1aab18668fce01a245130216993cc31448fc3efdd5cc1ef16a714",
+    "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql": "764cbf9e351062683c38d19719f52e5cdf4d51aeb76a6033d2cfc9c3011fffed",
+    "supabase/migrations/20261001001002_f010_f04_completion_authority.sql": "1e52cd7cbbaf01c85a1630759ce5db373b19da72fee6988051c669c5a1f39850",
+    "supabase/migrations/20261006175926_f011_allergy_revisions.sql": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+    "supabase/migrations/20261006175932_f011_content_artifacts.sql": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+    "supabase/migrations/20261006175937_f011_governance_evidence.sql": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+    "supabase/migrations/20261006175942_f011_atomic_receipts.sql": "c873313925348c84822bcf137c757d2e2475e62cbf2416fe6dff7433d77e3929",
+    "supabase/migrations/20261006185236_f011_allergy_functions.sql": "64d10b422ab4711a3f327d2e8984718bc3c8e2149aa76e0dbc36fbbe2b1e56b3",
+    "supabase/migrations/20261006185237_f011_release_functions.sql": "3871489179a618a277c598c142786343514c738751e4b03b443352ba047b34a9",
+    "supabase/migrations/20261006185239_f011_signing_functions.sql": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550",
+    "supabase/migrations/20261006185240_f011_publication_functions.sql": "1b24172abd84dc8ba4b7ce33970433b5af174760a2a95f85f099402968d11297",
+    "supabase/migrations/20261006185241_f011_rls_grants.sql": "6c7b6ab99d8b8d00ac6699cdfc8a63d88bd41d6f73e2f5ccd36a7244c1df0236",
+    "supabase/migrations/20261006185242_f011_receipt_functions.sql": "17114f0a3bf4290cb94b8f38a8a759f20a3ea23487ccdcff7d3eecfe82f04f31",
+    "supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql": "b12eda7e4cdf6b9096833a0a19b96d61dedd16bb3c57cb8bc9cf463089f1a90b"
+  },
+  "changedSourceHashes": {
+    "services/api/src/routes/clinic-scheduling.ts": "c2065284f93f575ff375b19e312461de4b3c109e99449b960df7116b98ebbac8",
+    "services/api/src/routes/clinic-scheduling.contract.test.ts": "1aa0267260dd76a5b21c27a52a11dcff3a0d757fb11180ce96df368a81326fea",
+    "apps/admin/src/app/clinical-content/ClinicalContentWorkspace.tsx": "5459bf22e068a4e3f367980a46f2acdb8f60effc86857d1494f358c1dd6ca719",
+    "packages/i18n/src/feature-011.ts": "9b89f9597f610e5d6cb5aaf8e34724d722dfedd2d29685e03f8bba817fd210d2",
+    "apps/admin/test/feature-011-clinical-content.test.tsx": "6aa89fe25c07cd0406eaf69559b27006d6414a381ef97147d1abe799c95a831f",
+    "packages/i18n/src/feature-011.test.ts": "3cc1f15f652ffc3977a80cd36b66e2f2bfb6844241765bc9b550f3bb2121ab3d"
+  },
+  "ledgerHashes": {
+    "specs/011-allergies-clinical-content-governance/tasks.md": "4d7d5b36a61b2b7410ca93be8404f446e53f83f7d52d10043de963e6ca7ff1f8",
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json": "9ee0719a82bf0df827c5c8803b9229a5de0558a354ad70204323a6fba4d5fe6d"
+  },
+  "preservedHistoricalFiles": 2330,
+  "historicalReruns": [
+    {
+      "path": "specs/006-discovery-sos-foundation/evidence/performance.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/9a4c36375aec28e8c8f4b58660bea8ecc6821911320435cec5ed7cb94259e49e-performance.json",
+        "sha256": "031fbc3d222a84890c0e116d28addff5657fd9bcc62e2c483eb2aba56b6d6c88"
+      },
+      "previousSha256": "4687c8604678c64b19c32e955bad021d85fb8fd69901dac499c4133ffe2d44aa"
+    },
+    {
+      "path": "specs/007-identity-continuity-sessions-mfa-recovery/evidence/performance.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/9646f57c9f4acf1e2abe4c75a9350670d05762fc796998ab37b7212183362704-performance.json",
+        "sha256": "bc70e1e358359f84c2d67b2659d26b938dabbd12509c1fab7e8a1df1bd5c5b3c"
+      },
+      "previousSha256": "55eb244db8e51ba4045d68306fd39264e53b71226feadc8218a2843f5c224f1d"
+    },
+    {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/243df7d09a81ea4f20a082c790fe1a5b9a19fc2df2845998c7210edbcce23a40-restore-report.md",
+        "sha256": "ce1a41071aea41f185e91d55fa964c47a52108da40f2c8006d8705f05cb9a217"
+      },
+      "previousSha256": "e712a2794e45b0dcbe2bcc2cc1bc8397714a9c2022c27387d7c18665fd255f32"
+    },
+    {
+      "path": "specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/ef00c84ac15bf37578b21aa5ac3f0fe8e0864b625e7135d7d8a94c82c490b950-load-profile.json",
+        "sha256": "6c67af1d8cc15026a483c987525c0919af1cf1900d1bc1b9dddb14c53416e904"
+      },
+      "previousSha256": "d1c56e3c041013edd4c4baacdccf1edeb32a8a13b4269c680ccd6317ea376515"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/composition.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/9e458f8adaff04e09237225fa91e5cfef855f987f94868e89dcf3150c98e8fa4-composition.json",
+        "sha256": "02003eb78bf213088b056b276a0a401f482e9a3a21f7e673988e936b063943d5"
+      },
+      "previousSha256": "e6c9624a59f55182fc2711dc423fede8c72329168f676c6758549d372cb1c38d"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/browser-clinic.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/536ba343e4e6af3cb64301950a79e4dfa1fd13b0d9b7afd5126322bbbf29abd1-browser-clinic.log",
+        "sha256": "e49a262cd4e15735a76828933193d0313db870ee58152478c3464e6eef0b7763"
+      },
+      "previousSha256": "f16acb38219ff4e69e16073064db787627405d536add5054c96ebd65fdae32c9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/browser-patient.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/f0f59d5699d9ede2459cfda3258ebd2ebb0e96f66fdfa0ed461e392ac34eb316-browser-patient.log",
+        "sha256": "2e8563ead1434d3056eb5170c2f9873605b7ffa8d0df742cd2ac685bc3ceb04d"
+      },
+      "previousSha256": "c4f6d8d2ee2a426b25713f7ea5eaef898c5e64715d8a233e87c531c2a7afe895"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/native-handoff.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/eb5e699ecda5bf90ea6946b93011826868a370344fd75ef30c535e0ae803e640-native-handoff.log",
+        "sha256": "286f598e60704f451e118e0dac4426cef71d709d729ce32b5f5556c36ad45873"
+      },
+      "previousSha256": "b36aeb479890e0d6bff883cdfa14b656598929ce8e9c40905d874f33ab0f547c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/package-admin.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/21617971f70b63f0be508ffe85ba1d51a768cceee73f43a0ed737dba762b542d-package-admin.log",
+        "sha256": "dcb4e659ec7a5fd34e5fbb6366bf74594af9438e8b4d5ecff343bc80888a1887"
+      },
+      "previousSha256": "921778a16a75a23b9e67216b5023a8f0d611107df776c4c5571295ddc9c02269"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/package-api-client.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/30225d631e3a5d4bc55cd44700952a4c84e1d1c4f6ea10a623bcb17573126c07-package-api-client.log",
+        "sha256": "dcf51f811b57956981ee7ba4160209cb71bc4542bd97b735286d4ed1b5597e9d"
+      },
+      "previousSha256": "a34b6d68fb125ff3c3ce8bb60692ef3ead54647808f8164bf84cffb4029b49e8"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/package-api.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/b00a7ceaf96b7b5661f8ad7022a16977c52ad5b77a14ba7ed015a4d68cdc6776-package-api.log",
+        "sha256": "c8075cfae30754c87ded71398e5ddcb40e90084edfb865d2bf4aafef7390e081"
+      },
+      "previousSha256": "e23fd212582d88dbdfbe4178cf626b6a8dfce02246a87c3d76eadabcb533bcd8"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/package-clinic.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/27c9899a50654e153de096d1278e549a4ec608ae469fec54d0792e41b8d1bd0b-package-clinic.log",
+        "sha256": "526d1e7eab9b885073f83bfe5162a5ebf66ef3af9bb522268cf0cab1efd0a47d"
+      },
+      "previousSha256": "5de39a08db895e47390d5adf551780ad0d432f71e6c94e3527b5902bb43e28dc"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/package-contracts.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/8bb0a8db22660e3510cf012315342d59c763c0a3241de23c6185b183b7097d13-package-contracts.log",
+        "sha256": "2d9ea24bb944fd78629f22d02d794b2f799874407d49c4b7588202cf1f28201f"
+      },
+      "previousSha256": "ac6bb4b0bfbe675ffdb784f4fe415457a6c9e72f5d2a8b74b8e5d572e8ebf853"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/package-core.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/7995d473159246703254bdb8a6a9829080f5fa82d200453efa50ff974be78bc5-package-core.log",
+        "sha256": "5095a2a5768498dbf1b577434d3e1ab95d045bae312c652971c993e99d51db0e"
+      },
+      "previousSha256": "2b2115236431d0f70484d4ee7482f28e9911b66f40062f987835ce07e7dd2c06"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/package-i18n.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/d64c064f5ea44ccb3ac3f107995beecfa2593c027ddd5c386810485f6db2590c-package-i18n.log",
+        "sha256": "2195ba25b7268dd898693c167b9aec5ac185004e504809cc03c7a84180a6bbb1"
+      },
+      "previousSha256": "b1dd55e1f870d8b0df2c78d691fcdaba9b9ff382de7fbb962c4c094d8f323dc1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/package-patient.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/bc3546a2ff7acf408db6942cb6476fdd3400d768c8f54baa412b51f3df176384-package-patient.log",
+        "sha256": "4743a7070120a1df828126de2c52b99a3bb29cc8394d1938832302fdc29fb6b2"
+      },
+      "previousSha256": "a8c9d53b3f3a65dbb866af9e4b35b833c33cb001eff9f48933ea4621a2ac1d45"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/physical-green.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/eda681cc9a1e14d371be242fba4a17b4ff408f5a721a79ec70abcd82f9984f77-physical-green.log",
+        "sha256": "2382e4f4e2f7b1d9289fd48de3f04895981cc2281390b79a039283309d12ce50"
+      },
+      "previousSha256": "6bcdcc1c293791596a07ea1629b0994a69982bdae24eeda4ae5518343d29a587"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/physical-races.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/a91e9b589f947c6fdcfb54fcee8163da812f71a40b74f0080c7e2d497786323a-physical-races.log",
+        "sha256": "0465917e3595e981d4e5954fa94dc22a41d10c88cf16ccbf99c4940f4f6385bb"
+      },
+      "previousSha256": "148570a023fb61bc75d5c140849a77c8358516ecfe62b7fd0d2f8bd6b4a3cbd4"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/tooling.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/bef645fd2299450502413c5e845658d1c1f66c8f2e56148a2d06278ec573fc94-tooling.log",
+        "sha256": "652e6b95949e871a562c0151c7d3e6bb5660e1cced27f77a845ee9c656781d6f"
+      },
+      "previousSha256": "75f427ed90f4289080936faaa2d7479437f8013fa32b726f82cde32aaab173ac"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-accessibility.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/016c95ee1ca78d1167c50be11ae366f2684571ef37cacf247c4ed846636f4758-clinic-ar-EG-accessibility.png",
+        "sha256": "2bb6279a75223f08c3ae4476a995e20dde85ede95a8817dc36e397aa3c5a03d9"
+      },
+      "previousSha256": "22b8fa427506d23986f2e68f9cbd5556b8889f95dd354e0ccf499a5e61efd64e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-decision-1-clinician_confirmed.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/c292928654118ab26bc6707105b77c28a94380fe69368271bd9486dbaa9a4330-clinic-ar-EG-decision-1-clinician_confirmed.png",
+        "sha256": "6c725a02b04841bb070d1a41e8c15a014724484878c44dfa36c0f85ba749193b"
+      },
+      "previousSha256": "d3cb8d4ca8c52a65bf8a167bf9a635ecf8f9ff64d8c72771fef6ab5e58e674a4"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-decision-2-refuted.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/f308ce3ed4141d729253ce8baada05f864dfcdd7b6383e2b1dc386bed46d7b09-clinic-ar-EG-decision-2-refuted.png",
+        "sha256": "8293c7de20f9ecea3d553fa90e94e9e389d780ae9d0cb5ad14ce46292ee1a9e2"
+      },
+      "previousSha256": "3432833b4726a4cd5ad39d670414fd5e8b216d780b1b5534f95c1ba243ff3e03"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-decision-3-clinician_confirmed.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/009f25f37abb3aae212330a38369df863385982801be274fba67f4e375eab100-clinic-ar-EG-decision-3-clinician_confirmed.png",
+        "sha256": "bb362bd0cda2d6fac9765215d0305a9cf64d6b636e9fc8d1567fd8ea7ab4bd67"
+      },
+      "previousSha256": "246a7901e4f1cc74895eb6bd41f936763a6eb4d8b443fe999134d5d49a83d4d6"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-decision-4-entered_in_error.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/66e047b685ab0bd8bc46a2334a5ab61051ac28c5296ebf3d27ca16cef385b0ea-clinic-ar-EG-decision-4-entered_in_error.png",
+        "sha256": "3cc9231bead249e68928f6f294e3820975ba22cde9d978a0d67b7e0cd3ee919b"
+      },
+      "previousSha256": "829197fbb8e70382e64a8426261f27243d7f6916c431507c4b8b89ed8d6ecc25"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-history-clinician_confirmed.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/daa68d8aeefd3ea2da172205a6cda95954f0cd25c239b04496433be4a0f30321-clinic-ar-EG-history-clinician_confirmed.png",
+        "sha256": "35c8a8ce995670244dc50f61624d2799a182c794cad73b6b7d35a70a4c4ececa"
+      },
+      "previousSha256": "c4aec4f56152fb7d7e1246252fbd9510ec704592ceccc7b762a53b6248030c9a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-history-entered_in_error.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/2b25a6d7d50491e4b8fe4a05027bee9ea0588b2f0e730c7ee877184c84841efd-clinic-ar-EG-history-entered_in_error.png",
+        "sha256": "35c8a8ce995670244dc50f61624d2799a182c794cad73b6b7d35a70a4c4ececa"
+      },
+      "previousSha256": "c4aec4f56152fb7d7e1246252fbd9510ec704592ceccc7b762a53b6248030c9a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-history-refuted.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/dc783f46c7001c7c645def2283a693aed9d82ae30e6d9c0d5cf4b7bc72e5c7bf-clinic-ar-EG-history-refuted.png",
+        "sha256": "35c8a8ce995670244dc50f61624d2799a182c794cad73b6b7d35a70a4c4ececa"
+      },
+      "previousSha256": "c4aec4f56152fb7d7e1246252fbd9510ec704592ceccc7b762a53b6248030c9a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-history-self_reported.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/d6a875b16173bb0034a8bcedd1957d8588e4da02bc74d2f5e579dd5cbe41bbe4-clinic-ar-EG-history-self_reported.png",
+        "sha256": "35c8a8ce995670244dc50f61624d2799a182c794cad73b6b7d35a70a4c4ececa"
+      },
+      "previousSha256": "c4aec4f56152fb7d7e1246252fbd9510ec704592ceccc7b762a53b6248030c9a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-history.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/1d7c3451bc098af0b376ea407e4aadcdb0951e32c7c7a00eaaa681a80b0dc435-clinic-ar-EG-history.png",
+        "sha256": "35c8a8ce995670244dc50f61624d2799a182c794cad73b6b7d35a70a4c4ececa"
+      },
+      "previousSha256": "c4aec4f56152fb7d7e1246252fbd9510ec704592ceccc7b762a53b6248030c9a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-j02.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/206dc7fbd48501965021003b5cd093355db2ff2667ed6c10513c01c46419e908-clinic-ar-EG-j02.png",
+        "sha256": "7d7bfb1d7fbeb9c92bbce69d26476b6675d47c555476dea067acad978278dbfb"
+      },
+      "previousSha256": "6ff09a73829459dd1e7ec84cc299b1a825893f6438a06e00887c681a193381f1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-ar-EG-receipt.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/935f8e1d8c52d797d645b74c04cdf1fef72c9611ec4e3d28612c9a9062eff5f4-clinic-ar-EG-receipt.png",
+        "sha256": "572d117c32371844922035e14a8c2550c6453a7af0527f4fc4d77f4ee39cfbb9"
+      },
+      "previousSha256": "40899e08da728096e65b5292e67e2868716a36b213affc1555b4e6b1a5d17fa1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-accessibility.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/0f43942f814c0c07ad33b90e7419cb5eb5fa8492b17c63f0f3b7bd6ad68d913c-clinic-en-EG-accessibility.png",
+        "sha256": "19d10bb5c7976b77b824f2c74a6b33a7a6b7ade989f3521cdc88f5f9c93b9ccf"
+      },
+      "previousSha256": "a62d34d286ee50cbd5ceeaa05f3346df73c0ed6e45da5cf49bd2ad875d9b8024"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-decision-1-clinician_confirmed.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/79a90e8f1e620644caafd648559332f36c107f5c5f594cdb3f32a52b35ed0c3c-clinic-en-EG-decision-1-clinician_confirmed.png",
+        "sha256": "5bb5307bd7ae25c4d4db00e6c13ae022d539662de31de995225925e7f0640323"
+      },
+      "previousSha256": "fe5659a2575692b2ec8c35b57863461927e9e904d97d2691e3437de7947e72e0"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-decision-2-refuted.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/e8169c26d7685dddf2444f16e054684f76c8a959c2a04fce0370c90a422aefeb-clinic-en-EG-decision-2-refuted.png",
+        "sha256": "4e302d17a198bf77712d0458879eabb40e930747a20c554880d30d4e034f2d67"
+      },
+      "previousSha256": "07ab8c438b30ac9da466d224b810959323b798851c31f6e3ba39e7a7f832dbdd"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-decision-3-clinician_confirmed.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/9aa2a01e9f95f806a7521c8423ccc83a11a9641fc2e0f653af5daa28b6cdc602-clinic-en-EG-decision-3-clinician_confirmed.png",
+        "sha256": "cff659ba72ed11ba89859ab75707f589206f5ddd00fab4b5093825fd6537cd2e"
+      },
+      "previousSha256": "0a7751412e89dbd978cf626177ca42b142b7255ceb236af59254f1e803dde802"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-decision-4-entered_in_error.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/725333edae999a514c18b71a2c2516157718f183eb6e4867ed447492870e24fe-clinic-en-EG-decision-4-entered_in_error.png",
+        "sha256": "2a705bf4b0d7c08a22f129bb5067a6336b51757d7994e43ac30b91d8f1dd94f4"
+      },
+      "previousSha256": "4fc40d7bea3bbe40a9e1b6a8f7e85b33ffb7d9bf92298f1e7176d35c2dfee4dd"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-history-clinician_confirmed.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/9c8504d4126ed0cb524c66d78c665accb6f73c28f31c0d31e0e33eed372be30b-clinic-en-EG-history-clinician_confirmed.png",
+        "sha256": "9898b2c69c84ab93b06fe581dd2373cf662df12cd828a89e0f5b5c40a71392e4"
+      },
+      "previousSha256": "f7480925e194f631ba3110882953f1226cc60914aa7700392ca0483ba1ccc78b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-history-entered_in_error.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/8e4f521832dc55c804452a4c9605a1c15cbcb253e4df3bdb80258a4136f2911a-clinic-en-EG-history-entered_in_error.png",
+        "sha256": "9898b2c69c84ab93b06fe581dd2373cf662df12cd828a89e0f5b5c40a71392e4"
+      },
+      "previousSha256": "f7480925e194f631ba3110882953f1226cc60914aa7700392ca0483ba1ccc78b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-history-refuted.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/80e5720e975800841325d378b2e8c465e766357bbd462a04e3ee2ac87b5effbc-clinic-en-EG-history-refuted.png",
+        "sha256": "9898b2c69c84ab93b06fe581dd2373cf662df12cd828a89e0f5b5c40a71392e4"
+      },
+      "previousSha256": "f7480925e194f631ba3110882953f1226cc60914aa7700392ca0483ba1ccc78b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-history-self_reported.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/e9eba232e03a6b6173239471c1a0065e413e858e100f5f87f9cfda030759f62c-clinic-en-EG-history-self_reported.png",
+        "sha256": "9898b2c69c84ab93b06fe581dd2373cf662df12cd828a89e0f5b5c40a71392e4"
+      },
+      "previousSha256": "f7480925e194f631ba3110882953f1226cc60914aa7700392ca0483ba1ccc78b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-history.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/8e94f1c9b04193d5b4b9e54a5b1c996b80d2939737d34a8c126026d5bf260201-clinic-en-EG-history.png",
+        "sha256": "9898b2c69c84ab93b06fe581dd2373cf662df12cd828a89e0f5b5c40a71392e4"
+      },
+      "previousSha256": "f7480925e194f631ba3110882953f1226cc60914aa7700392ca0483ba1ccc78b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-j02.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/205beb1a405651848366e1d047b678a01b00f61131c1e353dd13caaba40b505d-clinic-en-EG-j02.png",
+        "sha256": "47cf0dc9d15dddfa78613968f7748b6487a8de851857eb4c61a5dc1612e2a599"
+      },
+      "previousSha256": "459471597ae4850a30729e1f716b9b6869574e0c1a57dcb3e412cf84edf5a61b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/clinic/clinic-en-EG-receipt.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/2f6befedfbe805a70d2239a8b7b46cfbeea29c3cd6c0802bd31efd03250514b8-clinic-en-EG-receipt.png",
+        "sha256": "9a001aa877c5bd3379b68c561b19864e29a6e20a847fcb76b8049efb33af5708"
+      },
+      "previousSha256": "f708f62e3a8f49df3f1812e50edd928f1340c1235ee4deb2cf4a5eaee7980d12"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/patient/patient-ar-EG-history-entered_in_error.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/27b287d39685edc4217c145fde77e86d2b8148d9db0401953f20fc249b0578b2-patient-ar-EG-history-entered_in_error.png",
+        "sha256": "3d50f8765ea6fc18456f78d94efa63705dcb2045d500ec809d4be3d73379e8fa"
+      },
+      "previousSha256": "3fb1a45c4edde49e5fda3bad28ccb15e0b8dfa887333e487e34011dffab2cf4b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/patient/patient-ar-EG-history-refuted.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/af6ede5523a4bfa184f07ac5cc6bee83529c3a29573a29bfbdd2ff07772e67fd-patient-ar-EG-history-refuted.png",
+        "sha256": "108d6980576b12de69fc3fbb9899ea3ed26acbc277d1d14d3c3846c26afa5fa0"
+      },
+      "previousSha256": "447a19fe2e8774b82a04abd5c88c75c05c028c11182046030e6e92c90c5d9c1f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/patient/patient-ar-EG-history.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/9720b780a47f1eeb7ac80a1177648c742f91157b2b508e3e401ea8687b465a7e-patient-ar-EG-history.png",
+        "sha256": "3d50f8765ea6fc18456f78d94efa63705dcb2045d500ec809d4be3d73379e8fa"
+      },
+      "previousSha256": "3fb1a45c4edde49e5fda3bad28ccb15e0b8dfa887333e487e34011dffab2cf4b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/patient/patient-ar-EG-source-history.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/d9cd5d5ae4f528e4c6336d187344ce5287f37293159080f8240a3b1a65ee8668-patient-ar-EG-source-history.png",
+        "sha256": "0aba428057a7f100bdebee470d892a7fc3840342239e8a196079ebdded92c063"
+      },
+      "previousSha256": "bff4d3ebf272092de6cc016c1ee5aebe147c008138dd73f88d518268bf4bb72e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/patient/patient-en-EG-history-entered_in_error.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/9ab02b58e5243555df6242748b0a8288e54f0736161e05d1b70b7e7dc7d8a983-patient-en-EG-history-entered_in_error.png",
+        "sha256": "a0a0cd48a811a3cef8f3755a60632e860848c5a0440436382a8a4cd75314ecd1"
+      },
+      "previousSha256": "afd6a258195619c399e25fe376ae1c55be5e071acbdc4cd3f8c6ab7a0f8a3b83"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/patient/patient-en-EG-history-refuted.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/0f9c603b37a5233ef0e4a5db74dfe37d80a8cde141ea15dd0e136005f69c531d-patient-en-EG-history-refuted.png",
+        "sha256": "080463c3721bbb8f09a11316439c6fcc8935ae1f16425d03fb75622c22465879"
+      },
+      "previousSha256": "09f08413b3379c9da82f387df95a296757c7fe28e14d0c7a3de7ac906eef3a3e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/browser/patient/patient-en-EG-history.png",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/0189fac438bbe74afae42912e62ae0b2e4aad2c623bf10582582dab3618ffae3-patient-en-EG-history.png",
+        "sha256": "a0a0cd48a811a3cef8f3755a60632e860848c5a0440436382a8a4cd75314ecd1"
+      },
+      "previousSha256": "afd6a258195619c399e25fe376ae1c55be5e071acbdc4cd3f8c6ab7a0f8a3b83"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/allergy-api/allergy-api-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/fb480b12c631d071dd9800d958980a612db9e74c537387003dd9b50a9417eb31-allergy-api-proof.json",
+        "sha256": "ae67a3ef21a8156a438f816d3889339f8a11f438556b0d4b44a6bf81035dbb1b"
+      },
+      "previousSha256": "962255a94bbe494cf5646ac8751a5488d114f6cbcbd0f69f1b4e063428a5b71c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/allergy-api/allergy-read-create.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/c19060e57e3d8272c1cb6c590b4dc3c608f7b299cbb29e204f296baffccfe43e-allergy-read-create.json",
+        "sha256": "ae67a3ef21a8156a438f816d3889339f8a11f438556b0d4b44a6bf81035dbb1b"
+      },
+      "previousSha256": "962255a94bbe494cf5646ac8751a5488d114f6cbcbd0f69f1b4e063428a5b71c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/allergy-api/allergy-routes.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/a4ad1811a9516c3327187d9a29fd5bf2ddfb7df0b9bc5a3830c69fe83e20420e-allergy-routes.json",
+        "sha256": "ae67a3ef21a8156a438f816d3889339f8a11f438556b0d4b44a6bf81035dbb1b"
+      },
+      "previousSha256": "962255a94bbe494cf5646ac8751a5488d114f6cbcbd0f69f1b4e063428a5b71c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/allergy-api/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/8b8785fa0ed88a6f784c990fc204863de212aae300367a1dc32050894261afea-execution.json",
+        "sha256": "793e037477f872b6ecfaf6940f28aae1eea1bc22d3c36e9a5d5862012a5f789a"
+      },
+      "previousSha256": "b9fc770cc49849ee136af15b0f34920352a268fdb14421d09ea65be22a50711b"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/atomic-boundaries/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/ea1bab4338961623692b1e9818ddb64332c0b451ac35e85072a3044fddb0d0b5-execution.json",
+        "sha256": "8e1b5c2df8e415dbd0b85b4c75b9c1775da48dfa773d26496caeb7ef93c2f0c5"
+      },
+      "previousSha256": "a00088f322b5ee51f6d914f1b9601ee467902fe26f2dd70091b86dc84221dfdc"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/atomic-boundaries/protection-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/a22c0866059bbec4853ed4d0317942cd39662028ad32deb13ff1d40f98ef717d-protection-proof.json",
+        "sha256": "7cf5785beb5d26c6dd1b5bc197caeda3d85893a74aea49c54703c9b5ea22e4ce"
+      },
+      "previousSha256": "86f993ed3a85a6dd47ceb4cf5a3d7325ffa3a8e1a3cda6d6141789bb95dcd93a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/core-equivalence/equivalence.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/edc2d9529962f4f75256adea3b1727a0923f0688caaec6b6b812452d4b528e2b-equivalence.json",
+        "sha256": "c99d1ce3d974d8fbbc714d2ed2b098825569d4a431d1575934318ef995511ca8"
+      },
+      "previousSha256": "e0b32729d3ee8d052f91731e379cb451ac5fa4d93e4dec384ed7bf3a2476b68e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/core-equivalence/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/926998a8d60800972d9032b817d41e5eeb5a7196863366e89e685c96b0f9ba1f-execution.json",
+        "sha256": "0cee466b192e0a7722952d9b2202cc0a8f7ee1fa89174dde0dffc23510b6a876"
+      },
+      "previousSha256": "a6992f9415e669b3beb8ab2fac469c28f171a0bbca0c4959e3204236bcbf073d"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/create-api/draft-api-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/a99c43f9719a483331d213b78ea929aa70e0e7a7a54006961045dd979c6ddb09-draft-api-proof.json",
+        "sha256": "90febb45bb16bd75ce45bf15d108cb8a7a45d9f79a850dc02bbb8b56dc7f47a9"
+      },
+      "previousSha256": "cd3920391604e30132b3d685c07c72544e246826b577f0786db805243f6d1f8f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/create-api/draft-api.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/487ce26a550cad4253ac5150e9a7dca07deda154ef600577ce06452428143abe-draft-api.json",
+        "sha256": "90febb45bb16bd75ce45bf15d108cb8a7a45d9f79a850dc02bbb8b56dc7f47a9"
+      },
+      "previousSha256": "cd3920391604e30132b3d685c07c72544e246826b577f0786db805243f6d1f8f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/create-api/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/deeb807c15208c630eadcc4e0a1f94874971b90dfce76e7f63e9be3ea379c0dd-execution.json",
+        "sha256": "976ee0974db6e32121457c8e8ccc0f34f79d34469fac018c1f25aebb6e6038ee"
+      },
+      "previousSha256": "3bab07ada6c5766ae7ccd3062e905b3635ad7a7e815bb255e86a71c25041f0fd"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/deferred-obligations/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/6c1818c38f66cad2211f77cabb27a4a815f1a3138334cc1645acbe44e4710c62-execution.json",
+        "sha256": "07c666597a9ca1f7b8c8349ad51db5c907ed55434534e563c13376cc63cb0d10"
+      },
+      "previousSha256": "1f479efa6643449da384c61d62db31e11e6caa41d1c68e9cfdd3d81485f652f1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/deferred-obligations/storage-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/87152c8e14b3dccb1196bc8e8f1167ba75d22b9e68533e9672d6e5f38bd16348-storage-proof.json",
+        "sha256": "bddf6752a693b3f26d43fbab2770e1e1c028dd6877bcb7079e1a934354888814"
+      },
+      "previousSha256": "1fec17c998a326ce356197b82fc7dd4276625228e7f65cb2c685d76391c861cc"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/evidence/evidence-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/3e7f230cc3914cb0b04b7b41abc5908c006ae9f4575aba0efa87a91c801d8958-evidence-proof.json",
+        "sha256": "5098ade0e08b4230104d52b4667a725a601011bd1f9d82d30793c5dc327a9873"
+      },
+      "previousSha256": "464cc926212a195ca68d1a7318a0cea0887743e723dc2c9e256c742bf23169d2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/evidence/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/448a9e4a312cc533a5f2651fa93c6b69b056a351b735cc6da483efffe634c5fb-execution.json",
+        "sha256": "15e40426fb3b769eae36b51f2017b154291c6737dea624c290470afc5e72b18a"
+      },
+      "previousSha256": "f3e1034a2fb63b73ee85b6a0dc9bba3f1dc90a840f8615eaeb5dbcea1f6a77b3"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/native-abuse/proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/d30c5b213f251d8ccb69f5950bb2db9d8d61706484af0bcf86dc0386a7eea52d-proof.json",
+        "sha256": "7d2c89f14ab37603c837c03b002f63479b8667ca0fe0a9cc0b7f3daaee0c24fd"
+      },
+      "previousSha256": "d36583edb4bc94dbeac3bc2dd0649d93b62519e6b98fa2c2065e5638d2bc1495"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/584777fe5cf902897c48e78d0cb1dc25bb7046ac6d5bb4535dc27cdac2908970-execution.json",
+        "sha256": "a874d0302c3c73b8974762f696ae4f89f894859455fa4a73bdbb28d7eb80081c"
+      },
+      "previousSha256": "4bf3540eedabede23f850b0a548fda58c7124e7db0042885526d201e63c67321"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green/physical-green.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/f9ed19475f6048c74e5685b4dad4e7a272ae21e18a218a0f9576f2d2e92dbfad-physical-green.json",
+        "sha256": "7cf73d409e117fb582afc218a0a8b458adac72e8046ffb4166d7f63e17c6e0b0"
+      },
+      "previousSha256": "ed84fb33c7ca3e935943acf7e86a1bb1906986e1ac00a0b779fef02ca2fc4f97"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green/proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/c5fb62a84bfccef68b7287df54028f91ee347b416549d7fd05112260e5c70a13-proof.json",
+        "sha256": "7cf73d409e117fb582afc218a0a8b458adac72e8046ffb4166d7f63e17c6e0b0"
+      },
+      "previousSha256": "ed84fb33c7ca3e935943acf7e86a1bb1906986e1ac00a0b779fef02ca2fc4f97"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green/routes-absent.log",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/96f4c3aa2c9326f0b11009e97e52ec87a9dcf29f632d92351c982d1e201ca31c-routes-absent.log",
+        "sha256": "3defaf57297d8f0c9f097f775a6833f11808196742307f3bf8098f620c1c8143"
+      },
+      "previousSha256": "50d42de4a74c2ab25f8a31fd2b0e919f8c08e7beb9eecf72cecd8d2fef9b5fa9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green/shifaa-local-postgres-physical-details.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/d478971b68fbc8f691c7dd0b207fa0b38702762bf03e5d9c35004c4ec59463ed-shifaa-local-postgres-physical-details.json",
+        "sha256": "a8966e0e70f8ab2e911568501f470f88bc2a6a0dc029324c78ec01581ae75a7f"
+      },
+      "previousSha256": "84fb8d401fb2cb75b0c462b41304d6674d8da550390550d9814e1826295eea90"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-green/shifaa-local-supabase-physical-details.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/14500f960e9e54de40dc69d30583089e5a7968f6462080ab79cc2146b3c545f9-shifaa-local-supabase-physical-details.json",
+        "sha256": "16b30b285841f6288622ee707ef530d34b79826f3b87da89cea46b28b7c62e91"
+      },
+      "previousSha256": "fa4948192f38e220c3404153f0c0355bad3da43ba8127edf164ca2cba3c867ce"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-races/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/27144a77bad82b18cd04444d7bc77fc08982cd72adabd7bd0ea907d3bd794cd5-execution.json",
+        "sha256": "ab0bad5632d6f4278ca4c0f1c235323e3e7d2ad36b8fdbfc64fab312b0ed8141"
+      },
+      "previousSha256": "72869db49ca61f6e1b280025949dc4a77167dddcb5b1731ca8ec1ec989c471c2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-races/proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/86a1c07c301760ad6efd436d91b0986963fd2b53a58acd2654269962b52c348b-proof.json",
+        "sha256": "f28583a543d067bd925ea47e7dffe65680f4e533610e4a2b574018e786e92f1f"
+      },
+      "previousSha256": "d4bf72108e2f3ac5d22a63667d1b6c7ebf4a4acf87f3c8ad1214563cd2591338"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/protection/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/f6089af813c5c26e311ccc94c60cfcc558d721f524d73b584c87f32b6aff4cce-execution.json",
+        "sha256": "b91c9f64a74c961bc3e90f0df4368285901d16cf24b835c841925fc725ef378b"
+      },
+      "previousSha256": "75bc801dfe7d5a0bcf4b0441a331367fd718d4cebdd7d84b5cf6e2bb95e1cd13"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/protection/protection-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/12ebd8f55318cc379071ae1f690269081314433f8a416995f3191eb81013a188-protection-proof.json",
+        "sha256": "d42ecba562d421b2f1548ae5e20e70a56353f0065538ae0eee80b5f9f616eb77"
+      },
+      "previousSha256": "d82bec4f83091745d1ce187f14d375c2c90f9b58ead5745ce9be8738b646eec9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/publish-api/eligibility-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/8ab1bf810e4158ce620a610872e30ae3433da04ea32a04cd0b9528262a837886-eligibility-proof.json",
+        "sha256": "6c294d22a5156ce677ef14d489918c37dec338aabcac90e627543350e89c7144"
+      },
+      "previousSha256": "fee80ee995493efd705716276e835f66261e701a83fa94fb4dc27efa67852bb5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/publish-api/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/440d6799a77d8eae065333ea6dd1847ca024885fd2f5d160c91d2a2e3b93baa9-execution.json",
+        "sha256": "02b4fcba914b4da2df53735381d239324fbe658035585aa1ba765e1e9c14f489"
+      },
+      "previousSha256": "82f9828aae4982683dd9d919640458e1c77111c8d965326b97cb75184c872aef"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/publish-api/publish-api.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/6c64d918e63f07bf02b47a61f69c08934445dffecc48a4e263a36787767f7c06-publish-api.json",
+        "sha256": "6c294d22a5156ce677ef14d489918c37dec338aabcac90e627543350e89c7144"
+      },
+      "previousSha256": "fee80ee995493efd705716276e835f66261e701a83fa94fb4dc27efa67852bb5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/publish-api/publish-races.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/994074c4fbe7ee792bbd1b59834ace8bc738a8d0e83b59aba14a5bc63009a09c-publish-races.json",
+        "sha256": "6c294d22a5156ce677ef14d489918c37dec338aabcac90e627543350e89c7144"
+      },
+      "previousSha256": "fee80ee995493efd705716276e835f66261e701a83fa94fb4dc27efa67852bb5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/review/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/7b5024f4ad34f0cd0771418f91929e2031864c1ac29fee138bf29ce1c4987ae8-execution.json",
+        "sha256": "8dc9a2bced10ef3521d6c59e3befbe7d0bb7a362d29ef88e1195b2c0cd1dbbfd"
+      },
+      "previousSha256": "44ec1f156bb57e4ceb22a76df1fe894eadb7476158751a354e821cde271632b5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/review/governance-read.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/353b96b2d5b9c0095bcfc66b27124e13fa812d865d999e33ab052a643252019a-governance-read.json",
+        "sha256": "02401b898af291c0a619b7187c70af029a32fb965468f26e365cfe8bfa78da46"
+      },
+      "previousSha256": "10a420ed6c3b003413cc7d34abd50175dd89e362efe821d5301ad10625df19d1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/review/review-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/1660d099f00ecb448f7107a0c7d6465f24da30ff244ec37076e0c7414a64a376-review-proof.json",
+        "sha256": "02401b898af291c0a619b7187c70af029a32fb965468f26e365cfe8bfa78da46"
+      },
+      "previousSha256": "10a420ed6c3b003413cc7d34abd50175dd89e362efe821d5301ad10625df19d1"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/sign-api/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/a67bc7160dda1ea5c85c00159d50de89dd027f6227677a4c1de96d13cb3ba7f4-execution.json",
+        "sha256": "630b52aaca95720f078e78bf61c676b938ba3a687c7939e36f27693b0ed33abe"
+      },
+      "previousSha256": "857b469d3882de82f1b85a01ad009215609558b1724056ce534dd001902a448c"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/sign-api/sign-api-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/4815feb855ce75e31c527fe1ebf56f679003f2e2a9f607c60e73eea454dc766f-sign-api-proof.json",
+        "sha256": "cb3b1b252e8a73b3884dcf0d0fe374ed0a5742b007fac155090a620405209958"
+      },
+      "previousSha256": "a45e2cbafc4af93dc467653d61536c11b3826943d48b7614e92ea81748e9f687"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/sign-api/sign-api.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/62013f392727148d1d5e545c22fd1041206bfc18b540cceb3ecc6b3aa5bdb598-sign-api.json",
+        "sha256": "cb3b1b252e8a73b3884dcf0d0fe374ed0a5742b007fac155090a620405209958"
+      },
+      "previousSha256": "a45e2cbafc4af93dc467653d61536c11b3826943d48b7614e92ea81748e9f687"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/status/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/1ef4ed1c12be2658fc82b5a3a96d083fc764b7b6c50e74c82823ef81ccee5522-execution.json",
+        "sha256": "8edce142391767c3d67e3482569e06adef9c7dde4c83b27112e23b6061c12bc2"
+      },
+      "previousSha256": "5c1edf38ab286739e9ad7586720110f6d508b312a94cfe3c495012925235f639"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/status/status-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/f6a880e558f99aae2712652650a28210bc894ac0af65e6da4ad6743cf53a3149-status-proof.json",
+        "sha256": "c8d92071a6b53372dd0183d643af8ccd47a7ce5772e55845ebe82770ed4fd7b3"
+      },
+      "previousSha256": "aff9aebf74da8a91ec7946b711e5950ad421253bd42842b1115835348a8c30a2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/verify-api/execution.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/0c00071e340c8f2645722c7d6cfc3ed01d78c1d05606963e6bc7490012410ad5-execution.json",
+        "sha256": "c0f18b0e31b59320dc7cbdfe2245ee8da05bb07f30e5828a55276eb08ea71926"
+      },
+      "previousSha256": "cb174a6759a3f7ee15dfee2ad2e156e703e48bf46b82d57f2ce1900fc8aeb660"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/verify-api/verify-api-proof.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/94543da9d4e681229ab58df1d13d4a8be15bd7ee05ec222ae24d63a6dc653be7-verify-api-proof.json",
+        "sha256": "fb4bf3a66476627bb0a1221ab4e7cc032fe9534361c647937bc3a6513e7c1a5b"
+      },
+      "previousSha256": "d865d8291bbf9851a50e8df123a0d559dc0f10f6dcbde89dc6818a00a375d5fe"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/verify-api/verify-api.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/57205e070583076733a22dc3291ff2188f2de12e4a409d670542b62912fe5e9e-verify-api.json",
+        "sha256": "fb4bf3a66476627bb0a1221ab4e7cc032fe9534361c647937bc3a6513e7c1a5b"
+      },
+      "previousSha256": "d865d8291bbf9851a50e8df123a0d559dc0f10f6dcbde89dc6818a00a375d5fe"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/atomic-boundaries/runtime/shifaa-local-postgres-protection.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/329f78651ea828a5e7b629d02365f838cac0565eb102105ad2caa37cf04aaf85-shifaa-local-postgres-protection.json",
+        "sha256": "ac60c4be24b6f13d8a96608d4e9f36af411718e9438db4a22370866b41c2a210"
+      },
+      "previousSha256": "221d98e3f44c69d335ad9c7af7bbd8687f4ab58afdb56005bc2ab1c684e49ac0"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/atomic-boundaries/runtime/shifaa-local-supabase-protection.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/b3aec4789e69b937dcb8d87c78c4302f3db45e8f565ef4b78690137ae432c5d6-shifaa-local-supabase-protection.json",
+        "sha256": "1362b1e8a1e20eae975625eb0932d7f2526b09b7dfb5cf61df9d7c938a8470d4"
+      },
+      "previousSha256": "2fd44dc04e5e3e3b871844da91453da8151d3fb40a30cd15e235223f26ca83d2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/core-equivalence/runtime/shifaa-local-postgres-equivalence.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/f6504e28ac3fd6f8f90a71698c7207c7a406219211051f5a334e39ecfb40c05e-shifaa-local-postgres-equivalence.json",
+        "sha256": "631665591f9a578438460c7c4f05e17574d6533e789a6837b0d66d7d9fda1b83"
+      },
+      "previousSha256": "40d0e94b89af565ffc56877b36510c5477ae7ec6d560adc3ba2bcb81ff4f55df"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/core-equivalence/runtime/shifaa-local-supabase-equivalence.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/126b68bcac27cda00c9a1e2b4279c54653ad53c5a4d250c542fd59cd41a6d846-shifaa-local-supabase-equivalence.json",
+        "sha256": "20c32f26756bda7c12783b08af1554576ec90e22c155524f83ab4d830c9925c5"
+      },
+      "previousSha256": "b3501299c061d62b53ad0e5e2d0be0dce56efcdd496a4dbd452aeea00f153aa9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/evidence/runtime/shifaa-local-postgres-evidence.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/4108834b761faaf7227184a9a36ce3fdb457691deba35aa3b02c9f1e9f036b86-shifaa-local-postgres-evidence.json",
+        "sha256": "ee37a2f1866915c73c2e1d878bccaca2577ac4b3747015329b99f8ac51128067"
+      },
+      "previousSha256": "659d5cb03c68155b0bb186bc359ca12ac8bd28d6aa01df889ee2656702d02b88"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/evidence/runtime/shifaa-local-supabase-evidence.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/420c6af108cadaaaa40f27e2374d8f32fcf8d036c1741ce645c2e0ea30f5ce64-shifaa-local-supabase-evidence.json",
+        "sha256": "b04f537e48a0ed2dfd795aa35b896fa361db5be8488b5c5585caea9204d6999f"
+      },
+      "previousSha256": "f7ac6eeeaea674f0ca1103130aa2010427ed22f2390b18972812312e0bce9edb"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-races/runtime/shifaa-local-postgres-physical-races.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/805a36cb15655e6859ffd8d738ed36252336487c868fbb7bcd6e980701537a05-shifaa-local-postgres-physical-races.json",
+        "sha256": "8391bd13959f516d06d9dc23fd91346bee653410bcd9b99e8e76af921dce535f"
+      },
+      "previousSha256": "cd1433bd0f94cedc222c6ac47c320790a0f22d211e2993e0fa8f325f256c4bc7"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/physical-races/runtime/shifaa-local-supabase-physical-races.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/cccd63c25b942d9440c880dc7df223081b77b1c799f6ed87f4fde6763b001deb-shifaa-local-supabase-physical-races.json",
+        "sha256": "e36dbef74aecd7bc74c6f369e53c95490546cb3cdd6d0efe6fa5137caed3d65f"
+      },
+      "previousSha256": "6229a91ca2b483cdc47fd96ae9ec573e840c45fc3585246d7760a4dd19e16d3e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/protection/runtime/shifaa-local-postgres-protection.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/2871ab83290582b3d3612d3b1a6733f586f58972dec07f00bc9b1a87bf7cd533-shifaa-local-postgres-protection.json",
+        "sha256": "6b047d48b9dba89247d746731a2266b8467e345edd136d83ece1b765583bf854"
+      },
+      "previousSha256": "090ea20d9132d42c158c1843ea7a26f2c47a4e608d4a2c164d230eb23520e1da"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/protection/runtime/shifaa-local-supabase-protection.json",
+      "fresh": {
+        "path": "artifacts/f011-copy-reruns-04/15e4385f6d816da7ed3e6b1ccd6ad3950636591ac6bd09253b8dc9c6d5fcda93-shifaa-local-supabase-protection.json",
+        "sha256": "61528594f34c24176ac824b3770c8b8c715f989772e487d608536b3c11b23f57"
+      },
+      "previousSha256": "73aa906012b92de9152688a9ee0de5ba4379f49a0ee2cebf2262509814735231"
+    }
+  ],
+  "parity": "PASS",
+  "T092Reexecuted": false,
+  "formalAcceptance": false,
+  "retainedGates": "OPEN"
+}

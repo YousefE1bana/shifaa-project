@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "K02",
+  "task": "T004",
+  "ledgerId": "SHIFAA-F011-FRESH-TASKS@1.0.0",
+  "authorization": "K02_APPROVED; primary agent only",
+  "result": "VALID_RED",
+  "capturedAt": "2026-10-06T15:26:53.851Z",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tools/feature-011-protocol-parity.test.mjs"
+  ],
+  "exitCode": 1,
+  "counts": {
+    "tests": 82,
+    "pass": 11,
+    "fail": 71,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "testSha256": "128e07d91797347fef9d1a04796a3a595e479fd7459dc57d83ddf2e3028655ba",
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/protocol-initial-red.tap",
+    "sha256": "b9c75aa3fcfba0d93c565775b45ba31d4d7da419ce16b9729aff2143d71d2ad6"
+  },
+  "reason": "Both setup defects were corrected before accepted RED. All 42 normative hashes, legacy preparation fixture health and frozen V01-V07 checks passed. 71 initial assertion failures demonstrate missing recovered metadata/rejection/current stage bindings; no import/package/syntax/setup failure counted as RED. Supplemental replay demonstrates missing verifier P1-P3/current P4/separate P5 behavior.",
+  "limitations": "Preparation only; no encoders, physical runtime, crypto, producer or gate acceptance",
+  "delegationUsed": false,
+  "testSha256AtInitialRed": "128e07d91797347fef9d1a04796a3a595e479fd7459dc57d83ddf2e3028655ba",
+  "supplementalVerifierRed": {
+    "kind": "PRESERVED_ORIGINAL_VERIFIER_REPLAY_WITH_CURRENT_HEALTHY_GENERATORS",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tools/feature-011-protocol-parity.test.mjs"
+    ],
+    "environment": {
+      "F011_PROTOCOL_VERIFIER_MODULE": "../artifacts/feature-011/k02/verifier-red-replay.mjs"
+    },
+    "counts": {
+      "tests": 109,
+      "pass": 80,
+      "fail": 29,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "exitCode": 1,
+    "log": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/logs/protocol-verifier-red-replay.tap",
+      "sha256": "ca79ba97783c1fe827586a9fa79368d849be61cd87d6272c64f2aaa095fd2d61"
+    },
+    "testSha256": "4cf8203b2434ea12f0d9c2d1f905b446a6e0283e76816b1addb39c732f3f524e",
+    "replayedModule": {
+      "path": "artifacts/feature-011/k02/verifier-red-replay.mjs",
+      "sha256": "b7f39fa04a706a6ace5cad9ca632264ad4813d1eccb0c62e155f4b65de771658"
+    },
+    "adaptation": "Only module import/default-root paths are relocated for replay. Original verifier snapshot bytes are preserved below."
+  },
+  "baselineSources": {
+    "artifacts/feature-011/k02/generate-feature-011-contract.mjs": "2d7b66225d11588c191ca17e30143b346a26c89ebeabbb1932afbb958c5d5a68",
+    "artifacts/feature-011/k02/generate-feature-011-client.mjs": "b13e8082253230c75e49df22c5cf335873e892506cd7be889ec53f0b4aa1ce54",
+    "artifacts/feature-011/k02/verify-feature-011-contracts.mjs": "d9358df653eb1b13584a1b0a9a91f9084ec08517305c13b74fb8b1c9fcea7b46"
+  },
+  "setupDiagnostics": {
+    "excludedFromValidRed": true,
+    "runs": [
+      {
+        "path": "artifacts/feature-011/k02/setup-failure.tap",
+        "sha256": "1709e14f35b82fc43a0d292624ee1deb62bfa314413eafd89546e45c6c6bc563",
+        "reason": "Test discovery accidentally flattened non-array manifest metadata; corrected to the two normative input arrays."
+      },
+      {
+        "path": "artifacts/feature-011/k02/fixture-copy-failure.tap",
+        "sha256": "eac344437cd9234060598c1200af2d4913e63846731959cd868dbbfeeb039a4f",
+        "reason": "Isolated fixture omitted the legacy catalog; added to fixture copies and reran before implementation."
+      }
+    ]
+  }
+}

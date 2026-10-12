@@ -1,0 +1,14 @@
+{
+  "recordedAt": "2026-10-10T14:28:29.0835202Z",
+  "scope": "Read-only session capability observation, not device acceptance",
+  "adbFoundOnPath": false,
+  "nvdaProcessObserved": false,
+  "nativeComputerApi": "Disabled for this session",
+  "nativeTestsExecuted": false,
+  "deviceSettingsInferred": false,
+  "limitations": [
+    "PATH/process observations do not establish whether tools are installed elsewhere.",
+    "No phone connection, native speech, keyboard/swipe, or physical text-scaling proof was performed.",
+    "Previously reported device and AT versions remain attributed user reports."
+  ]
+}

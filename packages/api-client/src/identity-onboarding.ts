@@ -69,7 +69,7 @@ export class IdentityOnboardingClient {
     return this.request('POST', '/auth/otp/verify', { body, idempotencyKey });
   }
   public getMyProfile() {
-    return this.request('GET', '/people/me');
+    return this.request('GET', '/people/me') as Promise<import('@shifaa/contracts').ProfileDto>;
   }
   public updateMyProfile(body: ProfilePatchInput, version: number, idempotencyKey: string) {
     return this.request('PATCH', '/people/me', { body, version, idempotencyKey });

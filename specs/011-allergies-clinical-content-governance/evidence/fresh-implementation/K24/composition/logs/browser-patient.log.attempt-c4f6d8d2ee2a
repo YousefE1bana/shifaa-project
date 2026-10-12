@@ -1,0 +1,52 @@
+[WebServer] (node:8028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:4040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 38 tests using 1 worker
+
+(node:17544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/38] tests\e2e\feature-011-ui.spec.ts:175:7 › ar-EG report, explicit review, original receipt, keyboard and source/history
+[2/38] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG empty clears sensitive rows and enforces access
+[3/38] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG denied clears sensitive rows and enforces access
+[4/38] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG stale clears sensitive rows and enforces access
+[5/38] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG error clears sensitive rows and enforces access
+[6/38] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG default-off clears sensitive rows and enforces access
+[7/38] tests\e2e\feature-011-ui.spec.ts:234:9 › ar-EG kill clears sensitive rows and enforces access
+[8/38] tests\e2e\feature-011-ui.spec.ts:248:7 › ar-EG loading barrier, offline, manual reconciliation preserves original key/body
+[9/38] tests\e2e\feature-011-ui.spec.ts:274:7 › ar-EG responsive 360/412/768/1440, 200% text and 400% reflow
+[10/38] tests\e2e\feature-011-ui.spec.ts:175:7 › en-EG report, explicit review, original receipt, keyboard and source/history
+[11/38] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG empty clears sensitive rows and enforces access
+[12/38] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG denied clears sensitive rows and enforces access
+[13/38] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG stale clears sensitive rows and enforces access
+[14/38] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG error clears sensitive rows and enforces access
+[15/38] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG default-off clears sensitive rows and enforces access
+[16/38] tests\e2e\feature-011-ui.spec.ts:234:9 › en-EG kill clears sensitive rows and enforces access
+[17/38] tests\e2e\feature-011-ui.spec.ts:248:7 › en-EG loading barrier, offline, manual reconciliation preserves original key/body
+[18/38] tests\e2e\feature-011-ui.spec.ts:274:7 › en-EG responsive 360/412/768/1440, 200% text and 400% reflow
+[19/38] tests\e2e\feature-011-ui.spec.ts:315:9 › ar-EG F004 accepted server context survives care switcher; revoked delegate loses read-only records
+[20/38] tests\e2e\feature-011-ui.spec.ts:315:9 › en-EG F004 accepted server context survives care switcher; revoked delegate loses read-only records
+[21/38] tests\e2e\feature-011-verification.spec.ts:283:7 › ar-EG J-02 preserved four-state history, attribution, unknown and read boundary
+[22/38] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG empty degraded/isolation
+[23/38] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG loading degraded/isolation
+[24/38] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG error degraded/isolation
+[25/38] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG denied degraded/isolation
+[26/38] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG stale degraded/isolation
+[27/38] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG default-off degraded/isolation
+[28/38] tests\e2e\feature-011-verification.spec.ts:427:9 › ar-EG kill degraded/isolation
+[29/38] tests\e2e\feature-011-verification.spec.ts:435:7 › ar-EG offline, labels, bidi, keyboard, reflow and forced colors
+[30/38] tests\e2e\feature-011-verification.spec.ts:283:7 › en-EG J-02 preserved four-state history, attribution, unknown and read boundary
+[31/38] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG empty degraded/isolation
+[32/38] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG loading degraded/isolation
+[33/38] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG error degraded/isolation
+[34/38] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG denied degraded/isolation
+[35/38] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG stale degraded/isolation
+[36/38] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG default-off degraded/isolation
+[37/38] tests\e2e\feature-011-verification.spec.ts:427:9 › en-EG kill degraded/isolation
+[38/38] tests\e2e\feature-011-verification.spec.ts:435:7 › en-EG offline, labels, bidi, keyboard, reflow and forced colors
+  38 passed (31.1s)

@@ -1,0 +1,77 @@
+[
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-api-typecheck.log",
+    "name": "api-typecheck"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-client-typecheck.log",
+    "name": "client-typecheck"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-client-build.log",
+    "name": "client-build"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-patient-typecheck.log",
+    "name": "patient-typecheck"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-clinic-typecheck.log",
+    "name": "clinic-typecheck"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-i18n-typecheck.log",
+    "name": "i18n-typecheck"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-architecture.log",
+    "name": "architecture"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-secrets.log",
+    "name": "secrets"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-contracts.log",
+    "name": "contracts"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-client-tests.log",
+    "name": "client-tests"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-i18n-tests.log",
+    "name": "i18n-tests"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-ui-state.log",
+    "name": "ui-state"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-parity.log",
+    "name": "parity"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-preservation.log",
+    "name": "preservation"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/feature-011/k13/final-format.log",
+    "name": "format"
+  }
+]

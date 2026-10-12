@@ -1,0 +1,301 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\18412_1791619504656\\node.exe",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\node_modules\\playwright\\cli.js",
+      "test",
+      "--config",
+      "tools/.f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.config.ts",
+      "--max-failures=1"
+    ],
+    "configFile": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.config.ts",
+    "rootDir": "D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 1,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/artifacts/feature-011/k24/ui-gaps/clinic",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\ui-gap-scenarios\\clinic-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "corepack pnpm --filter @shifaa/clinic exec next dev --hostname localhost -p 18313",
+      "url": "http://localhost:18313/patients/f0110000-0000-4000-8000-000000000001/summary",
+      "timeout": 120000,
+      "reuseExistingServer": false,
+      "env": {
+        "CI": "1",
+        "NEXT_PUBLIC_API_BASE_URL": "http://localhost:18313"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts",
+      "file": ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ar-EG error-terminal server denial clears prior authorized rows",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 786,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:05:20.696Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4eabee420c56850ae1d1-2b640c1b0bbf36ebd0fc",
+          "file": ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts",
+          "line": 186,
+          "column": 52
+        },
+        {
+          "title": "ar-EG aal2-required server denial clears prior authorized rows",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 733,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:05:21.732Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4eabee420c56850ae1d1-48dccae32d6800262357",
+          "file": ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts",
+          "line": 186,
+          "column": 52
+        },
+        {
+          "title": "ar-EG context-ended rechecks server encounter and blocks another allergy read",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 780,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:05:22.478Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4eabee420c56850ae1d1-3807d402e43bc7bf1834",
+          "file": ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts",
+          "line": 219,
+          "column": 26
+        },
+        {
+          "title": "en-EG error-terminal server denial clears prior authorized rows",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 847,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:05:23.277Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4eabee420c56850ae1d1-fe4fe9d5797c415f7dd9",
+          "file": ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts",
+          "line": 186,
+          "column": 52
+        },
+        {
+          "title": "en-EG aal2-required server denial clears prior authorized rows",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 803,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:05:24.139Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4eabee420c56850ae1d1-8425ba0dabe85d811511",
+          "file": ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts",
+          "line": 186,
+          "column": 52
+        },
+        {
+          "title": "en-EG context-ended rechecks server encounter and blocks another allergy read",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 745,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:05:24.955Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4eabee420c56850ae1d1-b7f9286cf7ada34976de",
+          "file": ".f011-gaps-7b79d2af-bba6-4318-a07e-c52fe41dc863.spec.ts",
+          "line": 219,
+          "column": 26
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-10T08:05:17.654Z",
+    "duration": 8400.82,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

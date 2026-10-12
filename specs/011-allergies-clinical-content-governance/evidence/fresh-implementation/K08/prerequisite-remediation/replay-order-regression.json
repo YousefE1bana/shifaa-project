@@ -1,0 +1,8 @@
+{
+  "result": "CONFIRMED_IMPLEMENTATION_DEFECT",
+  "sqlstate": "22023",
+  "reason": "Committed receipt incorrectly requires fresh domain preparation before existing authoritative idempotency/replay branch",
+  "repair": "Move existing current-context claim/replay before fresh producer validation; verify retains the existing current authority/ordered-lock replay checks; every new attempt still validates complete preparation and rolls back invalid claims",
+  "newPrivileges": false,
+  "newPublicShape": false
+}

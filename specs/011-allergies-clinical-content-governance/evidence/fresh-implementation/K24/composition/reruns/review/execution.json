@@ -1,0 +1,21 @@
+{
+  "id": "review",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\464_1791613898202\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-635d6ed9-6593-465b-8354-d564b02f5f84.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/logs/review.log",
+    "sha256": "c3d761af5a84421d9a8e8291a0795e31493f61818051d0690027459842484b6e"
+  },
+  "original": "tools/run-feature-011-review-test.mjs",
+  "originalSha256": "ab7cdc18fc4746b5f3a22a1dd9d3ba9a65fcb5a09f5ecac788f9fbad70e066fe",
+  "substitution": "const f = 'specs/011-allergies-clinical-content-governance',\n  e = f + '/evidence/fresh-implementation/K18';",
+  "output": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition/reruns/review",
+  "temporarySha256": "e90c6295242483b40d6bb1241603a72d6f40047933e4b0c756b6d484034a9715",
+  "testAssertionsChanged": false,
+  "preflightSubstitutions": []
+}

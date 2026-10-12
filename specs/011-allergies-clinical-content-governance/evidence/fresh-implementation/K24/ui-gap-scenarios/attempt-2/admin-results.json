@@ -1,0 +1,845 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\6492_1791619289151\\node.exe",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\node_modules\\playwright\\cli.js",
+      "test",
+      "--config",
+      "tools/.f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.config.ts",
+      "--max-failures=1"
+    ],
+    "configFile": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.config.ts",
+    "rootDir": "D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 1,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/artifacts/feature-011/k24/ui-gaps/admin",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\specs\\011-allergies-clinical-content-governance\\evidence\\fresh-implementation\\K24\\ui-gap-scenarios\\admin-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "corepack pnpm --filter @shifaa/admin exec next dev --hostname localhost -p 18319",
+      "url": "http://localhost:18319/clinical-content",
+      "timeout": 120000,
+      "reuseExistingServer": false,
+      "env": {
+        "CI": "1",
+        "NEXT_PUBLIC_API_BASE_URL": "http://localhost:18319"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+      "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ar-EG error-terminal denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 788,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:51.729Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-df07f05e43969436c67e",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG qualification-unresolved denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 775,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:52.743Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-6e5d1178709350b27e11",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG authority-lost denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 623,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:53.529Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-2287c914b20591483bc2",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG self-approval-denied denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 714,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:54.161Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-6ee158eefd6244f438a5",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG duty-conflict denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 671,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:54.888Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-3c85de36006b3dbdacb2",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG digest-conflict denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 657,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:55.569Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-d315174b78f1dbf4652d",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG version-conflict denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 657,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:56.236Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-918dcce8184d00657f67",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG overlap-conflict denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 778,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:56.903Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-77ba03e79ace39429052",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG real-content-gated denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 767,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:57.691Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-23702397f3c3f8e6f6ba",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "ar-EG synthetic-gated retains explicit engineering-only and real-content gate notices",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 591,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:58.470Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-d0c97880484466defefc",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 311,
+          "column": 6
+        },
+        {
+          "title": "ar-EG aal2-required local assurance check stops request before transport",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 594,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:59.071Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-99dff9094b58484795f1",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 318,
+          "column": 6
+        },
+        {
+          "title": "en-EG error-terminal denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 658,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:01:59.673Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-d02dbe91813549ce68ee",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG qualification-unresolved denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 685,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:00.340Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-cd92ca4a2e5c67fa398a",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG authority-lost denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 656,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:01.034Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-9e883a2c36f45b74175c",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG self-approval-denied denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 708,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:01.699Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-2ad0de23f76a9d970917",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG duty-conflict denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 719,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:02.417Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-a3c853f8334a829d6511",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG digest-conflict denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 760,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:03.145Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-929c239b4c542687cb67",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG version-conflict denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 738,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:03.917Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-ce68eeeb036a56a80e7d",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG overlap-conflict denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 733,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:04.665Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-f4e1529e6df6c13ccb9c",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG real-content-gated denies disclosure/action after current fixture denial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 716,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:05.407Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-70df0a50407aa68f8bcb",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 285,
+          "column": 58
+        },
+        {
+          "title": "en-EG synthetic-gated retains explicit engineering-only and real-content gate notices",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 641,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:06.134Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-6ce5d30bb8a3df7888c9",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 311,
+          "column": 6
+        },
+        {
+          "title": "en-EG aal2-required local assurance check stops request before transport",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 630,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-10T08:02:06.784Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0a2e07c1cbeab4f3a265-95d18121b0081a61065c",
+          "file": ".f011-gaps-3a01eb1a-e615-4cc0-b745-d21cebbbda8d.spec.ts",
+          "line": 318,
+          "column": 6
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-10T08:01:49.118Z",
+    "duration": 18670.805,
+    "expected": 22,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

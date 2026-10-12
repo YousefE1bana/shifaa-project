@@ -1,0 +1,650 @@
+✔ current empty explicitly retains unknown; source/history success stays attributable (17.5392ms)
+✔ read-only roles cannot create; current context remains server-authorized (0.9976ms)
+✔ permission, offline and stale clear protected rows and disable mutations (2.8477ms)
+✔ explicit review/report and original-key reconciliation never queues a write (0.9256ms)
+✖ route composition includes named fields, focus and bidi-safe state regions (3.3554ms)
+✔ current empty explicitly retains unknown; source/history success stays attributable (17.6511ms)
+✔ read-only roles cannot create; current context remains server-authorized (0.9127ms)
+✔ permission, offline and stale clear protected rows and disable mutations (2.9064ms)
+✔ explicit review/report and original-key reconciliation never queues a write (0.9061ms)
+✖ route composition includes named fields, focus and bidi-safe state regions (3.3159ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 8
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 359.1016
+
+✖ failing tests:
+
+test at apps\clinic\test\feature-011-summary.test.tsx:1:4016
+✖ route composition includes named fields, focus and bidi-safe state regions (3.3554ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /AllergySummaryPanel/. Input:
+  
+  "'use client';\n" +
+    '\n' +
+    "import { feature010ArEG, feature010CommonCopy, feature010EnEG } from '@shifaa/i18n';\n" +
+    "import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';\n" +
+    "import { useParams, useRouter } from 'next/navigation';\n" +
+    'import {\n' +
+    '  breakpoint,\n' +
+    '  color,\n' +
+    '  minimumTargetSize,\n' +
+    '  radius,\n' +
+    '  spacing,\n' +
+    "} from '@shifaa/design-system/tokens';\n" +
+    'import {\n' +
+    '  createEncounterStartClients,\n' +
+    '  encounterStartFailure,\n' +
+    '  getEncounterStartEligibility,\n' +
+    '  type ClinicLocale,\n' +
+    '  type EncounterStartEligibility,\n' +
+    "} from '../../../../lib/feature-010-api';\n" +
+    "import { useFeature010DocumentLocale } from '../../../../components/feature-010/useFeature010DocumentLocale';\n" +
+    "import { feature010WebTypography } from '../../../../components/feature-010/feature010WebTypography';\n" +
+    '\n' +
+    'const words = {\n' +
+    "  'ar-EG': feature010ArEG['clinic.summary'],\n" +
+    "  'en-EG': feature010EnEG['clinic.summary'],\n" +
+    '} as const;\n' +
+    '\n' +
+    'const buttonStyle: React.CSSProperties = {\n' +
+    '  minWidth: minimumTargetSize,\n' +
+    '  minHeight: minimumTargetSize,\n' +
+    '  border: `1px solid ${color.brand}`,\n' +
+    '  borderRadius: radius.control,\n' +
+    '  background: color.surface,\n' +
+    '  color: color.ink,\n' +
+    '  paddingInline: spacing.md,\n' +
+    "  cursor: 'pointer',\n" +
+    '};\n' +
+    'const fieldStyle: React.CSSProperties = {\n' +
+    "  display: 'block',\n" +
+    "  boxSizing: 'border-box',\n" +
+    "  width: '100%',\n" +
+    "  maxWidth: '100%',\n" +
+    '  minWidth: 0,\n' +
+    '  minHeight: minimumTargetSize,\n' +
+    '  border: `1px solid ${color.border}`,\n' +
+    '  borderRadius: radius.control,\n' +
+    '  paddingInline: spacing.sm,\n' +
+    '  marginBlock: spacing.sm,\n' +
+    '  background: color.surface,\n' +
+    '  color: color.ink,\n' +
+    '};\n' +
+    'const cardStyle: React.CSSProperties = {\n' +
+    '  border: `1px solid ${color.border}`,\n' +
+    '  borderRadius: radius.card,\n' +
+    '  background: color.surface,\n' +
+    '  padding: spacing.lg,\n' +
+    '};\n' +
+    '\n' +
+    'export default function PatientSummaryPage() {\n' +
+    '  const params = useParams<{ id: string }>();\n' +
+    '  const patientId = params.id;\n' +
+    '  const router = useRouter();\n' +
+    "  const [locale, setLocale] = useState<ClinicLocale>('ar-EG');\n" +
+    "  const [handle, setHandle] = useState('');\n" +
+    "  const [password, setPassword] = useState('');\n" +
+    "  const [challenge, setChallenge] = useState('');\n" +
+    "  const [otp, setOtp] = useState('');\n" +
+    "  const [token, setToken] = useState('');\n" +
+    '  const [aal, setAal] = useState<1 | 2 | undefined>(undefined);\n' +
+    '  const [busy, setBusy] = useState(false);\n' +
+    '  const [loginError, setLoginError] = useState(false);\n' +
+    '  const [online, setOnline] = useState(true);\n' +
+    '  const [eligibility, setEligibility] = useState<EncounterStartEligibility | null>(null);\n' +
+    '  const [review, setReview] = useState(false);\n' +
+    '  const [result, setResult] = useState<string | null>(null);\n' +
+    '  const triggerRef = useRef<HTMLButtonElement>(null);\n' +
+    '  const backRef = useRef<HTMLButtonElement>(null);\n' +
+    '  const confirmRef = useRef<HTMLButtonElement>(null);\n' +
+    '  const modalRef = useRef<HTMLDivElement>(null);\n' +
+    "  const apiBaseUrl = process.env['NEXT_PUBLIC_API_BASE_URL'];\n" +
+    '  const copy = words[locale];\n' +
+    '  const common = feature010CommonCopy[locale];\n' +
+    "  const ar = locale === 'ar-EG';\n" +
+    '  useFeature010DocumentLocale(locale);\n' +
+    '  const clients = useMemo(\n' +
+    '    () => (token && apiBaseUrl ? createEncounterStartClients(token, locale, aal) : null),\n' +
+    '    [aal, apiBaseUrl, locale, token],\n' +
+    '  );\n' +
+    '\n' +
+    '  const refreshEligibility = useCallback(async () => {\n' +
+    '    if (!clients) return;\n' +
+    '    setEligibility(null);\n' +
+    '    setResult(null);\n' +
+    '    try {\n' +
+    '      setEligibility(await getEncounterStartEligibility(clients, patientId));\n' +
+    '    } catch {\n' +
+    "      setEligibility({ kind: 'recoverable' });\n" +
+    '    }\n' +
+    '  }, [clients, patientId]);\n' +
+    '\n' +
+    '  useEffect(() => {\n' +
+    '    if (clients) void refreshEligibility();\n' +
+    '  }, [clients, refreshEligibility]);\n' +
+    '\n' +
+    '  useEffect(() => {\n' +
+    '    const update = () => setOnline(navigator.onLine);\n' +
+    '    update();\n' +
+    "    window.addEventListener('online', update);\n" +
+    "    window.addEventListener('offline', update);\n" +
+    '    return () => {\n' +
+    "      window.removeEventListener('online', update);\n" +
+    "      window.removeEventListener('offline', update);\n" +
+    '    };\n' +
+    '  }, []);\n' +
+    '\n' +
+    '  useEffect(() => {\n' +
+    '    if (!review) return;\n' +
+    '    backRef.current?.focus();\n' +
+    '    const onKeyDown = (event: KeyboardEvent) => {\n' +
+    "      if (event.key === 'Escape') {\n" +
+    '        event.preventDefault();\n' +
+    '        setReview(false);\n' +
+    '        requestAnimationFrame(() => triggerRef.current?.focus());\n' +
+    '        return;\n' +
+    '      }\n' +
+    "      if (event.key !== 'Tab' || !modalRef.current) return;\n" +
+    '      const controls = Array.from(\n' +
+    "        modalRef.current.querySelectorAll<HTMLElement>('button:not([disabled])'),\n" +
+    '      );\n' +
+    '      if (!controls.length) return;\n' +
+    '      const first = controls[0]!;\n' +
+    '      const last = controls.at(-1)!;\n' +
+    '      if (event.shiftKey && document.activeElement === first) {\n' +
+    '        event.preventDefault();\n' +
+    '        last.focus();\n' +
+    '      } else if (!event.shiftKey && document.activeElement === last) {\n' +
+    '        event.preventDefault();\n' +
+    '        first.focus();\n' +
+    '      }\n' +
+    '    };\n' +
+    "    document.addEventListener('keydown', onKeyDown);\n" +
+    "    return () => document.removeEventListener('keydown', onKeyDown);\n" +
+    '  }, [review]);\n' +
+    '\n' +
+    '  const signIn = async (verify: boolean) => {\n' +
+    '    if (!apiBaseUrl) return;\n' +
+    '    setBusy(true);\n' +
+    '    setLoginError(false);\n' +
+    '    try {\n' +
+    "      const { IdentityOnboardingClient } = await import('@shifaa/api-client');\n" +
+    '      const auth = new IdentityOnboardingClient({ baseUrl: apiBaseUrl, acceptLanguage: locale });\n' +
+    '      if (!verify) {\n' +
+    '        const response = (await auth.login({ handle, password }, crypto.randomUUID())) as {\n' +
+    '          kind?: string;\n' +
+    '          challenge_id?: string;\n' +
+    '        };\n' +
+    "        if (response.kind !== 'challenge' || !response.challenge_id)\n" +
+    "          throw new Error('challenge-required');\n" +
+    '        setChallenge(response.challenge_id);\n' +
+    "        setPassword('');\n" +
+    '      } else {\n' +
+    '        const response = (await auth.verifyOtp(\n' +
+    '          { challenge_id: challenge, code: otp },\n' +
+    '          crypto.randomUUID(),\n' +
+    '        )) as { kind?: string; access_token?: string; aal?: 1 | 2 };\n' +
+    "        if (response.kind !== 'session' || !response.access_token)\n" +
+    "          throw new Error('session-required');\n" +
+    '        setToken(response.access_token);\n' +
+    '        setAal(response.aal === 2 ? 2 : response.aal === 1 ? 1 : undefined);\n' +
+    "        setChallenge('');\n" +
+    "        setOtp('');\n" +
+    '      }\n' +
+    '    } catch {\n' +
+    '      setLoginError(true);\n' +
+    '    } finally {\n' +
+    '      setBusy(false);\n' +
+    '    }\n' +
+    '  };\n' +
+    '\n' +
+    '  const startEncounter = async () => {\n' +
+    "    if (!clients || eligibility?.kind !== 'eligible' || busy) return;\n" +
+    '    const reviewed = eligibility;\n' +
+    '    setBusy(true);\n' +
+    '    setResult(copy.submitting);\n' +
+    '    try {\n' +
+    '      const current = await getEncounterStartEligibility(clients, patientId);\n' +
+    '      if (\n' +
+    "        current.kind !== 'eligible' ||\n" +
+    '        current.appointment.id !== reviewed.appointment.id ||\n' +
+    '        current.queueEntry.id !== reviewed.queueEntry.id\n' +
+    '      ) {\n' +
+    "        setEligibility(current.kind === 'eligible' ? { kind: 'stale' } : current);\n" +
+    '        setReview(false);\n' +
+    "        setResult(words[locale][current.kind === 'eligible' ? 'stale' : current.kind]);\n" +
+    '        requestAnimationFrame(() => triggerRef.current?.focus());\n' +
+    '        return;\n' +
+    '      }\n' +
+    '      const started = await clients.encounters.createEncounter(\n' +
+    "        { appointmentId: current.appointment.id, patientId, encounterType: 'consultation' },\n" +
+    '        { idempotencyKey: crypto.randomUUID() },\n' +
+    '      );\n' +
+    '      setReview(false);\n' +
+    '      router.push(`/encounters/${encodeURIComponent(started.encounter.id)}`);\n' +
+    '    } catch (error) {\n' +
+    '      const failure = encounterStartFailure(error);\n' +
+    '      setReview(false);\n' +
+    '      setResult(words[locale][failure]);\n' +
+    "      if (failure === 'conflict') setEligibility({ kind: 'stale' });\n" +
+    "      if (failure === 'denied') setEligibility({ kind: 'denied' });\n" +
+    '      requestAnimationFrame(() => triggerRef.current?.focus());\n' +
+    '    } finally {\n' +
+    '      setBusy(false);\n' +
+    '    }\n' +
+    '  };\n' +
+    '\n' +
+    '  const resultCopy =\n' +
+    '    result &&\n' +
+    '    result !== copy.submitting &&\n' +
+    "    result !== (eligibility && eligibility.kind !== 'eligible' ? copy[eligibility.kind] : null)\n" +
+    '      ? result\n' +
+    '      : null;\n' +
+    "  const active = eligibility?.kind === 'eligible';\n" +
+    '\n' +
+    '  return (\n' +
+    '    <div\n' +
+    '      lang={locale}\n' +
+    "      dir={ar ? 'rtl' : 'ltr'}\n" +
+    '      style={{\n' +
+    '        background: color.canvas,\n' +
+    '        color: color.ink,\n' +
+    "        minHeight: '100vh',\n" +
+    "        ...feature010WebTypography(locale, 'body'),\n" +
+    "        fontFamily: locale === 'ar-EG' ? 'IBM Plex Sans Arabic' : 'Inter',\n" +
+    '      }}\n' +
+    '    >\n' +
+    '      <header\n' +
+    '        style={{\n' +
+    "          display: 'flex',\n" +
+    "          justifyContent: 'space-between',\n" +
+    "          alignItems: 'center',\n" +
+    '          padding: spacing.md,\n' +
+    '          borderBlockEnd: `1px solid ${color.border}`,\n' +
+    '          background: color.surface,\n' +
+    '        }}\n' +
+    '      >\n' +
+    '        <strong>◇ SHIFAA</strong>\n' +
+    "        <button style={buttonStyle} onClick={() => setLocale(ar ? 'en-EG' : 'ar-EG')}>\n" +
+    '          {copy.english}\n' +
+    '        </button>\n' +
+    '      </header>\n' +
+    '      {token ? (\n' +
+    '        <div\n' +
+    '          className="clinic-summary-workspace"\n' +
+    '          style={{\n' +
+    "            minHeight: 'calc(100vh - 72px)',\n" +
+    '          }}\n' +
+    '        >\n' +
+    '          <nav\n' +
+    '            aria-label={common.primaryNavigation}\n' +
+    '            style={{\n' +
+    '              padding: spacing.md,\n' +
+    '              borderInlineEnd: `1px solid ${color.border}`,\n' +
+    '              background: color.surface,\n' +
+    '            }}\n' +
+    '          >\n' +
+    '            <p>{common.navigationToday}</p>\n' +
+    '            <p aria-current="page" style={{ color: color.brand, fontWeight: 700 }}>\n' +
+    '              {copy.title}\n' +
+    '            </p>\n' +
+    '            <p>{common.navigationEncounter}</p>\n' +
+    '            <p>{common.navigationReferrals}</p>\n' +
+    '            <p>{common.navigationMessages}</p>\n' +
+    '          </nav>\n' +
+    '          <main\n' +
+    '            style={{\n' +
+    "              boxSizing: 'border-box',\n" +
+    '              minWidth: 0,\n' +
+    "              overflowWrap: 'anywhere',\n" +
+    "              width: 'min(100%, 1100px)',\n" +
+    "              marginInline: 'auto',\n" +
+    '              padding: spacing.lg,\n' +
+    '            }}\n' +
+    '          >\n' +
+    '            <section\n' +
+    '              aria-label={copy.currentPatient}\n' +
+    '              style={{ ...cardStyle, marginBlockEnd: spacing.lg }}\n' +
+    '            >\n' +
+    '              <h2 style={{ marginBlockStart: 0 }}>{copy.patientContext}</h2>\n' +
+    '              <p>\n' +
+    "                {copy.facility}:{' '}\n" +
+    '                <bdi dir="ltr">\n' +
+    "                  {eligibility?.kind === 'eligible' ? eligibility.appointment.facil"... 9397 more characters
+  
+      at TestContext.<anonymous> (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\apps\clinic\test\feature-011-summary.test.tsx:148:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '\'use client\';\n\nimport { feature010ArEG, feature010CommonCopy, feature010EnEG } from \'@shifaa/i18n\';\nimport React, { useCallback, useEffect, useMemo, useRef, useState } from \'react\';\nimport { useParams, useRouter } from \'next/navigation\';\nimport {\n  breakpoint,\n  color,\n  minimumTargetSize,\n  radius,\n  spacing,\n} from \'@shifaa/design-system/tokens\';\nimport {\n  createEncounterStartClients,\n  encounterStartFailure,\n  getEncounterStartEligibility,\n  type ClinicLocale,\n  type EncounterStartEligibility,\n} from \'../../../../lib/feature-010-api\';\nimport { useFeature010DocumentLocale } from \'../../../../components/feature-010/useFeature010DocumentLocale\';\nimport { feature010WebTypography } from \'../../../../components/feature-010/feature010WebTypography\';\n\nconst words = {\n  \'ar-EG\': feature010ArEG[\'clinic.summary\'],\n  \'en-EG\': feature010EnEG[\'clinic.summary\'],\n} as const;\n\nconst buttonStyle: React.CSSProperties = {\n  minWidth: minimumTargetSize,\n  minHeight: minimumTargetSize,\n  border: `1px solid ${color.brand}`,\n  borderRadius: radius.control,\n  background: color.surface,\n  color: color.ink,\n  paddingInline: spacing.md,\n  cursor: \'pointer\',\n};\nconst fieldStyle: React.CSSProperties = {\n  display: \'block\',\n  boxSizing: \'border-box\',\n  width: \'100%\',\n  maxWidth: \'100%\',\n  minWidth: 0,\n  minHeight: minimumTargetSize,\n  border: `1px solid ${color.border}`,\n  borderRadius: radius.control,\n  paddingInline: spacing.sm,\n  marginBlock: spacing.sm,\n  background: color.surface,\n  color: color.ink,\n};\nconst cardStyle: React.CSSProperties = {\n  border: `1px solid ${color.border}`,\n  borderRadius: radius.card,\n  background: color.surface,\n  padding: spacing.lg,\n};\n\nexport default function PatientSummaryPage() {\n  const params = useParams<{ id: string }>();\n  const patientId = params.id;\n  const router = useRouter();\n  const [locale, setLocale] = useState<ClinicLocale>(\'ar-EG\');\n  const [handle, setHandle] = useState(\'\');\n  const [password, setPassword] = useState(\'\');\n  const [challenge, setChallenge] = useState(\'\');\n  const [otp, setOtp] = useState(\'\');\n  const [token, setToken] = useState(\'\');\n  const [aal, setAal] = useState<1 | 2 | undefined>(undefined);\n  const [busy, setBusy] = useState(false);\n  const [loginError, setLoginError] = useState(false);\n  const [online, setOnline] = useState(true);\n  const [eligibility, setEligibility] = useState<EncounterStartEligibility | null>(null);\n  const [review, setReview] = useState(false);\n  const [result, setResult] = useState<string | null>(null);\n  const triggerRef = useRef<HTMLButtonElement>(null);\n  const backRef = useRef<HTMLButtonElement>(null);\n  const confirmRef = useRef<HTMLButtonElement>(null);\n  const modalRef = useRef<HTMLDivElement>(null);\n  const apiBaseUrl = process.env[\'NEXT_PUBLIC_API_BASE_URL\'];\n  const copy = words[locale];\n  const common = feature010CommonCopy[locale];\n  const ar = locale === \'ar-EG\';\n  useFeature010DocumentLocale(locale);\n  const clients = useMemo(\n    () => (token && apiBaseUrl ? createEncounterStartClients(token, locale, aal) : null),\n    [aal, apiBaseUrl, locale, token],\n  );\n\n  const refreshEligibility = useCallback(async () => {\n    if (!clients) return;\n    setEligibility(null);\n    setResult(null);\n    try {\n      setEligibility(await getEncounterStartEligibility(clients, patientId));\n    } catch {\n      setEligibility({ kind: \'recoverable\' });\n    }\n  }, [clients, patientId]);\n\n  useEffect(() => {\n    if (clients) void refreshEligibility();\n  }, [clients, refreshEligibility]);\n\n  useEffect(() => {\n    const update = () => setOnline(navigator.onLine);\n    update();\n    window.addEventListener(\'online\', update);\n    window.addEventListener(\'offline\', update);\n    return () => {\n      window.removeEventListener(\'online\', update);\n      window.removeEventListener(\'offline\', update);\n    };\n  }, []);\n\n  useEffect(() => {\n    if (!review) return;\n    backRef.current?.focus();\n    const onKeyDown = (event: KeyboardEvent) => {\n      if (event.key === \'Escape\') {\n        event.preventDefault();\n        setReview(false);\n        requestAnimationFrame(() => triggerRef.current?.focus());\n        return;\n      }\n      if (event.key !== \'Tab\' || !modalRef.current) return;\n      const controls = Array.from(\n        modalRef.current.querySelectorAll<HTMLElement>(\'button:not([disabled])\'),\n      );\n      if (!controls.length) return;\n      const first = controls[0]!;\n      const last = controls.at(-1)!;\n      if (event.shiftKey && document.activeElement === first) {\n        event.preventDefault();\n        last.focus();\n      } else if (!event.shiftKey && document.activeElement === last) {\n        event.preventDefault();\n        first.focus();\n      }\n    };\n    document.addEventListener(\'keydown\', onKeyDown);\n    return () => document.removeEventListener(\'keydown\', onKeyDown);\n  }, [review]);\n\n  const signIn = async (verify: boolean) => {\n    if (!apiBaseUrl) return;\n    setBusy(true);\n    setLoginError(false);\n    try {\n      const { IdentityOnboardingClient } = await import(\'@shifaa/api-client\');\n      const auth = new IdentityOnboardingClient({ baseUrl: apiBaseUrl, acceptLanguage: locale });\n      if (!verify) {\n        const response = (await auth.login({ handle, password }, crypto.randomUUID())) as {\n          kind?: string;\n          challenge_id?: string;\n        };\n        if (response.kind !== \'challenge\' || !response.challenge_id)\n          throw new Error(\'challenge-required\');\n        setChallenge(response.challenge_id);\n        setPassword(\'\');\n      } else {\n        const response = (await auth.verifyOtp(\n          { challenge_id: challenge, code: otp },\n          crypto.randomUUID(),\n        )) as { kind?: string; access_token?: string; aal?: 1 | 2 };\n        if (response.kind !== \'session\' || !response.access_token)\n          throw new Error(\'session-required\');\n        setToken(response.access_token);\n        setAal(response.aal === 2 ? 2 : response.aal === 1 ? 1 : undefined);\n        setChallenge(\'\');\n        setOtp(\'\');\n      }\n    } catch {\n      setLoginError(true);\n    } finally {\n      setBusy(false);\n    }\n  };\n\n  const startEncounter = async () => {\n    if (!clients || eligibility?.kind !== \'eligible\' || busy) return;\n    const reviewed = eligibility;\n    setBusy(true);\n    setResult(copy.submitting);\n    try {\n      const current = await getEncounterStartEligibility(clients, patientId);\n      if (\n        current.kind !== \'eligible\' ||\n        current.appointment.id !== reviewed.appointment.id ||\n        current.queueEntry.id !== reviewed.queueEntry.id\n      ) {\n        setEligibility(current.kind === \'eligible\' ? { kind: \'stale\' } : current);\n        setReview(false);\n        setResult(words[locale][current.kind === \'eligible\' ? \'stale\' : current.kind]);\n        requestAnimationFrame(() => triggerRef.current?.focus());\n        return;\n      }\n      const started = await clients.encounters.createEncounter(\n        { appointmentId: current.appointment.id, patientId, encounterType: \'consultation\' },\n        { idempotencyKey: crypto.randomUUID() },\n      );\n      setReview(false);\n      router.push(`/encounters/${encodeURIComponent(started.encounter.id)}`);\n    } catch (error) {\n      const failure = encounterStartFailure(error);\n      setReview(false);\n      setResult(words[locale][failure]);\n      if (failure === \'conflict\') setEligibility({ kind: \'stale\' });\n      if (failure === \'denied\') setEligibility({ kind: \'denied\' });\n      requestAnimationFrame(() => triggerRef.current?.focus());\n    } finally {\n      setBusy(false);\n    }\n  };\n\n  const resultCopy =\n    result &&\n    result !== copy.submitting &&\n    result !== (eligibility && eligibility.kind !== \'eligible\' ? copy[eligibility.kind] : null)\n      ? result\n      : null;\n  const active = eligibility?.kind === \'eligible\';\n\n  return (\n    <div\n      lang={locale}\n      dir={ar ? \'rtl\' : \'ltr\'}\n      style={{\n        background: color.canvas,\n        color: color.ink,\n        minHeight: \'100vh\',\n        ...feature010WebTypography(locale, \'body\'),\n        fontFamily: locale === \'ar-EG\' ? \'IBM Plex Sans Arabic\' : \'Inter\',\n      }}\n    >\n      <header\n        style={{\n          display: \'flex\',\n          justifyContent: \'space-between\',\n          alignItems: \'center\',\n          padding: spacing.md,\n          borderBlockEnd: `1px solid ${color.border}`,\n          background: color.surface,\n        }}\n      >\n        <strong>◇ SHIFAA</strong>\n        <button style={buttonStyle} onClick={() => setLocale(ar ? \'en-EG\' : \'ar-EG\')}>\n          {copy.english}\n        </button>\n      </header>\n      {token ? (\n        <div\n          className="clinic-summary-workspace"\n          style={{\n            minHeight: \'calc(100vh - 72px)\',\n          }}\n        >\n          <nav\n            aria-label={common.primaryNavigation}\n            style={{\n              padding: spacing.md,\n              borderInlineEnd: `1px solid ${color.border}`,\n              background: color.surface,\n            }}\n          >\n            <p>{common.navigationToday}</p>\n            <p aria-current="page" style={{ color: color.brand, fontWeight: 700 }}>\n              {copy.title}\n            </p>\n            <p>{common.navigationEncounter}</p>\n            <p>{common.navigationReferrals}</p>\n            <p>{common.navigationMessages}</p>\n          </nav>\n          <main\n            style={{\n              boxSizing: \'border-box\',\n              minWidth: 0,\n              overflowWrap: \'anywhere\',\n              width: \'min(100%, 1100px)\',\n              marginInline: \'auto\',\n              padding: spacing.lg,\n            }}\n          >\n            <section\n              aria-label={copy.currentPatient}\n              style={{ ...cardStyle, marginBlockEnd: spacing.lg }}\n            >\n              <h2 style={{ marginBlockStart: 0 }}>{copy.patientContext}</h2>\n              <p>\n                {copy.facility}:{\' \'}\n                <bdi dir="ltr">\n                  {eligibility?.kind === \'eligible\' ? eligibility.appointment.facil'... 9397 more characters,
+    expected: /AllergySummaryPanel/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at apps\patient\test\feature-011-records.test.tsx:1:4012
+✖ route composition includes named fields, focus and bidi-safe state regions (3.3159ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /AllergyRecordsPanel/. Input:
+  
+  'import {\n' +
+    '  listReferralTargets,\n' +
+    '  referralDoctorKey,\n' +
+    '  referralSlotKey,\n' +
+    '  type ReferralTargetChoice,\n' +
+    "} from '../src/feature-010-targets';\n" +
+    'import {\n' +
+    '  color,\n' +
+    '  FocusVisiblePressable,\n' +
+    '  OfflineNoQueueBanner,\n' +
+    '  radius,\n' +
+    '  RouteStatePanel,\n' +
+    '  localizedType,\n' +
+    '  semanticStyles,\n' +
+    '  spacing,\n' +
+    "} from '@shifaa/design-system';\n" +
+    "import type { PendingSubjectReferralProjection, PublicDoctorProjection } from '@shifaa/contracts';\n" +
+    "import { useLocalSearchParams, useRouter } from 'expo-router';\n" +
+    "import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';\n" +
+    "import { Platform, ScrollView, Text, View } from 'react-native';\n" +
+    '\n' +
+    "import { createPatientClinicSchedulingClient } from '../src/clinic-scheduling-api';\n" +
+    "import { patientAccessTokens } from '../src/patient-auth-store';\n" +
+    "import { patientOnboardingApi } from '../src/identity-onboarding-api';\n" +
+    'import {\n' +
+    '  PatientFeature010ReferralApi,\n' +
+    '  referralRecordsCopy,\n' +
+    '  type EncounterTypeChoice,\n' +
+    '  type PatientReferralActorRole,\n' +
+    "} from '../src/feature-010-referrals';\n" +
+    "import { usePatientLocaleController } from '../src/locale-context';\n" +
+    "import { feature010CommonCopy } from '@shifaa/i18n';\n" +
+    "import { patientPlatform } from '../src/patient-auth-store';\n" +
+    "import { resolvePatientApiBaseUrl } from '../src/patient-api-base-url';\n" +
+    '\n' +
+    'type ScreenState =\n' +
+    "  | 'loading'\n" +
+    "  | 'empty'\n" +
+    "  | 'denied'\n" +
+    "  | 'offline'\n" +
+    "  | 'stale'\n" +
+    "  | 'error'\n" +
+    "  | 'conflict'\n" +
+    "  | 'pending'\n" +
+    "  | 'review'\n" +
+    "  | 'searching'\n" +
+    "  | 'slots'\n" +
+    "  | 'submitting'\n" +
+    "  | 'accepted';\n" +
+    '\n' +
+    'type TargetChoice = ReferralTargetChoice;\n' +
+    'const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;\n' +
+    "const actorRoles: PatientReferralActorRole[] = ['PAT', 'GUA', 'DEL'];\n" +
+    'type WebKeyboardEvent = {\n' +
+    '  key?: string;\n' +
+    '  repeat?: boolean;\n' +
+    '  preventDefault?: () => void;\n' +
+    '};\n' +
+    '\n' +
+    'function webKeyboardActivationProps(onActivate: () => void) {\n' +
+    "  if (Platform.OS !== 'web') return {};\n" +
+    '  return {\n' +
+    '    onKeyDown: (event: WebKeyboardEvent) => {\n' +
+    '      if (\n' +
+    "        (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') &&\n" +
+    '        !event.repeat\n' +
+    '      ) {\n' +
+    '        event.preventDefault?.();\n' +
+    '        onActivate();\n' +
+    '      }\n' +
+    '    },\n' +
+    '  };\n' +
+    '}\n' +
+    '\n' +
+    'const statusOf = (error: unknown) =>\n' +
+    "  error && typeof error === 'object' && 'status' in error\n" +
+    '    ? (error as { status?: unknown }).status\n' +
+    '    : null;\n' +
+    '\n' +
+    'function localDateAfter(days: number): string {\n' +
+    "  const parts = new Intl.DateTimeFormat('en-GB', {\n" +
+    "    timeZone: 'Africa/Cairo',\n" +
+    "    year: 'numeric',\n" +
+    "    month: '2-digit',\n" +
+    "    day: '2-digit',\n" +
+    '  }).formatToParts(new Date());\n' +
+    "  const get = (name: string) => parts.find((part) => part.type === name)?.value ?? '';\n" +
+    '  const date = new Date(\n' +
+    "    Date.UTC(Number(get('year')), Number(get('month')) - 1, Number(get('day')) + days),\n" +
+    '  );\n' +
+    '  return date.toISOString().slice(0, 10);\n' +
+    '}\n' +
+    '\n' +
+    "function displayTime(value: string, locale: 'ar-EG' | 'en-EG', timezone: string): string {\n" +
+    '  const instant = Date.parse(value);\n' +
+    "  if (!Number.isFinite(instant)) return '—';\n" +
+    '  try {\n' +
+    '    return new Intl.DateTimeFormat(`${locale}-u-ca-gregory`, {\n' +
+    '      timeZone: timezone,\n' +
+    "      dateStyle: 'medium',\n" +
+    "      timeStyle: 'short',\n" +
+    '    }).format(instant);\n' +
+    '  } catch {\n' +
+    "    return '—';\n" +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    'function validActorRole(value: unknown): value is PatientReferralActorRole {\n' +
+    '  return actorRoles.includes(value as PatientReferralActorRole);\n' +
+    '}\n' +
+    '\n' +
+    'export default function PatientRecordsRoute() {\n' +
+    '  const params = useLocalSearchParams<{ actingRole?: string; patientId?: string }>();\n' +
+    '  const router = useRouter();\n' +
+    '  const { locale, setLocale } = usePatientLocaleController();\n' +
+    '  const common = feature010CommonCopy[locale];\n' +
+    '  const copy = referralRecordsCopy[locale];\n' +
+    "  const initialRole = validActorRole(params.actingRole) ? params.actingRole : 'PAT';\n" +
+    '  const [actorRole, setActorRole] = useState<PatientReferralActorRole>(initialRole);\n' +
+    "  const [state, setState] = useState<ScreenState>('loading');\n" +
+    "  const [patientId, setPatientId] = useState('');\n" +
+    '  const [referrals, setReferrals] = useState<PendingSubjectReferralProjection[]>([]);\n' +
+    '  const [selectedReferral, setSelectedReferral] = useState<PendingSubjectReferralProjection | null>(\n' +
+    '    null,\n' +
+    '  );\n' +
+    '  const [reasonAuthorized, setReasonAuthorized] = useState(false);\n' +
+    '  const [encounterTypeChoice, setEncounterTypeChoice] = useState<EncounterTypeChoice>(null);\n' +
+    '  const [targets, setTargets] = useState<TargetChoice[]>([]);\n' +
+    '  const [selectedDoctor, setSelectedDoctor] = useState<PublicDoctorProjection | null>(null);\n' +
+    '  const [selectedTarget, setSelectedTarget] = useState<TargetChoice | null>(null);\n' +
+    '  const [booked, setBooked] = useState<Awaited<\n' +
+    "    ReturnType<PatientFeature010ReferralApi['acceptReferral']>\n" +
+    '  > | null>(null);\n' +
+    '  const requestGeneration = useRef(0);\n' +
+    '  const mutationInFlight = useRef(false);\n' +
+    '  const searchInFlight = useRef(false);\n' +
+    '  const resultFocus = useRef<View>(null);\n' +
+    '  const actionFocus = useRef<View>(null);\n' +
+    '  const referralApi = useRef<PatientFeature010ReferralApi | null>(null);\n' +
+    "  const direction = locale === 'ar-EG' ? 'rtl' : 'ltr';\n" +
+    '  const apiBaseUrl = useMemo(\n' +
+    '    () =>\n' +
+    '      resolvePatientApiBaseUrl({\n' +
+    '        platform: patientPlatform,\n' +
+    "        configuredBaseUrl: process.env['EXPO_PUBLIC_API_BASE_URL'],\n" +
+    "        ...(typeof globalThis.location?.origin === 'string'\n" +
+    '          ? { webOrigin: globalThis.location.origin }\n' +
+    '          : {}),\n' +
+    '      }),\n' +
+    '    [],\n' +
+    '  );\n' +
+    '  const clearReferralState = useCallback(() => {\n' +
+    '    referralApi.current?.clearProtectedState();\n' +
+    '    setReferrals([]);\n' +
+    '    setSelectedReferral(null);\n' +
+    '    setReasonAuthorized(false);\n' +
+    '    setEncounterTypeChoice(null);\n' +
+    '    setTargets([]);\n' +
+    '    setSelectedDoctor(null);\n' +
+    '    setSelectedTarget(null);\n' +
+    '    setBooked(null);\n' +
+    '  }, []);\n' +
+    '\n' +
+    '  const load = useCallback(async () => {\n' +
+    '    const generation = ++requestGeneration.current;\n' +
+    '    clearReferralState();\n' +
+    "    setPatientId('');\n" +
+    '    referralApi.current = null;\n' +
+    "    if (typeof navigator !== 'undefined' && navigator.onLine === false) {\n" +
+    "      setState('offline');\n" +
+    '      return;\n' +
+    '    }\n' +
+    '    if (!patientAccessTokens.read()) {\n' +
+    "      setState('denied');\n" +
+    '      return;\n' +
+    '    }\n' +
+    "    setState('loading');\n" +
+    '    try {\n' +
+    '      const profile = await patientOnboardingApi.getProfile();\n' +
+    '      if (generation !== requestGeneration.current) return;\n' +
+    '      if (!uuid.test(profile.id)) {\n' +
+    "        setState('denied');\n" +
+    '        return;\n' +
+    '      }\n' +
+    "      const subjectId = actorRole === 'PAT' ? profile.id : (params.patientId ?? '');\n" +
+    '      if (!uuid.test(subjectId)) {\n' +
+    "        setState('denied');\n" +
+    '        return;\n' +
+    '      }\n' +
+    '      const currentApi = new PatientFeature010ReferralApi({\n' +
+    '        locale,\n' +
+    '        actorRole,\n' +
+    '        patientId: subjectId,\n' +
+    '        accessToken: () => patientAccessTokens.read(),\n' +
+    '        apiBaseUrl,\n' +
+    '      });\n' +
+    '      referralApi.current = currentApi;\n' +
+    '      const page = await currentApi.listPendingReferrals();\n' +
+    '      if (generation !== requestGeneration.current) return;\n' +
+    '      setPatientId(subjectId);\n' +
+    '      setReferrals(page.data);\n' +
+    "      setState(page.data.length ? 'pending' : 'empty');\n" +
+    '    } catch (error) {\n' +
+    '      if (generation !== requestGeneration.current) return;\n' +
+    '      const api = referralApi.current;\n' +
+    '      clearReferralState();\n' +
+    '      setState(\n' +
+    "        api?.readState === 'denied' || statusOf(error) === 401 || statusOf(error) === 403\n" +
+    "          ? 'denied'\n" +
+    "          : api?.readState === 'offline' ||\n" +
+    '              (error instanceof TypeError &&\n' +
+    "                typeof navigator !== 'undefined' &&\n" +
+    '                navigator.onLine === false)\n' +
+    "            ? 'offline'\n" +
+    "            : api?.readState === 'stale' ||\n" +
+    "                (typeof statusOf(error) === 'number' && Number(statusOf(error)) >= 500)\n" +
+    "              ? 'stale'\n" +
+    "              : 'error',\n" +
+    '      );\n' +
+    '    }\n' +
+    '  }, [actorRole, apiBaseUrl, clearReferralState, locale, params.patientId]);\n' +
+    '\n' +
+    '  useEffect(() => {\n' +
+    '    void load();\n' +
+    '    return () => {\n' +
+    '      requestGeneration.current += 1;\n' +
+    '    };\n' +
+    '  }, [load]);\n' +
+    '\n' +
+    '  useEffect(() => {\n' +
+    '    const online = () => void load();\n' +
+    '    const offline = () => {\n' +
+    '      requestGeneration.current += 1;\n' +
+    '      referralApi.current?.markOffline();\n' +
+    '      clearReferralState();\n' +
+    "      setState('offline');\n" +
+    '    };\n' +
+    "    if (typeof window !== 'undefined') {\n" +
+    "      window.addEventListener('online', online);\n" +
+    "      window.addEventListener('offline', offline);\n" +
+    '    }\n' +
+    '    return () => {\n' +
+    "      if (typeof window !== 'undefined') {\n" +
+    "        window.removeEventListener('online', online);\n" +
+    "        window.removeEventListener('offline', offline);\n" +
+    '      }\n' +
+    '    };\n' +
+    '  }, [clearReferralState, load]);\n' +
+    '\n' +
+    '  useEffect(() => {\n' +
+    "    if (['accepted', 'conflict', 'denied', 'error', 'stale'].includes(state))\n" +
+    '      resultFocus.current?.focus?.();\n' +
+    '  }, [state]);\n' +
+    '\n' +
+    '  const schedulingApi = () =>\n' +
+    '    createPatientClinicSchedulingClient({\n' +
+    '      locale,\n' +
+    '      ...(patientId ? { patientId } : {}),\n' +
+    '      accessToken: () => patientAccessTokens.read(),\n' +
+    '      apiBaseUrl,\n' +
+    '    });\n' +
+    '\n' +
+    '  const selectActorRole = (role: PatientReferralActorRole) => {\n' +
+    '    if (role === actorRole) return;\n' +
+    '    requestGeneration.current += 1;\n' +
+    "    setPatientId('');\n" +
+    '    setActorRole(role);\n' +
+    "    setState('loading');\n" +
+    '    clearReferralState();\n' +
+    '  };\n' +
+    '\n' +
+    '  const discoverSlots = async () => {\n' +
+    '    if (!selectedReferral || !reasonAuthorized || encounterTypeChoice === null) return;\n' +
+    '    if (searchInFlight.current) return;\n' +
+    "    if (typeof navigator !== 'undefined' && navigator.onLine === false) {\n" +
+    '      clearReferralState();\n' +
+    "      setState('offline');\n" +
+    '      return;\n' +
+    '    }\n' +
+    '    searchInFlight.current = true;\n' +
+    '    const generation = ++requestGeneration.current;\n' +
+    "    setState('searching');\n" +
+    '    setTargets([]);\n' +
+    '    setSelectedDoctor(null);\n' +
+    '    setSelectedTarget(null);\n' +
+    '    try {\n' +
+    '      const referralsApi = referralApi.current;\n' +
+    '      if (!referralsApi) {\n' +
+    '        clearReferralState();\n' +
+    "        setState('denied');\n" +
+    '        return;\n' +
+    '      }\n' +
+    '      const currentPage = await referralsApi.listPendingReferrals();\n' +
+    '      if (generation !== requestGeneration.current) return;\n' +
+    '      const currentReferral = currentPage.data.find((item) => item.id === selectedReferral.id);\n' +
+    '      if (!currentReferral || currentReferral.version !== selectedReferral.version) {\n' +
+    '        clearReferralState();\n' +
+    "        setState('conflict');"... 23308 more characters
+  
+      at TestContext.<anonymous> (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\apps\patient\test\feature-011-records.test.tsx:145:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "import {\n  listReferralTargets,\n  referralDoctorKey,\n  referralSlotKey,\n  type ReferralTargetChoice,\n} from '../src/feature-010-targets';\nimport {\n  color,\n  FocusVisiblePressable,\n  OfflineNoQueueBanner,\n  radius,\n  RouteStatePanel,\n  localizedType,\n  semanticStyles,\n  spacing,\n} from '@shifaa/design-system';\nimport type { PendingSubjectReferralProjection, PublicDoctorProjection } from '@shifaa/contracts';\nimport { useLocalSearchParams, useRouter } from 'expo-router';\nimport React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';\nimport { Platform, ScrollView, Text, View } from 'react-native';\n\nimport { createPatientClinicSchedulingClient } from '../src/clinic-scheduling-api';\nimport { patientAccessTokens } from '../src/patient-auth-store';\nimport { patientOnboardingApi } from '../src/identity-onboarding-api';\nimport {\n  PatientFeature010ReferralApi,\n  referralRecordsCopy,\n  type EncounterTypeChoice,\n  type PatientReferralActorRole,\n} from '../src/feature-010-referrals';\nimport { usePatientLocaleController } from '../src/locale-context';\nimport { feature010CommonCopy } from '@shifaa/i18n';\nimport { patientPlatform } from '../src/patient-auth-store';\nimport { resolvePatientApiBaseUrl } from '../src/patient-api-base-url';\n\ntype ScreenState =\n  | 'loading'\n  | 'empty'\n  | 'denied'\n  | 'offline'\n  | 'stale'\n  | 'error'\n  | 'conflict'\n  | 'pending'\n  | 'review'\n  | 'searching'\n  | 'slots'\n  | 'submitting'\n  | 'accepted';\n\ntype TargetChoice = ReferralTargetChoice;\nconst uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;\nconst actorRoles: PatientReferralActorRole[] = ['PAT', 'GUA', 'DEL'];\ntype WebKeyboardEvent = {\n  key?: string;\n  repeat?: boolean;\n  preventDefault?: () => void;\n};\n\nfunction webKeyboardActivationProps(onActivate: () => void) {\n  if (Platform.OS !== 'web') return {};\n  return {\n    onKeyDown: (event: WebKeyboardEvent) => {\n      if (\n        (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') &&\n        !event.repeat\n      ) {\n        event.preventDefault?.();\n        onActivate();\n      }\n    },\n  };\n}\n\nconst statusOf = (error: unknown) =>\n  error && typeof error === 'object' && 'status' in error\n    ? (error as { status?: unknown }).status\n    : null;\n\nfunction localDateAfter(days: number): string {\n  const parts = new Intl.DateTimeFormat('en-GB', {\n    timeZone: 'Africa/Cairo',\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n  }).formatToParts(new Date());\n  const get = (name: string) => parts.find((part) => part.type === name)?.value ?? '';\n  const date = new Date(\n    Date.UTC(Number(get('year')), Number(get('month')) - 1, Number(get('day')) + days),\n  );\n  return date.toISOString().slice(0, 10);\n}\n\nfunction displayTime(value: string, locale: 'ar-EG' | 'en-EG', timezone: string): string {\n  const instant = Date.parse(value);\n  if (!Number.isFinite(instant)) return '—';\n  try {\n    return new Intl.DateTimeFormat(`${locale}-u-ca-gregory`, {\n      timeZone: timezone,\n      dateStyle: 'medium',\n      timeStyle: 'short',\n    }).format(instant);\n  } catch {\n    return '—';\n  }\n}\n\nfunction validActorRole(value: unknown): value is PatientReferralActorRole {\n  return actorRoles.includes(value as PatientReferralActorRole);\n}\n\nexport default function PatientRecordsRoute() {\n  const params = useLocalSearchParams<{ actingRole?: string; patientId?: string }>();\n  const router = useRouter();\n  const { locale, setLocale } = usePatientLocaleController();\n  const common = feature010CommonCopy[locale];\n  const copy = referralRecordsCopy[locale];\n  const initialRole = validActorRole(params.actingRole) ? params.actingRole : 'PAT';\n  const [actorRole, setActorRole] = useState<PatientReferralActorRole>(initialRole);\n  const [state, setState] = useState<ScreenState>('loading');\n  const [patientId, setPatientId] = useState('');\n  const [referrals, setReferrals] = useState<PendingSubjectReferralProjection[]>([]);\n  const [selectedReferral, setSelectedReferral] = useState<PendingSubjectReferralProjection | null>(\n    null,\n  );\n  const [reasonAuthorized, setReasonAuthorized] = useState(false);\n  const [encounterTypeChoice, setEncounterTypeChoice] = useState<EncounterTypeChoice>(null);\n  const [targets, setTargets] = useState<TargetChoice[]>([]);\n  const [selectedDoctor, setSelectedDoctor] = useState<PublicDoctorProjection | null>(null);\n  const [selectedTarget, setSelectedTarget] = useState<TargetChoice | null>(null);\n  const [booked, setBooked] = useState<Awaited<\n    ReturnType<PatientFeature010ReferralApi['acceptReferral']>\n  > | null>(null);\n  const requestGeneration = useRef(0);\n  const mutationInFlight = useRef(false);\n  const searchInFlight = useRef(false);\n  const resultFocus = useRef<View>(null);\n  const actionFocus = useRef<View>(null);\n  const referralApi = useRef<PatientFeature010ReferralApi | null>(null);\n  const direction = locale === 'ar-EG' ? 'rtl' : 'ltr';\n  const apiBaseUrl = useMemo(\n    () =>\n      resolvePatientApiBaseUrl({\n        platform: patientPlatform,\n        configuredBaseUrl: process.env['EXPO_PUBLIC_API_BASE_URL'],\n        ...(typeof globalThis.location?.origin === 'string'\n          ? { webOrigin: globalThis.location.origin }\n          : {}),\n      }),\n    [],\n  );\n  const clearReferralState = useCallback(() => {\n    referralApi.current?.clearProtectedState();\n    setReferrals([]);\n    setSelectedReferral(null);\n    setReasonAuthorized(false);\n    setEncounterTypeChoice(null);\n    setTargets([]);\n    setSelectedDoctor(null);\n    setSelectedTarget(null);\n    setBooked(null);\n  }, []);\n\n  const load = useCallback(async () => {\n    const generation = ++requestGeneration.current;\n    clearReferralState();\n    setPatientId('');\n    referralApi.current = null;\n    if (typeof navigator !== 'undefined' && navigator.onLine === false) {\n      setState('offline');\n      return;\n    }\n    if (!patientAccessTokens.read()) {\n      setState('denied');\n      return;\n    }\n    setState('loading');\n    try {\n      const profile = await patientOnboardingApi.getProfile();\n      if (generation !== requestGeneration.current) return;\n      if (!uuid.test(profile.id)) {\n        setState('denied');\n        return;\n      }\n      const subjectId = actorRole === 'PAT' ? profile.id : (params.patientId ?? '');\n      if (!uuid.test(subjectId)) {\n        setState('denied');\n        return;\n      }\n      const currentApi = new PatientFeature010ReferralApi({\n        locale,\n        actorRole,\n        patientId: subjectId,\n        accessToken: () => patientAccessTokens.read(),\n        apiBaseUrl,\n      });\n      referralApi.current = currentApi;\n      const page = await currentApi.listPendingReferrals();\n      if (generation !== requestGeneration.current) return;\n      setPatientId(subjectId);\n      setReferrals(page.data);\n      setState(page.data.length ? 'pending' : 'empty');\n    } catch (error) {\n      if (generation !== requestGeneration.current) return;\n      const api = referralApi.current;\n      clearReferralState();\n      setState(\n        api?.readState === 'denied' || statusOf(error) === 401 || statusOf(error) === 403\n          ? 'denied'\n          : api?.readState === 'offline' ||\n              (error instanceof TypeError &&\n                typeof navigator !== 'undefined' &&\n                navigator.onLine === false)\n            ? 'offline'\n            : api?.readState === 'stale' ||\n                (typeof statusOf(error) === 'number' && Number(statusOf(error)) >= 500)\n              ? 'stale'\n              : 'error',\n      );\n    }\n  }, [actorRole, apiBaseUrl, clearReferralState, locale, params.patientId]);\n\n  useEffect(() => {\n    void load();\n    return () => {\n      requestGeneration.current += 1;\n    };\n  }, [load]);\n\n  useEffect(() => {\n    const online = () => void load();\n    const offline = () => {\n      requestGeneration.current += 1;\n      referralApi.current?.markOffline();\n      clearReferralState();\n      setState('offline');\n    };\n    if (typeof window !== 'undefined') {\n      window.addEventListener('online', online);\n      window.addEventListener('offline', offline);\n    }\n    return () => {\n      if (typeof window !== 'undefined') {\n        window.removeEventListener('online', online);\n        window.removeEventListener('offline', offline);\n      }\n    };\n  }, [clearReferralState, load]);\n\n  useEffect(() => {\n    if (['accepted', 'conflict', 'denied', 'error', 'stale'].includes(state))\n      resultFocus.current?.focus?.();\n  }, [state]);\n\n  const schedulingApi = () =>\n    createPatientClinicSchedulingClient({\n      locale,\n      ...(patientId ? { patientId } : {}),\n      accessToken: () => patientAccessTokens.read(),\n      apiBaseUrl,\n    });\n\n  const selectActorRole = (role: PatientReferralActorRole) => {\n    if (role === actorRole) return;\n    requestGeneration.current += 1;\n    setPatientId('');\n    setActorRole(role);\n    setState('loading');\n    clearReferralState();\n  };\n\n  const discoverSlots = async () => {\n    if (!selectedReferral || !reasonAuthorized || encounterTypeChoice === null) return;\n    if (searchInFlight.current) return;\n    if (typeof navigator !== 'undefined' && navigator.onLine === false) {\n      clearReferralState();\n      setState('offline');\n      return;\n    }\n    searchInFlight.current = true;\n    const generation = ++requestGeneration.current;\n    setState('searching');\n    setTargets([]);\n    setSelectedDoctor(null);\n    setSelectedTarget(null);\n    try {\n      const referralsApi = referralApi.current;\n      if (!referralsApi) {\n        clearReferralState();\n        setState('denied');\n        return;\n      }\n      const currentPage = await referralsApi.listPendingReferrals();\n      if (generation !== requestGeneration.current) return;\n      const currentReferral = currentPage.data.find((item) => item.id === selectedReferral.id);\n      if (!currentReferral || currentReferral.version !== selectedReferral.version) {\n        clearReferralState();\n        setState('conflict');"... 23308 more characters,
+    expected: /AllergyRecordsPanel/,
+    operator: 'match',
+    diff: 'simple'
+  }

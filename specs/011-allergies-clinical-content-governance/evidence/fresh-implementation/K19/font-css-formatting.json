@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "path": "apps/admin/public/fonts/feature-011-fonts.css",
+  "beforeSha256": "cec3618ae216b9a36f39e8c6b8ec0d4d5f1bf69c2a823e6a526b8d8980768c2d",
+  "afterSha256": "815e2bc01ed1e1ce4a70367d491c10335f69fe31d03018b4b2e412dc4f0990c8",
+  "verification": "Only whitespace and optional final declaration semicolons changed; identical CSS declarations, URLs, families, weights and Unicode ranges. Font binaries unchanged."
+}

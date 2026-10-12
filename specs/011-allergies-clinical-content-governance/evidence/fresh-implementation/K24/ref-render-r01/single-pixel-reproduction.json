@@ -1,0 +1,263 @@
+{
+  "recordedAt": "2026-10-11T04:07:56.463Z",
+  "record": {
+    "path": "artifacts/feature-011/k24/render-recheck-2026-10-11/deterministic-scroll-v2-2026-10-11T04-06-06-864Z-ff1c69da-142e-4aca-80a5-feac069a2694.json",
+    "sha256": "e59e1dcfe5311e1720f50692112258e5d4571bc66833655c5cee923aa92edf6d"
+  },
+  "name": "patient-records__success-receipt__ar-EG__360x800__dark.png",
+  "width": 360,
+  "height": 800,
+  "pixels": [
+    {
+      "x": 174,
+      "y": 390,
+      "a": [
+        16,
+        51,
+        64,
+        255
+      ],
+      "b": [
+        16,
+        52,
+        64,
+        255
+      ]
+    }
+  ],
+  "images": [
+    {
+      "path": "artifacts\\feature-011\\k24\\render-recheck-2026-10-11\\visual\\diagnostics\\2026-10-11T040607-544Z-789e4e67-6307-4348-93c0-5dd3c61d3938\\capture-a/patient-records__success-receipt__ar-EG__360x800__dark.png",
+      "sha256": "a1684a0a8d0febb6fe513e209de07b9ecdc388343d0b7d9016f1b28dac85af2e"
+    },
+    {
+      "path": "artifacts\\feature-011\\k24\\render-recheck-2026-10-11\\visual\\diagnostics\\2026-10-11T040607-544Z-789e4e67-6307-4348-93c0-5dd3c61d3938\\capture-b/patient-records__success-receipt__ar-EG__360x800__dark.png",
+      "sha256": "7bdac9378d1ac83ac1dfe7f07098f771aa9b9f1f33f57cb8d24c9caac8a85177"
+    }
+  ],
+  "framingEqual": true,
+  "rows": [
+    {
+      "key": "patient-records__success-receipt__ar-EG__360x800__dark",
+      "app": "patient",
+      "route": "/records",
+      "state": "success-receipt",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "colorMode": "dark",
+      "coverage": {
+        "targetRect": {
+          "x": 33,
+          "y": 367,
+          "width": 294,
+          "height": 32
+        },
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "intersectsViewport": true,
+        "scroll": {
+          "x": 0,
+          "y": 0
+        },
+        "nestedScrolls": [],
+        "limitation": "Viewport-visible feature state; fullPage does not expand nested Expo scroll content. This image alone does not prove complete long-history coverage."
+      },
+      "stability": {
+        "stableSamples": 5,
+        "settlePolls": 5,
+        "signature": {
+          "active": "DIV#.css-view-g5y9jx",
+          "scroll": [],
+          "selects": [],
+          "panel": [
+            16,
+            350,
+            328,
+            1340
+          ],
+          "fonts": "loaded"
+        }
+      },
+      "nativeSelectActions": [],
+      "fontFaces": [
+        {
+          "family": "IBMPlexSansArabic_400Regular",
+          "weight": "normal",
+          "status": "loaded"
+        },
+        {
+          "family": "IBMPlexSansArabic_600SemiBold",
+          "weight": "normal",
+          "status": "loaded"
+        },
+        {
+          "family": "IBMPlexSansArabic_700Bold",
+          "weight": "normal",
+          "status": "loaded"
+        },
+        {
+          "family": "Inter_400Regular",
+          "weight": "normal",
+          "status": "unloaded"
+        },
+        {
+          "family": "Inter_600SemiBold",
+          "weight": "normal",
+          "status": "unloaded"
+        },
+        {
+          "family": "Inter_700Bold",
+          "weight": "normal",
+          "status": "loaded"
+        }
+      ],
+      "fontAssets": [
+        {
+          "sourceKind": "http-url",
+          "sourcePath": "http://127.0.0.1:18312/assets/",
+          "sha256": "93ac94c4b3174176d410381b86c19891086a091c3c8da940ca65d85aa6a4f8a4",
+          "byteLength": 226560
+        }
+      ],
+      "fontSources": [
+        {
+          "family": "IBMPlexSansArabic_400Regular",
+          "weight": "normal",
+          "style": "normal",
+          "sourceKind": "http-url",
+          "sourcePath": "http://127.0.0.1:18312/assets/",
+          "sha256": "93ac94c4b3174176d410381b86c19891086a091c3c8da940ca65d85aa6a4f8a4",
+          "byteLength": 226560
+        }
+      ],
+      "rendered": {
+        "width": 360,
+        "height": 800,
+        "direction": "rtl",
+        "forcedColors": false,
+        "dark": true,
+        "reducedMotion": true
+      },
+      "sha256": "a1684a0a8d0febb6fe513e209de07b9ecdc388343d0b7d9016f1b28dac85af2e"
+    },
+    {
+      "key": "patient-records__success-receipt__ar-EG__360x800__dark",
+      "app": "patient",
+      "route": "/records",
+      "state": "success-receipt",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "colorMode": "dark",
+      "coverage": {
+        "targetRect": {
+          "x": 33,
+          "y": 367,
+          "width": 294,
+          "height": 32
+        },
+        "viewport": {
+          "width": 360,
+          "height": 800
+        },
+        "intersectsViewport": true,
+        "scroll": {
+          "x": 0,
+          "y": 0
+        },
+        "nestedScrolls": [],
+        "limitation": "Viewport-visible feature state; fullPage does not expand nested Expo scroll content. This image alone does not prove complete long-history coverage."
+      },
+      "stability": {
+        "stableSamples": 5,
+        "settlePolls": 5,
+        "signature": {
+          "active": "DIV#.css-view-g5y9jx",
+          "scroll": [],
+          "selects": [],
+          "panel": [
+            16,
+            350,
+            328,
+            1340
+          ],
+          "fonts": "loaded"
+        }
+      },
+      "nativeSelectActions": [],
+      "fontFaces": [
+        {
+          "family": "IBMPlexSansArabic_400Regular",
+          "weight": "normal",
+          "status": "loaded"
+        },
+        {
+          "family": "IBMPlexSansArabic_600SemiBold",
+          "weight": "normal",
+          "status": "loaded"
+        },
+        {
+          "family": "IBMPlexSansArabic_700Bold",
+          "weight": "normal",
+          "status": "loaded"
+        },
+        {
+          "family": "Inter_400Regular",
+          "weight": "normal",
+          "status": "unloaded"
+        },
+        {
+          "family": "Inter_600SemiBold",
+          "weight": "normal",
+          "status": "unloaded"
+        },
+        {
+          "family": "Inter_700Bold",
+          "weight": "normal",
+          "status": "loaded"
+        }
+      ],
+      "fontAssets": [
+        {
+          "sourceKind": "http-url",
+          "sourcePath": "http://127.0.0.1:18312/assets/",
+          "sha256": "93ac94c4b3174176d410381b86c19891086a091c3c8da940ca65d85aa6a4f8a4",
+          "byteLength": 226560
+        }
+      ],
+      "fontSources": [
+        {
+          "family": "IBMPlexSansArabic_400Regular",
+          "weight": "normal",
+          "style": "normal",
+          "sourceKind": "http-url",
+          "sourcePath": "http://127.0.0.1:18312/assets/",
+          "sha256": "93ac94c4b3174176d410381b86c19891086a091c3c8da940ca65d85aa6a4f8a4",
+          "byteLength": 226560
+        }
+      ],
+      "rendered": {
+        "width": 360,
+        "height": 800,
+        "direction": "rtl",
+        "forcedColors": false,
+        "dark": true,
+        "reducedMotion": true
+      },
+      "sha256": "7bdac9378d1ac83ac1dfe7f07098f771aa9b9f1f33f57cb8d24c9caac8a85177"
+    }
+  ],
+  "rootCause": "NOT_ESTABLISHED",
+  "pixelThreshold": 0,
+  "channelTolerance": 0,
+  "fullMatrixPass": false,
+  "formalAccessibilityAcceptance": false,
+  "checkpointAccepted": false
+}

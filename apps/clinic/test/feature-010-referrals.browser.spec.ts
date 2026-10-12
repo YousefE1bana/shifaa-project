@@ -384,7 +384,9 @@ test('create failures remain explicit and never report a saved referral', async 
       await page.getByRole('button', { name: 'Review referral' }).click();
     await page.getByRole('dialog').getByRole('button', { name: 'Create pending referral' }).click();
     await expect(page.getByText(referralId)).toHaveCount(0);
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(
+      page.getByRole('dialog', { name: 'Review internal referral' }).getByRole('alert'),
+    ).toBeVisible();
   }
   expect(
     api.seen.filter(

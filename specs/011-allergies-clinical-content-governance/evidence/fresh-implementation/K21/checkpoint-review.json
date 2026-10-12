@@ -1,0 +1,559 @@
+{
+  "result": "F011_K21_READY_FOR_REVIEW",
+  "primaryAgentReview": true,
+  "noDelegation": true,
+  "bookkeeping": {
+    "K20": "T074–T076 CHECKED / #471–#473 CLOSED",
+    "acceptance": {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/k20-accepted-2026-10-09.md",
+      "sha256": "717eef887a2557d931e0ce5b8a1770eed749060730bc5e3c6d4772ccb0f7e469"
+    },
+    "review": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/acceptance-review-2026-10-09.json",
+      "sha256": "86eebf767cdac9d23fa8c1353c1974243bc1aa8e76d0a3bf3f0c290614640ff7"
+    }
+  },
+  "K21": {
+    "tasks": "T077–T079 UNCHECKED",
+    "issues": "#474–#476 OPEN",
+    "red": {
+      "tests": 54,
+      "failed": 54,
+      "setupFailures": 0
+    },
+    "focusedGreen": 93,
+    "runtimes": [
+      {
+        "runtime": "shifaa-local-postgres",
+        "checks": 62,
+        "scenarios": [
+          {
+            "scenario": "lifecycle",
+            "count": 55,
+            "health": {
+              "result": "PASS",
+              "manifest": {
+                "database": "f011_k08_0c60e77567b343f8",
+                "owner": "shifaa_owner",
+                "serverVersion": "17.11",
+                "actors": 8,
+                "encounters": 1,
+                "feature010Entrypoint": true,
+                "roles": [
+                  {
+                    "name": "shifaa_api",
+                    "superuser": false,
+                    "bypassRls": false,
+                    "login": true
+                  },
+                  {
+                    "name": "shifaa_worker",
+                    "superuser": false,
+                    "bypassRls": false,
+                    "login": true
+                  }
+                ],
+                "peopleOwner": "shifaa_owner",
+                "peopleForceRls": true
+              },
+              "nonOwner": {
+                "user": "shifaa_api",
+                "visiblePeople": 0,
+                "backendPid": 130152
+              },
+              "setupCommand": [
+                "docker",
+                "exec",
+                "-i",
+                "shifaa-local-postgres-postgres-1",
+                "psql",
+                "-X",
+                "-qAt",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-v",
+                "VERBOSITY=verbose",
+                "-U",
+                "shifaa_owner",
+                "-d",
+                "f011_k08_0c60e77567b343f8"
+              ],
+              "nonOwnerCommand": [
+                "docker",
+                "exec",
+                "-i",
+                "-e",
+                "PGPASSWORD",
+                "shifaa-local-postgres-postgres-1",
+                "psql",
+                "-X",
+                "-qAt",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-v",
+                "VERBOSITY=verbose",
+                "-h",
+                "127.0.0.1",
+                "-U",
+                "shifaa_api",
+                "-d",
+                "f011_k08_0c60e77567b343f8"
+              ]
+            },
+            "cleanup": {
+              "database": "f011_k08_0c60e77567b343f8",
+              "dropped": true,
+              "absenceVerified": true,
+              "forced": false
+            }
+          },
+          {
+            "scenario": "signer-loss",
+            "count": 7,
+            "health": {
+              "result": "PASS",
+              "manifest": {
+                "database": "f011_k08_da12f3c64aaa1718",
+                "owner": "shifaa_owner",
+                "serverVersion": "17.11",
+                "actors": 8,
+                "encounters": 1,
+                "feature010Entrypoint": true,
+                "roles": [
+                  {
+                    "name": "shifaa_api",
+                    "superuser": false,
+                    "bypassRls": false,
+                    "login": true
+                  },
+                  {
+                    "name": "shifaa_worker",
+                    "superuser": false,
+                    "bypassRls": false,
+                    "login": true
+                  }
+                ],
+                "peopleOwner": "shifaa_owner",
+                "peopleForceRls": true
+              },
+              "nonOwner": {
+                "user": "shifaa_api",
+                "visiblePeople": 0,
+                "backendPid": 132781
+              },
+              "setupCommand": [
+                "docker",
+                "exec",
+                "-i",
+                "shifaa-local-postgres-postgres-1",
+                "psql",
+                "-X",
+                "-qAt",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-v",
+                "VERBOSITY=verbose",
+                "-U",
+                "shifaa_owner",
+                "-d",
+                "f011_k08_da12f3c64aaa1718"
+              ],
+              "nonOwnerCommand": [
+                "docker",
+                "exec",
+                "-i",
+                "-e",
+                "PGPASSWORD",
+                "shifaa-local-postgres-postgres-1",
+                "psql",
+                "-X",
+                "-qAt",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-v",
+                "VERBOSITY=verbose",
+                "-h",
+                "127.0.0.1",
+                "-U",
+                "shifaa_api",
+                "-d",
+                "f011_k08_da12f3c64aaa1718"
+              ]
+            },
+            "cleanup": {
+              "database": "f011_k08_da12f3c64aaa1718",
+              "dropped": true,
+              "absenceVerified": true,
+              "forced": false
+            }
+          }
+        ]
+      },
+      {
+        "runtime": "shifaa-local-supabase",
+        "checks": 62,
+        "scenarios": [
+          {
+            "scenario": "lifecycle",
+            "count": 55,
+            "health": {
+              "result": "PASS",
+              "manifest": {
+                "database": "f011_k08_4ca6e9e7320c5848",
+                "owner": "supabase_admin",
+                "serverVersion": "17.6",
+                "actors": 8,
+                "encounters": 1,
+                "feature010Entrypoint": true,
+                "roles": [
+                  {
+                    "name": "shifaa_api",
+                    "superuser": false,
+                    "bypassRls": false,
+                    "login": true
+                  },
+                  {
+                    "name": "shifaa_worker",
+                    "superuser": false,
+                    "bypassRls": false,
+                    "login": true
+                  }
+                ],
+                "peopleOwner": "supabase_admin",
+                "peopleForceRls": true
+              },
+              "nonOwner": {
+                "user": "shifaa_api",
+                "visiblePeople": 0,
+                "backendPid": 83319
+              },
+              "setupCommand": [
+                "docker",
+                "exec",
+                "-i",
+                "supabase_db_shifaa-local-supabase",
+                "psql",
+                "-X",
+                "-qAt",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-v",
+                "VERBOSITY=verbose",
+                "-U",
+                "supabase_admin",
+                "-d",
+                "f011_k08_4ca6e9e7320c5848"
+              ],
+              "nonOwnerCommand": [
+                "docker",
+                "exec",
+                "-i",
+                "-e",
+                "PGPASSWORD",
+                "supabase_db_shifaa-local-supabase",
+                "psql",
+                "-X",
+                "-qAt",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-v",
+                "VERBOSITY=verbose",
+                "-h",
+                "127.0.0.1",
+                "-U",
+                "shifaa_api",
+                "-d",
+                "f011_k08_4ca6e9e7320c5848"
+              ]
+            },
+            "cleanup": {
+              "database": "f011_k08_4ca6e9e7320c5848",
+              "dropped": true,
+              "absenceVerified": true,
+              "forced": false
+            }
+          },
+          {
+            "scenario": "signer-loss",
+            "count": 7,
+            "health": {
+              "result": "PASS",
+              "manifest": {
+                "database": "f011_k08_a731efac71a59034",
+                "owner": "supabase_admin",
+                "serverVersion": "17.6",
+                "actors": 8,
+                "encounters": 1,
+                "feature010Entrypoint": true,
+                "roles": [
+                  {
+                    "name": "shifaa_api",
+                    "superuser": false,
+                    "bypassRls": false,
+                    "login": true
+                  },
+                  {
+                    "name": "shifaa_worker",
+                    "superuser": false,
+                    "bypassRls": false,
+                    "login": true
+                  }
+                ],
+                "peopleOwner": "supabase_admin",
+                "peopleForceRls": true
+              },
+              "nonOwner": {
+                "user": "shifaa_api",
+                "visiblePeople": 0,
+                "backendPid": 86214
+              },
+              "setupCommand": [
+                "docker",
+                "exec",
+                "-i",
+                "supabase_db_shifaa-local-supabase",
+                "psql",
+                "-X",
+                "-qAt",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-v",
+                "VERBOSITY=verbose",
+                "-U",
+                "supabase_admin",
+                "-d",
+                "f011_k08_a731efac71a59034"
+              ],
+              "nonOwnerCommand": [
+                "docker",
+                "exec",
+                "-i",
+                "-e",
+                "PGPASSWORD",
+                "supabase_db_shifaa-local-supabase",
+                "psql",
+                "-X",
+                "-qAt",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-v",
+                "VERBOSITY=verbose",
+                "-h",
+                "127.0.0.1",
+                "-U",
+                "shifaa_api",
+                "-d",
+                "f011_k08_a731efac71a59034"
+              ]
+            },
+            "cleanup": {
+              "database": "f011_k08_a731efac71a59034",
+              "dropped": true,
+              "absenceVerified": true,
+              "forced": false
+            }
+          }
+        ]
+      }
+    ],
+    "registry": {
+      "allFamilyStates": 99,
+      "statusFamily": [
+        "loading",
+        "empty",
+        "error-recoverable",
+        "error-terminal",
+        "permission-denied",
+        "offline",
+        "stale",
+        "success",
+        "effective",
+        "future-effective",
+        "superseded",
+        "synthetic-gated",
+        "aal2-required",
+        "authority-lost",
+        "dependency-unavailable"
+      ],
+      "ownership": {
+        "K12": "patient records/clinic allergy summary",
+        "K14": "allergy verification/history",
+        "K19": "admin content",
+        "K21": "clinic status"
+      },
+      "frozenReferencesChanged": false
+    },
+    "US4": "Engineering journey demonstrated; product/clinical/final visual approval not claimed"
+  },
+  "parity": {
+    "pins": 133,
+    "current": "PASS",
+    "unchanged": true,
+    "T029RenewalRequired": false,
+    "reason": "No pinned SQL/generated/normative input changed"
+  },
+  "fixes": [
+    "Mock response cache policy repaired and valid RED recaptured; setup never counted",
+    "Browser runner uses allowed localhost origin; blocked hydration attempt excluded",
+    "Runner expects generated unsafe-cache-policy rejection of root early no-store-only 503 as recoverable error; no security/product change",
+    "Harness instruments actual material and key preparation ports, and uses explicit server-selected pharmacist facility",
+    "Explicit .ts i18n export fixes NodeNext and native Node module resolution; current proof rerun",
+    "Scoped AAL error selector to the screen to avoid Next route-announcer collision",
+    "Replaced invented clinic /privacy link with existing patient-app guidance; added regression tests and reran full both-runtime demo against final bytes"
+  ],
+  "evidence": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/status-ui-red.json",
+      "sha256": "fdeb8c2ba91117505d6b7b9bebfd15e36fd34625875e244928aa9f1ad0994bf2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/status-ui.json",
+      "sha256": "cc8bd2b5087b6a368a7bf792a09c5d4d12f9bc662ef2b90c1e86993856e904a2"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/us4-demo.json",
+      "sha256": "41c6c5539cf9cca98e8f677a21671b14a9b1f74785912480acbd59fa7caf0ba7"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/parity.json",
+      "sha256": "10602e79df95fe4bb6d1366d58c7a6d17df43ba505d084731e46f2637903b7e4"
+    }
+  ],
+  "logs": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/focused-regressions.log",
+      "sha256": "70cbe18a53a8d994a02d6683975352eb884bdf58808ce4ca737497385d05aa55"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/typecheck.log",
+      "sha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/i18n-typecheck.log",
+      "sha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/build.log",
+      "sha256": "543f9dab88e4de193e5b2d6b28f7398fef664220e05d3d1ef32ecb8731090a86"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/architecture.log",
+      "sha256": "8896c703cc68317561d54f46f0e457a4c8c9b2523b66c8c17b165c4dafdd16b7"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/secrets.log",
+      "sha256": "f03f7eae8c4b6df5b2c1af52148a67bf72e896f0f22c228a848603e7b8255124"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/format.log",
+      "sha256": "f20510a9da4717c51c4cffee6d0dd88d6c9a723d0a83711d01216f5b48961283"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/native-i18n-import.log",
+      "sha256": "172ceab59cad8da1696d9a1ccbb20315ec5d1f0a163505c9cfedfecf5b9b03b6"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/frozen-scope.log",
+      "sha256": "327239705190f72f0f07852b99d321d23778d286787bf04e59e033bbe52dbfd7"
+    }
+  ],
+  "sourceChanges": [
+    "packages/i18n/src/index.ts",
+    "specs/011-allergies-clinical-content-governance/tasks.md",
+    "specs/011-allergies-clinical-content-governance/contracts/task-map.json"
+  ],
+  "newFiles": [
+    "apps/clinic/src/app/clinical-content/status/page.tsx",
+    "apps/clinic/src/app/clinical-content/status/StatusWorkspace.tsx",
+    "apps/clinic/src/lib/feature-011-status.ts",
+    "apps/clinic/test/feature-011-status.test.tsx",
+    "packages/i18n/src/feature-011-status.ts",
+    "tools/run-feature-011-status-ui-test.mjs"
+  ],
+  "preservation": {
+    "missingFiles": 0,
+    "unexpectedPriorChanges": 0,
+    "normalizedTasks": "e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957235f9573165",
+    "normalizedTaskMap": "5a6037838bc644a5dbb61c17a5504a662822f8d5ee0925379b823737f17b738d",
+    "laterTasks": "T080–T092 unchanged/unchecked"
+  },
+  "issues": [
+    {
+      "number": 471,
+      "state": "CLOSED",
+      "title": "[011-allergies-clinical-content-governance] T074: Add RED clinic SQL/API/client projection and current explicit status grant tests"
+    },
+    {
+      "number": 472,
+      "state": "CLOSED",
+      "title": "[011-allergies-clinical-content-governance] T075: Compose metadata-only status via existing listClinicalContent projection"
+    },
+    {
+      "number": 473,
+      "state": "CLOSED",
+      "title": "[011-allergies-clinical-content-governance] T076: Capture both-runtime status allowlist/current authority and qualification-loss proof"
+    },
+    {
+      "number": 474,
+      "state": "OPEN",
+      "title": "[011-allergies-clinical-content-governance] T077: Add RED clinic status family state/a11y/allowlist tests"
+    },
+    {
+      "number": 475,
+      "state": "OPEN",
+      "title": "[011-allergies-clinical-content-governance] T078: Implement existing /clinical-content/status engineering route"
+    },
+    {
+      "number": 476,
+      "state": "OPEN",
+      "title": "[011-allergies-clinical-content-governance] T079: Capture complete J-04 AR/EN after authoritative eligibility and status security acceptance"
+    }
+  ],
+  "gates": {
+    "OPEN-UX-001": "F011 affected-UI Plan prerequisite only satisfied",
+    "OPEN-UX-002": "OPEN VERIFYING",
+    "OPEN-TECH-002": "OPEN affected IMPLEMENTING; bounded F011 P1–P5 unchanged",
+    "OPEN-TECH-003": "OPEN VERIFYING/reference environment",
+    "OPEN-CLIN-001": "OPEN synthetic engineering only",
+    "OPEN-LEGAL-001/002/007": "OPEN existing lifecycle effects unchanged"
+  },
+  "boundaries": {
+    "operations": 7,
+    "boundedFRs": 4,
+    "NFRs": 19,
+    "sqlUnchanged": true,
+    "generatedUnchanged": true,
+    "contractsUnchanged": true,
+    "noNewApiRoute": true,
+    "noNewGrant": true,
+    "noK22": true
+  },
+  "limitations": [
+    "Headless installed Chrome synthetic engineering evidence; 400% CSS reflow equivalence, not native zoom/reference environment/final visual acceptance",
+    "Auth handoff fixture carries real native token. UI future/superseded/unavailable shape fixtures do not imply SQL discloses unavailable releases. Real future/admission/signer-loss reads separately proven. Current security proof remains K20, not replaced by UI.",
+    "Full feature verification/test discovery belongs to later approved checkpoints; no shared destructive pnpm verify run",
+    "Early exposure guard 503 has no-store without private; client intentionally fails closed to recoverable unavailable rather than using data"
+  ],
+  "guardReview": {
+    "cleanCode": "PASS metadata-only composition; existing boundaries preserved",
+    "tests": "PASS real client/render + actual native/non-owner runtimes, independent positive controls, failed setup excluded",
+    "docs": "PASS source/evidence hashes, counts and current/future/unknown semantics verified"
+  },
+  "blockers": [],
+  "drift": [],
+  "git": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "main": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "status": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/git-status.txt",
+      "sha256": "f8bd6af1a398f6f2ad19b054504f631e2b1d2725dd62dea361e270565c4a3a75"
+    },
+    "dirtyEntries": 144,
+    "commit": false,
+    "push": false,
+    "PR": false
+  },
+  "stop": "STOP before K22/T080; ready and waiting for orders",
+  "capturedAt": "2026-10-09T11:12:35.733Z"
+}

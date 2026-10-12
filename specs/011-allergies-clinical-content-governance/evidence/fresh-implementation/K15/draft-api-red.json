@@ -1,0 +1,28 @@
+{
+  "result": "VALID_RED",
+  "task": "T057",
+  "tests": 19,
+  "setupFailures": 0,
+  "reason": "MISSING_CREATE_RELEASE_COMPOSITION",
+  "assertions": [
+    "K15 approved create release composition initial exact tuple, three material bindings and lossless UTF-8 review",
+    "K15 approved create release composition BODY decrypts to the intended exact content using immutable ID/version AAD",
+    "K15 approved create release composition same-version competing drafts use distinct ID/nonces",
+    "K15 approved create release composition successor uses exact published same-series predecessor version plus one",
+    "K15 approved create release composition content reference/hash substitution denies before mutation",
+    "K15 approved create release composition code reference/hash substitution denies before mutation",
+    "K15 approved create release composition testVectors reference/hash substitution denies before mutation",
+    "K15 approved create release composition unavailable denies without effect",
+    "K15 approved create release composition wrong-source denies without effect",
+    "K15 approved create release composition invalid-utf8 denies without effect",
+    "K15 approved create release composition changed-bytes denies without effect",
+    "K15 approved create release composition caller declaredDigest mismatch denies",
+    "K15 approved create release composition stale initial lineage denies before preparation",
+    "K15 approved create release composition wrong-series predecessor denies",
+    "K15 approved create release composition lost create/review authority denies without resolver/key work",
+    "K15 approved create release composition native AAL/purpose is required",
+    "K15 approved create release composition native AAL/purpose is required",
+    "K15 approved create release composition closed request rejects client-authored protected/allocation fields",
+    "K15 approved create release composition failed locked preflight retries with fresh ID/envelope and no hidden retry"
+  ]
+}

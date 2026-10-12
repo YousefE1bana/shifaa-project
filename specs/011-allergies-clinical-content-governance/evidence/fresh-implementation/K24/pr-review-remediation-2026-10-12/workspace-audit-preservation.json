@@ -1,0 +1,8 @@
+{
+  "path": "pnpm-workspace.yaml",
+  "observedChange": "auditConfig: {} became auditConfig: { ignoreGhsas: null } during full gate",
+  "approvedConfigurationPreserved": true,
+  "observedSha256": "77d646e85c07f090fd712666a0ac46c7ffa7e1d15dc61005c8f4dd606a2e46bc",
+  "restoredHeadSha256": "56771494d04fdb3d73139586fac0a82d1f70fc74abf2604f35cc5f53cafa2e8d",
+  "scope": "Only this exact null audit serialization was archived then restored; no dependency or ignore decision changed"
+}

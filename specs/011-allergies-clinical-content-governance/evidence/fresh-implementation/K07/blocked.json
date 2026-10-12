@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "K07",
+  "result": "BLOCKED",
+  "cause": "POSTGRES_17_11_APPROVED_CONTAINER_STOPPED_BEFORE_SCRATCH_CREATE",
+  "runtimeState": "/shifaa-local-postgres-postgres-1|shifaa/postgis:17-3.5-006-local|exited|false|255\n/supabase_db_shifaa-local-supabase|public.ecr.aws/supabase/postgres:17.6.1.158|running|true|0",
+  "t027": {
+    "result": "BLOCKED_ENVIRONMENT",
+    "baselineApplied": false,
+    "featureMigrationsApplied": false,
+    "databaseCreated": false,
+    "attempt": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-green-attempt.json",
+      "sha256": "b84eedb33cb68175edbf89544e65295a20c003e4f6cdfc799606966d79a6b9c1"
+    }
+  },
+  "t028": {
+    "executed": false,
+    "candidateSourceIncomplete": true
+  },
+  "t029": {
+    "asserted": false,
+    "ownerDesignation": "Direct Product Owner reply: Yousef Osama acts in API Lead, Data Lead and QA Lead roles for Feature 011 P5 only; no disposition recorded because prerequisites did not pass."
+  },
+  "tests": {
+    "harness": 5,
+    "protocolPreflight": 109,
+    "exposure": 27,
+    "physicalCommandExitCode": 1,
+    "sqlCasesExecuted": 0,
+    "racesExecuted": 0
+  },
+  "bookkeeping": {
+    "result": "PASS",
+    "accepted": [
+      "K05",
+      "K06"
+    ],
+    "checked": "T001–T026",
+    "unchecked": "T027–T092",
+    "before": {
+      "tasks": "b853efc31937e5ce1749b346e6a6ea4d0e3dc1182825d3d9d702f7f99fb60760",
+      "taskMap": "176bf067eb4d318ff066503a7519ab10649ecea6eed5504954930c122c245720"
+    },
+    "after": {
+      "tasks": "16542baa0f98202beda61b699a8341020b39cc0473c4193fba9c59bd2775448c",
+      "taskMap": "da2bbce9960affa001ca80b57a88450b312315bc4c0c94166fef859dae9f4be5"
+    },
+    "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+    "acceptanceRecords": [
+      "specs/011-allergies-clinical-content-governance/decisions/k05-accepted-2026-10-07.md",
+      "specs/011-allergies-clinical-content-governance/decisions/k06-accepted-2026-10-07.md"
+    ],
+    "issues": [
+      414,
+      415,
+      416,
+      417,
+      418,
+      419,
+      420,
+      421,
+      422,
+      423
+    ]
+  },
+  "issues": {
+    "closed": "414-423",
+    "open": "424-489"
+  },
+  "unchanged": "Spec, recovered Plan, OpenAPI, profiles, generated outputs and all ten accepted migrations; T030-T092 unchanged/unchecked",
+  "gates": "All retained OPEN gates unchanged; OPEN-TECH-002 globally OPEN",
+  "head": "670b1e0fe15c719b98179805f2628d1b478a55dd",
+  "branch": "codex/011-allergies-clinical-content-governance",
+  "sourcePreparationUnaccepted": true,
+  "stopBeforeK08": true,
+  "syntheticOnly": true,
+  "capturedAt": "2026-10-07T10:32:58.452Z"
+}

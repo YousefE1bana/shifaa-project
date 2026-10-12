@@ -1,0 +1,209 @@
+# SHIFAA team installation checklist
+
+> Baseline: `002-supabase-runtime-foundation` seeded-synthetic engineering only. Run these commands in Windows PowerShell. Do not add real patient, identity, document, vendor, or production credentials.
+
+## 1. Install machine prerequisites
+
+Run PowerShell as Administrator:
+
+```powershell
+$ErrorActionPreference = 'Stop'
+winget install --exact --id Git.Git --accept-package-agreements --accept-source-agreements
+winget install --exact --id GitHub.cli --accept-package-agreements --accept-source-agreements
+winget install --exact --id Schniz.fnm --accept-package-agreements --accept-source-agreements
+winget install --exact --id astral-sh.uv --accept-package-agreements --accept-source-agreements
+winget install --exact --id Docker.DockerDesktop --accept-package-agreements --accept-source-agreements
+```
+
+Close PowerShell, open a new non-administrator PowerShell window, then run:
+
+```powershell
+$ErrorActionPreference = 'Stop'
+$fnmHook = 'fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression'
+if (-not (Test-Path -LiteralPath $PROFILE)) {
+  New-Item -ItemType File -Path $PROFILE -Force | Out-Null
+}
+if (-not (Select-String -LiteralPath $PROFILE -SimpleMatch $fnmHook -Quiet)) {
+  Add-Content -LiteralPath $PROFILE -Value "`n$fnmHook"
+}
+Invoke-Expression (& fnm env --use-on-cd --shell powershell | Out-String)
+fnm install 24.18.0
+fnm default 24.18.0
+fnm use 24.18.0
+corepack enable
+corepack install --global pnpm@11.13.0
+uv tool install --force "git+https://github.com/github/spec-kit.git@v1.0.13"
+$specifyPython = Join-Path (uv tool dir) 'specify-cli\Scripts\python.exe'
+if (-not (Test-Path -LiteralPath $specifyPython)) { throw 'SpecKit Python runtime was not installed' }
+[Environment]::SetEnvironmentVariable('SPECKIT_PYTHON', $specifyPython, 'User')
+$env:SPECKIT_PYTHON = $specifyPython
+$env:KIMI_VERSION = '0.34.0'
+irm https://code.kimi.com/kimi-code/install.ps1 | iex
+Remove-Item Env:KIMI_VERSION
+```
+
+Open Docker Desktop and wait until the engine reports that it is running. Then verify every pin:
+
+```powershell
+$ErrorActionPreference = 'Stop'
+if ((node --version) -ne 'v24.18.0') { throw 'Node must be v24.18.0' }
+if ((pnpm --version) -ne '11.13.0') { throw 'pnpm must be 11.13.0' }
+if ((specify --version) -ne 'specify 1.0.13') { throw 'SpecKit must be 1.0.13' }
+if (-not (Test-Path -LiteralPath $env:SPECKIT_PYTHON)) { throw 'SPECKIT_PYTHON must point to the SpecKit uv runtime' }
+if ((kimi --version) -ne '0.34.0') { throw 'Kimi Code must be 0.34.0' }
+git --version
+gh --version
+docker version
+docker compose version
+```
+
+## 2. Authenticate GitHub and Kimi
+
+```powershell
+$ErrorActionPreference = 'Stop'
+gh auth login --hostname github.com --git-protocol https --web
+gh auth status --hostname github.com
+kimi login
+```
+
+The final `kimi login` command opens the Kimi device-code flow. Complete it before continuing.
+
+## 3. Pull and validate the repository
+
+```powershell
+$ErrorActionPreference = 'Stop'
+gh repo clone YousefE1bana/shifaa-project
+Set-Location shifaa-project
+git switch main
+git pull --ff-only
+fnm use 24.18.0
+corepack install --global pnpm@11.13.0
+pnpm install --frozen-lockfile
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools/sync-shifaa-owned-skills.ps1
+pnpm agent-skills:check
+if (-not (Test-Path '.agents/skills/shifaa-project-guardrails/SKILL.md')) { throw 'SHIFAA local skill sync failed' }
+```
+
+`.agents/skills/`, `.kimi-code/skills/`, and root `skills-lock.json` are ignored
+machine-local runtime state. Install or upgrade official SpecKit integrations
+with the installed Spec Kit CLI's manifest-aware flow, and install third-party
+project skills locally as needed. Never add those runtime files to Git. Global
+skills are managed separately by each user.
+
+## 4. Create the synthetic-only Supabase environment
+
+The local runtimes are separate: standalone Compose project `shifaa-local-postgres`
+uses PostgreSQL on `127.0.0.1:5432`; Supabase project `shifaa-local-supabase`
+uses its checked-in `supabase/config.toml` ports (`54321` API, `54322` database,
+`54323` Studio, `54324` mail, `54327` analytics, `54329` pooler). Run commands
+from the active repository checkout. The `pnpm db:*` scripts target standalone
+Compose; `pnpm supabase:*` targets local Supabase. Their volumes are distinct.
+On this Windows local runtime, `pnpm supabase:start` excludes the optional
+Vector Docker-log collector. Supabase CLI 2.113.0 otherwise generates a
+`host.docker.internal:2375` Docker-log source without a socket mount; this
+host does not expose an unauthenticated Docker daemon. Database, Auth, API,
+Mailpit and the Logflare service remain available on their configured ports,
+but Docker container logs are not forwarded into local Logflare. Keep the
+Docker TCP daemon disabled; this startup choice does not change production.
+
+```powershell
+$ErrorActionPreference = 'Stop'
+pnpm supabase:start
+pnpm supabase:reset
+pnpm supabase:status
+if (Test-Path '.env.local') { throw '.env.local already exists; review it instead of overwriting it' }
+Copy-Item '.env.supabase.example' '.env.local'
+pnpm supabase:test
+pnpm verify
+```
+
+Open three PowerShell windows from the repository root and run one command in each:
+
+```powershell
+pnpm dev:supabase:api
+pnpm dev:patient:web
+pnpm dev:admin:web
+```
+
+`.env.local` is ignored by Git. Copy the generated local keys printed by `pnpm supabase:status` into it and never commit it. Production Supabase, Valify, SMS, encryption, signing, or PHI credentials are neither required nor permitted for this slice.
+
+## 5. Start an Issue-scoped implementation
+
+Replace `123` with the assigned enriched Issue number:
+
+```powershell
+$ErrorActionPreference = 'Stop'
+$issue = 123
+git switch main
+git pull --ff-only
+git switch -c "issue-$issue-identity-onboarding"
+gh issue view $issue --repo YousefE1bana/shifaa-project
+.specify/scripts/powershell/resolve-issue-handoff.ps1 -Issue "#$issue" -Json
+kimi
+```
+
+Inside Kimi Code, paste:
+
+```text
+/skill:speckit-implement #123
+```
+
+For a Codex implementation session, paste:
+
+```text
+$speckit-implement #123
+```
+
+The resolver must accept the Issue's `shifaa-speckit-handoff:v1` body, feature path, task ID, artifact links, and baseline commit before any implementation begins. Do not proceed from an Issue that fails validation.
+
+## 6. Validate before pushing
+
+```powershell
+$ErrorActionPreference = 'Stop'
+pnpm verify
+pnpm sbom:generate
+git status --short
+git push --set-upstream origin (git branch --show-current)
+```
+
+Performance evidence additionally requires the synthetic API to be running:
+
+```powershell
+$ErrorActionPreference = 'Stop'
+pnpm test:performance
+Get-Content 'specs/001-identity-onboarding/evidence/performance.json'
+```
+
+## 7. Stop local services
+
+```powershell
+pnpm supabase:stop
+```
+
+To deliberately reset only the active checkout's local Supabase database from
+checked-in migrations and seed (this does not reset the standalone Compose
+database or the retained volumes of retired projects):
+
+```powershell
+$confirmation = Read-Host 'Type RESET-SHIFAA-LOCAL-SUPABASE to reset the named local Supabase database'
+if ($confirmation -ne 'RESET-SHIFAA-LOCAL-SUPABASE') { throw 'Reset cancelled' }
+pnpm supabase:reset
+pnpm supabase:test
+```
+
+## Feature 011 engineering verification maintenance — 2026-10-09
+
+Feature 011 uses Node 24.18.0, pnpm 11.13.0 and the pinned project-local Supabase CLI 2.113.0. Its isolated SQL proofs require PostgreSQL 17.11 and Supabase PostgreSQL 17.6. Use the approved harness-owned temporary databases; do not reset shared databases or remove unrelated volumes.
+
+The following commands produce synthetic local engineering evidence from this Feature 011 worktree:
+
+```powershell
+node --import tsx tools/run-feature-011-performance.mjs
+node --import tsx tools/run-feature-011-restore.mjs
+node --import tsx tools/run-feature-011-observability.mjs
+node --import tsx tools/run-feature-011-final-ui-test.mjs
+```
+
+K23 records workload, topology, raw measurements, protected-history restore and operational negatives. Test keys and neutral sources do not establish production KMS, clinical, backup/WORM or SLO/DR acceptance. OPEN-TECH-003 remains open: a documented reference device/network/dataset/load profile and explicit owner disposition are still required. Browser engineering checks do not substitute for native assistive-technology/reference-device acceptance under OPEN-UX-002.
+
+K24 final engineering verification and PR-based integration remain pending. These commands do not authorize commit, push, PR, production enablement or main changes. Preserve historical predecessor acceptance evidence and the dated identifier-handoff amendment.

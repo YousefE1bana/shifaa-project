@@ -1,0 +1,122 @@
+{
+  "result": "READY_FOR_REVIEW",
+  "prerequisites": {
+    "k05": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/k05/storage-proof.json",
+      "sha256": "fef1d9c42b1d2f088b1fb59c0d90cf53e7b4a6ed4eebfad3c9d5d1320c4e36b9"
+    },
+    "k06": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/k06/consumer-proof.json",
+      "sha256": "629a6ceeb4090edd79024b23dc41b599d1731dabd68f49e83bb5f99007c6e483"
+    },
+    "t027": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/physical-green.json",
+      "sha256": "8d43304c4569eb8cddb4edd8bbc1288ab613b9ba0a03f14fac3a97a33d1df62b"
+    },
+    "t028": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/physical-races.json",
+      "sha256": "aeccfffae8468d8ef008b7b63b1d82293e0a6840bb4ebc590732819dafd0c78f"
+    },
+    "t029": {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/stage-assertion.json",
+      "sha256": "5312d18dc2d28b34d3c9827c5e460528359d514bf98a434aad825dc2892e9d3e"
+    },
+    "currentSqlDigests": {
+      "supabase/migrations/20261006175926_f011_allergy_revisions.sql": "241b2d331744d196413498003d39e22468ba6926affff674a7d298a0728ca9dd",
+      "supabase/migrations/20261006175932_f011_content_artifacts.sql": "9ed72affaefc84349a2b20bca4f5a2555d30bebc9b28cae94c07c7838fd5499f",
+      "supabase/migrations/20261006175937_f011_governance_evidence.sql": "3f9b70b9315f6ecf7d331120ecbcc2fd1ce97006ded6d42de944b845915eee31",
+      "supabase/migrations/20261006175942_f011_atomic_receipts.sql": "4de286c39005856f0132f7432e76efb07f24d8d7e0fe8b67d1c5ec9280bb056d",
+      "supabase/migrations/20261006185236_f011_allergy_functions.sql": "64d10b422ab4711a3f327d2e8984718bc3c8e2149aa76e0dbc36fbbe2b1e56b3",
+      "supabase/migrations/20261006185237_f011_release_functions.sql": "a8bba430b0ac52dd4c0fe13be4fddabff58ba5d89ca464131d2663100b62253a",
+      "supabase/migrations/20261006185239_f011_signing_functions.sql": "a386de8a55f5e781f65d2ceb7bbdc68e8dd5165e7c169b539bbccf7926cf8550",
+      "supabase/migrations/20261006185240_f011_publication_functions.sql": "34584f7d9de0b72cf35900cb1f0b817177be57a761e9cc22454685bd481e497d",
+      "supabase/migrations/20261006185241_f011_rls_grants.sql": "368d9b19425451b1031de65780cb7ff36063eac795d71de925194df069fba26d",
+      "supabase/migrations/20261006185242_f011_receipt_functions.sql": "850335b5acfc51eed3076a74b07acd3989b2ae08ba926d99f8489ed18ff9ac39"
+    },
+    "pinnedInputs": 123
+  },
+  "tasks": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-red.json",
+      "sha256": "430e6b099688b0857c054f4b234d6f26d845c817cdbbc0de240f146f89310a4e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/release-protection.json",
+      "sha256": "ca02101f33cef2419e6af93c55d39df4f73fefdb1c6d9e43329e0bdf0cab4927"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/allergy-protection.json",
+      "sha256": "eb6e0d432e58a32750d16f0686fee5f6383c841396c42abbbd0d0e83840aeedf"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/receipt-producer.json",
+      "sha256": "cc962c3daaaa499bbd7352cecdf7586417f9d73d80dbe4adfa900ad74abea1a5"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-proof.json",
+      "sha256": "181c75d6e31c63688424e8eb7e73cc6462e48ed76c25411ca2aac25808b0509f"
+    }
+  ],
+  "unitEvidence": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/runtime/crypto-unit-tests.json",
+    "sha256": "d2e56024658ced2e86761b05c57ee1d1edeb48bed4dd5039cd651c6a9e9395a5"
+  },
+  "preservation": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/preservation.json",
+    "sha256": "dd1f6136fd1d92d0ef24ed345bb574a1281602dfd608f800b6e6bedfd925b322"
+  },
+  "newFiles": [
+    "services/api/src/adapters/postgres/feature-011-receipts.ts",
+    "services/api/src/modules/feature-011/allergy-protection.ts",
+    "services/api/src/modules/feature-011/mutation-receipts.ts",
+    "services/api/src/modules/feature-011/protection.test.ts",
+    "services/api/src/modules/feature-011/protection.ts",
+    "services/api/src/modules/feature-011/receipts.test.ts",
+    "services/api/src/modules/feature-011/release-protection.ts",
+    "services/api/src/modules/feature-011/response-composition.ts",
+    "specs/011-allergies-clinical-content-governance/decisions/k07-accepted-2026-10-07.md",
+    "specs/011-allergies-clinical-content-governance/decisions/k08-prerequisite-p5-revalidated-2026-10-07.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/allergy-protection.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/authorization.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/expected-catalog.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/k05/k05-before-k06.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/k05/storage-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/k06/consumer-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/parity-stage-verifier.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/physical-green.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/physical-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/replay-order-regression.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/physical-green-before-evidence-bundling.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-postgres-barriers.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-postgres-physical-execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-postgres-physical-observations.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-postgres-physical-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-postgres-race-execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-postgres-stage-catalog.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-supabase-barriers.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-supabase-physical-execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-supabase-physical-observations.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-supabase-physical-races.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-supabase-race-execution.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/runtime/shifaa-local-supabase-stage-catalog.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/shifaa-local-postgres-physical-details.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/shifaa-local-supabase-physical-details.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/prerequisite-remediation/stage-assertion.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/preservation.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-proof.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-red.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/receipt-producer.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/release-protection.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/review-report.md",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/review-summary.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/runtime/crypto-unit-tests.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/runtime/shifaa-local-postgres-protection.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/runtime/shifaa-local-supabase-protection.json",
+    "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/sign-response-blocker.json",
+    "tools/feature-011-k08-preflight.mjs",
+    "tools/feature-011-protection-fixtures.mjs",
+    "tools/run-feature-011-protection-test.mjs"
+  ],
+  "architectureBlocker": null,
+  "stop": "Before T035/K09; no commit/push/PR/main change"
+}

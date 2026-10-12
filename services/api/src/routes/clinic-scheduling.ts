@@ -274,7 +274,7 @@ function policyError(error: unknown): Error {
         'Use a new Idempotency-Key when the request changes.',
       );
     }
-    if (databaseError.code === '40001') {
+    if (databaseError.code === '40001' || databaseError.code === '40P01') {
       return new ApiPolicyError(
         'version-conflict',
         409,

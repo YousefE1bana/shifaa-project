@@ -1,0 +1,21 @@
+{
+  "result": "PASS_FORMAT_ONLY_SECOND_PASS",
+  "files": [
+    {
+      "path": "tests/e2e/feature-011-ui.spec.ts",
+      "before": "ecc286a514fe0577c152b3db3eea98ad981ffdd3e34cfea8e40a2c39890c9e15",
+      "after": "94373b4d61d484a82b8ae679acb5ba5ef1162e1ef64ea55c5695ade5e291a65f",
+      "syntaxTreeEqual": true,
+      "secondPassStable": true
+    },
+    {
+      "path": "tests/e2e/feature-011-verification.spec.ts",
+      "before": "9357228a252bd425896663e5bd0068e39a09fd9913052b376b4559f92e2177dc",
+      "after": "2b55c2f856b35a9d989c097648e585d6e801137d86152f5f5b845ea059652ce5",
+      "syntaxTreeEqual": true,
+      "secondPassStable": true
+    }
+  ],
+  "capturedAt": "2026-10-09T16:30:22.362Z",
+  "pinnedSourcesChanged": false
+}

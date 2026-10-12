@@ -1,0 +1,106 @@
+// Neutral private test provenance; native auth and online SQL remain real.
+import assert from 'node:assert/strict';
+import { randomUUID, randomBytes } from 'node:crypto';
+import { withAllergyApi, patient, report } from './run-feature-011-allergy-api-test.mjs';
+import { sql } from './run-feature-011-postgres-test.mjs';
+import { withPublication, quote, person } from './feature-011-publication-fixtures.mjs';
+import { request as initial } from './run-feature-011-content-api-test.mjs';
+import { Feature011Governance } from '../services/api/src/modules/feature-011/list-clinical-content.ts';
+import { installFeature011Telemetry } from '../services/api/src/modules/feature-011/observability.ts';
+export { patient, report, initial, quote, person };
+export const encounter = 'f0110000-0000-4000-8400-000000000001';
+const instant = (value) => new Date(value).toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
+export function allergySupport({ runtime, database }) {
+  return {
+    evidence: {
+      mode: 'isolated-synthetic',
+      sourceIdentity: 'synthetic.internal_clinician_provenance',
+      now: () => instant(Date.now()),
+    },
+    support: {
+      async lookup(ref) {
+        const statement = `SELECT json_build_object('support',row_to_json(s),'used',EXISTS(SELECT 1 FROM clinical.allergy_verification_bindings WHERE evidence_ref=s.id)) FROM clinical.allergy_verification_support s WHERE id=${quote(ref)}::uuid;`;
+        const selected = JSON.parse(sql(runtime, database, statement).stdout.trim() || 'null');
+        const support = selected?.support;
+        if (!support) throw Error('Unavailable synthetic support');
+        const used = selected.used;
+        return {
+          contractId: 'SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1',
+          profile: 'allergy_verification',
+          bindingId: randomUUID(),
+          producerId: support.producer_id,
+          verifiedAt: instant(support.recorded_at),
+          evidenceRef: support.id,
+          patientId: support.patient_id,
+          allergyId: support.allergy_id,
+          previousRevisionId: support.previous_revision_id,
+          previousVersion: support.previous_version,
+          revisionId: randomUUID(),
+          revisionVersion: support.previous_version + 1,
+          targetStatus: support.target_status,
+          attestorPersonId: support.attestor_person_id,
+          sourceIdentity: support.source_identity,
+          sourceEvidenceIdentity: support.source_evidence_identity,
+          synthetic: true,
+          consumed: used,
+        };
+      },
+    },
+  };
+}
+export function provisionSupport(harness, revision, target = 'clinician_confirmed') {
+  const reference = randomUUID();
+  sql(
+    harness.runtime,
+    harness.database,
+    `INSERT INTO clinical.allergy_verification_support(id,patient_id,allergy_id,previous_revision_id,previous_version,target_status,attestor_person_id,source_identity,source_evidence_identity,producer_id,recorded_at,synthetic) VALUES(${quote(reference)}::uuid,${quote(patient)}::uuid,${quote(revision.allergyId)}::uuid,${quote(revision.revisionId)}::uuid,${revision.version},${quote(target)},${quote(person(2))}::uuid,'synthetic.internal_clinician_provenance',${quote(reference)},'f011.allergy_evidence_boundary',clock_timestamp(),true);`,
+  );
+  return reference;
+}
+export function verificationBody(reference, target = 'clinician_confirmed') {
+  return {
+    targetStatus: target,
+    reason: 'K23 neutral engineering reason',
+    verificationEvidenceRef: reference,
+    encounterId: encounter,
+  };
+}
+export async function withOperationalAllergies(runtime, work) {
+  return withAllergyApi(runtime, work, { dependencies: allergySupport });
+}
+export async function withOperationalContent(runtime, work, telemetry = []) {
+  return withPublication(runtime, work, async (args) => {
+    installFeature011Telemetry(args.app, (record) => telemetry.push(record));
+    return {
+      reading: new Feature011Governance({
+        ...args.deps,
+        repository: args.repository,
+        cursorKey: randomBytes(32),
+        context: { resolve: async () => ({ role: 'ADM-MEDICAL' }) },
+      }),
+    };
+  });
+}
+export function successor(previous, index) {
+  const candidate = structuredClone(initial);
+  candidate.predecessor = { initial: false, supersedesReleaseId: previous };
+  candidate.effectiveAt = new Date(Date.UTC(2026, 9, 6, 12, 0, index))
+    .toISOString()
+    .replace('.000Z', '.000000Z');
+  delete candidate.artifact.declaredDigest;
+  return candidate;
+}
+export async function admitDraft(harness, releaseId) {
+  const admission = randomUUID();
+  const tuple = harness.owner(
+    `SELECT json_build_object('version',r.artifact_version,'digest',encode(r.artifact_digest,'hex'),'type',s.content_type,'key',s.governed_content_key,'scope',s.effective_scope_key) FROM clinical.content_releases r JOIN clinical.content_series s ON s.id=r.series_id WHERE r.id=${quote(releaseId)}::uuid;`,
+  );
+  assert(tuple, 'Draft must exist before private admission');
+  sql(
+    harness.runtime,
+    harness.database,
+    `INSERT INTO clinical.content_admissibility_evidence(id,release_id,artifact_version,artifact_digest,content_type,governed_content_key,effective_scope_key,policy_ref,policy_version,policy_sha256,source_admission_ref,category_admission_ref,code_admission_ref,test_vector_admission_ref,source_identity,source_evidence_identity,synthetic,status,valid_from,version) VALUES(${quote(admission)}::uuid,${quote(releaseId)}::uuid,${tuple.version},decode(${quote(tuple.digest)},'hex'),${quote(tuple.type)},${quote(tuple.key)},${quote(tuple.scope)},${quote(randomUUID())}::uuid,'synthetic-policy-v1',decode(repeat('b',64),'hex'),${quote(randomUUID())}::uuid,${quote(randomUUID())}::uuid,${quote(randomUUID())}::uuid,${quote(randomUUID())}::uuid,'synthetic.exact-admission',${quote(randomUUID())},true,'active','2020-01-01',1);`,
+  );
+  await harness.offline.admission(admission);
+  return admission;
+}

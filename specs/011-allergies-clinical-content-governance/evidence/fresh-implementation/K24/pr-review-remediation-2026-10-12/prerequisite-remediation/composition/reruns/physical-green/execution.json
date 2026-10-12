@@ -1,0 +1,42 @@
+{
+  "id": "physical-green",
+  "result": "PASS",
+  "command": [
+    "C:\\Users\\Yousef\\AppData\\Local\\fnm_multishells\\3164_1791774162044\\node.exe",
+    "--import",
+    "tsx",
+    "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\.f011-k22-8cb46d5b-7d8a-4e73-82a1-02815aa6dc57.mjs"
+  ],
+  "log": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/logs/physical-green.log",
+    "sha256": "ee524f997dfa8db61bd0a0c8b729014a3b64619bd008497df454ffd8cb7e3d69"
+  },
+  "original": "tools/feature-011-physical-green.mjs",
+  "originalSha256": "45e6dd7b34e7ebb398cfd3ea416bbdee7e01999cdb1fb2eaa1452f304e475567",
+  "substitutions": [
+    [
+      "const path = `${evidenceRoot}/${name}`;",
+      "const path = \"specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/reruns/physical-green\" + '/' + name;"
+    ],
+    [
+      "mkdirSync(resolve(root, evidenceRoot), { recursive: true });",
+      "mkdirSync(resolve(root, \"specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/composition/reruns/physical-green\"), { recursive: true });"
+    ]
+  ],
+  "lifecycleSubstitutions": [
+    [
+      "for (let i = 0; i < 92; i++)",
+      "const firstUnchecked = map.tasks.findIndex(t => t.status === 'UNCHECKED');\n  const acceptedBoundary = firstUnchecked < 0 ? 92 : firstUnchecked;\n  assert.ok(acceptedBoundary >= 79 && acceptedBoundary >= boundary, 'K21/current accepted prefix required');\n  for (let i = 0; i < 92; i++)"
+    ],
+    [
+      "i < boundary ? 'CHECKED' : 'UNCHECKED'",
+      "i < acceptedBoundary ? 'CHECKED' : 'UNCHECKED'"
+    ]
+  ],
+  "lifecycleSource": {
+    "path": "tools/feature-011-physical-green.mjs",
+    "sha256": "45e6dd7b34e7ebb398cfd3ea416bbdee7e01999cdb1fb2eaa1452f304e475567"
+  },
+  "lifecyclePreflightAdaptedToCurrentAcceptedPrefix": true,
+  "physicalAssertionsChanged": false
+}

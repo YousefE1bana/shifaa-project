@@ -1,0 +1,1420 @@
+TAP version 13
+# Subtest: fixture health: all recovered approval inputs are intact and legacy public preparation runs
+ok 1 - fixture health: all recovered approval inputs are intact and legacy public preparation runs
+  ---
+  duration_ms: 613.6574
+  type: 'test'
+  ...
+# Subtest: frozen V01–V07 keep independent bytes, digests and the sole field-8 lineage exception
+ok 2 - frozen V01–V07 keep independent bytes, digests and the sole field-8 lineage exception
+  ---
+  duration_ms: 1.4044
+  type: 'test'
+  ...
+# Subtest: recovered metadata is data only and binds all current approved profiles in both outputs
+not ok 3 - recovered metadata is data only and binds all current approved profiles in both outputs
+  ---
+  duration_ms: 89.8729
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:78:1'
+  failureType: 'testCodeFailure'
+  error: 'missing recovered protocol metadata'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:82:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: .specify/memory/constitution.md
+not ok 4 - both generators and contracts-only reject missing approved input: .specify/memory/constitution.md
+  ---
+  duration_ms: 159.3994
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: docs/design/SHIFAA-UI-Contract.md
+not ok 5 - both generators and contracts-only reject missing approved input: docs/design/SHIFAA-UI-Contract.md
+  ---
+  duration_ms: 131.026
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md
+not ok 6 - both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Baseline-Amendment-v2.1.2-007-Readiness.md
+  ---
+  duration_ms: 124.8221
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md
+not ok 7 - both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md
+  ---
+  duration_ms: 121.7481
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Remaining-Specs-Roadmap.md
+not ok 8 - both generators and contracts-only reject missing approved input: docs/governance/SHIFAA-Remaining-Specs-Roadmap.md
+  ---
+  duration_ms: 122.4514
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: packages/design-system/src/tokens.ts
+not ok 9 - both generators and contracts-only reject missing approved input: packages/design-system/src/tokens.ts
+  ---
+  duration_ms: 115.0155
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json
+not ok 10 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json
+  ---
+  duration_ms: 111.4691
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json
+not ok 11 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json
+  ---
+  duration_ms: 114.585
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md
+not ok 12 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md
+  ---
+  duration_ms: 132.5626
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json
+ok 13 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json
+  ---
+  duration_ms: 121.7589
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json
+ok 14 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json
+  ---
+  duration_ms: 116.5499
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json
+ok 15 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json
+  ---
+  duration_ms: 119.6055
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md
+ok 16 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md
+  ---
+  duration_ms: 99.7438
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md
+not ok 17 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md
+  ---
+  duration_ms: 130.8784
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md
+not ok 18 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md
+  ---
+  duration_ms: 122.1904
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json
+not ok 19 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json
+  ---
+  duration_ms: 120.0296
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json
+not ok 20 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json
+  ---
+  duration_ms: 115.2347
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md
+not ok 21 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md
+  ---
+  duration_ms: 120.0393
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml
+ok 22 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml
+  ---
+  duration_ms: 61.8047
+  type: 'test'
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json
+not ok 23 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json
+  ---
+  duration_ms: 122.5516
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json
+not ok 24 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json
+  ---
+  duration_ms: 121.4441
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json
+not ok 25 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json
+  ---
+  duration_ms: 118.1352
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json
+not ok 26 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json
+  ---
+  duration_ms: 130.9251
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md
+not ok 27 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md
+  ---
+  duration_ms: 130.2785
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md
+not ok 28 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md
+  ---
+  duration_ms: 114.9172
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json
+not ok 29 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json
+  ---
+  duration_ms: 113.2137
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json
+not ok 30 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json
+  ---
+  duration_ms: 122.8715
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json
+not ok 31 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json
+  ---
+  duration_ms: 134.0332
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md
+not ok 32 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md
+  ---
+  duration_ms: 124.8249
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/data-model.md
+not ok 33 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/data-model.md
+  ---
+  duration_ms: 122.9799
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md
+not ok 34 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-design-lead-2026-10-06.md
+  ---
+  duration_ms: 127.483
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md
+not ok 35 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/feature-011-ux-plan-gate-2026-10-06.md
+  ---
+  duration_ms: 124.2586
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md
+not ok 36 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-2026-10-06.md
+  ---
+  duration_ms: 134.9676
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md
+not ok 37 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-evidence-foundation-2026-10-06.md
+  ---
+  duration_ms: 123.052
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md
+not ok 38 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/plan-recovery-r2-2026-10-06.md
+  ---
+  duration_ms: 123.1539
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md
+not ok 39 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md
+  ---
+  duration_ms: 118.1414
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md
+not ok 40 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/evidence/plan-recovery-evidence-foundation-matrix.md
+  ---
+  duration_ms: 118.7058
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/plan.md
+not ok 41 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/plan.md
+  ---
+  duration_ms: 120.5612
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/quickstart.md
+not ok 42 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/quickstart.md
+  ---
+  duration_ms: 125.9181
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/research.md
+not ok 43 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/research.md
+  ---
+  duration_ms: 120.9136
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/spec.md
+not ok 44 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/spec.md
+  ---
+  duration_ms: 119.9065
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json
+not ok 45 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/visual-baselines/reference-manifest.json
+  ---
+  duration_ms: 133.7169
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json
+not ok 46 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approval-manifest-v1.json
+  ---
+  duration_ms: 117.5374
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md
+not ok 47 - both generators and contracts-only reject missing approved input: specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md
+  ---
+  duration_ms: 124.2659
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:96:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:99:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json
+not ok 48 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1-vectors.json
+  ---
+  duration_ms: 137.0159
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json
+not ok 49 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.json
+  ---
+  duration_ms: 156.438
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md
+not ok 50 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/allergy-protection-v1.md
+  ---
+  duration_ms: 226.675
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json
+ok 51 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json
+  ---
+  duration_ms: 195.6852
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json
+ok 52 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json
+  ---
+  duration_ms: 163.0228
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json
+ok 53 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json
+  ---
+  duration_ms: 173.1179
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md
+ok 54 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md
+  ---
+  duration_ms: 167.8358
+  type: 'test'
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md
+not ok 55 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/artifact-review-disclosure-v1.md
+  ---
+  duration_ms: 159.7329
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md
+not ok 56 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md
+  ---
+  duration_ms: 157.2115
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json
+not ok 57 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1-vectors.json
+  ---
+  duration_ms: 165.2295
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json
+not ok 58 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.json
+  ---
+  duration_ms: 177.2223
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md
+not ok 59 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/mutation-receipt-v1.md
+  ---
+  duration_ms: 180.9383
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml
+not ok 60 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/openapi.yaml
+  ---
+  duration_ms: 100.333
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /canonicalization|protocol/i. Input:
+    
+    'YAMLParseError: Implicit map keys need to be followed by map values at line 1428, column 1:\n' +
+      '\n' +
+      '\n' +
+      'STALE INPUT\n' +
+      '^^^^^^^^^^^\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: |-
+    Implicit map keys need to be followed by map values at line 1428, column 1:
+    
+    
+    STALE INPUT
+    ^^^^^^^^^^^
+    
+  stack: |-
+    Composer.onError (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\yaml@2.8.2\node_modules\yaml\dist\compose\composer.js:70:34)
+    Object.resolveBlockMap (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\yaml@2.8.2\node_modules\yaml\dist\compose\resolve-block-map.js:98:17)
+    resolveCollection (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\yaml@2.8.2\node_modules\yaml\dist\compose\compose-collection.js:13:27)
+    Object.composeCollection (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\yaml@2.8.2\node_modules\yaml\dist\compose\compose-collection.js:59:16)
+    Object.composeNode (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\yaml@2.8.2\node_modules\yaml\dist\compose\compose-node.js:33:38)
+    Object.composeDoc (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\yaml@2.8.2\node_modules\yaml\dist\compose\compose-doc.js:35:23)
+    Composer.next (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\yaml@2.8.2\node_modules\yaml\dist\compose\composer.js:150:40)
+    next (<anonymous>)
+    Composer.compose (D:\ECU\Gradution-Project\.worktrees\011-allergies-clinical-content-governance\node_modules\.pnpm\yaml@2.8.2\node_modules\yaml\dist\compose\composer.js:132:25)
+    compose.next (<anonymous>)
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json
+not ok 61 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json
+  ---
+  duration_ms: 169.724
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json
+not ok 62 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json
+  ---
+  duration_ms: 201.7876
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json
+not ok 63 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json
+  ---
+  duration_ms: 158.6112
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json
+not ok 64 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json
+  ---
+  duration_ms: 172.0311
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md
+not ok 65 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md
+  ---
+  duration_ms: 174.8372
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md
+not ok 66 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md
+  ---
+  duration_ms: 158.978
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json
+not ok 67 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-parity-v1.json
+  ---
+  duration_ms: 159.0214
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json
+not ok 68 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1-vectors.json
+  ---
+  duration_ms: 152.4321
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json
+not ok 69 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.json
+  ---
+  duration_ms: 158.0358
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md
+not ok 70 - both generators and verifier reject stale/inconsistent protocol input: specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md
+  ---
+  duration_ms: 232.1052
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:107:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:110:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1.json
+not ok 71 - both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1.json
+  ---
+  duration_ms: 220.326
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1-vectors.json
+not ok 72 - both generators reject valid JSON with inconsistent approved facts: trusted-release-handoff-v1-vectors.json
+  ---
+  duration_ms: 177.6825
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1.json
+not ok 73 - both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1.json
+  ---
+  duration_ms: 157.135
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1-vectors.json
+not ok 74 - both generators reject valid JSON with inconsistent approved facts: allergy-protection-v1-vectors.json
+  ---
+  duration_ms: 159.3392
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1.json
+not ok 75 - both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1.json
+  ---
+  duration_ms: 152.0336
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1-vectors.json
+not ok 76 - both generators reject valid JSON with inconsistent approved facts: mutation-receipt-v1-vectors.json
+  ---
+  duration_ms: 158.6403
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1.json
+not ok 77 - both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1.json
+  ---
+  duration_ms: 218.5196
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1-vectors.json
+not ok 78 - both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-v1-vectors.json
+  ---
+  duration_ms: 185.0126
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-parity-v1.json
+not ok 79 - both generators reject valid JSON with inconsistent approved facts: verified-evidence-binding-parity-v1.json
+  ---
+  duration_ms: 156.6043
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:128:3'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:134:7
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: contracts-only binds P1–P3, including current vector/profile registries
+not ok 80 - contracts-only binds P1–P3, including current vector/profile registries
+  ---
+  duration_ms: 310.1839
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:138:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + undefined
+    - [
+    -   'P1',
+    -   'P2',
+    -   'P3'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'P1'
+    1: 'P2'
+    2: 'P3'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:141:10
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: default requires current P4 and separately owned P5, with no P6 backward prerequisite
+not ok 81 - default requires current P4 and separately owned P5, with no P6 backward prerequisite
+  ---
+  duration_ms: 344.2973
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:146:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + undefined
+    - [
+    -   'P1',
+    -   'P2',
+    -   'P3',
+    -   'P4',
+    -   'P5'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'P1'
+    1: 'P2'
+    2: 'P3'
+    3: 'P4'
+    4: 'P5'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:149:10
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: historical R2 registry is bound as history without accepting its superseded current hashes
+not ok 82 - historical R2 registry is bound as history without accepting its superseded current hashes
+  ---
+  duration_ms: 323.3698
+  type: 'test'
+  location: 'D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\tools\\feature-011-protocol-parity.test.mjs:156:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + undefined
+    - [
+    -   'specs/011-allergies-clinical-content-governance/contracts/plan-protection-parity-r2.json'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'specs/011-allergies-clinical-content-governance/contracts/plan-protection-parity-r2.json'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:159:10
+    async fixture (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/tools/feature-011-protocol-parity.test.mjs:44:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+1..82
+# tests 82
+# suites 0
+# pass 11
+# fail 71
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12736.4371

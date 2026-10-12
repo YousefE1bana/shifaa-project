@@ -1,0 +1,11 @@
+{
+  "result": "READY_FOR_REVIEW",
+  "pairedReport": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/review-summary.json",
+    "sha256": "65fa6bb1cb278792806c79c813f455df30dd37453f99d38ea61c097458c6eabd"
+  },
+  "k09BeforeK10": {
+    "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/k09-before-k10.json",
+    "sha256": "f5a5ab1367caae7cb10477ffd94903f7a8214995dd35d9b47cd0966d22c65953"
+  }
+}

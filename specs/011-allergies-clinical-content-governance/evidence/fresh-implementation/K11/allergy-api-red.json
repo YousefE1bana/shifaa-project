@@ -1,0 +1,209 @@
+{
+  "task": "T044",
+  "result": "VALID_RED",
+  "total": 28,
+  "failed": 24,
+  "passed": 4,
+  "runtimeErrors": 0,
+  "reasons": [
+    "Seven service assertions fail with F011_K11_NOT_IMPLEMENTED",
+    "Seventeen route assertions fail because intended two public routes are absent (404). Enabled isolated config explicitly disables kill switch."
+  ],
+  "sourceHashes": {
+    "services/api/src/modules/feature-011/allergies.ts": "0d7aaeba3efd0d24d0ffa5938ce83f727283121464cfe096ad71723e9505f7c9",
+    "services/api/src/modules/feature-011/allergies.test.ts": "4f7e25b652dcae667aaa26b0f1464361f0b2c3523aea9e814c2c2791aad73f30",
+    "services/api/src/routes/feature-011-allergies.ts": "01b973d9118436ea88e084ba96283042143398ae8922313b2a1476387ffa5d2b",
+    "services/api/src/routes/feature-011-allergies.contract.test.ts": "fdaf92b690b114a81935bfa196212e8c213261711acd031c9f4c57c304a793e6"
+  },
+  "assertions": [
+    {
+      "name": "Feature011 generated/native/default-off route boundary native authorized read exact page/no-store",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 200 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:14:150\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary native authorized report returns exact original HTTP receipt",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 201 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:15:196\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary denies non-native authentication ",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 401 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:16:270\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary denies non-native authentication synthetic-person:c6aa0aee-a652-444f-ad1d-e7cab9b2a15d",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 401 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:16:270\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary denies non-native authentication invalid-native",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 401 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:16:270\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed request rejects {\"status\":\"clinician_confirmed\"}",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:17:290\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed request rejects {\"extra\":true}",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:17:290\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed request rejects {\"substance\":{\"display\":\"\"}}",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:17:290\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed query rejects limit=0",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:18:242\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed query rejects limit=101",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:18:242\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed query rejects limit=x",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:18:242\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed query rejects view=invalid",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:18:242\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed query rejects status=invalid",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:18:242\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary closed query rejects extra=1",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 422 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:18:242\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary missing key denies before mutation",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 400 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:19:213\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary missing purpose denies",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 403 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:20:158\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary default-off exposes no allergy route",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "Feature011 generated/native/default-off route boundary dynamic kill denies without queue or service call",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected 404 to be 503 // Object.is equality\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/routes/feature-011-allergies.contract.test.ts:22:220\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 scoped report/read PAT creates self_reported and explicit unknown only",
+      "status": "failed",
+      "failures": [
+        "Error: F011_K11_NOT_IMPLEMENTED\n    at Feature011Allergies.createAllergy (D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.ts:20:481)\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.test.ts:20:154\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:296:11\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:26\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1681:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1678:10)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1660:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1627:10)"
+      ]
+    },
+    {
+      "name": "Feature011 scoped report/read CLN creates self_reported and explicit unknown only",
+      "status": "failed",
+      "failures": [
+        "Error: F011_K11_NOT_IMPLEMENTED\n    at Feature011Allergies.createAllergy (D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.ts:20:481)\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.test.ts:20:154\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:296:11\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:26\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1681:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1678:10)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1660:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1627:10)"
+      ]
+    },
+    {
+      "name": "Feature011 scoped report/read empty read is explicitly empty, not allergy-free",
+      "status": "failed",
+      "failures": [
+        "Error: F011_K11_NOT_IMPLEMENTED\n    at Feature011Allergies.listAllergies (D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.ts:20:263)\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.test.ts:21:107\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:296:11\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:26\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1681:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1678:10)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1660:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1627:10)"
+      ]
+    },
+    {
+      "name": "Feature011 scoped report/read authorized reconstruction returns exact source/facts without private fields",
+      "status": "failed",
+      "failures": [
+        "Error: F011_K11_NOT_IMPLEMENTED\n    at Feature011Allergies.createAllergy (D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.ts:20:481)\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.test.ts:22:127\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:296:11\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:26\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1681:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1678:10)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1660:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1627:10)"
+      ]
+    },
+    {
+      "name": "Feature011 scoped report/read GUA read only; denies before protection",
+      "status": "failed",
+      "failures": [
+        "Error: F011_K11_NOT_IMPLEMENTED\n    at Feature011Allergies.listAllergies (D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.ts:20:263)\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.test.ts:23:360\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 scoped report/read DEL read only; denies before protection",
+      "status": "failed",
+      "failures": [
+        "Error: F011_K11_NOT_IMPLEMENTED\n    at Feature011Allergies.listAllergies (D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.ts:20:263)\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.test.ts:23:360\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ]
+    },
+    {
+      "name": "Feature011 scoped report/read new known coding unavailable denies before SQL mutation",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "Feature011 scoped report/read denies missing native AAL/purpose {\"aal\":1}",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "Feature011 scoped report/read denies missing native AAL/purpose {\"purposes\":[]}",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "Feature011 scoped report/read lost current authority denies without decryption",
+      "status": "failed",
+      "failures": [
+        "Error: expected [Function] to throw error including 'authority revoked' but got 'F011_K11_NOT_IMPLEMENTED'\n    at _Assertion.__VITEST_REJECTS__ (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+expect@4.1.0/node_modules/@vitest/expect/dist/index.js:1742:17)\n    at _Assertion.propertyGetter (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1570:27)\n    at Reflect.get (<anonymous>)\n    at Object.proxyGetter [as get] (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1659:22)\n    at D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/services/api/src/modules/feature-011/allergies.test.ts:26:202\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:296:11\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1258:26\n    at file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1681:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///D:/ECU/Gradution-Project/.worktrees/011-allergies-clinical-content-governance/node_modules/.pnpm/@vitest+runner@4.1.0/node_modules/@vitest/runner/dist/index.js:1678:10)"
+      ]
+    }
+  ],
+  "setupFailureAccepted": false
+}
