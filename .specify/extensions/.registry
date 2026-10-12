@@ -11,11 +11,9 @@
       "enabled": true,
       "priority": 10,
       "registered_commands": {
-        "codex": [
-          "speckit.agent-context.update"
-        ]
+        "codex": ["speckit.agent-context.update"]
       },
-      "registered_skills": [],
+      "registered_skills": ["speckit-agent-context-update"],
       "installed_at": "2026-07-16T17:42:34.765931+00:00"
     }
   }

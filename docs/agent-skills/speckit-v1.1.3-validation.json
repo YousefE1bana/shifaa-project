@@ -1,0 +1,79 @@
+{
+  "version": "specify 1.1.3",
+  "upstreamProvenance": {
+    "url": "https://github.com/github/spec-kit.git",
+    "vcs_info": {
+      "vcs": "git",
+      "commit_id": "0282d03eb6fc3091b3deaa3a855d4030dc40cd6c",
+      "requested_revision": "v1.1.3"
+    }
+  },
+  "startingHead": "21b86964b10f0675490aca4bb8547d9f02bbbd1e",
+  "upgradeCommand": "specify integration upgrade codex --script ps --integration-options=--skills",
+  "forceUsed": false,
+  "integrationStatus": {
+    "status": "ok",
+    "default_integration": "codex",
+    "installed_integrations": ["codex"],
+    "recorded_installed_integrations": ["codex"],
+    "manifest_checked_integrations": ["codex", "speckit"],
+    "multi_install_safe": true,
+    "shared_templates_target_alignment": "codex",
+    "missing_managed_files": 0,
+    "modified_managed_files": 0,
+    "invalid_manifest_paths": 0,
+    "unchecked_manifests": 0,
+    "manifests": {
+      "codex": {
+        "manifest": ".specify/integrations/codex.manifest.json",
+        "readable": true,
+        "tracked_files": 10,
+        "missing_files": [],
+        "modified_files": [],
+        "invalid_files": []
+      },
+      "speckit": {
+        "manifest": ".specify/integrations/speckit.manifest.json",
+        "readable": true,
+        "tracked_files": 12,
+        "missing_files": [],
+        "modified_files": [],
+        "invalid_files": []
+      }
+    },
+    "findings": []
+  },
+  "changedTrackedFiles": [
+    ".specify/.gitignore",
+    ".specify/extensions/.registry",
+    ".specify/init-options.json",
+    ".specify/integration.json",
+    ".specify/integrations/codex.manifest.json",
+    ".specify/integrations/speckit.manifest.json",
+    ".specify/scripts/powershell/create-new-feature.ps1",
+    "docs/TEAM-INSTALLATION-CHECKLIST.md",
+    "tools/verify-discovery-sos-evidence.mjs"
+  ],
+  "protectedTrackedFilesPreserved": 4551,
+  "existingFeatureFilesPreserved": 4505,
+  "codexConfigurationPreserved": true,
+  "primaryConfigurationPreserved": true,
+  "activeFeaturePointerPreserved": true,
+  "prerequisiteNormalizedPointerArchivedBeforeOriginalRestored": true,
+  "untrackedArchiveHashesPreserved": {
+    "specs\\011-allergies-clinical-content-governance\\evidence.zip": "9903071a07567ae3b33cf57f71fd0e86ef36463fb062cad5469575967b41a048",
+    "specs\\011-allergies-clinical-content-governance\\visual-baselines.zip": "01afbae2d1baf3c30d7640ff8954c3396859fe8c9274d03281b49035a16280a4",
+    "test-results\\.last-run.json": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+  },
+  "focusedChecks": {
+    "prerequisites": "PASS",
+    "workflowInfo13Steps": "PASS",
+    "powershellSyntaxAndUnicodeFunctions": "PASS",
+    "nodeSyntax": "PASS",
+    "feature006EvidenceVerifier": "PASS",
+    "ownedSkillsCheck": "PASS",
+    "ownedSkillsSelfTestWithProcessLocalLongpaths": "PASS"
+  },
+  "fullProductVerificationRerun": false,
+  "productCodeOrSqlChanges": false
+}
