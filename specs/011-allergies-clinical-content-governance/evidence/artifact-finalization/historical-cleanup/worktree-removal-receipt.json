@@ -1,0 +1,13 @@
+{
+  "command": "git -c core.longpaths=true worktree remove -- <exact F011 source>",
+  "non_force": true,
+  "source_residue_absent": true,
+  "status": "PASS",
+  "registered_after": [
+    "worktree D:/ECU/Gradution-Project",
+    "HEAD e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+    "branch refs/heads/main",
+    ""
+  ],
+  "source": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance"
+}

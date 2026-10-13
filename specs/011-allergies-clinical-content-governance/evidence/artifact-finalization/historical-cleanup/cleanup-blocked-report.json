@@ -1,0 +1,721 @@
+{
+  "status": "BLOCKED",
+  "preservation_root": "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644",
+  "exact_discrepancy": {
+    "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+    "restored_path": "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independently-extracted-worktree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+    "target": "..\\react@19.2.8\\node_modules\\react",
+    "resolved_target": "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independently-extracted-worktree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+    "target_directory_present": true,
+    "original_and_restored_directory_link_flag": false,
+    "link_target_sha256": "e07556b82263c4d68094f8e4279c5fd0dcb5f8bf3a276bc67900b1385d955dd2",
+    "archived_target_and_restored_metadata_match_manifest": true,
+    "follow_link_error": {
+      "type": "PermissionError",
+      "winerror": 5,
+      "errno": 13,
+      "message": "[WinError 5] Access is denied: '\\\\\\\\?\\\\D:\\\\SHIFAA-Preservation\\\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\\\independently-extracted-worktree\\\\apps\\\\pharmacy\\\\.next\\\\standalone\\\\node_modules\\\\.pnpm\\\\node_modules\\\\react'"
+    }
+  },
+  "validation_gap": "Pre-removal validation checked the normalized resolved target path rather than following the actual Windows symlink; final verification follows the symlink and returns WinError 5. No link repair, evidence rewrite, restoration or further cleanup was performed.",
+  "pre_removal_validation": {
+    "status": "PASS",
+    "manifest_sha256": "ecb03d481368d6a1a6a6c0e8bfbd1d340dd8bb9cfe5346698dccbd6c412cba93",
+    "archive_sha256": "7afa84867df233d6b797a2d92225025a8ce0ea20b90c530f0a1d3071f8e7d1c0",
+    "extracted_tree": {
+      "entries": 100215,
+      "files": 85822,
+      "symlinks": 2367,
+      "directories": 12026,
+      "bytes": 4550067195,
+      "long_path_files_sha256_passed": 22921,
+      "status": "PASS"
+    },
+    "source_tree": {
+      "entries": 100215,
+      "files": 85822,
+      "symlinks": 2367,
+      "directories": 12026,
+      "bytes": 4550067195,
+      "long_path_files_sha256_passed": 22921,
+      "status": "PASS"
+    },
+    "original_archives": [
+      {
+        "archive": "evidence.zip",
+        "status": "PASS",
+        "files": 36,
+        "bytes": 1089674,
+        "archive_sha256": "9903071a07567ae3b33cf57f71fd0e86ef36463fb062cad5469575967b41a048",
+        "extraction_root": "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independently-extracted-evidence",
+        "long_extracted_files": 0
+      },
+      {
+        "archive": "visual-baselines.zip",
+        "status": "PASS",
+        "files": 766,
+        "bytes": 48377665,
+        "archive_sha256": "01afbae2d1baf3c30d7640ff8954c3396859fe8c9274d03281b49035a16280a4",
+        "extraction_root": "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independently-extracted-visual-baselines",
+        "long_extracted_files": 0
+      }
+    ],
+    "history": {
+      "status": "PASS",
+      "head": "e2d1116b44d600ed2108c15530f3c22ff3daa13f",
+      "commit_count": 53,
+      "bundle_sha256": "44ab8ad8919ac3b9598aa4479cfc57e57468a45ddade0bf8245861fa9ddb5852",
+      "commands": [
+        {
+          "command": [
+            "git",
+            "clone",
+            "--bare",
+            "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\f011-history.bundle",
+            "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independent-history.git"
+          ],
+          "stdout": "",
+          "stderr": "Cloning into bare repository 'D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independent-history.git'...\n"
+        },
+        {
+          "command": [
+            "git",
+            "-C",
+            "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independent-history.git",
+            "fsck",
+            "--full"
+          ],
+          "stdout": "",
+          "stderr": ""
+        }
+      ]
+    },
+    "git_administration": {
+      "entries": 11,
+      "files": 9,
+      "symlinks": 0,
+      "directories": 2,
+      "bytes": 1037031,
+      "long_path_files_sha256_passed": 0,
+      "status": "PASS"
+    },
+    "longest_original_paths": [
+      {
+        "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageAVIFCoder/release/SDWebImageAVIFCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageAVIFCoder.framework.dSYM/Contents/Resources/Relocations/aarch64/SDWebImageAVIFCoder.yml",
+        "length": 391,
+        "sha256": "45c45e7cdc4a0ef5b66100ded8aa506237a575b519ed47359945fc3912154018"
+      },
+      {
+        "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageWebPCoder/release/SDWebImageWebPCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageWebPCoder.framework.dSYM/Contents/Resources/Relocations/aarch64/SDWebImageWebPCoder.yml",
+        "length": 391,
+        "sha256": "530638aea9815f8f2ebe1907af682ff62fbb6532ffecb61258d4b5dfc63dc34e"
+      },
+      {
+        "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageAVIFCoder/release/SDWebImageAVIFCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageAVIFCoder.framework.dSYM/Contents/Resources/Relocations/x86_64/SDWebImageAVIFCoder.yml",
+        "length": 390,
+        "sha256": "602f48e5b740940ac2a647c1a1d1c4ce570902206e8cd8b307840513a472dca7"
+      },
+      {
+        "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageWebPCoder/release/SDWebImageWebPCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageWebPCoder.framework.dSYM/Contents/Resources/Relocations/x86_64/SDWebImageWebPCoder.yml",
+        "length": 390,
+        "sha256": "6c3e1a9050dc0d640251893d826baa27682de8ec17d770b2c934d3ee77bd42c9"
+      },
+      {
+        "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageSVGCoder/release/SDWebImageSVGCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageSVGCoder.framework.dSYM/Contents/Resources/Relocations/aarch64/SDWebImageSVGCoder.yml",
+        "length": 387,
+        "sha256": "102a24294f5158022d17b1174f9fcfc28726dd8a0263939fb3f69b7be7dcdb33"
+      }
+    ],
+    "long_extracted_regular_files": 37363,
+    "max_extracted_path_length": 418,
+    "active_feature_pointer_sha256": "5a84fbf86a9a477393b7185e15732db72e391da3e19a4334b4af7b852422c467",
+    "elapsed_seconds": 1796.7
+  },
+  "completed_disposition": {
+    "worktree_deregistered": true,
+    "source_residue_absent": true,
+    "non_force_worktree_removal": true,
+    "preserved_untracked_files_removed": 30,
+    "local_remote_and_tracking_f011_branches_absent": true,
+    "exact_preserved_source_head": "e2d1116b44d600ed2108c15530f3c22ff3daa13f",
+    "remote_main": "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+    "unrelated_refs_unchanged": true
+  },
+  "primary": {
+    "protected_file_count": 13,
+    "status_diffs_and_all_protected_file_hashes_unchanged": true,
+    "active_feature_pointer_unchanged": true,
+    "final_git_status": "## main...origin/main\n M .codex/config.toml\n M docs/TEAM-INSTALLATION-CHECKLIST.md\n?? SHIFAA-Developer-Setup.zip\n?? SHIFAA-Developer-Setup/\n?? SHIFAA-SETUP-CENTER.html\n?? tools/bootstrap-shifaa-dev.ps1\n?? tools/test-shifaa-dev-environment.ps1\n"
+  },
+  "issues_closed_completed": 92,
+  "issues": [
+    {
+      "number": 398,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T15:16:57Z"
+    },
+    {
+      "number": 399,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T15:16:59Z"
+    },
+    {
+      "number": 400,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T15:17:01Z"
+    },
+    {
+      "number": 401,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T16:02:01Z"
+    },
+    {
+      "number": 402,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T16:02:04Z"
+    },
+    {
+      "number": 403,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T16:02:07Z"
+    },
+    {
+      "number": 404,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T16:02:10Z"
+    },
+    {
+      "number": 405,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T16:36:10Z"
+    },
+    {
+      "number": 406,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T16:36:12Z"
+    },
+    {
+      "number": 407,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T16:36:15Z"
+    },
+    {
+      "number": 408,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T16:36:17Z"
+    },
+    {
+      "number": 409,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T17:52:11Z"
+    },
+    {
+      "number": 410,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T17:52:14Z"
+    },
+    {
+      "number": 411,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T17:52:16Z"
+    },
+    {
+      "number": 412,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T17:52:18Z"
+    },
+    {
+      "number": 413,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-06T17:52:20Z"
+    },
+    {
+      "number": 414,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:06Z"
+    },
+    {
+      "number": 415,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:09Z"
+    },
+    {
+      "number": 416,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:12Z"
+    },
+    {
+      "number": 417,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:14Z"
+    },
+    {
+      "number": 418,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:18Z"
+    },
+    {
+      "number": 419,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:21Z"
+    },
+    {
+      "number": 420,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:24Z"
+    },
+    {
+      "number": 421,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:27Z"
+    },
+    {
+      "number": 422,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:30Z"
+    },
+    {
+      "number": 423,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T10:11:33Z"
+    },
+    {
+      "number": 424,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T13:58:31Z"
+    },
+    {
+      "number": 425,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T13:58:34Z"
+    },
+    {
+      "number": 426,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T13:58:37Z"
+    },
+    {
+      "number": 427,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T16:39:35Z"
+    },
+    {
+      "number": 428,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T16:39:38Z"
+    },
+    {
+      "number": 429,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T16:39:41Z"
+    },
+    {
+      "number": 430,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T16:39:44Z"
+    },
+    {
+      "number": 431,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T16:39:48Z"
+    },
+    {
+      "number": 432,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:17Z"
+    },
+    {
+      "number": 433,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:20Z"
+    },
+    {
+      "number": 434,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:24Z"
+    },
+    {
+      "number": 435,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:27Z"
+    },
+    {
+      "number": 436,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:29Z"
+    },
+    {
+      "number": 437,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:32Z"
+    },
+    {
+      "number": 438,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:35Z"
+    },
+    {
+      "number": 439,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:38Z"
+    },
+    {
+      "number": 440,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-07T17:35:41Z"
+    },
+    {
+      "number": 441,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T01:16:21Z"
+    },
+    {
+      "number": 442,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T01:16:24Z"
+    },
+    {
+      "number": 443,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T01:16:27Z"
+    },
+    {
+      "number": 444,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T01:16:30Z"
+    },
+    {
+      "number": 445,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T04:34:40Z"
+    },
+    {
+      "number": 446,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T04:34:43Z"
+    },
+    {
+      "number": 447,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T04:34:46Z"
+    },
+    {
+      "number": 448,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T05:44:34Z"
+    },
+    {
+      "number": 449,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T05:44:37Z"
+    },
+    {
+      "number": 450,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T05:44:40Z"
+    },
+    {
+      "number": 451,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T05:44:42Z"
+    },
+    {
+      "number": 452,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T05:44:45Z"
+    },
+    {
+      "number": 453,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T05:44:48Z"
+    },
+    {
+      "number": 454,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T07:03:24Z"
+    },
+    {
+      "number": 455,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T07:03:27Z"
+    },
+    {
+      "number": 456,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T07:03:30Z"
+    },
+    {
+      "number": 457,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T07:03:32Z"
+    },
+    {
+      "number": 458,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T07:03:34Z"
+    },
+    {
+      "number": 459,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-08T07:03:36Z"
+    },
+    {
+      "number": 460,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T08:19:09Z"
+    },
+    {
+      "number": 461,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T08:19:12Z"
+    },
+    {
+      "number": 462,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T08:19:14Z"
+    },
+    {
+      "number": 463,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T08:19:16Z"
+    },
+    {
+      "number": 464,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T08:19:18Z"
+    },
+    {
+      "number": 465,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T08:19:21Z"
+    },
+    {
+      "number": 466,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T08:19:23Z"
+    },
+    {
+      "number": 467,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T09:39:29Z"
+    },
+    {
+      "number": 468,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T09:39:31Z"
+    },
+    {
+      "number": 469,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T09:39:33Z"
+    },
+    {
+      "number": 470,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T09:39:35Z"
+    },
+    {
+      "number": 471,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T10:36:44Z"
+    },
+    {
+      "number": 472,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T10:36:46Z"
+    },
+    {
+      "number": 473,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T10:36:48Z"
+    },
+    {
+      "number": 474,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T12:57:13Z"
+    },
+    {
+      "number": 475,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T12:57:15Z"
+    },
+    {
+      "number": 476,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T12:57:19Z"
+    },
+    {
+      "number": 477,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T14:19:05Z"
+    },
+    {
+      "number": 478,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T14:19:08Z"
+    },
+    {
+      "number": 479,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T14:19:11Z"
+    },
+    {
+      "number": 480,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T14:19:13Z"
+    },
+    {
+      "number": 481,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T15:17:18Z"
+    },
+    {
+      "number": 482,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T15:17:21Z"
+    },
+    {
+      "number": 483,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T15:17:24Z"
+    },
+    {
+      "number": 484,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-09T15:17:27Z"
+    },
+    {
+      "number": 485,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-11T08:57:18Z"
+    },
+    {
+      "number": 486,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-11T08:57:20Z"
+    },
+    {
+      "number": 487,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-11T08:57:23Z"
+    },
+    {
+      "number": 488,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-11T08:57:25Z"
+    },
+    {
+      "number": 489,
+      "state": "CLOSED",
+      "stateReason": "COMPLETED",
+      "closedAt": "2026-10-11T08:57:28Z"
+    }
+  ],
+  "manifest_sha256": "ecb03d481368d6a1a6a6c0e8bfbd1d340dd8bb9cfe5346698dccbd6c412cba93",
+  "worktree_archive_sha256": "7afa84867df233d6b797a2d92225025a8ce0ea20b90c530f0a1d3071f8e7d1c0",
+  "archive_bytes": 4588066562,
+  "history": {
+    "branch": "codex/011-allergies-clinical-content-governance",
+    "head": "e2d1116b44d600ed2108c15530f3c22ff3daa13f",
+    "sha256": "44ab8ad8919ac3b9598aa4479cfc57e57468a45ddade0bf8245861fa9ddb5852",
+    "size": 183722002,
+    "verify_stdout": "The bundle contains this ref:\ne2d1116b44d600ed2108c15530f3c22ff3daa13f refs/heads/codex/011-allergies-clinical-content-governance\nThe bundle records a complete history.\nThe bundle uses this hash algorithm: sha1\n",
+    "verify_stderr": "D:/SHIFAA-Preservation/F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644/f011-history.bundle is okay\n",
+    "heads": "e2d1116b44d600ed2108c15530f3c22ff3daa13f refs/heads/codex/011-allergies-clinical-content-governance\n",
+    "commit_count": 53,
+    "branch_log": "e2d1116b44d600ed2108c15530f3c22ff3daa13f 1c916222c4439200c148b016c5ed6eac60188312 2026-10-12T19:06:19+03:00 fix(tooling): preserve approved F011 documentation pins\n1c916222c4439200c148b016c5ed6eac60188312 21b86964b10f0675490aca4bb8547d9f02bbbd1e 2026-10-12T18:36:25+03:00 chore(tooling): upgrade SHIFAA Spec Kit integration to 1.1.3\n21b86964b10f0675490aca4bb8547d9f02bbbd1e ab991dc0b676d4e8bfd50d6a5efd9679aa9c33b0 2026-10-12T18:31:54+03:00 chore(codex): apply reviewed SHIFAA agent configuration\nab991dc0b676d4e8bfd50d6a5efd9679aa9c33b0 22ef2a5121c3a9c1e2afb94433b549f46c9eb551 2026-10-12T06:54:32+03:00 fix(011): enforce scoped review authority and bound allergy guards\n22ef2a5121c3a9c1e2afb94433b549f46c9eb551 bea8fad786b387fe39b7a9aabd2e60dd2df7cc53 2026-10-11T19:32:50+03:00 fix(011): revalidate current authority and native test startup\nbea8fad786b387fe39b7a9aabd2e60dd2df7cc53 670b1e0fe15c719b98179805f2628d1b478a55dd 2026-10-11T11:53:42+03:00 feat(011): add governed allergies and clinical-content workflows\n670b1e0fe15c719b98179805f2628d1b478a55dd f51e3fa0c41a819d1765b2c5a33c005462bdef49 2026-10-01T07:12:29+03:00 chore: integrate project Codex configuration\nf51e3fa0c41a819d1765b2c5a33c005462bdef49 deb03d8a460f6c46e988cbcb7f98a5abc996d864 2026-10-01T06:26:31+03:00 fix: harden pre-011 clinical integration boundaries (#396)\ndeb03d8a460f6c46e988cbcb7f98a5abc996d864 da6d01761fb5c5b0e8ff430510b307f18c671ff2 2026-09-30T18:02:26+03:00 chore(speckit): upgrade integration to v1.0.13 (#395)\nda6d01761fb5c5b0e8ff430510b307f18c671ff2 310f8ef803b10026f0a31fa4b531557d1d9be815 2026-09-30T16:58:03+03:00 feat(feature-010): encounters, referrals, and contextual chat (#394)\n310f8ef803b10026f0a31fa4b531557d1d9be815 0a5b3b413ed1302e60dba929a5e320d78f8496ac 2026-09-26T11:41:14+03:00 chore: normalize local Docker runtimes (#307)\n0a5b3b413ed1302e60dba929a5e320d78f8496ac 9fda81e16aed7d58fed4fa5a8f6b8dddea5d78db 2026-09-25T23:07:09+03:00 chore(speckit): upgrade integration to v1.0.12 (#306)\n9fda81e16aed7d58fed4fa5a8f6b8dddea5d78db b05a146425a976f7675b6bb3c30fe1f22a92f8b8 2026-09-25T22:14:59+03:00 feat(009): clinic scheduling, appointments, and queue (#305)\nb05a146425a976f7675b6bb3c30fe1f22a92f8b8 b1b9dd4246a546ecea0b10eda56154f6e6efed13 2026-09-13T08:42:01+03:00 Stabilize repository performance verification and reconcile SpecKit 1.0.6\nb1b9dd4246a546ecea0b10eda56154f6e6efed13 e31db2c109b62955343cca04795da1eb678857a2 2026-09-12T13:57:46+03:00 chore(codex): add token-efficient agent routing (#303)\ne31db2c109b62955343cca04795da1eb678857a2 c59514249c797fcbb414f404f7e4310cf58fbe80 2026-09-10T19:02:55+03:00 chore(speckit): update integration to v1.0.6 (#302)\nc59514249c797fcbb414f404f7e4310cf58fbe80 05a48341b50187f2021638ae635d3941b64b244e 2026-09-09T05:08:29+03:00 fix: keep identity provider callbacks vendor-gated (#301)\n05a48341b50187f2021638ae635d3941b64b244e adf5f5b302a0c1b00e3d76713934728a6bc48596 2026-09-09T04:30:34+03:00 fix: protect idempotency record identifiers (#300)\nadf5f5b302a0c1b00e3d76713934728a6bc48596 64ca7d8b4c478a537ce8832a762d6d353ec7edaf 2026-09-08T22:53:14+03:00 fix: restrict SEC-007 function execute grants (#299)\n64ca7d8b4c478a537ce8832a762d6d353ec7edaf 4e07b90e184ac836b959a8d2dff21b56f02c4d15 2026-09-08T18:47:39+03:00 fix: enforce SEC-005 pre-auth abuse controls (#298)\n4e07b90e184ac836b959a8d2dff21b56f02c4d15 00b8b11758a80897cd5a06faff5338c3cbe94e7b 2026-09-08T17:22:06+03:00 fix(security): enforce server-authoritative purposes (#297)\n00b8b11758a80897cd5a06faff5338c3cbe94e7b ae88be15a14f6a43402c493fb425a5ae86365a17 2026-09-08T05:10:56+03:00 fix(security): enforce synthetic reviewer and crypto key gates (#296)\nae88be15a14f6a43402c493fb425a5ae86365a17 650e896e550fb78aeda7b4b192d781985f9f7835 2026-09-08T01:43:36+03:00 test: stabilize verification lifecycle isolation (#295)\n650e896e550fb78aeda7b4b192d781985f9f7835 bde8e51cc1e357656e68a30be02c98a32b2237b8 2026-09-07T19:50:13+03:00 feat: complete audit admin aggregates and observability (#294)\nbde8e51cc1e357656e68a30be02c98a32b2237b8 bc9b19e9f21dadfd9ead1e29573c911b060bea52 2026-09-01T16:47:37+03:00 chore: keep third-party skills local (#239)\nbc9b19e9f21dadfd9ead1e29573c911b060bea52 3fe91e69de2dd5ed3263d0b47cba6ed5cf2cd33d 2026-09-01T01:51:20+03:00 chore: sync and automate SHIFAA skills updates (#238)\n3fe91e69de2dd5ed3263d0b47cba6ed5cf2cd33d c0ae533cd5054475053ed7cd8151488b0781f525 2026-08-31T22:21:12+03:00 chore: upgrade Spec Kit to 1.0.2 and hybridize skills\nc0ae533cd5054475053ed7cd8151488b0781f525 ccd76c4875821beb246fa3b0abf32f225c54f6ae 2026-08-31T20:45:05+03:00 feat(identity): deliver Feature 007 continuity and recovery\nccd76c4875821beb246fa3b0abf32f225c54f6ae c520c8765a85e0c58aead3fe0b8eabf187564e00 2026-08-25T05:21:40+03:00 docs(governance): clarify roadmap approval blockers (#187)\nc520c8765a85e0c58aead3fe0b8eabf187564e00 5b1e1d640dcda2060a554f799b90d8f37ce80f12 2026-08-24T17:53:19+03:00 docs(governance): freeze SHIFAA remaining specs roadmap (#186)\n5b1e1d640dcda2060a554f799b90d8f37ce80f12 fa4136dc1eb5b07d16bb64ad52e0858ca48dd1c1 2026-08-24T16:37:24+03:00 fix(006): stabilize performance verification (#185)\nfa4136dc1eb5b07d16bb64ad52e0858ca48dd1c1 090efaa8c7ff3ea86e2b01efa2f77f874c0aa800 2026-08-23T19:03:29+03:00 feat(006): discovery and SOS foundation (#184)\n090efaa8c7ff3ea86e2b01efa2f77f874c0aa800 6bc7a6e5a923e0b6a8c443b626b965d38fe80469 2026-08-20T13:24:15+03:00 feat(005): privacy DSR and notification governance (#145)\n6bc7a6e5a923e0b6a8c443b626b965d38fe80469 571ad7288aa6739e5c490c95b94fbf116b38aff7 2026-08-13T18:16:10+03:00 chore: curate shared agent skills and delegation tooling (#109)\n571ad7288aa6739e5c490c95b94fbf116b38aff7 87074382ba65293e4edd7a90859b2d4742e7a6b5 2026-08-13T17:16:42+03:00 feat: add governed family care relationships (#110)\n87074382ba65293e4edd7a90859b2d4742e7a6b5 588498d0d80eb24c5664929fade5ddae5ceeb886 2026-08-11T10:17:22+03:00 feat: facility onboarding and contextual RBAC (#77)\n588498d0d80eb24c5664929fade5ddae5ceeb886 b9651e6f232313ef5920e5b97a9def85b9085eb8 2026-08-11T06:49:56+03:00 chore: ignore local dev/generated artifacts (.expo, .playwright-mcp) (#46)\nb9651e6f232313ef5920e5b97a9def85b9085eb8 0333a6a7d22aa91a45978d2bc5cf0fa5490bfc00 2026-08-11T05:54:47+03:00 docs(002): record verified lifecycle completion\n0333a6a7d22aa91a45978d2bc5cf0fa5490bfc00 a3cc90652a1cb2d0834ded975bf4ab6d6d469a32 2026-08-11T05:49:53+03:00 test(002): make Supabase harness cross-platform\na3cc90652a1cb2d0834ded975bf4ab6d6d469a32 439bc08432fadaf10e90ddb236b19c25e6638f89 2026-08-11T05:43:12+03:00 test(002): align RLS fixture with masked identity schema\n439bc08432fadaf10e90ddb236b19c25e6638f89 5aaeae29d3a44df65d5f94c119d5bdb7125a9ab1 2026-08-11T05:34:44+03:00 feat(002): implement Supabase runtime foundation\n5aaeae29d3a44df65d5f94c119d5bdb7125a9ab1 9bb2245575bb6a2a5ae8d833bff906a1e633fc84 2026-08-11T04:16:14+03:00 spec(002): define Supabase runtime foundation\n9bb2245575bb6a2a5ae8d833bff906a1e633fc84 6fa6e1e032775b3b19d5339af5677bc5fb8d07c1 2026-08-10T02:20:49+03:00 fix(001): validate live bilingual onboarding\n6fa6e1e032775b3b19d5339af5677bc5fb8d07c1 b64fb93d2112ce1e1a9da6931babfb9a1c7f440a 2026-08-09T21:13:49+03:00 docs: record identity onboarding verification [skip ci]\nb64fb93d2112ce1e1a9da6931babfb9a1c7f440a 450094d5e26bdde66f6a252621dc83f36db30e89 2026-08-09T21:06:15+03:00 fix: retain CodeQL SARIF without code-scanning upload\n450094d5e26bdde66f6a252621dc83f36db30e89 483d35b93f36667d0d0992391aa27cf73d7b2663 2026-08-09T20:59:10+03:00 fix: make CI test gates portable\n483d35b93f36667d0d0992391aa27cf73d7b2663 09ab8692b485ce8f315c545b9f3f47e6e1d71bd1 2026-08-09T20:55:36+03:00 chore: exclude Next generated declaration from formatting\n09ab8692b485ce8f315c545b9f3f47e6e1d71bd1 c4680948dc1c4c9c11c491f9a7c4792393b3613f 2026-08-09T20:54:24+03:00 chore: preserve webp assets as binary\nc4680948dc1c4c9c11c491f9a7c4792393b3613f a89ffe8c20dbf44740e16e4de0e5e5b37c60523c 2026-08-09T20:53:58+03:00 chore: enforce reproducible LF checkouts\na89ffe8c20dbf44740e16e4de0e5e5b37c60523c d2b300f471be4472e5d4e45e25f5d74f493a81f8 2026-08-09T20:52:36+03:00 feat: implement identity onboarding vertical slice\nd2b300f471be4472e5d4e45e25f5d74f493a81f8 06207a8af4af0cdccb42a7d26ff00d509a7bfcb7 2026-08-09T19:59:09+03:00 fix: validate issue handoff payload cardinality\n06207a8af4af0cdccb42a7d26ff00d509a7bfcb7 ba472cb6f13fae617a8dc3e1bdd27cffd45e1145 2026-08-09T19:58:23+03:00 spec: define identity onboarding task baseline\nba472cb6f13fae617a8dc3e1bdd27cffd45e1145  2026-08-09T16:00:27+03:00 chore: publish approved SHIFAA v2.1.0 baseline\n"
+  },
+  "feature012_absent": true,
+  "retained_limits": "Engineering-only F011 acceptance; historical failures retained; physical/formal/strict-pixel review deferred; retained OPEN gates unchanged; no clean final Codex/Copilot review claimed."
+}

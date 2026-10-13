@@ -21,3 +21,12 @@ Never infer completion from conversation history, broaden a feature, or mark an
 unverified task complete. If official SpecKit integration content changes, use
 its manifest-aware upgrade flow locally; do not commit the generated runtime
 skill files.
+
+Before feature closeout, worktree removal, or branch deletion, apply
+`docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md`. Official feature
+outputs belong in `specs/<feature>/`; external essential evidence requires a
+verified index there. Review tracked, untracked, and relevant ignored state,
+preserve historical failures and approval limits, and verify required artifacts
+in merged remote main. An archive alone cannot pass the gate. Unclassified
+important material or unresolved preservation gaps block cleanup. This gate
+does not authorize Git integration, close retained OPEN gates, or start a successor.

@@ -1,0 +1,1845 @@
+{
+  "status": "PASS",
+  "count": 36,
+  "results": [
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/node_modules/react",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\single-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+      "target": "..\\react@19.2.8\\node_modules\\react",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\single-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/react@19.2.8/node_modules/react/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\single-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react\\package.json",
+        "bytes": 1242,
+        "sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\react@19.2.8\\node_modules\\react",
+      "package_manifest_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "package_through_link_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\single-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/react",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react",
+      "target": "..\\..\\react@19.2.8\\node_modules\\react",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/react@19.2.8/node_modules/react/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react\\package.json",
+        "bytes": 1242,
+        "sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\react@19.2.8\\node_modules\\react",
+      "package_manifest_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "package_through_link_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react-dom",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/react-dom",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react-dom",
+      "target": "..\\..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom\\package.json",
+        "bytes": 3057,
+        "sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "package_manifest_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "package_through_link_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\sharp",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/sharp",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\sharp",
+      "target": "..\\..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/sharp@0.35.3_@types+node@24.10.1/node_modules/sharp/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp\\package.json",
+        "bytes": 8120,
+        "sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "package_manifest_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "package_through_link_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\styled-jsx",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/styled-jsx",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\styled-jsx",
+      "target": "..\\..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/styled-jsx@5.1.6_react@19.2.8/node_modules/styled-jsx/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx\\package.json",
+        "bytes": 3271,
+        "sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "package_manifest_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "package_through_link_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/node_modules/react",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+      "target": "..\\react@19.2.8\\node_modules\\react",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/react@19.2.8/node_modules/react/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react\\package.json",
+        "bytes": 1242,
+        "sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\react@19.2.8\\node_modules\\react",
+      "package_manifest_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "package_through_link_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react-dom",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/node_modules/react-dom",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react-dom",
+      "target": "..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom\\package.json",
+        "bytes": 3057,
+        "sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "package_manifest_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "package_through_link_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\semver",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/node_modules/semver",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\semver",
+      "target": "..\\semver@7.8.5\\node_modules\\semver",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/semver@7.8.5/node_modules/semver/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver\\package.json",
+        "bytes": 1661,
+        "sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\semver@7.8.5\\node_modules\\semver",
+      "package_manifest_sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "package_through_link_sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\sharp",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/node_modules/sharp",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\sharp",
+      "target": "..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/sharp@0.35.3_@types+node@24.10.1/node_modules/sharp/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp\\package.json",
+        "bytes": 8120,
+        "sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "package_manifest_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "package_through_link_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\styled-jsx",
+      "archived_relative_path": "apps/clinic/.next/standalone/node_modules/.pnpm/node_modules/styled-jsx",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\styled-jsx",
+      "target": "..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/clinic/.next/standalone/node_modules/.pnpm/styled-jsx@5.1.6_react@19.2.8/node_modules/styled-jsx/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx\\package.json",
+        "bytes": 3271,
+        "sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "package_manifest_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "package_through_link_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\clinic\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/react",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react",
+      "target": "..\\..\\react@19.2.8\\node_modules\\react",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/react@19.2.8/node_modules/react/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react\\package.json",
+        "bytes": 1242,
+        "sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\react@19.2.8\\node_modules\\react",
+      "package_manifest_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "package_through_link_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react-dom",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/react-dom",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react-dom",
+      "target": "..\\..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom\\package.json",
+        "bytes": 3057,
+        "sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "package_manifest_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "package_through_link_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\sharp",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/sharp",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\sharp",
+      "target": "..\\..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/sharp@0.35.3_@types+node@24.10.1/node_modules/sharp/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp\\package.json",
+        "bytes": 8120,
+        "sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "package_manifest_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "package_through_link_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\styled-jsx",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/styled-jsx",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\styled-jsx",
+      "target": "..\\..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/styled-jsx@5.1.6_react@19.2.8/node_modules/styled-jsx/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx\\package.json",
+        "bytes": 3271,
+        "sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "package_manifest_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "package_through_link_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/node_modules/react",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+      "target": "..\\react@19.2.8\\node_modules\\react",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/react@19.2.8/node_modules/react/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react\\package.json",
+        "bytes": 1242,
+        "sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\react@19.2.8\\node_modules\\react",
+      "package_manifest_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "package_through_link_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react-dom",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/node_modules/react-dom",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react-dom",
+      "target": "..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom\\package.json",
+        "bytes": 3057,
+        "sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "package_manifest_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "package_through_link_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\semver",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/node_modules/semver",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\semver",
+      "target": "..\\semver@7.8.5\\node_modules\\semver",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/semver@7.8.5/node_modules/semver/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver\\package.json",
+        "bytes": 1661,
+        "sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\semver@7.8.5\\node_modules\\semver",
+      "package_manifest_sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "package_through_link_sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\sharp",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/node_modules/sharp",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\sharp",
+      "target": "..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/sharp@0.35.3_@types+node@24.10.1/node_modules/sharp/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp\\package.json",
+        "bytes": 8120,
+        "sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "package_manifest_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "package_through_link_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\styled-jsx",
+      "archived_relative_path": "apps/hospital/.next/standalone/node_modules/.pnpm/node_modules/styled-jsx",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\styled-jsx",
+      "target": "..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/hospital/.next/standalone/node_modules/.pnpm/styled-jsx@5.1.6_react@19.2.8/node_modules/styled-jsx/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx\\package.json",
+        "bytes": 3271,
+        "sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "package_manifest_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "package_through_link_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\hospital\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/react",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react",
+      "target": "..\\..\\react@19.2.8\\node_modules\\react",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/react@19.2.8/node_modules/react/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react\\package.json",
+        "bytes": 1242,
+        "sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\react@19.2.8\\node_modules\\react",
+      "package_manifest_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "package_through_link_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react-dom",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/react-dom",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react-dom",
+      "target": "..\\..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom\\package.json",
+        "bytes": 3057,
+        "sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "package_manifest_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "package_through_link_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\sharp",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/sharp",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\sharp",
+      "target": "..\\..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/sharp@0.35.3_@types+node@24.10.1/node_modules/sharp/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp\\package.json",
+        "bytes": 8120,
+        "sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "package_manifest_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "package_through_link_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\styled-jsx",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/styled-jsx",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\styled-jsx",
+      "target": "..\\..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/styled-jsx@5.1.6_react@19.2.8/node_modules/styled-jsx/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx\\package.json",
+        "bytes": 3271,
+        "sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "package_manifest_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "package_through_link_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/node_modules/react",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react",
+      "target": "..\\react@19.2.8\\node_modules\\react",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/react@19.2.8/node_modules/react/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react\\package.json",
+        "bytes": 1242,
+        "sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\react@19.2.8\\node_modules\\react",
+      "package_manifest_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "package_through_link_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react-dom",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/node_modules/react-dom",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react-dom",
+      "target": "..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom\\package.json",
+        "bytes": 3057,
+        "sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "package_manifest_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "package_through_link_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\semver",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/node_modules/semver",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\semver",
+      "target": "..\\semver@7.8.5\\node_modules\\semver",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/semver@7.8.5/node_modules/semver/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver\\package.json",
+        "bytes": 1661,
+        "sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\semver@7.8.5\\node_modules\\semver",
+      "package_manifest_sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "package_through_link_sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\sharp",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/node_modules/sharp",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\sharp",
+      "target": "..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/sharp@0.35.3_@types+node@24.10.1/node_modules/sharp/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp\\package.json",
+        "bytes": 8120,
+        "sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "package_manifest_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "package_through_link_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\styled-jsx",
+      "archived_relative_path": "apps/lab/.next/standalone/node_modules/.pnpm/node_modules/styled-jsx",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\styled-jsx",
+      "target": "..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/lab/.next/standalone/node_modules/.pnpm/styled-jsx@5.1.6_react@19.2.8/node_modules/styled-jsx/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx\\package.json",
+        "bytes": 3271,
+        "sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "package_manifest_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "package_through_link_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\lab\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/react",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react",
+      "target": "..\\..\\react@19.2.8\\node_modules\\react",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/react@19.2.8/node_modules/react/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react\\package.json",
+        "bytes": 1242,
+        "sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\react@19.2.8\\node_modules\\react",
+      "package_manifest_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "package_through_link_sha256": "e40c3ed9b633c9ecf188e09a4be309780a1ea0a9c068278a30ff6a27e7b2dbb6",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react-dom",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/react-dom",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\react-dom",
+      "target": "..\\..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom\\package.json",
+        "bytes": 3057,
+        "sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "package_manifest_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "package_through_link_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\sharp",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/sharp",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\sharp",
+      "target": "..\\..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/sharp@0.35.3_@types+node@24.10.1/node_modules/sharp/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp\\package.json",
+        "bytes": 8120,
+        "sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "package_manifest_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "package_through_link_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\styled-jsx",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2/node_modules/styled-jsx",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\next@16.3.0_@types+node@24._10a53b4144476fc0fb9cb79a0e18c4d2\\node_modules\\styled-jsx",
+      "target": "..\\..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/styled-jsx@5.1.6_react@19.2.8/node_modules/styled-jsx/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx\\package.json",
+        "bytes": 3271,
+        "sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "package_manifest_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "package_through_link_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react-dom",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/node_modules/react-dom",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\react-dom",
+      "target": "..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom\\package.json",
+        "bytes": 3057,
+        "sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "package_manifest_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "package_through_link_sha256": "7c82f0967114d4b5d38b1f07e543af87c9919e8d3243f9604004819319cb2200",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\react-dom@19.2.8_react@19.2.8\\node_modules\\react-dom",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\semver",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/node_modules/semver",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\semver",
+      "target": "..\\semver@7.8.5\\node_modules\\semver",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/semver@7.8.5/node_modules/semver/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver\\package.json",
+        "bytes": 1661,
+        "sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\semver@7.8.5\\node_modules\\semver",
+      "package_manifest_sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "package_through_link_sha256": "7c94cb7f2a53c27b20d76386ec144c062894dbcc909cfabd0f728c37874b1776",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\semver@7.8.5\\node_modules\\semver",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\sharp",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/node_modules/sharp",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\sharp",
+      "target": "..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/sharp@0.35.3_@types+node@24.10.1/node_modules/sharp/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp\\package.json",
+        "bytes": 8120,
+        "sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "package_manifest_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "package_through_link_sha256": "0f3a7e7eb4f22978dfde46e6c7c6ecf3b86b43e33c3d366de88b334b4610c3ff",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\sharp@0.35.3_@types+node@24.10.1\\node_modules\\sharp",
+      "status": "PASS"
+    },
+    {
+      "original_path": "D:\\ECU\\Gradution-Project\\.worktrees\\011-allergies-clinical-content-governance\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\styled-jsx",
+      "archived_relative_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/node_modules/styled-jsx",
+      "scratch_link": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\node_modules\\styled-jsx",
+      "target": "..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "intended_target": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "original_directory_link": false,
+      "restoration_directory_link": true,
+      "creation_command": "CreateSymbolicLinkW(<extended scratch link>, <original relative target>, SYMBOLIC_LINK_FLAG_DIRECTORY | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)",
+      "flags": 3,
+      "creation_success": true,
+      "creation_windows_error": 0,
+      "materialized_file": {
+        "archive_path": "apps/pharmacy/.next/standalone/node_modules/.pnpm/styled-jsx@5.1.6_react@19.2.8/node_modules/styled-jsx/package.json",
+        "scratch_path": "D:\\SHIFAA-Preservation-Scratch\\F011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx\\package.json",
+        "bytes": 3271,
+        "sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9"
+      },
+      "operations": [
+        {
+          "command": "os.lstat(link); os.readlink(link)",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.scandir(link)",
+          "children": [
+            "package.json"
+          ],
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "open(link/package.json, rb); SHA-256",
+          "status": "PASS",
+          "windows_error": 0
+        },
+        {
+          "command": "os.path.realpath(link); os.path.samefile(link, target)",
+          "status": "PASS",
+          "windows_error": 0
+        }
+      ],
+      "link_attributes": 1040,
+      "link_reparse_tag": 2684354572,
+      "actual_relative_target": "..\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "package_manifest_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "package_through_link_sha256": "0a11b14d7bbeab650019db18883a14cb67daa3615f498a5a625d45828be7eef9",
+      "resolved_target": "\\\\?\\d:\\shifaa-preservation-scratch\\f011-restoration-test-2026-10-13-20160078b00547b98cad92baef831a2a\\remaining-35-link-tree\\apps\\pharmacy\\.next\\standalone\\node_modules\\.pnpm\\styled-jsx@5.1.6_react@19.2.8\\node_modules\\styled-jsx",
+      "status": "PASS"
+    }
+  ],
+  "original_preservation_state_unchanged": true,
+  "primary_unchanged": true,
+  "scope": "Minimum target package.json and directory traversal for all 36 directory-typed derivative links; original archive and extraction remain unchanged."
+}

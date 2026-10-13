@@ -1,0 +1,113 @@
+{
+  "status": "PASS",
+  "manifest_sha256": "ecb03d481368d6a1a6a6c0e8bfbd1d340dd8bb9cfe5346698dccbd6c412cba93",
+  "archive_sha256": "7afa84867df233d6b797a2d92225025a8ce0ea20b90c530f0a1d3071f8e7d1c0",
+  "extracted_tree": {
+    "entries": 100215,
+    "files": 85822,
+    "symlinks": 2367,
+    "directories": 12026,
+    "bytes": 4550067195,
+    "long_path_files_sha256_passed": 22921,
+    "status": "PASS"
+  },
+  "source_tree": {
+    "entries": 100215,
+    "files": 85822,
+    "symlinks": 2367,
+    "directories": 12026,
+    "bytes": 4550067195,
+    "long_path_files_sha256_passed": 22921,
+    "status": "PASS"
+  },
+  "original_archives": [
+    {
+      "archive": "evidence.zip",
+      "status": "PASS",
+      "files": 36,
+      "bytes": 1089674,
+      "archive_sha256": "9903071a07567ae3b33cf57f71fd0e86ef36463fb062cad5469575967b41a048",
+      "extraction_root": "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independently-extracted-evidence",
+      "long_extracted_files": 0
+    },
+    {
+      "archive": "visual-baselines.zip",
+      "status": "PASS",
+      "files": 766,
+      "bytes": 48377665,
+      "archive_sha256": "01afbae2d1baf3c30d7640ff8954c3396859fe8c9274d03281b49035a16280a4",
+      "extraction_root": "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independently-extracted-visual-baselines",
+      "long_extracted_files": 0
+    }
+  ],
+  "history": {
+    "status": "PASS",
+    "head": "e2d1116b44d600ed2108c15530f3c22ff3daa13f",
+    "commit_count": 53,
+    "bundle_sha256": "44ab8ad8919ac3b9598aa4479cfc57e57468a45ddade0bf8245861fa9ddb5852",
+    "commands": [
+      {
+        "command": [
+          "git",
+          "clone",
+          "--bare",
+          "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\f011-history.bundle",
+          "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independent-history.git"
+        ],
+        "stdout": "",
+        "stderr": "Cloning into bare repository 'D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independent-history.git'...\n"
+      },
+      {
+        "command": [
+          "git",
+          "-C",
+          "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\independent-history.git",
+          "fsck",
+          "--full"
+        ],
+        "stdout": "",
+        "stderr": ""
+      }
+    ]
+  },
+  "git_administration": {
+    "entries": 11,
+    "files": 9,
+    "symlinks": 0,
+    "directories": 2,
+    "bytes": 1037031,
+    "long_path_files_sha256_passed": 0,
+    "status": "PASS"
+  },
+  "longest_original_paths": [
+    {
+      "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageAVIFCoder/release/SDWebImageAVIFCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageAVIFCoder.framework.dSYM/Contents/Resources/Relocations/aarch64/SDWebImageAVIFCoder.yml",
+      "length": 391,
+      "sha256": "45c45e7cdc4a0ef5b66100ded8aa506237a575b519ed47359945fc3912154018"
+    },
+    {
+      "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageWebPCoder/release/SDWebImageWebPCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageWebPCoder.framework.dSYM/Contents/Resources/Relocations/aarch64/SDWebImageWebPCoder.yml",
+      "length": 391,
+      "sha256": "530638aea9815f8f2ebe1907af682ff62fbb6532ffecb61258d4b5dfc63dc34e"
+    },
+    {
+      "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageAVIFCoder/release/SDWebImageAVIFCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageAVIFCoder.framework.dSYM/Contents/Resources/Relocations/x86_64/SDWebImageAVIFCoder.yml",
+      "length": 390,
+      "sha256": "602f48e5b740940ac2a647c1a1d1c4ce570902206e8cd8b307840513a472dca7"
+    },
+    {
+      "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageWebPCoder/release/SDWebImageWebPCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageWebPCoder.framework.dSYM/Contents/Resources/Relocations/x86_64/SDWebImageWebPCoder.yml",
+      "length": 390,
+      "sha256": "6c3e1a9050dc0d640251893d826baa27682de8ec17d770b2c934d3ee77bd42c9"
+    },
+    {
+      "path": "node_modules/.pnpm/expo-image@57.0.3_expo@57.0_9fdf869539a20b8041e271de4caf05db/node_modules/expo-image/prebuilds/spm-deps/SDWebImageSVGCoder/release/SDWebImageSVGCoder.xcframework/ios-arm64_x86_64-simulator/dSYMs/SDWebImageSVGCoder.framework.dSYM/Contents/Resources/Relocations/aarch64/SDWebImageSVGCoder.yml",
+      "length": 387,
+      "sha256": "102a24294f5158022d17b1174f9fcfc28726dd8a0263939fb3f69b7be7dcdb33"
+    }
+  ],
+  "long_extracted_regular_files": 37363,
+  "max_extracted_path_length": 418,
+  "active_feature_pointer_sha256": "5a84fbf86a9a477393b7185e15732db72e391da3e19a4334b4af7b852422c467",
+  "elapsed_seconds": 1796.7
+}

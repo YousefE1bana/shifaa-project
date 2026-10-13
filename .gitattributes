@@ -15,6 +15,9 @@
 # Feature 011 historical/runtime evidence is SHA-bound as originally captured.
 # Preserve CRLF/mixed capture bytes instead of normalizing sealed evidence.
 specs/011-allergies-clinical-content-governance/evidence/** -text
+# Restored historical reports retain SHA-bound CRLF; treat CR as a line ending
+# while continuing to check other whitespace errors in these exact directories.
+specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-*/** whitespace=cr-at-eol
 # Retain the bundled upstream font licence in its original byte representation.
 specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/ibm-plex-sans-arabic-LICENSE_FONT.txt -text
 

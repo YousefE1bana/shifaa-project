@@ -13,7 +13,7 @@
 - Tasks cite actual repository paths. Generated artifacts name their source and generation command; generated files are not manually edited.
 - Each story ends with a checkpoint that can be demonstrated using synthetic data without relying on a later story.
 - Requirement IDs MUST be written individually in canonical form; compressed forms such as `NFR-API-001/002` are forbidden.
-- Every task is immediately followed by `  - Depends on: \`none\`` or a comma-separated list of earlier task IDs and `  - Acceptance evidence: \`<path or command plus expected result>\``. These lines are the machine-readable GitHub Issue handoff contract.
+- Every task is immediately followed by `  - Depends on: \`none\``or a comma-separated list of earlier task IDs and` - Acceptance evidence: \`<path or command plus expected result>\``. These lines are the machine-readable GitHub Issue handoff contract.
 
 ## Required task block example
 
@@ -76,3 +76,8 @@
 - [ ] T0XX [FR/NFR IDs] Update API/data/UI catalogs, trace matrix, ADR/open register, and generated docs — `[paths]`
 - [ ] T0XX [FR/NFR IDs] Complete release approvals with artifact digests and no applicable blocker — `specs/[feature]/checklists/requirements.md`
 - [ ] T0XX [FR/NFR IDs] Execute feature-flag rollout and verify SLO/rollback/kill switch — `[runbook/evidence]`
+
+## Feature artifact finalization — before closeout and cleanup
+
+- [ ] T0XX [Governance] Review tracked, untracked, and relevant ignored material; organize official outputs and a verified evidence index with retention/non-retention reasons — `specs/[feature]/evidence/artifact-finalization/`
+- [ ] T0XX [Governance] Pass `docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md` after required integration checks and Yousef's squash merge; verify required artifacts in current remote main before any authorized worktree/branch cleanup — `specs/[feature]/evidence/artifact-finalization/`

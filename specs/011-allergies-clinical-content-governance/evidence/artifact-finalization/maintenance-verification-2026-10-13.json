@@ -1,0 +1,28 @@
+{
+  "status": "PASS_MAINTENANCE_CHECKS_WITH_ACCEPTED_HISTORICAL_ARCHIVE_LOSS",
+  "date": "2026-10-13",
+  "base": "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+  "branch": "codex/onboarding-repository-hygiene",
+  "disposition": "CLOSED_WITH_ACCEPTED_PRESERVATION_LOSS",
+  "retained_files_size_and_sha256_rechecked": 24595,
+  "bytes": 2936738795,
+  "existing_spec_files_unchanged": 2747,
+  "restored_reports_unchanged": 19,
+  "checks_passed": [
+    "pnpm format:check",
+    "node tools/verify-agent-skills.mjs",
+    "node tools/verify-secrets.mjs",
+    "git diff --check",
+    "YAML workflow parsing, registry metadata equality and rejecting-gate shape",
+    "current Markdown links",
+    "retained index hash and copied-report hashes",
+    "original spec hashes",
+    "shared agents/features TOML equality against main",
+    "active-feature pointer unchanged"
+  ],
+  "full_pnpm_verify": "NOT_RUN: documentation/configuration maintenance; local database resets remain outside this authorization. Historical feature verification is not presented as fresh. Hosted required CI remains mandatory before merge.",
+  "application_and_ui_changes": false,
+  "feature012_started": false,
+  "merge_authority": "Yousef Osama only",
+  "historical_records": "Original BLOCKED index/verification and copied reports are retained unchanged; current named disposition supersedes the hold."
+}

@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "allowed_roots": {
+    "worktrees": "D:\\ECU\\Gradution-Project\\.worktrees",
+    "preservation": "D:\\SHIFAA-Preservation",
+    "scratch": "D:\\SHIFAA-Preservation-Scratch"
+  },
+  "deletion_method": "Exact inventoried os.unlink files/file-links and os.rmdir directory-links/empty directories; no recursive removal, force, ACL or attribute changes",
+  "removed_entry_count": 240414,
+  "retained_file_count": 32375,
+  "retained_bytes": 3379848741,
+  "original_file_bytes": 12173174761,
+  "actual_free_bytes_increase": 9946021888,
+  "all_requested_roots_absent": true,
+  "all_retained_sha256_pass": true,
+  "primary_protected_files_and_git_diff_unchanged": true,
+  "remote_main": "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+  "git_status_short": " M .codex/config.toml\n M docs/TEAM-INSTALLATION-CHECKLIST.md\n",
+  "no_branch_commit_push_or_feature012_changes": true,
+  "net_free_bytes_since_before_retention_copy": 6613479424,
+  "after_manifest_sha256": "379b36a212b52d7ef6ca7c9deffb43dd69f01afc1a6a5f2135e570351b61ee0f",
+  "original_claude_folder_absent": true,
+  "restoration_evidence_current_location": "D:\\ECU\\GP-STUFF\\SHIFAA-Final-Cleanup\\2026-10-13-2cd5d5d3fa1149ed8e16da23f162a669\\symlink-restoration-records",
+  "old_preservation_locations": "Intentionally deleted under the latest authorization. Earlier reports remain historical; current retained-files and after manifests map old paths to recoverable GP-STUFF locations.",
+  "preflight_findings_resolved": [
+    "Original F011 manifest uses size, not bytes; corrected own retention script lookup.",
+    "Directory reported size changed from 0 to 32768 while mtime and attributes remained identical; file hashes and complete child-path inventory verified. Directory sizes were excluded from file-byte accounting.",
+    "Three read-only pack files retained by moving their intact clone; attributes unchanged.",
+    "Original bare clone HEAD names unborn master; verified the actual preserved F011 branch ref instead, without changing HEAD."
+  ],
+  "remaining_repository_draft_issues": [
+    "TEAM-INSTALLATION-CHECKLIST.md still contains old Spec Kit version 1.0.13.",
+    "Its relative link to the moved setup-center HTML still needs a separate documentation update."
+  ],
+  "next_scope": "Review the existing onboarding/config drafts, then resume Feature 012 eligibility, Specify and Clarify only; stop for Yousef before Plan. No Feature 012 lifecycle was started in this cleanup."
+}

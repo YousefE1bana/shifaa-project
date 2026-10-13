@@ -1,0 +1,42 @@
+{
+  "capturedAt": "2026-10-11T09:03:53.969Z",
+  "head": "bea8fad786b387fe39b7a9aabd2e60dd2df7cc53",
+  "pr": "https://github.com/YousefE1bana/shifaa-project/pull/490",
+  "ci": {
+    "success": [
+      "PostgreSQL migration and forced-RLS matrix",
+      "Dependencies, secrets, and SBOM",
+      "Format, lint, types, tests, contracts, boundaries",
+      "Accessibility and patient E2E",
+      "CodeQL SAST"
+    ],
+    "failure": {
+      "job": "Supabase Auth, PostgreSQL, Storage, and RLS",
+      "url": "https://github.com/YousefE1bana/shifaa-project/actions/runs/38126645431/job/114432278042",
+      "sqlstate": "42501",
+      "migration": "supabase/migrations/20261006185241_f011_rls_grants.sql",
+      "statement": "ALTER ROLE shifaa_f011_executor NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION NOBYPASSRLS",
+      "message": "Only roles with the SUPERUSER attribute may alter roles with the SUPERUSER attribute."
+    }
+  },
+  "observedRuntimeRoles": {
+    "supabase_admin": {
+      "rolsuper": true,
+      "rolcreaterole": true
+    },
+    "postgres": {
+      "rolsuper": false,
+      "rolcreaterole": true
+    },
+    "shifaa_f011_executor": {
+      "rolsuper": false,
+      "rolcanlogin": false,
+      "rolbypassrls": false
+    }
+  },
+  "localHarnessMigrationUser": "supabase_admin",
+  "codeqlLimitation": "Cannot retrieve the full diff because there are too many (300) changed files in the pull request.",
+  "migrationChangesMade": false,
+  "mergeReadiness": "BLOCKED",
+  "retainedGates": "UNCHANGED"
+}

@@ -34,12 +34,17 @@ For CHK009, CHK011, and CHK012, record `N/A — <objective reason>` in the evide
 - [ ] CHK016 Arabic/English/RTL, WCAG 2.2 AA, reference viewports/devices, loading/empty/error/offline/stale/success states pass.
 - [ ] CHK017 Performance, observability/redaction, security, backup/restore, and incident evidence meets applicable NFRs.
 
+## Feature artifact finalization
+
+- [ ] CHK018 Official feature documents, reviews, decisions, acceptance records, and evidence index are inside `specs/[feature]/`; tracked/untracked/relevant ignored material is reviewed and classified, essential external evidence is hash-verified, and references/retention reasons are current.
+- [ ] CHK019 The Feature Artifact Finalization Gate passes with exact merged remote-main identity and required artifact integrity; no important unclassified files or unresolved required preservation gaps remain before authorized closeout/worktree/branch cleanup. Historical failures, approval limits, and retained OPEN gates are unchanged.
+
 ## Release decision
 
-| Gate | Reviewer | Artifact/version/digest | Decision/date | Open blocker |
-|---|---|---|---|---|
-| Product/QA | [name] | [evidence] | [decision] | [OPEN/NONE] |
-| Architecture/Security | [name] | [evidence] | [decision] | [OPEN/NONE] |
-| Legal/DPO | [name] | [evidence] | [decision] | [OPEN/NONE] |
-| Clinical | [names] | [evidence] | [decision] | [OPEN/NONE] |
-| Design/Accessibility | [name] | [evidence] | [decision] | [OPEN/NONE] |
+| Gate                  | Reviewer | Artifact/version/digest | Decision/date | Open blocker |
+| --------------------- | -------- | ----------------------- | ------------- | ------------ |
+| Product/QA            | [name]   | [evidence]              | [decision]    | [OPEN/NONE]  |
+| Architecture/Security | [name]   | [evidence]              | [decision]    | [OPEN/NONE]  |
+| Legal/DPO             | [name]   | [evidence]              | [decision]    | [OPEN/NONE]  |
+| Clinical              | [names]  | [evidence]              | [decision]    | [OPEN/NONE]  |
+| Design/Accessibility  | [name]   | [evidence]              | [decision]    | [OPEN/NONE]  |
