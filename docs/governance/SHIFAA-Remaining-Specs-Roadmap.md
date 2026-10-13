@@ -19,11 +19,6 @@ No feature may:
 - proceed past a canonical `OPEN-*` gate's earliest blocked lifecycle stage; or
 - start before remote `main` contains its predecessor's verified squash merge and cleanup is complete.
 
-Feature closeout and predecessor cleanup also require the
-[Feature Artifact Finalization Gate](SHIFAA-Feature-Artifact-Finalization-Gate.md).
-This preserves official outputs and verifiable evidence without changing the
-frozen feature boundaries, historical acceptance, or retained `OPEN-*` gates.
-
 ## 2. Frozen order
 
 | Feature | Name                                                    | Master phase                    | Primary requirement closure                             | Predecessor | Successor |

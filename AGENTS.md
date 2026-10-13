@@ -38,6 +38,14 @@ Unclassified important files, inaccessible evidence, stale references, hash
 mismatches, or unresolved preservation gaps block finalization and cleanup.
 Preserve historical failures, named approval limits, and retained `OPEN-*` gates.
 
+## Current onboarding guidance
+
+Use [the maintained onboarding draft](docs/TEAM-ONBOARDING-DRAFT.md) for the
+reviewed Spec Kit 1.1.3 pin and the moved local setup-center location. The
+original installation checklist and roadmap remain unchanged because F011
+approved evidence binds their exact bytes. The finalization gate above applies
+additively without changing those frozen feature boundaries.
+
 ## Remaining feature authority
 
 For every feature after 006, read

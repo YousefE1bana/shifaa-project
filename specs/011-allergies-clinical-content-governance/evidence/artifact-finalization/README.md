@@ -95,3 +95,12 @@ The F011 retrospective finalization audit is closed with the documented accepted
 loss. The archive issue will not remain an active recovery/classification blocker.
 The maintenance edits proceed through PR integration; clinical/legal/design/release
 gates and historical acceptance limits remain unchanged. Feature 012 is not started.
+
+## Maintenance CI correction
+
+The [documentation boundary record](../../decisions/maintenance-documentation-boundary-2026-10-13.md)
+explains the first hosted quality/Supabase failures and the correction that
+preserves approved document bytes. The
+[correction verification](maintenance-ci-correction-2026-10-13.json) indexes
+retained failure logs and fresh local test results. Final hosted checks must
+pass on the current PR head before Yousef squash-merges.
