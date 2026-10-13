@@ -1,0 +1,169 @@
+{
+  "status": "PASS_FOR_ADD_ONLY_ORGANIZATION_NOT_FEATURE_FINALIZATION",
+  "date": "2026-10-13",
+  "indexed_retained_files_pre_copy_sha256_pass": 24595,
+  "copied_source_and_destination_hashes_pass": 19,
+  "existing_spec_files_unchanged": 2747,
+  "source_inventory_manifests_unchanged": true,
+  "external_index_digest_pass": true,
+  "markdown_links_pass": true,
+  "prior_workflow_steps_unchanged": true,
+  "active_feature_pointer_sha256": "957ec882110889a1b9dd236f8566f1f286cde597764494127b4243de47a47870",
+  "shared_codex_configuration_unchanged": true,
+  "personal_config_diff_only_four_disabled_Endor_hooks": true,
+  "hook_app_reload": "PENDING_FRESH_SESSION",
+  "branch": "codex/onboarding-repository-hygiene",
+  "HEAD": "afaa3a15f1a511f4c005c9b3ad8d23ea9e864f4d",
+  "remote_main": "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+  "feature_finalization": "BLOCKED",
+  "checks": "YAML parser, Markdown formatting, whitespace diff and repository secret/synthetic-fixture scan passed separately; no application runtime checks or SpecKit lifecycle command executed.",
+  "git_status_short": "M .shifaa/skills/shifaa-speckit-overlay/SKILL.md\n M .specify/templates/overrides/checklist-template.md\n M .specify/templates/overrides/tasks-template.md\n M .specify/workflows/speckit/workflow.yml\n M AGENTS.md\n M docs/governance/SHIFAA-Remaining-Specs-Roadmap.md\n?? docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md\n?? specs/011-allergies-clinical-content-governance/decisions/artifact-finalization-policy-2026-10-13.md\n?? specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/",
+  "output_manifest": [
+    {
+      "path": ".shifaa/skills/shifaa-speckit-overlay/SKILL.md",
+      "bytes": 1816,
+      "sha256": "8514e5d379c651e0662d084eb62499886a4fae2a697c7153267af59384a9a412"
+    },
+    {
+      "path": ".specify/templates/overrides/checklist-template.md",
+      "bytes": 4108,
+      "sha256": "b0b5ab2996c222db5e89e1879cbd2737a74d9631f03a99b3b4c4b0489f66ddac"
+    },
+    {
+      "path": ".specify/templates/overrides/tasks-template.md",
+      "bytes": 6796,
+      "sha256": "8d150a820037ccf9784db66b34780ac7287771da34f65c0850959f71fea65224"
+    },
+    {
+      "path": ".specify/workflows/speckit/workflow.yml",
+      "bytes": 6045,
+      "sha256": "34e9e8252bbaaa029a48fdcd7c8a29178c05ae7fd83c85c9bf9c2091035eab33"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 4585,
+      "sha256": "642abc38eb7ea3a69ccfc01666fc162988a8309433f50c2af5cc0b5cf023963c"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md",
+      "bytes": 6433,
+      "sha256": "1fc7cf5612052d97990bf506224373aa83cc7ce86294f44c1f44d70f697a56a2"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+      "bytes": 55984,
+      "sha256": "81f2cd6da75b49af3dea16d65d587b1faa1c82710e8885e44b45ea6f8af72734"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/decisions/artifact-finalization-policy-2026-10-13.md",
+      "bytes": 1529,
+      "sha256": "f3e2081fef991110e3a656432a4e82d657067e4928492e3ce2f47922d4135ca0"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/README.md",
+      "bytes": 10051,
+      "sha256": "88d7af162e2953533d7789381283150e3a8142ac5c1898a64bb890b4c2b798e8"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/evidence-index.json",
+      "bytes": 65833,
+      "sha256": "5bec321f7ab13fae8541b0df93e708be21d28a5ba52e8e4495d4aabbca9b38da"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/branch-cleanup-receipt.json",
+      "bytes": 6044,
+      "sha256": "415e5d16585abbf74b3305fdd33c891fd429148b0c70187cd4973b4a60d3dcfc"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/cleanup-blocked-report.json",
+      "bytes": 30916,
+      "sha256": "80f96cd4775212ff872c1e527bc208d02c1f466f1295f79c457b9b7d896d3315"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/final-verification.json",
+      "bytes": 2509,
+      "sha256": "2a3778c3281e4662f4e0262aad5a21629ca0ab83668f426acdda1524d5b01a96"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/history-bundle.json",
+      "bytes": 9378,
+      "sha256": "e5897b89eb1cc355e11e7cf7d30f1387e9b3291dc7aeed0a78d2ac25ff917365"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/inventory-summary.json",
+      "bytes": 433,
+      "sha256": "a638f8becf65fe4f0155c105d0a187b2821456a21d912578979212e1cd94e426"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/issue-evidence-validation.json",
+      "bytes": 84775,
+      "sha256": "8ba146ba78d76c7bf40790a22905cbf12fa97bbf9e6e7aab261cc96e47430c40"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/lfs-history-validation.json",
+      "bytes": 330,
+      "sha256": "10d3e1f10c33923d03fd3d77a4c5d34954bb5975512a6d1ce8a230cca81b7336"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/predelete-validation.json",
+      "bytes": 540,
+      "sha256": "44a3a1d73e2f09f6a84a296b12f97081834e9571f1057a8c1e3a842db9639c5d"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/preservation-build.json",
+      "bytes": 434,
+      "sha256": "e3280aafedd4b8451d4a38192bf68072f29120d06874fe27f8c379385c260746"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/validation.json",
+      "bytes": 5195,
+      "sha256": "8ccd7e86e21055554f66be4a78b35821fc64c1537a22e7dce20364a7a68e6622"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/worktree-removal-receipt.json",
+      "bytes": 427,
+      "sha256": "48b10a9de14e6a22a158636ea157635a167de02cd6870e4d81fb90ef76073a33"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-restoration/all-36-result.json",
+      "bytes": 114600,
+      "sha256": "c095bf44a0fa5281557522be515fe551b13cc84497169337f0f45fadd31a008f"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-restoration/single-link-result.json",
+      "bytes": 2782,
+      "sha256": "ba65c36e2cc94bc109274ea4612749f7b16d2b796813cbde469aad5464cd48a0"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/integration-2026-10-11/ci-result.json",
+      "bytes": 1528,
+      "sha256": "fa08ef4dbca223b1e519d7dda4fa6aef4e2c7c883e207c865cbf4d95a7106149"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/integration-2026-10-11/review-handoff.md",
+      "bytes": 1156,
+      "sha256": "8c466c76b9fe763032e92c03103d41ac41cbc4053447a2a8dae7aecf1ab6772e"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/k01/taskstoissues-review.md",
+      "bytes": 7355,
+      "sha256": "461efd46e79f34950d562638196bac0a70fccfbd6df21d5474f8e265f505da1a"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/k24/reference-verification-2026-10-10/visual/capture-stability-diagnostic.md",
+      "bytes": 2751,
+      "sha256": "105967c65989ea4b6ebf715cd59b48969fb1b8397d1517395e0ce0568c3883d8"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/pr-remediation-round2/verification-completed.json",
+      "bytes": 159,
+      "sha256": "9a4f5e1d1057c3812d889ecd91b663178dd12282887612b5961bf3bad2d24771"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/pr-remediation/verification-completed.json",
+      "bytes": 446,
+      "sha256": "7bb3a9e012d9397128dafa546c2bcf61b0591c172a7aa811b236c7e9b2a12323"
+    }
+  ],
+  "manifest_limit": "New verification.json and later local validation receipts are excluded to avoid a self-referential hash."
+}

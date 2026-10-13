@@ -2,9 +2,9 @@ schema_version: "1.0"
 workflow:
   id: "speckit"
   name: "Full SDD Cycle"
-  version: "2.2.0"
+  version: "2.3.0"
   author: "SHIFAA (based on GitHub Spec Kit)"
-  description: "Runs SHIFAA scope eligibility → specify → clarify → approve → plan → approve → tasks → analyze → approve → baseline publication → taskstoissues → implement → post-implementation analysis"
+  description: "Runs SHIFAA scope eligibility → specify → clarify → approve → plan → approve → tasks → analyze → approve → baseline publication → taskstoissues → implement → post-implementation analysis → artifact finalization gate"
 
 requires:
   # The official built-in workflow documents this schema with a >=0.7.2
@@ -118,3 +118,9 @@ steps:
     integration: "{{ inputs.integration }}"
     input:
       args: "Re-run cross-artifact analysis after implementation and report remaining blockers without changing artifacts."
+
+  - id: feature-artifact-finalization
+    type: gate
+    message: "Apply docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md before declaring closeout complete or deleting worktree/branch state. Require reviewed classification of tracked/untracked/relevant ignored material, official outputs in specs/<feature>/, a verified evidence index with retention reasons and current paths/hashes, preserved historical failures and approval limits, no unresolved essential preservation gaps, and verified required artifacts in this feature's merged remote main. Prepare the outputs before PR integration; final approval waits for Yousef's squash merge and the AGENTS integration checks. This gate does not execute or authorize merge, cleanup, or successor work. On rejection, record BLOCKED finalization without rewriting historical acceptance."
+    options: [approve, reject]
+    on_reject: abort

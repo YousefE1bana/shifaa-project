@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "git_lfs_version": "git-lfs/3.8.0 (GitHub; windows amd64; go 1.27.0; git aece9221)",
+  "method": "git lfs ls-files --all --long before branch deletion",
+  "lfs_pointer_count": 0,
+  "output": "",
+  "scope": "All current local refs, including F011 history; no LFS pointer/object dependency found."
+}

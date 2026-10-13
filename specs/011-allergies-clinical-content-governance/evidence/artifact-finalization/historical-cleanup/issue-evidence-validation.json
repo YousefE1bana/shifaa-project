@@ -1,0 +1,2031 @@
+{
+  "status": "PASS",
+  "issue_count": 92,
+  "closed_completed_count": 92,
+  "task_evidence_count": 92,
+  "source_head": "e2d1116b44d600ed2108c15530f3c22ff3daa13f",
+  "merge_commit": "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+  "head_tree_equals_merge_tree": true,
+  "limits": "Engineering-only acceptance, historical failures and deferred physical/formal/strict-pixel review retained; no clean final Codex/Copilot review or clinical/production acceptance asserted.",
+  "failures": [],
+  "records": [
+    {
+      "issue": 398,
+      "task": "T001",
+      "checkpoint": "K01",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T15:16:57Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/readiness.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "2d86e5e30a0655f61edfe06f119889f39eb3f6657dc3d304972f143197f04ed3",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k01-accepted-2026-10-06.md",
+          "sha256": "dddd54142ff026ad2c0694e891105a86b9a38c739fcc0adecbb77f0b9fee100d"
+        }
+      ],
+      "issue_acceptance_comments": []
+    },
+    {
+      "issue": 399,
+      "task": "T002",
+      "checkpoint": "K01",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T15:16:59Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/scope-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "fd529369d67dcf037d0b3d2801d7d897327982bb150a7259c3309133a7bb3c59",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k01-accepted-2026-10-06.md",
+          "sha256": "dddd54142ff026ad2c0694e891105a86b9a38c739fcc0adecbb77f0b9fee100d"
+        }
+      ],
+      "issue_acceptance_comments": []
+    },
+    {
+      "issue": 400,
+      "task": "T003",
+      "checkpoint": "K01",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T15:17:01Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K01/scope-guard.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "7d2b8a67526e78128e7df27c1f043771c8b3f44a3537b96b4cb98c111d6acd01",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k01-accepted-2026-10-06.md",
+          "sha256": "dddd54142ff026ad2c0694e891105a86b9a38c739fcc0adecbb77f0b9fee100d"
+        }
+      ],
+      "issue_acceptance_comments": []
+    },
+    {
+      "issue": 401,
+      "task": "T004",
+      "checkpoint": "K02",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T16:02:01Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/protocol-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "070b80e311731ddb93067bb4a6538ae0151232bb1f1b6f1092406672f7a59361",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k02-accepted-2026-10-06.md",
+          "sha256": "e9e794f21c1aee95877efa64857984c11d0aa23ad3c7ea2ec944ca7b2c407bb3"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/401#issuecomment-6020259664"
+      ]
+    },
+    {
+      "issue": 402,
+      "task": "T005",
+      "checkpoint": "K02",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T16:02:04Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/public-gen.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "247cf4eb60f51f15b78afbae2b891871bfeb262ee696aafd346ed3dfa786c3d0",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k02-accepted-2026-10-06.md",
+          "sha256": "e9e794f21c1aee95877efa64857984c11d0aa23ad3c7ea2ec944ca7b2c407bb3"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/402#issuecomment-6020260576"
+      ]
+    },
+    {
+      "issue": 403,
+      "task": "T006",
+      "checkpoint": "K02",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T16:02:07Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/parity-verifier.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "3ed082c2bdeea121d26f7ae6bb284bec941471d4235262b876b4f3cb55faafec",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k02-accepted-2026-10-06.md",
+          "sha256": "e9e794f21c1aee95877efa64857984c11d0aa23ad3c7ea2ec944ca7b2c407bb3"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/403#issuecomment-6020261560"
+      ]
+    },
+    {
+      "issue": 404,
+      "task": "T007",
+      "checkpoint": "K02",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T16:02:10Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K02/protocol-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "bb09ef3dab8f81cb5e7b9ec4a91859754b02869916eea0df16d1976bdf1642fb",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k02-accepted-2026-10-06.md",
+          "sha256": "e9e794f21c1aee95877efa64857984c11d0aa23ad3c7ea2ec944ca7b2c407bb3"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/404#issuecomment-6020262516"
+      ]
+    },
+    {
+      "issue": 405,
+      "task": "T008",
+      "checkpoint": "K03",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T16:36:10Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "510bdbfe205282a40c2a56c563d060080b3f91f959152371e3dc24d612a66086",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k03-accepted-2026-10-06.md",
+          "sha256": "e4fc96b4f572ddfabd2a90b7fd1ff1801d12ea16bad90bd61132c69ee5be58cd"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/405#issuecomment-6020868473"
+      ]
+    },
+    {
+      "issue": 406,
+      "task": "T009",
+      "checkpoint": "K03",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T16:36:12Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/exposure.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "b18efde92d9a9ad98cf0fc2352f59cbb7a337c48bf22d4499639993de6a88b6e",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k03-accepted-2026-10-06.md",
+          "sha256": "e4fc96b4f572ddfabd2a90b7fd1ff1801d12ea16bad90bd61132c69ee5be58cd"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/406#issuecomment-6020869134"
+      ]
+    },
+    {
+      "issue": 407,
+      "task": "T010",
+      "checkpoint": "K03",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T16:36:15Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/harness.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "2b846a66f238774dd853678794de53bbb9a6b7a614a1b05a4e5e793fed646b8e",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k03-accepted-2026-10-06.md",
+          "sha256": "e4fc96b4f572ddfabd2a90b7fd1ff1801d12ea16bad90bd61132c69ee5be58cd"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/407#issuecomment-6020869956"
+      ]
+    },
+    {
+      "issue": 408,
+      "task": "T011",
+      "checkpoint": "K03",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T16:36:17Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K03/harness-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "c2b7c6a8497758e91a901066f2200e74d190adbb6ed3477e84c3304489b26b55",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k03-accepted-2026-10-06.md",
+          "sha256": "e4fc96b4f572ddfabd2a90b7fd1ff1801d12ea16bad90bd61132c69ee5be58cd"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/408#issuecomment-6020870534"
+      ]
+    },
+    {
+      "issue": 409,
+      "task": "T012",
+      "checkpoint": "K04",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T17:52:11Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K04/sql-allergy-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "d9ec8e34f6ac33d5a705856e846d3fba9701605cf71d741c905e67178428f3f7",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k04-accepted-2026-10-06.md",
+          "sha256": "10f24a92bec018b2e82357902d94765ea834068b11ddb76ceba62cb3d9c20dcb"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/409#issuecomment-6022166781"
+      ]
+    },
+    {
+      "issue": 410,
+      "task": "T013",
+      "checkpoint": "K04",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T17:52:14Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K04/sql-content-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "d9d8c3ec6fc08a41a52e2b770bdda5f81f3918e555f219cfc20d2e32be3111e0",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k04-accepted-2026-10-06.md",
+          "sha256": "10f24a92bec018b2e82357902d94765ea834068b11ddb76ceba62cb3d9c20dcb"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/410#issuecomment-6022167455"
+      ]
+    },
+    {
+      "issue": 411,
+      "task": "T014",
+      "checkpoint": "K04",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T17:52:16Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K04/sql-receipt-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "b7a718f3d93edeb9ef67c54c30c4e8ed31d0101c001608ed00606d5719fc1412",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k04-accepted-2026-10-06.md",
+          "sha256": "10f24a92bec018b2e82357902d94765ea834068b11ddb76ceba62cb3d9c20dcb"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/411#issuecomment-6022168179"
+      ]
+    },
+    {
+      "issue": 412,
+      "task": "T015",
+      "checkpoint": "K04",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T17:52:18Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K04/sql-security-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "f446591ca93fd051992f09ed763f067daeaa5a6ccf87b85bcfdb3eb7d2a46531",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k04-accepted-2026-10-06.md",
+          "sha256": "10f24a92bec018b2e82357902d94765ea834068b11ddb76ceba62cb3d9c20dcb"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/412#issuecomment-6022168869"
+      ]
+    },
+    {
+      "issue": 413,
+      "task": "T016",
+      "checkpoint": "K04",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-06T17:52:20Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K04/sql-red-capture.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "00275f91e93b03ca4c1306b5801b1f0417a6fb02b5b39688438f35c182b1bced",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k04-accepted-2026-10-06.md",
+          "sha256": "10f24a92bec018b2e82357902d94765ea834068b11ddb76ceba62cb3d9c20dcb"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/413#issuecomment-6022169565"
+      ]
+    },
+    {
+      "issue": 414,
+      "task": "T017",
+      "checkpoint": "K05",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:06Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/ddl-allergy.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "2e53ceafe5d54f0129892c3aceff483896e4818a984d5d67f45422be0ba9c886",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k05-accepted-2026-10-07.md",
+          "sha256": "7d0e095b6abe09f820a88c253792b6780ac76e49dc6e0f800656d4ae5cbabd23"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/414#issuecomment-6035753721"
+      ]
+    },
+    {
+      "issue": 415,
+      "task": "T018",
+      "checkpoint": "K05",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:09Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/ddl-release.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "37e6b02b9b249c24c3886f816128b32d6b9fb4981e37306cfd76a53bdb182bab",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k05-accepted-2026-10-07.md",
+          "sha256": "7d0e095b6abe09f820a88c253792b6780ac76e49dc6e0f800656d4ae5cbabd23"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/415#issuecomment-6035754507"
+      ]
+    },
+    {
+      "issue": 416,
+      "task": "T019",
+      "checkpoint": "K05",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:12Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/ddl-signing.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "9014096fcdb66d33e25b9299b131774b9be1da2e35e1365061cd9ca25c0258d7",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k05-accepted-2026-10-07.md",
+          "sha256": "7d0e095b6abe09f820a88c253792b6780ac76e49dc6e0f800656d4ae5cbabd23"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/416#issuecomment-6035755251"
+      ]
+    },
+    {
+      "issue": 417,
+      "task": "T020",
+      "checkpoint": "K05",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:14Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K05/ddl-receipt.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "d02d2ffa786533eb914b654c59870b4d69f89fc36dece0128167723f00e05594",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k05-accepted-2026-10-07.md",
+          "sha256": "7d0e095b6abe09f820a88c253792b6780ac76e49dc6e0f800656d4ae5cbabd23"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/417#issuecomment-6035755978"
+      ]
+    },
+    {
+      "issue": 418,
+      "task": "T021",
+      "checkpoint": "K06",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:18Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K06/sql-allergy.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "a627ea6acf636115e8b42b2f2ee9b4b2417ecb43ed393fe105eb1b4489a9cf71",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k06-accepted-2026-10-07.md",
+          "sha256": "aaf5e00b2471b22b52980419ebace688141b1de872192c3be8cf3208ee3f0a58"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/418#issuecomment-6035756943"
+      ]
+    },
+    {
+      "issue": 419,
+      "task": "T022",
+      "checkpoint": "K06",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:21Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K06/sql-draft.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "edb3e0cb9ac0cb34456ca33eaddbac6c0560930cf997e5f4b02b9fc8dea323db",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k06-accepted-2026-10-07.md",
+          "sha256": "aaf5e00b2471b22b52980419ebace688141b1de872192c3be8cf3208ee3f0a58"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/419#issuecomment-6035757655"
+      ]
+    },
+    {
+      "issue": 420,
+      "task": "T023",
+      "checkpoint": "K06",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:24Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K06/sql-sign.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "b9db60586b04c23ab636830da7990767b0dd7d6cfbaf0672b3173829ba232790",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k06-accepted-2026-10-07.md",
+          "sha256": "aaf5e00b2471b22b52980419ebace688141b1de872192c3be8cf3208ee3f0a58"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/420#issuecomment-6035758459"
+      ]
+    },
+    {
+      "issue": 421,
+      "task": "T024",
+      "checkpoint": "K06",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:27Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K06/sql-publish.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "32bf6e7a4fe78732baa85212309abcebab4a0557db0607d27cb85d90f1a82a2a",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k06-accepted-2026-10-07.md",
+          "sha256": "aaf5e00b2471b22b52980419ebace688141b1de872192c3be8cf3208ee3f0a58"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/421#issuecomment-6035759218"
+      ]
+    },
+    {
+      "issue": 422,
+      "task": "T025",
+      "checkpoint": "K06",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:30Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K06/sql-privileges.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "df3227550c8d768ffc32cc72888a14862955a474295bb8e4a8540370076b7ccf",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k06-accepted-2026-10-07.md",
+          "sha256": "aaf5e00b2471b22b52980419ebace688141b1de872192c3be8cf3208ee3f0a58"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/422#issuecomment-6035760114"
+      ]
+    },
+    {
+      "issue": 423,
+      "task": "T026",
+      "checkpoint": "K06",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T10:11:33Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K06/sql-finalizer.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "269c2c33a3c1e08b3bc41777e8eaf535859976d44c0474cabd971c192555dbf4",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k06-accepted-2026-10-07.md",
+          "sha256": "aaf5e00b2471b22b52980419ebace688141b1de872192c3be8cf3208ee3f0a58"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/423#issuecomment-6035760831"
+      ]
+    },
+    {
+      "issue": 424,
+      "task": "T027",
+      "checkpoint": "K07",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T13:58:31Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-green.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "2f61b425891eac3c4c328d9b37e180dc6486549f72271f99eb82620f42d5c299",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k07-accepted-2026-10-07.md",
+          "sha256": "d192ff68c77fb0ea3ab79ae050be50b716cfa30cc7ca0b801779d71c2a27955d"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/424#issuecomment-6039541837"
+      ]
+    },
+    {
+      "issue": 425,
+      "task": "T028",
+      "checkpoint": "K07",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T13:58:34Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/physical-races.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "3927e1df659b219abb991f97da1b91c13c5bca6efd4e5c47b4b2ef8841d6f5f8",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k07-accepted-2026-10-07.md",
+          "sha256": "d192ff68c77fb0ea3ab79ae050be50b716cfa30cc7ca0b801779d71c2a27955d"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/425#issuecomment-6039542816"
+      ]
+    },
+    {
+      "issue": 426,
+      "task": "T029",
+      "checkpoint": "K07",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T13:58:37Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K07/stage-assertion.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "e0a17fb219e30856ec2b9bd699ce754f5f5cc7b72d2840bdf88d76edf31af575",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k07-accepted-2026-10-07.md",
+          "sha256": "d192ff68c77fb0ea3ab79ae050be50b716cfa30cc7ca0b801779d71c2a27955d"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/426#issuecomment-6039543591"
+      ]
+    },
+    {
+      "issue": 427,
+      "task": "T030",
+      "checkpoint": "K08",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T16:39:35Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "430e6b099688b0857c054f4b234d6f26d845c817cdbbc0de240f146f89310a4e",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k08-accepted-2026-10-07.md",
+          "sha256": "412db6de74dc192797192e3cbfb753869389cbd3d847836a462d31c834734d81"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/427#issuecomment-6042411575"
+      ]
+    },
+    {
+      "issue": 428,
+      "task": "T031",
+      "checkpoint": "K08",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T16:39:38Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/release-protection.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "ca02101f33cef2419e6af93c55d39df4f73fefdb1c6d9e43329e0bdf0cab4927",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k08-accepted-2026-10-07.md",
+          "sha256": "412db6de74dc192797192e3cbfb753869389cbd3d847836a462d31c834734d81"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/428#issuecomment-6042412365"
+      ]
+    },
+    {
+      "issue": 429,
+      "task": "T032",
+      "checkpoint": "K08",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T16:39:41Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/allergy-protection.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "eb6e0d432e58a32750d16f0686fee5f6383c841396c42abbbd0d0e83840aeedf",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k08-accepted-2026-10-07.md",
+          "sha256": "412db6de74dc192797192e3cbfb753869389cbd3d847836a462d31c834734d81"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/429#issuecomment-6042413454"
+      ]
+    },
+    {
+      "issue": 430,
+      "task": "T033",
+      "checkpoint": "K08",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T16:39:44Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/receipt-producer.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "cc962c3daaaa499bbd7352cecdf7586417f9d73d80dbe4adfa900ad74abea1a5",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k08-accepted-2026-10-07.md",
+          "sha256": "412db6de74dc192797192e3cbfb753869389cbd3d847836a462d31c834734d81"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/430#issuecomment-6042414405"
+      ]
+    },
+    {
+      "issue": 431,
+      "task": "T034",
+      "checkpoint": "K08",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T16:39:48Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K08/protection-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "181c75d6e31c63688424e8eb7e73cc6462e48ed76c25411ca2aac25808b0509f",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k08-accepted-2026-10-07.md",
+          "sha256": "412db6de74dc192797192e3cbfb753869389cbd3d847836a462d31c834734d81"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/431#issuecomment-6042415443"
+      ]
+    },
+    {
+      "issue": 432,
+      "task": "T035",
+      "checkpoint": "K09",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:17Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/evidence-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "9af3f39beeeede9f43d7ce5cd4e0d826c8e42fef48a110cda6f1b57f0c2704cb",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k09-accepted-2026-10-07.md",
+          "sha256": "eb5eaa69ecaa4d87ecc8df55cceedd551e30a6f751171b68113b60921d9fdab8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/432#issuecomment-6043321210"
+      ]
+    },
+    {
+      "issue": 433,
+      "task": "T036",
+      "checkpoint": "K09",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:20Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/material-producer.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "1addcec7fc0f95b24a2096bbff467f4fd7e4530b4a8099cb5c0c3b6bf78e57b3",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k09-accepted-2026-10-07.md",
+          "sha256": "eb5eaa69ecaa4d87ecc8df55cceedd551e30a6f751171b68113b60921d9fdab8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/433#issuecomment-6043322019"
+      ]
+    },
+    {
+      "issue": 434,
+      "task": "T037",
+      "checkpoint": "K09",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:24Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/signing-producer.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "446cd7e56f0617aab625fdb3fd3ac4de4c68efe6a85e90c38b99db2bda3b60eb",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k09-accepted-2026-10-07.md",
+          "sha256": "eb5eaa69ecaa4d87ecc8df55cceedd551e30a6f751171b68113b60921d9fdab8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/434#issuecomment-6043322985"
+      ]
+    },
+    {
+      "issue": 435,
+      "task": "T038",
+      "checkpoint": "K09",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:27Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/governed-provisioner.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "aa82b7dc6f2da58751a80df86ed4fdfdbd6aa96df3e00f8789abad163f826ee3",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k09-accepted-2026-10-07.md",
+          "sha256": "eb5eaa69ecaa4d87ecc8df55cceedd551e30a6f751171b68113b60921d9fdab8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/435#issuecomment-6043323910"
+      ]
+    },
+    {
+      "issue": 436,
+      "task": "T039",
+      "checkpoint": "K09",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:29Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/allergy-provenance.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "df0328c7dc441e1e1e91bf05a6b087515c42663706cc6d9fa107c13c4ade8010",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k09-accepted-2026-10-07.md",
+          "sha256": "eb5eaa69ecaa4d87ecc8df55cceedd551e30a6f751171b68113b60921d9fdab8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/436#issuecomment-6043324752"
+      ]
+    },
+    {
+      "issue": 437,
+      "task": "T040",
+      "checkpoint": "K09",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:32Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K09/evidence-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "3e32d709a6d9cb8d0344de61eb4b2a3bba3b04fac021b57500c0663cb56fb94e",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k09-accepted-2026-10-07.md",
+          "sha256": "eb5eaa69ecaa4d87ecc8df55cceedd551e30a6f751171b68113b60921d9fdab8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/437#issuecomment-6043325522"
+      ]
+    },
+    {
+      "issue": 438,
+      "task": "T041",
+      "checkpoint": "K10",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:35Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/core-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "34479ca3f97bb11579e3be66c50f8a358d73847b07aa254da5504c9f90ab3b1e",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k10-accepted-2026-10-07.md",
+          "sha256": "ebd4efda3d53a3b58f46dfd9fa2417b439315936bcf9dc9fcf7c649a87554912"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/438#issuecomment-6043326454"
+      ]
+    },
+    {
+      "issue": 439,
+      "task": "T042",
+      "checkpoint": "K10",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:38Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/core.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "297613278ca897fae2635bcf2b4741f714a60332c1850ee132fe624d2e1cf616",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k10-accepted-2026-10-07.md",
+          "sha256": "ebd4efda3d53a3b58f46dfd9fa2417b439315936bcf9dc9fcf7c649a87554912"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/439#issuecomment-6043327279"
+      ]
+    },
+    {
+      "issue": 440,
+      "task": "T043",
+      "checkpoint": "K10",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-07T17:35:41Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K10/equivalence.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "cfccd7aedc17da014bb3a6a03b697a61b2e97cfd8c4a1f8084a53926a26c39c3",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k10-accepted-2026-10-07.md",
+          "sha256": "ebd4efda3d53a3b58f46dfd9fa2417b439315936bcf9dc9fcf7c649a87554912"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/440#issuecomment-6043328016"
+      ]
+    },
+    {
+      "issue": 441,
+      "task": "T044",
+      "checkpoint": "K11",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T01:16:21Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-api-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "62d817537549c1b1c9a7ff712940a0f49755a03822d7aba742cbd569a56c88ef",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k11-accepted-2026-10-08.md",
+          "sha256": "f31feefe69516a401b9915aa2a3bc75308d84cc01e4678e430ea91f360d33d0f"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/441#issuecomment-6050156421"
+      ]
+    },
+    {
+      "issue": 442,
+      "task": "T045",
+      "checkpoint": "K11",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T01:16:24Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-read-create.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "363bae92d96177414d0730c82073e559b760ff456d105e09996997db5544ec64",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k11-accepted-2026-10-08.md",
+          "sha256": "f31feefe69516a401b9915aa2a3bc75308d84cc01e4678e430ea91f360d33d0f"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/442#issuecomment-6050157006"
+      ]
+    },
+    {
+      "issue": 443,
+      "task": "T046",
+      "checkpoint": "K11",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T01:16:27Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-routes.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "363bae92d96177414d0730c82073e559b760ff456d105e09996997db5544ec64",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k11-accepted-2026-10-08.md",
+          "sha256": "f31feefe69516a401b9915aa2a3bc75308d84cc01e4678e430ea91f360d33d0f"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/443#issuecomment-6050157537"
+      ]
+    },
+    {
+      "issue": 444,
+      "task": "T047",
+      "checkpoint": "K11",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T01:16:30Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K11/allergy-api-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "363bae92d96177414d0730c82073e559b760ff456d105e09996997db5544ec64",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k11-accepted-2026-10-08.md",
+          "sha256": "f31feefe69516a401b9915aa2a3bc75308d84cc01e4678e430ea91f360d33d0f"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/444#issuecomment-6050158005"
+      ]
+    },
+    {
+      "issue": 445,
+      "task": "T048",
+      "checkpoint": "K12",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T04:34:40Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/allergy-ui-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "92f84b67dc33928fa033d060924f840739ed011cbb5ce9d25f4257f660f62e13",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k12-accepted-2026-10-08.md",
+          "sha256": "3a463fc58f5086478587bc406fbd682a346848d6e53ce47fcd41ae895f4cbb26"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/445#issuecomment-6052318737"
+      ]
+    },
+    {
+      "issue": 446,
+      "task": "T049",
+      "checkpoint": "K12",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T04:34:43Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/allergy-ui.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "e1b05478440a6639d07d8f6f8d6c8dbc2ed40c9c891e78cc9ef6255a90b0abb9",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k12-accepted-2026-10-08.md",
+          "sha256": "3a463fc58f5086478587bc406fbd682a346848d6e53ce47fcd41ae895f4cbb26"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/446#issuecomment-6052319397"
+      ]
+    },
+    {
+      "issue": 447,
+      "task": "T050",
+      "checkpoint": "K12",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T04:34:46Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K12/us1-demo.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "ba03e638767f06dacbad4c7ab8d1ca6dede0b71f036743adefe80046fd24e95c",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k12-accepted-2026-10-08.md",
+          "sha256": "3a463fc58f5086478587bc406fbd682a346848d6e53ce47fcd41ae895f4cbb26"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/447#issuecomment-6052320031"
+      ]
+    },
+    {
+      "issue": 448,
+      "task": "T051",
+      "checkpoint": "K13",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T05:44:34Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/verify-api-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "2028530245c64f2d466c099a06d172b0c46ab67b33f2728822ec330a42094584",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k13-accepted-2026-10-08.md",
+          "sha256": "7ea8f326202b85111add0f7a69259ef22ff5d4bbf54c0050d92d829762619a91"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/448#issuecomment-6053228840"
+      ]
+    },
+    {
+      "issue": 449,
+      "task": "T052",
+      "checkpoint": "K13",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T05:44:37Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/verify-api.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "157996f053362aa3e283d6f058e6d7c01a63134ca67cd5da34f29c1ef34fac5d",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k13-accepted-2026-10-08.md",
+          "sha256": "7ea8f326202b85111add0f7a69259ef22ff5d4bbf54c0050d92d829762619a91"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/449#issuecomment-6053229452"
+      ]
+    },
+    {
+      "issue": 450,
+      "task": "T053",
+      "checkpoint": "K13",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T05:44:40Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K13/verify-api-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "157996f053362aa3e283d6f058e6d7c01a63134ca67cd5da34f29c1ef34fac5d",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k13-accepted-2026-10-08.md",
+          "sha256": "7ea8f326202b85111add0f7a69259ef22ff5d4bbf54c0050d92d829762619a91"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/450#issuecomment-6053230122"
+      ]
+    },
+    {
+      "issue": 451,
+      "task": "T054",
+      "checkpoint": "K14",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T05:44:42Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/verify-ui-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "3362c67c0078289284d5c56e1143b12509ffa43ff5583eedd2832b81db9aa09f",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k14-accepted-2026-10-08.md",
+          "sha256": "d5f4fa82f15b4fc8ffbce20e59a7a0833872244add2794a2930d7181cebf04a8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/451#issuecomment-6053230628"
+      ]
+    },
+    {
+      "issue": 452,
+      "task": "T055",
+      "checkpoint": "K14",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T05:44:45Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/verify-ui.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "a685934852685813e26cff4daf87ffd13eb08383d13b15e4407bcc72d71560d9",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k14-accepted-2026-10-08.md",
+          "sha256": "d5f4fa82f15b4fc8ffbce20e59a7a0833872244add2794a2930d7181cebf04a8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/452#issuecomment-6053231250"
+      ]
+    },
+    {
+      "issue": 453,
+      "task": "T056",
+      "checkpoint": "K14",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T05:44:48Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K14/us2-demo.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "4db13c5978018784f931ae99a4faed8507402fbb1cb72eb1eea4863bb4208e9e",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k14-accepted-2026-10-08.md",
+          "sha256": "d5f4fa82f15b4fc8ffbce20e59a7a0833872244add2794a2930d7181cebf04a8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/453#issuecomment-6053231847"
+      ]
+    },
+    {
+      "issue": 454,
+      "task": "T057",
+      "checkpoint": "K15",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T07:03:24Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K15/draft-api-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "b23a23f0ae3b6e73290b1e1aeb97e04f4e413fe6d32d83ce18563c080097146a",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k15-accepted-2026-10-08.md",
+          "sha256": "27e29352b6622f45c96aa916921a3f3f687fbeb7d8813083955866f2e56adc26"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/454#issuecomment-6054451366"
+      ]
+    },
+    {
+      "issue": 455,
+      "task": "T058",
+      "checkpoint": "K15",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T07:03:27Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K15/draft-api.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "9cc1815f029a2978d7300255de0fc4fd26cdbf8d0bb3f6523a525bda500c4972",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k15-accepted-2026-10-08.md",
+          "sha256": "27e29352b6622f45c96aa916921a3f3f687fbeb7d8813083955866f2e56adc26"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/455#issuecomment-6054452138"
+      ]
+    },
+    {
+      "issue": 456,
+      "task": "T059",
+      "checkpoint": "K15",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T07:03:30Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K15/draft-api-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "9cc1815f029a2978d7300255de0fc4fd26cdbf8d0bb3f6523a525bda500c4972",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k15-accepted-2026-10-08.md",
+          "sha256": "27e29352b6622f45c96aa916921a3f3f687fbeb7d8813083955866f2e56adc26"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/456#issuecomment-6054453021"
+      ]
+    },
+    {
+      "issue": 457,
+      "task": "T060",
+      "checkpoint": "K16",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T07:03:32Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K16/sign-api-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "1c9334bdaa77707001a5e69936c79fef3e8cd4e22fc503dc8fbaec45cd8f9cc4",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k16-accepted-2026-10-08.md",
+          "sha256": "247bdafc67038116a613b496604cc9e87e31941db2261cd01df0dd4a1a1f00a2"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/457#issuecomment-6054453757"
+      ]
+    },
+    {
+      "issue": 458,
+      "task": "T061",
+      "checkpoint": "K16",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T07:03:34Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K16/sign-api.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "308eeaa3064d3561bac73c154f6f1b596d8bf7ea6071b328729d7d0c47129b82",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k16-accepted-2026-10-08.md",
+          "sha256": "247bdafc67038116a613b496604cc9e87e31941db2261cd01df0dd4a1a1f00a2"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/458#issuecomment-6054454390"
+      ]
+    },
+    {
+      "issue": 459,
+      "task": "T062",
+      "checkpoint": "K16",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-08T07:03:36Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K16/sign-api-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "308eeaa3064d3561bac73c154f6f1b596d8bf7ea6071b328729d7d0c47129b82",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k16-accepted-2026-10-08.md",
+          "sha256": "247bdafc67038116a613b496604cc9e87e31941db2261cd01df0dd4a1a1f00a2"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/459#issuecomment-6054455129"
+      ]
+    },
+    {
+      "issue": 460,
+      "task": "T063",
+      "checkpoint": "K17",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T08:19:09Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publish-api-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "27ac4c2e054e80bf007d07a4f29180299d0e62a12d33847227725db5d1c37879",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k17-accepted-2026-10-09.md",
+          "sha256": "a40e44f4a27fdf4d13ccad7cf1989f0abbc529491f8f30948029e400e2435962"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/460#issuecomment-6077191603"
+      ]
+    },
+    {
+      "issue": 461,
+      "task": "T064",
+      "checkpoint": "K17",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T08:19:12Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publish-api.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k17-accepted-2026-10-09.md",
+          "sha256": "a40e44f4a27fdf4d13ccad7cf1989f0abbc529491f8f30948029e400e2435962"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/461#issuecomment-6077192164"
+      ]
+    },
+    {
+      "issue": 462,
+      "task": "T065",
+      "checkpoint": "K17",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T08:19:14Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publish-races.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k17-accepted-2026-10-09.md",
+          "sha256": "a40e44f4a27fdf4d13ccad7cf1989f0abbc529491f8f30948029e400e2435962"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/462#issuecomment-6077192694"
+      ]
+    },
+    {
+      "issue": 463,
+      "task": "T066",
+      "checkpoint": "K17",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T08:19:16Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/eligibility-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "d022b65df25f2e6987cf34001a3fbfe80ad2c9358c5d206b8db2b84b89abde32",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k17-accepted-2026-10-09.md",
+          "sha256": "a40e44f4a27fdf4d13ccad7cf1989f0abbc529491f8f30948029e400e2435962"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/463#issuecomment-6077193243"
+      ]
+    },
+    {
+      "issue": 464,
+      "task": "T067",
+      "checkpoint": "K18",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T08:19:18Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/review-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "be7cba2e380f0ad7b84ce76846555150f6e5b6c07afe929525ba169150f3facd",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k18-accepted-2026-10-09.md",
+          "sha256": "669c3ae7bd4576a436fed38baaab25a40dcd96d586525f81c3246f0a13b311d8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/464#issuecomment-6077193761"
+      ]
+    },
+    {
+      "issue": 465,
+      "task": "T068",
+      "checkpoint": "K18",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T08:19:21Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/governance-read.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "96ca6efd24b029a4e31b939d1baf94be772b076840b9a11c0044d0f4dd077bc3",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k18-accepted-2026-10-09.md",
+          "sha256": "669c3ae7bd4576a436fed38baaab25a40dcd96d586525f81c3246f0a13b311d8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/465#issuecomment-6077194271"
+      ]
+    },
+    {
+      "issue": 466,
+      "task": "T069",
+      "checkpoint": "K18",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T08:19:23Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K18/review-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "96ca6efd24b029a4e31b939d1baf94be772b076840b9a11c0044d0f4dd077bc3",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k18-accepted-2026-10-09.md",
+          "sha256": "669c3ae7bd4576a436fed38baaab25a40dcd96d586525f81c3246f0a13b311d8"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/466#issuecomment-6077194822"
+      ]
+    },
+    {
+      "issue": 467,
+      "task": "T070",
+      "checkpoint": "K19",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T09:39:29Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-ui-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "a21e0436c7e867d4bf9cab047d4f0bf0d3086e210d2ed78a6e818adca37499f8",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k19-accepted-2026-10-09.md",
+          "sha256": "dda7a551f185cdef067ad459d29165a69a9b96b0cbaedef705c88c81480be123"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/467#issuecomment-6078371606"
+      ]
+    },
+    {
+      "issue": 468,
+      "task": "T071",
+      "checkpoint": "K19",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T09:39:31Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-ui.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "658ac14b4e4c735e14be2b32d9c3fc3ab7ea1924f407c55968b4e5f392de0e1b",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k19-accepted-2026-10-09.md",
+          "sha256": "dda7a551f185cdef067ad459d29165a69a9b96b0cbaedef705c88c81480be123"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/468#issuecomment-6078372199"
+      ]
+    },
+    {
+      "issue": 469,
+      "task": "T072",
+      "checkpoint": "K19",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T09:39:33Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/admin-i18n.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "1c05a094873fed7f6eb263f39a6fa6896a707479dd023c4c7536a68bee334230",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k19-accepted-2026-10-09.md",
+          "sha256": "dda7a551f185cdef067ad459d29165a69a9b96b0cbaedef705c88c81480be123"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/469#issuecomment-6078372701"
+      ]
+    },
+    {
+      "issue": 470,
+      "task": "T073",
+      "checkpoint": "K19",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T09:39:35Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K19/us3-demo.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "ad02a1994be448e942b16cb1d52ab434948e07f50cdf94977ecf4cace7a385ad",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k19-accepted-2026-10-09.md",
+          "sha256": "dda7a551f185cdef067ad459d29165a69a9b96b0cbaedef705c88c81480be123"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/470#issuecomment-6078373203"
+      ]
+    },
+    {
+      "issue": 471,
+      "task": "T074",
+      "checkpoint": "K20",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T10:36:44Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/status-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "f9b30f9effcf7b2b71690e044ab805f30e1de8025f575db7d0162d739a524b16",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k20-accepted-2026-10-09.md",
+          "sha256": "717eef887a2557d931e0ce5b8a1770eed749060730bc5e3c6d4772ccb0f7e469"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/471#issuecomment-6079200190"
+      ]
+    },
+    {
+      "issue": 472,
+      "task": "T075",
+      "checkpoint": "K20",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T10:36:46Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/status.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "4dd2dd46e9811c52b01fae76b7e540d84a0ad8be7e1a5b8d5f8a187ce1bf146f",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k20-accepted-2026-10-09.md",
+          "sha256": "717eef887a2557d931e0ce5b8a1770eed749060730bc5e3c6d4772ccb0f7e469"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/472#issuecomment-6079200669"
+      ]
+    },
+    {
+      "issue": 473,
+      "task": "T076",
+      "checkpoint": "K20",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T10:36:48Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K20/status-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "ed534d102b6f47705de441c0b2ef8c46fb880ada34007533a9d0c59639de0b7e",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k20-accepted-2026-10-09.md",
+          "sha256": "717eef887a2557d931e0ce5b8a1770eed749060730bc5e3c6d4772ccb0f7e469"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/473#issuecomment-6079201125"
+      ]
+    },
+    {
+      "issue": 474,
+      "task": "T077",
+      "checkpoint": "K21",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T12:57:13Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/status-ui-red.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "fdeb8c2ba91117505d6b7b9bebfd15e36fd34625875e244928aa9f1ad0994bf2",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k21-accepted-2026-10-09.md",
+          "sha256": "0bd11a88ab7daf8653346d28eb31a7bec9fbda450f40b6c9451e835075e6c59b"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/474#issuecomment-6081342912"
+      ]
+    },
+    {
+      "issue": 475,
+      "task": "T078",
+      "checkpoint": "K21",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T12:57:15Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/status-ui.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "cc8bd2b5087b6a368a7bf792a09c5d4d12f9bc662ef2b90c1e86993856e904a2",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k21-accepted-2026-10-09.md",
+          "sha256": "0bd11a88ab7daf8653346d28eb31a7bec9fbda450f40b6c9451e835075e6c59b"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/475#issuecomment-6081343480"
+      ]
+    },
+    {
+      "issue": 476,
+      "task": "T079",
+      "checkpoint": "K21",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T12:57:19Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K21/us4-demo.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "41c6c5539cf9cca98e8f677a21671b14a9b1f74785912480acbd59fa7caf0ba7",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k21-accepted-2026-10-09.md",
+          "sha256": "0bd11a88ab7daf8653346d28eb31a7bec9fbda450f40b6c9451e835075e6c59b"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/476#issuecomment-6081344387"
+      ]
+    },
+    {
+      "issue": 477,
+      "task": "T080",
+      "checkpoint": "K22",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T14:19:05Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/composition-harness.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "f209e3307b61a0a18af8dff7db079acc5c490261ac942f705c6a49d91cc4dd70",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k22-accepted-2026-10-09.md",
+          "sha256": "0937b59c8a7ec16893dfcf0ac31cfb8f913afadbc7bdddc7b83de1478493ea06"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/477#issuecomment-6082768728"
+      ]
+    },
+    {
+      "issue": 478,
+      "task": "T081",
+      "checkpoint": "K22",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T14:19:08Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/all-races.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "b60b8d29636c023c9680bd55c70e282f6fec78eb29b1c76a1f35e526c3c28507",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k22-accepted-2026-10-09.md",
+          "sha256": "0937b59c8a7ec16893dfcf0ac31cfb8f913afadbc7bdddc7b83de1478493ea06"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/478#issuecomment-6082769454"
+      ]
+    },
+    {
+      "issue": 479,
+      "task": "T082",
+      "checkpoint": "K22",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T14:19:11Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/security-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "04b8d2d2f93e7fba340932ff099e843aa79745422520a0f11ed25d37c4ef6ab6",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k22-accepted-2026-10-09.md",
+          "sha256": "0937b59c8a7ec16893dfcf0ac31cfb8f913afadbc7bdddc7b83de1478493ea06"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/479#issuecomment-6082770411"
+      ]
+    },
+    {
+      "issue": 480,
+      "task": "T083",
+      "checkpoint": "K22",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T14:19:13Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22/atomic-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "b0b2a0d62fbdaa26cdc46106f8405a141b2657be2df1326b223b7cbceb74a852",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k22-accepted-2026-10-09.md",
+          "sha256": "0937b59c8a7ec16893dfcf0ac31cfb8f913afadbc7bdddc7b83de1478493ea06"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/480#issuecomment-6082771155"
+      ]
+    },
+    {
+      "issue": 481,
+      "task": "T084",
+      "checkpoint": "K23",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T15:17:18Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K23/ops-hardening.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "296b71084e5051aed7c904a4a62136bb757090a1f18c5684307b2dc3439c30a9",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k23-accepted-2026-10-09.md",
+          "sha256": "a2d979ec415e926ad61ea74510d9d209a726a538009b127d875d406373c0393d"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/481#issuecomment-6083784524"
+      ]
+    },
+    {
+      "issue": 482,
+      "task": "T085",
+      "checkpoint": "K23",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T15:17:21Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K23/performance-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "c7522f546383c7c16f4885bf38f1d725c783e7209792556be6104942ecd1bd56",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k23-accepted-2026-10-09.md",
+          "sha256": "a2d979ec415e926ad61ea74510d9d209a726a538009b127d875d406373c0393d"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/482#issuecomment-6083785437"
+      ]
+    },
+    {
+      "issue": 483,
+      "task": "T086",
+      "checkpoint": "K23",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T15:17:24Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K23/restore-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "6cb040c03f6bc1aafdc0a263b11a65c81383be2fd41ccf7fec9bce00e3ca63fa",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k23-accepted-2026-10-09.md",
+          "sha256": "a2d979ec415e926ad61ea74510d9d209a726a538009b127d875d406373c0393d"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/483#issuecomment-6083786317"
+      ]
+    },
+    {
+      "issue": 484,
+      "task": "T087",
+      "checkpoint": "K23",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-09T15:17:27Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K23/observability-proof.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "1872e79606036fb80640e0e02639b2a248ae3a0750e35d57670ab62b637ce4f7",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/k23-accepted-2026-10-09.md",
+          "sha256": "a2d979ec415e926ad61ea74510d9d209a726a538009b127d875d406373c0393d"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/484#issuecomment-6083787124"
+      ]
+    },
+    {
+      "issue": 485,
+      "task": "T088",
+      "checkpoint": "K24",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-11T08:57:18Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/bilingual-acceptance.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "ede39f1c05afe79afb8799c1de0955d6eacc97764bb0ed602fd2f0f9684f3e41",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/review.md",
+          "sha256": "1171fc63b3fd19c3cf52c5b65a7fd99987bcb9c19e85a3c8797098d57250931c"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/485#issuecomment-6107349727"
+      ]
+    },
+    {
+      "issue": 486,
+      "task": "T089",
+      "checkpoint": "K24",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-11T08:57:20Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-maintenance.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "70543804638a63ed1a91943815affd90a0092e5f2374f03c8358683dd99fed43",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/review.md",
+          "sha256": "1171fc63b3fd19c3cf52c5b65a7fd99987bcb9c19e85a3c8797098d57250931c"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/486#issuecomment-6107350088"
+      ]
+    },
+    {
+      "issue": 487,
+      "task": "T090",
+      "checkpoint": "K24",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-11T08:57:23Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/final-parity.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "f7665026e4a2dd8190687564110e8625766e1186c352bfa71b175904d6bedf3e",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/review.md",
+          "sha256": "1171fc63b3fd19c3cf52c5b65a7fd99987bcb9c19e85a3c8797098d57250931c"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/487#issuecomment-6107350415"
+      ]
+    },
+    {
+      "issue": 488,
+      "task": "T091",
+      "checkpoint": "K24",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-11T08:57:25Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/full-verify.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "f247792cef5a17625bdf21f30d6a8b525804683785f676f8b6f1467aab2f7c73",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/review.md",
+          "sha256": "1171fc63b3fd19c3cf52c5b65a7fd99987bcb9c19e85a3c8797098d57250931c"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/488#issuecomment-6107350711"
+      ]
+    },
+    {
+      "issue": 489,
+      "task": "T092",
+      "checkpoint": "K24",
+      "state": "CLOSED",
+      "state_reason": "COMPLETED",
+      "closed_at": "2026-10-11T08:57:28Z",
+      "handoff_valid": true,
+      "ledger_status": "CHECKED",
+      "evidence_path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/final-gates.json",
+      "evidence_in_merged_tree": true,
+      "evidence_sha256": "c6c5e3a30239733dd6ad555f3a140496d947f716a5fcffd6ad26245916751c32",
+      "acceptance_records": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/review.md",
+          "sha256": "1171fc63b3fd19c3cf52c5b65a7fd99987bcb9c19e85a3c8797098d57250931c"
+        }
+      ],
+      "issue_acceptance_comments": [
+        "https://github.com/YousefE1bana/shifaa-project/issues/489#issuecomment-6107351013"
+      ]
+    }
+  ]
+}

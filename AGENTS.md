@@ -14,9 +14,37 @@ Every spec 003+ must complete this sequence in order:
 5. Wait for every required GitHub status check to pass on the up-to-date branch.
 6. Stop for Yousef Osama to squash-merge the pull request; no external approver
    is required.
-7. Confirm remote `main` contains the squash merge and close the corresponding
-   Issue or Issues.
-8. Only then clean up the feature worktree and branch.
+7. Confirm remote `main` contains the squash merge.
+8. Pass the Feature Artifact Finalization Gate below before declaring feature
+   closeout complete or cleaning up the feature worktree and branch.
+9. Only then close the corresponding feature closeout Issue or Issues and perform
+   authorized cleanup. Accepted task Issues may retain their recorded checkpoint
+   closure; this gate does not rewrite historical acceptance.
+
+## Feature Artifact Finalization Gate
+
+`specs/<feature>/` is the permanent home for official feature documentation,
+reviews, acceptance records, decisions, exceptions, and the evidence index.
+Apply [the mandatory gate](docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md)
+before closeout and before worktree or branch deletion. Prepare official outputs
+for the feature PR; confirm their integrity in merged remote `main` before cleanup.
+
+Inventory tracked, untracked, and relevant ignored files, then review and classify
+them. Keep essential evidence inside the feature folder or in a verified retained
+copy indexed there with paths, hashes, context, and retention reasons. Do not move
+build trees automatically into specs or place personal settings/setup files there.
+A complete worktree archive is a backup, not a substitute for organized outputs.
+Unclassified important files, inaccessible evidence, stale references, hash
+mismatches, or unresolved preservation gaps block finalization and cleanup.
+Preserve historical failures, named approval limits, and retained `OPEN-*` gates.
+
+## Current onboarding guidance
+
+Use [the maintained onboarding draft](docs/TEAM-ONBOARDING-DRAFT.md) for the
+reviewed Spec Kit 1.1.3 pin and the moved local setup-center location. The
+original installation checklist and roadmap remain unchanged because F011
+approved evidence binds their exact bytes. The finalization gate above applies
+additively without changing those frozen feature boundaries.
 
 ## Remaining feature authority
 

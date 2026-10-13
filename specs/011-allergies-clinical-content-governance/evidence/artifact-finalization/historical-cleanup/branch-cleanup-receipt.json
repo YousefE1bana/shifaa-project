@@ -1,0 +1,214 @@
+{
+  "status": "PASS",
+  "exact_branch": "codex/011-allergies-clinical-content-governance",
+  "preserved_source_head": "e2d1116b44d600ed2108c15530f3c22ff3daa13f",
+  "verified_squash_merge": "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+  "history_bundle_sha256": "44ab8ad8919ac3b9598aa4479cfc57e57468a45ddade0bf8245861fa9ddb5852",
+  "local_deletion": "git branch -d",
+  "remote_deletion": "git push origin --delete",
+  "local_and_remote_branch_absent": true,
+  "remote_main_unchanged": true,
+  "commands": [
+    {
+      "args": [
+        "gh",
+        "pr",
+        "view",
+        "490",
+        "--repo",
+        "YousefE1bana/shifaa-project",
+        "--json",
+        "state,headRefName,headRefOid,baseRefName,mergeCommit"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"baseRefName\":\"main\",\"headRefName\":\"codex/011-allergies-clinical-content-governance\",\"headRefOid\":\"e2d1116b44d600ed2108c15530f3c22ff3daa13f\",\"mergeCommit\":{\"oid\":\"e41abb4e008242f447dc7ba643ada0d3f712a5a7\"},\"state\":\"MERGED\"}\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "ls-remote",
+        "--heads",
+        "origin",
+        "main",
+        "codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "e2d1116b44d600ed2108c15530f3c22ff3daa13f\trefs/heads/codex/011-allergies-clinical-content-governance\ne41abb4e008242f447dc7ba643ada0d3f712a5a7\trefs/heads/main\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "rev-parse",
+        "refs/heads/codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "e2d1116b44d600ed2108c15530f3c22ff3daa13f\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "rev-parse",
+        "refs/remotes/origin/codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "e2d1116b44d600ed2108c15530f3c22ff3daa13f\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "rev-parse",
+        "--symbolic-full-name",
+        "codex/011-allergies-clinical-content-governance@{upstream}"
+      ],
+      "exit_code": 0,
+      "stdout": "refs/remotes/origin/codex/011-allergies-clinical-content-governance\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "e41abb4e008242f447dc7ba643ada0d3f712a5a7\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "symbolic-ref",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "refs/heads/main\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "worktree",
+        "list",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "stdout": "worktree D:/ECU/Gradution-Project\nHEAD e41abb4e008242f447dc7ba643ada0d3f712a5a7\nbranch refs/heads/main\n\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "diff",
+        "--quiet",
+        "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+        "e2d1116b44d600ed2108c15530f3c22ff3daa13f"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "branch",
+        "-d",
+        "codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "Deleted branch codex/011-allergies-clinical-content-governance (was e2d1116).\n",
+      "stderr": "warning: deleting branch 'codex/011-allergies-clinical-content-governance' that has been merged to\n         'refs/remotes/origin/codex/011-allergies-clinical-content-governance', but not yet merged to HEAD\n"
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "for-each-ref",
+        "--format=%(refname)",
+        "refs/heads/codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "ls-remote",
+        "--heads",
+        "origin",
+        "main",
+        "codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "e2d1116b44d600ed2108c15530f3c22ff3daa13f\trefs/heads/codex/011-allergies-clinical-content-governance\ne41abb4e008242f447dc7ba643ada0d3f712a5a7\trefs/heads/main\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "push",
+        "origin",
+        "--delete",
+        "codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "To https://github.com/YousefE1bana/shifaa-project.git\n - [deleted]         codex/011-allergies-clinical-content-governance\n"
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "ls-remote",
+        "--heads",
+        "origin",
+        "main",
+        "codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "e41abb4e008242f447dc7ba643ada0d3f712a5a7\trefs/heads/main\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "for-each-ref",
+        "--format=%(refname)",
+        "refs/remotes/origin/codex/011-allergies-clinical-content-governance"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

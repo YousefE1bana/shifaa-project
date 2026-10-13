@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "retained_file_count": 32353,
+  "retained_bytes": 3195839440,
+  "retained_link_metadata_count": 0,
+  "inventory_entry_count": 240445,
+  "inventory_regular_file_count": 199553,
+  "inventory_regular_file_bytes": 12173174761,
+  "retention_manifest_sha256": "bcf11a2762656e8e8290df68a3ea750cc9cb5a38c4eb56478654fca8db5bf20f",
+  "inventory_sha256": "ece04f5b3aba2644665a81ba038990f75bf691554b6ad8fdcdfa5107517d8c73",
+  "primary_unchanged": true,
+  "remote_main": "e41abb4e008242f447dc7ba643ada0d3f712a5a7"
+}

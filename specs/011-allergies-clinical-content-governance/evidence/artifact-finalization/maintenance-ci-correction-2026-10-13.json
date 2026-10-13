@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-13",
+  "scope": "Maintenance documentation boundary correction",
+  "result": "PASS_LOCAL_MAINTENANCE_CHECKS",
+  "failed_hosted_head": "e8ca49780e3d1d4b48600695fcc1993557195e59",
+  "failed_hosted_run": "https://github.com/YousefE1bana/shifaa-project/actions/runs/38418296412",
+  "first_hosted_result": {
+    "quality": "FAIL_DOCUMENTATION_INPUT_DRIFT",
+    "supabase": "FAIL_CONTRACT_ADMISSION",
+    "other_required_checks": "4_PASS"
+  },
+  "correction": "Preserve exact approved onboarding checklist and roadmap; retain corrected content in docs/TEAM-ONBOARDING-DRAFT.md, with AGENTS navigation. No verifier or sealed evidence edits.",
+  "local_checks": {
+    "pnpm_test": "PASS: 21 workspace tasks",
+    "pnpm_format_check": "PASS",
+    "documentation_successor_tests": "8_PASS including drift and missing-input negatives",
+    "feature011_contract_verification": "PASS_EXISTING_EVIDENCE_BINDING; no fresh physical/runtime acceptance",
+    "owned_skills": "PASS",
+    "secrets": "PASS"
+  },
+  "logs": [
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Artifact-Finalization\\2026-10-13-2d5c8c051d8f4186997d65c46a9b17f6\\closure-4a0791bab98d44a69d8ec513f368e4c8\\ci-quality-first-attempt.log",
+      "bytes": 126898,
+      "sha256": "e06e26f2eb01bbe8f4e3e868001aacb7913f28581105af0b04e64d762f3d5017"
+    },
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Artifact-Finalization\\2026-10-13-2d5c8c051d8f4186997d65c46a9b17f6\\closure-4a0791bab98d44a69d8ec513f368e4c8\\ci-supabase-first-attempt.log",
+      "bytes": 71157,
+      "sha256": "e9d80c8d0563eab39c30f775053251a3edf1512c4604aa5ea5c424d62ffaa930"
+    },
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Artifact-Finalization\\2026-10-13-2d5c8c051d8f4186997d65c46a9b17f6\\closure-4a0791bab98d44a69d8ec513f368e4c8\\maintenance-test-second-attempt.log",
+      "bytes": 66612,
+      "sha256": "54cda32ec83e3ce27a8d36ce15cc337e17f606fc95dcf3f9acbbc951452f71c9"
+    },
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Artifact-Finalization\\2026-10-13-2d5c8c051d8f4186997d65c46a9b17f6\\closure-4a0791bab98d44a69d8ec513f368e4c8\\maintenance-format-second-attempt.log",
+      "bytes": 609,
+      "sha256": "06a91549221843dcd3f011519bbe10fc6753a29d1888014b7804309bbe271c02"
+    }
+  ],
+  "full_pnpm_verify": "NOT_RUN: local database resets outside authorization",
+  "feature012_started": false,
+  "hosted_required_checks": "Fresh run required on final PR head; no merge authorization inferred"
+}

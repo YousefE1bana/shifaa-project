@@ -1,0 +1,9 @@
+{
+  "archive": "D:\\SHIFAA-Preservation\\F011-2026-10-13-65ffaa59b75e43a1a409373f7b7a0644\\f011-complete-worktree.zip",
+  "archive_bytes": 4588066562,
+  "archive_sha256": "7afa84867df233d6b797a2d92225025a8ce0ea20b90c530f0a1d3071f8e7d1c0",
+  "manifest_sha256": "ecb03d481368d6a1a6a6c0e8bfbd1d340dd8bb9cfe5346698dccbd6c412cba93",
+  "entries": 100215,
+  "status": "PRESERVED_PENDING_INDEPENDENT_EXTRACTION",
+  "elapsed_seconds": 219.4
+}

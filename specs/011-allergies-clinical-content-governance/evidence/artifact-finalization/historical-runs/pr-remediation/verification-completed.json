@@ -1,0 +1,11 @@
+{
+  "sealedPredecessorInputsRestored": true,
+  "exitCode": 0,
+  "browserRuntimeRepair": "browser-runtime-proof.json",
+  "diagnosticExpectationRepair": "tools/feature-011-protocol-parity.test.mjs",
+  "processGitLongpaths": true,
+  "command": "pnpm verify",
+  "startedAt": "2026-10-11T15:41:39.4601215Z",
+  "referralLocatorRepair": "apps/clinic/test/feature-010-referrals.browser.spec.ts",
+  "finishedAt": "2026-10-11T16:30:57.4260939Z"
+}

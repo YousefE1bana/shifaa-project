@@ -1,0 +1,15 @@
+{
+  "files": 85822,
+  "symlinks": 2367,
+  "directories": 12026,
+  "regular_file_bytes": 4550067195,
+  "symlink_target_bytes": 149303,
+  "tracked_paths": 5540,
+  "untracked_paths": 30,
+  "ignored_paths": 82618,
+  "long_path_files": 22921,
+  "max_original_path_length": 391,
+  "manifest_sha256": "ecb03d481368d6a1a6a6c0e8bfbd1d340dd8bb9cfe5346698dccbd6c412cba93",
+  "free_bytes_before": 173451116544,
+  "required_bytes": 14723943409
+}
