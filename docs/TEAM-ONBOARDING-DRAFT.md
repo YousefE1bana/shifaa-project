@@ -458,6 +458,23 @@ Source: `package.json / pnpm-lock.yaml / pnpm-workspace.yaml / .npmrc`.
 
 SHIFAA uses SpecKit as its only project lifecycle. No third-party skill can change the approved roadmap or integration rules.
 
+#### Proposed governance successor — Feature 012
+
+Read the [proposed F012 boundary and governance addendum](governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md)
+alongside the frozen roadmap. Its successor statements are not effective until
+the separately authorized governance change is explicitly approved and merged.
+The fixture and reviewer-discovery directions are approved in principle only;
+Feature 012 remains `NOT READY`, with separate lifecycle authorization required.
+
+The proposed guidance successor references the existing Spec Kit 1.1.3 pin,
+Codex integration metadata, agent-context 1.0.2, and SHIFAA workflow/registry
+2.3.0. Registered metadata and historical parsing evidence do not establish
+present execution compatibility. Resolve the recorded compatibility limitations,
+or approve an explicit stage-by-stage procedure preserving every governance gate,
+before automated lifecycle execution. The deprecated taskstoissues command does
+not authorize extension installation or replacement-command execution. No
+tooling pin, installation, or historical artifact changes are made by this note.
+
 #### Install the pinned Spec Kit CLI (Required)
 
 Tracked integration metadata pins 1.1.3; Codex is the sole registered/default integration with PowerShell and --skills. agent-context is 1.0.2. Install the exact official tag with uv; do not run specify init on this existing repository. An existing different CLI needs manual review, not a silent --force downgrade.

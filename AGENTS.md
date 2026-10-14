@@ -55,6 +55,13 @@ only the canonical material relevant to that feature and its listed
 dependencies; any boundary conflict requires a governance reconciliation before
 the feature's SpecKit lifecycle begins.
 
+For Feature 012, also read the
+[proposed boundary and governance addendum](docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md).
+Its successor statements are not effective until the separately authorized
+governance change is explicitly approved and merged. The two boundary directions
+are approved in principle only; Feature 012 remains `NOT READY`. This reference
+does not authorize fixtures, contract changes, or any SpecKit lifecycle stage.
+
 ## Shared agent skills
 
 Repository-owned SHIFAA skills and compact policy wrappers live in
