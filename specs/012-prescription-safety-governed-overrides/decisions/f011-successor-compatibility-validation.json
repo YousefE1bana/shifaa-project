@@ -1,0 +1,439 @@
+{
+  "recordId": "SHIFAA-F012-F011-SUCCESSOR-COMPATIBILITY-VALIDATION@1.0.0",
+  "preparedUtc": "2026-10-15T22:59:50.599809+00:00",
+  "authorization": "Yousef Osama direct instruction: SHIFAA — Fix F011 Historical Constitution Pin Without Reopening F011 (2026-10-16)",
+  "historicalFailedRun": 38818562483,
+  "rootCause": "F011 historical Constitution pin compared with current hash-bound conditional F012 successor; both quality/contracts and native Supabase jobs stop at the same guard.",
+  "compatibilityMechanism": "Existing documentation-successor module exports one shared Constitution successor reader. It verifies exact live approved Constitution, attributable owner decision, release manifest, immutable F011 approval manifest and three exact changed verification tools before reading immutable historical Git blobs. Other normative/runtime inputs retain live-byte verification.",
+  "historicalBaselineCommit": "862db9f66c19ccb8efa9163e5221845225b62174",
+  "priorPrHead": "dae62a105a8ccfdb529988dacb467738f49eae9c",
+  "runtime": {
+    "node": "24.18.0",
+    "pnpm": "11.13.0"
+  },
+  "additionalArtifacts": [
+    {
+      "path": "tools/feature-011-documentation-successor.mjs",
+      "bytes": 2655,
+      "sha256": "a939a4f9c92ed18dc8c1d859e0eea027d6be159cb0e926d441b4038ae8510283",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "tools/feature-011-constitution-successor.mjs",
+      "bytes": 5306,
+      "sha256": "633542331d00dfcad0606c49287fd4ae9b847bc63e90aa729bdfe8d5373f3ba6",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "tools/generate-feature-011-contract.mjs",
+      "bytes": 30936,
+      "sha256": "fad4a83f3e9ac72f6db17c44687ed90b4ea914b68cb5d1199e1539133c5acc58",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "tools/verify-feature-011-contracts.mjs",
+      "bytes": 39635,
+      "sha256": "0810e5b71b6ffb17cfc970f36685dc863256782d8bb54c7dd491cb2cb0c57573",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "packages/contracts/src/feature-011.test.ts",
+      "bytes": 29806,
+      "sha256": "0ddf75b4aa4028610f5574e33b81551b2c92a774bbadc32e075f6fac163a7743",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "packages/contracts/src/feature-011-successor.test.ts",
+      "bytes": 5947,
+      "sha256": "1d9fad7b02b76df1f57afe6593fd7e2b7a641523117f3460ab22ce768860a0fa",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/f011-constitution-successor-v1.json",
+      "bytes": 3224,
+      "sha256": "2d5d6ce7b833c0e388f94bc52b910aa677065fc5d45042dff41859f7efa8e1a7",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    }
+  ],
+  "additionalPublicationPaths": [
+    "tools/feature-011-documentation-successor.mjs",
+    "tools/feature-011-constitution-successor.mjs",
+    "tools/generate-feature-011-contract.mjs",
+    "tools/verify-feature-011-contracts.mjs",
+    "packages/contracts/src/feature-011.test.ts",
+    "packages/contracts/src/feature-011-successor.test.ts",
+    "specs/012-prescription-safety-governed-overrides/decisions/f011-constitution-successor-v1.json",
+    "specs/012-prescription-safety-governed-overrides/decisions/f011-successor-compatibility-validation.json"
+  ],
+  "additionalPathCount": 8,
+  "originalReleasePathCount": 44,
+  "totalPrPathsExpected": 52,
+  "originalReleaseArtifacts": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1510,
+      "sha256": "a6f349a58eba23d96ab13ac0d612b086a17c28ef0cc8d8c6ac012577e7accb55",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": ".specify/memory/SHIFAA-Constitution-F012-Amendment-v2.2.0.md",
+      "bytes": 11226,
+      "sha256": "e68dbcd5a5eed1fd6aeb33b4ca1cd96667e9d4801263f546d8e84b2f07345a38",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": ".specify/memory/constitution.md",
+      "bytes": 17725,
+      "sha256": "cc0204a2fcef7ee6e337fada07c160def4a7b51915ced944951cf0c8a1828a44",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": ".specify/templates/overrides/constitution-template.md",
+      "bytes": 12400,
+      "sha256": "247be9abb39c25ff941994b8d53486e46019aa5b9085cfdbbff21b8b4e55fff6",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": ".specify/templates/overrides/f012-synthetic-profile-supplement.md",
+      "bytes": 9403,
+      "sha256": "f6a51951fb6de0028fa47358da6f4b18949ce75d7c2490dc7aa80e0c04539c37",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": ".specify/templates/overrides/plan-template.md",
+      "bytes": 8537,
+      "sha256": "67578310d19c6b222d8a26037eedc6e115cc96d055fd32ff5cc4dfe31fecabb2",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": ".specify/templates/overrides/spec-template.md",
+      "bytes": 13845,
+      "sha256": "818d4885656ef0e060290aa49c6b8b2af6b7d7dd14cbfaa87f103d1203d30b06",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 15587,
+      "sha256": "214f8f086c31002d316026d8e46e5395da5f98d79a7048e4be699935e10240e1",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "bytes": 93489,
+      "sha256": "120e16b42b9ff92392cb1334350e0c278690d14ddbbdef4c874c3471a24963ce",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "docs/TEAM-ONBOARDING-DRAFT.md",
+      "bytes": 88174,
+      "sha256": "cadd71156d9c9beadc0c6f69081940f8f4521c1e1130959bd1b2fd87382c8f05",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+      "bytes": 32968,
+      "sha256": "f2c0d33837a53eb1658a3024668544e76aa6929c301743be25a0cef4a39e2eab",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "bytes": 29454,
+      "sha256": "4cfc67583831139118e51d9b229eb1323d7f2cccd7929f5a410c3a6e4693e5f4",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Future-Feature-Readiness-Register.md",
+      "bytes": 9620,
+      "sha256": "0aaa6ed40813828b1f8979e3afdf2e5d8ee321ac723c656b7bee4274ee8b98d3",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "docs/governance/SHIFAA-MASTER-F012-Graduation-Amendment-v2.2.0.md",
+      "bytes": 16510,
+      "sha256": "e79273da3c4d9074f634637491f0a602b5d0a4aeb89ab31f1160436d14beb17a",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "docs/governance/SHIFAA-PRD-F012-Graduation-Amendment-v2.2.0.md",
+      "bytes": 8802,
+      "sha256": "079d888bc952dac92eb65975b4327aac11b07a96db1ce1365f0596bf0b6591aa",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+      "bytes": 10564,
+      "sha256": "553bd69557157f3298361de99eef49d59bf15f49cc1f64cc27ef9a9e18edede3",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "shifaa-prd.md",
+      "bytes": 97658,
+      "sha256": "3a010821c00cb6a1e9a05797779cbb8f5a3282889241251edfd77d79332f82b6",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md",
+      "bytes": 30175,
+      "sha256": "a0ea338bd91b5b39fd3ca1427f301374051c4b3d50b8d6f6640844926733b3f8",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/activation-and-decisions.md",
+      "bytes": 26101,
+      "sha256": "9a6223b90bff09082fb0cc8f73c8a9a229825ca4eec317b553dec227637bcf8e",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/constitutional-impact-review.md",
+      "bytes": 30607,
+      "sha256": "858c1bf17687cb813ce3f28556f6c30536b093ce801aec069b51e90ca02869bf",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/impact-inventory.json",
+      "bytes": 18722,
+      "sha256": "3f9bbfe0c9c950f1f01374c6242beacadded595a920fd315584cd6df8f36a96a",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+      "bytes": 213045,
+      "sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest.json",
+      "bytes": 90915,
+      "sha256": "2c9d997db26c805f4979cb999fce14e4d77f81c2e48fa1597e5907063988458b",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/release-candidate-inventory.json",
+      "bytes": 44419,
+      "sha256": "8e22b4e220410fe47eaff0aacb16fd0b0882b18d02273e65888fa1e4ea4bd939",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+      "bytes": 8871,
+      "sha256": "908f4b611052cdc9b1b0a24c46a5675832ea214aefae7648d625a929345567c2",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/clinical-pharmacist-review-questionnaire.md",
+      "bytes": 13239,
+      "sha256": "50df6d33958191cde635e605eae1caed54b3a28c904ad37fa493890d0bfcad96",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+      "bytes": 8480,
+      "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+      "bytes": 12415,
+      "sha256": "11c485ccd1505f176de63c4b012834e82f541beeb2e6cf7dcd7b7cd9a1c49135",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+      "bytes": 64001,
+      "sha256": "ede4fc0157b5b48a32b6c3919d4b63ab01dfcc376781f75751699d19872ffc9c",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+      "bytes": 5953,
+      "sha256": "6f5255c2a994f58c983add1206c8f922aac078a8ef1f140d8f61c2273081fb93",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+      "bytes": 5728,
+      "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+      "bytes": 3643,
+      "sha256": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+      "bytes": 8983,
+      "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+      "bytes": 26032,
+      "sha256": "52e61305c4c2cc5625834b6ec612685fb28704ce55eb9e07238c0f8985ce9f52",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+      "bytes": 4007,
+      "sha256": "d534b0f6ab59359b9d953cf83f8a7ebc116239228fd99b37107a72f0751bbbb0",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md",
+      "bytes": 36610,
+      "sha256": "6bfa1ad63411aaffeed638bb1ac0b29cc685d530db871747b1eaad42c8141b95",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/p01-p30-source-crosswalk.md",
+      "bytes": 14704,
+      "sha256": "1aa813197b88ac0ae9f7dd8b63d560de2b4412fc36fdbdaf1b7e4946f4265afd",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+      "bytes": 111351,
+      "sha256": "2f7e260089c39041eb403867c7d671ef7d921c85af77eb95e01b8cd174a063f7",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+      "bytes": 62355,
+      "sha256": "4440f2139c4b152efb8d01e708ec6330ab57310b136acbb0487a3f5c1d03dbaa",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-review.md",
+      "bytes": 6850,
+      "sha256": "527911ec0200d349259c36e69ced237436ce08b8d9fc886be9adc4788b79dfc9",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+      "bytes": 9729,
+      "sha256": "1917e6d9590992b19febfb5d6b060d21755a60637e2494431ff0beb02807964d",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+      "bytes": 10691,
+      "sha256": "629e5db455ed02f15b606a0b46aaf99d76b30e5c89308836c67c840b352f771d",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+      "bytes": 4593,
+      "sha256": "5a219ade402438c542cb306b32b85a21ea08ccd7d02444952efc552e62f813ca",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+      "bytes": 13585,
+      "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185",
+      "publication": "CLEARED_TOOLING_TEST_OR_ATTRIBUTABLE_COMPATIBILITY_EVIDENCE_NO_PRIVATE_SOURCE_CONTENT"
+    }
+  ],
+  "preservation": {
+    "f011Records": 2774,
+    "f011OriginalSha256Index": "0a6323056fd99c0edd8c183bb50480a59ed773d5182327bcb59b3a9ae1732e70",
+    "f011Changed": [],
+    "originalReleaseFiles": 44,
+    "originalReleaseChanged": [],
+    "otherPreexistingChanged": [],
+    "changedTooling": [
+      "packages/contracts/src/feature-011.test.ts",
+      "tools/feature-011-documentation-successor.mjs",
+      "tools/generate-feature-011-contract.mjs",
+      "tools/verify-feature-011-contracts.mjs"
+    ],
+    "baseCommit": "dae62a105a8ccfdb529988dacb467738f49eae9c",
+    "f011GitTree": "ee8590c2d3c68257e77bd95267b778d5612722eb",
+    "privateReadinessOriginalsHashMatched": 23,
+    "privateSourceStreamsHashMatched": 8,
+    "indexDigestMethod": "SHA-256 of JSON encoding of sorted repository-relative path to raw SHA-256 map; all 2774 F011 files independently rehashed against pre-edit inventory."
+  },
+  "checks": [
+    {
+      "command": "pnpm --filter @shifaa/contracts exec vitest run src/feature-011-successor.test.ts src/feature-011.test.ts",
+      "result": "PASS",
+      "tests": 54
+    },
+    {
+      "command": "node tools/verify-feature-011-contracts.mjs",
+      "result": "PASS",
+      "meaning": "Historical acceptance integrity and exact current successor compatibility; not a new clinical acceptance cycle."
+    },
+    {
+      "command": "pnpm exec turbo run test --concurrency=1",
+      "result": "PASS",
+      "tasks": 21,
+      "cachedTasks": 19
+    },
+    {
+      "command": "pnpm --filter @shifaa/api exec vitest run test/facility-onboarding.integration.test.ts test/identity-onboarding.integration.test.ts",
+      "result": "PASS",
+      "tests": 19
+    },
+    {
+      "command": "node --test tools/start-feature-011-native-supabase.test.mjs tools/reset-feature-011-native-supabase.test.mjs tools/feature-011-native-supabase-bootstrap.test.mjs tools/feature-011-evidence-head.test.mjs tools/feature-011-pr-review-binding.test.mjs",
+      "result": "PASS",
+      "tests": 15
+    },
+    {
+      "command": "pnpm format:check",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm contracts:check",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm architecture:check",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm secrets:check",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm lint",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm typecheck",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "regressionCoverage": [
+    "Exact approved conditional successor; historical Constitution binding unchanged",
+    "Unchanged historical Constitution without successor",
+    "Corrupted or missing successor binding",
+    "Missing or altered owner approval",
+    "Corrupted release manifest",
+    "Changed original F011 approval",
+    "Unapproved changed verification tooling",
+    "Premature effective status rejected; unverified receipt cannot activate governance",
+    "Unrelated normative inputs remain live",
+    "Existing F011 canonicalization, negative preparation and fail-closed physical evidence tests retained"
+  ],
+  "observedLocalFailure": "Initial parallel pnpm test encountered two unrelated API 5000ms timeouts during concurrent formatting/verification. Both isolated API suites passed (19 tests); serialized workspace test run then passed all 21 tasks. No test timeout or assertion was relaxed.",
+  "notExecuted": [
+    "No host database reset, pnpm verify, or native Supabase runtime reset; current authorized ephemeral GitHub CI must verify runtime.",
+    "Live Arabic/English acceptance remains EXPLICITLY DEFERRED FOR THIS GOVERNANCE-ONLY PR by prior one-time Product Owner exception; not PASS.",
+    "No SpecKit lifecycle, clinical review, F012 activation, PR B or merge."
+  ],
+  "restrictions": [
+    "F012 NOT READY — PRE_SPECIFY_BLOCKED",
+    "Ten effective operations; twelve remains candidate",
+    "Constitution successor effective=false; separately authorized PR B required",
+    "All clinical/legal/production authority and OPEN gates unchanged",
+    "Original 44 release artifacts and approval manifest unchanged",
+    "No private/raw sources, recovery receipts or archives included"
+  ],
+  "hashGraph": "This record hashes seven known compatibility artifacts and the unchanged original 44 release artifacts. It excludes its own bytes and future commits/CI outcomes. Commit and final report bind this record externally."
+}

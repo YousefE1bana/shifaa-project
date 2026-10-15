@@ -1,0 +1,68 @@
+{
+  "bindingId": "SHIFAA-F011-CONSTITUTION-SUCCESSOR@1.0.0",
+  "version": "1.0.0",
+  "authorization": {
+    "name": "Yousef Osama",
+    "capacity": "SHIFAA Product Owner",
+    "date": "2026-10-16",
+    "source": "Direct conversation instruction: SHIFAA — Fix F011 Historical Constitution Pin Without Reopening F011",
+    "scope": "Verification-tooling and regression compatibility only; no reopening F011, new clinical acceptance, activation, or changes to the original 44 release artifacts."
+  },
+  "publicationState": "APPROVED_FOR_CONDITIONAL_ACTIVATION",
+  "effective": false,
+  "historicalConstitution": {
+    "path": ".specify/memory/constitution.md",
+    "bytes": 5326,
+    "sha256": "25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a",
+    "blob": "111828f80850e0090ef8040e5bb8f2adbedf1b51"
+  },
+  "historicalBaselineCommit": "862db9f66c19ccb8efa9163e5221845225b62174",
+  "successor": {
+    "path": ".specify/memory/constitution.md",
+    "bytes": 17725,
+    "sha256": "cc0204a2fcef7ee6e337fada07c160def4a7b51915ced944951cf0c8a1828a44",
+    "version": "3.0.0"
+  },
+  "approval": {
+    "path": "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md",
+    "bytes": 30175,
+    "sha256": "a0ea338bd91b5b39fd3ca1427f301374051c4b3d50b8d6f6640844926733b3f8"
+  },
+  "releaseManifest": {
+    "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+    "bytes": 62355,
+    "sha256": "4440f2139c4b152efb8d01e708ec6330ab57310b136acbb0487a3f5c1d03dbaa"
+  },
+  "verificationTools": [
+    {
+      "path": "tools/feature-011-documentation-successor.mjs",
+      "bytes": 2414,
+      "sha256": "f8982d8c51be29315d636aa11989a3080a436e92644d3cddeeeddffdb58c456c",
+      "blob": "b7e12b7090a08510eba0976e78f7afce6136bc93",
+      "currentSha256": "a939a4f9c92ed18dc8c1d859e0eea027d6be159cb0e926d441b4038ae8510283",
+      "currentBytes": 2655
+    },
+    {
+      "path": "tools/generate-feature-011-contract.mjs",
+      "bytes": 30820,
+      "sha256": "9f3f030df595c7c9acee0e549a9c5e39cd5dfd1323ed08a47c61bd7df11ab569",
+      "blob": "fa9364867171ce2bbc75c386af2ea83550452267",
+      "currentSha256": "fad4a83f3e9ac72f6db17c44687ed90b4ea914b68cb5d1199e1539133c5acc58",
+      "currentBytes": 30936
+    },
+    {
+      "path": "tools/verify-feature-011-contracts.mjs",
+      "bytes": 39075,
+      "sha256": "34be1753bbb68e310e90131053358072787249c129d6ed91528852630cea9f91",
+      "blob": "9d275b1887062d8de59461db0a1086039a9cfc28",
+      "currentSha256": "0810e5b71b6ffb17cfc970f36685dc863256782d8bb54c7dd491cb2cb0c57573",
+      "currentBytes": 39635
+    }
+  ],
+  "restrictions": [
+    "F011 clinical artifacts, vectors, physical parity evidence and OPEN gates remain unchanged.",
+    "The historical evidence view covers exactly the Constitution and three named verification-tool successors, after exact live-byte validation. All other source bytes remain current and checked.",
+    "The conditional Constitution is not effective; PR B and separate lifecycle authorization remain required.",
+    "The original 44-path release inventory and its approval are immutable; this compatibility binding is separately authorized."
+  ]
+}

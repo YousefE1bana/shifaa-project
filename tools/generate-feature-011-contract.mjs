@@ -6,7 +6,10 @@ import { fileURLToPath } from 'node:url';
 
 import { format } from 'prettier';
 import { parse } from 'yaml';
-import { readDocumentationSuccessor } from './feature-011-documentation-successor.mjs';
+import {
+  readDocumentationSuccessor,
+  readHistoricalVerificationInputs,
+} from './feature-011-documentation-successor.mjs';
 
 const defaultRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -282,10 +285,11 @@ export function readFeature011ProtocolMetadata(root = defaultRoot) {
     );
     const normativeInputDigests = {};
     const documentationSuccessor = readDocumentationSuccessor(root);
+    const readHistorical = readHistoricalVerificationInputs(root);
     for (const input of inputs) {
       const currentDigest = documentationSuccessor?.inputDigests[input.path] ?? input.sha256;
       protocolRequire(
-        sha256(read(input.path)) === currentDigest,
+        sha256(readHistorical(input.path)) === currentDigest,
         `approved input hash mismatch: ${input.path}`,
       );
       normativeInputDigests[input.path] = currentDigest;
