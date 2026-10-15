@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "0.2.0-proposal",
+  "proposedDatasetVersion": "1.0.0",
+  "approvalStatus": "PROPOSED_NOT_APPROVED",
+  "engineeringOnly": true,
+  "namespace": "urn:shifaa:engineering:f012",
+  "cases": [
+    {
+      "caseId": "SYNTHETIC_CASE_0001",
+      "purpose": "FLAGS_FALSE_MECHANISM_ONLY",
+      "item": {
+        "itemId": "00000000-0000-4000-8000-000000000001",
+        "prescriptionId": "00000000-0000-4000-8000-000000000010",
+        "productCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_PRODUCT_0001",
+          "version": "1.0.0-proposed"
+        },
+        "ingredientCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_INGREDIENT_0001",
+          "version": "1.0.0-proposed"
+        },
+        "strength": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_STRENGTH_UNIT"
+        },
+        "formCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_FORM_0001",
+          "version": "1.0.0-proposed"
+        },
+        "routeCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_ROUTE_0001",
+          "version": "1.0.0-proposed"
+        },
+        "dose": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_DOSE_UNIT"
+        },
+        "frequency": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_FREQUENCY_UNIT"
+        },
+        "duration": {
+          "value": "2",
+          "unitCode": "SYNTHETIC_DURATION_UNIT"
+        },
+        "quantity": {
+          "value": "2",
+          "unitCode": "SYNTHETIC_QUANTITY_UNIT"
+        },
+        "indicationCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_INDICATION_0001",
+          "version": "1.0.0-proposed"
+        },
+        "classificationEvidence": {
+          "contentVersion": "SYNTHETIC_CONTENT_MECHANISM_ONLY_0001",
+          "controlled": false,
+          "nti": false
+        },
+        "itemStatus": "SYNTHETIC_ITEM_STATUS"
+      }
+    },
+    {
+      "caseId": "SYNTHETIC_CASE_0002",
+      "purpose": "CONTROLLED_TRUE_MECHANISM_ONLY",
+      "item": {
+        "itemId": "00000000-0000-4000-8000-000000000002",
+        "prescriptionId": "00000000-0000-4000-8000-000000000010",
+        "productCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_PRODUCT_0002",
+          "version": "1.0.0-proposed"
+        },
+        "ingredientCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_INGREDIENT_0002",
+          "version": "1.0.0-proposed"
+        },
+        "strength": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_STRENGTH_UNIT"
+        },
+        "formCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_FORM_0001",
+          "version": "1.0.0-proposed"
+        },
+        "routeCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_ROUTE_0001",
+          "version": "1.0.0-proposed"
+        },
+        "dose": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_DOSE_UNIT"
+        },
+        "frequency": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_FREQUENCY_UNIT"
+        },
+        "duration": {
+          "value": "2",
+          "unitCode": "SYNTHETIC_DURATION_UNIT"
+        },
+        "quantity": {
+          "value": "2",
+          "unitCode": "SYNTHETIC_QUANTITY_UNIT"
+        },
+        "indicationCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_INDICATION_0001",
+          "version": "1.0.0-proposed"
+        },
+        "classificationEvidence": {
+          "contentVersion": "SYNTHETIC_CONTENT_MECHANISM_ONLY_0002",
+          "controlled": true,
+          "nti": false
+        },
+        "itemStatus": "SYNTHETIC_ITEM_STATUS"
+      }
+    },
+    {
+      "caseId": "SYNTHETIC_CASE_0003",
+      "purpose": "NTI_TRUE_MECHANISM_ONLY",
+      "item": {
+        "itemId": "00000000-0000-4000-8000-000000000003",
+        "prescriptionId": "00000000-0000-4000-8000-000000000010",
+        "productCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_PRODUCT_0003",
+          "version": "1.0.0-proposed"
+        },
+        "ingredientCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_INGREDIENT_0003",
+          "version": "1.0.0-proposed"
+        },
+        "strength": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_STRENGTH_UNIT"
+        },
+        "formCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_FORM_0001",
+          "version": "1.0.0-proposed"
+        },
+        "routeCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_ROUTE_0001",
+          "version": "1.0.0-proposed"
+        },
+        "dose": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_DOSE_UNIT"
+        },
+        "frequency": {
+          "value": "1",
+          "unitCode": "SYNTHETIC_FREQUENCY_UNIT"
+        },
+        "duration": {
+          "value": "2",
+          "unitCode": "SYNTHETIC_DURATION_UNIT"
+        },
+        "quantity": {
+          "value": "2",
+          "unitCode": "SYNTHETIC_QUANTITY_UNIT"
+        },
+        "indicationCoding": {
+          "system": "urn:shifaa:engineering:f012",
+          "code": "SYNTHETIC_INDICATION_0001",
+          "version": "1.0.0-proposed"
+        },
+        "classificationEvidence": {
+          "contentVersion": "SYNTHETIC_CONTENT_MECHANISM_ONLY_0003",
+          "controlled": false,
+          "nti": true
+        },
+        "itemStatus": "SYNTHETIC_ITEM_STATUS"
+      }
+    }
+  ]
+}

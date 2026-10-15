@@ -1,0 +1,136 @@
+{
+  "recordKind": "PRE_SPECIFY_READINESS_EVIDENCE",
+  "feature": "012",
+  "date": "2026-10-14",
+  "base": "862db9f66c19ccb8efa9163e5221845225b62174",
+  "branch": "codex/012-prescription-safety-readiness",
+  "status": "NOT READY",
+  "lifecycle": "PRE_SPECIFY_BLOCKED",
+  "scopeEligibility": "IDs present in active PRD and assigned roadmap; boundary eligibility remains blocked",
+  "closureRequirements": [
+    "FR-SAFE-001",
+    "FR-SAFE-003",
+    "FR-SAFE-004",
+    "FR-SAFE-005",
+    "FR-SAFE-006",
+    "FR-SAFE-007",
+    "FR-SAFE-011"
+  ],
+  "prerequisiteOnlyRequirements": [
+    "FR-SAFE-009",
+    "FR-SAFE-010"
+  ],
+  "nfrRequirements": [
+    "NFR-SEC-001",
+    "NFR-SEC-002",
+    "NFR-SEC-003",
+    "NFR-SEC-004",
+    "NFR-SEC-005",
+    "NFR-SEC-006",
+    "NFR-SEC-007",
+    "NFR-PRIV-001",
+    "NFR-PRIV-002",
+    "NFR-PRIV-004",
+    "NFR-I18N-001",
+    "NFR-A11Y-001",
+    "NFR-PERF-001",
+    "NFR-PERF-002",
+    "NFR-AVAIL-002",
+    "NFR-DATA-001",
+    "NFR-DATA-002",
+    "NFR-API-001",
+    "NFR-API-002",
+    "NFR-OBS-001",
+    "NFR-QUALITY-001",
+    "NFR-PORT-001"
+  ],
+  "operations": [
+    "createPrescription",
+    "updatePrescription",
+    "runPrescriptionSafety",
+    "acknowledgeWarning",
+    "requestContraindicatedOverride",
+    "decideOverride",
+    "signPrescription",
+    "cancelPrescription",
+    "getPrescription",
+    "listPatientMedications"
+  ],
+  "dependencies": [
+    "010",
+    "011"
+  ],
+  "exclusions": [
+    "F013 product catalog/search ownership",
+    "F014 fulfilment-worklist ownership",
+    "F014 FR-SAFE-009 closure",
+    "F019 FR-SAFE-010 no-auto-refill closure",
+    "production implementation",
+    "clinical/legal approval",
+    "Tasks"
+  ],
+  "counts": {
+    "closure": 7,
+    "prerequisiteOnly": 2,
+    "PATIENT": 22,
+    "F012": 10,
+    "F014": 16,
+    "activeCatalog": 242,
+    "reservations": 6,
+    "catalogTotal": 248,
+    "F007_024": 170,
+    "F012_024": 120,
+    "F026ParityTarget": 242
+  },
+  "scopeAuthority": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md#L118-L126",
+  "boundaryAuthority": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md#L121-L132",
+  "authorization": "Bounded readiness review and explicit exact-snapshot engineering-only fixture approval; no clinical/legal/reviewer policy, runtime contract or SpecKit lifecycle authorization",
+  "fixtureSchemaProposal": "0.2.0-proposal",
+  "fixtureDatasetProposal": "1.0.0 PROPOSED_NOT_APPROVED",
+  "approvalProvenance": {
+    "reviewerDirection": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md#L26-L33",
+    "engineeringDirection": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md#L15-L24",
+    "scope": "Addendum directions remain approved in principle. Subsequent direct approval covers only five exact hash-bound engineering proposal artifacts and three synthetic cases; complete reviewer journey remains unapproved.",
+    "engineeringSnapshotApproval": {
+      "record": "engineering-fixture-approval-2026-10-14.md",
+      "status": "APPROVED_EXACT_SNAPSHOT_ENGINEERING_ONLY",
+      "snapshotEnvelopeStatus": "PROPOSED_NOT_APPROVED",
+      "meaning": "Original proposal labels and version retained in immutable reviewed bytes; subsequent approval is separate, not production publication",
+      "approvedArtifacts": [
+        {
+          "path": "coded-input-proposal.md",
+          "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c",
+          "bytes": 8480
+        },
+        {
+          "path": "engineering-fixtures.candidate.json",
+          "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+          "bytes": 5728
+        },
+        {
+          "path": "engineering-fixtures.manifest.json",
+          "sha256": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af",
+          "bytes": 3643
+        },
+        {
+          "path": "engineering-fixtures.schema.json",
+          "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65",
+          "bytes": 8983
+        },
+        {
+          "path": "validate-readiness.ps1",
+          "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185",
+          "bytes": 13585
+        }
+      ]
+    }
+  },
+  "documentationHold": {
+    "requestedBy": "Yousef",
+    "request": "we will not start 012 until we recheck all our docs to prevent something like that again",
+    "status": "RECHECK_FINDINGS_OPEN",
+    "report": "documentation-recheck-report.md",
+    "earliestBlocked": "Before Specify",
+    "scope": "No lifecycle authorization or policy approval inferred"
+  }
+}

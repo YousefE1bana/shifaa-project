@@ -24,3 +24,5 @@ specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/ib
 # Third-party skills are mirrored byte-for-byte from their locked upstream trees.
 # Do not rewrite or reject upstream whitespace; project-authored files remain checked.
 .agents/skills/** -whitespace
+/specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md whitespace=-blank-at-eol

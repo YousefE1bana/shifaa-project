@@ -1,28 +1,44 @@
 # SHIFAA (شفاء) — Product Requirements Document
 
-> **Document ID:** SHIFAA-PRD
+> **Version:** 2.2.0 — prospective release candidate; not approved.
+> **Publication form:** PROSPECTIVE CONDITIONAL RELEASE — approval/effectiveness is established only by the bound approval and activation records.
+> **Conditional publication state:** APPROVED_FOR_CONDITIONAL_ACTIVATION (prospective only; this header asserts no approval).
+> **Current preparation limit:** Exact Product Owner approval is not recorded by preparation of this form; predecessor authority continues until verified activation.
+> **Publication bundle:** F012-GOVERNANCE/3.0.0
+> **Preparation history:** Prepared 2026-10-15. Authority is determined by the approval and activation records, never by this preparation date.
+> **Effective authority before activation:** Constitution 2.1.0 and PRD/Master 2.1.3 at Git commit `862db9f66c19ccb8efa9163e5221845225b62174` remain controlling until the verified activation receipt satisfies the canonical procedure. An integrated proposal does not withdraw that authority.
+
+### Historical predecessor metadata — not approval of this candidate
+
+> **Predecessor document id:** SHIFAA-PRD
 >
-> **Version:** 2.1.3
+> **Predecessor version:** 2.1.3
 >
-> **Status:** Approved implementation baseline; production authorization blockers remain open
+> **Predecessor status:** Approved implementation baseline; production authorization blockers remain open
 >
-> **Owner:** Product Owner
+> **Predecessor owner:** Product Owner
 >
-> **Approved by:** Yousef Osama
+> **Predecessor approved by:** Yousef Osama
 >
-> **Approved on:** 2-Sep-2026
+> **Predecessor approved on:** 2-Sep-2026
 >
-> **Approval version:** v2.1.3
+> **Predecessor approval version:** v2.1.3
 >
-> **Approval record:** [`OPEN-PRIV-001 decision package v1.0.0`](./specs/008-audit-admin-aggregates-observability/decisions/OPEN-PRIV-001-reidentification-risk-decision-package.md)
+> **Predecessor approval record:** [`OPEN-PRIV-001 decision package v1.0.0`](./specs/008-audit-admin-aggregates-observability/decisions/OPEN-PRIV-001-reidentification-risk-decision-package.md)
 >
-> **Last verified:** 2026-09-02 (Africa/Cairo)
+> **Predecessor last verified:** 2026-09-02 (Africa/Cairo)
 >
-> **Delivery target:** 2027-05-31
+> **Predecessor delivery target:** 2027-05-31
 
 ## 1. Purpose and authority
 
 SHIFAA is an Egyptian integrated digital-health platform connecting patients, clinics, pharmacies, hospitals, and diagnostic laboratories around one longitudinal patient record. The MVP must demonstrate a real end-to-end care journey without simulating a clinical, identity, pharmacy, or facility operation that is described as complete.
+
+For F012 only, the proposed [canonical Constitution Article VI applicability](./.specify/memory/constitution.md#vi-clinical-safety-requires-dual-governance), only after its fixed conditional publication, exact-content approval and independently verified activation receipt, permits a visibly labelled, isolated synthetic engineering demonstration. Such a demonstration can evidence software mechanisms, not a complete clinical operation, clinical acceptance or production authorization. FR-SAFE-012, genuine dual clinical signatures, lawful disclosure, professional eligibility, facility policy and production gates remain unchanged. Synthetic reviewer designations and rules confer no clinical authority. Q1–Q10 consists of Product Owner-supplied clinical consultation text used as advisory input. Original survey provenance, respondent identity and professional credentials have not been independently verified in repository evidence. This input establishes no professional sign-off, clinically validated rule bundle or regulatory approval.
+
+For the separately activated F012 non-clinical evidence-matching path in canonical Constitution Article VI, the graduation demonstration uses independently sourced genuine medication names and official attributed alert conditions with explicitly synthetic patient facts. It distinguishes an evidence-condition match from a complete clinically validated prescription-safety assessment. No-match is limited to the selected source predicate and never means safe; missing identity/context/source integrity yields insufficient evidence, with the overall assessment not_fully_checked. Products, registrations, codes, strengths, doses and class memberships must not be invented. This path permits engineering evidence for isolated source matching only; it provides no clinical release, professional approval, dispensing/administration authority, new operation or lifecycle permission. Existing clinical/production gates and immutable requirement ownership remain unchanged.
+
+The proposed applicability transfers no immutable requirement ID or ownership: seven F012 closure FRs, two prerequisite-only FRs and 22 PATIENT NFRs retain their roadmap allocation. The effective ten-operation inventory remains unchanged; 11/12-operation reviewer candidates require separate exact boundary approval. F013 retains catalog/search ownership; F014 retains fulfilment-worklist ownership. No other feature inherits this applicability and no OPEN item is closed or moved by it. Before receipt-based activation, approved PRD 2.1.3 at the recorded predecessor commit remains effective; a merged candidate never rescinds it. The final release-form status is APPROVED_FOR_CONDITIONAL_ACTIVATION, approved with its full bytes before PR A; authority changes only when the canonical activation predicate is satisfied, without a later header edit.
 
 This PRD is the source of truth for product intent, scope, numbered requirements, and acceptance outcomes. The [Master Implementation Plan](./SHIFAA-Implementation-Plan-MASTER.md) is authoritative for architecture and delivery governance. Machine and implementation contracts are owned by the supporting documents below:
 

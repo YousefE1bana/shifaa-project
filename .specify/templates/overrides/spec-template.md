@@ -1,5 +1,11 @@
 # Feature Specification: [FEATURE NAME]
 
+> **Publication form:** PROSPECTIVE CONDITIONAL RELEASE — approval/effectiveness is established only by the bound approval and activation records.
+> **Conditional publication state:** APPROVED_FOR_CONDITIONAL_ACTIVATION (prospective only; this header asserts no approval).
+> **Current preparation limit:** Exact Product Owner approval is not recorded by preparation of this form; predecessor authority continues until verified activation.
+> **Publication bundle:** F012-GOVERNANCE/3.0.0
+> Until verified activation, use the predecessor template at `862db9f66c19ccb8efa9163e5221845225b62174`. The F012 additions authorize no lifecycle stage.
+
 > Delete no mandatory section. Use `N/A — <objective reason>` where a section is truly inapplicable. `NEEDS CLARIFICATION` blocks `SPEC_APPROVED`; legal/clinical/UX/vendor choices must not be silently selected. Do not create this file unless every target ID passed the active-scope eligibility gate; `DEFERRED_POST_MVP`, `RETIRED`, reserved, and unknown IDs are forbidden.
 
 ## 0. Metadata and traceability
@@ -20,6 +26,14 @@
 | Dependencies | `[feature IDs and approved contract versions]` |
 | Parent roadmap entry | `[path + immutable ID or N/A]` |
 | Created / updated | `[YYYY-MM-DD / YYYY-MM-DD]` |
+
+### Proposed F012 input and evidence separation
+
+For F012 only, record the effective canonical Constitution path/version/SHA-256, approved PRD/Master/template hashes, durable exact-content approval, final integration-manifest hash, the approved activation receipt, observed remote-main SHA and separate stage authorization. The canonical two-phase publication procedure retains predecessor authority until receipt verification; a conditional-release header alone is insufficient. The canonical Constitution is the sole constitutional authority; v2.2.0 sidecars/supplement are supporting evidence requiring explicit reading, not automatically loaded overrides. Missing/inactive/inconsistent authority or unresolved reviewer boundary keeps pre-Specify blocked.
+
+Record engineering simulation scope and genuine clinical/production restrictions separately. Synthetic designation, content and decision evidence cannot populate professional credential/signature approval rows. Keep required clinical signatures OPEN when missing; identify their capability and earliest applicable gate. Preserve all mandatory sections, immutable FR/NFR ownership, ten operations, F013/F014 boundaries and existing OPEN IDs/owners. Mechanism-only positive/negative vectors can evidence engineering acceptance only under activated Article VI applicability, never clinical validation. Do not mark the whole clinical gate PASS or remove it as N/A because inputs are synthetic.
+
+For F012 non-clinical evidence matching, separately record source name/URL/page/date/digest, genuine medication-name identity evidence, exact source predicate, declared synthetic inputs, unresolved applicability and result category (source-condition match / specific-condition no-match / insufficient evidence). Preserve overall not_fully_checked and distinguish attributed source contraindication/warning wording from an executable clinical classification. A class is not a medicine; a documentary source key is not an approved production drug code. Keep source, engineering, clinical and release evidence separate. Apply only the activated canonical Article VI path; do not fabricate missing prescription carrier fields, clinical approval or professional answers. No real-patient input, clinical decision, F011 clinical publication or API amendment is authorized by this template.
 
 ## 1. Problem and scope
 

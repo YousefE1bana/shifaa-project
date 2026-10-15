@@ -1,5 +1,11 @@
 # Implementation Plan: [FEATURE]
 
+> **Publication form:** PROSPECTIVE CONDITIONAL RELEASE — approval/effectiveness is established only by the bound approval and activation records.
+> **Conditional publication state:** APPROVED_FOR_CONDITIONAL_ACTIVATION (prospective only; this header asserts no approval).
+> **Current preparation limit:** Exact Product Owner approval is not recorded by preparation of this form; predecessor authority continues until verified activation.
+> **Publication bundle:** F012-GOVERNANCE/3.0.0
+> Until verified activation, use the predecessor template at `862db9f66c19ccb8efa9163e5221845225b62174`. The F012 additions authorize no lifecycle stage.
+
 > **Feature:** `[NNN-short-name]` · **Spec version/status:** `[version / SPEC_APPROVED]`
 > **Target FR/NFR:** `[IDs]` · **Owner:** `[name/role]` · **Updated:** `[YYYY-MM-DD]`
 
@@ -34,6 +40,14 @@ For Articles I–XV, write `PASS — <implementation evidence>`, `N/A — <objec
 | XIII Accessibility/localization | [result] |
 | XIV Safety UI clarity | [result] |
 | XV Human authority over AI | [result] |
+
+### Proposed F012 engineering applicability check
+
+Record the effective canonical Constitution path/version/SHA-256, approved PRD/Master/template hashes, the exact-content approval, final integration-manifest hash, approved activation receipt and observed remote-main SHA, and separate stage authorization. Apply the canonical two-phase publication procedure; the predecessor remains effective until verified activation, and no header edit occurs after exact approval. Read supporting decisions/supplement explicitly; they are not competing normative authority or automatically loaded. A missing/inactive/mismatched input blocks applicability.
+
+Evaluate Article VI engineering conditions separately from genuine professional signatures. A design review or planned negative vector is not runtime PASS; synthetic mechanism evidence is not clinical validation. Preserve missing clinical/legal/facility approvals with the exact capability restriction and earliest applicable stage. No blanket synthetic-only release waiver, inherited permission, widened F011 rule-body access or operation amendment is permitted. Resolve protected F011 content consumption/current authority, state/version binding, RLS/disclosure, CAS/idempotency, recovery and UI contracts before Plan approval. No Tasks until architecture completeness, approval of the exact Plan and separate Tasks authorization. Preserve all clinical approval rows and OPEN gates; do not mark them passed by simulation.
+
+For an explicitly authorized F012 non-clinical evidence-matching plan, prove the activated canonical Article VI boundary: declared synthetic inputs, source integrity/version binding, exact bounded identity/predicate matching, missing-data handling, specific no-match versus safety, independent evidence/engineering/clinical/release statuses, context authorization and deployment isolation. The overall assessment remains not_fully_checked; no matched source statement grants a prescribing, override, dispensing or administration decision. Cover digest mismatch, unknown identity/class membership, missing age/exposure, stale snapshots and replay without clinical inference. Genuine clinical rule consumption and signature gates remain separate and blocked where applicable. Planned vectors are not executed PASS. Approval of the exact Plan, architecture completeness and separate Tasks authorization remain mandatory.
 
 ## 3. Technical context
 

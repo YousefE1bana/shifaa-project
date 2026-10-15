@@ -1,0 +1,1128 @@
+{
+  "document_id": "F012-REAL-MEDICINE-ACADEMIC-SOURCE-MANIFEST",
+  "version": "0.5.0-proposed",
+  "prepared_utc": "2026-10-15T22:20:50.026826+00:00",
+  "status": "FINAL_CONDITIONAL_RELEASE_CANDIDATE_EXACT_APPROVAL_PENDING_NOT_EFFECTIVE",
+  "feature_status": "NOT READY â€” PRE_SPECIFY_BLOCKED",
+  "owning_feature": "specs/012-prescription-safety-governed-overrides",
+  "policy_decision": "Existing actual PO interim academic-reference acceptance now binds the two exact supplied hashes. Unverified authorship and assistant analysis confer no professional approval. Changed candidate bytes require exact review.",
+  "missing_supplied_artifacts": [],
+  "originals": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/originals/eda-alert-index.html",
+      "bytes": 142493,
+      "sha256": "61acdaf66cbd5ae21ef6bba69df24c9694aa0807b756e481b0780eadd3175a83",
+      "source_id": "EDA-INDEX",
+      "url": "https://www.edaegypt.gov.eg/en/awareness/ca-of-pharmaceutical-care-publications/pharmacovigilance-publications/third-safety-alerts/",
+      "resolved_url": "https://www.edaegypt.gov.eg/en/awareness/ca-of-pharmaceutical-care-publications/pharmacovigilance-publications/third-safety-alerts/",
+      "publication_version": "Live index snapshot; no independent publication version",
+      "retrieved_utc": "2026-10-15T17:48:11.007832+00:00",
+      "http_etag": null,
+      "http_last_modified": null,
+      "http_metadata_limit": "HTTP modification time is not publication, clinical effective time or approval",
+      "rights": "No explicit redistribution licence established; retain original locally without public Git publication pending rights review",
+      "source_artifact_approval": "NEWLY_RETRIEVED_SNAPSHOT_NOT_EXACT_CONTENT_APPROVED",
+      "content_evidence": "OFFICIAL_STATEMENT_VERIFIED_WITH_STATED_CONTEXT_LIMITS",
+      "backup_and_restore": "HASH_MATCH_VERIFIED"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/originals/eda-nirmatrelvir-ritonavir-2025-05.pdf",
+      "bytes": 159579,
+      "sha256": "8ada614a96f13cb641bf201e826e8f05411e902687e62734b2526397cce0f2a2",
+      "source_id": "EDA-NR",
+      "url": "https://www.edaegypt.gov.eg/media/wttfsxfk/safety-alerts-nirmatrelvirritonavir.pdf",
+      "resolved_url": "https://www.edaegypt.gov.eg/media/wttfsxfk/safety-alerts-nirmatrelvirritonavir.pdf",
+      "publication_version": "May 2025, page 1",
+      "retrieved_utc": "2026-10-15T17:48:11.159529+00:00",
+      "http_etag": "\"7de29b2fc28dc1:0\"",
+      "http_last_modified": "Fri, 19 Sep 2025 00:31:10 GMT",
+      "http_metadata_limit": "HTTP modification time is not publication, clinical effective time or approval",
+      "rights": "No explicit redistribution licence established; retain original locally without public Git publication pending rights review",
+      "source_artifact_approval": "NEWLY_RETRIEVED_SNAPSHOT_NOT_EXACT_CONTENT_APPROVED",
+      "content_evidence": "OFFICIAL_STATEMENT_VERIFIED_WITH_STATED_CONTEXT_LIMITS",
+      "backup_and_restore": "HASH_MATCH_VERIFIED"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/originals/eda-promethazine-2024-07.pdf",
+      "bytes": 165792,
+      "sha256": "134a366b9bf83c98065d0da20d09ef9a9080f4e410a0fedeab71282f9ad7876d",
+      "source_id": "EDA-PM",
+      "url": "https://www.edaegypt.gov.eg/media/axrbqzfj/safety-alerts-promethazine.pdf",
+      "resolved_url": "https://www.edaegypt.gov.eg/media/axrbqzfj/safety-alerts-promethazine.pdf",
+      "publication_version": "July 2024, page 1",
+      "retrieved_utc": "2026-10-15T17:48:11.334987+00:00",
+      "http_etag": "\"37876f3e010dc1:0\"",
+      "http_last_modified": "Tue, 19 Aug 2025 08:12:05 GMT",
+      "http_metadata_limit": "HTTP modification time is not publication, clinical effective time or approval",
+      "rights": "No explicit redistribution licence established; retain original locally without public Git publication pending rights review",
+      "source_artifact_approval": "NEWLY_RETRIEVED_SNAPSHOT_NOT_EXACT_CONTENT_APPROVED",
+      "content_evidence": "OFFICIAL_STATEMENT_VERIFIED_WITH_STATED_CONTEXT_LIMITS",
+      "backup_and_restore": "HASH_MATCH_VERIFIED"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/originals/eda-bisoprolol-2026-02.pdf",
+      "bytes": 133337,
+      "sha256": "1f89183f5d500158e691df00af7c9f2d9b21bddd50b3124e1a85d5f05b238243",
+      "source_id": "EDA-BS",
+      "url": "https://www.edaegypt.gov.eg/media/liyfh5oj/bisoprolol-safety-alert.pdf",
+      "resolved_url": "https://www.edaegypt.gov.eg/media/liyfh5oj/bisoprolol-safety-alert.pdf",
+      "publication_version": "February 2026, page 1",
+      "retrieved_utc": "2026-10-15T17:48:11.480591+00:00",
+      "http_etag": "\"f298bf23b199dc1:0\"",
+      "http_last_modified": "Mon, 09 Feb 2026 10:45:00 GMT",
+      "http_metadata_limit": "HTTP modification time is not publication, clinical effective time or approval",
+      "rights": "No explicit redistribution licence established; retain original locally without public Git publication pending rights review",
+      "source_artifact_approval": "NEWLY_RETRIEVED_SNAPSHOT_NOT_EXACT_CONTENT_APPROVED",
+      "content_evidence": "OFFICIAL_STATEMENT_VERIFIED_WITH_STATED_CONTEXT_LIMITS",
+      "backup_and_restore": "HASH_MATCH_VERIFIED"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/originals/gahar-hospitals-2025-v2.pdf",
+      "bytes": 1943395,
+      "sha256": "825ae23527489a767c08760ecbd18371434fda134d48e75f3008510bb6e444ae",
+      "source_id": "GAHAR-2025",
+      "url": "https://www.gahar.gov.eg/upload/gahar-handbook-for-hospitals-accreditation-standards-2025---v2.pdf",
+      "resolved_url": "https://admin.gahar.gov.eg/uploads/media/gahar-handbook-for-hospitals-accreditation-standards-2025---v2.pdf",
+      "publication_version": "Hospitals Standards 2025; v2 URL; MMS.12 printed pages 310â€“311 (PDF page indices 310â€“311)",
+      "retrieved_utc": "2026-10-15T17:48:12.865848+00:00",
+      "http_etag": "\"1dbcee91dd4c763\"",
+      "http_last_modified": "Tue, 27 May 2025 09:24:16 GMT",
+      "http_metadata_limit": "HTTP modification time is not publication, clinical effective time or approval",
+      "rights": "No explicit redistribution licence established; retain original locally without public Git publication pending rights review",
+      "source_artifact_approval": "NEWLY_RETRIEVED_SNAPSHOT_NOT_EXACT_CONTENT_APPROVED",
+      "content_evidence": "OFFICIAL_STATEMENT_VERIFIED_WITH_STATED_CONTEXT_LIMITS",
+      "backup_and_restore": "HASH_MATCH_VERIFIED"
+    }
+  ],
+  "authored_artifacts": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-review.md",
+      "bytes": 6850,
+      "sha256": "527911ec0200d349259c36e69ced237436ce08b8d9fc886be9adc4788b79dfc9"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md",
+      "bytes": 36610,
+      "sha256": "6bfa1ad63411aaffeed638bb1ac0b29cc685d530db871747b1eaad42c8141b95"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/p01-p30-source-crosswalk.md",
+      "bytes": 14704,
+      "sha256": "1aa813197b88ac0ae9f7dd8b63d560de2b4412fc36fdbdaf1b7e4946f4265afd"
+    }
+  ],
+  "historical_release_candidate": [
+    {
+      "path": ".specify/memory/constitution.md",
+      "bytes": 15937,
+      "sha256": "cb5b69a5edcae4dfa007f536446e9f92de587cf37259650228ba9eed9a86082c",
+      "status": "PREPATCH_CANDIDATE_BYTES_RETAINED_IN_VERIFIED_PRIVATE_PREDECESSOR_COPY_NOT_CURRENT_NOT_APPROVED"
+    },
+    {
+      "path": "shifaa-prd.md",
+      "bytes": 96690,
+      "sha256": "e9403e2f5b227fd57de3a360783c47641def418f2cd190123b2d23e5c155cacb",
+      "status": "PREPATCH_CANDIDATE_BYTES_RETAINED_IN_VERIFIED_PRIVATE_PREDECESSOR_COPY_NOT_CURRENT_NOT_APPROVED"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "bytes": 91701,
+      "sha256": "1b0f01acd868047d7ab411da64c073f680b76f958add518ff3c8cce0511aa239",
+      "status": "PREPATCH_CANDIDATE_BYTES_RETAINED_IN_VERIFIED_PRIVATE_PREDECESSOR_COPY_NOT_CURRENT_NOT_APPROVED"
+    },
+    {
+      "path": ".specify/templates/overrides/constitution-template.md",
+      "bytes": 10612,
+      "sha256": "bfea8dd46eb36d279f462c9a8ca991f0fc8813110e376601b13d99d499be3571",
+      "status": "PREPATCH_CANDIDATE_BYTES_RETAINED_IN_VERIFIED_PRIVATE_PREDECESSOR_COPY_NOT_CURRENT_NOT_APPROVED"
+    },
+    {
+      "path": ".specify/templates/overrides/spec-template.md",
+      "bytes": 12961,
+      "sha256": "77ccca55ed6e716920ab899dda1125a7c22407721d4c4f18d62af30b319c33a4",
+      "status": "PREPATCH_CANDIDATE_BYTES_RETAINED_IN_VERIFIED_PRIVATE_PREDECESSOR_COPY_NOT_CURRENT_NOT_APPROVED"
+    },
+    {
+      "path": ".specify/templates/overrides/plan-template.md",
+      "bytes": 7618,
+      "sha256": "547dea91d6b9ec3cbcb1b7e0c7907cfe8955e2924bb9401081e61767fb16b87c",
+      "status": "PREPATCH_CANDIDATE_BYTES_RETAINED_IN_VERIFIED_PRIVATE_PREDECESSOR_COPY_NOT_CURRENT_NOT_APPROVED"
+    }
+  ],
+  "original_38_path_inventory": {
+    "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/release-candidate-inventory.json",
+    "bytes": 44419,
+    "sha256": "8e22b4e220410fe47eaff0aacb16fd0b0882b18d02273e65888fa1e4ea4bd939"
+  },
+  "original_retention_manifest": {
+    "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+    "bytes": 213045,
+    "sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2"
+  },
+  "source_verification": {
+    "methods": [
+      "Official EDA index and three original PDF text reads through web tool",
+      "Local original-byte downloads, SHA-256 and PDF magic checks",
+      "GAHAR 2025 MMS.12 official PDF web text inspection"
+    ],
+    "python": "3.14.6",
+    "pypdf": "6.16.0",
+    "local_EDA_extraction": "PASS_THREE_ONE_PAGE_PDFS",
+    "local_GAHAR_extraction": "NOT_COMPLETED_PYPDF_AES_CRYPTOGRAPHY_DEPENDENCY_UNAVAILABLE; web official PDF text inspected; no installation or decryption workaround",
+    "clinical_validation": "NOT_PERFORMED",
+    "runtime_or_F011_release_admissibility": "NOT_TESTED_NOT_AUTHORIZED",
+    "currency_limit": "Retrieval proves this snapshot was accessible; no exhaustive supersession/revocation/source-rights review or clinical signature verification"
+  },
+  "retention": {
+    "publication": "RAW_ORIGINALS_EXCLUDED_PENDING_REPRODUCTION_RIGHTS_REVIEW",
+    "source_directory_access": "Protected DACL allows only current Windows account, SYSTEM and Administrators; each file allowlist inspected",
+    "backup_root_locator": "specs/012-prescription-safety-governed-overrides/governance-remediation/private-evidence-preservation-receipt.json",
+    "backup_root_locator_sha256": "d4c5e50246923aa3fdb1205fbde423f30f6b90ad38c1557622f8c5766d94c4d1",
+    "backup_subtree": "source-addendum-20261015/original",
+    "restore_subtree": "source-addendum-20261015/restore-verification",
+    "relative_paths": "Original repository-relative feature paths preserved below both subtrees",
+    "backup_readback_restore": "PASS_ALL_5_NEW_ORIGINALS",
+    "limits": [
+      "No offsite/offline guarantee",
+      "No alternate-user logon denial test",
+      "No claim that local preservation satisfies merged-main finalization",
+      "Source worktree retained; no cleanup"
+    ],
+    "supplied_originals": {
+      "count": 3,
+      "canonical_location": "Owning F012 originals paths indexed above",
+      "access": "PASS: all three source files and six backup/restore files allow only current Windows account, SYSTEM and Administrators; SID allowlists inspected. No alternate-user logon test.",
+      "private_receipt_locator": "specs/012-prescription-safety-governed-overrides/governance-remediation/private-evidence-preservation-receipt.json",
+      "backup_subtree": "original-research-binding-20261015/original",
+      "restore_subtree": "original-research-binding-20261015/restore-verification",
+      "result": "PASS_3_ORIGINAL_BYTE_BACKUP_READBACK_AND_RESTORE_HASHES",
+      "predecessor_candidate_backup": "original-research-binding-20261015/predecessor-candidates",
+      "limits": "Same-account recovery verified; no offsite or alternate-user denial claim; worktree retained; finalization pending"
+    },
+    "current_readback_2026_10_16": {
+      "original_37_and_five_fixture_hashes": "PASS",
+      "private_originals_23_original_backup_restored_copy": "PASS_EXISTING_COPIES_REHASHED_NO_NEW_RESTORE",
+      "official_and_supplied_originals_8": "PASS_ORIGINAL_BACKUP_RESTORED_COPY_24_READS",
+      "source_acl": "31 files: 23 protected file ACLs; 8 inherit from protected originals directory; no allowed SID outside receipt allowlist. Initial overstrict per-file-protection assertion failed on inherited ACLs; effective allowlist and protected parent verified. No ACL edited.",
+      "limit": "No offsite/offline guarantee or alternate-user denial test; retain source worktree; artifact finalization remains pending."
+    }
+  },
+  "hash_exclusions": [
+    "No own, downstream decision or downstream inventory hash; final inventory/response supply these to avoid circularity.",
+    "Prior candidate hashes are provenance, not final approval."
+  ],
+  "scope": "Final conditional release preflight: six canonical/template headers already satisfy the prospective conditional form and remain byte-identical. Only exact-path Git whitespace handling and dependent manifest/inventory/approval proposal refreshed (four paths), within the unchanged 44-path candidate. No real-index stage, Git integration, activation or lifecycle authorization.",
+  "supplied_originals": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/originals/Pasted text(6).txt",
+      "bytes": 69309,
+      "sha256": "108fe1514afa96fe8c2fff1bd4b59477d6b21f611f4e9bd1d3c6a38a47e36fa7",
+      "source_id": "USER-RESEARCH",
+      "publication": "PRIVATE_NOT_FOR_GIT_PUBLICATION",
+      "classification": "USER_SUPPLIED_ACADEMIC_RESEARCH_UNVERIFIED_PROFESSIONAL_AUTHORSHIP",
+      "original_bytes": "UNCHANGED_HASH_MATCH",
+      "byte_recovery": "BACKUP_READBACK_AND_RESTORE_HASH_MATCH"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/originals/SHIFAA-F012-Interim-Source-Review-2026-10-15.md",
+      "bytes": 9189,
+      "sha256": "887fe99bf8b3fa038c2029ced2a19bf02b9d6a1ea81d76cd30f4e94e7b6c4345",
+      "source_id": "INTERIM-REVIEW",
+      "publication": "PRIVATE_NOT_FOR_GIT_PUBLICATION",
+      "classification": "ASSISTANT_PREPARED_ANALYSIS_NOT_PROFESSIONAL_SIGNOFF",
+      "original_bytes": "UNCHANGED_HASH_MATCH",
+      "byte_recovery": "BACKUP_READBACK_AND_RESTORE_HASH_MATCH"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/originals/TRANSFER-MANIFEST.json",
+      "bytes": 733,
+      "sha256": "cdc2e785852b2a16333fc80220367232619739d21b4d4bb2c4b14f5fc4a26e50",
+      "source_id": "TRANSFER-METADATA",
+      "publication": "PRIVATE_NOT_FOR_GIT_PUBLICATION",
+      "classification": "USER_SUPPLIED_TRANSFER_METADATA_NOT_AUTHORITY",
+      "original_bytes": "UNCHANGED_HASH_MATCH",
+      "byte_recovery": "BACKUP_READBACK_AND_RESTORE_HASH_MATCH"
+    }
+  ],
+  "transfer_archive": {
+    "filename": "SHIFAA-F012-Original-Research-Transfer.zip",
+    "bytes": 22475,
+    "sha256": "959911dce3c46dcc8c9b154e2c8f7b3516c9e62e3602c5cb722cf860cdf5ea9a",
+    "publication": "EXCLUDED_ARCHIVE_NOT_COPIED_OR_STAGED",
+    "verification": "WHITELIST_REGULAR_FILES_NO_TRAVERSAL_SYMLINKS_SIZE_RATIO_LIMITS_CRC_AND_EXPECTED_SHA256_MATCH"
+  },
+  "previous_documentary_candidate_hashes": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md",
+      "bytes": 10385,
+      "sha256": "3393628c8a0762b2695e51181d42bf441495958147896a9a57c00d55d8f7c46f"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-review.md",
+      "bytes": 7425,
+      "sha256": "da03a8a699edda109153769a0f29328fb9d16db4811e2277838580592415cc11"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md",
+      "bytes": 9430,
+      "sha256": "7b1ada270293f38508ff82edad290b614ad6a4d749a67c310a89e49e7299a57b"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/p01-p30-source-crosswalk.md",
+      "bytes": 10044,
+      "sha256": "0c8e5c4c2a44e8433cbc7aeb0976789d6dd2c672827c9206a5f5155b5964b6f9"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+      "bytes": 12006,
+      "sha256": "c3f5ae58eace8e516d8678ba35be391860472d0ec9a32921c8014b4733b394ad"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+      "bytes": 63318,
+      "sha256": "6d2a692c5a4b619489da98ebd076ec91bef13757e03a8a73708093acb0d16c1b"
+    }
+  ],
+  "research_mapping": {
+    "P01_P30": "Section line ranges mapped, not professional answers",
+    "T01_T12": "Original research lines 628â€“639; not clinical acceptance",
+    "source_version_conflict": "Research hospital locator/pages differ from independently checked 2025-v2; originals untouched",
+    "legal_and_other_claims": "NEEDS_SOURCE_VALIDATION_UNLESS_EXPLICITLY_VERIFIED"
+  },
+  "previous_binding_manifest": {
+    "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+    "bytes": 20741,
+    "sha256": "1f75663f990e565e19816f8d47b3320d66bc03947a8460a01f8f6d247e48d748"
+  },
+  "previous_documentary_candidate_hashes_after_original_binding": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+      "bytes": 20741,
+      "sha256": "1f75663f990e565e19816f8d47b3320d66bc03947a8460a01f8f6d247e48d748"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+      "bytes": 70572,
+      "sha256": "ba5adb36a046f50283f796d6009368582c339a23657eacd720afb4a85903cb09"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md",
+      "bytes": 11709,
+      "sha256": "af28d6f86ca5f3303958985b94994f7e0d3348cca1ad1efb1149e49e2a804f77"
+    }
+  ],
+  "applied_canonical_compatibility": {
+    "embedded_in": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md",
+    "diff_sha256": "2ca291e4bbc52ce0a759eac67834ff785f5665c77150f44ca0520fc4b4c9acf9",
+    "targets": [
+      {
+        "path": ".specify/memory/constitution.md",
+        "proposed_bytes": 17725,
+        "proposed_sha256": "cc0204a2fcef7ee6e337fada07c160def4a7b51915ced944951cf0c8a1828a44",
+        "status": "APPLIED_TO_UNMERGED_CANDIDATE_NOT_RATIFIED_NOT_EFFECTIVE",
+        "predecessor_bytes": 15937,
+        "predecessor_sha256": "cb5b69a5edcae4dfa007f536446e9f92de587cf37259650228ba9eed9a86082c",
+        "current_bytes": 17725,
+        "current_sha256": "cc0204a2fcef7ee6e337fada07c160def4a7b51915ced944951cf0c8a1828a44"
+      },
+      {
+        "path": ".specify/templates/overrides/constitution-template.md",
+        "proposed_bytes": 12400,
+        "proposed_sha256": "247be9abb39c25ff941994b8d53486e46019aa5b9085cfdbbff21b8b4e55fff6",
+        "status": "APPLIED_TO_UNMERGED_CANDIDATE_NOT_RATIFIED_NOT_EFFECTIVE",
+        "predecessor_bytes": 10612,
+        "predecessor_sha256": "bfea8dd46eb36d279f462c9a8ca991f0fc8813110e376601b13d99d499be3571",
+        "current_bytes": 12400,
+        "current_sha256": "247be9abb39c25ff941994b8d53486e46019aa5b9085cfdbbff21b8b4e55fff6"
+      },
+      {
+        "path": "shifaa-prd.md",
+        "proposed_bytes": 97658,
+        "proposed_sha256": "3a010821c00cb6a1e9a05797779cbb8f5a3282889241251edfd77d79332f82b6",
+        "status": "APPLIED_TO_UNMERGED_CANDIDATE_NOT_RATIFIED_NOT_EFFECTIVE",
+        "predecessor_bytes": 96690,
+        "predecessor_sha256": "e9403e2f5b227fd57de3a360783c47641def418f2cd190123b2d23e5c155cacb",
+        "current_bytes": 97658,
+        "current_sha256": "3a010821c00cb6a1e9a05797779cbb8f5a3282889241251edfd77d79332f82b6"
+      },
+      {
+        "path": "SHIFAA-Implementation-Plan-MASTER.md",
+        "proposed_bytes": 93489,
+        "proposed_sha256": "120e16b42b9ff92392cb1334350e0c278690d14ddbbdef4c874c3471a24963ce",
+        "status": "APPLIED_TO_UNMERGED_CANDIDATE_NOT_RATIFIED_NOT_EFFECTIVE",
+        "predecessor_bytes": 91701,
+        "predecessor_sha256": "1b0f01acd868047d7ab411da64c073f680b76f958add518ff3c8cce0511aa239",
+        "current_bytes": 93489,
+        "current_sha256": "120e16b42b9ff92392cb1334350e0c278690d14ddbbdef4c874c3471a24963ce"
+      },
+      {
+        "path": ".specify/templates/overrides/spec-template.md",
+        "proposed_bytes": 13845,
+        "proposed_sha256": "818d4885656ef0e060290aa49c6b8b2af6b7d7dd14cbfaa87f103d1203d30b06",
+        "status": "APPLIED_TO_UNMERGED_CANDIDATE_NOT_RATIFIED_NOT_EFFECTIVE",
+        "predecessor_bytes": 12961,
+        "predecessor_sha256": "77ccca55ed6e716920ab899dda1125a7c22407721d4c4f18d62af30b319c33a4",
+        "current_bytes": 13845,
+        "current_sha256": "818d4885656ef0e060290aa49c6b8b2af6b7d7dd14cbfaa87f103d1203d30b06"
+      },
+      {
+        "path": ".specify/templates/overrides/plan-template.md",
+        "proposed_bytes": 8537,
+        "proposed_sha256": "67578310d19c6b222d8a26037eedc6e115cc96d055fd32ff5cc4dfe31fecabb2",
+        "status": "APPLIED_TO_UNMERGED_CANDIDATE_NOT_RATIFIED_NOT_EFFECTIVE",
+        "predecessor_bytes": 7618,
+        "predecessor_sha256": "547dea91d6b9ec3cbcb1b7e0c7907cfe8955e2924bb9401081e61767fb16b87c",
+        "current_bytes": 8537,
+        "current_sha256": "67578310d19c6b222d8a26037eedc6e115cc96d055fd32ff5cc4dfe31fecabb2"
+      }
+    ],
+    "applied": true,
+    "approval": "PATCH_APPLICATION_AUTHORIZED_FINAL_RELEASE_BYTES_NOT_APPROVED",
+    "application_date": "2026-10-16",
+    "preparation_authority": "Direct Product Owner instruction: Apply Exact Governance Compatibility Patch; authorizes preparation only, not final release hashes or activation"
+  },
+  "supporting_reference_corrections": [
+    {
+      "path": ".specify/memory/SHIFAA-Constitution-F012-Amendment-v2.2.0.md",
+      "bytes": 11226,
+      "sha256": "e68dbcd5a5eed1fd6aeb33b4ca1cd96667e9d4801263f546d8e84b2f07345a38"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+      "bytes": 32968,
+      "sha256": "f2c0d33837a53eb1658a3024668544e76aa6929c301743be25a0cef4a39e2eab"
+    },
+    {
+      "path": ".specify/templates/overrides/f012-synthetic-profile-supplement.md",
+      "bytes": 9403,
+      "sha256": "f6a51951fb6de0028fa47358da6f4b18949ce75d7c2490dc7aa80e0c04539c37"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+      "bytes": 10564,
+      "sha256": "553bd69557157f3298361de99eef49d59bf15f49cc1f64cc27ef9a9e18edede3"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 15587,
+      "sha256": "214f8f086c31002d316026d8e46e5395da5f98d79a7048e4be699935e10240e1"
+    },
+    {
+      "path": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "bytes": 29454,
+      "sha256": "4cfc67583831139118e51d9b229eb1323d7f2cccd7929f5a410c3a6e4693e5f4"
+    }
+  ],
+  "release_binding_contract": {
+    "role": "Current final candidate artifact-binding and feature-owned retention integration manifest; not approval evidence",
+    "publication_inventory": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+    "publication_inventory_role": "Presentation of 44 exact paths, including approval-record candidate; downstream inventory is not an input to the approval-record hash graph",
+    "input_exclusions": [
+      "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+      "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md",
+      "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-activation-receipt.md"
+    ],
+    "exclusion_reason": "This manifest is bound externally by its known digest; the approval record does not bind its own bytes or a presentation inventory that hashes it; no future receipt bytes are approved.",
+    "final_exact_approval": "NOT_RECORDED. Existing interim PO source decision and patch application authorization are not exact release-byte approval.",
+    "retention_index": {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+      "bytes": 213045,
+      "sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2"
+    },
+    "legacy_inventory": "The retained 38-path inventory/diff and older approval sheets are predecessor evidence, not the current final release inventory.",
+    "precedence": "Canonical Constitution only; no sidecar or this manifest can activate governance."
+  },
+  "release_candidate_artifacts": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1510,
+      "sha256": "a6f349a58eba23d96ab13ac0d612b086a17c28ef0cc8d8c6ac012577e7accb55"
+    },
+    {
+      "path": ".specify/memory/SHIFAA-Constitution-F012-Amendment-v2.2.0.md",
+      "bytes": 11226,
+      "sha256": "e68dbcd5a5eed1fd6aeb33b4ca1cd96667e9d4801263f546d8e84b2f07345a38"
+    },
+    {
+      "path": ".specify/memory/constitution.md",
+      "bytes": 17725,
+      "sha256": "cc0204a2fcef7ee6e337fada07c160def4a7b51915ced944951cf0c8a1828a44"
+    },
+    {
+      "path": ".specify/templates/overrides/constitution-template.md",
+      "bytes": 12400,
+      "sha256": "247be9abb39c25ff941994b8d53486e46019aa5b9085cfdbbff21b8b4e55fff6"
+    },
+    {
+      "path": ".specify/templates/overrides/f012-synthetic-profile-supplement.md",
+      "bytes": 9403,
+      "sha256": "f6a51951fb6de0028fa47358da6f4b18949ce75d7c2490dc7aa80e0c04539c37"
+    },
+    {
+      "path": ".specify/templates/overrides/plan-template.md",
+      "bytes": 8537,
+      "sha256": "67578310d19c6b222d8a26037eedc6e115cc96d055fd32ff5cc4dfe31fecabb2"
+    },
+    {
+      "path": ".specify/templates/overrides/spec-template.md",
+      "bytes": 13845,
+      "sha256": "818d4885656ef0e060290aa49c6b8b2af6b7d7dd14cbfaa87f103d1203d30b06"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 15587,
+      "sha256": "214f8f086c31002d316026d8e46e5395da5f98d79a7048e4be699935e10240e1"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "bytes": 93489,
+      "sha256": "120e16b42b9ff92392cb1334350e0c278690d14ddbbdef4c874c3471a24963ce"
+    },
+    {
+      "path": "docs/TEAM-ONBOARDING-DRAFT.md",
+      "bytes": 88174,
+      "sha256": "cadd71156d9c9beadc0c6f69081940f8f4521c1e1130959bd1b2fd87382c8f05"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+      "bytes": 32968,
+      "sha256": "f2c0d33837a53eb1658a3024668544e76aa6929c301743be25a0cef4a39e2eab"
+    },
+    {
+      "path": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "bytes": 29454,
+      "sha256": "4cfc67583831139118e51d9b229eb1323d7f2cccd7929f5a410c3a6e4693e5f4"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Future-Feature-Readiness-Register.md",
+      "bytes": 9620,
+      "sha256": "0aaa6ed40813828b1f8979e3afdf2e5d8ee321ac723c656b7bee4274ee8b98d3"
+    },
+    {
+      "path": "docs/governance/SHIFAA-MASTER-F012-Graduation-Amendment-v2.2.0.md",
+      "bytes": 16510,
+      "sha256": "e79273da3c4d9074f634637491f0a602b5d0a4aeb89ab31f1160436d14beb17a"
+    },
+    {
+      "path": "docs/governance/SHIFAA-PRD-F012-Graduation-Amendment-v2.2.0.md",
+      "bytes": 8802,
+      "sha256": "079d888bc952dac92eb65975b4327aac11b07a96db1ce1365f0596bf0b6591aa"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+      "bytes": 10564,
+      "sha256": "553bd69557157f3298361de99eef49d59bf15f49cc1f64cc27ef9a9e18edede3"
+    },
+    {
+      "path": "shifaa-prd.md",
+      "bytes": 97658,
+      "sha256": "3a010821c00cb6a1e9a05797779cbb8f5a3282889241251edfd77d79332f82b6"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/activation-and-decisions.md",
+      "bytes": 26101,
+      "sha256": "9a6223b90bff09082fb0cc8f73c8a9a229825ca4eec317b553dec227637bcf8e"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/constitutional-impact-review.md",
+      "bytes": 30607,
+      "sha256": "858c1bf17687cb813ce3f28556f6c30536b093ce801aec069b51e90ca02869bf"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/impact-inventory.json",
+      "bytes": 18722,
+      "sha256": "3f9bbfe0c9c950f1f01374c6242beacadded595a920fd315584cd6df8f36a96a"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+      "bytes": 213045,
+      "sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest.json",
+      "bytes": 90915,
+      "sha256": "2c9d997db26c805f4979cb999fce14e4d77f81c2e48fa1597e5907063988458b"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/release-candidate-inventory.json",
+      "bytes": 44419,
+      "sha256": "8e22b4e220410fe47eaff0aacb16fd0b0882b18d02273e65888fa1e4ea4bd939"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+      "bytes": 8871,
+      "sha256": "908f4b611052cdc9b1b0a24c46a5675832ea214aefae7648d625a929345567c2"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/clinical-pharmacist-review-questionnaire.md",
+      "bytes": 13239,
+      "sha256": "50df6d33958191cde635e605eae1caed54b3a28c904ad37fa493890d0bfcad96"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+      "bytes": 8480,
+      "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+      "bytes": 12415,
+      "sha256": "11c485ccd1505f176de63c4b012834e82f541beeb2e6cf7dcd7b7cd9a1c49135"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+      "bytes": 64001,
+      "sha256": "ede4fc0157b5b48a32b6c3919d4b63ab01dfcc376781f75751699d19872ffc9c"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+      "bytes": 5953,
+      "sha256": "6f5255c2a994f58c983add1206c8f922aac078a8ef1f140d8f61c2273081fb93"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+      "bytes": 5728,
+      "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+      "bytes": 3643,
+      "sha256": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+      "bytes": 8983,
+      "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+      "bytes": 26032,
+      "sha256": "52e61305c4c2cc5625834b6ec612685fb28704ce55eb9e07238c0f8985ce9f52"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+      "bytes": 4007,
+      "sha256": "d534b0f6ab59359b9d953cf83f8a7ebc116239228fd99b37107a72f0751bbbb0"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md",
+      "bytes": 36610,
+      "sha256": "6bfa1ad63411aaffeed638bb1ac0b29cc685d530db871747b1eaad42c8141b95"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/p01-p30-source-crosswalk.md",
+      "bytes": 14704,
+      "sha256": "1aa813197b88ac0ae9f7dd8b63d560de2b4412fc36fdbdaf1b7e4946f4265afd"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-review.md",
+      "bytes": 6850,
+      "sha256": "527911ec0200d349259c36e69ced237436ce08b8d9fc886be9adc4788b79dfc9"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+      "bytes": 9729,
+      "sha256": "1917e6d9590992b19febfb5d6b060d21755a60637e2494431ff0beb02807964d"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+      "bytes": 10691,
+      "sha256": "629e5db455ed02f15b606a0b46aaf99d76b30e5c89308836c67c840b352f771d"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+      "bytes": 4593,
+      "sha256": "5a219ade402438c542cb306b32b85a21ea08ccd7d02444952efc552e62f813ca"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+      "bytes": 13585,
+      "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185"
+    }
+  ],
+  "documentary_binding_checks_previous_2026_10_15": {
+    "original_research_expected_sha256": "PASS",
+    "interim_review_expected_sha256": "PASS",
+    "zip_name_type_size_ratio_crc_checks": "PASS",
+    "source_and_backup_restore_access_allowlists": "PASS_9_FILES",
+    "backup_readback_and_restore_original_bytes": "PASS_3_STREAMS",
+    "predecessor_candidates_recovery": "PASS_6_COPIES",
+    "unchanged_original_readiness_records": "PASS_37",
+    "protected_fixture_hashes": "PASS_5",
+    "questionnaire_unchanged_sha256": "PASS",
+    "crosswalk_rows_awaiting_professional_input": 30,
+    "local_markdown_links": 41,
+    "json_and_manifest_hashes": "PASS",
+    "canonical_patch_check": "git apply --check of extracted embedded six-file diff: exit 0; no patch applied",
+    "proposed_target_hashes": "PASS_RECONSTRUCTED_IN_MEMORY_ONLY",
+    "whitespace": "git diff --check exit 0; authored prose checked; unified-diff context whitespace preserved",
+    "scope": "Only six existing authored feature records modified and three new private original streams; all other baseline bytes unchanged",
+    "not_run": [
+      "SpecKit lifecycle",
+      "pnpm verify",
+      "Runtime evidence matching",
+      "Clinical rule execution or validation",
+      "RLS/race/rollback tests",
+      "Live Arabic/English or native accessibility acceptance",
+      "CI",
+      "Git integration"
+    ]
+  },
+  "previous_final43_binding_manifest": {
+    "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+    "bytes": 42191,
+    "sha256": "aff8f98a4a192b3ef063e24912e1466f71b337c8157d51501bc86f773734f694"
+  },
+  "previous_final43_inventory": {
+    "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+    "bytes": 86983,
+    "sha256": "6f23b1402b4e115332b8f7857e887585b8aee0f79ecc08d6f3f7d03dc07ccbef"
+  },
+  "historical_unapplied_activation_locator": {
+    "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/activation-and-decisions.md",
+    "scope": "Existing publication path but not in current authorized supporting-edit allowlist; exact proposed heading/locator diff is in demonstration-data-proposal.md. No edit applied.",
+    "historical_status": "38-path final sheet retained as historical predecessor; canonical procedure and this current manifest/inventory identify its successor.",
+    "approval_required": "Exact permission for this documentary locator correction before applying; no additional publication path"
+  },
+  "historical_publication_integrity_blocker": {
+    "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+    "result": "BLOCKED_GIT_CLEAN_FILTER_ALTERS_APPROVED_ORIGINAL_BYTES",
+    "original_bytes": 213045,
+    "original_sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+    "crlf_sequences": 2906,
+    "filtered_lf_bytes": 210139,
+    "filtered_lf_sha256": "74752f2deb0c0474cd17dde336cf198994259777e2194c35f411cf080b2fc904",
+    "original_git_blob": "13990e1284256d9dc49648b571de9d7fa7503c38",
+    "filtered_git_blob": "18f17ddcff77dbeb123a665520066b47fcbabc84",
+    "current_attributes": "text=auto eol=lf inherited from .gitattributes",
+    "scope_dependency": ".gitattributes is outside the authorized edit scope; no change applied. An exact exception would modify the prospective publication scope from 43 to 44 paths and needs separate approval plus actual-byte hash refresh.",
+    "proposed_attribute_line": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json -text whitespace=cr-at-eol",
+    "claim_limit": "Proposed exception not applied or validated under active repository attributes. No staging, normalization, original rewrite, or historical hash substitution performed."
+  },
+  "documentary_checks_before_final44_2026_10_16": {
+    "runtime_versions": {
+      "node": "v24.18.0",
+      "python": "3.14.6",
+      "git": "2.56.0.windows.1"
+    },
+    "exact_patch_bytes": {
+      "bytes": 19502,
+      "sha256": "2ca291e4bbc52ce0a759eac67834ff785f5665c77150f44ca0520fc4b4c9acf9",
+      "result": "PASS"
+    },
+    "predecessors_allowlist": "PASS_SIX_FILES_BEFORE_APPLICATION",
+    "commands": [
+      {
+        "command": "git apply --check <exact extracted patch>",
+        "exit_code": 0
+      },
+      {
+        "command": "git apply <exact extracted patch>",
+        "exit_code": 0
+      },
+      {
+        "command": "git apply --reverse --check <exact extracted patch>",
+        "exit_code": 0,
+        "limit": "Check only; no reverse mutation"
+      },
+      {
+        "command": "node tools/verify-architecture.mjs",
+        "exit_code": 0,
+        "result": "18 canonical boundaries; 17 package manifests"
+      },
+      {
+        "command": "node tools/verify-contracts.mjs",
+        "exit_code": 0,
+        "result": "97 existing OpenAPI operations; no F012 implementation proof"
+      },
+      {
+        "command": "node tools/verify-secrets.mjs",
+        "exit_code": 0,
+        "limit": "Initial Git path-length warning; rerun with process-only GIT_CONFIG_COUNT=1, GIT_CONFIG_KEY_0=core.longpaths, GIT_CONFIG_VALUE_0=true: exit 0, no warning"
+      },
+      {
+        "command": "git diff --check",
+        "exit_code": 0
+      }
+    ],
+    "originals_fixtures_questionnaire": "PASS_37_RECORDS_5_FIXTURES_8_SOURCE_STREAMS_QUESTIONNAIRE",
+    "scope_counts": {
+      "closure": 7,
+      "prerequisite_only": 2,
+      "PATIENT_NFR": 22,
+      "effective_operations": 10
+    },
+    "json_links_and_hashes": "Validated by final read-only preflight; exact manifest excludes itself and downstream records to prevent circularity",
+    "not_run": [
+      "pnpm verify (includes db:reset and historical evidence writers; unsafe/outside this authorization; not waived)",
+      "Live Arabic/English acceptance and native accessibility (not executed; applicability unwaived)",
+      "SpecKit stages",
+      "runtime evidence matching or clinical rule tests",
+      "RLS/race/rollback runtime tests",
+      "CI",
+      "Git integration"
+    ],
+    "remaining_ci_jobs": [
+      "quality",
+      "database",
+      "supabase-runtime",
+      "accessibility-and-e2e",
+      "supply-chain",
+      "sast"
+    ],
+    "ci_limit": "Job names read from .github/workflows/ci.yml; no current remote run or branch-protection requirement verification claimed. All actual required current checks remain mandatory.",
+    "local_links_and_anchors": {
+      "resolvable_links": 731,
+      "missing_paths": 0,
+      "missing_heading_or_line_anchors": 0,
+      "links_to_private_indexed_records": 100,
+      "limit": "Private source references are resolved via feature-owned hash index and authorized recovery; not publicly readable in a clean clone."
+    },
+    "git_filter_byte_preservation": {
+      "matched_paths": 42,
+      "mismatched_paths": 1,
+      "result": "BLOCKED",
+      "details": {
+        "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+        "result": "BLOCKED_GIT_CLEAN_FILTER_ALTERS_APPROVED_ORIGINAL_BYTES",
+        "original_bytes": 213045,
+        "original_sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+        "crlf_sequences": 2906,
+        "filtered_lf_bytes": 210139,
+        "filtered_lf_sha256": "74752f2deb0c0474cd17dde336cf198994259777e2194c35f411cf080b2fc904",
+        "original_git_blob": "13990e1284256d9dc49648b571de9d7fa7503c38",
+        "filtered_git_blob": "18f17ddcff77dbeb123a665520066b47fcbabc84",
+        "current_attributes": "text=auto eol=lf inherited from .gitattributes",
+        "scope_dependency": ".gitattributes is outside the authorized edit scope; no change applied. An exact exception would modify the prospective publication scope from 43 to 44 paths and needs separate approval plus actual-byte hash refresh.",
+        "proposed_attribute_line": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json -text whitespace=cr-at-eol",
+        "claim_limit": "Proposed exception not applied or validated under active repository attributes. No staging, normalization, original rewrite, or historical hash substitution performed."
+      }
+    },
+    "crosswalk_check": "All 30 P-row states AWAITING_PROFESSIONAL_INPUT; initial overbroad whole-document count asserted 30 and failed because explanatory prose also uses the label. Corrected row-scoped assertion passed; source crosswalk not edited."
+  },
+  "applied_activation_locator_correction": {
+    "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/activation-and-decisions.md",
+    "status": "AUTHORIZED_LOCATOR_CORRECTION_APPLIED_TO_PROPOSED_CANDIDATE_NOT_EFFECTIVE",
+    "changes": "Historical heading and current 44-path inventory/source-manifest locator only; prior sheet and approval limits retained",
+    "candidate": {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/activation-and-decisions.md",
+      "bytes": 26101,
+      "sha256": "9a6223b90bff09082fb0cc8f73c8a9a229825ca4eec317b553dec227637bcf8e"
+    },
+    "authority": "Latest direct Product Owner instruction: Authorized Git Byte-Preservation Fix and Final PR A Convergence; no exact release-byte approval"
+  },
+  "byte_preservation_resolution": {
+    "status": "RESOLVED_BY_EXACT_AUTHORIZED_ONE_PATH_RULE",
+    "rule": "/specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json -text",
+    "attributes_file": {
+      "path": ".gitattributes",
+      "bytes": 1510,
+      "sha256": "a6f349a58eba23d96ab13ac0d612b086a17c28ef0cc8d8c6ac012577e7accb55"
+    },
+    "proof": {
+      "verified_utc": "2026-10-15T21:51:05.487050+00:00",
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+      "raw_bytes": 213045,
+      "raw_sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+      "text_attribute": "unset",
+      "eol_attribute": "lf",
+      "filter_attribute": "unspecified",
+      "working_tree_encoding_attribute": "unspecified",
+      "ident_attribute": "unspecified",
+      "unfiltered_git_blob": "13990e1284256d9dc49648b571de9d7fa7503c38",
+      "filtered_git_blob": "13990e1284256d9dc49648b571de9d7fa7503c38",
+      "stored_git_blob": "13990e1284256d9dc49648b571de9d7fa7503c38",
+      "stored_blob_bytes": 213045,
+      "stored_blob_sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+      "checkout_filter_bytes": 213045,
+      "checkout_filter_sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+      "object_format": "sha1",
+      "commands": [
+        "git check-attr -z --stdin text eol filter working-tree-encoding ident",
+        "git hash-object --no-filters -- <exact manifest path>",
+        "git hash-object -- <exact manifest path>",
+        "git hash-object -w -- <exact manifest path> (blob only; no staging)",
+        "git cat-file blob <verified object>",
+        "git cat-file --filters --path=<exact manifest path> <verified object>"
+      ],
+      "scope_probes": [
+        "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+        "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json.bak",
+        "nested/specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+        "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json",
+        "specs/011-allergies-clinical-content-governance/evidence/byte-preservation-attribute-probe.json"
+      ],
+      "scope_result": "Only text attribute for the exact manifest changed across six target/near-match/protected probes; inherited LF does not convert unset text; no filter/encoding/ident transform",
+      "limit": "Verifies local object-store and checkout-filter bytes without staging, commit, PR, remote publication or activation"
+    },
+    "historical_record": "Previous failed normalization measurements retained in historical fields; no normalized replacement adopted"
+  },
+  "historical_reference_disposition": "Earlier 38/43-path inventories, AGENTS preparation snapshots and embedded unapplied locator/attribute proposals describe predecessor states. This current manifest/inventory records the authorized successor: 44 paths and exact root-anchored -text only, without whitespace-policy changes. Historical source bytes and approvals are not rewritten. The final conditional-release preflight adds only exact-path whitespace recognition to preserve original CRLF and fenced-diff bytes; prior one-path-only preparation observations remain historical. No historical source hash changes.",
+  "previous_conditional_preflight_candidate": {
+    "manifest": {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+      "bytes": 52704,
+      "sha256": "cfac09550e9fa81af6af357db55c3f397762f6cafe1b6682cc2e1ca406aacbfb"
+    },
+    "inventory": {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+      "bytes": 99797,
+      "sha256": "e5e3d98a4636acf48e10db45518a7b23f007ebb0bf0d7dfb2bf8c4f860b346f9"
+    },
+    "approval_proposal": {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md",
+      "bytes": 18269,
+      "sha256": "901f2d22a794bbc5bc185407af75fcd1b48fbc9556651338d41c3decf1d8fb38"
+    },
+    "attributes": {
+      "path": ".gitattributes",
+      "bytes": 1350,
+      "sha256": "e19adaaf3c7d5168947e769fc325a52e05218235a198c64ed8fb303a777a1cfe"
+    },
+    "treatment": "Predecessor reviewed candidate identities, not exact approval; original copies preserved privately"
+  },
+  "conditional_release_preflight": {
+    "first_check": {
+      "command": "git diff --cached --check HEAD with isolated GIT_INDEX_FILE; default repository whitespace configuration",
+      "exit_code": 2,
+      "findings": [
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+          "lines": "1-2906",
+          "count": 2906,
+          "reason": "Unnormalized original CRLF recognized as trailing CR; original bytes must remain unchanged"
+        },
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md",
+          "lines": [
+            80,
+            84,
+            86,
+            92,
+            96,
+            98,
+            104,
+            108,
+            110,
+            115,
+            117,
+            121,
+            127,
+            129,
+            133,
+            140,
+            144,
+            146
+          ],
+          "count": 18,
+          "reason": "Preserved single-space blank context lines inside original fenced compatibility patch"
+        }
+      ]
+    },
+    "proposed_minimum_correction": {
+      "path": ".gitattributes",
+      "rules": [
+        "/specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json -text whitespace=cr-at-eol",
+        "/specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md whitespace=-blank-at-eol"
+      ],
+      "scope": "Two exact root-anchored paths only; -text remains confined to v2 manifest. No source byte normalization or global whitespace/config change. New candidate attributes await exact-content approval.",
+      "limits": "The demo-file rule permits trailing whitespace throughout that exact documentary file, because Git attributes cannot select fenced lines; other whitespace diagnostics remain enabled. This is a publication-format exception, not a verification, clinical or production waiver."
+    },
+    "temporary_attribute_proposal_probe": {
+      "proposed_attributes_staged_check": "PASS_44_PATHS_WITH_TEMPORARY_ATTRIBUTES_ONLY_NOT_APPLIED",
+      "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json": {
+        "negative_rejected": true,
+        "diagnostic": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json:1: trailing whitespace.\n+{\"negative\":true} \r\n"
+      },
+      "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md": {
+        "negative_rejected": true,
+        "diagnostic": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md:1: space before tab in indent.\n+ \tnegative\n"
+      }
+    },
+    "final_candidate_test": {
+      "executed_utc": "2026-10-15T22:21:08.148133+00:00",
+      "commands": [
+        {
+          "git": [
+            "read-tree",
+            "HEAD"
+          ],
+          "exit_code": 0
+        },
+        {
+          "git": [
+            "-c",
+            "core.longpaths=true",
+            "add",
+            "--pathspec-from-file=-",
+            "--pathspec-file-nul"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": "git diff --cached --check HEAD (GIT_INDEX_FILE isolated)",
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "result": "PASS",
+      "staged_paths": 44,
+      "original_stored_checkout_readbacks": 44,
+      "negative_whitespace_probes": [
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+          "rejected": true,
+          "diagnostic": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json:1: trailing whitespace.\n+{\"negative\":true} \r\n"
+        },
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md",
+          "rejected": true,
+          "diagnostic": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md:1: space before tab in indent.\n+ \tnegative\n"
+        }
+      ],
+      "exclusions": "PASS_23_PRIVATE_8_SOURCE_STREAMS_PRIVATE_RECEIPT_AND_FUTURE_ACTIVATION_RECEIPT_ABSENT",
+      "preservation": "REAL_INDEX_WORKTREE_STATUS_5640_FILE_HASHES_AND_ROOT_POINTER_UNCHANGED_TEMP_INDEX_REMOVED",
+      "scope": "Temporary GIT_INDEX_FILE only; exact HEAD plus 44 candidate path changes. Real index unchanged; temporary index removed. Final serialization is followed by repeat staged verification; no current manifest/self hash embedded in this evidence.",
+      "claim_limit": "No pnpm verify/live Arabic/live English/CI/runtime/clinical acceptance or governance activation."
+    }
+  },
+  "verification_acceptance_prerequisites": {
+    "pnpm_verify": {
+      "status": "MANDATORY_NOT_RUN_NOT_WAIVED",
+      "authority": "AGENTS.md Repository Integration Policy item 1; package.json scripts.verify and scripts.db:reset",
+      "hazards": [
+        "docker compose down -v destroys the selected project volumes",
+        "compose.yml fixes project name shifaa-local-postgres and host port 5432",
+        "supabase/config.toml fixes project_id shifaa-local-supabase and local ports",
+        "verification writes predecessor evidence, including F011 composition outputs"
+      ],
+      "safe_environment": "Proposed fresh disposable Windows VM with its own Docker daemon, guest disk and local-only synthetic services; no host Docker socket, shared writable repository, existing volumes, real patient data or production secrets. Use pinned tooling; preserve full Git predecessor history and exact 44 candidate bytes in the guest. Provision/run only after explicit authorization.",
+      "evidence": "Fresh exit 0 against the exact candidate snapshot; before/after guest hashes, complete logs and generated evidence classified; no guest output overwrites sealed source evidence. Unexpected writes stop the run for disposition."
+    },
+    "live_arabic": {
+      "status": "MANDATORY_NOT_RUN_NOT_WAIVED",
+      "authority": "AGENTS.md item 2",
+      "required": "Separately authorized live Arabic acceptance of existing applicable application surfaces in the isolated environment, with attributable dated evidence; document review is not live acceptance and no F012 runtime exists."
+    },
+    "live_english": {
+      "status": "MANDATORY_NOT_RUN_NOT_WAIVED",
+      "authority": "AGENTS.md item 2",
+      "required": "Equivalent separately authorized live English acceptance and recorded evidence; no F012 implementation/clinical acceptance inferred."
+    },
+    "github_ci": {
+      "status": "PENDING_PR_A_NOT_RUN",
+      "authority": "AGENTS.md item 5; .github/workflows/ci.yml",
+      "required": "All current required checks on the exact up-to-date branch; no inference from documentary checks"
+    },
+    "feature_evidence": {
+      "status": "DOCUMENTARY_HASH_AND_INVENTORY_CHECKS_REQUIRED; FINALIZATION_PENDING_REMOTE_INTEGRATION",
+      "authority": "AGENTS.md Feature Artifact Finalization Gate",
+      "required": "Exact scope/private exclusions/original-byte checks, approved decision, remote-main artifact verification and retained recovery evidence. No cleanup or finalization approval inferred."
+    },
+    "documentation_exception": "No effective documentation-only exemption found or created. If an exception is desired, it requires a separate exact authorized effective policy amendment; current plan instead satisfies existing checks in a disposable environment."
+  },
+  "historical_final44_checks": {
+    "verified_utc": "2026-10-15T21:55:33.526970+00:00",
+    "base_head": "862db9f66c19ccb8efa9163e5221845225b62174",
+    "branch": "codex/012-prescription-safety-readiness",
+    "remote_main": "Fresh git ls-remote origin refs/heads/main matched HEAD during this bounded preflight; no remote mutation",
+    "runtime_versions": {
+      "node": "v24.18.0",
+      "python": "3.14.6",
+      "git": "2.56.0.windows.1"
+    },
+    "commands": [
+      {
+        "command": "node tools/verify-architecture.mjs",
+        "exit_code": 0,
+        "result": "18 boundaries; 17 manifests"
+      },
+      {
+        "command": "node tools/verify-contracts.mjs",
+        "exit_code": 0,
+        "result": "97 existing OpenAPI operations; no F012 runtime acceptance"
+      },
+      {
+        "command": "node tools/verify-secrets.mjs",
+        "exit_code": 0,
+        "environment": "Process-only core.longpaths=true via GIT_CONFIG_COUNT/KEY_0/VALUE_0; no repository config mutation"
+      },
+      {
+        "command": "git diff --check",
+        "exit_code": 0,
+        "limit": "Tracked diff only; untracked candidate bytes receive separate bounded documentary/whitespace checks"
+      }
+    ],
+    "preservation": "37 original readiness records, five fixture artifacts, questionnaire, eight original source streams and existing backup/restore copies rehashed unchanged; 23 private originals excluded",
+    "scope_counts": {
+      "closure": 7,
+      "prerequisite_only": 2,
+      "PATIENT_NFR": 22,
+      "effective_operations": 10,
+      "candidate_operations_not_approved": 12,
+      "publication_paths": 44
+    },
+    "byte_preservation": {
+      "verified_utc": "2026-10-15T21:51:05.487050+00:00",
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+      "raw_bytes": 213045,
+      "raw_sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+      "text_attribute": "unset",
+      "eol_attribute": "lf",
+      "filter_attribute": "unspecified",
+      "working_tree_encoding_attribute": "unspecified",
+      "ident_attribute": "unspecified",
+      "unfiltered_git_blob": "13990e1284256d9dc49648b571de9d7fa7503c38",
+      "filtered_git_blob": "13990e1284256d9dc49648b571de9d7fa7503c38",
+      "stored_git_blob": "13990e1284256d9dc49648b571de9d7fa7503c38",
+      "stored_blob_bytes": 213045,
+      "stored_blob_sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+      "checkout_filter_bytes": 213045,
+      "checkout_filter_sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+      "object_format": "sha1",
+      "commands": [
+        "git check-attr -z --stdin text eol filter working-tree-encoding ident",
+        "git hash-object --no-filters -- <exact manifest path>",
+        "git hash-object -- <exact manifest path>",
+        "git hash-object -w -- <exact manifest path> (blob only; no staging)",
+        "git cat-file blob <verified object>",
+        "git cat-file --filters --path=<exact manifest path> <verified object>"
+      ],
+      "scope_probes": [
+        "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+        "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json.bak",
+        "nested/specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+        "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json",
+        "specs/011-allergies-clinical-content-governance/evidence/byte-preservation-attribute-probe.json"
+      ],
+      "scope_result": "Only text attribute for the exact manifest changed across six target/near-match/protected probes; inherited LF does not convert unset text; no filter/encoding/ident transform",
+      "limit": "Verifies local object-store and checkout-filter bytes without staging, commit, PR, remote publication or activation"
+    },
+    "publication_filters": "44 of 44 current candidate paths: filtered and unfiltered Git blob identities equal; downstream JSON/approval byte edits require final repetition",
+    "final_verification_contract": "After serialization, re-read every bound artifact and inventory entry; validate JSON, local references/anchors, crosswalk, scope, filters, privacy and five-path edit scope. Final execution result supplied outside this manifest to avoid self/hash recursion.",
+    "not_run": [
+      "pnpm verify: includes database reset and historical evidence writers; unsafe/outside authorization, not waived",
+      "Live Arabic/English acceptance and native accessibility: not executed; applicability remains to be resolved before integration",
+      "SpecKit stages; runtime/clinical/RLS/race/rollback acceptance; CI; Git integration"
+    ],
+    "remaining_ci_jobs": [
+      "quality",
+      "database",
+      "supabase-runtime",
+      "accessibility-and-e2e",
+      "supply-chain",
+      "sast"
+    ],
+    "ci_limit": "Names read from current CI workflow; current remote checks/branch protection not independently queried; no CI PASS claimed"
+  },
+  "conditional_publication_identity": {
+    "bundle": "F012-GOVERNANCE/3.0.0",
+    "constitution": "3.0.0",
+    "PRD_MASTER": "2.2.0",
+    "publication_state": "APPROVED_FOR_CONDITIONAL_ACTIVATION",
+    "qualification": "Prospective release form only; newly prepared bytes await attributable exact approval. Constitution 2.1.0 and PRD/Master 2.1.3 remain effective until verified PR A and separately approved/verified PR B activation. No post-merge header rewrite."
+  }
+}

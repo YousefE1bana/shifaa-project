@@ -9,11 +9,14 @@ Audited **2026-10-03**, against local and remote main `670b1e0fe15c719b98179805f
 Draft correction **2026-10-13**: the Spec Kit pin and local setup-package location
 were checked against main `e41abb4e008242f447dc7ba643ada0d3f712a5a7`.
 
-On this machine, open the preserved
-[SHIFAA-SETUP-CENTER.html](../../GP-STUFF/SHIFAA-Repo-Hygiene/2026-10-13-8f6e24910fcd427ebe7912d99c885601/developer-setup/SHIFAA-Developer-Setup/SHIFAA-SETUP-CENTER.html)
-for the Arabic/English interactive guide, search and saved progress. This local
-GP-STUFF link is outside the repository; on another machine, use the HTML in the
-complete portable package described below. Keep it beside the launcher and tools.
+Open `SHIFAA-SETUP-CENTER.html` from the complete portable package described
+below for the Arabic/English interactive guide, search and saved progress.
+The preserved copy on this machine is outside Git: from the canonical primary
+repository's parent (`<DRIVE>:\ECU`), its relative location is
+`GP-STUFF/SHIFAA-Repo-Hygiene/2026-10-13-8f6e24910fcd427ebe7912d99c885601/developer-setup/SHIFAA-Developer-Setup/SHIFAA-SETUP-CENTER.html`.
+Do not resolve that location from an isolated worktree or assume it exists on
+another machine. Keep the portable HTML beside its launcher and tools. An existing
+local copy proves neither portable-package completeness nor a fresh installation.
 The preserved guide still shows the historical Spec Kit 1.0.13 pin; use this
 checklist's [current Spec Kit installation](#install-the-pinned-spec-kit-cli-required)
 for the 1.1.3 commands. The guide embeds
@@ -24,6 +27,12 @@ This is developer onboarding maintenance, not the parked SHIFAA Control feature 
 and synthetic. No AI subscription is required to build SHIFAA.
 
 ## Portable start and fixed project path
+
+The [2026-10-14 documentation successor](governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md#documentation-reconciliation--2026-10-14)
+records current metadata and the serial gated procedure. Product Owner
+authorization of that documentation change does not authorize a lifecycle run;
+the successor remains pending integration. Frozen installation records retain
+their dated context.
 
 Extract the complete **SHIFAA-Developer-Setup.zip** to any local folder outside
 the project destination (for example Downloads). Keep the extracted files together.

@@ -1,0 +1,1419 @@
+{
+  "status": "PROPOSED_UNAPPROVED — NOT_EFFECTIVE",
+  "feature_status": "NOT READY — PRE_SPECIFY_BLOCKED",
+  "baseline": "862db9f66c19ccb8efa9163e5221845225b62174",
+  "records": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+      "sha256": "908f4b611052cdc9b1b0a24c46a5675832ea214aefae7648d625a929345567c2",
+      "bytes": 8871,
+      "essential_direct_reference": true,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md"
+      ],
+      "existing_repository_reading_targets": [
+        "SHIFAA-Implementation-Plan-MASTER.md",
+        "docs/compliance/EGYPT-Compliance-Baseline.md",
+        "shifaa-prd.md"
+      ],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+      "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c",
+      "bytes": 8480,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [
+        "docs/architecture/SHIFAA-API-Catalog.md",
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "packages/contracts/src/feature-011.ts",
+        "shifaa-prd.md",
+        "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+        "specs/011-allergies-clinical-content-governance/decisions/product-owner-approvals-2026-10-02.md"
+      ],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+      "sha256": "11c485ccd1505f176de63c4b012834e82f541beeb2e6cf7dcd7b7cd9a1c49135",
+      "bytes": 12415,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md"
+      ],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+      "sha256": "c6373f1130e7f8d83df8a143859d937004f434764e6ba8d5b08abfa4fa761df2",
+      "bytes": 13235,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md"
+      ],
+      "existing_repository_reading_targets": [
+        ".specify/integration.json",
+        ".specify/templates/overrides/constitution-template.md",
+        ".specify/workflows/speckit/workflow.yml",
+        "docs/TEAM-ONBOARDING-DRAFT.md",
+        "docs/agent-skills/speckit-v1.1.3-upgrade.md",
+        "docs/governance/SHIFAA-Completion-Coverage.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "shifaa-prd.md",
+        "specs/011-allergies-clinical-content-governance/decisions/artifact-finalization-policy-2026-10-13.md"
+      ],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck.json",
+      "sha256": "6a9dc019f4814a215aaac1781618ac868bf3e738ef773695cb4ece0dd0087bcc",
+      "bytes": 1800189,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json"
+      ],
+      "existing_repository_reading_targets": [
+        ".specify/integration.json",
+        ".specify/workflows/speckit/workflow.yml",
+        "docs/TEAM-ONBOARDING-DRAFT.md",
+        "docs/agent-skills/speckit-v1.1.3-upgrade.md",
+        "docs/architecture/SHIFAA-API-Catalog.md",
+        "docs/architecture/SHIFAA-Architecture.md",
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/design/SHIFAA-UI-Contract.md",
+        "docs/governance/SHIFAA-Completion-Coverage.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "packages/contracts/src/feature-011.ts",
+        "packages/core/src/facility-onboarding/policy.ts",
+        "packages/core/src/privacy-dsr-notifications/policy.ts",
+        "packages/core/src/privacy-dsr-notifications/types.ts",
+        "services/worker/src/clinic-scheduling-notifications.ts",
+        "shifaa-prd.md",
+        "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+        "specs/011-allergies-clinical-content-governance/decisions/artifact-finalization-policy-2026-10-13.md",
+        "specs/011-allergies-clinical-content-governance/decisions/product-owner-approvals-2026-10-02.md",
+        "specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md",
+        "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/preceding-tasks.md"
+      ],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/documentation-reconciliation.json",
+      "sha256": "2fc70df37155f23486903897d8110dac9f10dc24ede35b388e03e546525dd5b6",
+      "bytes": 276185,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+      "sha256": "ede4fc0157b5b48a32b6c3919d4b63ab01dfcc376781f75751699d19872ffc9c",
+      "bytes": 64001,
+      "essential_direct_reference": true,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-reconciliation.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/package-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-engineering-approval.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+        "specs/012-prescription-safety-governed-overrides/readiness/verify-documentation-reconciliation.py"
+      ],
+      "existing_repository_reading_targets": [
+        ".specify/integration.json",
+        ".specify/memory/constitution.md",
+        ".specify/templates/overrides/constitution-template.md",
+        ".specify/workflows/speckit/workflow.yml",
+        "SHIFAA-Implementation-Plan-MASTER.md",
+        "docs/TEAM-INSTALLATION-CHECKLIST.md",
+        "docs/TEAM-ONBOARDING-DRAFT.md",
+        "docs/agent-skills/speckit-v1.1.3-upgrade.md",
+        "docs/architecture/SHIFAA-API-Catalog.md",
+        "docs/architecture/SHIFAA-Architecture.md",
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/governance/SHIFAA-Completion-Coverage.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "docs/governance/SHIFAA-Feature-011-Reconciliation-2026-10-01.md",
+        "docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md",
+        "docs/governance/SHIFAA-Identifier-Handoff-Amendment-2026-10-08.md",
+        "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "shifaa-prd.md",
+        "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-parity-v1.json",
+        "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json",
+        "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.json",
+        "specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1.md",
+        "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+        "specs/011-allergies-clinical-content-governance/contracts/openapi.yaml",
+        "specs/011-allergies-clinical-content-governance/contracts/scope-manifest.json",
+        "specs/011-allergies-clinical-content-governance/contracts/task-map.json",
+        "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-parity-v1.json",
+        "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1-vectors.json",
+        "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.json",
+        "specs/011-allergies-clinical-content-governance/contracts/trusted-release-handoff-v1.md",
+        "specs/011-allergies-clinical-content-governance/contracts/ui-state-contract.md",
+        "specs/011-allergies-clinical-content-governance/data-model.md",
+        "specs/011-allergies-clinical-content-governance/decisions/artifact-finalization-policy-2026-10-13.md",
+        "specs/011-allergies-clinical-content-governance/decisions/product-owner-approvals-2026-10-02.md",
+        "specs/011-allergies-clinical-content-governance/decisions/recovered-plan-approved-2026-10-06.md",
+        "specs/011-allergies-clinical-content-governance/decisions/trusted-handoff-design-2026-10-06.md",
+        "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/closeout-2026-10-11/preceding-tasks.md",
+        "specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/doc-proposal/SHIFAA-Traceability-Matrix.md",
+        "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/tasks-generation-validation.md",
+        "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/tasks.md",
+        "specs/011-allergies-clinical-content-governance/evidence/historical-task-evidence-crosswalk-v1.json",
+        "specs/011-allergies-clinical-content-governance/evidence/implementation/C02A-red.md",
+        "specs/011-allergies-clinical-content-governance/evidence/implementation/canonical-contract-parity.md",
+        "specs/011-allergies-clinical-content-governance/evidence/plan-recovery/data-model.md",
+        "specs/011-allergies-clinical-content-governance/evidence/plan-recovery/governance-boundaries.md",
+        "specs/011-allergies-clinical-content-governance/evidence/plan-recovery/plan.md",
+        "specs/011-allergies-clinical-content-governance/evidence/plan-recovery/research.md",
+        "specs/011-allergies-clinical-content-governance/evidence/plan-validation.md",
+        "specs/011-allergies-clinical-content-governance/plan.md",
+        "specs/011-allergies-clinical-content-governance/quickstart.md",
+        "specs/011-allergies-clinical-content-governance/research.md",
+        "specs/011-allergies-clinical-content-governance/spec.md",
+        "specs/011-allergies-clinical-content-governance/tasks.md"
+      ],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+      "sha256": "6f5255c2a994f58c983add1206c8f922aac078a8ef1f140d8f61c2273081fb93",
+      "bytes": 5953,
+      "essential_direct_reference": true,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md"
+      ],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+      "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+      "bytes": 5728,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [],
+      "existing_repository_reading_targets": [],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+      "sha256": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af",
+      "bytes": 3643,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+      "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65",
+      "bytes": 8983,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [],
+      "existing_repository_reading_targets": [],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+      "sha256": "81ba4aa97ab80d8d40859d1daa8f657ba66bb44ca9d8a2a720332b2a7957804d",
+      "bytes": 58594,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-reconciliation.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/evidence.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-recheck-first-pass.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-reconciliation-first-check.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/package-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-engineering-approval.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+        "specs/012-prescription-safety-governed-overrides/readiness/verify-documentation-reconciliation.py"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+      "sha256": "bb8abd3f245a7f1de378aada78b4a3f3b89fd1e76d36d2ffcf9b325f9c1b1816",
+      "bytes": 11381,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "HISTORICAL_EXTERNAL_RETENTION_PROPOSED",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+      "sha256": "00ea49ea452882083705b532db14f796b83dd964cdf8ecefac84537aecc4b1ee",
+      "bytes": 5441,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "HISTORICAL_EXTERNAL_RETENTION_PROPOSED",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "sha256": "093cf033b38d2f30d38a5e4a97701d458f142b28da0e42ad7f127aaae84f46e2",
+      "bytes": 7343,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "HISTORICAL_EXTERNAL_RETENTION_PROPOSED",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+      "sha256": "38bc649fbd170c79c218b5273fc4e87e3e1e8aa9af3143ef4e66041ff315b1d8",
+      "bytes": 87556,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+      "sha256": "3266632b219426ef3cfd72e924aefe358443480e5492f7eece96e45533cda49d",
+      "bytes": 11731,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck.json"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck.json",
+      "sha256": "86bbece3fb251a711a7b25adac37687b0d0ab3f717a161dddb289d8ec97cea1b",
+      "bytes": 1734738,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/evidence.json",
+      "sha256": "ca64b32a2bd3359dac198ada5936a4e452443862f9f1dc94cfed75a84019817d",
+      "bytes": 55145,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck.json"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json",
+      "sha256": "c2c300dc81760bc430b18de5f8463a967eec3d614b85100a3917d6782059543d",
+      "bytes": 1078040,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "HISTORICAL_EXTERNAL_RETENTION_PROPOSED",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+      "sha256": "93d7eb7afb8bf10427d30e8a4a2ec7f1f92e84144182c09af61e2f57a0d6c777",
+      "bytes": 11731,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/evidence.json"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-recheck-first-pass.json",
+      "sha256": "30ba3e45fe60a399f70c15873fb6b71847edfea48398dfc583522cc2dbe574c1",
+      "bytes": 1721026,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md"
+      ],
+      "existing_repository_reading_targets": [
+        "SHIFAA-Implementation-Plan-MASTER.md"
+      ],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-reconciliation-first-check.json",
+      "sha256": "10dbaac33f41744eac78f576561f74ceea86de7c2d742bfe44e85365b7fbb228",
+      "bytes": 272204,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/package-before-independent-audit.json",
+      "sha256": "beb326e4397135b8118c54495cb849e8453474c5aafb3484b3ceae2f18234691",
+      "bytes": 1476,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "HISTORICAL_EXTERNAL_RETENTION_PROPOSED",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+      "sha256": "b4f24353738f5850cf3ef1ecb16534f620310438cc197567a0f77d8d592c202f",
+      "bytes": 36856,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/package-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-documentation-recheck.json",
+      "sha256": "945af1115ba90fa4dcbfed12ef2f518d971a805f0e2d267e6e4f60b4a43d83d6",
+      "bytes": 59024,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-engineering-approval.json",
+      "sha256": "cb480ac760681c3556965d4e1ba25197e32d422e54b9ed2982447c53519e5417",
+      "bytes": 39452,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/package-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-independent-audit.json",
+      "sha256": "5216f05d178cd15e1cf5c46ce2b76b94ed46c29d3278518db713bbc3aea2c2d8",
+      "bytes": 10392,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+      "sha256": "a7f38b2f69d640324ee289e0105a33fb0ef3ac0b19f5917ded12f069470e8070",
+      "bytes": 2405,
+      "essential_direct_reference": false,
+      "historical": true,
+      "disposition": "HISTORICAL_EXTERNAL_RETENTION_PROPOSED",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-recheck-first-pass.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-engineering-approval.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md"
+      ],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+      "sha256": "52e61305c4c2cc5625834b6ec612685fb28704ce55eb9e07238c0f8985ce9f52",
+      "bytes": 26032,
+      "essential_direct_reference": true,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md"
+      ],
+      "existing_repository_reading_targets": [
+        ".specify/workflows/speckit/workflow.yml",
+        "docs/architecture/SHIFAA-API-Catalog.md",
+        "docs/architecture/SHIFAA-Architecture.md",
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/design/SHIFAA-UI-Contract.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "services/api/src/adapters/postgres/feature-011-content.ts",
+        "services/api/src/modules/feature-011/artifact-review.ts",
+        "services/api/src/modules/feature-011/content-eligibility.ts",
+        "services/api/src/modules/feature-011/list-clinical-content.ts",
+        "shifaa-prd.md",
+        "specs/011-allergies-clinical-content-governance/contracts/governance-boundaries.md",
+        "specs/011-allergies-clinical-content-governance/contracts/verified-evidence-binding-v1.md",
+        "supabase/migrations/20261006185240_f011_publication_functions.sql"
+      ],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+      "sha256": "d534b0f6ab59359b9d953cf83f8a7ebc116239228fd99b37107a72f0751bbbb0",
+      "bytes": 4007,
+      "essential_direct_reference": true,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json"
+      ],
+      "existing_repository_reading_targets": [
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md"
+      ],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+      "sha256": "57987f5a7a54ff34479ec801afd1c027b9b98ca1054c23592a84826e74630ca0",
+      "bytes": 12507,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/package-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-documentation-recheck.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-engineering-approval.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-independent-audit.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+        "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [
+        ".specify/workflows/speckit/workflow.yml",
+        "docs/architecture/SHIFAA-Architecture.md",
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md",
+        "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "shifaa-prd.md"
+      ],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+      "sha256": "1917e6d9590992b19febfb5d6b060d21755a60637e2494431ff0beb02807964d",
+      "bytes": 9729,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [],
+      "existing_repository_reading_targets": [],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+      "sha256": "629e5db455ed02f15b606a0b46aaf99d76b30e5c89308836c67c840b352f771d",
+      "bytes": 10691,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [],
+      "existing_repository_reading_targets": [
+        "docs/architecture/SHIFAA-API-Catalog.md",
+        "docs/architecture/SHIFAA-Architecture.md",
+        "docs/architecture/SHIFAA-Data-RLS.md",
+        "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+        "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+        "packages/contracts/src/facility-onboarding.ts",
+        "packages/core/src/facility-onboarding/policy.ts",
+        "packages/core/src/identity-continuity/policy.ts",
+        "packages/core/src/privacy-dsr-notifications/policy.ts",
+        "packages/core/src/privacy-dsr-notifications/types.ts",
+        "services/api/src/feature-011-exposure.test.ts",
+        "services/api/src/modules/feature-010/messages.ts",
+        "services/worker/src/clinic-scheduling-notifications.ts",
+        "shifaa-prd.md",
+        "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql"
+      ],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+      "sha256": "5a219ade402438c542cb306b32b85a21ea08ccd7d02444952efc552e62f813ca",
+      "bytes": 4593,
+      "essential_direct_reference": true,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [
+        "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+      ],
+      "existing_repository_reading_targets": [],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+      "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185",
+      "bytes": 13585,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "COMMIT_CANDIDATE",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": false,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [],
+      "existing_repository_reading_targets": [],
+      "external_retention": null
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/verify-documentation-reconciliation.py",
+      "sha256": "a1ea6b9be82be4769764dbaa4938d4e385275c8d23559c24120c3a632a0156ea",
+      "bytes": 10300,
+      "essential_direct_reference": false,
+      "historical": false,
+      "disposition": "RESTRICTED_RETAIN_DO_NOT_PUBLISH",
+      "publication_approval": "PENDING — no file staged",
+      "bounded_scan": {
+        "local_machine_context": true,
+        "credential_pattern_found": false,
+        "limits": "UTF-8 text pattern/manual-context triage only; not secret/PHI clearance or archive inspection"
+      },
+      "dependencies": [],
+      "existing_repository_reading_targets": [],
+      "external_retention": {
+        "locator": null,
+        "custodian": null,
+        "access_verified": false,
+        "hash_verified_at_destination": false,
+        "navigation_resolution": "PENDING — raw relative links are not automatically redirected by this manifest"
+      }
+    }
+  ],
+  "count": 37,
+  "classification_counts": {
+    "COMMIT_CANDIDATE": 14,
+    "RESTRICTED_RETAIN_DO_NOT_PUBLISH": 17,
+    "HISTORICAL_EXTERNAL_RETENTION_PROPOSED": 6
+  },
+  "direct_reference_count": 6,
+  "minimum_integration_rule": "Six directly linked records require an explicit resolvable disposition. Commit only cleared candidates; every transitive dependency must be committed or held in verified retained storage with a feature index and tested navigation. No silent 37/50-path scope. External storage and publication decisions remain unverified, so no effective dependency closure is claimed.",
+  "dependency_graph_complete_for": "37 readiness files: Markdown links, JSON artifact/source path strings and current evidence artifactHashes; existing canonical reading targets recorded separately. Historical source byte identity is not inferred from current targets.",
+  "closure_state": "CLASSIFIED_DEPENDENCY_GRAPH — INTEGRATION_BLOCKED_PENDING_RETENTION_AND_PUBLICATION",
+  "protected_five_fixture_artifacts": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+      "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+      "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+      "sha256": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+      "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+      "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185"
+    }
+  ],
+  "backup": {
+    "path": "specs/012-prescription-safety-governed-overrides/readiness.rar",
+    "sha256": "aa355d41b6e74e6bdb0af4b04fc0204b61ee5b080230b1df81f2bfdb7d6eece6",
+    "bytes": 24818,
+    "disposition": "BACKUP_ONLY — preserve locally; do not publish archive automatically",
+    "restore_or_privacy_inspection": "NOT_EXECUTED; cannot substitute for organized evidence"
+  },
+  "crlf": {
+    "path": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json",
+    "crlf_count": 5607,
+    "original_sha256": "c2c300dc81760bc430b18de5f8463a967eec3d614b85100a3917d6782059543d",
+    "lf_normalized_sha256": "1cbeed36fab4afcc4ab5d6aff2e04a842e7f6a54a94a05c05a8a81d15780e83f",
+    "raw_git_blob": "680b134038cf93ccd6f8609967e9b03f6e54191a",
+    "currently_filtered_git_blob": "c73d752d7ec1627df79db9b5fe7b41dbf8078408",
+    "proposed_exact_attribute_line": "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json -text",
+    "attribute_change_applied": false,
+    "expected_with_minus_text": "No text clean/smudge conversion; blob and checkout bytes remain CRLF, raw_git_blob and original_sha256. This is conditional on approved exact-path attribute and verification in the actual later staging/checkout environment.",
+    "proof": "git hash-object --stdin versus git hash-object --path=<exact path> --stdin; no -w. Unfiltered hash proves expected no-text-conversion byte identity; no index, checkout or attribute mutation tested.",
+    "exact_literal_path_matches": 1,
+    "unrelated_attribute_effect": "Proposed literal path has no glob metacharacters; one inventory target. No .gitattributes bytes changed, no index or checkout executed; no empirical filtered checkout PASS claimed."
+  },
+  "must_not_publish_rule": "Do not publish actual secrets, credentials, real PHI or unnecessary local-machine context. Bounded scan found no credential-pattern match, which is not full privacy clearance. Retain raw local-context/historical bytes privately; approve a minimized public derivative and reference resolution separately if needed. No redaction/rewriting of approved evidence performed.",
+  "approval_record_hash": "EXCLUDED — future approval record binds this completed manifest; it cannot be part of its own input hash graph.",
+  "minimum_dependency_closure": {
+    "roots": [
+      "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json"
+    ],
+    "paths": [
+      "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-reconciliation.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/evidence.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-recheck-first-pass.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-reconciliation-first-check.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/package-before-independent-audit.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-documentation-recheck.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-engineering-approval.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-independent-audit.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+      "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+      "specs/012-prescription-safety-governed-overrides/readiness/verify-documentation-reconciliation.py"
+    ],
+    "count": 37,
+    "meaning": "All 37 original records are reachable from six direct references, including evidence artifact hashes. Account for all; this is not permission to publish or commit all. Fourteen commit candidates plus 23 proposed nonpublic/external records require final publication and retention decisions."
+  },
+  "proposed_pr_scope": {
+    "status": "NOT FINAL; separate exact-path approval required",
+    "existing_nine_patch_paths": [
+      "AGENTS.md",
+      ".specify/memory/SHIFAA-Constitution-F012-Amendment-v2.2.0.md",
+      ".specify/templates/overrides/f012-synthetic-profile-supplement.md",
+      "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+      "docs/governance/SHIFAA-PRD-F012-Graduation-Amendment-v2.2.0.md",
+      "docs/governance/SHIFAA-MASTER-F012-Graduation-Amendment-v2.2.0.md",
+      "docs/governance/SHIFAA-Future-Feature-Readiness-Register.md",
+      "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+      "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md"
+    ],
+    "supporting_remediation_records": [
+      "specs/012-prescription-safety-governed-overrides/governance-remediation/constitutional-impact-review.md",
+      "specs/012-prescription-safety-governed-overrides/governance-remediation/activation-and-decisions.md",
+      "specs/012-prescription-safety-governed-overrides/governance-remediation/impact-inventory.json",
+      "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest.json",
+      "specs/012-prescription-safety-governed-overrides/governance-remediation/remediation.diff",
+      "specs/012-prescription-safety-governed-overrides/governance-remediation/validation.json"
+    ],
+    "readiness_commit_candidates": [
+      "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+      "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1"
+    ],
+    "external_or_restricted_retention": [
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck-report.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-recheck.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/documentation-reconciliation.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/evidence.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/decision-brief-before-engineering-approval.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/AGENTS.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/docs/TEAM-ONBOARDING-DRAFT.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck-report.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/documentation-recheck.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/evidence.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/inventory.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-before-authorized-reconciliation/README.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-recheck-first-pass.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/documentation-reconciliation-first-check.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/package-before-independent-audit.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-decision-brief.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-documentation-recheck.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-engineering-approval.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/readiness-evidence-before-independent-audit.json",
+      "specs/012-prescription-safety-governed-overrides/readiness/history/README.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/README.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/verify-documentation-reconciliation.py"
+    ],
+    "additional_canonical_changes_requiring_scope_authorization": [
+      ".specify/memory/constitution.md",
+      ".specify/templates/overrides/constitution-template.md",
+      "shifaa-prd.md",
+      "SHIFAA-Implementation-Plan-MASTER.md",
+      ".specify/templates/overrides/spec-template.md",
+      ".specify/templates/overrides/plan-template.md"
+    ],
+    "preexisting_successor_dependency": [
+      "docs/TEAM-ONBOARDING-DRAFT.md"
+    ],
+    "future_real_approval_record": "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md",
+    "optional_only_if_historical_inventory_is_committed": [
+      ".gitattributes"
+    ],
+    "not_automatic": [
+      "readiness.rar",
+      "23 external/restricted records",
+      "generated runtime assets",
+      "workflow/pin changes"
+    ],
+    "final_gate": "Resolve required reviewers, canonical propagation scope, publication review and verified retention; then approve exact path list. No staging occurred."
+  }
+}
