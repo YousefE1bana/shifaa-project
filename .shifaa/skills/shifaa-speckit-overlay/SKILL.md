@@ -9,6 +9,8 @@ Use this repository-owned wrapper alongside the locally installed official
 SpecKit skills. SpecKit is SHIFAA's only feature lifecycle, but its generic
 templates do not override repository governance or an approved feature boundary.
 
+Read this skill, the actual task context, the [current authority map](../../../docs/governance/SHIFAA-Current-Authority-Map-v1.md), and the [documentation index](../../../docs/SHIFAA-Documentation-Index.md) before lifecycle work. Verify current authority against exact approval records, required integration state, and remote contents; proposal labels alone do not establish current status after approval and integration. Preserve the law/Constitution/PRD/Master hierarchy and all API, RLS, UI, and `not_fully_checked` constraints.
+
 When the user supplies a GitHub Issue URL or number, resolve it with
 `.specify/scripts/powershell/resolve-issue-handoff.ps1 -Issue <issue> -Json`
 before implementation. Require the versioned handoff marker, validate the local

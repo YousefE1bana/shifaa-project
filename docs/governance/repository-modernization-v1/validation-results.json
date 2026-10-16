@@ -1,0 +1,323 @@
+{
+  "schemaVersion": 1,
+  "preparedAt": "2026-10-16T13:01:35.218132+00:00",
+  "scope": "Preparation integrity only; no runtime, live UI, native/device, clinical or production acceptance",
+  "baseline": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+  "branch": "codex/repository-docs-agent-reconciliation",
+  "candidatePaths": 28,
+  "trackedBaselineFiles": 5621,
+  "inventoryRecords": 4731,
+  "commands": [
+    {
+      "command": "git fetch origin main; git rev-parse origin/main; git ls-remote origin refs/heads/main",
+      "result": "PASS",
+      "observedMain": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+      "note": "No upstream drift observed; no checkout/main edits"
+    },
+    {
+      "command": "git -c core.longpaths=true worktree add .worktrees/repository-docs-agent-reconciliation codex/repository-docs-agent-reconciliation",
+      "result": "PASS",
+      "note": "Existing predecessor worktrees retained. Initial default worktree-add long-path error was retried with core.longpaths=true; no destructive cleanup"
+    },
+    {
+      "command": "C:/Python314/python.exe -B tools/verify-documentation-authority.py --mode current",
+      "result": "PASS",
+      "exit": 0,
+      "inventoryRecords": 4731,
+      "protectedArtifacts": 165,
+      "currentMarkdownFiles": 13,
+      "note": "Fresh current-mode pass; pinned protected inputs preserved, publication allowlist not applied to future feature work"
+    },
+    {
+      "command": "C:/Python314/python.exe -B -m unittest discover -s tools -p test_documentation_authority.py -v",
+      "result": "PASS",
+      "exit": 0,
+      "tests": 13,
+      "failed": 0,
+      "note": "Fresh final run: 13 methods, expanded disposable subcases cover all 13 requested criteria; zero failures; 47.544 seconds"
+    },
+    {
+      "command": "node tools/verify-agent-skills.mjs",
+      "result": "PASS",
+      "exit": 0,
+      "ownedSkills": 4
+    },
+    {
+      "command": "node tools/verify-architecture.mjs",
+      "result": "PASS",
+      "exit": 0,
+      "canonicalBoundaries": 18,
+      "packageManifests": 17
+    },
+    {
+      "command": "node tools/verify-secrets.mjs",
+      "result": "PASS",
+      "exit": 0,
+      "note": "Initial child Git emitted long-path warnings; final run uses process-local GIT_CONFIG_COUNT override for core.longpaths=true; independent complete allowlist scan includes TOML/JSONL"
+    },
+    {
+      "command": "node --input-type=module --eval <existing-module-resolver + import verify-contracts.mjs>",
+      "result": "PASS",
+      "exit": 0,
+      "note": "Existing selective verifier reports hard-coded97; not global runtime parity. No contract generation or full pnpm contracts:check claimed"
+    },
+    {
+      "command": "node --input-type=module --eval <existing-module-resolver + import feature-011-two-input-successor.test.mjs>",
+      "result": "PASS",
+      "exit": 0,
+      "tests": 32,
+      "failed": 0,
+      "skipped": 0,
+      "note": "Fresh captured run: 32 tests pass, zero failures/skips, 21.820 seconds; mandatory P4/P5 and exact current/historical negatives remain; no new physical/clinical acceptance"
+    },
+    {
+      "command": "Existing installed prettier CLI --write then --check on exact candidate .md/.json allowlist only",
+      "result": "PASS",
+      "exit": 0,
+      "note": "Exact allowlisted Markdown/JSON formatted and final --check passed; protected files, TOML, JSONL and Python were not formatted"
+    },
+    {
+      "command": "codex --strict-config doctor --json in disposable CODEX_HOME: root+role copies; each five role layers separately",
+      "result": "CONFIG_LOAD_PASS_ENVIRONMENT_NOT_READY",
+      "configLoad": "ok",
+      "tomlParse": "ok",
+      "overallExit": 1,
+      "roles": 5,
+      "activeThreadOverrides": "not inspected",
+      "note": "No credentials copied; full authenticated Desktop effective configuration not claimed"
+    },
+    {
+      "command": "codex features list; codex debug models --bundled; version/package inspection",
+      "result": "PASS",
+      "note": "Installed runtime accepts existing multi_agent_v2 and bundled model/effort choices. No paid model requests/update"
+    },
+    {
+      "command": "git cat-file --batch original F011 blobs compared byte-for-byte with current worktree files",
+      "result": "PASS",
+      "files": 2774,
+      "bytes": 368853663,
+      "mismatches": 0,
+      "gitTree": "ee8590c2d3c68257e77bd95267b778d5612722eb",
+      "note": "Historical evidence was read only; not regenerated or newly accepted"
+    },
+    {
+      "command": "Original17 inventory raw SHA256 plus16entry size/hash comparisons; original5compatibility paths protected by baseline raw-byte checks",
+      "result": "PASS",
+      "contractPaths": 17,
+      "compatibilityPaths": 5,
+      "mismatches": 0,
+      "inventorySha256": "61322ad7a3abdfc4a27a43eaf17998f869218db7870d49846ff4f07e95205228"
+    },
+    {
+      "command": "Existing yaml.parseDocument of10owning-feature OpenAPI snapshots, traverse actual path methods",
+      "result": "PASS",
+      "files": 10,
+      "declarations": 122,
+      "uniqueIds": 122,
+      "note": "Structural declarations, not implemented endpoints; regex probe was discarded because it counts a description reference"
+    },
+    {
+      "command": "git -c core.longpaths=true diff --check; real-index/pointer/scope checks",
+      "result": "PASS",
+      "exit": 0,
+      "realIndexStagedPaths": 0,
+      "activeFeaturePointer": "ABSENT_UNCHANGED",
+      "note": "No staging, commit, push, PR, lifecycle or cleanup"
+    },
+    {
+      "command": "gh issue view 493 --repo YousefE1bana/shifaa-project --json state",
+      "result": "PASS",
+      "state": "OPEN"
+    },
+    {
+      "command": "Independent exact-allowlist privacy/whitespace/JSON/TOML and publication-byte binding checks",
+      "result": "PASS",
+      "candidateFiles": 28,
+      "note": "No raw research, snapshots, archives, private receipts or feature-owned evidence copied into this package; no secret-shaped credential findings in the candidate"
+    },
+    {
+      "command": "C:/Python314/python.exe -B tools/verify-documentation-authority.py --mode package --inventory-sha256 <external final candidate inventory digest>",
+      "result": "PASS",
+      "exit": 0,
+      "note": "External final digest supplied after binding; 28 paths and 27 artifact hashes. Not embedded here to prevent circular manifest binding."
+    },
+    {
+      "command": "Python ast.parse, tabnanny.process_tokens(tokenize.generate_tokens(StringIO(source).readline)), trailing-whitespace checks",
+      "result": "PASS",
+      "exit": 0,
+      "note": "No pyc emitted. Black/Ruff unavailable; not installed or claimed run."
+    },
+    {
+      "command": "Original 24 candidate hashes, exact PR496 inventory and real-index/pointer comparisons around both validation contexts",
+      "result": "PASS",
+      "exit": 0,
+      "unchangedCandidates": 24
+    }
+  ],
+  "moduleResolution": {
+    "reason": "Fresh worktree has no node_modules; existing unchanged installed primary checkout packages used read-only, no installation/symlink",
+    "program": "import {registerHooks,createRequire} from 'node:module';import {pathToFileURL} from 'node:url';const installed=createRequire('D:/ECU/Gradution-Project/package.json');const resolved=new Map([['yaml',pathToFileURL(installed.resolve('yaml')).href],['prettier',pathToFileURL('D:/ECU/Gradution-Project/node_modules/prettier/index.mjs').href]]);registerHooks({resolve(s,c,n){return n(resolved.get(s)||s,c);}});await import('./tools/feature-011-two-input-successor.test.mjs');"
+  },
+  "developmentCorrections": [
+    {
+      "result": "RESOLVED",
+      "issue": "First full checker run rejected extra reviewDepth field and uncovered48missing contract/client inventory paths",
+      "correction": "Use closed metadata schema and include4731trackedpaths, final full check passes"
+    },
+    {
+      "result": "RESOLVED",
+      "issue": "First temporary module-resolution probe recursively resolved its own require; next used CJS Prettier without named export",
+      "correction": "Pre-resolve yaml and use existing Prettier public ESM entry; captured32tests pass; no repository dependency mutation"
+    },
+    {
+      "result": "RESOLVED",
+      "issue": "Doctor result parser initially expected list instead of checks object",
+      "correction": "Inspect config.load object; root and5roles load OK, overall environment exit1 remains honestly reported"
+    },
+    {
+      "result": "RESOLVED",
+      "issue": "Expanded disposable read-only test detected Git auto-refreshing cached index stat data after fixture mutation",
+      "correction": "Disable optional locks, fsmonitor, external diff/textconv and diff.autoRefreshIndex for checker reads; final complete disposable snapshots and actual index comparisons pass"
+    },
+    {
+      "result": "RESOLVED",
+      "issue": "Initial external tabnanny runner passed readline result rather than callable",
+      "correction": "Corrected runner callable; failure occurred before validation/publication writes; AST/indentation checks now pass"
+    }
+  ],
+  "notExecuted": [
+    {
+      "check": "pnpm verify",
+      "reason": "Includes db:reset/down -v and evidence-producing harnesses. No authorized isolated aggregate execution or PR-specific exception for this modernization. Required before publication unless exact disposition approved."
+    },
+    {
+      "check": "Live Arabic/English; native NVDA/TalkBack/physical device",
+      "reason": "No executable UI change; not performed/not PASS; current integration policy is not automatically waived."
+    },
+    {
+      "check": "GitHub CI",
+      "reason": "No commit/push/PR authorized; historical PR496 green checks are not this candidate verification."
+    },
+    {
+      "check": "Full runtime/security/clinical acceptance and professional P01-P30 answers",
+      "reason": "Not authorized or established by documentary/static/regression checks."
+    },
+    {
+      "check": "Existing agent-skills:test updater self-test",
+      "reason": "Contains recursive temporary cleanup; not invoked here. Owned source validator and explicit role/skill checks performed; no sync/install/update."
+    },
+    {
+      "check": "Global historical external link crawl, full historical semantic reread, new retention/restore proof",
+      "reason": "Protected metadata and targeted current references checked; no claim every historical URL/log/private artifact was reaudited."
+    }
+  ],
+  "preservation": {
+    "F011RawFilesUnchanged": 2774,
+    "originalPR496PathsUnchanged": 22,
+    "privateFeatureOriginals": "Not read/copied/edited/staged by this package; existing retention limitations unchanged",
+    "personalConfig": "Read-only hash before/after unchanged",
+    "otherWorktrees": "Retained untouched; no branch/pointer/evidence cleanup",
+    "original24CandidateArtifacts": "Fresh byte count/SHA-256 comparison against superseded candidate passed",
+    "F011CurrentCheck": "Original tree and no tracked path changes plus 165 pinned current input checks; no clinical/physical reacceptance"
+  },
+  "independentReview": {
+    "docsGuard": "Read and applied: source authority, scoped claims, link integrity, explicit limitations and no false approvals",
+    "testGuard": "Read and applied: behavioral negatives rather than mirrored implementation, disposable fixtures, raw results inspected by root",
+    "cleanCodeGuard": "Read and applied including AI failure modes: stdlib only, batched Git reads, explicit boundary validation, fail-closed errors, no runtime or DB integration"
+  },
+  "classificationCounts": {
+    "OUTDATED_ACTIONABLE": 12,
+    "CURRENT_CANONICAL": 138,
+    "SUPERSEDED": 3,
+    "HISTORICAL_IMMUTABLE": 4540,
+    "DRAFT_OR_PROPOSED": 24,
+    "CURRENT_ADDITIVE_SUCCESSOR": 14
+  },
+  "remainingDecisions": [
+    "Exact candidate content approval, including routine/default medium effort; no4childprofile",
+    "Exact publication verification disposition or authorized safe full execution under current policy",
+    "CI wiring/change-class policy require separate approval and are not applied here"
+  ],
+  "finalRemoteMain": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+  "supersededCandidate": {
+    "publicationInventoryBytes": 25338,
+    "publicationInventorySha256": "a2447dad8050e3859e0f64e44c99f5b4454f8c28befe74c99bd644fb72e3035b",
+    "disposition": "Superseded unapproved review candidate; not approval of revised bytes",
+    "changedPathCount": 4,
+    "unchangedArtifactCount": 24
+  },
+  "validationContexts": {
+    "documentation": "Contracts are explicit in checker docstring and --help. Supporting 24 artifacts unchanged.",
+    "package": "--mode package requires an externally reviewed --inventory-sha256; exact 28 paths, 27 artifact hashes, publication classifications and dependency closure plus shared history checks. Inventory excludes its own hash.",
+    "current": "Default --mode current preserves pinned baseline/protected/approval inputs, baseline inventory, accounting, configuration and references without the frozen package allowlist. New docs are UNCLASSIFIED_NON_PROTECTED, never automatically canonical. Historical classification alone does not freeze current bytes.",
+    "successors": "Optional integrated additive locator with externally reviewed digest and exact approval/artifact bytes. Never replaces protected inputs, grants professional/clinical/legal/lifecycle authority, rewrites F011 acceptance or performs activation. No actual future approval created.",
+    "limits": "Structural metadata/byte checks, not natural-language policy certification, human approval, remote-main discovery, clinical or runtime acceptance."
+  },
+  "forwardCompatibilityMatrix": [
+    {
+      "id": 1,
+      "case": "Exact 28-path package passes",
+      "result": "PASS"
+    },
+    {
+      "id": 2,
+      "case": "Modified/missing package artifacts fail",
+      "result": "PASS"
+    },
+    {
+      "id": 3,
+      "case": "Unexpected package path fails",
+      "result": "PASS"
+    },
+    {
+      "id": 4,
+      "case": "New non-protected F012 spec passes before commit as unclassified",
+      "result": "PASS"
+    },
+    {
+      "id": 5,
+      "case": "Same spec passes after future fixture commit",
+      "result": "PASS"
+    },
+    {
+      "id": 6,
+      "case": "Frozen allowlist does not constrain current work; non-protected historical note can change/retire",
+      "result": "PASS"
+    },
+    {
+      "id": 7,
+      "case": "Protected F011 change rejected in both modes",
+      "result": "PASS"
+    },
+    {
+      "id": 8,
+      "case": "Protected PR496 change rejected; additive locator cannot replace protected bytes",
+      "result": "PASS"
+    },
+    {
+      "id": 9,
+      "case": "Unauthorized canonical or baseline-ledger change rejected",
+      "result": "PASS"
+    },
+    {
+      "id": 10,
+      "case": "Allowed path grants no authority; explicit clinical/legal/lifecycle/normative claims rejected",
+      "result": "PASS"
+    },
+    {
+      "id": 11,
+      "case": "Missing/corrupt successor approval, record, target or external pin fails closed",
+      "result": "PASS"
+    },
+    {
+      "id": 12,
+      "case": "Integrated approved additive locator recognized without new F011 acceptance",
+      "result": "PASS"
+    },
+    {
+      "id": 13,
+      "case": "Both modes preserve complete fixture snapshots, real index and active pointer",
+      "result": "PASS"
+    }
+  ]
+}

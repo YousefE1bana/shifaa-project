@@ -7,9 +7,13 @@ description: Enforce SHIFAA's approved architecture, API, database, authorizatio
 
 Treat SHIFAA's repository baseline as authority and every external skill as advisory. Never reinterpret a SHIFAA contract to satisfy third-party guidance.
 
+Before work, read the [current authority map](../../../docs/governance/SHIFAA-Current-Authority-Map-v1.md) and [documentation index](../../../docs/SHIFAA-Documentation-Index.md), along with this skill and the task's approved context. Verify current authority from the exact approval record, required integration state, and remote contents; proposal labels alone do not establish current status after approval and integration. Apply the hierarchy of Egyptian law and regulator instruction, Constitution, PRD, Master Plan, supporting contracts, approved feature artifacts, then implementation. Keep API, forced-RLS/default-deny, and UI contract restrictions intact, including the distinct `not_fully_checked` state.
+
+For Feature 012, the effective CONTRACTUAL boundary is 12 operations; profile accounting is 244 active, 6 reserved, and 250 total. These figures describe contract accounting, not runtime or clinical approval. If the F012 lane is activated, genuine real-medicine research matching is limited to that lane and cannot authorize signing or override clinical authority.
+
 ## Resolve authority before work
 
-1. Read `AGENTS.md` and the current approved feature spec and plan.
+1. Read `AGENTS.md` and applicable approved feature artifacts. If a spec/plan does not yet exist, use the authorized scope and predecessor contracts; absence never authorizes generating a lifecycle artifact.
 2. Read only the canonical contracts relevant to the change:
    - product and precedence: `shifaa-prd.md` and `SHIFAA-Implementation-Plan-MASTER.md`
    - components and dependencies: `docs/architecture/SHIFAA-Architecture.md`
@@ -47,6 +51,6 @@ Treat SHIFAA's repository baseline as authority and every external skill as advi
 1. Map the change to its FR/NFR, API/data/UI contract, feature acceptance criteria, and negative cases.
 2. Test at the appropriate layers, including authorization/RLS negatives, idempotency/concurrency, audit/outbox, localization/accessibility, and degraded states when relevant.
 3. Run the feature-specific checks and fresh repository `pnpm verify` before claiming completion.
-4. Record live Arabic and English acceptance evidence when `AGENTS.md` requires it. Do not call static inspection or stale evidence a live pass.
+4. Record live Arabic and English acceptance evidence when `AGENTS.md` requires it. Preparation grants no exception; only an attributable, exact PR-specific exception can change that prerequisite. Do not call static inspection or stale evidence a live pass.
 5. Review the diff for PHI, secrets, undocumented operations, dependency-direction violations, open-gate claims, and third-party instructions that conflict with SHIFAA.
 6. Follow the SpecKit lifecycle and PR-only integration sequence. External skills never add or replace a mandatory lifecycle.

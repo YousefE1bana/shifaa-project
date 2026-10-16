@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "baseline": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+  "status": "CANDIDATE_FINDINGS_NOT_NEW_ACCEPTANCE",
+  "findings": [
+    {
+      "id": "DOC-01",
+      "priority": "P0",
+      "classification": "OUTDATED_ACTIONABLE",
+      "path": "AGENTS.md",
+      "defect": "Prospective activation/ten-operation language in always-loaded entry misleads after PR494/495/496",
+      "correction": "Replace operational entry with source-resolved lookup; retain original historical identity",
+      "disposition": "FIXED_IN_CANDIDATE",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": "AGENTS.md",
+          "line": 49,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/AGENTS.md#L49"
+        },
+        {
+          "path": "AGENTS.md",
+          "line": 193,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/AGENTS.md#L193"
+        }
+      ]
+    },
+    {
+      "id": "DOC-02",
+      "priority": "P0",
+      "classification": "DOCUMENTATION_DRIFT",
+      "path": ".specify/memory/constitution.md; .specify/templates/overrides/; F012 sidecars/readiness",
+      "defect": "Hash-bound preparation labels can be mistaken for current authority",
+      "correction": "Add map with explicit approval/integration precedence, manual lifecycle source-loading list; do not change frozen bytes",
+      "disposition": "FIXED_BY_ADDITIVE_LOOKUP",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": ".specify/memory/constitution.md",
+          "line": 3,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/.specify/memory/constitution.md#L3"
+        },
+        {
+          "path": ".specify/templates/overrides/spec-template.md",
+          "line": 32,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/.specify/templates/overrides/spec-template.md#L32"
+        }
+      ]
+    },
+    {
+      "id": "DOC-03",
+      "priority": "P1",
+      "classification": "DOCUMENTATION_DRIFT",
+      "path": "docs/architecture/SHIFAA-API-Catalog.md; docs/architecture/SHIFAA-Data-RLS.md",
+      "defect": "Whole-file historical hashes require approved two-input successor, not rewrite",
+      "correction": "Preserve exact approved appendices/compatibility and regression tests",
+      "disposition": "PRESERVED_AND_CHECKED",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": "tools/feature-011-two-input-successor.mjs",
+          "line": 34,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/tools/feature-011-two-input-successor.mjs#L34"
+        },
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/decisions/f011-two-input-compatibility-validation-v1.json",
+          "line": 47,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/specs/012-prescription-safety-governed-overrides/decisions/f011-two-input-compatibility-validation-v1.json#L47"
+        }
+      ]
+    },
+    {
+      "id": "DOC-04",
+      "priority": "P1",
+      "classification": "CONFIRMED_GAP",
+      "path": "docs/",
+      "defect": "No single concise current requirements/contracts/runtime/evidence navigator",
+      "correction": "Add index, authority map and feature dimension lookup",
+      "disposition": "FIXED_IN_CANDIDATE",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": []
+    },
+    {
+      "id": "DOC-05",
+      "priority": "P1",
+      "classification": "DOCUMENTATION_DRIFT",
+      "path": ".codex/config.toml; .codex/agents/*.toml",
+      "defect": "Duplicated always-loaded hints and routine high effort; assumed config capacity differs from actual session limit",
+      "correction": "Shorten hints; routine medium; retain 5 roles/2 ceiling; installed-runtime probes; no security/global changes",
+      "disposition": "FIXED_IN_CANDIDATE",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": ".codex/config.toml",
+          "line": 4,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/.codex/config.toml#L4"
+        },
+        {
+          "path": ".codex/config.toml",
+          "line": 5,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/.codex/config.toml#L5"
+        }
+      ]
+    },
+    {
+      "id": "DOC-06",
+      "priority": "P1",
+      "classification": "DOCUMENTATION_DRIFT",
+      "path": ".shifaa/skills/; docs/agent-skills/README.md",
+      "defect": "Current authority/loading instructions and feature-owned evidence need aligned source lookup",
+      "correction": "Update owned policies and discovery limits; no local skill installations",
+      "disposition": "FIXED_IN_CANDIDATE",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": []
+    },
+    {
+      "id": "DOC-07",
+      "priority": "P1",
+      "classification": "DOCUMENTATION_DRIFT",
+      "path": "docs/TEAM-ONBOARDING-DRAFT.md; docs/TEAM-INSTALLATION-CHECKLIST.md",
+      "defect": "Dated observations and pending integration prose are not current install readiness",
+      "correction": "Preserve F011-bound snapshots; new operational guide links actual pins/scripts and warns reset effects",
+      "disposition": "FIXED_BY_ADDITIVE_LOOKUP",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": "docs/TEAM-ONBOARDING-DRAFT.md",
+          "line": 8,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/docs/TEAM-ONBOARDING-DRAFT.md#L8"
+        }
+      ]
+    },
+    {
+      "id": "DOC-08",
+      "priority": "P1",
+      "classification": "NEEDS_AUTHORITY_DECISION",
+      "path": "AGENTS.md; package.json verify; .github/workflows/ci.yml",
+      "defect": "Mandatory aggregate/live acceptance versus preparation-only non-destructive scope",
+      "correction": "Keep current policy; separately propose class-specific criteria/disposition, no implicit waiver",
+      "disposition": "PENDING_EXACT_INTEGRATION_DISPOSITION",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": "AGENTS.md",
+          "line": 10,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/AGENTS.md#L10"
+        },
+        {
+          "path": "package.json",
+          "line": 21,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/package.json#L21"
+        },
+        {
+          "path": "package.json",
+          "line": 82,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/package.json#L82"
+        }
+      ]
+    },
+    {
+      "id": "DOC-09",
+      "priority": "P2",
+      "classification": "DOCUMENTATION_DRIFT",
+      "path": "docs/governance/SHIFAA-Completion-Coverage.md; SHIFAA-Future-Feature-Readiness-Register.md",
+      "defect": "Historical summary sums118 while reported119; row-derived119; OPEN19 versus frozen23",
+      "correction": "Reference existing reconciliation; preserve statuses and gate ownership; no new acceptance",
+      "disposition": "PRESERVED_EXISTING_RECONCILIATION",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": "docs/governance/SHIFAA-Future-Feature-Readiness-Register.md",
+          "line": 54,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/docs/governance/SHIFAA-Future-Feature-Readiness-Register.md#L54"
+        },
+        {
+          "path": "docs/governance/SHIFAA-Future-Feature-Readiness-Register.md",
+          "line": 62,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/docs/governance/SHIFAA-Future-Feature-Readiness-Register.md#L62"
+        }
+      ]
+    },
+    {
+      "id": "DOC-10",
+      "priority": "P2",
+      "classification": "CONFIRMED_GAP",
+      "path": "tools/; .github/",
+      "defect": "No maintained lightweight current authority/protected scope/map/config/link checker",
+      "correction": "Prepare read-only stdlib tool and meaningful negative tests; CI wiring proposed only",
+      "disposition": "FIXED_TOOL_CANDIDATE_CI_PENDING",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": []
+    },
+    {
+      "id": "DOC-11",
+      "priority": "P1",
+      "classification": "NO_FINDING",
+      "path": "specs/011-allergies-clinical-content-governance",
+      "defect": "Historical lifecycle and accepted preservation loss must not become fresh PASS",
+      "correction": "Preserve all2774trackedfiles/tree and disposition, no reopened acceptance",
+      "disposition": "PRESERVED",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/decisions/artifact-finalization-policy-2026-10-13.md",
+          "line": 17,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/specs/011-allergies-clinical-content-governance/decisions/artifact-finalization-policy-2026-10-13.md#L17"
+        }
+      ]
+    },
+    {
+      "id": "DOC-12",
+      "priority": "P1",
+      "classification": "NO_FINDING",
+      "path": "services/api/src/app.ts; specs/012-prescription-safety-governed-overrides",
+      "defect": "Twelve contract assignments do not establish implemented API or clinical safety",
+      "correction": "Map distinct dimensions; not_fully_checked and professional/gate limits remain",
+      "disposition": "EXPLICIT_LIMIT_PRESERVED",
+      "authoritativeEvidence": "PR494/495/496, canonical authority and exact owning-feature records indexed in current map",
+      "sourceAnchors": [
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md",
+          "line": 14,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md#L14"
+        },
+        {
+          "path": "services/api/src/app.ts",
+          "line": 29,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/services/api/src/app.ts#L29"
+        }
+      ]
+    },
+    {
+      "id": "DOC-13",
+      "priority": "P1",
+      "classification": "DOCUMENTATION_DRIFT",
+      "path": "specs/011-allergies-clinical-content-governance/tasks.md:3-6",
+      "defect": "Frozen generation header says DRAFT/unchecked/paused although later accepted checkpoints, 92 checked entries and merged implementation are retained",
+      "correction": "Current feature map records generation-vs-acceptance distinction and finalization limits, without rewriting the ledger",
+      "disposition": "FIXED_BY_ADDITIVE_LOOKUP",
+      "authoritativeEvidence": "tasks.md checked entries; PR490 e41abb4; decisions/artifact-finalization-policy-2026-10-13.md lines17-37",
+      "sourceAnchors": [
+        {
+          "path": "specs/011-allergies-clinical-content-governance/tasks.md",
+          "line": 4,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/specs/011-allergies-clinical-content-governance/tasks.md#L4"
+        }
+      ]
+    },
+    {
+      "id": "DOC-14",
+      "priority": "P2",
+      "classification": "DOCUMENTATION_DRIFT",
+      "path": "tools/verify-contracts.mjs final console.log",
+      "defect": "Success message hard-codes 97 operations; independent structural parsing finds122unique declarations across10owningfeatureOpenAPI snapshots. The verifier has a selective scope, so neither number establishes implemented global parity.",
+      "correction": "Document exact checker scope and fresh declared-snapshot count separately; leave existing verifier/hash bindings intact. Any dynamic-summary tooling correction requires its own scoped review.",
+      "disposition": "DOCUMENTED_NOT_A_RUNTIME_PARITY_CLAIM",
+      "authoritativeEvidence": "parseOpenApi implementation and final success text; parseDocument of specs/*/contracts/openapi.yaml; services/api/src/app.ts registration",
+      "sourceAnchors": [
+        {
+          "path": "tools/verify-contracts.mjs",
+          "line": 566,
+          "commit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+          "permalink": "https://github.com/YousefE1bana/shifaa-project/blob/e7e606532c97568fa17d1e98c4160b84390db9d5/tools/verify-contracts.mjs#L566"
+        }
+      ]
+    }
+  ]
+}
