@@ -1,8 +1,15 @@
-import { randomUUID } from 'node:crypto';
+import { randomUUID, randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
-import { buildApp } from '../../services/api/src/app.ts';
-import { loadConfig } from '../../services/api/src/config.ts';
+import {
+  connectTestOwner,
+  withTestResource,
+  guardTestHandle,
+  registerRunRecord,
+  assertRunOwned,
+  runRecordIds,
+  revalidateTestResourceContext,
+} from '../../tools/test-resource-context.mjs';
 import {
   discoverySosSyntheticConfig,
   discoverySosSyntheticContact,
@@ -12,23 +19,35 @@ import {
   discoverySosSyntheticPeople,
   discoverySosSyntheticRelationships,
 } from '../../packages/test-kit/src/discovery-sos.ts';
-import postgres from 'postgres';
+import type postgres from 'postgres';
+import type { MessagingAdapter } from '../../services/worker/src/privacy-dsr-notifications.ts';
 
-export const ownerDatabaseUrl =
-  'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
-export const apiDatabaseUrl = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa';
-export const workerDatabaseUrl =
-  'postgresql://shifaa_worker:synthetic_worker_only@127.0.0.1:5432/shifaa';
+export async function createDiscoverySosStack(context?: object) {
+  revalidateTestResourceContext(context, 'discovery-sos');
+  const [{ default: postgres }, { buildApp }, { loadConfig }] = await Promise.all([
+    import('postgres'),
+    import('../../services/api/src/app.ts'),
+    import('../../services/api/src/config.ts'),
+  ]);
+  const owner = (await connectTestOwner(context, 'discovery-sos', (url: string) =>
+    postgres(url, { max: 2 }),
+  )) as postgres.Sql;
+  try {
+    // Fixed-ID fixtures may be created only in the fresh, exclusively run-owned DB.
+    // Reject preexisting fixture rows instead of silently upserting another run.
+    const [existing] = await owner<
+      { count: number }[]
+    >`select count(*)::int as count from identity.facilities where id in ('63000000-0000-4000-8000-000000000001','63000000-0000-4000-8000-000000000002','63000000-0000-4000-8000-000000000003','63000000-0000-4000-8000-000000000004','63000000-0000-4000-8000-000000000005','63000000-0000-4000-8000-000000000006')`;
+    if (existing?.count !== 0)
+      throw new Error('test-resource-denied: preexisting discovery fixtures');
+    const fixturePath = new URL('../../infra/db/fixtures/discovery-sos.sql', import.meta.url);
+    await owner.unsafe(readFileSync(fixturePath, 'utf8'));
 
-export async function createDiscoverySosStack() {
-  const owner = postgres(ownerDatabaseUrl, { max: 2 });
+    for (const facility of Object.values(discoverySosSyntheticFacilities))
+      registerRunRecord(context, 'discovery-sos', 'facility', facility);
 
-  // Load baseline discovery-sos facility/license/capacity fixtures if not already present
-  const fixturePath = new URL('../../infra/db/fixtures/discovery-sos.sql', import.meta.url);
-  await owner.unsafe(readFileSync(fixturePath, 'utf8'));
-
-  // Ensure synthetic capacity projection freshness window is aligned with current transaction time
-  await owner`
+    // Ensure synthetic capacity projection freshness window is aligned with current transaction time
+    await owner`
     UPDATE hospital.capacity_projections
     SET observed_at = statement_timestamp() - interval '1 minute',
         fresh_until = CASE facility_id
@@ -50,74 +69,155 @@ export async function createDiscoverySosStack() {
           WHEN '63000000-0000-4000-8000-000000000002'::uuid THEN 0
           ELSE emergency_held_count
         END
+    WHERE facility_id IN (${discoverySosSyntheticFacilities.nearestFreshHospital}::uuid, ${discoverySosSyntheticFacilities.fartherFreshHospital}::uuid, ${discoverySosSyntheticFacilities.staleHospital}::uuid)
   `;
 
-  // Clean any lingering runtime incidents from previous runs before starting
-  await cleanRuntimeState(owner);
+    const baseConfig = loadConfig({ NODE_ENV: 'test' });
+    const harness = await withTestResource(
+      context,
+      'discovery-sos',
+      'api',
+      async (databaseUrl: string) =>
+        buildApp({
+          config: {
+            ...baseConfig,
+            repositoryAdapter: 'postgres',
+            databaseUrl,
+            discoverySosEnabled: true,
+          },
+          clock: { now: () => new Date() },
+        }),
+    );
 
-  const baseConfig = loadConfig({ NODE_ENV: 'test' });
-  const harness = await buildApp({
-    config: {
-      ...baseConfig,
-      repositoryAdapter: 'postgres',
-      databaseUrl: apiDatabaseUrl,
-      discoverySosEnabled: true,
-    },
-    clock: { now: () => new Date() },
-  });
+    const incidents = new Set<string>();
+    const rawApp = harness.app;
+    const inject = rawApp.inject.bind(rawApp);
+    // Retain exact IDs returned by this run; no event-type/global cleanup.
+    rawApp.inject = (async (options: any) => {
+      revalidateTestResourceContext(context, 'discovery-sos');
+      const response = await inject(options);
+      if (
+        options.method === 'POST' &&
+        response.statusCode === 201 &&
+        response.headers['content-type']?.includes('json')
+      ) {
+        const body = response.json();
+        for (const [kind, value] of [
+          ['incident', body.incident?.incident_id],
+          ['share', body.share?.share_id],
+        ] as const) {
+          if (value) {
+            registerRunRecord(context, 'discovery-sos', kind, value);
+            if (kind === 'incident') incidents.add(value);
+          }
+        }
+      }
+      return response;
+    }) as typeof rawApp.inject;
+    harness.app = guardTestHandle(context, 'discovery-sos', rawApp, ['inject']);
+    const clean = async () => {
+      for (const incidentId of incidents) {
+        assertRunOwned(context, 'discovery-sos', 'incident', incidentId);
+        const headers = {
+          authorization: person(discoverySosSyntheticPeople.patient),
+          'x-shifaa-patient-context': discoverySosSyntheticPatients.subject,
+          'x-purpose': 'emergency_care',
+        };
+        const current = await harness.app.inject({
+          method: 'GET',
+          url: `/v1/sos/incidents/${incidentId}`,
+          headers,
+        });
+        if (current.statusCode !== 200)
+          throw new Error('owned incident unavailable; preserve resources');
+        const incident = current.json().incident;
+        if (incident.status === 'closed') continue;
+        const closed = await harness.app.inject({
+          method: 'POST',
+          url: `/v1/sos/incidents/${incidentId}/close`,
+          headers: { ...headers, 'if-match': `"${incident.version}"`, 'idempotency-key': key() },
+          payload: { outcome_code: 'no_longer_needed' },
+        });
+        if (closed.statusCode !== 200)
+          throw new Error('owned incident close failed; preserve resources');
+      }
+    };
 
-  return {
-    ...harness,
-    owner,
-    ids: {
-      people: discoverySosSyntheticPeople,
-      patients: discoverySosSyntheticPatients,
-      facilities: discoverySosSyntheticFacilities,
-      locations: discoverySosSyntheticLocations,
-      config: discoverySosSyntheticConfig,
-      relationships: discoverySosSyntheticRelationships,
-      contact: discoverySosSyntheticContact,
-    },
-    clean: () => cleanRuntimeState(owner),
-    close: async () => {
-      await cleanRuntimeState(owner);
-      await harness.app.close();
-      await owner.end({ timeout: 5 });
-    },
-  };
-}
-
-async function cleanRuntimeState(owner: postgres.Sql) {
-  await owner.begin(async (sql) => {
-    await sql`alter table platform.sos_incidents disable trigger user`;
-    await sql`alter table platform.emergency_share_links disable trigger user`;
-    await sql`alter table platform.outbox_events disable trigger user`;
-    await sql`alter table platform.notifications disable trigger user`;
-    await sql`alter table platform.notification_delivery_attempts disable trigger user`;
-    await sql`alter table platform.synthetic_message_receipts disable trigger user`;
-    await sql`alter table platform.idempotency_records disable trigger user`;
-    await sql`alter table audit.events disable trigger user`;
-
-    await sql`delete from platform.event_receipts where consumer = 'discovery-sos-contact-worker' or event_id in (select id from platform.outbox_events where event_type in ('sos.incident.created','sos.incident.accepted','sos.incident.closed','sos.share.created','sos.share.revoked','sos.share.viewed','sos.emergency_contact.requested') or aggregate_type in ('sos-incident','sos-contact','discovery-sos'))`;
-    await sql`delete from platform.notification_delivery_attempts where source_event_id in (select id from platform.outbox_events where event_type = 'sos.emergency_contact.requested')`;
-    await sql`delete from platform.synthetic_message_receipts where true`;
-    await sql`delete from platform.notifications where recipient_type = 'emergency_contact'`;
-    await sql`delete from platform.outbox_events where event_type in ('sos.incident.created','sos.incident.accepted','sos.incident.closed','sos.share.created','sos.share.revoked','sos.share.viewed','sos.emergency_contact.requested') or aggregate_type in ('sos-incident','sos-contact','discovery-sos')`;
-    await sql`delete from platform.emergency_share_links where true`;
-    await sql`delete from platform.sos_incidents where true`;
-    await sql`delete from platform.idempotency_records
-      where route_template like '%sos%' or route_template like '%discovery%'`;
-    await sql`delete from audit.events where resource_type in ('discovery-sos','emergency-share') or action_code like 'sos.%'`;
-
-    await sql`alter table audit.events enable trigger user`;
-    await sql`alter table platform.idempotency_records enable trigger user`;
-    await sql`alter table platform.notification_delivery_attempts enable trigger user`;
-    await sql`alter table platform.synthetic_message_receipts enable trigger user`;
-    await sql`alter table platform.notifications enable trigger user`;
-    await sql`alter table platform.outbox_events enable trigger user`;
-    await sql`alter table platform.emergency_share_links enable trigger user`;
-    await sql`alter table platform.sos_incidents enable trigger user`;
-  });
+    const contact: { confirmed: string } = { ...discoverySosSyntheticContact };
+    return {
+      app: harness.app,
+      owner,
+      ids: {
+        people: discoverySosSyntheticPeople,
+        patients: discoverySosSyntheticPatients,
+        facilities: discoverySosSyntheticFacilities,
+        locations: discoverySosSyntheticLocations,
+        config: discoverySosSyntheticConfig,
+        relationships: discoverySosSyntheticRelationships,
+        contact,
+      },
+      context,
+      clean,
+      createWorker: async (adapter: MessagingAdapter, workerId?: string) =>
+        withTestResource(context, 'discovery-sos', 'worker', async (url: string) => {
+          const { PostgresDiscoverySosProcessor } = await import(
+            '../../services/worker/src/discovery-sos.ts'
+          );
+          revalidateTestResourceContext(context, 'discovery-sos');
+          return guardTestHandle(
+            context,
+            'discovery-sos',
+            new PostgresDiscoverySosProcessor(url, adapter, workerId),
+            ['processNext'],
+          );
+        }),
+      createDurableProvider: async () =>
+        withTestResource(context, 'discovery-sos', 'worker', async (url: string) => {
+          const { DurableLocalSyntheticMessagingAdapter } = await import(
+            '../../services/worker/src/adapters/local-synthetic-messaging.ts'
+          );
+          revalidateTestResourceContext(context, 'discovery-sos');
+          return guardTestHandle(
+            context,
+            'discovery-sos',
+            new DurableLocalSyntheticMessagingAdapter(url),
+            ['send'],
+          );
+        }),
+      setContactPrecision: async (precision: 'none' | 'coarse' | 'exact') => {
+        const previous = contact.confirmed;
+        assertRunOwned(context, 'discovery-sos', 'contact', previous);
+        const replacement = randomUUID();
+        const invitation = randomBytes(32);
+        await owner.begin(async (sql) => {
+          await sql`select set_config('shifaa.person_id',${discoverySosSyntheticPeople.patient},true)`;
+          await sql`update identity.emergency_contacts set status='revoked',revoked_by_person_id=${discoverySosSyntheticPeople.patient}::uuid,revoked_at=statement_timestamp() where id=${previous}::uuid and subject_patient_id=${discoverySosSyntheticPatients.subject}::uuid`;
+          await sql`insert into identity.emergency_contacts(id,subject_patient_id,created_by_person_id,display_name_ciphertext,display_name_nonce,display_name_authentication_tag,display_name_key_version,phone_ciphertext,phone_nonce,phone_authentication_tag,phone_key_version,masked_phone,phone_blind_index,preferred_locale,location_precision,status,invite_token_digest,invite_key_version,invite_expires_at)
+          select ${replacement}::uuid,subject_patient_id,created_by_person_id,display_name_ciphertext,display_name_nonce,display_name_authentication_tag,display_name_key_version,phone_ciphertext,phone_nonce,phone_authentication_tag,phone_key_version,masked_phone,phone_blind_index,preferred_locale,${precision},'pending',${invitation},invite_key_version,statement_timestamp()+interval '1 day' from identity.emergency_contacts where id=${previous}::uuid and subject_patient_id=${discoverySosSyntheticPatients.subject}::uuid`;
+          await sql`select * from platform.respond_emergency_contact_invite(${invitation},'confirmed')`;
+        });
+        registerRunRecord(context, 'discovery-sos', 'contact', replacement);
+        contact.confirmed = replacement;
+      },
+      setCallbackRevoked: async (revoked: boolean) => {
+        const callbacks = runRecordIds(context, 'discovery-sos', 'callback');
+        if (callbacks.length !== 1) throw new Error('exact run-owned callback fixture required');
+        const callbackId = callbacks[0]!;
+        assertRunOwned(context, 'discovery-sos', 'callback', callbackId);
+        await owner`update identity.callback_contact_verifications set revoked_at=${revoked ? new Date() : null} where person_id=${callbackId}::uuid and person_id=${discoverySosSyntheticPeople.patient}::uuid`;
+      },
+      close: async () => {
+        try {
+          await harness.app.close();
+        } finally {
+          await owner.end({ timeout: 5 });
+        }
+      },
+    };
+  } catch (error) {
+    await owner.end({ timeout: 5 });
+    throw error;
+  }
 }
 
 export const person = (id: string) => `Bearer synthetic-person:${id}`;
