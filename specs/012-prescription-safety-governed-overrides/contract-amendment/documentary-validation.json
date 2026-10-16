@@ -1,0 +1,409 @@
+{
+  "amendmentId": "F012-REVIEWER-CONTRACT/0.1.0",
+  "recordKind": "DOCUMENTARY_VALIDATION_ONLY",
+  "observedAtUTC": "2026-10-16T08:56:54.162084+00:00",
+  "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+  "runtime": {
+    "python": "3.14.6",
+    "git": "git version 2.56.0.windows.1",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "node": "v24.18.0"
+  },
+  "executedCommands": [
+    "git rev-parse HEAD",
+    "git branch --show-current",
+    "git ls-remote origin refs/heads/main",
+    "git show <base>:<path> / git rev-parse <base>:<path>",
+    "git diff --name-only -z",
+    "git ls-files --others --exclude-standard -z",
+    "git diff --cached --name-only -z",
+    "git diff --check",
+    "C:\\Python314\\python.exe -X utf8 - (inline standard-library JSON/count/hash/reference/whitespace/privacy checks)",
+    "node --input-type=module -e \"import {readDocumentationSuccessor,readConstitutionSuccessor} from './tools/feature-011-documentation-successor.mjs'; readDocumentationSuccessor(process.cwd()); readConstitutionSuccessor(process.cwd());\""
+  ],
+  "method": "Read-only checks except writing these authorized documentary validation and inventory records. No temporary index, staging, fixture execution, DB or runtime tests. Final inventory hashes validated again after final serialization.",
+  "checks": [
+    {
+      "check": "branch_and_base",
+      "result": "PASS",
+      "observed": {
+        "HEAD": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+        "branch": "codex/012-reviewer-contract-amendment"
+      }
+    },
+    {
+      "check": "fresh_remote_main",
+      "result": "PASS",
+      "observed": "922d33b415814d4bcb935a0df592ef32205cb6ff"
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/architecture/SHIFAA-API-Catalog.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 96036,
+        "baseBlob": "ef5b1b5f4a4299dd745e1004335b4dec677fb3a5",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/architecture/SHIFAA-Data-RLS.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 82052,
+        "baseBlob": "19f72ef97ad329080a0ed5a0d6490fff117f1faa",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/architecture/SHIFAA-Architecture.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 14434,
+        "baseBlob": "5a5f9c21a059bcf79cb7d9737913248bb50c431a",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/design/SHIFAA-UI-Contract.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 28266,
+        "baseBlob": "a0fb9a7101679840538499fe7de797694a7bca79",
+        "treatment": "PRESERVED_EXACT_CANONICAL_BYTES"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:shifaa-prd.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 97658,
+        "baseBlob": "6d74245660c071f4f011596972c47e8182484564",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:SHIFAA-Implementation-Plan-MASTER.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 93489,
+        "baseBlob": "cc28ddd59f274cc8869a7019aed653180e6e2fb6",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 29454,
+        "baseBlob": "b8c663e16f839c598377068c1a88a8af9a03fba2",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 32968,
+        "baseBlob": "ad5be1a9cdd9523cf1a156cf6e5869d10a08a887",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/traceability/SHIFAA-Traceability-Matrix.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 60174,
+        "baseBlob": "ccea8c4e4bbaf9af021d0b07865bafed796cffd4",
+        "treatment": "PRESERVED_EXACT_CANONICAL_BYTES"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/governance/SHIFAA-Completion-Coverage.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 38549,
+        "baseBlob": "ff632df1afccd2b7dff11a72e5c8fc010127837c",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "unchanged_predecessor_prefix:docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+      "result": "PASS",
+      "observed": {
+        "prefixBytes": 10564,
+        "baseBlob": "8e376cf2d92fea205ea6e170e546da0248092cad",
+        "treatment": "UNCHANGED_PREFIX_WITH_INACTIVE_APPENDIX"
+      }
+    },
+    {
+      "check": "closureRequirements",
+      "result": "PASS",
+      "observed": 7
+    },
+    {
+      "check": "prerequisiteOnlyRequirements",
+      "result": "PASS",
+      "observed": 2
+    },
+    {
+      "check": "nfrRequirements",
+      "result": "PASS",
+      "observed": 22
+    },
+    {
+      "check": "existing_ten_operations",
+      "result": "PASS",
+      "observed": [
+        "createPrescription",
+        "updatePrescription",
+        "runPrescriptionSafety",
+        "acknowledgeWarning",
+        "requestContraindicatedOverride",
+        "decideOverride",
+        "signPrescription",
+        "cancelPrescription",
+        "getPrescription",
+        "listPatientMedications"
+      ]
+    },
+    {
+      "check": "candidate_twelve_unique",
+      "result": "PASS",
+      "observed": [
+        "createPrescription",
+        "updatePrescription",
+        "runPrescriptionSafety",
+        "acknowledgeWarning",
+        "requestContraindicatedOverride",
+        "decideOverride",
+        "signPrescription",
+        "cancelPrescription",
+        "getPrescription",
+        "listPatientMedications",
+        "getOverrideReviewCases",
+        "transitionOverrideReviewAssignment"
+      ]
+    },
+    {
+      "check": "closed_r1_r2",
+      "result": "PASS",
+      "observed": {
+        "R1": 2,
+        "R2": 3
+      }
+    },
+    {
+      "check": "dependencies_unchanged",
+      "result": "PASS",
+      "observed": [
+        "010",
+        "011"
+      ]
+    },
+    {
+      "check": "inventory_arithmetic",
+      "result": "PASS",
+      "observed": {
+        "F012": {
+          "effective": 10,
+          "proposed": 12
+        },
+        "activeCatalog": {
+          "effective": 242,
+          "proposed": 244
+        },
+        "reserved": {
+          "effective": 6,
+          "proposed": 6
+        },
+        "catalogTotal": {
+          "effective": 248,
+          "proposed": 250
+        },
+        "F014": {
+          "effective": 16,
+          "proposed": 16
+        },
+        "F007_024": {
+          "effective": 170,
+          "proposed": 172
+        },
+        "F012_024": {
+          "effective": 120,
+          "proposed": 122
+        },
+        "F026ParityTarget": {
+          "effective": 242,
+          "proposed": 244
+        }
+      }
+    },
+    {
+      "check": "catalog_actual_rows",
+      "result": "PASS",
+      "observed": {
+        "baselineRows": 248,
+        "baselineActive": 242,
+        "reserved": 6,
+        "allRowsIncludingExplicitlyInactiveCandidates": 250,
+        "proposedActive": 244
+      }
+    },
+    {
+      "check": "approved_original_proposal",
+      "result": "PASS",
+      "observed": {
+        "bytes": 69037,
+        "sha256": "735c715b92aea102ec0c3b1ca2108db2a1164983fa8ba03c606d980cece23ac5"
+      }
+    },
+    {
+      "check": "protected_authority_roadmap_fixture_bytes",
+      "result": "PASS",
+      "observed": {
+        "checkedPaths": [
+          ".specify/memory/constitution.md",
+          "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+          "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+          "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+          "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json"
+        ],
+        "altered": 0
+      }
+    },
+    {
+      "check": "exact_documentation_scope",
+      "result": "PASS",
+      "observed": {
+        "paths": 17,
+        "trackedAppendices": 9,
+        "newRecords": 8,
+        "unapprovedExtraPaths": [],
+        "stagedPaths": 0
+      }
+    },
+    {
+      "check": "real_index_untouched",
+      "result": "PASS",
+      "observed": {
+        "stagedPaths": 0
+      }
+    },
+    {
+      "check": "git_diff_check",
+      "result": "PASS",
+      "observed": {
+        "exitCode": 0,
+        "output": ""
+      }
+    },
+    {
+      "check": "publication_secret_pattern_screen",
+      "result": "PASS",
+      "observed": "Authored deltas and unchanged reviewed proposal only; pattern screen is not a comprehensive secret audit."
+    },
+    {
+      "check": "new_markdown_whitespace",
+      "result": "PASS",
+      "observed": "No trailing whitespace in authored/copy Markdown; historical source bytes untouched."
+    },
+    {
+      "check": "claim_input_discovery_closure",
+      "result": "PASS",
+      "observed": "R1 supplies R2 expected revision inputs; exact-case detail remains assignment-bound."
+    },
+    {
+      "check": "explicit_unapproved_and_clinical_separation",
+      "result": "PASS",
+      "observed": {
+        "requiredBoundaryTermsPresent": true,
+        "evidence": "Root full documentary review; no clinical/runtime acceptance claim."
+      }
+    },
+    {
+      "check": "new_markdown_reference_integrity",
+      "result": "PASS",
+      "observed": {
+        "linksChecked": 58,
+        "errors": [],
+        "method": "GitHub-style punctuation removal and one hyphen per space."
+      }
+    },
+    {
+      "check": "all_candidate_json_parse",
+      "result": "PASS",
+      "observed": {
+        "jsonFiles": 3
+      }
+    },
+    {
+      "check": "inventory_hash_and_allowlist_integrity",
+      "result": "PASS",
+      "observed": {
+        "boundArtifacts": 16,
+        "publicationPaths": 17,
+        "mismatches": [],
+        "ownHashExcluded": true
+      }
+    },
+    {
+      "check": "final_actual_seventeen_path_scope",
+      "result": "PASS",
+      "observed": {
+        "paths": 17,
+        "trackedAppendices": 9,
+        "newRecords": 8,
+        "unapprovedExtraPaths": [],
+        "stagedPaths": 0
+      }
+    },
+    {
+      "check": "existing_historical_successor_compatibility",
+      "result": "PASS",
+      "observed": "Executed existing shared readDocumentationSuccessor/readConstitutionSuccessor readers successfully; canonical UI/trace preserved byte-for-byte. No F011 suite, acceptance regeneration, historical approval edit or tooling change."
+    },
+    {
+      "check": "historically_bound_ui_trace_exact_bytes",
+      "result": "PASS",
+      "observed": "Two feature-owned inactive versioned successors replace initially drafted canonical appendices; source canonical bytes remain identical."
+    }
+  ],
+  "preservation": {
+    "checkedRecords": 67,
+    "readinessFiles": 66,
+    "rawHashesUnchanged": true,
+    "statusInventoryUnchanged": true,
+    "activeFeaturePointerUnchanged": true,
+    "method": "Fresh read-only SHA-256/status comparison with the captured pre-edit preserved readiness worktree and primary active-feature pointer snapshot; only aggregate results published."
+  },
+  "manualReview": {
+    "result": "PASS_DOCUMENTARY_ONLY",
+    "reviewer": "Codex assistant, root agent; not professional approval",
+    "scope": "Complete tracked diff and new contract/decision/scope records; Docs Guard second pass; current PRD gate ownership, catalog code/route conventions; discovery supplies all claim inputs. Independent negative matrix documented, not executed. Canonical UI/trace historical bindings preserved via feature-owned versioned successors; no historical scope expansion."
+  },
+  "notExecuted": [
+    {
+      "check": "pnpm verify",
+      "reason": "Resets databases and writes historical evidence; not authorized for this documentation preparation. No mandatory integration requirement waived."
+    },
+    {
+      "check": "SpecKit/lifecycle/generated OpenAPI/DDL/RLS/client checks",
+      "reason": "No lifecycle or generation authorized; exact implementation contracts are later stages."
+    },
+    {
+      "check": "runtime/RLS/non-owner/races/replay/rollback/queue/native accessibility/live Arabic-English/GitHub CI/clinical validation",
+      "reason": "No implementation/integration or acceptance authorization; documentary checks prove none of these."
+    }
+  ],
+  "limitations": [
+    "Proposed contracts, route spellings, new artifact bytes and inventory await exact Product Owner approval.",
+    "No stage advanced, gate closed, feature acceptance, clinical/production authority or retention-finalization claim.",
+    "Inventory hashes are raw worktree bytes, not staged Git identities. Git publication/normalization verification remains a separately authorized integration check."
+  ],
+  "result": "PASS_DOCUMENTARY_CHECKS",
+  "verificationNotes": [
+    "Initial packaging check found the inventory had not yet been created; it was created within the declared scope before final reference/hash verification.",
+    "First full serialized pass produced two verifier false negatives: an over-specific wording token and a heading algorithm that collapsed adjacent spaces. Re-executed checks with the actual boundary wording and GitHub-style anchors pass; no historical/source bytes changed to silence a check.",
+    "Focused compatibility review found UI Contract and canonical traceability exact-byte bindings. Withdrew only this worktree's authored appendices and placed their proposed F012 deltas in feature-owned versioned successor documents. Scope remains 17 paths: nine append-only records and eight new records. Existing shared readers pass without tooling changes."
+  ]
+}

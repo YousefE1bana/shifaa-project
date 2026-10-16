@@ -432,3 +432,31 @@ The [P01–P30 questionnaire](../../specs/012-prescription-safety-governed-overr
 The recorded Product Owner real-medicine and provisional academic-reference directions supersede the earlier preference for invented visible medicine identities within Product Owner scope. The exact six-file compatibility addition is applied to the unmerged candidate only. It separately proposes attributed real-medicine source-condition matching in synthetic-patient scenarios; it does not approve executable clinical severity or full safety assessment. The five hash-approved mechanism-only artifacts remain unchanged historical evidence. The current publication proposal has 43 paths, not a new 43-record readiness inventory; the retained 38-path inventory and original 37-record retention analysis are historical inputs. Exact release-byte approval, governed activation, complete reviewer-boundary approval and separate lifecycle authorization remain required.
 
 Use the [current source and release-binding manifest](../../specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json) and its separately indexed publication inventory. The canonical Constitution remains the sole normative constitutional locator; supplementary records cannot activate it. P01–P30 remains AWAITING_PROFESSIONAL_INPUT. All applicable OPEN IDs, owners, closure evidence, restrictions and earliest blocked stages are preserved. Effective operations remain ten; R1/R2 and twelve are unapproved candidates. F012 remains NOT READY — PRE_SPECIFY_BLOCKED.
+
+
+## F012 reviewer contract successor — proposed 2026-10-16
+
+> F012-REVIEWER-CONTRACT/0.1.0 — PROPOSED, EXACT CONTENT UNAPPROVED, NOT EFFECTIVE.
+> Engineering boundary approved separately; effective F012 inventory remains ten.
+
+This additive candidate preserves all preceding source bytes and historical acceptance. Its exact contents require Product Owner approval, separately authorized coordinated PR integration and remote verification before serving as a contract successor. It implements no API, grant or clinical behavior. F012 remains **NOT READY — PRE_SPECIFY_BLOCKED**; Specify requires separate authorization. Existing OPEN IDs, owners, evidence, restrictions and earliest blocked stages are unchanged.
+
+This is the additive successor location for the frozen roadmap's F012 row and aggregate operation accounting, not a rewrite of the roadmap. The [2026-10-16 boundary approval](../../specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md) establishes the engineering direction; the [new exact coordinated contract](../../specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md) remains unapproved pending review. Earlier statements that complete engineering boundary selection is unresolved are historical as to that approved decision only; they remain correct about the not-yet-approved inventory amendment, clinical approvals and separate lifecycle authorization. Earlier frozen version/hash-bound records and original labels are not rewritten.
+
+| Measure | Effective unchanged | Proposed after exact amendment approval/integration |
+| --- | --- | --- |
+| F012 | 10 | 12 |
+| Active / F026 parity | 242 | 244 |
+| Reserved | 6 | 6 |
+| Catalog document total | 248 | 250 |
+| F007–024 | 170 | 172 |
+| F012–024 | 120 | 122 |
+| F014 | 16 | 16 |
+
+R1 `getOverrideReviewCases` is one bounded discovery/detail read with exactly two selectors; R2 `transitionOverrideReviewAssignment` is one self-assignment mutation with exactly claim/release_own/takeover_invalid. Existing request/decision/sign/cancel operations supply the closed approved pathway transitions. Clinic owns synthetic physician review and pharmacy a distinct F012 Safety Review entry; F014 retains its fulfilment worklist exclusively. No new app, F015 dependency, F013 catalog transfer, clinical permission or third operation.
+
+These proposed totals supersede only the affected frozen machine targets after approved integration: 242+6=248 becomes 244+6=250; assigned 170/120 becomes 172/122; F026 parity becomes 244. The 72 original F001–006 operations plus 172 future F007–024 still sum to 244. Existing feature rows other than F012 and F014's sixteen remain unchanged. Closure FR/NFR IDs and prerequisite-only ownership remain exact. Completion coverage has no new DONE/COMPLETE/PASS or gate closure; retain DONE/PARTIAL/PLANNED/BLOCKED/DEFERRED_POST_MVP as originally used, with no vocabulary mapping or changed historical totals.
+
+The already activated governance scope is not reopened. This new amendment's substantive bytes, operation/route contracts and inventory require their own exact approval, governed integration and remote verification. F012 remains NOT READY — PRE_SPECIFY_BLOCKED until that reconciliation and separate Specify authorization. P01–P30 remains AWAITING_PROFESSIONAL_INPUT. Clinical/legal/credential/facility and production gates, current evidence retention and Article VI genuine signatures remain intact.
+
+F012 UI and requirement traces are carried by the feature-owned [UI Contract successor](../../specs/012-prescription-safety-governed-overrides/contract-amendment/ui-contract-successor-v0.1.0.md) and [traceability successor](../../specs/012-prescription-safety-governed-overrides/contract-amendment/traceability-successor-v0.1.0.md). The historical canonical UI Contract and traceability matrix remain byte-identical to their approved F011 bindings; these linked proposed successors supply only the F012 delta and create no new historical acceptance.

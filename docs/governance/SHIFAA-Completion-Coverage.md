@@ -231,3 +231,15 @@ These conflicts or stale authority markers are not guessed away:
 ## 8. Freeze result
 
 There are no unowned active requirements after applying the companion roadmap. Deferred finance scope remains deferred. Any future finding that changes an ID, owner, split, operation, table, route, phase, or dependency requires a dated governance change before its SpecKit lifecycle begins; a feature agent may not re-derive or silently reshape the program roadmap.
+
+
+## F012 reviewer contract successor — proposed 2026-10-16
+
+> F012-REVIEWER-CONTRACT/0.1.0 — PROPOSED, EXACT CONTENT UNAPPROVED, NOT EFFECTIVE.
+> Engineering boundary approved separately; effective F012 inventory remains ten.
+
+This additive candidate preserves all preceding source bytes and historical acceptance. Its exact contents require Product Owner approval, separately authorized coordinated PR integration and remote verification before serving as a contract successor. It implements no API, grant or clinical behavior. F012 remains **NOT READY — PRE_SPECIFY_BLOCKED**; Specify requires separate authorization. Existing OPEN IDs, owners, evidence, restrictions and earliest blocked stages are unchanged.
+
+The [F012 candidate](../../specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md#inventory-and-immutable-scope) adds operation linkage/accounting only, subject to its own exact approval and integration. The complete original ledger, row statuses, totals, frozen ownership and acceptance remain unchanged. No requirement becomes DONE or clinically accepted by boundary approval, contract preparation, documentation validation or a later engineering test alone. Preserve existing DONE/PARTIAL/PLANNED/BLOCKED/DEFERRED_POST_MVP semantics; introduce no COMPLETE or OPEN_DEPENDENT substitution.
+
+Effective active operations remain 242 (reserved six, document 248). Proposed successor is 244 active (reserved six, document 250), with F012 10→12, F007–024 170→172, F012–024 120→122 and F026 active parity 242→244. F014 remains sixteen; F013/F014/F019 later ownership and all requirement IDs remain unchanged. These counts are a proposed operation-inventory successor, not a correction to historical completion arithmetic or new requirement acceptance. The frozen roadmap is not edited. Generated parity and runtime proof remain future OPEN-TECH-002 evidence.

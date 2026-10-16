@@ -1,0 +1,120 @@
+{
+  "validationId": "SHIFAA-F011-TWO-INPUT-COMPATIBILITY-VALIDATION@1.0.0",
+  "verifiedAt": "2026-10-16T11:20:23.120812+00:00",
+  "authorization": "Yousef Osama direct two-input compatibility directive, 2026-10-16; tooling/tests/versioned records only; existing PR #496 branch integration authorized; no merge or lifecycle.",
+  "basePrHead": "a380478b560c6e474891f47a5b8182cbe2449bd1",
+  "original17Inventory": {
+    "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/publication-inventory.json",
+    "sha256": "61322ad7a3abdfc4a27a43eaf17998f869218db7870d49846ff4f07e95205228",
+    "unchanged": true
+  },
+  "additionalArtifacts": [
+    {
+      "path": "tools/feature-011-constitution-successor.mjs",
+      "bytes": 5567,
+      "sha256": "c69c57a054c210e3f6f6ebf119306ab607d1554698f29d47333496bf08a0b864"
+    },
+    {
+      "path": "tools/feature-011-two-input-successor.mjs",
+      "bytes": 5774,
+      "sha256": "c056ab70b34a477de83ca39aaf84cd7b4b7493e2c3d8de3da606c7814867e739"
+    },
+    {
+      "path": "tools/feature-011-two-input-successor.test.mjs",
+      "bytes": 9005,
+      "sha256": "05a3b8dce314b7611d3cf706eb52e9eb91819b3b9c0eac0142790751dd1b95db"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/f011-two-input-successor-v1.json",
+      "bytes": 3004,
+      "sha256": "7fe1b9ccd5e6f35ec164eae0b2f47f9b661c545799a8f6fa5078ce96769317aa"
+    }
+  ],
+  "selfBinding": "This validation record excludes its own bytes/hash. The integration commit binds it; the historical 17-path inventory is not rewritten.",
+  "preservation": {
+    "f011TrackedFiles": 2774,
+    "approvedArtifacts": 17,
+    "all2791ByteIdentical": true,
+    "protectedPathHashMapSha256": "7979547d894b2b4097cb49e0a7541e648e9516951407c0dae87ca2826bdc4282",
+    "f011Tree": "ee8590c2d3c68257e77bd95267b778d5612722eb",
+    "physicalOrClinicalEvidenceRegenerated": false
+  },
+  "diagnosis": {
+    "onlyChangedInputs": [
+      "docs/architecture/SHIFAA-API-Catalog.md",
+      "docs/architecture/SHIFAA-Data-RLS.md"
+    ],
+    "historicalPrefixesByteIdentical": true,
+    "approvedAppendixBytes": [
+      4070,
+      4457
+    ],
+    "physicalGreenPhysicalRacesStageAssertionDigestMaps": "3/3 exact after independently validated two-input historical projection"
+  },
+  "runtime": {
+    "node": "24.18.0",
+    "pnpm": "11.13.0"
+  },
+  "checks": [
+    {
+      "command": "node --test tools/feature-011-two-input-successor.test.mjs tools/feature-011-documentation-successor.test.mjs tools/start-feature-011-native-supabase.test.mjs tools/reset-feature-011-native-supabase.test.mjs tools/feature-011-native-supabase-bootstrap.test.mjs tools/feature-011-evidence-head.test.mjs tools/feature-011-pr-review-binding.test.mjs",
+      "result": "PASS",
+      "tests": 55,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "pnpm contracts:check",
+      "result": "PASS",
+      "contractTests": 90,
+      "clientTests": 39,
+      "openApiOperations": 97
+    },
+    {
+      "command": "node tools/verify-feature-011-contracts.mjs",
+      "result": "PASS",
+      "mode": "FULL_PARITY_EVIDENCE",
+      "requiredStages": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "retainedGate": "OPEN-TECH-002",
+      "freshPhysicalExecution": false
+    },
+    {
+      "command": "node tools/verify-secrets.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "node tools/verify-architecture.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --check tools/feature-011-constitution-successor.mjs tools/feature-011-two-input-successor.mjs tools/feature-011-two-input-successor.test.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "developmentFailuresResolved": [
+    "Disposable fixture initially omitted required predecessor/current-inventory dependencies; exported input closure corrected without editing historical evidence.",
+    "Six local existing contract negative cases exceeded 5-second test timeout with repeated Git object reads; immutable Git objects now cached, while live bytes/approvals remain freshly checked. Final unmodified test suite passes."
+  ],
+  "notExecuted": [
+    "local aggregate pnpm verify",
+    "fresh physical database acceptance",
+    "live Arabic acceptance",
+    "live English acceptance",
+    "SpecKit lifecycle"
+  ],
+  "restrictions": [
+    "No clinical credential, source admissibility, protected clinical-content access, runtime permission, new acceptance or production authority is created.",
+    "OPEN gates remain intact. F012 remains NOT READY — PRE_SPECIFY_BLOCKED.",
+    "PR #496 human-only merge; Issue #493 remains open. New conversation and separate authorization required for any F012 lifecycle."
+  ]
+}

@@ -388,3 +388,24 @@ The local/test API, PostgreSQL, worker, Arabic/English UI, performance, privacy,
 ### Post-acceptance identifier response maintenance — 2026-10-08
 
 Authority: [additive handoff amendment](../governance/SHIFAA-Identifier-Handoff-Amendment-2026-10-08.md). Existing getMyProfile adds own server-derived optional nullable managedPatientId; updateMyProfile request/response remains unchanged. Existing current authorized getEncounter projections add patientPersonId and managedPatientId beside legacy patientId (person). The pair comes only from identity.patients.person_id. Historical canonical replay may omit these additive fields; fresh getEncounter is required for allergy context consumption. F004 managed_patient_id remains unchanged and server-issued. No operation, route, request selector or grant is added.
+
+
+## F012 reviewer contract successor — proposed 2026-10-16
+
+> F012-REVIEWER-CONTRACT/0.1.0 — PROPOSED, EXACT CONTENT UNAPPROVED, NOT EFFECTIVE.
+> Engineering boundary approved separately; effective F012 inventory remains ten.
+
+This additive candidate preserves all preceding source bytes and historical acceptance. Its exact contents require Product Owner approval, separately authorized coordinated PR integration and remote verification before serving as a contract successor. It implements no API, grant or clinical behavior. F012 remains **NOT READY — PRE_SPECIFY_BLOCKED**; Specify requires separate authorization. Existing OPEN IDs, owners, evidence, restrictions and earliest blocked stages are unchanged.
+
+Read the [complete closed contract and operation coverage](../../specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md) and [boundary approval](../../specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md). The following two rows are CANDIDATE ONLY, excluded from the effective active inventory until exact amendment approval/integration; the original active/reserved tables are unchanged. Paths use the existing `/v1` base.
+
+| Proposed operation ID | Proposed method and path | Actor / request boundary | Response / flags / requirements |
+| --- | --- | --- | --- |
+| `getOverrideReviewCases` | `GET /override-review-cases` | Currently independent isolated CLN/PHA simulation reviewer; exactly `view=discover` or `view=detail` | Discovery minimum metadata / assigned-case detail only; read, private/no-store; SAFE-006/007/011 |
+| `transitionOverrideReviewAssignment` | `POST /override-requests/{overrideId}/assignment-transitions` | Same current scoped reviewer; exactly `action=claim|release_own|takeover_invalid`, verified caller as assignee | Assignment/receipt metadata only; I,V; SAFE-006/007/011 |
+
+R1 discovery accepts lane, `scope=eligible|own`, opaque cursor and limit (default 25/max 100). Detail instead requires exact override/lane and expected request/assignment/evidence revisions; mixed/extra selectors fail. R2 requires exact request/lane, current roster/evidence/assignment/request revision bindings, Idempotency-Key and If-Match; there is no target assignee, admin assignment, renewal, forced valid-holder takeover or separate detail route. Both paths require current AAL2/purpose/facility, independent underlying person, current roster validity/revocation, verified isolation and minimum disclosure. These are proposed logical predicates, not new roles/action grants. Use existing RFC 9457 codes and privacy-safe failures; exact DTO serialization/problem mappings are pre-Plan work.
+
+For isolated mechanism simulation only, existing `requestContraindicatedOverride` explicitly creates normal pharmacist or emergency second-physician plus immediate durable pharmacist lanes/obligation. Existing `decideOverride` accepts lane, approve/reject and current assignment/evidence/revisions; second-physician approval starts the virtual test window atomically with obligation linkage, never implicitly signs. Existing `signPrescription` separately rechecks all current bindings; `cancelPrescription` invalidates linked pending authority and preserves correction lineage. No new public carrier is hidden in these transitions. `getPrescription` grants no new reviewer access. Real-medicine source-condition matches cannot authorize any of these decisions/signing; clinical assessment remains `not_fully_checked`.
+
+Effective active/reserved/total = **242/6/248**; proposed successor = **244/6/250**. F012 **10→12**; F014 **16 unchanged**; F007–024 **170→172**; F012–024 **120→122**; F026 active parity **242→244**. Count the two closed union operations once each, never each selector/action as an extra operation. Generated OpenAPI/client/schema/route registration remain future separately authorized feature work under OPEN-TECH-002. No candidate row may be treated as implemented or an effective inventory entry by a raw Markdown row count.
