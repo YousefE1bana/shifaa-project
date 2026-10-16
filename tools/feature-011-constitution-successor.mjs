@@ -4,6 +4,10 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import {
+  readTwoInputDocumentationSuccessor,
+  twoInputSuccessorInputPaths,
+} from './feature-011-two-input-successor.mjs';
 
 const feature = 'specs/012-prescription-safety-governed-overrides';
 const constitution = '.specify/memory/constitution.md';
@@ -24,6 +28,7 @@ export const constitutionSuccessorInputPaths = [
   approvalPath,
   manifestPath,
   'tools/feature-011-constitution-successor.mjs',
+  ...twoInputSuccessorInputPaths,
 ];
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const immutableBlobs = new Map();
@@ -110,5 +115,6 @@ export function readHistoricalVerificationInputs(root) {
       historical.set(descriptor.path, historicalBlob(root, descriptor));
     }
   }
+  for (const [file, bytes] of readTwoInputDocumentationSuccessor(root)) historical.set(file, bytes);
   return (file) => historical.get(file) ?? readFileSync(join(root, file));
 }

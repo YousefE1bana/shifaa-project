@@ -1,0 +1,61 @@
+{
+  "bindingId": "SHIFAA-F011-TWO-INPUT-SUCCESSOR@1.0.0",
+  "version": "1.0.0",
+  "disposition": "AUTHORIZED_VERIFICATION_COMPATIBILITY_ONLY",
+  "authorization": {
+    "owner": "Yousef Osama, SHIFAA Product Owner",
+    "date": "2026-10-16",
+    "source": "Direct conversation directive: SHIFAA — Authorize Exact Two-Input F011 P4/P5 Successor Compatibility",
+    "scope": "Exactly the approved Catalog and Data/RLS appendices in PR #496; verification tooling, focused tests and immutable compatibility records only. No historical acceptance regeneration or clinical/lifecycle authority.",
+    "approvedPrHead": "a380478b560c6e474891f47a5b8182cbe2449bd1",
+    "approvedInventorySha256": "61322ad7a3abdfc4a27a43eaf17998f869218db7870d49846ff4f07e95205228",
+    "approvedContractSha256": "6436f1ea96c50cc422f8cab51fb692b2245e859500123cca18a8784f47b0af63",
+    "boundaryApprovalSha256": "8f52882e71e1615d93a4f7461a32854537d5c48e9fc77b9964a47fdab9721d88"
+  },
+  "clinicalAuthority": false,
+  "lifecycleAuthorization": false,
+  "contractActivation": false,
+  "readerSuccessor": {
+    "path": "tools/feature-011-constitution-successor.mjs",
+    "bytes": 5567,
+    "sha256": "c69c57a054c210e3f6f6ebf119306ab607d1554698f29d47333496bf08a0b864",
+    "predecessorBlob": "8ddb301ce1af0ae72cdefd2b2373e65d5ca983f7",
+    "predecessorSha256": "633542331d00dfcad0606c49287fd4ae9b847bc63e90aa729bdfe8d5373f3ba6"
+  },
+  "inputs": [
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "bytes": 100106,
+      "sha256": "5e20548ace942acae611f4915dd3f1ab7130b5295a879113435b352e8a771fad",
+      "historical": {
+        "blob": "ef5b1b5f4a4299dd745e1004335b4dec677fb3a5",
+        "bytes": 96036,
+        "sha256": "ba6dd9177ee07410ebde92140ea086b06a86750e146a267625bbff498e832490"
+      },
+      "appendix": {
+        "bytes": 4070,
+        "sha256": "1f1e77974af26ed4326a71e61cd6c3461c417c7820bc4953332806f566452ca0"
+      }
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "bytes": 86509,
+      "sha256": "a6de0ba094415d5a93315db5305c4c8fcf7f37797540a217ccc059f567a52ab5",
+      "historical": {
+        "blob": "19f72ef97ad329080a0ed5a0d6490fff117f1faa",
+        "bytes": 82052,
+        "sha256": "0df367f69aa016bcfd2d345b727d7dcc3539e4fdbb7b69f44dc0d171a950de2b"
+      },
+      "appendix": {
+        "bytes": 4457,
+        "sha256": "dc2d9078b669ba6d5c34c58d74b023a0c58c4fc60616707f029968cb3610cd0c"
+      }
+    }
+  ],
+  "restrictions": [
+    "All original Constitution/documentation bindings and their three pinned verification tools remain unchanged.",
+    "Only these two exact historical prefixes are projected, after independent current-byte and full 17-path inventory verification.",
+    "All other normative/generated/physical inputs remain live. P4/P5 proofs, artifacts, race evidence and owner dispositions remain mandatory.",
+    "No fresh physical execution, professional approval, production release, protected-content consumption or SpecKit stage is established."
+  ]
+}
