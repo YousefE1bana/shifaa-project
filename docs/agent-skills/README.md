@@ -73,3 +73,22 @@ Official SpecKit integration runtime files are installed and upgraded locally
 with Spec Kit's manifest-aware integration flow. The tracked `.specify/`
 integration metadata remains the project integration record; generated agent
 skill files remain ignored runtime state.
+
+## Current authority and safe discovery
+
+Read [the documentation index](../SHIFAA-Documentation-Index.md) and
+[current authority map](../governance/SHIFAA-Current-Authority-Map-v1.md) alongside
+AGENTS before work. Historical upgrade reports and delegate-runtime-status.json
+are observations at their recorded versions, not live configuration discovery.
+
+The four policy skills are copied by the owned-skill sync. Official SpecKit skills
+remain a separate local installation pinned by `.specify/integration.json` to
+1.1.3; the custom workflow remains 2.3.0. Do not execute an install, updater,
+lifecycle command or sync merely to inspect discovery. Check actual local paths,
+read the selected SKILL.md and report missing integrations honestly.
+
+A fresh isolated worktree may have no `.agents/skills/` or active-feature pointer.
+Neither an ancestor's runtime state nor a skill name establishes correct context.
+Profiles under `.codex/agents/` are role layers declared by `.codex/config.toml`;
+they are not the user's `--profile` selection or a change to personal settings.
+See the [modernization configuration report](../governance/repository-modernization-v1/configuration-and-skills.md) for tested support and limitations.

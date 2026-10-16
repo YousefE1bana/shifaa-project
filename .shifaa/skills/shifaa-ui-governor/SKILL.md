@@ -7,6 +7,8 @@ description: Enforce SHIFAA's approved bilingual UI, UX, frontend, mobile, acces
 
 Read `docs/design/SHIFAA-UI-Contract.md` before changing or approving SHIFAA UI. Also read the applicable route/state row, feature spec, and shared `packages/design-system` primitives. The UI Contract is normative even when a third-party design skill recommends something else.
 
+Read this skill and the [current authority map](../../../docs/governance/SHIFAA-Current-Authority-Map-v1.md) and [documentation index](../../../docs/SHIFAA-Documentation-Index.md) for each task. Verify current authority against exact approval records, required integration state, and remote contents; proposal labels alone do not establish current status after approval and integration. Preserve the law/Constitution/PRD/Master hierarchy and applicable API, RLS, and UI restrictions, including the distinct `not_fully_checked` state.
+
 ## Non-negotiable foundation
 
 - Author Arabic `ar-EG` first with root RTL and logical layout properties. Ship complete `en-EG` LTR feature, route, copy, and state parity.

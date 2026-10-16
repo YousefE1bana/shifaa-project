@@ -1,0 +1,1107 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+  "scope": "PROPOSED modernization; baseline bindings do not authorize unknown future successors",
+  "protectedArtifacts": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1510,
+      "sha256": "a6f349a58eba23d96ab13ac0d612b086a17c28ef0cc8d8c6ac012577e7accb55",
+      "gitBlob": "bf811ab65386963142f3f05f734a239c34ed25c7"
+    },
+    {
+      "path": ".specify/.gitignore",
+      "bytes": 586,
+      "sha256": "0a61c5378b0bb2e0f85babff99c8b166f2170a2c12378cd17d929aa19296ec88",
+      "gitBlob": "bcd485e2c783d694e304d0f924f6961063a3f273"
+    },
+    {
+      "path": ".specify/extensions.yml",
+      "bytes": 605,
+      "sha256": "411357796faff0ccab4e345d420d70e4c959ef4af4046e3db39e258359ea8e2c",
+      "gitBlob": "54157147176c8d5fd2e5542eb773e894f43a45b8"
+    },
+    {
+      "path": ".specify/extensions/.registry",
+      "bytes": 542,
+      "sha256": "a33791087ebf630d787fff74f3826375bf202498a7fec1df71c2eba584b7dee6",
+      "gitBlob": "944626d7a544e025a02bfaeba692311581027384"
+    },
+    {
+      "path": ".specify/extensions/agent-context/README.md",
+      "bytes": 4030,
+      "sha256": "a156f3e8683e3763ea0d5edf91a7663b566d396692621d7fb663971f499dfcf7",
+      "gitBlob": "53602c334326791f043de59d0a6a5f07a1773391"
+    },
+    {
+      "path": ".specify/extensions/agent-context/agent-context-config.yml",
+      "bytes": 119,
+      "sha256": "6a4ded82dd549d4249abe481a41e2410ac0e70a217b02cb2c78f81614627cdb8",
+      "gitBlob": "c425561497d799cb0c0ebc86d273718abb08f64f"
+    },
+    {
+      "path": ".specify/extensions/agent-context/agent-context-defaults.json",
+      "bytes": 1599,
+      "sha256": "5021ae903777b4cd8523e9414b7f51be590367a852dd03bb13fa510cae3ad840",
+      "gitBlob": "a00b1d5276f84efb3cfc60b2055ac29a1e7d18e0"
+    },
+    {
+      "path": ".specify/extensions/agent-context/commands/speckit.agent-context.update.md",
+      "bytes": 1766,
+      "sha256": "215e3df01bafd18e051e31fbb05c5b4986879a3b00127865c62adaec0785ea6d",
+      "gitBlob": "71c85f5d855cf0a9a6a4c91fbc09f227d8c2331c"
+    },
+    {
+      "path": ".specify/extensions/agent-context/extension.yml",
+      "bytes": 932,
+      "sha256": "270100175bb742c37b8d549f2233c5b79114869dac754883dbecac2a4813beef",
+      "gitBlob": "7f9e9867ab3a9217c550990f12d6487c81b182d8"
+    },
+    {
+      "path": ".specify/extensions/agent-context/scripts/bash/update-agent-context.sh",
+      "bytes": 15961,
+      "sha256": "356ba4508ab6ab47af23b9ad945e8a5730b8289289d896cfe234eba055a9602e",
+      "gitBlob": "7fbe3ef49a2c0ca1dd015d5b43f700e73e517a21"
+    },
+    {
+      "path": ".specify/extensions/agent-context/scripts/powershell/update-agent-context.ps1",
+      "bytes": 20296,
+      "sha256": "75dd50b5070728560926f47a3238e4203efa79da63131b97815adffda9236b7a",
+      "gitBlob": "91d067cc415db01362f0a07d5c2fa47533a70358"
+    },
+    {
+      "path": ".specify/extensions/agent-context/scripts/python/update_agent_context.py",
+      "bytes": 13892,
+      "sha256": "5b3c5770d12c06d9854edbe657016dfc8ea276ada3865f5de1dcc3b3e7d5bdcf",
+      "gitBlob": "669ec5bf9d24d227ada9235114d64ca1f607b375"
+    },
+    {
+      "path": ".specify/init-options.json",
+      "bytes": 168,
+      "sha256": "0af980c78b25d7708fa39c6060b735c99841c579ab6705dd2f54de46bdbfb447",
+      "gitBlob": "16a3b0a9be853f75d2c6a7686dda623e9c33167d"
+    },
+    {
+      "path": ".specify/integration.json",
+      "bytes": 354,
+      "sha256": "464d8961a7a9836190408ba61511e9dfad6871a5a8a0bebdbcc5eb11c8a83f56",
+      "gitBlob": "cefe714a0c7e858fb16813a605fad6970da055f4"
+    },
+    {
+      "path": ".specify/integrations/codex.manifest.json",
+      "bytes": 1283,
+      "sha256": "5e259d6a892003582b85a29b0f74dbab492e08b8be93de84b5de920e357fc2fd",
+      "gitBlob": "fbbc41d72df28b478f587d8636ee7e49ddc81618"
+    },
+    {
+      "path": ".specify/integrations/kimi.manifest.json",
+      "bytes": 1312,
+      "sha256": "23626600231dda3f95fbc4f3942500aceeed2f4b0405cee673472bbaaa0f82d6",
+      "gitBlob": "1f7f817b048b7a6aefa7971cd40d49534077ab35"
+    },
+    {
+      "path": ".specify/integrations/speckit.manifest.json",
+      "bytes": 1516,
+      "sha256": "867a34aac5d9742d57ae60cc8b0e4aa12bb8b1e338ddc42bf2771964ca88c713",
+      "gitBlob": "9772753c7bb72153f5480f0eb4fd0fadd650e386"
+    },
+    {
+      "path": ".specify/memory/SHIFAA-Constitution-F012-Amendment-v2.2.0.md",
+      "bytes": 11226,
+      "sha256": "e68dbcd5a5eed1fd6aeb33b4ca1cd96667e9d4801263f546d8e84b2f07345a38",
+      "gitBlob": "90215cc452e343d730728fe91d4368584d8c9f2b"
+    },
+    {
+      "path": ".specify/memory/constitution.md",
+      "bytes": 17725,
+      "sha256": "cc0204a2fcef7ee6e337fada07c160def4a7b51915ced944951cf0c8a1828a44",
+      "gitBlob": "a3d65085e36c0002b5853c9e300e75b5fa748fa2"
+    },
+    {
+      "path": ".specify/scripts/powershell/build-issue-handoffs.ps1",
+      "bytes": 8003,
+      "sha256": "a8eb49114d95790698cac85cf6a33868918a6a570b490819624268981d63bf0b",
+      "gitBlob": "e1461e50f680509f894bc9997b9f7949f8fb0b7f"
+    },
+    {
+      "path": ".specify/scripts/powershell/check-prerequisites.ps1",
+      "bytes": 6631,
+      "sha256": "ef7fe740091441e5aeadccb8dc36b08d840f524513d79e2fcf258133ee6568b4",
+      "gitBlob": "00dc6b2a70a98f9e572120a508bd7833ca9c7565"
+    },
+    {
+      "path": ".specify/scripts/powershell/common.ps1",
+      "bytes": 35296,
+      "sha256": "8b188a9c3a2e979cfcb874acc4452175c00e9095cb0caef18374ea0cfbc384c0",
+      "gitBlob": "f1765db88778a92c92a1e8d9c22f7cf648ab2831"
+    },
+    {
+      "path": ".specify/scripts/powershell/create-new-feature.ps1",
+      "bytes": 14876,
+      "sha256": "481c7368541a816b1679e5ed65fa9e5aea84b09f8be3a02ff8a340e3b48dd58a",
+      "gitBlob": "cd8a2d2b3c676650cb0061d011e392eb1d8395f8"
+    },
+    {
+      "path": ".specify/scripts/powershell/publish-issue-handoffs.ps1",
+      "bytes": 3485,
+      "sha256": "c0f3a2d95b4f08eacd4f34c7c27f22c29568029b18a89020e520864124abb7e4",
+      "gitBlob": "22f51c45a6d523a7f2f0c18069aca1b7344c2d67"
+    },
+    {
+      "path": ".specify/scripts/powershell/resolve-issue-handoff.ps1",
+      "bytes": 3967,
+      "sha256": "b1fee4f14c5a1be48f902fcac3fbb1fc14d07bd0f7801a7cf665ebf1c6ff028b",
+      "gitBlob": "bc096794552a86d3b4ba3eee114a954b9eb9135c"
+    },
+    {
+      "path": ".specify/scripts/powershell/resolve-template.ps1",
+      "bytes": 889,
+      "sha256": "e49c565a09902e4ebd4b5a51c4e014d5067fdee5b1592f15cb44ef31f430d745",
+      "gitBlob": "70aee0aca0f1cdbb8bfe2569cb1631b74ca6f24a"
+    },
+    {
+      "path": ".specify/scripts/powershell/setup-plan.ps1",
+      "bytes": 3058,
+      "sha256": "3b8173f1553bbf67ae021af949a29e2d3e3bb35805be95e4ba8d0ab83173c66f",
+      "gitBlob": "036a54e4d135e20843495f74f2f38d04a1232897"
+    },
+    {
+      "path": ".specify/scripts/powershell/setup-tasks.ps1",
+      "bytes": 3892,
+      "sha256": "578c19c7fa196327c1c6791e3179accffab049fe62851961139d67bd699f336e",
+      "gitBlob": "dda5122e14d5fd5a52d59ceb024d000a54369409"
+    },
+    {
+      "path": ".specify/templates/checklist-template.md",
+      "bytes": 2033,
+      "sha256": "70bbc48e884fab372ffb09e83e78ff983e28b69caebf8cd9964a02b6836683ac",
+      "gitBlob": "84b5a3acccba193cfe6e76ab0c480460f6287785"
+    },
+    {
+      "path": ".specify/templates/constitution-template.md",
+      "bytes": 2346,
+      "sha256": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3",
+      "gitBlob": "a4670ff46919b276a4c9663b4ca51830108fcfc0"
+    },
+    {
+      "path": ".specify/templates/overrides/checklist-template.md",
+      "bytes": 4108,
+      "sha256": "b0b5ab2996c222db5e89e1879cbd2737a74d9631f03a99b3b4c4b0489f66ddac",
+      "gitBlob": "dd8041f5dbd5fde707ce6450274d3ec06d14109c"
+    },
+    {
+      "path": ".specify/templates/overrides/constitution-template.md",
+      "bytes": 12400,
+      "sha256": "247be9abb39c25ff941994b8d53486e46019aa5b9085cfdbbff21b8b4e55fff6",
+      "gitBlob": "1bcfe935f9e5d555f87973983f79e7d252cbc94b"
+    },
+    {
+      "path": ".specify/templates/overrides/f012-synthetic-profile-supplement.md",
+      "bytes": 9403,
+      "sha256": "f6a51951fb6de0028fa47358da6f4b18949ce75d7c2490dc7aa80e0c04539c37",
+      "gitBlob": "9204baaa75b68472f411fd38b8c65f0720aa2944"
+    },
+    {
+      "path": ".specify/templates/overrides/plan-template.md",
+      "bytes": 8537,
+      "sha256": "67578310d19c6b222d8a26037eedc6e115cc96d055fd32ff5cc4dfe31fecabb2",
+      "gitBlob": "13853fb0e5b9edcf94e22926887cf6e29569ba82"
+    },
+    {
+      "path": ".specify/templates/overrides/spec-template.md",
+      "bytes": 13845,
+      "sha256": "818d4885656ef0e060290aa49c6b8b2af6b7d7dd14cbfaa87f103d1203d30b06",
+      "gitBlob": "6a0e664aeaebd47723ddc1eaca1394a632091c10"
+    },
+    {
+      "path": ".specify/templates/overrides/tasks-template.md",
+      "bytes": 6796,
+      "sha256": "8d150a820037ccf9784db66b34780ac7287771da34f65c0850959f71fea65224",
+      "gitBlob": "b98d6984f4076c0810db28cd6c177f41717b4ec4"
+    },
+    {
+      "path": ".specify/templates/plan-template.md",
+      "bytes": 3682,
+      "sha256": "a828ad6206526574ab3fc99be6d0154588cb1c9774c5919d71b81ab5b2dbffa0",
+      "gitBlob": "ee04d9fb03bbf4b7c4debf7da003afd5e7bf6855"
+    },
+    {
+      "path": ".specify/templates/spec-template.md",
+      "bytes": 4556,
+      "sha256": "3945437fc35cd30a5b2bf7beea680337c3516826d3efa5a6b92c4a7eca1ba28e",
+      "gitBlob": "ceb28776215a098e977650ac090c785dcbf53651"
+    },
+    {
+      "path": ".specify/templates/tasks-template.md",
+      "bytes": 9171,
+      "sha256": "b0f527d41e546af0c31903e04f9b20965b6b497b573792198f663a64ce128863",
+      "gitBlob": "c37fc7074e66857220244997617c9ce265b87b6c"
+    },
+    {
+      "path": ".specify/tests/issue-handoff.Tests.ps1",
+      "bytes": 2029,
+      "sha256": "73c6526332f943e79c37a553b1d5d6aef688865f19212a3c10ed61d27800f414",
+      "gitBlob": "c69d4744f85bd04c3385129ef87e83a94cd61be9"
+    },
+    {
+      "path": ".specify/workflows/speckit/workflow.yml",
+      "bytes": 6045,
+      "sha256": "34e9e8252bbaaa029a48fdcd7c8a29178c05ae7fd83c85c9bf9c2091035eab33",
+      "gitBlob": "765603064c39d26c97e7796a12bda836625d93d7"
+    },
+    {
+      "path": ".specify/workflows/workflow-registry.json",
+      "bytes": 585,
+      "sha256": "1bf057edb5f5c3c9dea123b4eac0dd2b29e0c591ca680026e55180a35ad3f013",
+      "gitBlob": "0c3f1b740ad4c5f1f397e135a7786ca6359656dd"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "bytes": 96882,
+      "sha256": "831a3aa813dc50d45f4d08a61483b88767af92e5ec2cf51038d164b1a9fa167c",
+      "gitBlob": "eb655a3867cef01fe2413fe5c570021d1bc6cf4f"
+    },
+    {
+      "path": "docs/TEAM-INSTALLATION-CHECKLIST.md",
+      "bytes": 8655,
+      "sha256": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c",
+      "gitBlob": "18c632964b0361e6597ce9439ffaa6d79a1a1277"
+    },
+    {
+      "path": "docs/TEAM-ONBOARDING-DRAFT.md",
+      "bytes": 88174,
+      "sha256": "cadd71156d9c9beadc0c6f69081940f8f4521c1e1130959bd1b2fd87382c8f05",
+      "gitBlob": "d1ad2e7dd7aeb6527d70ffdff1bde4385d5c46ed"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "bytes": 100106,
+      "sha256": "5e20548ace942acae611f4915dd3f1ab7130b5295a879113435b352e8a771fad",
+      "gitBlob": "2db9c79940ff60a12da891a25f8e918c6a8c51f9"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Architecture.md",
+      "bytes": 17772,
+      "sha256": "4c55b22acc8d82253167f86c88feab19573312ece2e03300cc091681972fe1ef",
+      "gitBlob": "7974f628de44556769d91f5735ea6543884eacde"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "bytes": 86509,
+      "sha256": "a6de0ba094415d5a93315db5305c4c8fcf7f37797540a217ccc059f567a52ab5",
+      "gitBlob": "2a4cd60d0941127b3f0e19f8b99e9b67a2c2cadb"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+      "bytes": 35738,
+      "sha256": "9b74b38f90588f48470f410b03e217c225c4b338ef0862f57430b7df229fbbe7",
+      "gitBlob": "8a8b45f826cc1541f79b0950cdeb926f46f29c1b"
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "bytes": 28266,
+      "sha256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+      "gitBlob": "a0fb9a7101679840538499fe7de797694a7bca79"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Completion-Coverage.md",
+      "bytes": 40476,
+      "sha256": "7f882a48c87b29d15d44c128ef70a0785d9c2669fbfcf62c99c7e7021cc60645",
+      "gitBlob": "534c383c59daa310d93a383a9fdd9f22161d3127"
+    },
+    {
+      "path": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "bytes": 33514,
+      "sha256": "880a66bbb22914f799e4924f6183b7e0154ca15194d11be5b99865bbb015a847",
+      "gitBlob": "f0851f883a8177e20db5f856f0be793b56dc3daa"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Future-Feature-Readiness-Register.md",
+      "bytes": 9620,
+      "sha256": "0aaa6ed40813828b1f8979e3afdf2e5d8ee321ac723c656b7bee4274ee8b98d3",
+      "gitBlob": "c9df5960bf6923e1cb8c437c97b932aa5f33b12d"
+    },
+    {
+      "path": "docs/governance/SHIFAA-MASTER-F012-Graduation-Amendment-v2.2.0.md",
+      "bytes": 16510,
+      "sha256": "e79273da3c4d9074f634637491f0a602b5d0a4aeb89ab31f1160436d14beb17a",
+      "gitBlob": "c164cf4616dcf82146ef75623c9e4120d02ec038"
+    },
+    {
+      "path": "docs/governance/SHIFAA-PRD-F012-Graduation-Amendment-v2.2.0.md",
+      "bytes": 8802,
+      "sha256": "079d888bc952dac92eb65975b4327aac11b07a96db1ce1365f0596bf0b6591aa",
+      "gitBlob": "400aa4b0cba0d511ebacde540b3f006393f57408"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+      "bytes": 55686,
+      "sha256": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757",
+      "gitBlob": "b6fb0ef0fb6310b0a681d03f5d43bdd0bf383880"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+      "bytes": 13223,
+      "sha256": "3de438053933f2b4d14c5dd1309be612de1d7f4a43036ce74bc0d97f6d608860",
+      "gitBlob": "03cf30d70041ac8ed96a7096b23cc455796dee8f"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-Traceability-Matrix.md",
+      "bytes": 60174,
+      "sha256": "1e86808e8825ebe3ba6563952b52de00a71be70b6bee9ae71e163702f511673e",
+      "gitBlob": "ccea8c4e4bbaf9af021d0b07865bafed796cffd4"
+    },
+    {
+      "path": "shifaa-prd.md",
+      "bytes": 100550,
+      "sha256": "eca3a8dd2955da8b6d91bb6fc0d9722f57801c39fae59a4ca4c3475af6b4ab0f",
+      "gitBlob": "cd32af6ca3468d47d2882aabb03de8a2adfec4b7"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/documentary-validation.json",
+      "bytes": 14233,
+      "sha256": "beea04a6532f977cbcbde9d547587385eec649a05e904d9a39a08f9f928effc6",
+      "gitBlob": "acdc406f440076e23e3d31683d247500ecae10f2"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/publication-inventory.json",
+      "bytes": 14098,
+      "sha256": "61322ad7a3abdfc4a27a43eaf17998f869218db7870d49846ff4f07e95205228",
+      "gitBlob": "9c72bbc243daaa4028b890e15f31a6e1880ed1b9"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md",
+      "bytes": 28577,
+      "sha256": "6436f1ea96c50cc422f8cab51fb692b2245e859500123cca18a8784f47b0af63",
+      "gitBlob": "d762b0fb4a1808384e054e6f83cb677db35e5fb6"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/scope-successor.json",
+      "bytes": 11412,
+      "sha256": "8493cabde6208dbe0221892c14307a6056df5a6c555e96348ed77f951ecac0fd",
+      "gitBlob": "a8588b70329e9939c0cbddc9e73e0f64cb3a2b9e"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/traceability-successor-v0.1.0.md",
+      "bytes": 3548,
+      "sha256": "cf375e05ae4e3dcb0d341365ee52a349597ff21148923f83516d778eefc08a14",
+      "gitBlob": "bd8e6887baa210fe5ab032b10fc4820e5499ff5f"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/ui-contract-successor-v0.1.0.md",
+      "bytes": 4130,
+      "sha256": "078e845c70eec355ec32d4a4b7d42e6f770e8c521282895d456024989db9f7d2",
+      "gitBlob": "d142a85f116085b28ff62a8da066177982cbd2a8"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-activation-receipt.md",
+      "bytes": 47609,
+      "sha256": "9e4c4c8fa2dac680c3b80c6c307ca342ade977a12166c23bd4d299aa7ea12b59",
+      "gitBlob": "e2379dba537c217a5692b05cdbf247ab1af49815"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md",
+      "bytes": 30175,
+      "sha256": "a0ea338bd91b5b39fd3ca1427f301374051c4b3d50b8d6f6640844926733b3f8",
+      "gitBlob": "f7108c36b1f4494cca301d6f66131b03ada6131a"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md",
+      "bytes": 3943,
+      "sha256": "8f52882e71e1615d93a4f7461a32854537d5c48e9fc77b9964a47fdab9721d88",
+      "gitBlob": "21dab62de7aef5c4bf16130495e650c2a928cb4b"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/activation-and-decisions.md",
+      "bytes": 26101,
+      "sha256": "9a6223b90bff09082fb0cc8f73c8a9a229825ca4eec317b553dec227637bcf8e",
+      "gitBlob": "54480d84a77ddc4047d7b9bc87d921fba8e90aee"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/constitutional-impact-review.md",
+      "bytes": 30607,
+      "sha256": "858c1bf17687cb813ce3f28556f6c30536b093ce801aec069b51e90ca02869bf",
+      "gitBlob": "b32e3b7ce97674976d489e9c7b895031c4d4be18"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/impact-inventory.json",
+      "bytes": 18722,
+      "sha256": "3f9bbfe0c9c950f1f01374c6242beacadded595a920fd315584cd6df8f36a96a",
+      "gitBlob": "16ece703aa4071a43eda6b5d66369294da6f6515"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json",
+      "bytes": 213045,
+      "sha256": "52c5c03718cdaa0524906217ee913d0bece2c5fd52ffb6d6d73f2be22f0926b2",
+      "gitBlob": "13990e1284256d9dc49648b571de9d7fa7503c38"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest.json",
+      "bytes": 90915,
+      "sha256": "2c9d997db26c805f4979cb999fce14e4d77f81c2e48fa1597e5907063988458b",
+      "gitBlob": "3a4703639923aa18d3ed6843baceb63cba88478b"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/governance-remediation/release-candidate-inventory.json",
+      "bytes": 44419,
+      "sha256": "8e22b4e220410fe47eaff0aacb16fd0b0882b18d02273e65888fa1e4ea4bd939",
+      "gitBlob": "4faf24eecb940ed6deb044fe6ef49e4f99ecc4c9"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/authority-and-reviewer-decision-package.md",
+      "bytes": 8871,
+      "sha256": "908f4b611052cdc9b1b0a24c46a5675832ea214aefae7648d625a929345567c2",
+      "gitBlob": "0aa1f7dfda783d06204016341b693016a03fdd98"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/clinical-pharmacist-review-questionnaire.md",
+      "bytes": 13239,
+      "sha256": "50df6d33958191cde635e605eae1caed54b3a28c904ad37fa493890d0bfcad96",
+      "gitBlob": "5ae5bc0d6d124c7ec1ff9244b0c050831e20e984"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+      "bytes": 8480,
+      "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c",
+      "gitBlob": "6f6c32352e84404dab245c634ec53c1eba3bd210"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/decision-brief.md",
+      "bytes": 12415,
+      "sha256": "11c485ccd1505f176de63c4b012834e82f541beeb2e6cf7dcd7b7cd9a1c49135",
+      "gitBlob": "a21190dd6f32250bcf37508a5c0fac785a2642bd"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/documentation-reference-dispositions.md",
+      "bytes": 64001,
+      "sha256": "ede4fc0157b5b48a32b6c3919d4b63ab01dfcc376781f75751699d19872ffc9c",
+      "gitBlob": "24aa8f564cdd740e2322ab6872c4be786cb640c0"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md",
+      "bytes": 5953,
+      "sha256": "6f5255c2a994f58c983add1206c8f922aac078a8ef1f140d8f61c2273081fb93",
+      "gitBlob": "a884c9124ec3bb2c119be1ff59c9c24d7be2e2ce"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+      "bytes": 5728,
+      "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+      "gitBlob": "cafdd64893e5bbe825da8892b2214116089b1093"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+      "bytes": 3643,
+      "sha256": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af",
+      "gitBlob": "9802f43f32cdcbc2b1f174b0cd67708df0d81681"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+      "bytes": 8983,
+      "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65",
+      "gitBlob": "fbe8f4f77142e89e65d8951234d482b5452e1678"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-readiness-matrix.md",
+      "bytes": 26032,
+      "sha256": "52e61305c4c2cc5625834b6ec612685fb28704ce55eb9e07238c0f8985ce9f52",
+      "gitBlob": "02be9bf5971f3b5e2e88b4a873ddfdab3f7df781"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/product-owner-documentation-authorization-2026-10-14.md",
+      "bytes": 4007,
+      "sha256": "d534b0f6ab59359b9d953cf83f8a7ebc116239228fd99b37107a72f0751bbbb0",
+      "gitBlob": "0e4098001e8dd27b6ec8ed12277888d10fda4ed3"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md",
+      "bytes": 36610,
+      "sha256": "6bfa1ad63411aaffeed638bb1ac0b29cc685d530db871747b1eaad42c8141b95",
+      "gitBlob": "caca940518b116ec66aa42a58ea7d142d3b5db84"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/p01-p30-source-crosswalk.md",
+      "bytes": 14704,
+      "sha256": "1aa813197b88ac0ae9f7dd8b63d560de2b4412fc36fdbdaf1b7e4946f4265afd",
+      "gitBlob": "b799bf4e01f97eb1efe4fde9c785a15e79885a63"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+      "bytes": 111351,
+      "sha256": "2f7e260089c39041eb403867c7d671ef7d921c85af77eb95e01b8cd174a063f7",
+      "gitBlob": "4e7b6abb0d4ef193fc6f35d9a0219cb4cfe6ebb1"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-manifest.json",
+      "bytes": 62355,
+      "sha256": "4440f2139c4b152efb8d01e708ec6330ab57310b136acbb0487a3f5c1d03dbaa",
+      "gitBlob": "b89451ed840d4b3a9e3d6b05e542fee60202cfa5"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/source-review.md",
+      "bytes": 6850,
+      "sha256": "527911ec0200d349259c36e69ced237436ce08b8d9fc886be9adc4788b79dfc9",
+      "gitBlob": "89acdc8f5a76defacb909f37c992194bffe40f01"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/recheck-documentation.py",
+      "bytes": 9729,
+      "sha256": "1917e6d9590992b19febfb5d6b060d21755a60637e2494431ff0beb02807964d",
+      "gitBlob": "41cd3d5d0680e8287f6f41b3f505c62567ec1fa5"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-boundary-decision-proposal-2026-10-16.md",
+      "bytes": 69037,
+      "sha256": "735c715b92aea102ec0c3b1ca2108db2a1164983fa8ba03c606d980cece23ac5",
+      "gitBlob": "d60031cef05e931328f643f41829ef93cd6167fb"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-evidence.md",
+      "bytes": 10691,
+      "sha256": "629e5db455ed02f15b606a0b46aaf99d76b30e5c89308836c67c840b352f771d",
+      "gitBlob": "80af2f82ba71e49d2b4dda411e6a1b8e9ada02ef"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/scope-manifest.json",
+      "bytes": 4593,
+      "sha256": "5a219ade402438c542cb306b32b85a21ea08ccd7d02444952efc552e62f813ca",
+      "gitBlob": "5f5ab0a78f63abe9037af5b13f4675e7a6c95796"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+      "bytes": 13585,
+      "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185",
+      "gitBlob": "bd599f1c01644b338fa939a4dd6ac8437fd0c316"
+    },
+    {
+      "path": "tools/feature-011-composition-atomic.mjs",
+      "bytes": 5068,
+      "sha256": "dba6f6c30d35edcafd04e6e45fda704e7e021f110927ab07f300760014c7f501",
+      "gitBlob": "1d9969477b5c4cfc86c8ba1bb2b94153075af4b3"
+    },
+    {
+      "path": "tools/feature-011-composition-playwright.config.ts",
+      "bytes": 1531,
+      "sha256": "c91cc663d24a19da9f5306d452bcbcaf765fafe9e485353acf667d22d8c7ad7e",
+      "gitBlob": "0e73d32fef1dabf1d46832bf9507c6fedc2def07"
+    },
+    {
+      "path": "tools/feature-011-composition-security.mjs",
+      "bytes": 10208,
+      "sha256": "c474c8d92a56426992d13d75e6d293bd0db475e2434a5755b7084ed8a54a0aea",
+      "gitBlob": "e80fc3bd25430d7e9254c17cee45aa3e0e623acf"
+    },
+    {
+      "path": "tools/feature-011-constitution-successor.mjs",
+      "bytes": 5567,
+      "sha256": "c69c57a054c210e3f6f6ebf119306ab607d1554698f29d47333496bf08a0b864",
+      "gitBlob": "206702ef85e02493f76cc5eb44f4c4887096ce7e"
+    },
+    {
+      "path": "tools/feature-011-consumer-fixtures.mjs",
+      "bytes": 35364,
+      "sha256": "4df750503dfcf33b1dbf10cef2e307a67485d988fb4742e67a15293b3dbe4d36",
+      "gitBlob": "630789939ed5b414c0de8e48e240a2aaaadb55f7"
+    },
+    {
+      "path": "tools/feature-011-content-fixtures.mjs",
+      "bytes": 7604,
+      "sha256": "3c85ddb42638fc8e45f801fdeaa5d6dbf5a65910dd75d36d1afc796f48f53e54",
+      "gitBlob": "6e78453b3290df15c78f9f54af96a926bef3a839"
+    },
+    {
+      "path": "tools/feature-011-documentation-successor.mjs",
+      "bytes": 2655,
+      "sha256": "a939a4f9c92ed18dc8c1d859e0eea027d6be159cb0e926d441b4038ae8510283",
+      "gitBlob": "7e4c4b5e4c2aad282de6482b36a2149c857f0c0a"
+    },
+    {
+      "path": "tools/feature-011-documentation-successor.test.mjs",
+      "bytes": 2359,
+      "sha256": "05bf41b0c3ab18a36e3db28e7a68b2455e1067d2c730b6110fba81e3c2bfe5f4",
+      "gitBlob": "0df6170fe5644141ef06fc23a831345ca665dec8"
+    },
+    {
+      "path": "tools/feature-011-evidence-fixtures.mjs",
+      "bytes": 36357,
+      "sha256": "59bba05d3c4b0f14976128f70cff704a44c22d22ca74cacd1ce212bcc1d9ef88",
+      "gitBlob": "f9824d91f3e0a4d0a5cbe50c5aa077e474122d85"
+    },
+    {
+      "path": "tools/feature-011-evidence-head.mjs",
+      "bytes": 802,
+      "sha256": "b9da9dea930a59a8063db915df00ce41a3bc63386f66b8a1a70ea95be593108f",
+      "gitBlob": "9cf16ca693a01fa475e33298d0781f6318a960f9"
+    },
+    {
+      "path": "tools/feature-011-evidence-head.test.mjs",
+      "bytes": 2246,
+      "sha256": "fa2d3e7c4a9cef5fdf4f06b3aed25addb87fbda3235c52601c0cb1a5e03cb5af",
+      "gitBlob": "4b9931058ae55e75e5929c8ef2f01598e5b65da9"
+    },
+    {
+      "path": "tools/feature-011-final-playwright.config.ts",
+      "bytes": 1456,
+      "sha256": "47ea0d6d1174aa2bf1864fc756aad026aed60ad3d6d62aca0fbcfb33e09ad1e5",
+      "gitBlob": "61ed15c79dac7996172ca36612d62e76fce58d28"
+    },
+    {
+      "path": "tools/feature-011-harness.test.mjs",
+      "bytes": 3490,
+      "sha256": "886ecac88a96c0320b9a5ac9107bddc6e7ccc2c5f5fa618dbcb5ed62e5247280",
+      "gitBlob": "0c859df3e8e0e9b5f0d88761c9de32ff89951396"
+    },
+    {
+      "path": "tools/feature-011-k08-preflight.mjs",
+      "bytes": 9418,
+      "sha256": "3a25f0da30b8ccd633b96e12e35e79bbc51b58ae11736dbd29f136a92bc0083f",
+      "gitBlob": "24df09645fbd5b336f5ba7021d3e388bb9a830cf"
+    },
+    {
+      "path": "tools/feature-011-ledger-contract.test.mjs",
+      "bytes": 6594,
+      "sha256": "36d4e37870959e4cbb8fd1b7c2d5cdc6c3d5bb60cdedee2bb425d6fadf8fb717",
+      "gitBlob": "5ee60fdd49b109d1d95366ac907286a8c544af04"
+    },
+    {
+      "path": "tools/feature-011-native-digest-binding.test.mjs",
+      "bytes": 1754,
+      "sha256": "54029f61c7888a6d0cc18c362973afd09abf07e828bd13f9261e9868e63fff2b",
+      "gitBlob": "7ac195750a0afd49c2c0653f7c4c3b15071afb57"
+    },
+    {
+      "path": "tools/feature-011-native-supabase-bootstrap.mjs",
+      "bytes": 8376,
+      "sha256": "6d235d24a7d9d3a9ffbcdd9364ce431ba8f6e2a1fe43663856963496e1d1e28c",
+      "gitBlob": "c0063f5b148aa39c0a509ac632756d364e93839b"
+    },
+    {
+      "path": "tools/feature-011-native-supabase-bootstrap.test.mjs",
+      "bytes": 1171,
+      "sha256": "76d5dd9d67f462d65da09461b5494e4a27a23a5ade268c22a1d7dfe4bb490e93",
+      "gitBlob": "e482e069a82bb0dd4f1175a6e2f641bf5627a15a"
+    },
+    {
+      "path": "tools/feature-011-offline-proof.mjs",
+      "bytes": 9227,
+      "sha256": "67d632cbd1704c89f9f0fe0d9c338cd3c4b1c3110db3c44649119e1a9ad2c4be",
+      "gitBlob": "2e2217b0a4be1f8b54cebaaf0aca9eb03dfa5911"
+    },
+    {
+      "path": "tools/feature-011-ops-fixtures.mjs",
+      "bytes": 5916,
+      "sha256": "787e616b0bf365bfe294a284a723a87fefc6a3f248a4cf99bffd40666f997fc0",
+      "gitBlob": "dd9570219a53947da08d4ce3bdcc9717daf87990"
+    },
+    {
+      "path": "tools/feature-011-physical-green.mjs",
+      "bytes": 15102,
+      "sha256": "45e6dd7b34e7ebb398cfd3ea416bbdee7e01999cdb1fb2eaa1452f304e475567",
+      "gitBlob": "b7bf2379d1da830cc2a6a3d5ccb5658f3f0ed6f9"
+    },
+    {
+      "path": "tools/feature-011-physical-races.mjs",
+      "bytes": 120133,
+      "sha256": "ec5a14e11d68330ee0c6cee0607ac28af23404bb2f659f3f3333c89b18b2e7fd",
+      "gitBlob": "325545ef6574295b2533ff82123099b7bb5af358"
+    },
+    {
+      "path": "tools/feature-011-physical-red.test.mjs",
+      "bytes": 2064,
+      "sha256": "a319e5fdacf4a4810cf1d1c2b3b8d9880cd2514e37eba473a30d2ac0a68047ef",
+      "gitBlob": "7cd504bd6928d02fceabec8ec2ab12fec83c1331"
+    },
+    {
+      "path": "tools/feature-011-pr-authority.mjs",
+      "bytes": 10317,
+      "sha256": "debad1f194dee59651b14308f3f8312c96049c56917311d8081215f85d28cbe2",
+      "gitBlob": "e1dd8a7f84d6c1768cdb9710eb3acb48ca1a6f1f"
+    },
+    {
+      "path": "tools/feature-011-pr-review-binding.test.mjs",
+      "bytes": 1284,
+      "sha256": "322d5f1514f8c4fbbf7c5894771abfb3fa84f6d629b39c9dedb00e801c994cc4",
+      "gitBlob": "f4701c4f65d4868679c56c69a6c01756ef6ff082"
+    },
+    {
+      "path": "tools/feature-011-pr-round2.mjs",
+      "bytes": 11578,
+      "sha256": "2bd6bd8d525dd5d3cc165ca34d505af69552b2955ee2c94828045bdbcb204d00",
+      "gitBlob": "4de71b1faad8fe26a714c3763be13fb8dcb933c9"
+    },
+    {
+      "path": "tools/feature-011-predecessor-races.mjs",
+      "bytes": 13401,
+      "sha256": "99930b2f785b1502a33b9cbb92e3f3e10e47b127954ffcc82388e0deccc84f04",
+      "gitBlob": "e14ba96da2499e0a5c0aefeee5aa42cfa109ebf0"
+    },
+    {
+      "path": "tools/feature-011-protection-fixtures.mjs",
+      "bytes": 34986,
+      "sha256": "dbdd535c5381788f745b4b5717b4d982b06474aaa939287e7f499da8362b89bb",
+      "gitBlob": "098be92820ce73d4554573fd215cf5209cbd8a5e"
+    },
+    {
+      "path": "tools/feature-011-protocol-parity.test.mjs",
+      "bytes": 18942,
+      "sha256": "8a14240f3a587d705600177b824f1039db71005b1908f037f4092d7921809f91",
+      "gitBlob": "847f78cfc19a29f96c9de7359eaae33266d0bbe9"
+    },
+    {
+      "path": "tools/feature-011-publication-fixtures.mjs",
+      "bytes": 4272,
+      "sha256": "e0207fc5581a04cc3b345c5c4f1b9994028f3e3eb0d89e119a375c21ff2ff1b1",
+      "gitBlob": "66ca3c78505a22a8def630d4609d4114611ad3b1"
+    },
+    {
+      "path": "tools/feature-011-source-negatives.mjs",
+      "bytes": 5450,
+      "sha256": "20d7e7b1b6d00e61952aeb30ce47ec21d5f8860f6d5d2298520008b3d118e19d",
+      "gitBlob": "7095af8ed9d1b88f8aa5abffe18ed158ac7a5253"
+    },
+    {
+      "path": "tools/feature-011-support-lifecycle.mjs",
+      "bytes": 7440,
+      "sha256": "1e64b06ba9a441b4f1c4c40e995dc7b03fa9372ac3ee80899a0605117aa2cd83",
+      "gitBlob": "dfe657d8af345d22155cf8b021ddf02d85a31147"
+    },
+    {
+      "path": "tools/feature-011-two-input-successor.mjs",
+      "bytes": 5774,
+      "sha256": "c056ab70b34a477de83ca39aaf84cd7b4b7493e2c3d8de3da606c7814867e739",
+      "gitBlob": "158999c2ce97918e352edd8ed6877b70609f289e"
+    },
+    {
+      "path": "tools/feature-011-two-input-successor.test.mjs",
+      "bytes": 9005,
+      "sha256": "05a3b8dce314b7611d3cf706eb52e9eb91819b3b9c0eac0142790751dd1b95db",
+      "gitBlob": "64627d0b5bfa2fda267cda4604a8afd8cd8b2297"
+    },
+    {
+      "path": "tools/feature-011-ui-playwright.config.ts",
+      "bytes": 1343,
+      "sha256": "2e9822383a684ec43039c5d3973142760fdc254d694ff73dc3c1f12f9398d447",
+      "gitBlob": "a7eb6fdd88d92ba43ae4c76c6b5d6be3ebb87e41"
+    },
+    {
+      "path": "tools/feature-011-verification-playwright.config.ts",
+      "bytes": 1289,
+      "sha256": "50c3e1d26aaae8081836418dd0cb14fdaefc82b6a23c50b1376318d7a5742b4a",
+      "gitBlob": "3254cbb7d4f79e1f5ce35ebc183ff1a82325b10e"
+    },
+    {
+      "path": "tools/generate-feature-011-client.mjs",
+      "bytes": 14146,
+      "sha256": "d12e7a6881d64050cb62ed4a2b9ee57c57e4f663a8bc5423a8c28808cea29fa2",
+      "gitBlob": "4c4fe3fcb660c88e283d072a2b4c25242ff8c060"
+    },
+    {
+      "path": "tools/generate-feature-011-contract.mjs",
+      "bytes": 30936,
+      "sha256": "fad4a83f3e9ac72f6db17c44687ed90b4ea914b68cb5d1199e1539133c5acc58",
+      "gitBlob": "f356c29e44397c5de0efcf6c98a71954bda6c61e"
+    },
+    {
+      "path": "tools/provision-feature-011-evidence.mjs",
+      "bytes": 10323,
+      "sha256": "eb8a49ceb3fd8ad7688bb5c6d6649826076e949520d08996879d8f848e55937f",
+      "gitBlob": "41d48ccc65a8020d65efd55d4ee180afd0782d6d"
+    },
+    {
+      "path": "tools/reset-feature-011-native-supabase.mjs",
+      "bytes": 1124,
+      "sha256": "2bef0af0bc6811339237a74aeb448463d8094dcbdc3393105b2c1f48950775bd",
+      "gitBlob": "a2cd60c45e6fa121f1ed4a122978a38844838029"
+    },
+    {
+      "path": "tools/reset-feature-011-native-supabase.test.mjs",
+      "bytes": 1147,
+      "sha256": "fe361890834db061748cc250dc061a6b3641830b149538b276a9bf41b7eae370",
+      "gitBlob": "68bb9d2e2143b1f2388b7fd7122e3621ec21c81a"
+    },
+    {
+      "path": "tools/run-feature-011-admin-ui-test.mjs",
+      "bytes": 29479,
+      "sha256": "d800ce270fe3ea55e3e78901c3e900bef8e44d16d806137473e4bc2bf63c87aa",
+      "gitBlob": "3197dac90a2e1115b125f3a290f18efd16905be1"
+    },
+    {
+      "path": "tools/run-feature-011-allergy-api-test.mjs",
+      "bytes": 29976,
+      "sha256": "2fdea47d364258622ff7164c10ddaa2f7d16174244204c1ed70a4016de42b19f",
+      "gitBlob": "8a451f5698e5bef2d9b8de2de422cbd19bc72942"
+    },
+    {
+      "path": "tools/run-feature-011-composition-test.mjs",
+      "bytes": 16958,
+      "sha256": "5564299b37822f611dfc172824e0ac158379827d8db969fd6e8019686954cc51",
+      "gitBlob": "b52e64d8758d448ddb35479e259871d95d907be2"
+    },
+    {
+      "path": "tools/run-feature-011-concurrency-test.mjs",
+      "bytes": 7662,
+      "sha256": "5b441a5e30627e1a473ac4cc75fc55f97548a5f111c0ab5df0e5bd4b797ee207",
+      "gitBlob": "9c00ac1b99f22a91e1f30da88b7f247d0432236a"
+    },
+    {
+      "path": "tools/run-feature-011-consumer-test.mjs",
+      "bytes": 21300,
+      "sha256": "2e2d34da0f220d1d666c6be41ed49494ddd52a58c468f3d7df3f413d1fd7a3c4",
+      "gitBlob": "a47ab29aace9dc1f43fe3c9d107ab17a7eb2ba79"
+    },
+    {
+      "path": "tools/run-feature-011-content-api-test.mjs",
+      "bytes": 20007,
+      "sha256": "913611bae882219a150fe2a4ae7b65bf6f018b11d529ec0cd45c197798dac88e",
+      "gitBlob": "56d87d876f2f211e5faf1cecb84ec529b0d8f77c"
+    },
+    {
+      "path": "tools/run-feature-011-core-equivalence-test.mjs",
+      "bytes": 8115,
+      "sha256": "9a87c64381c1fab55837f88f07d49a3cc6ae856fe0f113ded988ab1e74a520e0",
+      "gitBlob": "a2665e58c760d16c1df1fad4647a17451be920c6"
+    },
+    {
+      "path": "tools/run-feature-011-evidence-test.mjs",
+      "bytes": 29184,
+      "sha256": "d7d718f9bede146f9c542f3abb3a832a9e65558c490f1742e5800b4d495083d5",
+      "gitBlob": "6154c7617dfe841c39363636cedea597e1dcef23"
+    },
+    {
+      "path": "tools/run-feature-011-final-ui-test.mjs",
+      "bytes": 8017,
+      "sha256": "80a334b80114e8685e1f5b43acef871d019ee197a8fd720a902eb1b9c0b3332f",
+      "gitBlob": "0c430bdf57dbd88971813dc9cfeb7d54fa22a814"
+    },
+    {
+      "path": "tools/run-feature-011-handoff-test.mjs",
+      "bytes": 11152,
+      "sha256": "122a1843908890d8b75fbc064f3a62c9560e5fd72cf32b84fca43d90ad351bdb",
+      "gitBlob": "c4dc8e4cde011d2224dbc8ea88f82daa11e18f7a"
+    },
+    {
+      "path": "tools/run-feature-011-observability.mjs",
+      "bytes": 6625,
+      "sha256": "e10002040b540fb06e82b84d03d2f9fae3d1e6289c5dd5f60abe5f75a88565c0",
+      "gitBlob": "ffbb7a6265d2f719f1140cecf00eb49309e72409"
+    },
+    {
+      "path": "tools/run-feature-011-performance.mjs",
+      "bytes": 9434,
+      "sha256": "7841fcffc097915d596f20db3aeeb03507d59ce567c6f3aa2b0adf57b89e8e6c",
+      "gitBlob": "690af52b3e607065d072e38fcb173ab2d8038fbc"
+    },
+    {
+      "path": "tools/run-feature-011-physical-red.mjs",
+      "bytes": 10592,
+      "sha256": "c7fef4098344f377ba29f568e4aaed48116c28ab7235fc0736a63ad25b93fb78",
+      "gitBlob": "ba4bf64d1c553f9543997754bfd8108cf9655d77"
+    },
+    {
+      "path": "tools/run-feature-011-postgres-test.mjs",
+      "bytes": 14790,
+      "sha256": "23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b",
+      "gitBlob": "8ba2568f4108ca5e09b2e6baa4f32efc54b8d649"
+    },
+    {
+      "path": "tools/run-feature-011-protection-test.mjs",
+      "bytes": 22841,
+      "sha256": "0e57d04e9dc9c6103c53683ea1bd76538e5e76637a04323413206d62bb28bd82",
+      "gitBlob": "7dc49a141fc764cdca297f63907cfff1906abf8b"
+    },
+    {
+      "path": "tools/run-feature-011-publication-boundary-test.mjs",
+      "bytes": 9178,
+      "sha256": "6d20a1b66a34b8a6b6aeac67d5b2182243878299db6cfd5c875f6fe8c22ae4e4",
+      "gitBlob": "d7595607d78655fbe0d6fa09628c273494b409fd"
+    },
+    {
+      "path": "tools/run-feature-011-publish-api-test.mjs",
+      "bytes": 27390,
+      "sha256": "d99d0c0ec6a855bfb1c0403b45934b1da012d12e9e516cc94856c31927730579",
+      "gitBlob": "dde5d13fae4aa21ab6a2e00e4f665f4052966403"
+    },
+    {
+      "path": "tools/run-feature-011-restore.mjs",
+      "bytes": 18882,
+      "sha256": "9321675ef914bbc1bafa697fc0f467b0b10770a367c4ad373ea85816301c5964",
+      "gitBlob": "648eb67fc375e7b4c3144180b496222fe308bf7c"
+    },
+    {
+      "path": "tools/run-feature-011-review-test.mjs",
+      "bytes": 23355,
+      "sha256": "ab7cdc18fc4746b5f3a22a1dd9d3ba9a65fcb5a09f5ecac788f9fbad70e066fe",
+      "gitBlob": "ec76fc7a5bbbc13ed27a87454c33646e87938540"
+    },
+    {
+      "path": "tools/run-feature-011-sign-api-test.mjs",
+      "bytes": 28141,
+      "sha256": "0f225c78fa9930590191071be8264c81eadf1ed63f4efbe4eb5232afd091dc56",
+      "gitBlob": "67a82a39a2a2ad3213b43c5ad38c1a8391edf682"
+    },
+    {
+      "path": "tools/run-feature-011-status-test.mjs",
+      "bytes": 18322,
+      "sha256": "62a1a33a5459b3d57eb7af08892023c9af6ffb2959fd3ad39df180e0a7e86baf",
+      "gitBlob": "cb1601ed188b7ae429f32ff069083f488c6c3132"
+    },
+    {
+      "path": "tools/run-feature-011-status-ui-test.mjs",
+      "bytes": 27984,
+      "sha256": "f2e9ba64461a5562979fa732645454b3ea44fbfbda79b686b3f09d2fbfbb63f6",
+      "gitBlob": "983fafe8c5e214f35bdbe7e293c7f5f08a7e57ff"
+    },
+    {
+      "path": "tools/run-feature-011-storage-test.mjs",
+      "bytes": 15160,
+      "sha256": "62dc149fa7899de9a3e68dfb2600dba6ad47aa7a94d089c70022109710d71b6d",
+      "gitBlob": "1b5855ad59410e85bed7eeadaadb4c7fa117ef50"
+    },
+    {
+      "path": "tools/run-feature-011-verify-api-test.mjs",
+      "bytes": 20887,
+      "sha256": "9c64133e7945176340b4ff877efa01c3f16aa54bee6fe699c78b5e3bc02993a4",
+      "gitBlob": "4cc4e5682a118d52a53e9753f7e33c640e758d7f"
+    },
+    {
+      "path": "tools/start-feature-011-native-supabase.mjs",
+      "bytes": 5431,
+      "sha256": "c9ce768fabd6cbd01a670e0d6cc516dec8a9ca0313a352d300303c50d782f114",
+      "gitBlob": "b990fd605c1a77d289464f6e16ec252e61fe23d3"
+    },
+    {
+      "path": "tools/start-feature-011-native-supabase.test.mjs",
+      "bytes": 5259,
+      "sha256": "ad867848acd3d6914533582ed04eca8dbdb7b90556b7b64b644b3dcec6d31bad",
+      "gitBlob": "68a03a3004ea3dd24c04de1356752fe6ea54f436"
+    },
+    {
+      "path": "tools/verify-feature-011-contracts.mjs",
+      "bytes": 39635,
+      "sha256": "0810e5b71b6ffb17cfc970f36685dc863256782d8bb54c7dd491cb2cb0c57573",
+      "gitBlob": "c662bec9e96f5a6bf780ebc101f911fd0cdb9f8d"
+    },
+    {
+      "path": "tools/verify-feature-011-scope.mjs",
+      "bytes": 21851,
+      "sha256": "6df2e3711c63929ad64c39fd394d8ebd2947983efbdeb3e57d7d71d7ea44164a",
+      "gitBlob": "c587558922472843f71c9afec7440160e0cd041e"
+    },
+    {
+      "path": "tools/verify-feature-011-scope.test.mjs",
+      "bytes": 15826,
+      "sha256": "90398024006de2dc41a9e24f08a64bdac04e432224c4abbea9fa076e433ca2da",
+      "gitBlob": "bac01aa439570e802abcfc61bfe76eb448e1a6d9"
+    }
+  ],
+  "f011": {
+    "path": "specs/011-allergies-clinical-content-governance",
+    "files": 2774,
+    "gitTree": "ee8590c2d3c68257e77bd95267b778d5612722eb"
+  },
+  "candidateAllowlist": [
+    ".codex/agents/deep-worker.toml",
+    ".codex/agents/explorer.toml",
+    ".codex/agents/tester.toml",
+    ".codex/agents/ui-worker.toml",
+    ".codex/agents/worker.toml",
+    ".codex/config.toml",
+    ".shifaa/skills/shifaa-project-guardrails/SKILL.md",
+    ".shifaa/skills/shifaa-speckit-overlay/SKILL.md",
+    ".shifaa/skills/shifaa-third-party-skill-overlay/SKILL.md",
+    ".shifaa/skills/shifaa-ui-governor/SKILL.md",
+    "AGENTS.md",
+    "docs/SHIFAA-Documentation-Index.md",
+    "docs/SHIFAA-Operational-Guide-v1.md",
+    "docs/agent-skills/README.md",
+    "docs/governance/SHIFAA-Current-Authority-Map-v1.md",
+    "docs/governance/repository-modernization-v1/README.md",
+    "docs/governance/repository-modernization-v1/approval-package.md",
+    "docs/governance/repository-modernization-v1/baseline-and-protection.json",
+    "docs/governance/repository-modernization-v1/change-map.json",
+    "docs/governance/repository-modernization-v1/configuration-and-skills.md",
+    "docs/governance/repository-modernization-v1/documentation-inventory.jsonl",
+    "docs/governance/repository-modernization-v1/drift-register.json",
+    "docs/governance/repository-modernization-v1/feature-status-map.json",
+    "docs/governance/repository-modernization-v1/publication-inventory.json",
+    "docs/governance/repository-modernization-v1/validation-results.json",
+    "docs/governance/repository-modernization-v1/verification-policy-proposal.md",
+    "tools/test_documentation_authority.py",
+    "tools/verify-documentation-authority.py"
+  ],
+  "mutableOperationalPredecessors": [
+    {
+      "path": ".codex/agents/deep-worker.toml",
+      "bytes": 1485,
+      "sha256": "9bba7061679d5a5fa46da13caf2ca26a6184e3e38e7e8e908b35237bf880570c",
+      "gitBlob": "6d14c15fcfce52182ad7dc3a44a95f393b2dc42c"
+    },
+    {
+      "path": ".codex/agents/explorer.toml",
+      "bytes": 1245,
+      "sha256": "00caad0bc084dfa30e12096ca88504495311684164317016c5338332b0e9cc67",
+      "gitBlob": "d6a02cfc2056842c64cf2ada5e5afd97c9c84859"
+    },
+    {
+      "path": ".codex/agents/tester.toml",
+      "bytes": 1565,
+      "sha256": "a24a3e0acf540d396c57acf5e8136b71ac5d865461deba720f0ea81d57aadd35",
+      "gitBlob": "a7c02fccab9269c83887c488750deb5d7bf55c45"
+    },
+    {
+      "path": ".codex/agents/ui-worker.toml",
+      "bytes": 1604,
+      "sha256": "270c40e70c9b892a5bf62b8c757351dc8fe5cc62360c5862778efac882c3f9fd",
+      "gitBlob": "45acf813ff5d12b921528e836264cfa71df9ec4b"
+    },
+    {
+      "path": ".codex/agents/worker.toml",
+      "bytes": 1205,
+      "sha256": "012b3e6e07d388e6a57d4a126a021daca92e43dbed34581ed6179294b81b9c00",
+      "gitBlob": "5b8ac80bc95be17193595b8045ee502cb34e4f3c"
+    },
+    {
+      "path": ".codex/config.toml",
+      "bytes": 3645,
+      "sha256": "8b1569de234b1ddf89947f7170c86872f8b63b6d4fe215c4da350f2d9ea9d3b1",
+      "gitBlob": "c9efd987281bce050d75ea9d77624f9aa96234a7"
+    },
+    {
+      "path": ".shifaa/skills/shifaa-project-guardrails/SKILL.md",
+      "bytes": 4497,
+      "sha256": "0e19a0f9bf9a245e009916e17d853e08fea722de63f4122e7353ed6a2cdfaccb",
+      "gitBlob": "cafdac4e0b7c48b95b96d14f1ce9bb4c6fd2a476"
+    },
+    {
+      "path": ".shifaa/skills/shifaa-speckit-overlay/SKILL.md",
+      "bytes": 1816,
+      "sha256": "8514e5d379c651e0662d084eb62499886a4fae2a697c7153267af59384a9a412",
+      "gitBlob": "5543a9da819b57e647e163dda596fba17f31e3ea"
+    },
+    {
+      "path": ".shifaa/skills/shifaa-third-party-skill-overlay/SKILL.md",
+      "bytes": 2767,
+      "sha256": "4c04a22bf9745fe009618c344acefbc560dd065b4a12181c1782dc1aa324201d",
+      "gitBlob": "927853c4569d2d2f4236e84cbe2db4cd995c1492"
+    },
+    {
+      "path": ".shifaa/skills/shifaa-ui-governor/SKILL.md",
+      "bytes": 4305,
+      "sha256": "d50e6ec4f37697bdd8da88279b57b4db710b1a04f407801d6cb7f499a9a455d1",
+      "gitBlob": "4f4af2f0ac9197901845a9cdecb823c1e9eddf74"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 15587,
+      "sha256": "214f8f086c31002d316026d8e46e5395da5f98d79a7048e4be699935e10240e1",
+      "gitBlob": "36d675e32961a1d5ad1212495021c1f4a0c5b4f6"
+    },
+    {
+      "path": "docs/agent-skills/README.md",
+      "bytes": 3161,
+      "sha256": "a78924d9b7e93e2c3bb8bf751a3927e16aa4017a42b4629161c43be25de60741",
+      "gitBlob": "ed3ed5bf5a6140714e69a574d4344df9b787246b"
+    }
+  ],
+  "historicalApprovalPolicy": "Never rewrite earlier release inventories; these current operational successors need their own exact approval. Prior AGENTS identities remain historical facts."
+}
