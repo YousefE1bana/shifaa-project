@@ -1,0 +1,488 @@
+{
+  "status": "PROPOSED_UNAPPROVED — NOT_EFFECTIVE",
+  "review_kind": "Documentary applicability and propagation; not professional acceptance or runtime review",
+  "patterns": [
+    ".specify/templates/**/*.md",
+    "specs/**/spec.md",
+    "specs/**/plan.md",
+    "specs/**/tasks.md"
+  ],
+  "count": 46,
+  "items": [
+    {
+      "path": ".specify/templates/checklist-template.md",
+      "sha256": "70bbc48e884fab372ffb09e83e78ff983e28b69caebf8cd9964a02b6836683ac",
+      "bytes": 2033,
+      "kind": "template",
+      "disposition": "UNCHANGED_PINNED_OR_UNAFFECTED",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": ".specify/templates/constitution-template.md",
+      "sha256": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3",
+      "bytes": 2346,
+      "kind": "template",
+      "disposition": "UNCHANGED_PINNED_OR_UNAFFECTED",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": ".specify/templates/overrides/checklist-template.md",
+      "sha256": "b0b5ab2996c222db5e89e1879cbd2737a74d9631f03a99b3b4c4b0489f66ddac",
+      "bytes": 4108,
+      "kind": "template",
+      "disposition": "UNCHANGED_PINNED_OR_UNAFFECTED",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": ".specify/templates/overrides/constitution-template.md",
+      "sha256": "ec180cd90097fd2396aa612491b64475336266ec4bc3ba4a2e835ce39ad466dd",
+      "bytes": 5199,
+      "kind": "template",
+      "disposition": "ADDITIONAL_CANONICAL_PROPAGATION_PROPOSED",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 39,
+          "text": "### VI. Clinical Safety Requires Dual Governance"
+        },
+        {
+          "line": 61,
+          "text": "MVP has one patient app and one staff app per facility type. A second app for the same operational surface requires a constitutional amendment and must not duplicate auth, contracts, or domain logic."
+        }
+      ]
+    },
+    {
+      "path": ".specify/templates/overrides/f012-synthetic-profile-supplement.md",
+      "sha256": "91713f8540d469a3f02c330188a73eabdeaf11587b39cb18c1631871fb9cd6c7",
+      "bytes": 4332,
+      "kind": "template",
+      "disposition": "F012_SUPPLEMENT_PROPOSED",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 34,
+          "text": "Retain the [Plan template Constitution check](plan-template.md) and show Article VI's preserved clinical obligation plus the exact approved engineering applicability. Do not mark professional approval PASS."
+        }
+      ]
+    },
+    {
+      "path": ".specify/templates/overrides/plan-template.md",
+      "sha256": "ad471b8a7c5191b97b6596813b5b26a95bb4bc3961dc6442151ae7761b3f6929",
+      "bytes": 5504,
+      "kind": "template",
+      "disposition": "ADDITIONAL_CANONICAL_PROPAGATION_PROPOSED",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 16,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": ".specify/templates/overrides/spec-template.md",
+      "sha256": "47ac6747f877f3d623f9f865f15ece73483dff64338957f8652ffbc61ce0c79f",
+      "bytes": 10866,
+      "kind": "template",
+      "disposition": "ADDITIONAL_CANONICAL_PROPAGATION_PROPOSED",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": ".specify/templates/overrides/tasks-template.md",
+      "sha256": "8d150a820037ccf9784db66b34780ac7287771da34f65c0850959f71fea65224",
+      "bytes": 6796,
+      "kind": "template",
+      "disposition": "UNCHANGED_PINNED_OR_UNAFFECTED",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": ".specify/templates/plan-template.md",
+      "sha256": "a828ad6206526574ab3fc99be6d0154588cb1c9774c5919d71b81ab5b2dbffa0",
+      "bytes": 3682,
+      "kind": "template",
+      "disposition": "UNCHANGED_PINNED_OR_UNAFFECTED",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 39,
+          "text": "## Constitution Check"
+        },
+        {
+          "line": 108,
+          "text": "> **Fill ONLY if Constitution Check has violations that must be justified**"
+        }
+      ]
+    },
+    {
+      "path": ".specify/templates/spec-template.md",
+      "sha256": "3945437fc35cd30a5b2bf7beea680337c3516826d3efa5a6b92c4a7eca1ba28e",
+      "bytes": 4556,
+      "kind": "template",
+      "disposition": "UNCHANGED_PINNED_OR_UNAFFECTED",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": ".specify/templates/tasks-template.md",
+      "sha256": "b0f527d41e546af0c31903e04f9b20965b6b497b573792198f663a64ce128863",
+      "bytes": 9171,
+      "kind": "template",
+      "disposition": "UNCHANGED_PINNED_OR_UNAFFECTED",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/001-identity-onboarding/plan.md",
+      "sha256": "38e6190e53d0107786e761f9a45f6f3df3a9f05a403b22c76171d9bcae4480ed",
+      "bytes": 15886,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 16,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/001-identity-onboarding/spec.md",
+      "sha256": "6cee0480e16afbae2f4532be0762d3ba3cfdfdab9f249d556375ff456c4e0f64",
+      "bytes": 51132,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/001-identity-onboarding/tasks.md",
+      "sha256": "2ea386e7b5e03f4cd193c86542a8b25dd53f1ee7010f7be08bbd7cda604c5dbc",
+      "bytes": 12825,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/002-supabase-runtime-foundation/plan.md",
+      "sha256": "6e95c6e7ec13ece8aabe534a329dc457baa6569a4ba71a647de88dc73ff23b50",
+      "bytes": 7164,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 16,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/002-supabase-runtime-foundation/spec.md",
+      "sha256": "2274213f44ae84808170e64dd85164821d804212d4fa531f9d7e43a669436e8d",
+      "bytes": 21069,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/002-supabase-runtime-foundation/tasks.md",
+      "sha256": "86c48d1d375f658387f83354cf4ee8ec676463b5d9cb967092b70ba42512d0dc",
+      "bytes": 4684,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/003-facility-onboarding-rbac/plan.md",
+      "sha256": "6104f74c616d32fc41a7c72b66a012ed3cf86e725116c151ac744aeb87376628",
+      "bytes": 18522,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 17,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/003-facility-onboarding-rbac/spec.md",
+      "sha256": "cb7f9db9e40adb46f84bad24965a597ac1a5bcdc4c298f8d11b672cc398b82f1",
+      "bytes": 51309,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/003-facility-onboarding-rbac/tasks.md",
+      "sha256": "5d8ce1d1151e01a472e049d423968a3de9146a6ad20605ce9fb143fbbb7200e9",
+      "bytes": 17424,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/004-family-care-relationships/plan.md",
+      "sha256": "78a72be013bc1f5aaaab8bf086285c0602e45999a2edb49d4ae493a427be00a1",
+      "bytes": 20583,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 18,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/004-family-care-relationships/spec.md",
+      "sha256": "d31320ebc7ec2cd13b8091ef7e58ec27a8d0b1fadd889df8dc68e978dce18d0b",
+      "bytes": 52805,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/004-family-care-relationships/tasks.md",
+      "sha256": "03c3d9125991780e4fb424e542b1028d914d365ab462e3f4990389eb09901630",
+      "bytes": 20091,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/005-privacy-dsr-notifications/plan.md",
+      "sha256": "206604d05077f9a7377c4f93ca1cdf54672b77891bbb384d3d77c053efd81886",
+      "bytes": 17623,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 21,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/005-privacy-dsr-notifications/spec.md",
+      "sha256": "bf928b90c4728dc440fa56d6f597e01c3d645c51d35b1ef8159f9abcb64da30f",
+      "bytes": 57061,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/005-privacy-dsr-notifications/tasks.md",
+      "sha256": "9c36191c5be7cc7af405ef231f381d797ebc9e520e33d7704f803afe38684b73",
+      "bytes": 23460,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/006-discovery-sos-foundation/plan.md",
+      "sha256": "0d25ff345773bb60fba4f0d4fe55a0c4e8375500efd75ea247784714a846f377",
+      "bytes": 21296,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 21,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/006-discovery-sos-foundation/spec.md",
+      "sha256": "17325612d0ad6e1800ea095e08c70ed201275fd2bee7bf546f90431cb2d7bb66",
+      "bytes": 60078,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/006-discovery-sos-foundation/tasks.md",
+      "sha256": "2c757510ac822eee226e6d38ebdb61a35c37694e99eede93d805239713a94beb",
+      "bytes": 27777,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/007-identity-continuity-sessions-mfa-recovery/plan.md",
+      "sha256": "e8335a51a452953f23f75c23becf24b7fecb646fef8928a3a1ac9d4a8cc1f4dd",
+      "bytes": 16680,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 17,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/007-identity-continuity-sessions-mfa-recovery/spec.md",
+      "sha256": "50bcec461d3cfcfa806fe03e0d75554fea458e79f87c0f86840f156935a29b78",
+      "bytes": 65273,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/007-identity-continuity-sessions-mfa-recovery/tasks.md",
+      "sha256": "49051a77ec5b04c4ea293ed7ee75f67ef54daf947e6c71e80d3ec89e97b3a15d",
+      "bytes": 35210,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/008-audit-admin-aggregates-observability/plan.md",
+      "sha256": "983f2bae651dba95c2453781dba9219cda809d157cd7c0b9f672a4f97f21e045",
+      "bytes": 21931,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 17,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/008-audit-admin-aggregates-observability/spec.md",
+      "sha256": "78792c091566988bc992decb2c40cffc54e5a92b62fcf64b7f98be7b31907871",
+      "bytes": 72936,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/008-audit-admin-aggregates-observability/tasks.md",
+      "sha256": "f706e63e8414426e3b321adf65a63f882c2016a79ce10ba889d038def26b3ce8",
+      "bytes": 27203,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/009-clinic-scheduling-appointments-queue/plan.md",
+      "sha256": "0df0abce1079b9c6a54ab302ff89fc5c5c2b4bc81adbd7455de7f8546312d9ce",
+      "bytes": 22289,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 21,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/009-clinic-scheduling-appointments-queue/spec.md",
+      "sha256": "b4da2a6ceb094edf05b1f67d52e19f2c703e8602cc51e9867ee0310f17aaf08e",
+      "bytes": 108161,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/009-clinic-scheduling-appointments-queue/tasks.md",
+      "sha256": "e5b460d525a96d517e3d3cb4ae57175fdbfeb0f93110791f4ef2e082f5ede13d",
+      "bytes": 67288,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/010-encounters-referrals-contextual-chat/plan.md",
+      "sha256": "3865d898d13e2dc18aaa70180311910953044f1d2b9973a430aca0cad5c5996a",
+      "bytes": 20444,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 21,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/010-encounters-referrals-contextual-chat/spec.md",
+      "sha256": "2aed898488f3355f4380f54c44859b81a0cdc48e753a859d0f4eab0b10743de1",
+      "bytes": 84028,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 385,
+          "text": "| Plan gate | Architecture, QA, owning engineer under the approved v2.1.2 pre-implementation operating model | Five plan artifacts, Constitution check, prior plan review with zero Critical/High findings and no unresolved technical design decisions, approved Feature 010 TEST-ONLY functional baseline; dated Feature 010 Plan Gate record | `PLAN_APPROV"
+        }
+      ]
+    },
+    {
+      "path": "specs/010-encounters-referrals-contextual-chat/tasks.md",
+      "sha256": "4780ad0afeccfdb5f10a30adea6de2cf11efa28944e03fd10ec9d529df3fb494",
+      "bytes": 56916,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/historical-ledger/pre-fresh-2026-10-06/tasks.md",
+      "sha256": "8c7159c44253445cf48a86cd6637339ee8a5b328153dae1f4bfe5daf1c85635d",
+      "bytes": 119654,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/plan-recovery/plan.md",
+      "sha256": "bb6f5918696dab056e4cec756324078f5c28ea640d5387ad6fa515caf3992689",
+      "bytes": 22508,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 17,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/plan.md",
+      "sha256": "038684b04879b0ff2b26a9a351768cfcf0185e7da86b855ad56df5c55c47a7ca",
+      "bytes": 44430,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 19,
+          "text": "## 2. Constitution check"
+        }
+      ]
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/spec.md",
+      "sha256": "96fb693f97f6905c4b34890319ed26e3f5b4250eb462e25e1e04b50c23cc0eb0",
+      "bytes": 140465,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": [
+        {
+          "line": 33,
+          "text": "| [Traceability Matrix](../../docs/traceability/SHIFAA-Traceability-Matrix.md), [Completion Coverage](../../docs/governance/SHIFAA-Completion-Coverage.md)                                                                                                                                   | Existing FR ownership and canonical allergy/unsigned-content/du"
+        },
+        {
+          "line": 390,
+          "text": "**Q2 — Professional eligibility evidence: RESOLVED.** Require authoritative professional verification plus an evidence-backed clinical-owner designation for the required senior physician/medical director or clinical pharmacist reviewer capacity. Unresolved eligibility denies signing; clinical qualification criteria remain subject to `OPEN-CLIN-001`"
+        }
+      ]
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/tasks.md",
+      "sha256": "3d5229dbe80618d78100921e32ed90bf6b85b8ffa3906834dda58618ecd210ad",
+      "bytes": 84236,
+      "kind": "specification_artifact",
+      "disposition": "NO_RETROACTIVE_CHANGE_F012_ONLY",
+      "clinical_or_constitution_mentions": []
+    }
+  ],
+  "f012_spec_plan_tasks_present": [
+    false,
+    false,
+    false
+  ]
+}

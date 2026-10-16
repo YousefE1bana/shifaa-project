@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:shifaa:engineering:f012:fixture-schema:0.2.0-proposal",
+  "title": "Proposed F012 engineering fixture carrier, no clinical or production validity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "proposedDatasetVersion",
+    "approvalStatus",
+    "engineeringOnly",
+    "namespace",
+    "cases"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.2.0-proposal"
+    },
+    "proposedDatasetVersion": {
+      "const": "1.0.0"
+    },
+    "approvalStatus": {
+      "const": "PROPOSED_NOT_APPROVED"
+    },
+    "engineeringOnly": {
+      "const": true
+    },
+    "namespace": {
+      "const": "urn:shifaa:engineering:f012"
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "caseId",
+          "purpose",
+          "item"
+        ],
+        "properties": {
+          "caseId": {
+            "type": "string",
+            "pattern": "^SYNTHETIC_CASE_[0-9]+$"
+          },
+          "purpose": {
+            "enum": [
+              "FLAGS_FALSE_MECHANISM_ONLY",
+              "CONTROLLED_TRUE_MECHANISM_ONLY",
+              "NTI_TRUE_MECHANISM_ONLY"
+            ]
+          },
+          "item": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "itemId",
+              "prescriptionId",
+              "productCoding",
+              "ingredientCoding",
+              "strength",
+              "formCoding",
+              "routeCoding",
+              "dose",
+              "frequency",
+              "duration",
+              "quantity",
+              "indicationCoding",
+              "classificationEvidence",
+              "itemStatus"
+            ],
+            "properties": {
+              "itemId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^00000000-0000-4000-8000-[0-9]{12}$"
+              },
+              "prescriptionId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^00000000-0000-4000-8000-[0-9]{12}$"
+              },
+              "productCoding": {
+                "$ref": "#/$defs/coding"
+              },
+              "ingredientCoding": {
+                "$ref": "#/$defs/coding"
+              },
+              "strength": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/quantity"
+                  },
+                  {
+                    "properties": {
+                      "unitCode": {
+                        "const": "SYNTHETIC_STRENGTH_UNIT"
+                      }
+                    }
+                  }
+                ]
+              },
+              "formCoding": {
+                "$ref": "#/$defs/coding"
+              },
+              "routeCoding": {
+                "$ref": "#/$defs/coding"
+              },
+              "dose": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/quantity"
+                  },
+                  {
+                    "properties": {
+                      "unitCode": {
+                        "const": "SYNTHETIC_DOSE_UNIT"
+                      }
+                    }
+                  }
+                ]
+              },
+              "frequency": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/quantity"
+                  },
+                  {
+                    "properties": {
+                      "unitCode": {
+                        "const": "SYNTHETIC_FREQUENCY_UNIT"
+                      }
+                    }
+                  }
+                ]
+              },
+              "duration": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/quantity"
+                  },
+                  {
+                    "properties": {
+                      "unitCode": {
+                        "const": "SYNTHETIC_DURATION_UNIT"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quantity": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/quantity"
+                  },
+                  {
+                    "properties": {
+                      "unitCode": {
+                        "const": "SYNTHETIC_QUANTITY_UNIT"
+                      }
+                    }
+                  }
+                ]
+              },
+              "indicationCoding": {
+                "$ref": "#/$defs/coding"
+              },
+              "classificationEvidence": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "contentVersion",
+                  "controlled",
+                  "nti"
+                ],
+                "properties": {
+                  "contentVersion": {
+                    "type": "string",
+                    "pattern": "^SYNTHETIC_CONTENT_MECHANISM_ONLY_[0-9]+$"
+                  },
+                  "controlled": {
+                    "type": "boolean"
+                  },
+                  "nti": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "itemStatus": {
+                "const": "SYNTHETIC_ITEM_STATUS"
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "then": {
+              "properties": {
+                "item": {
+                  "properties": {
+                    "classificationEvidence": {
+                      "properties": {
+                        "controlled": {
+                          "const": false
+                        },
+                        "nti": {
+                          "const": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "if": {
+              "required": [
+                "purpose"
+              ],
+              "properties": {
+                "purpose": {
+                  "const": "FLAGS_FALSE_MECHANISM_ONLY"
+                }
+              }
+            }
+          },
+          {
+            "then": {
+              "properties": {
+                "item": {
+                  "properties": {
+                    "classificationEvidence": {
+                      "properties": {
+                        "controlled": {
+                          "const": true
+                        },
+                        "nti": {
+                          "const": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "if": {
+              "required": [
+                "purpose"
+              ],
+              "properties": {
+                "purpose": {
+                  "const": "CONTROLLED_TRUE_MECHANISM_ONLY"
+                }
+              }
+            }
+          },
+          {
+            "then": {
+              "properties": {
+                "item": {
+                  "properties": {
+                    "classificationEvidence": {
+                      "properties": {
+                        "controlled": {
+                          "const": false
+                        },
+                        "nti": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "if": {
+              "required": [
+                "purpose"
+              ],
+              "properties": {
+                "purpose": {
+                  "const": "NTI_TRUE_MECHANISM_ONLY"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "coding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "system",
+        "code",
+        "version"
+      ],
+      "properties": {
+        "system": {
+          "const": "urn:shifaa:engineering:f012"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^SYNTHETIC_[A-Z0-9_]+$"
+        },
+        "version": {
+          "const": "1.0.0-proposed"
+        }
+      }
+    },
+    "quantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unitCode"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "unitCode": {
+          "type": "string",
+          "enum": [
+            "SYNTHETIC_STRENGTH_UNIT",
+            "SYNTHETIC_DOSE_UNIT",
+            "SYNTHETIC_FREQUENCY_UNIT",
+            "SYNTHETIC_DURATION_UNIT",
+            "SYNTHETIC_QUANTITY_UNIT"
+          ]
+        }
+      }
+    }
+  }
+}

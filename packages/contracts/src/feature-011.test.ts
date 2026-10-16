@@ -304,7 +304,11 @@ async function verifierFixture(
   const parent = path.join(root, 'artifacts/feature-011/c02-fixtures');
   fs.mkdirSync(parent, { recursive: true });
   const fixtureRoot = fs.mkdtempSync(path.join(parent, 'contracts-'));
-  const { readDocumentationSuccessor, documentationSuccessorInputPaths } = await import(
+  const {
+    readDocumentationSuccessor,
+    documentationSuccessorInputPaths,
+    constitutionSuccessorInputPaths,
+  } = await import(
     pathToFileURL(path.join(root, 'tools/feature-011-documentation-successor.mjs')).href
   );
   const copies = [
@@ -320,6 +324,9 @@ async function verifierFixture(
         ]
       : []),
     'tools/feature-011-documentation-successor.mjs',
+    ...constitutionSuccessorInputPaths.filter((file: string) =>
+      fs.existsSync(path.join(root, file)),
+    ),
     ...(() => {
       const manifest = JSON.parse(
         fs.readFileSync(

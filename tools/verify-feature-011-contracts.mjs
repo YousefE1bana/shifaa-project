@@ -13,6 +13,8 @@ import { evidenceHeadBelongsToCurrentHistory } from './feature-011-evidence-head
 import {
   readDocumentationSuccessor,
   documentationSuccessorInputPaths,
+  readConstitutionSuccessor,
+  readHistoricalVerificationInputs,
 } from './feature-011-documentation-successor.mjs';
 
 const defaultRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -181,6 +183,9 @@ const currentProofInputs = [
 ];
 export function currentPhysicalSourceDigests(root = defaultRoot, { includeRaces = true } = {}) {
   const metadata = readFeature011ProtocolMetadata(root);
+  // Preserve the F011 acceptance view. The successor reader independently checks
+  // exact live successor/tool bytes before resolving these historical bindings.
+  const readHistorical = readHistoricalVerificationInputs(root);
   const files = new Set([
     ...contractInputs,
     ...(fs.existsSync(path.join(root, prReviewAuthorizationPath))
@@ -212,9 +217,7 @@ export function currentPhysicalSourceDigests(root = defaultRoot, { includeRaces 
       .sort()
       .map((name) => `supabase/migrations/${name}`),
   ]);
-  return Object.fromEntries(
-    [...files].map((file) => [file, sha256(fs.readFileSync(path.join(root, file)))]),
-  );
+  return Object.fromEntries([...files].map((file) => [file, sha256(readHistorical(file))]));
 }
 // These are evidence categories, not new medical or product policy.
 const physicalAssertions = [
@@ -592,7 +595,9 @@ function verifyPhysical(root, read, inputDigests, current = false) {
   ];
   const expectedDigests = current
     ? currentPhysicalSourceDigests(root, { includeRaces: false })
-    : Object.fromEntries(sourceFiles.map((file) => [file, sha256(read(file))]));
+    : Object.fromEntries(
+        sourceFiles.map((file) => [file, sha256(readHistoricalVerificationInputs(root)(file))]),
+      );
   require(equal(
     proof.sourceDigests,
     expectedDigests,
@@ -835,7 +840,8 @@ export async function verifyFeature011Contracts({
           failures.push(`${pkg} generated package export/check wiring stale`);
       }
     }
-    for (const file of contractInputs) inputDigests[file] = sha256(read(file));
+    const readHistorical = readHistoricalVerificationInputs(root);
+    for (const file of contractInputs) inputDigests[file] = sha256(readHistorical(file));
   } catch (error) {
     failures.push(`Contract verification: ${error.message}`);
   }
@@ -868,6 +874,8 @@ export async function verifyFeature011Contracts({
       'K07/T029 (P5); accepted current P1–P4 and separate applicable owner disposition',
     requiredStages: contractsOnly ? ['P1', 'P2', 'P3'] : ['P1', 'P2', 'P3', 'P4', 'P5'],
     supersededRegistries: protocolMetadata?.supersededRegistries ?? [],
+    // Separate from historical acceptance, never an activation or clinical grant.
+    governanceSuccessor: failures.length ? null : readConstitutionSuccessor(root),
   };
 }
 

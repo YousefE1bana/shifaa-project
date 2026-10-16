@@ -1,24 +1,34 @@
 # SHIFAA — Master Implementation Plan
 
-> **Document ID:** SHIFAA-MASTER
+> **Version:** 2.2.0 — prospective release candidate; not approved.
+> **Publication form:** PROSPECTIVE CONDITIONAL RELEASE — approval/effectiveness is established only by the bound approval and activation records.
+> **Conditional publication state:** APPROVED_FOR_CONDITIONAL_ACTIVATION (prospective only; this header asserts no approval).
+> **Current preparation limit:** Exact Product Owner approval is not recorded by preparation of this form; predecessor authority continues until verified activation.
+> **Publication bundle:** F012-GOVERNANCE/3.0.0
+> **Preparation history:** Prepared 2026-10-15. Authority is determined by the approval and activation records, never by this preparation date.
+> **Effective authority before activation:** Constitution 2.1.0 and PRD/Master 2.1.3 at Git commit `862db9f66c19ccb8efa9163e5221845225b62174` remain controlling until the verified activation receipt satisfies the canonical procedure. An integrated proposal does not withdraw that authority.
+
+### Historical predecessor metadata — not approval of this candidate
+
+> **Predecessor document id:** SHIFAA-MASTER
 >
-> **Version:** 2.1.3
+> **Predecessor version:** 2.1.3
 >
-> **Status:** Approved architecture baseline; production authorization blockers remain open
+> **Predecessor status:** Approved architecture baseline; production authorization blockers remain open
 >
-> **Owner:** Product Owner + Architecture Lead
+> **Predecessor owner:** Product Owner + Architecture Lead
 >
-> **Approved by:** Yousef Osama
+> **Predecessor approved by:** Yousef Osama
 >
-> **Approved on:** 2-Sep-2026
+> **Predecessor approved on:** 2-Sep-2026
 >
-> **Approval version:** v2.1.3
+> **Predecessor approval version:** v2.1.3
 >
-> **Approval record:** [`OPEN-PRIV-001 decision package v1.0.0`](./specs/008-audit-admin-aggregates-observability/decisions/OPEN-PRIV-001-reidentification-risk-decision-package.md)
+> **Predecessor approval record:** [`OPEN-PRIV-001 decision package v1.0.0`](./specs/008-audit-admin-aggregates-observability/decisions/OPEN-PRIV-001-reidentification-risk-decision-package.md)
 >
-> **Last verified:** 2026-09-02 (Africa/Cairo)
+> **Predecessor last verified:** 2026-09-02 (Africa/Cairo)
 >
-> **Companion product source:** [`shifaa-prd.md`](./shifaa-prd.md)
+> **Predecessor companion product source:** [`shifaa-prd.md`](./shifaa-prd.md)
 
 ## 0. Operating rules
 
@@ -176,7 +186,7 @@ The production logical topology is two or more stateless API/worker replicas beh
 
 ## 3. Project Constitution — 15 immutable articles
 
-The following articles are copied into [`.specify/memory/constitution.md`](./.specify/memory/constitution.md). A constitutional amendment requires a version bump, rationale, Product Owner approval, impact review of all templates/specs, and migration plan.
+The following articles are copied into [`.specify/memory/constitution.md`](./.specify/memory/constitution.md). A constitutional amendment requires a version bump, rationale, Product Owner approval, impact review of all templates/specs, and migration plan. The canonical Constitution is the single normative constitutional authority; this section mirrors it. Separately versioned F012 files remain supporting decisions/evidence, not competing normative inputs. F012 applicability has no authority until the fixed publication/receipt predicate in the canonical Constitution is satisfied for the separately approved release form.
 
 **I. Least Privilege and Default Deny.** Every action is authorized for the minimum actor, purpose, patient, facility, resource, field set, and time. Missing policy means deny.
 
@@ -189,6 +199,10 @@ The following articles are copied into [`.specify/memory/constitution.md`](./.sp
 **V. Medical Data Follows the Patient With Purpose Limits.** Longitudinal safety data is patient-centric; access still requires a care, consent, emergency, or legal basis. Cross-facility continuity never means universal staff visibility.
 
 **VI. Clinical Safety Requires Dual Governance.** Clinical decision-support code, content, severity, exceptions, and test vectors require written senior-physician/medical-director and clinical-pharmacist approval. Unknown is displayed as unknown; it is never silently safe.
+
+F012 isolated graduation-engineering applicability only: policy-shaped software mechanisms and mechanism-only test vectors may receive engineering acceptance without professional clinical signatures only with exclusively synthetic patients, coding, rule scenarios and reviewer designations; trusted deployment isolation must reject real-patient/production inputs and prevent production authority. Synthetic designations are not professional credentials; synthetic content is not admissible F011 clinical content; simulated decisions cannot authorize actual prescribing, dispensing or administration. This applicability grants no endpoint, role, permission or protected rule-body access. Current contextual authorization, independence, immutable history, audit, failure handling and bilingual accessibility remain required. Actual clinical logic, classifications, source admissibility, professional reviewer eligibility, emergency policy and clinically operational use retain the preceding dual-signature obligation and designated approvals. Unknown or unverifiable evidence remains `not_fully_checked`. Engineering evidence is separate from clinical validation and production authorization. All other articles and applicable OPEN gates, their canonical IDs, owners, closure evidence, capability restrictions and earliest blocked stages remain controlling; no undocumented deadline is introduced. This applicability is F012-only and can take effect only under the canonical Constitution's publication and activation procedure. Proposal status never activates it.
+
+F012 non-clinical evidence-matching applicability, after the same exact approval and activation predicate only: a separately indexed, isolated synthetic-patient demonstration may deterministically match verified real medication names and explicitly documented alert conditions to attributed official source statements. The exclusively synthetic coding/rule condition above continues to govern mechanism-only fixtures; this separate path permits source-identified genuine ingredient/combination names and source-condition matching, not fabricated medicines or clinical conclusions. Inputs must be bounded declared synthetic scenario facts, with no real-patient intake or operational clinical action. Outputs distinguish source-condition match, no match for that specific condition, and insufficient evidence; none is a complete safety result, executable SHIFAA clinical severity, treatment recommendation, override approval or F011 clinical-content release. The overall prescription-safety assessment remains not_fully_checked in this path. Do not infer product registration, formulation, dose, medicine codes, class membership or current clinical eligibility. Unknown applicability stays explicit; a missing field required to match a condition prevents a match, and non-match never means safe. Only evidence fidelity, deterministic matching, isolation and authorization mechanics may receive engineering acceptance under this applicability. Actual clinical rules, clinically accepted mappings/vectors, professional authority, facility/emergency policy, lawful disclosure and production activation retain all existing signature and approval requirements. This paragraph changes no operation, endpoint, role, grant, dependency, OPEN gate, protected F011 access or lifecycle authorization.
 
 **VII. Regulated Activity Is Gated by Evidence.** Sensitive-data processing, controlled medicines, payments, donations, facility licensing, and official integrations cannot enter production on verbal assurance or an inferred rule.
 
@@ -300,6 +314,34 @@ The canonical [graduation roadmap](docs/governance/SHIFAA-Remaining-Specs-Roadma
 ## 11. Mandatory SpecKit specification lifecycle
 
 The repository uses GitHub Spec Kit’s `scope eligibility → specify → clarify → plan → tasks → analyze → taskstoissues → implement → post-implementation analyze` model with SHIFAA-specific gates. Complex epics are decomposed into independent vertical slices; every slice has its own artifacts and immutable requirement mapping. The checked-in workflow follows the [official custom-workflow schema](https://github.github.com/spec-kit/reference/workflows.html) and is registered as SHIFAA workflow `2.2.0`. Both `codex` and `kimi` integrations are installed with skills enabled; `kimi` is the repository default while Codex remains supported for Issue-scoped implementation. On 2026-08-09, `specify workflow info speckit` on SpecKit `0.16.2.dev0` from upstream commit `684b3d8e05263a7c1948d3d0699ab1cb4f77c3d5` parsed all thirteen ordered steps. Reproducible-build acceptance remains tracked by `OPEN-TECH-001`.
+
+### Proposed F012-only graduation-engineering applicability and migration
+
+This subsection follows this document's publication status and the canonical activation predicate; it grants no authority before verified activation. The historical tool/workflow statements above remain dated evidence, not the current executable instruction: current checked-in `.specify/integration.json` pins Spec Kit 1.1.3/Codex, and `.specify/workflows/workflow-registry.json` registers custom workflow 2.3.0. Preserve that pin and workflow; no command execution or generated-asset update is authorized here. Deprecated taskstoissues handoff is not permission to execute it.
+
+After the canonical Constitution's activation procedure is satisfied, F012 may seek separately authorized synthetic engineering acceptance. This cannot meet the Phase 3 clinical exit, clinical ship/signature obligations or real-patient production release. Preserve the seven closure FRs, two prerequisite-only FRs, 22 PATIENT NFRs and ten operations; neither documenting R1/R2 nor preferring twelve operations approves a boundary change. Before Specify, resolve simulated designation authority, assignment, minimum disclosure, emergency responsibility, clinic/pharmacy app ownership without introducing F015 as a prerequisite and exact operation sufficiency through explicit engineering/product-boundary decisions. Real professional, lawful-disclosure and facility approvals remain separate.
+
+| Migration/input | Required disposition before applicability is effective |
+| --- | --- |
+| Canonical Constitution | Recommend 3.0.0; exact version and final known hashes require Product Owner approval; ratified predecessor is v2.1.0 at the retained commit |
+| PRD/Master companion candidates | Prospective 2.2.0 document versions do not determine constitutional version; preserve prior v2.1.3 acceptance through original Git identities |
+| Existing v2.2.0 F012 amendment locators | Retain filenames/bytes as draft decision evidence in this patch; separately authorize repair of normative/composite-authority claims and references in AGENTS, Constitution/PRD/Master sidecars, supplement, boundary/addendum, evidence overlay and remediation records; do not silently rename or promote |
+| Impact review and propagation | Use the prepared constitutional impact review and 46-item pre-change inventory; preserve its hashes as predecessor evidence. Supersede its composite-authority and affirmative-clinical-amendment-acceptance interpretations explicitly; obtain affected-discipline dispositions without fabricating participation or clinical signatures |
+| API/Data/UI/traceability and other specs/templates | No endpoint, permission, schema or requirement-owner change here; review and accept exact unchanged dispositions or authorize narrowly required propagation. Preserve F001–F011 historical bytes and F011 protected content access |
+| Evidence integration | The original 37-readiness-record inventory is distinct from the prospective PR A path inventory. Fourteen publication candidates require individual clearance; twenty-three restricted/historical originals remain private in their owning F012 scope. Every feature owns official evidence under specs/<feature>/; reference F011 originals in F011 without copying or changing them. No generic external vault/cloud destination is mandatory. Use the versioned integration-retention-manifest-v2.json and final publication inventory; preserve original manifests and hashes. Verify actual least-privilege access, organized feature-relative backup, read-back/restore hashes and authorized dependency navigation. Local existence or an archive alone is insufficient. Preserve the source worktree and all finalization/cleanup restrictions |
+| Final decision/integration | Use canonical fixed states: exact conditional-release bytes and final manifest approved before PR A; human merge; verify remote main; prepare receipt from known PR A facts; separately review/authorize PR B containing only the receipt; human merge and verify. Predecessor authority continues until the receipt predicate is satisfied. No post-approval canonical/header edit; no circular record hashes; separate Specify authorization |
+
+#### Proposed Product Owner participation and impact disposition
+
+The evidence establishes Yousef's preparation/product directions and Codex documentary architecture/security/privacy/design/QA impact analysis. It does not establish attributable discipline-holder acceptance of this exact amendment. Q1–Q10 is unverified advisory text, not clinical participation/sign-off for this amendment. An independent clinical pharmacist is unavailable as reported by the Product Owner; senior-physician/medical-director and legal/DPO participation have not been evidenced. Other named discipline-holder consultations are not evidenced; do not describe them as completed or known unavailable.
+
+Proposed exact Product Owner disposition under the amended internal rule: accept documentary engineering impact analysis for the isolated non-clinical applicability only; distinguish it from actual participation and document missing/unavailable review without fabricating consultation. For the F012 isolated non-clinical constitutional-applicability amendment only, record each affected discipline separately as actual attributable participation, unavailable, unresponsive, or review not obtained. Record the materials and versions offered, date and response evidence when an invitation actually occurred; do not invent outreach or infer unresponsiveness from missing evidence. Separate engineering impact analysis from professional consultation. Under this amended internal procedure, exact Product Owner amendment approval may accept a documented missing-participation disposition for this narrowly bounded engineering applicability, including consequences, limitations and required follow-up. The inclusion checklist then records the accepted procedural disposition, never a completed professional review. This alternative has no authority before its exact governed approval and activation. It does not waive Article VI dual senior-physician/medical-director and clinical-pharmacist signatures for real clinical code, rules, severity, exceptions, clinical test vectors or operational use; lawful disclosure, legal/privacy, credential, facility and production restrictions remain intact. No unperformed professional review may be marked complete, PASS or N/A, and no other feature or gate receives this procedural alternative. Until the exact disposition and amendment activation are established, F012 remains blocked. The fallback remains documentation and isolated policy-agnostic research without lifecycle execution or clinical implementation.
+
+The constitutional release is 3.0.0; PRD/Master companions are 2.2.0, all proposed until exact approval. Existing v2.2.0 sidecar filenames remain historical draft locators. Add explicit successor notices and repair active consumption instructions only after their separate scope authorization; do not rename or rewrite historical acceptance. Record API/Data/UI/traceability dispositions and any boundary amendment independently; approval of this applicability changes no operation inventory.
+
+Before any future authorized stage, manually load and record canonical version/hash and approved PRD/Master/templates, scope, approval, activation and applicable gates; verify worktree/branch/pointer context. Supplement presence is not automatic SpecKit loading. Missing/inconsistent authority or unresolved pre-Specify boundary decisions keep F012 `NOT READY — PRE_SPECIFY_BLOCKED`. Architecture completeness requires producer/consumer, authorization, state/data/transactions, content freshness, UI, migration/recovery and independent negative-case contracts before Plan approval. No Tasks until these decisions are resolved, the exact Plan is approved and Tasks separately authorized.
+
+There is no runtime/data migration in this documentation candidate. Backward compatibility means no existing contract, client, grant or predecessor acceptance changes. Before activation the predecessor remains controlling; later rollback needs an attributable governance decision and retained evidence, never destructive restoration. Separate engineering evidence from professional clinical validation and production authorization; no applicable OPEN gate ID, owner, closure evidence, capability restriction or earliest blocked stage changes.
 
 ### 11.1 Directory and metadata
 

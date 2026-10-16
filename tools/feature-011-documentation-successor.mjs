@@ -3,6 +3,12 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+// One shared successor boundary; this does not activate prospective governance.
+export {
+  constitutionSuccessorInputPaths,
+  readConstitutionSuccessor,
+  readHistoricalVerificationInputs,
+} from './feature-011-constitution-successor.mjs';
 
 const feature = 'specs/011-allergies-clinical-content-governance';
 export const documentationSuccessorPath = `${feature}/decisions/documentation-successor-v1.json`;

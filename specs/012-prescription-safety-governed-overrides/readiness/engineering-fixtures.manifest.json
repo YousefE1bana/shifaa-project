@@ -1,0 +1,71 @@
+{
+  "recordKind": "ENGINEERING_FIXTURE_PROPOSAL_MANIFEST",
+  "schemaVersion": "0.2.0-proposal",
+  "proposedDatasetVersion": "1.0.0",
+  "approvalStatus": "PROPOSED_NOT_APPROVED",
+  "namespace": "urn:shifaa:engineering:f012",
+  "authoredOn": "2026-10-14",
+  "author": "Codex under Yousef Osama's bounded readiness-package audit/correction authorization",
+  "provenance": {
+    "source": "Separately authored synthetic structural input; no real medicine codes, external medicine dataset, F011 fixture bodies or patient data",
+    "mapping": "coded-input-proposal.md",
+    "canonicalSources": [
+      "docs/architecture/SHIFAA-Data-RLS.md#L8-L14",
+      "docs/architecture/SHIFAA-Data-RLS.md#L60-L66",
+      "docs/architecture/SHIFAA-API-Catalog.md#L152-L161"
+    ],
+    "typeStatus": "All carrier types, units, nullability and admissible values are proposed engineering choices except established logical field requirements",
+    "approvalDirectionSource": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md#L15-L24",
+    "approvalScope": "Engineering-only direction recorded approved in principle; exact schema/data/manifest/version remain unapproved.",
+    "schemaRevision": "0.2.0-proposal replaces inconsistent structural proposal; proposed dataset 1.0.0 is not promoted or approved."
+  },
+  "limitations": [
+    "No clinical validity, classification, dose correctness, interaction or allergy evidence",
+    "False controlled/NTI flags are as synthetic as true flags",
+    "Mock contentVersion is not an F011 published release or clinician approval",
+    "No production source vocabulary is approved",
+    "Schema validation is not terminology, permission, clinical or runtime production-exclusion validation",
+    "Field-specific synthetic units label carrier roles only, not dimensions or clinical units.",
+    "Cross-record consistency means structural consistency; no clinical semantic validation.",
+    "Distinct mock contentVersion values identify fixture scenarios, never F011 releases, signatures or qualification."
+  ],
+  "productionExclusion": {
+    "engineeringOnly": true,
+    "clinicalReleaseEligible": false,
+    "runtimeImports": [],
+    "seedRegistration": false,
+    "loaderImplemented": false,
+    "requiredFutureEvidence": [
+      "API/core/persistence reject this namespace in production",
+      "Unsigned or synthetic content cannot be published as real authority",
+      "No test flag or client coding grants qualification or patient access"
+    ],
+    "evidenceStatus": "PROPOSAL_METADATA_ONLY_NO_RUNTIME_EXCLUSION_TEST",
+    "runtimeImportsMeaning": "No runtime imports are proposed; an empty list is not proof of runtime exclusion."
+  },
+  "reviewRequiredBeforeApproval": [
+    "Exact schema and manifest hashes",
+    "Canonical field mapping, dimension-specific units and nullability",
+    "Admissible test values and mechanism-only flag semantics",
+    "Versioning and production-exclusion boundaries",
+    "Yousef's recorded engineering-boundary approval; designated clinical/legal approvals remain separate"
+  ],
+  "files": [
+    {
+      "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65",
+      "path": "engineering-fixtures.schema.json"
+    },
+    {
+      "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+      "path": "engineering-fixtures.candidate.json"
+    },
+    {
+      "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c",
+      "path": "coded-input-proposal.md"
+    },
+    {
+      "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185",
+      "path": "validate-readiness.ps1"
+    }
+  ]
+}
