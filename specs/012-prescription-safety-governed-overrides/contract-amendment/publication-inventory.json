@@ -1,0 +1,202 @@
+{
+  "amendmentId": "F012-REVIEWER-CONTRACT/0.1.0",
+  "status": "PROPOSED_EXACT_CONTENT_UNAPPROVED_NOT_EFFECTIVE",
+  "featureStatus": "NOT READY — PRE_SPECIFY_BLOCKED",
+  "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+  "branch": "codex/012-reviewer-contract-amendment",
+  "pathCount": 17,
+  "allowlist": [
+    "docs/architecture/SHIFAA-API-Catalog.md",
+    "docs/architecture/SHIFAA-Data-RLS.md",
+    "docs/architecture/SHIFAA-Architecture.md",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/ui-contract-successor-v0.1.0.md",
+    "shifaa-prd.md",
+    "SHIFAA-Implementation-Plan-MASTER.md",
+    "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+    "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/traceability-successor-v0.1.0.md",
+    "docs/governance/SHIFAA-Completion-Coverage.md",
+    "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-boundary-decision-proposal-2026-10-16.md",
+    "specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/scope-successor.json",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/documentary-validation.json",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/publication-inventory.json"
+  ],
+  "entries": [
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 100106,
+      "sha256": "5e20548ace942acae611f4915dd3f1ab7130b5295a879113435b352e8a771fad",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 86509,
+      "sha256": "a6de0ba094415d5a93315db5305c4c8fcf7f37797540a217ccc059f567a52ab5",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Architecture.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 17772,
+      "sha256": "4c55b22acc8d82253167f86c88feab19573312ece2e03300cc091681972fe1ef",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/ui-contract-successor-v0.1.0.md",
+      "status": "NEW_PROPOSED_DOCUMENTATION",
+      "bytes": 4130,
+      "sha256": "078e845c70eec355ec32d4a4b7d42e6f770e8c521282895d456024989db9f7d2",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "shifaa-prd.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 100550,
+      "sha256": "eca3a8dd2955da8b6d91bb6fc0d9722f57801c39fae59a4ca4c3475af6b4ab0f",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 96882,
+      "sha256": "831a3aa813dc50d45f4d08a61483b88767af92e5ec2cf51038d164b1a9fa167c",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 33514,
+      "sha256": "880a66bbb22914f799e4924f6183b7e0154ca15194d11be5b99865bbb015a847",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 35738,
+      "sha256": "9b74b38f90588f48470f410b03e217c225c4b338ef0862f57430b7df229fbbe7",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/traceability-successor-v0.1.0.md",
+      "status": "NEW_PROPOSED_DOCUMENTATION",
+      "bytes": 3548,
+      "sha256": "cf375e05ae4e3dcb0d341365ee52a349597ff21148923f83516d778eefc08a14",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "docs/governance/SHIFAA-Completion-Coverage.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 40476,
+      "sha256": "7f882a48c87b29d15d44c128ef70a0785d9c2669fbfcf62c99c7e7021cc60645",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+      "status": "MODIFIED_APPEND_ONLY",
+      "bytes": 13223,
+      "sha256": "3de438053933f2b4d14c5dd1309be612de1d7f4a43036ce74bc0d97f6d608860",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-boundary-decision-proposal-2026-10-16.md",
+      "status": "NEW_UNCHANGED_APPROVED_PROPOSAL_COPY",
+      "bytes": 69037,
+      "sha256": "735c715b92aea102ec0c3b1ca2108db2a1164983fa8ba03c606d980cece23ac5",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md",
+      "status": "NEW_PROPOSED_DOCUMENTATION",
+      "bytes": 3943,
+      "sha256": "8f52882e71e1615d93a4f7461a32854537d5c48e9fc77b9964a47fdab9721d88",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md",
+      "status": "NEW_PROPOSED_DOCUMENTATION",
+      "bytes": 28577,
+      "sha256": "6436f1ea96c50cc422f8cab51fb692b2245e859500123cca18a8784f47b0af63",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/scope-successor.json",
+      "status": "NEW_PROPOSED_DOCUMENTATION",
+      "bytes": 11412,
+      "sha256": "8493cabde6208dbe0221892c14307a6056df5a6c555e96348ed77f951ecac0fd",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/documentary-validation.json",
+      "status": "NEW_PROPOSED_DOCUMENTATION",
+      "bytes": 14233,
+      "sha256": "beea04a6532f977cbcbde9d547587385eec649a05e904d9a39a08f9f928effc6",
+      "publicationReview": "CLEARED_FOR_EXACT_PRODUCT_OWNER_REVIEW_ONLY",
+      "privacy": "Non-sensitive authored engineering contract/evidence or approved proposal; no private originals/raw source snapshots/archive/credentials.",
+      "dependencies": "scope-successor.json predecessor/proposal bindings and central contract local references",
+      "approval": "Exact amendment/publication bytes unapproved; prior approval limited to the original engineering boundary."
+    }
+  ],
+  "selfBinding": {
+    "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/publication-inventory.json",
+    "excludedFromEntries": true,
+    "reason": "No self hash. Full inventory final byte count/SHA-256 delivered externally for exact approval; no approval record hashes itself."
+  },
+  "exclusions": [
+    "All pre-existing private readiness originals/source snapshots/receipts/archives",
+    "All F011 historical evidence and implementation",
+    "Frozen roadmap and canonical Constitution",
+    "Runtime/migration/API registration/grants/clients/active-feature pointer changes",
+    "Canonical UI Contract and canonical traceability exact-byte historical bindings; F012 feature-owned proposed successors are included instead."
+  ],
+  "effect": "Preparation only; coordinated approval/integration/remote verification and separate Specify authorization remain required."
+}

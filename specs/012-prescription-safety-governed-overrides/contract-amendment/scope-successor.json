@@ -1,0 +1,289 @@
+{
+  "amendmentId": "F012-REVIEWER-CONTRACT/0.1.0",
+  "status": "PROPOSED_EXACT_CONTENT_UNAPPROVED_NOT_EFFECTIVE",
+  "featureStatus": "NOT READY — PRE_SPECIFY_BLOCKED",
+  "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+  "branch": "codex/012-reviewer-contract-amendment",
+  "engineeringBoundary": {
+    "decisionId": "F012-REVIEWER-BOUNDARY/0.1.0",
+    "approvalDate": "2026-10-16",
+    "authority": "Yousef Osama, Product Owner",
+    "source": "direct Product Owner instruction in this conversation; attributable transcription in decisions/reviewer-boundary-approval-2026-10-16.md",
+    "reviewedPath": "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-boundary-decision-proposal-2026-10-16.md",
+    "bytes": 69037,
+    "sha256": "735c715b92aea102ec0c3b1ca2108db2a1164983fa8ba03c606d980cece23ac5",
+    "scope": "exact reviewed engineering boundary and amendment preparation only, not this amendment bytes or route spellings"
+  },
+  "closureRequirements": [
+    "FR-SAFE-001",
+    "FR-SAFE-003",
+    "FR-SAFE-004",
+    "FR-SAFE-005",
+    "FR-SAFE-006",
+    "FR-SAFE-007",
+    "FR-SAFE-011"
+  ],
+  "prerequisiteOnlyRequirements": [
+    "FR-SAFE-009",
+    "FR-SAFE-010"
+  ],
+  "nfrRequirements": [
+    "NFR-SEC-001",
+    "NFR-SEC-002",
+    "NFR-SEC-003",
+    "NFR-SEC-004",
+    "NFR-SEC-005",
+    "NFR-SEC-006",
+    "NFR-SEC-007",
+    "NFR-PRIV-001",
+    "NFR-PRIV-002",
+    "NFR-PRIV-004",
+    "NFR-I18N-001",
+    "NFR-A11Y-001",
+    "NFR-PERF-001",
+    "NFR-PERF-002",
+    "NFR-AVAIL-002",
+    "NFR-DATA-001",
+    "NFR-DATA-002",
+    "NFR-API-001",
+    "NFR-API-002",
+    "NFR-OBS-001",
+    "NFR-QUALITY-001",
+    "NFR-PORT-001"
+  ],
+  "dependencies": [
+    "010",
+    "011"
+  ],
+  "existingOperations": [
+    "createPrescription",
+    "updatePrescription",
+    "runPrescriptionSafety",
+    "acknowledgeWarning",
+    "requestContraindicatedOverride",
+    "decideOverride",
+    "signPrescription",
+    "cancelPrescription",
+    "getPrescription",
+    "listPatientMedications"
+  ],
+  "candidateAdditions": [
+    {
+      "slot": "R1",
+      "operationId": "getOverrideReviewCases",
+      "method": "GET",
+      "path": "/override-review-cases",
+      "selectors": [
+        "discover",
+        "detail"
+      ],
+      "queryDiscriminator": "view",
+      "owner": "012",
+      "status": "PROPOSED_NOT_EFFECTIVE"
+    },
+    {
+      "slot": "R2",
+      "operationId": "transitionOverrideReviewAssignment",
+      "method": "POST",
+      "path": "/override-requests/{overrideId}/assignment-transitions",
+      "actions": [
+        "claim",
+        "release_own",
+        "takeover_invalid"
+      ],
+      "bodyDiscriminator": "action",
+      "flags": [
+        "I",
+        "V"
+      ],
+      "owner": "012",
+      "status": "PROPOSED_NOT_EFFECTIVE"
+    }
+  ],
+  "proposedOperations": [
+    "createPrescription",
+    "updatePrescription",
+    "runPrescriptionSafety",
+    "acknowledgeWarning",
+    "requestContraindicatedOverride",
+    "decideOverride",
+    "signPrescription",
+    "cancelPrescription",
+    "getPrescription",
+    "listPatientMedications",
+    "getOverrideReviewCases",
+    "transitionOverrideReviewAssignment"
+  ],
+  "counts": {
+    "F012": {
+      "effective": 10,
+      "proposed": 12
+    },
+    "activeCatalog": {
+      "effective": 242,
+      "proposed": 244
+    },
+    "reserved": {
+      "effective": 6,
+      "proposed": 6
+    },
+    "catalogTotal": {
+      "effective": 248,
+      "proposed": 250
+    },
+    "F014": {
+      "effective": 16,
+      "proposed": 16
+    },
+    "F007_024": {
+      "effective": 170,
+      "proposed": 172
+    },
+    "F012_024": {
+      "effective": 120,
+      "proposed": 122
+    },
+    "F026ParityTarget": {
+      "effective": 242,
+      "proposed": 244
+    }
+  },
+  "predecessors": [
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "ef5b1b5f4a4299dd745e1004335b4dec677fb3a5",
+      "gitBlobRawBytes": 96036,
+      "gitBlobRawSha256": "ba6dd9177ee07410ebde92140ea086b06a86750e146a267625bbff498e832490",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "19f72ef97ad329080a0ed5a0d6490fff117f1faa",
+      "gitBlobRawBytes": 82052,
+      "gitBlobRawSha256": "0df367f69aa016bcfd2d345b727d7dcc3539e4fdbb7b69f44dc0d171a950de2b",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Architecture.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "5a5f9c21a059bcf79cb7d9737913248bb50c431a",
+      "gitBlobRawBytes": 14434,
+      "gitBlobRawSha256": "235242dffaaa9d7978e8e0cd1bd4ac330c1ae188579c622793481f541d2d870c",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "a0fb9a7101679840538499fe7de797694a7bca79",
+      "gitBlobRawBytes": 28266,
+      "gitBlobRawSha256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+      "treatment": "PRESERVED_CANONICAL_BYTES_WITH_FEATURE_OWNED_INACTIVE_SUCCESSOR",
+      "proposedSuccessor": "specs/012-prescription-safety-governed-overrides/contract-amendment/ui-contract-successor-v0.1.0.md"
+    },
+    {
+      "path": "shifaa-prd.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "6d74245660c071f4f011596972c47e8182484564",
+      "gitBlobRawBytes": 97658,
+      "gitBlobRawSha256": "3a010821c00cb6a1e9a05797779cbb8f5a3282889241251edfd77d79332f82b6",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "cc28ddd59f274cc8869a7019aed653180e6e2fb6",
+      "gitBlobRawBytes": 93489,
+      "gitBlobRawSha256": "120e16b42b9ff92392cb1334350e0c278690d14ddbbdef4c874c3471a24963ce",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    },
+    {
+      "path": "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "b8c663e16f839c598377068c1a88a8af9a03fba2",
+      "gitBlobRawBytes": 29454,
+      "gitBlobRawSha256": "4cfc67583831139118e51d9b229eb1323d7f2cccd7929f5a410c3a6e4693e5f4",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "ad5be1a9cdd9523cf1a156cf6e5869d10a08a887",
+      "gitBlobRawBytes": 32968,
+      "gitBlobRawSha256": "f2c0d33837a53eb1658a3024668544e76aa6929c301743be25a0cef4a39e2eab",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-Traceability-Matrix.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "ccea8c4e4bbaf9af021d0b07865bafed796cffd4",
+      "gitBlobRawBytes": 60174,
+      "gitBlobRawSha256": "1e86808e8825ebe3ba6563952b52de00a71be70b6bee9ae71e163702f511673e",
+      "treatment": "PRESERVED_CANONICAL_BYTES_WITH_FEATURE_OWNED_INACTIVE_SUCCESSOR",
+      "proposedSuccessor": "specs/012-prescription-safety-governed-overrides/contract-amendment/traceability-successor-v0.1.0.md"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Completion-Coverage.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "ff632df1afccd2b7dff11a72e5c8fc010127837c",
+      "gitBlobRawBytes": 38549,
+      "gitBlobRawSha256": "8ce658b00d80680b7fc6235f1d060eaefac3e030c9615865b92341e1d41cffcf",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    },
+    {
+      "path": "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+      "baseCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "gitBlob": "8e376cf2d92fea205ea6e170e546da0248092cad",
+      "gitBlobRawBytes": 10564,
+      "gitBlobRawSha256": "553bd69557157f3298361de99eef49d59bf15f49cc1f64cc27ef9a9e18edede3",
+      "treatment": "PREDECESSOR_UNCHANGED_PREFIX_PLUS_INACTIVE_ADDITIVE_CANDIDATE"
+    }
+  ],
+  "publicationAllowlist": [
+    "docs/architecture/SHIFAA-API-Catalog.md",
+    "docs/architecture/SHIFAA-Data-RLS.md",
+    "docs/architecture/SHIFAA-Architecture.md",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/ui-contract-successor-v0.1.0.md",
+    "shifaa-prd.md",
+    "SHIFAA-Implementation-Plan-MASTER.md",
+    "docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md",
+    "docs/architecture/SHIFAA-F012-Synthetic-Engineering-Boundary.md",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/traceability-successor-v0.1.0.md",
+    "docs/governance/SHIFAA-Completion-Coverage.md",
+    "docs/traceability/SHIFAA-F012-Graduation-Evidence-Overlay.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/reviewer-journey-boundary-decision-proposal-2026-10-16.md",
+    "specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/scope-successor.json",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/documentary-validation.json",
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/publication-inventory.json"
+  ],
+  "historicalReadinessInputs": "Original readiness/scope-manifest.json and decision/matrix records are preserved byte-for-byte. This versioned scope record is the proposed successor; old blocked wording is historical evidence, not a new engineering boundary question.",
+  "unchangedAuthorities": [
+    "canonical Constitution 3.0.0",
+    "activated PRD/Master 2.2.0 predecessor approval/receipt",
+    "all existing OPEN gate IDs/owners/evidence/restrictions/stages",
+    "P01–P30 AWAITING_PROFESSIONAL_INPUT",
+    "Spec Kit 1.1.3",
+    "custom workflow 2.3.0",
+    "F013 catalog/search",
+    "F014 fulfilment/substitution/dispensing",
+    "F014 FR-SAFE-009 closure",
+    "F019 FR-SAFE-010 closure"
+  ],
+  "prohibited": [
+    "API/runtime activation",
+    "clinical credential or professional approval claims",
+    "F011 protected rule-body access",
+    "clinical source-match signing/override",
+    "real patient care",
+    "SpecKit lifecycle",
+    "staging/commit/push/PR/merge",
+    "active feature pointer mutation",
+    "private original/source/archive publication",
+    "cleanup"
+  ],
+  "releaseApproval": "PENDING_ATTRIBUTABLE_EXACT_CONTENT_APPROVAL; inventory excludes its own hash; no unknown future content is approved",
+  "historicalVerificationCompatibility": "UI Contract and canonical traceability bytes remain identical to approved F011 historical bindings. F012-only versioned successors are explicitly linked from the coordinated contract and addendum; no historical validator/tooling changes are needed or made."
+}

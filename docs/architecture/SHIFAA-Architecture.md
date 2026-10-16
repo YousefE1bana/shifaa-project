@@ -170,3 +170,21 @@ Any change to application count, public protocol, data store, auth subject, even
 ### Feature 005 foundation realization
 
 The Core API owns DSR state changes, purpose-limited DPO decisions, private export capabilities, template governance, signed receipt callbacks, and append-only replay requests. PostgreSQL is authoritative and every new table is forced-RLS. A separate non-owner `shifaa_worker` claims minimum notification metadata with `SKIP LOCKED`, resolves only published paired templates, calls the deterministic local adapter, and appends attempts. The provider boundary stores digests and minimum statuses, not raw destinations or rendered bodies. This foundation adds no 006 discovery/SOS behavior and does not enable production messaging or erasure automation.
+
+
+## F012 reviewer contract successor — proposed 2026-10-16
+
+> F012-REVIEWER-CONTRACT/0.1.0 — PROPOSED, EXACT CONTENT UNAPPROVED, NOT EFFECTIVE.
+> Engineering boundary approved separately; effective F012 inventory remains ten.
+
+This additive candidate preserves all preceding source bytes and historical acceptance. Its exact contents require Product Owner approval, separately authorized coordinated PR integration and remote verification before serving as a contract successor. It implements no API, grant or clinical behavior. F012 remains **NOT READY — PRE_SPECIFY_BLOCKED**; Specify requires separate authorization. Existing OPEN IDs, owners, evidence, restrictions and earliest blocked stages are unchanged.
+
+The [F012 coordinated contract](../../specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md#emergency-and-durable-recovery-responsibility) assigns the reviewer queue to the existing Clinical safety/prescribing module. Core API owns current isolated roster/case authority checks, R1 `getOverrideReviewCases`, R2 `transitionOverrideReviewAssignment`, lane decisions through existing `decideOverride`, and the atomic request/assignment/decision/obligation/audit/outbox/idempotency boundary. PostgreSQL is the durable source; the R1 projection must recheck current scope and deny immediately on invalidity even before materialized state catches up.
+
+At emergency request creation, persist the pharmacist obligation immediately with the second-physician lane. The second-physician `decideOverride` commit binds that obligation and starts the 60-second virtual-clock automated scenario. It does not sign a prescription. Prescriber signing remains separate and current-guarded. Expired/cancelled/invalidated unreviewed obligations stay metadata-only blocked history; no worker or notification can mark them reviewed or authorize treatment.
+
+The existing Worker owns ordered at-least-once outbox delivery, leases/retry/deduplication, observable failures and dead-letter processing under Section 7. The durable obligation exists independently of notification success. Worker recovery creates no new public operator capability and cannot assign/revoke credentials, grant disclosure or approve a case. No vendor/channel dependency is added; a new required public recovery action would require boundary approval. Notifications carry opaque non-sensitive references/status only, never clinical payload or authorization tokens.
+
+Isolated roster provisioning/revocation is a versioned deployment configuration input under authorized engineering change control, not hidden online administration. Core API/worker must fail closed during unverifiable propagation. Plan must prove authority/CAS linearization, immutable evidence versus aggregate revision, atomic rollback/idempotent replay, projection reconciliation and delivery monitoring. Physical implementation and tests are not supplied by documentation.
+
+Clinic owns prescriber/second-physician views; pharmacy owns F012 Safety Review. F014 retains fulfilment/dispensing/substitution. Six-app topology, package boundaries, F010/F011 dependencies and F013 catalog ownership remain unchanged; no F015 prerequisite. No F011 protected rule-body consumer, synthetic professional credential or research-match clinical authority is introduced.

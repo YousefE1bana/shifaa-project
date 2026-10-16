@@ -487,3 +487,27 @@ The closed decisions and remaining-open table mirror PRD Section 10 verbatim. Cl
 | 2026-08-25 | 2.1.1   | Closed `OPEN-LEGAL-006` for Feature-007 specification/development from `External Egyptian legal counsel analysis — Product Owner approved`; froze the seven transition rules, state/event matrix, and test vectors while preserving all production legal/DPO/PHI gates. Approved by Product Owner Yousef Osama on 25-Aug-2026.      |
 | 2026-08-09 | 2.1.0   | Closed the two scope decisions: AI Triage is mandatory graduation-MVP scope in an isolated one-to-two-person synthetic-data track; Donations/Four-Eyes donation flow is deferred to a licensed-partner-only post-graduation re-entry. Formally approved by Product Owner Yousef Osama on 9-Aug-2026.                                |
 | 2026-08-09 | 2.0.0   | Replaced contradictory planning text with one canonical app/package tree, complete operation ownership/worklists, corrected Egypt compliance baseline, transactional event model, SpecKit lifecycle, dependency-ordered phases, dual clinical governance, and synchronized stage-owned open items.                                  |
+
+
+## F012 reviewer contract successor — proposed 2026-10-16
+
+> F012-REVIEWER-CONTRACT/0.1.0 — PROPOSED, EXACT CONTENT UNAPPROVED, NOT EFFECTIVE.
+> Engineering boundary approved separately; effective F012 inventory remains ten.
+
+This additive candidate preserves all preceding source bytes and historical acceptance. Its exact contents require Product Owner approval, separately authorized coordinated PR integration and remote verification before serving as a contract successor. It implements no API, grant or clinical behavior. F012 remains **NOT READY — PRE_SPECIFY_BLOCKED**; Specify requires separate authorization. Existing OPEN IDs, owners, evidence, restrictions and earliest blocked stages are unchanged.
+
+Use [F012-REVIEWER-CONTRACT/0.1.0](specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md) as the single detailed candidate coordinated contract, the [attributable boundary approval](specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md), and the [additive roadmap/accounting successor](docs/governance/SHIFAA-F012-Boundary-and-Governance-Addendum.md#f012-reviewer-contract-successor--proposed-2026-10-16). The frozen roadmap/coverage/history and activated Constitution 3.0.0/PRD-Master 2.2.0 predecessor identities are preserved. This proposed contract amendment is not another Constitution or a reactivation of PR A/B.
+
+| Accounting | Effective | Proposed successor |
+| --- | --- | --- |
+| F012 | 10 | 12 |
+| Active / F026 parity | 242 | 244 |
+| Reserved / catalog total | 6 / 248 | 6 / 250 |
+| F007–024 / F012–024 | 170 / 120 | 172 / 122 |
+| F014 | 16 | 16 |
+
+Only R1 `getOverrideReviewCases` and R2 `transitionOverrideReviewAssignment` are candidate additions. Existing request/decision/sign/cancel operations carry the stated lanes, durable obligation and guarded simulation; no hidden public capability. Generated OpenAPI/clients/physical schemas/grants/races are separately authorized later work, not a prerequisite to approve a documentation-only pre-Specify boundary amendment. Reserved donations remain excluded; no new FR/NFR or ownership/sequence/dependency change.
+
+Before Specify: approve exact candidate content/inventory, authorize governed PR integration and verify remote identities; independently verify active-feature/worktree context and receive separate Specify authorization. Before exact Plan approval: resolve API/Data/Architecture DTO necessity, state/evidence/current-authority/TTL/transaction/CAS/idempotency/recovery, provider/F011 exclusions and affected UI compositions under OPEN-UX-001, with an independent negative matrix. Architecture Completeness Gate remains mandatory; no Tasks until exact Plan approval, required decisions/gates and separate Tasks authorization. Implementation/VERIFYING/clinical/legal/release gates retain their existing IDs, designated owners, evidence and earliest blocks. Spec Kit 1.1.3/custom workflow 2.3.0 unchanged. Prior PR A/B procedural exceptions confer no future verification waiver.
+
+Official feature evidence stays under its owning feature scope. Keep reviewed proposals, original fixtures/research/private retention evidence and F011 histories unchanged; cross-feature dependencies reference their owners. Existing Artifact Finalization Gate applies; no cleanup or closeout is authorized by this preparation.
