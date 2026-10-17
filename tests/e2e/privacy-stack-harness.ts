@@ -1,14 +1,6 @@
 import type postgres from 'postgres';
 import { randomUUID } from 'node:crypto';
-
-import {
-  revalidateTestResourceContext,
-  connectTestOwner,
-  withTestResource,
-  guardTestHandle,
-  registerRunRecord,
-  assertRunOwned,
-} from '../../tools/test-resource-context.mjs';
+import type { MessagingAdapter } from '../../services/worker/src/privacy-dsr-notifications.ts';
 
 const patient = '50000000-0000-4000-8000-000000000001';
 const guardian = '50000000-0000-4000-8000-000000000002';
@@ -16,6 +8,18 @@ const subject = '51000000-0000-4000-8000-000000000001';
 const dpo = '50000000-0000-4000-8000-000000000006';
 
 export async function createPrivacyStack(context?: object) {
+  // Dynamic imports retain one ESM capability authority under Node/tsx's
+  // CommonJS TypeScript loader; require(ESM) would create a second module realm.
+  const { acquireTestLauncherContext } = await import('../../tools/test-launcher-session.mjs');
+  const {
+    revalidateTestResourceContext,
+    connectTestOwner,
+    withTestResource,
+    guardTestHandle,
+    registerRunRecord,
+    assertRunOwned,
+  } = await import('../../tools/test-resource-context.mjs');
+  context ??= await acquireTestLauncherContext('privacy');
   revalidateTestResourceContext(context, 'privacy');
   const [{ default: postgres }, { buildApp }, { loadConfig }] = await Promise.all([
     import('postgres'),
@@ -41,6 +45,19 @@ export async function createPrivacyStack(context?: object) {
     return {
       app: harness.app,
       owner,
+      createWorker: async (adapter: MessagingAdapter) =>
+        withTestResource(context, 'privacy', 'worker', async (url: string) => {
+          const { PostgresPrivacyNotificationProcessor } = await import(
+            '../../services/worker/src/privacy-dsr-notifications.ts'
+          );
+          revalidateTestResourceContext(context, 'privacy');
+          return guardTestHandle(
+            context,
+            'privacy',
+            new PostgresPrivacyNotificationProcessor(url, adapter),
+            ['processNext'],
+          );
+        }),
       ids: { patient, guardian, subject, dpo },
       create: async (
         requestType: 'access_export' | 'correction' | 'restriction' | 'erasure_pseudonymization',

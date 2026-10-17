@@ -2,15 +2,6 @@ import { randomUUID, randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
 import {
-  connectTestOwner,
-  withTestResource,
-  guardTestHandle,
-  registerRunRecord,
-  assertRunOwned,
-  runRecordIds,
-  revalidateTestResourceContext,
-} from '../../tools/test-resource-context.mjs';
-import {
   discoverySosSyntheticConfig,
   discoverySosSyntheticContact,
   discoverySosSyntheticFacilities,
@@ -23,6 +14,19 @@ import type postgres from 'postgres';
 import type { MessagingAdapter } from '../../services/worker/src/privacy-dsr-notifications.ts';
 
 export async function createDiscoverySosStack(context?: object) {
+  // Dynamic imports retain one ESM capability authority under Node/tsx's
+  // CommonJS TypeScript loader; require(ESM) would create a second module realm.
+  const { acquireTestLauncherContext } = await import('../../tools/test-launcher-session.mjs');
+  const {
+    connectTestOwner,
+    withTestResource,
+    guardTestHandle,
+    registerRunRecord,
+    assertRunOwned,
+    runRecordIds,
+    revalidateTestResourceContext,
+  } = await import('../../tools/test-resource-context.mjs');
+  context ??= await acquireTestLauncherContext('discovery-sos');
   revalidateTestResourceContext(context, 'discovery-sos');
   const [{ default: postgres }, { buildApp }, { loadConfig }] = await Promise.all([
     import('postgres'),

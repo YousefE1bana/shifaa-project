@@ -1,14 +1,13 @@
 import type postgres from 'postgres';
 import { randomUUID } from 'node:crypto';
 
-import {
-  revalidateTestResourceContext,
-  connectTestOwner,
-  withTestResource,
-  guardTestHandle,
-} from '../../tools/test-resource-context.mjs';
-
 export async function createFamilyStack(context?: object) {
+  // Dynamic imports retain one ESM capability authority under Node/tsx's
+  // CommonJS TypeScript loader; require(ESM) would create a second module realm.
+  const { acquireTestLauncherContext } = await import('../../tools/test-launcher-session.mjs');
+  const { revalidateTestResourceContext, connectTestOwner, withTestResource, guardTestHandle } =
+    await import('../../tools/test-resource-context.mjs');
+  context ??= await acquireTestLauncherContext('family');
   revalidateTestResourceContext(context, 'family');
   const [{ default: postgres }, { buildApp }, { loadConfig }] = await Promise.all([
     import('postgres'),

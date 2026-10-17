@@ -79,12 +79,19 @@ const resourceObservers = {
         : {}),
       container,
       volumeMetadata: volumes,
+      ...(manifest.network
+        ? {
+            network: JSON.parse(
+              command('docker', [...docker, 'network', 'inspect', manifest.network.Id]),
+            )[0],
+          }
+        : {}),
       output: inspectOutput(manifest.output, outputMode),
     };
   },
 };
 
-function sourceFingerprint(worktree) {
+export function sourceFingerprint(worktree) {
   const tracked = command('git', ['-c', 'core.longpaths=true', 'ls-files', '-z'], worktree)
     .split('\0')
     .filter(Boolean);
@@ -177,6 +184,13 @@ function privateOutput(observed, expected, absent) {
     !observed.entries.some((entry) => entry.sid === observed.sid && (entry.rights & 2) !== 0)
   )
     fail('private output ACL/ownership');
+}
+
+export function verifyPrivateTestOutput(destination) {
+  const absolute = path.resolve(destination);
+  const observed = inspectOutput(absolute, 'present');
+  privateOutput(observed, absolute, false);
+  return Object.freeze(structuredClone(observed.identity));
 }
 
 export function beginTestRun({
@@ -314,6 +328,28 @@ function validate(manifest, authority, observed, output, integrity) {
     fail('shared/ambiguous published target');
   if (manifest.host !== '127.0.0.1' || manifest.database !== `test_${authority.nonce}`)
     fail('database/host identity');
+  if (manifest.network) {
+    const network = observed.network;
+    const attachments = container.NetworkSettings?.Networks;
+    if (
+      !same(network, manifest.network) ||
+      !id.test(network?.Id ?? '') ||
+      network.Driver !== 'bridge' ||
+      network.Internal !== true ||
+      container.HostConfig?.Binds?.length ||
+      container.HostConfig?.PidMode ||
+      !['', 'private', undefined].includes(container.HostConfig?.IpcMode) ||
+      container.HostConfig?.CapAdd?.length ||
+      container.HostConfig?.Devices?.length ||
+      network.Labels?.['com.docker.compose.project'] !== project ||
+      network.Labels?.['shifaa.test.nonce'] !== authority.nonce ||
+      Date.parse(network.Created) < authority.started ||
+      !Number.isFinite(Date.parse(network.Created)) ||
+      Object.keys(attachments ?? {}).length !== 1 ||
+      attachments[network.Name]?.NetworkID !== network.Id
+    )
+      fail('isolated network identity/ownership');
+  }
   for (const role of ['owner', 'api', 'worker']) {
     let url;
     try {
