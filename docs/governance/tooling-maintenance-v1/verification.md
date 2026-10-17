@@ -74,3 +74,18 @@ remains open. The direct Product Owner safe-only publication instruction is spec
 to this tooling scope and is not a permanent verification exemption. Fresh PR CI is
 required on the final published head; prior green runs do not verify this delta. The
 new Python checker execution is local evidence, not a claim of new CI wiring.
+
+## First CI attempt and bounded correction
+
+Head `9960ce10a57e754eac5e8b8cb3745eb943985321` passed five GitHub jobs. The
+quality job failed one contract negative fixture at Vitest's default 5-second
+limit: the deliberately stale physical bundle required 6.28 seconds under
+concurrent package load. No assertion failed. The six populated invalid-bundle
+cases now have a bounded 15-second timeout, matching the neighboring
+filesystem/process-backed verification budget. Every stale/owner/race/RLS/
+canonical-digest assertion is unchanged. This is ordinary tooling-test
+compatibility under the direct Product Owner instruction, not new F011 acceptance.
+
+After that one-line correction, the full contracts unit suite passed again:
+11 files, 90 tests, exit 0 (61.99 seconds locally). Final-head GitHub CI remains
+a separate publication check; this report does not predict its result.
