@@ -1,124 +1,82 @@
-# Safe verification entrypoint: implementation review
+# PR #500 correction review
 
-Baseline: `7e9405452e6945b56ccc496ea64170be9dbc0b15`, including human-merged
-PR #498 and PR #499. Preparation and publication are authorized by the Product
-Owner's “Make pnpm verify the Single Safe Verification Command” instruction.
-No real-resource execution is authorized by this change or its mocked results.
+Baseline: `7e9405452e6945b56ccc496ea64170be9dbc0b15`.
+The Product Owner's final P0 directive rejects the Hyper-V architecture and
+allows safe static/mocked checks and publication to this same PR only.
+No real local resource execution is authorized or claimed.
 
-## Old and new execution graphs
+## Execution graph
 
-Previously, `package.json:scripts.verify` was a 42-command shell chain. It mixed
-read-only checks with fixed-project Compose reset, PostgreSQL fixture mutation,
-Supabase lifecycle, physical runners, restore/performance tests and retained
-evidence writes directly on the developer machine. Its complete literal text and
-ordered check IDs are preserved in [plan.json](plan.json). Package scripts, Turbo
-tasks, dependencies, executable imports and line-numbered resource-risk matches
-are recorded in [execution-graph.json](execution-graph.json).
+Old: the exact 42 shell commands in [plan.json](plan.json), including nested
+Compose volume teardown, fixed Supabase resets, shared PostgreSQL clients and
+historical evidence writers.
 
-The graph inventories 18 package manifests and 975 executable/configuration/SQL
-nodes. It deliberately over-approximates dynamic reachability. Regex risk matches
-are investigation locators, not proof that an operation is harmless or reachable.
-The lockfile binds third-party dependencies; this is not a source audit of every
-installed dependency. Full-machine containment covers unresolved dynamic edges.
-
-New flow:
+Current:
 
 ```text
-pnpm verify
-  read-only admission: exact clean committed source, historical/current authority,
-    private configuration/output, immutable image/provenance, host capability,
-    explicit one-run authorization, budgets and unresolved-resource inventory
-  exclusive authorization consumption and one fixed per-user coordination lock
-  committed-source bundle -> fresh bounded Windows VM/differencing disk
-  fresh guest/engine admission -> offline dependency setup
-  literal advisory audit in metadata-only directory -> remove all guest NICs
-  guarded Discovery/SOS + Family + Privacy with in-process launcher capabilities
-  every remaining original verification step serially inside the offline guest
-  exact required-result accounting -> identity-verified VM/disk teardown
-  one PASS / FAIL / BLOCKED report
+pnpm verify -> immutable 42 + Family/Privacy coverage validation
+            -> read-only complete-graph admission / concrete unsafe-source checks
+            -> BLOCKED (44 results; zero test/resource subprocesses or imports)
 ```
 
-All original 42 command predicates remain represented. Discovery E2E uses the
-same scenarios through the trusted launcher; Family and Privacy add two required
-result IDs, for 44 total. Dependency verification retains peer, registry advisory
-and Expo checks; no cached/stale advisory is accepted. No omitted or duplicate ID,
-SKIP status, nonzero exit, incomplete run or failed teardown can yield aggregate
-PASS. Nested legacy assertions remain unchanged; real execution is still needed
-to establish their runtime results.
+This is a safety correction and an explicitly incomplete aggregate implementation.
+The plan reads its immutable original package with a read-only Git command.
+The rejected VM/guest/provider code, generated 975-node over-approximation and
+obsolete VM test report were removed. They are not required project evidence.
+Existing immutable feature evidence and approvals are not edited.
 
-## Why this boundary
+## Guarded resource paths
 
-Environment-only retargeting cannot contain protected hardcoded legacy callers.
-Examples include `db:reset` using Compose teardown with volumes; native Supabase
-project/container names and port 54322; F008/F009 restore runners dropping fixed
-databases; and F010/F011 physical runners writing tracked evidence. Rewriting all
-those accepted scripts would require a much larger compatibility change.
+The merged launcher is extended with opt-in sequential resource limits and
+verified harness-release receipts. It can prepare the original source-bound SQL
+bootstrap/test inputs without the shared Compose project. These paths are unit
+and mock tested; they are not yet a complete aggregate dispatcher. The three
+harness close methods now track and close separately created worker/provider
+handles before releasing capability ownership. Default direct E2E execution
+continues to deny missing launcher authority.
 
-The selected backend therefore confines legacy names, ports, resets, volumes and
-evidence to a fresh machine. It never forwards the host Docker socket, source
-directory, credentials or environment into legacy tests. The host's existing
-PostgreSQL, Supabase, development/audit volumes and private evidence are not
-fallbacks. Missing prerequisites produce BLOCKED before allocation.
+## Incomplete routes
 
-Hyper-V is this implementation's supported backend, not a retroactive governance
-requirement. Other hosts deliberately BLOCK. This is more infrastructure than a
-container-only wrapper, but contains the actual unmodified transitive callers.
-No appliance has been created or validated during this task.
+The admission table preserves every required check and explicitly blocks legacy
+idempotency/Discovery physical tests, native F007, F008/F009 physical, restore and
+performance, and F010/F011 two-runtime composition. The table is not a list of
+approved command strings and offers no arbitrary shell execution. Native Auth/
+Storage coverage cannot be satisfied by the PostgreSQL launcher. Data-volume
+storage limits also remain unresolved; no hard quota is falsely claimed.
 
-## Authorization, limits and failure safety
+See [developer guidance](../../testing/SHIFAA-Safe-Verification.md) for exact
+limitations. PR #500 must remain unmerged while this aggregate blocker remains.
+Fresh CI results validate only their actual configured checks, not full aggregate
+or real local resource acceptance. Local aggregate and live UI acceptance were
+not executed under the Product Owner's task-specific safe-check restriction.
+The restriction supplies no standing verification exemption.
 
-One explicit private run configuration authorizes one nonce, committed revision,
-immutable appliance and bounded create/remove lifecycle. It expires within 24
-hours and must cover execution plus teardown. Consumption is durable. The fixed
-private coordination root prevents same-user alternate-output lock bypass.
-Preflight rejects unresolved verification machines, existing output and locks.
+## Preservation
 
-Budgets: 2–4 vCPU, 8–16 GiB RAM, 40–120 GiB virtual disk, 10–180 minutes; legacy
-steps execute serially with Turbo concurrency one. Guarded suites are serialized
-and capped at 32 resource leases each, checked before creation. Successful suite
-teardown precedes the next suite. Overall machine budgets bound nested resources.
+The root package's sole semantic change from merged main remains the verify
+entrypoint. `tools/tooling-history.mjs` independently validates exact old/current
+bytes and permits only that replacement for historical P4/P5 comparisons.
+Protected old ledgers, physical evidence, clinical contracts and 2,774 F011 files
+remain bound to their original bytes. No F012 lifecycle or gate is advanced.
 
-Creation and teardown validate actual VM ID, notes, storage, disk identifier and
-parent, network/media absence and CPU/RAM configuration. Unknown or partial state
-is retained with the run lock; no blanket prune, stale-lock adoption or cleanup
-by a matching name is allowed. The successful path removes only the verified VM
-and differencing disk, preserving private reports and the consumed authorization.
+## Local verification of this correction
 
-The host deadline can stop only the identity-verified new VM. Host termination is
-not a proven independent watchdog: an interrupted host can leave its bounded VM
-running and locked for operator review. This limitation is explicit; no automatic
-recovery or real teardown acceptance is claimed. Raw guest logs remain private;
-the final public report exposes only permitted result IDs, statuses and exit codes.
+- Coordinator/accounting: 15 mocked tests passed.
+- Launcher and original guard regressions: 199 mocked tests passed.
+- Actual harness import/close integration under mocked boundaries: 123 tests passed.
+  These suites overlap; their counts are not a count of unique acceptance cases.
+- Historical F011 successor negatives: 32 passed. The fixture was run with a
+  disposable Git index reflecting the six authorized VM-only deletions; the real
+  index was unchanged. An initial fixture attempt still enumerated a deleted VM
+  file and failed; no historical assertion was relaxed to correct that setup.
+- Read-only F011 full-parity verification, CURRENT authority, 16 authority
+  regressions, 90 contracts tests, 39 API-client tests, architecture, secrets,
+  skills, lint, targeted TypeScript, formatting and whitespace checks passed.
+  Repository type tasks also passed from cache; targeted TypeScript was fresh.
+- Preservation comparison: 2,954 protected identities, including 2,774 F011
+  files, matched; 150 original incident files and the private post-incident dump
+  matched. Dump restoration and pre-incident recovery remain unverified.
 
-## Historical compatibility
-
-Changing the root verify script changes a whole-file P4/P5 input. The existing
-shared `tooling-history.mjs` mechanism projects the exact original package only
-for historical evidence comparison. It independently checks the complete new
-package bytes, complete old bytes, lengths and JSON equality allowing only the
-verify-script replacement. Arbitrary package edits still fail. No old ledger,
-approval, physical evidence, Catalog/Data-RLS appendix or clinical input changes.
-The read-only F011 verifier and all 32 two-input negative cases passed.
-
-## Verification and first real run
-
-See [validation.json](validation.json) for actual commands, exit codes, log
-identities, preservation results and deliberately unexecuted checks. Read
-[the operator guide](../../testing/SHIFAA-Safe-Verification.md) for the one-command
-configuration and first-run prerequisites. Ordinary CI remains a separate set of
-checks; it does not execute this Windows aggregate or enforce the new mock suite.
-
-The first real run still needs a separately approved, clean, hash/provenance-bound
-Windows appliance, private output/credential provisioning, Hyper-V/nested Docker
-support, offline dependencies/images, explicit audit switch and bounded run grant.
-Missing assets or failed guest checks remain failures/blockers, never skips.
-
-The Product Owner explicitly authorized static/mock-only verification and scoped
-PR publication for this task, while prohibiting actual local resource lifecycle
-and the old destructive aggregate. Record that task-specific disposition in the
-commit/PR. No standing verification waiver is adopted. No UI behavior changed;
-human bilingual/device acceptance was not performed or claimed.
-
-F012 remains PRE_SPECIFY_BLOCKED; Issue #493 stays OPEN. No SpecKit stage,
-professional/clinical approval, actual prescription-safety result, production
-permission, prior-state recovery or historical acceptance is established.
+No real database, Docker lifecycle, aggregate verification, restore, performance
+or live bilingual UI acceptance ran. Fresh GitHub CI must be read on the final
+PR head; it cannot establish completion of the blocked aggregate.

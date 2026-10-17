@@ -1,4 +1,3 @@
-import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
@@ -7,39 +6,54 @@ import {
   publicResults,
   requiredIds,
 } from './verification-plan.mjs';
-import { verificationHost } from './verification-host.mjs';
+import { localVerificationHost } from './verification-host.mjs';
 
-// This coordinator never imports a DB client or executes a legacy command on the host.
+// Admit the ENTIRE graph before any test, fixture import, resource subprocess,
+// connection or creation. The plan's immutable Git lookup is read-only.
+// No VM or per-run JSON is used.
 export async function verify(host, plan) {
-  let run;
-  let created = false;
-  let results = requiredIds(plan).map((id) => ({ id, status: 'BLOCKED', exitCode: null }));
+  const results = requiredIds(plan).map((id) => ({ id, status: 'BLOCKED', exitCode: null }));
   try {
-    run = await host.admit(); // Read-only, before lock, disk, VM or guest creation.
-    await host.reserve(run);
-    // Creation may fail after a resource has been allocated. Never guess at cleanup.
-    created = true;
-    await host.create(run);
-    await host.checkpoint(run, 'created');
-    await host.prepare(run);
-    await host.checkpoint(run, 'bootstrapped');
-    results = publicResults(plan, await host.execute(run, plan));
+    const admission = await host.preflight(plan);
+    if (admission?.status !== 'PASS')
+      return {
+        status: 'BLOCKED',
+        results,
+        code: admission?.code ?? 'PREFLIGHT_INCOMPLETE',
+        reason: admission?.reason ?? 'Required safety admission did not pass.',
+        blocked: admission?.blocked,
+        evidence: admission?.evidence,
+      };
+    for (const result of results) {
+      const actual = await host.execute(result.id);
+      // A zero test exit is insufficient when owned resource disposition is
+      // unverified. Unknown or partial teardown must preserve resources.
+      if (actual?.cleanupVerified !== true) throw new Error('Unverified resource disposition');
+      result.exitCode = actual.exitCode;
+      result.status = actual.exitCode === 0 ? 'PASS' : 'FAIL';
+      publicResults(plan, results);
+      if (result.status === 'FAIL') return { status: 'FAIL', results };
+    }
     assertComplete(plan, results);
-    await host.checkpoint(run, 'before-teardown');
-    await host.teardown(run);
-    created = false;
-    await host.finalize(run, 'PASS', results);
     return { status: 'PASS', results };
   } catch {
-    // No raw subprocess output/argv can disclose rows, tokens or credentials.
-    const status = results.some((r) => r.status === 'FAIL') ? 'FAIL' : 'BLOCKED';
-    if (run) await host.preserve(run, { status, created, results });
+    // No raw subprocess errors, SQL, URLs, credentials or guessed cleanup.
     return {
-      status,
-      results,
+      status: results.some((r) => r.status === 'FAIL') ? 'FAIL' : 'BLOCKED',
+      results: results.map((r) => ({
+        id: r.id,
+        status:
+          r.status === 'PASS' && r.exitCode === 0
+            ? 'PASS'
+            : r.status === 'FAIL'
+              ? 'FAIL'
+              : 'BLOCKED',
+        exitCode:
+          Number.isInteger(r.exitCode) && r.exitCode >= 0 && r.exitCode <= 255 ? r.exitCode : null,
+      })),
+      code: 'EXECUTION_INCOMPLETE',
       reason:
-        host.reason ??
-        'Required verification incomplete; inspect the private run receipt. No acceptance claimed.',
+        'Required verification or identity-checked teardown did not complete. No acceptance claimed.',
     };
   }
 }
@@ -47,18 +61,14 @@ export async function verify(host, plan) {
 export async function main() {
   const root = path.resolve(import.meta.dirname, '..');
   try {
-    const plan = verificationPlan(root);
-    const result = await verify(
-      verificationHost(root, process.env.SHIFAA_VERIFY_CONFIG, randomBytes(16).toString('hex')),
-      plan,
-    );
+    const result = await verify(localVerificationHost(root), verificationPlan(root));
     console.log(JSON.stringify(result));
     process.exitCode = result.status === 'PASS' ? 0 : result.status === 'FAIL' ? 1 : 2;
   } catch {
     console.log(
       JSON.stringify({
         status: 'BLOCKED',
-        reason: 'Verification plan/configuration is invalid. No resources created.',
+        reason: 'Verification plan integrity failed. No commands or resources started.',
       }),
     );
     process.exitCode = 2;
