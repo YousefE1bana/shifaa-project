@@ -620,6 +620,11 @@ export async function createDisposableTestRun(options) {
 // Node's no-isolation runner keeps test callbacks and the provider in one
 // process. Each harness acquires a NEW database, never a reused per-suite lease.
 export async function runDisposableTestSuite(options) {
+  if (
+    options.maxRuns !== undefined &&
+    (!Number.isInteger(options.maxRuns) || options.maxRuns < 1 || options.maxRuns > 32)
+  )
+    denied('suite lease budget must be an integer from 1 to 32');
   const runs = [];
   const { run } = await import('node:test');
   let failed = false;
@@ -628,6 +633,8 @@ export async function runDisposableTestSuite(options) {
   await withTestLauncherSession(
     options.scope,
     async () => {
+      if (options.maxRuns !== undefined && runs.length >= options.maxRuns)
+        denied('suite lease budget exhausted before resource creation');
       const created = await createDisposableTestRun(options);
       runs.push(created);
       return created.capability;

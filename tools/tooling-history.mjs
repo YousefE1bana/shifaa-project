@@ -17,6 +17,20 @@ const recordSha256 = 'e38049b11787c49e01d0c6cfe0ef3cb3f825fc68f207be5bb224eebc45
 const sha = (raw) => createHash('sha256').update(raw).digest('hex');
 const immutableObjects = new Map();
 
+// The aggregate entrypoint is operational tooling, not a new physical F011
+// acceptance. Project ONLY this reviewed script replacement for old P4/P5
+// comparisons; validate the complete current file independently every time.
+export function verificationPackageProjection(current, historical) {
+  assert.equal(sha(historical), '2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200');
+  assert.equal(historical.length, 21058);
+  assert.equal(sha(current), '8910c0366041499875a2df0c4b09529da49471dec4df0d6434b07058039200dc');
+  assert.equal(current.length, 19816);
+  const expected = JSON.parse(historical);
+  expected.scripts.verify = 'node tools/verify.mjs';
+  assert.deepEqual(JSON.parse(current), expected, 'Unrelated package semantics changed');
+  return historical;
+}
+
 function safeFile(root, relative) {
   assert.equal(typeof relative, 'string');
   assert.ok(!isAbsolute(relative) && !/[\\:]/.test(relative));
@@ -67,6 +81,22 @@ export function toolingPolicyHistoricalInputs(root) {
     assert.equal(bytes.length, old.bytes);
     assert.equal(sha(bytes), old.sha256, 'Historical tooling policy bytes drift');
     historical.set(input.path, bytes);
+  }
+  // Partial contracts-only fixtures intentionally omit physical-source inputs.
+  // Full P4/P5 source collection still requires package.json independently.
+  const packageFile = safeFile(root, 'package.json');
+  const currentPackage = existsSync(packageFile) ? readFileSync(packageFile) : undefined;
+  if (currentPackage && JSON.parse(currentPackage).scripts?.verify === 'node tools/verify.mjs') {
+    const old = execFileSync(
+      'git',
+      ['cat-file', 'blob', 'f205a80ae41b5507afaa1a7868fbbc8e84deb217'],
+      {
+        cwd: root,
+        stdio: ['ignore', 'pipe', 'pipe'],
+        maxBuffer: 128 * 1024,
+      },
+    );
+    historical.set('package.json', verificationPackageProjection(currentPackage, old));
   }
   return historical;
 }
