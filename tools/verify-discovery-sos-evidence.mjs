@@ -247,8 +247,33 @@ for (const gate of [
 ])
   if (!openGateRegister.includes(gate)) failures.push(`Canonical OPEN gate is missing: ${gate}`);
 
-const specKit = JSON.parse(text(join(root, '.specify', 'integration.json')));
-if (specKit.version !== '1.1.3') failures.push('Spec Kit integration is not v1.1.3.');
+// SHIFAA-SPECKIT-PIN-BOUNDARY START
+export function verifySpecKitPin(projectRoot, execute = execFileSync, environment = process.env) {
+  // Operational schema/source validation is independent of F006's immutable
+  // historical evidence. Routine version changes never edit this consumer.
+  const result = JSON.parse(
+    execute(
+      environment.SPECKIT_PYTHON_EXECUTABLE || environment.SPECKIT_PYTHON || 'python',
+      [join(projectRoot, 'tools', 'speckit_tooling.py'), '--root', projectRoot],
+      {
+        cwd: projectRoot,
+        encoding: 'utf8',
+        timeout: 120000,
+        windowsHide: true,
+        env: { ...environment, PYTHONDONTWRITEBYTECODE: '1' },
+      },
+    ),
+  );
+  if (!result.ok) throw new Error('Spec Kit tooling configuration invalid.');
+  return result;
+}
+// SHIFAA-SPECKIT-PIN-BOUNDARY END
+
+try {
+  verifySpecKitPin(root);
+} catch {
+  failures.push('Spec Kit operational configuration verification failed.');
+}
 
 try {
   const aclProbe = execFileSync(

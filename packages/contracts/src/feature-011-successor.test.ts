@@ -71,6 +71,17 @@ describe('F011 historical Constitution and conditional successor compatibility',
 
   it('continues to accept the unchanged original binding without a successor', () => {
     fixture((directory) => {
+      // Reconstruct the actual pre-tooling-policy inputs for this historical case.
+      // A current policy record must never falsely approve substituted old bytes.
+      const policy = 'docs/governance/tooling-maintenance-v1/historical-compatibility.json';
+      const record = JSON.parse(fs.readFileSync(path.join(directory, policy), 'utf8'));
+      for (const input of record.inputs) {
+        fs.writeFileSync(
+          path.join(directory, input.path),
+          execFileSync('git', ['cat-file', 'blob', input.historical.gitBlob], { cwd: root }),
+        );
+      }
+      fs.unlinkSync(path.join(directory, policy));
       const original = execFileSync(
         'git',
         ['show', `862db9f66c19ccb8efa9163e5221845225b62174:${constitution}`],
@@ -84,7 +95,7 @@ describe('F011 historical Constitution and conditional successor compatibility',
   });
 
   it.each([
-    ['corrupted Constitution', constitution, 'append', /Constitution successor drift/],
+    ['corrupted Constitution', constitution, 'append', /Tooling policy source drift/],
     ['missing approval', approval, 'remove', /ENOENT/],
     ['unapproved decision', approval, 'append', /owner approval drift/],
     ['missing binding', binding, 'remove', /ENOENT/],

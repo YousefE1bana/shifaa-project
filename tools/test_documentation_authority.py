@@ -6,6 +6,7 @@ import json
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 
@@ -38,7 +39,7 @@ def json_bytes(value: object) -> bytes:
 
 
 class AuthorityVerifierTests(unittest.TestCase):
-    def make_repository(self) -> tuple[tempfile.TemporaryDirectory, Path]:
+    def make_repository(self, *, tooling=False) -> tuple[tempfile.TemporaryDirectory, Path]:
         temporary = tempfile.TemporaryDirectory()
         root = Path(temporary.name)
         contents = {
@@ -57,6 +58,13 @@ class AuthorityVerifierTests(unittest.TestCase):
             ".shifaa/skills/shifaa-third-party-skill-overlay/SKILL.md": "# Overlay\n",
             ".shifaa/skills/shifaa-speckit-overlay/SKILL.md": "# SpecKit\n",
         }
+        if tooling:
+            import sys
+            sys.path.insert(0, str(TOOL_PATH.parent))
+            from test_speckit_tooling import tooling_fixture
+            tooling_fixture(root)
+            for relative in authority.METADATA_PATHS:
+                contents[relative] = (root / relative).read_text(encoding="utf-8")
         for relative, text in contents.items():
             write_text(root, relative, text)
         write_text(root, ".gitignore", "ignored.tmp\n")
@@ -81,7 +89,7 @@ class AuthorityVerifierTests(unittest.TestCase):
                 {"path": path, "bytes": len(baseline_contents[baseline_blobs[path]]),
                  "sha256": hashlib.sha256(baseline_contents[baseline_blobs[path]]).hexdigest(),
                  "gitBlob": baseline_blobs[path]}
-                for path in ("docs/protected.md", "specs/012-example/contract-amendment/approved.md")
+                for path in ("docs/protected.md", "specs/012-example/contract-amendment/approved.md", *(authority.METADATA_PATHS if tooling else []))
             ],
             "f011": {"path": f011_path, "files": len([path for path in f011_files if path]), "gitTree": f011_tree},
             "candidateAllowlist": [
@@ -429,6 +437,39 @@ class AuthorityVerifierTests(unittest.TestCase):
         self.assertIn("successor_approval_binding_invalid", {e["code"] for e in self.verify(root, **invalid_pin)["errors"]})
         self.assertEqual(before_index, (root / ".git/index").read_bytes())
 
+
+class MutableToolingTests(unittest.TestCase):
+    make_repository = AuthorityVerifierTests.make_repository
+    verify = AuthorityVerifierTests.verify
+    config_text = staticmethod(AuthorityVerifierTests.config_text)
+    def test_future_patch_and_minor_change_only_mutable_configuration(self):
+        from test_speckit_tooling import set_version
+        temporary, root = self.make_repository(tooling=True)
+        try:
+            baseline = (root / authority.BASELINE_FILE).read_bytes()
+            for version in ("1.2.1", "1.3.0"):
+                set_version(root, version)
+                report = self.verify(root, mode="current")
+                self.assertTrue(report["ok"], report["errors"])
+                self.assertEqual(report["checks"]["mutable_tooling"]["version"], version)
+                self.assertEqual((root / authority.BASELINE_FILE).read_bytes(), baseline)
+                self.assertIn("protected_current_hash_mismatch", {e["code"] for e in self.verify(root)["errors"]})
+            write_text(root, "docs/protected.md", "unapproved historical mutation")
+            self.assertIn("protected_current_hash_mismatch", {e["code"] for e in self.verify(root, mode="current")["errors"]})
+        finally:
+            temporary.cleanup()
+
+    def test_mutable_file_corruption_is_not_hidden_by_history(self):
+        temporary, root = self.make_repository(tooling=True)
+        try:
+            path = root / ".specify/integration.json"
+            data = json.loads(path.read_bytes())
+            data["integration_settings"]["codex"]["script"] = "bash"
+            path.write_bytes(json_bytes(data))
+            report = self.verify(root, mode="current")
+            self.assertIn("mutable_tooling_configuration_invalid", {e["code"] for e in report["errors"]})
+        finally:
+            temporary.cleanup()
 
 if __name__ == "__main__":
     unittest.main()

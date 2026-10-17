@@ -1,6 +1,7 @@
 # SHIFAA Constitution
 
-> **Version:** 3.0.0 — prospective release candidate; not ratified.
+> **Version:** 3.0.1 — tooling-maintenance amendment; integration pending.
+> **Tooling amendment authority:** Product Owner direction dated 2026-10-17; effective through normal reviewed PR integration. The F012 3.0.0 publication/activation history below is preserved, not reapproved.
 > **Publication form:** PROSPECTIVE CONDITIONAL RELEASE — approval/effectiveness is established only by the bound approval and activation records.
 > **Conditional publication state:** APPROVED_FOR_CONDITIONAL_ACTIVATION (prospective only; this header asserts no approval).
 > **Current preparation limit:** Exact Product Owner approval is not recorded by preparation of this form; predecessor authority continues until verified activation.
@@ -119,12 +120,33 @@ The receipt records completion of an already approved predicate; it cannot appro
 
 ### Explicit lifecycle consumption
 
-For each separately authorized F012 stage, manually read and record this effective canonical Constitution path/version/hash, approved PRD/Master/template hashes, approval-record and activation-receipt identities, observed remote-main SHA, scope and applicable gates. Read sidecars/supplement as supporting evidence, never as a second Constitution. Verify actual branch/worktree and `.specify/feature.json` context independently; pointer identity is not feature authority. No automatic supplementary-document loading is claimed. Missing/inactive/inconsistent inputs block applicability. No Tasks before required architecture decisions, approval of the exact Plan and separate Tasks authorization. F012 remains `NOT READY — PRE_SPECIFY_BLOCKED` pending governance activation, complete reviewer-boundary decisions and separate lifecycle authorization. Ten operations remain effective; 11/12 are unapproved alternatives. Spec Kit stays pinned to v1.1.3 with the established custom workflow.
+For each separately authorized F012 stage, manually read and record this effective canonical Constitution path/version/hash, approved PRD/Master/template hashes, approval-record and activation-receipt identities, observed remote-main SHA, scope and applicable gates. Read sidecars/supplement as supporting evidence, never as a second Constitution. Verify actual branch/worktree and `.specify/feature.json` context independently; pointer identity is not feature authority. No automatic supplementary-document loading is claimed. Missing/inactive/inconsistent inputs block applicability. No Tasks before required architecture decisions, approval of the exact Plan and separate Tasks authorization. F012 remains `NOT READY — PRE_SPECIFY_BLOCKED` pending governance activation, complete reviewer-boundary decisions and separate lifecycle authorization. Ten operations remain effective; 11/12 are unapproved alternatives. The operational Spec Kit version is declared only in `.specify/integration.json`; validate its supporting manifests and official release provenance under [the tooling maintenance policy](../../docs/governance/SHIFAA-Tooling-Maintenance-Policy.md). Routine toolchain upgrades use reviewed Git changes and compatibility tests, not a constitutional amendment, per-release historical approval or activation receipt. The established custom workflow and all feature/clinical gates remain binding. The former 1.1.3 statement is historical context only.
 
 ## Amendment record
 
-| Version | Date | Change |
-|---|---|---|
+| Version        | Date       | Change                                                                                                                                                                                                                                     |
+| -------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 3.0.1          | 2026-10-17 | Product Owner-authorized tooling maintenance clarification; branch candidate pending normal human PR integration; no immutable article or F012 clinical gate change.                                                                       |
 | 3.0.0-proposed | 2026-10-15 | UNAPPROVED, NOT_EFFECTIVE: narrow F012 engineering applicability changes an otherwise unqualified Article VI prerequisite; major version recommended by the mandatory template. No historical ratification or clinical acceptance changes. |
-| 2.1.0 | 2026-08-09 | Ratified as the implementation Constitution by Product Owner Yousef Osama on 9-Aug-2026; no immutable article text changed from the synchronized 2.0.0 proposal. |
-| 2.0.0 | 2026-08-09 | Proposed synchronized 15-article text for Master 2.0; reconciled application count, dual clinical sign-off, Egyptian production gates, Arabic/WCAG requirements, and AI authority; ratification remains pending. |
+| 2.1.0          | 2026-08-09 | Ratified as the implementation Constitution by Product Owner Yousef Osama on 9-Aug-2026; no immutable article text changed from the synchronized 2.0.0 proposal.                                                                           |
+| 2.0.0          | 2026-08-09 | Proposed synchronized 15-article text for Master 2.0; reconciled application count, dual clinical sign-off, Egyptian production gates, Arabic/WCAG requirements, and AI authority; ratification remains pending.                           |
+
+## Tooling maintenance amendment — 2026-10-17
+
+Version 3.0.1 clarifies operational maintenance without changing any immutable
+article. Product Owner Yousef Osama explicitly authorized this narrow policy
+change and publication to PR #498 in the direct “ONE-PASS Spec Kit Upgrade +
+Permanent Tooling Governance Simplification” instruction. Until human integration,
+this amendment is a branch candidate. It does not amend the F012-specific two-phase
+activation procedure or retroactively approve different PR A/B bytes. Historical
+3.0.0 remains independently verifiable from its original Git blob and receipts.
+
+The four operational metadata files listed in the tooling policy are mutable
+configuration. Their historical snapshots remain evidence; their current bytes
+are checked for schema, installed-version consistency, official provenance and
+compatibility instead of permanent equality to an old release. Future routine
+upgrades require no Constitution/Master/feature-verifier version-string edit.
+Breaking workflow, security, architectural or domain changes retain their ordinary
+approval requirements. No tooling result supplies clinical, legal, production or
+F012 lifecycle authority. Impact and unchanged-propagation dispositions are in
+[the decision record](../../docs/governance/tooling-maintenance-v1/decision-and-impact.md).

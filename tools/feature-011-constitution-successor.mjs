@@ -9,6 +9,12 @@ import {
   twoInputSuccessorInputPaths,
 } from './feature-011-two-input-successor.mjs';
 
+import {
+  readToolingPolicyInput,
+  toolingPolicyHistoricalInputs,
+  toolingPolicyInputPaths,
+} from './tooling-history.mjs';
+
 const feature = 'specs/012-prescription-safety-governed-overrides';
 const constitution = '.specify/memory/constitution.md';
 const originalSha256 = '25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a';
@@ -24,6 +30,7 @@ const compatibleTools = [
   'tools/verify-feature-011-contracts.mjs',
 ];
 export const constitutionSuccessorInputPaths = [
+  ...toolingPolicyInputPaths,
   bindingPath,
   approvalPath,
   manifestPath,
@@ -34,7 +41,7 @@ const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const immutableBlobs = new Map();
 
 function verifiedBinding(root) {
-  const read = (file) => readFileSync(join(root, file));
+  const read = (file) => readToolingPolicyInput(root, file);
   const current = read(constitution);
   if (sha(current) === originalSha256 && !existsSync(join(root, bindingPath))) return null;
   const bytes = read(bindingPath);
@@ -116,5 +123,8 @@ export function readHistoricalVerificationInputs(root) {
     }
   }
   for (const [file, bytes] of readTwoInputDocumentationSuccessor(root)) historical.set(file, bytes);
+  for (const [file, bytes] of toolingPolicyHistoricalInputs(root)) {
+    if (!historical.has(file)) historical.set(file, bytes);
+  }
   return (file) => historical.get(file) ?? readFileSync(join(root, file));
 }

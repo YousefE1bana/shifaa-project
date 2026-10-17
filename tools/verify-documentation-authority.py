@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Read-only documentation checks; no approval or lifecycle is performed.
 
-CURRENT (default, --mode current): retain pinned historical/approval inputs,
+CURRENT (default, --mode current): retain historical/approval inputs; four
+mutable tooling files use schema/managed-source checks instead of old current hashes,
 baseline inventory and accounting checks, but permit later non-protected docs.
 New/changed docs are reported as UNCLASSIFIED, never as approved authority.
 The inventory describes the baseline, not a permanent file-immutability policy.
@@ -18,6 +19,7 @@ be committed; all declared artifacts are checked in that recorded Git commit.
 It is verification evidence, not a new governance approval procedure. An operator
 must obtain the exact record digest through the existing approval process.
 Both modes are non-mutating; no hooks, fetch, index refresh or lifecycle commands.
+
 """
 
 from __future__ import annotations
@@ -29,11 +31,16 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tomllib
 import unicodedata
 from pathlib import Path, PurePosixPath
 from urllib.parse import unquote, urlsplit
 
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from speckit_tooling import METADATA_PATHS, safe_path, validate_configuration
+from tooling_history import preserved_inputs
 
 MODERNIZATION_DIR = "docs/governance/repository-modernization-v1"
 BASELINE_FILE = f"{MODERNIZATION_DIR}/baseline-and-protection.json"
@@ -301,7 +308,7 @@ def check_current_head(root: Path, manifest: dict, errors: list[dict[str, str]],
     return baseline
 
 
-def check_protected_files(root: Path, manifest: dict, commit: str | None, errors: list[dict[str, str]], checks: dict) -> None:
+def check_protected_files(root: Path, manifest: dict, commit: str | None, errors: list[dict[str, str]], checks: dict, historical_view: dict | None = None, *, mutable: bool = True) -> None:
     entries = manifest.get("protectedArtifacts")
     if not isinstance(entries, list):
         add_error(errors, "protected_artifacts_invalid", BASELINE_FILE)
@@ -343,12 +350,14 @@ def check_protected_files(root: Path, manifest: dict, commit: str | None, errors
     else:
         object_by_path = {}
     for entry, path, current_bytes in valid:
-        expected_size = entry.get("bytes")
-        expected_hash = entry.get("sha256")
+        current_identity = entry
+        compared_bytes = (historical_view or {}).get(path, current_bytes)
+        expected_size = current_identity.get("bytes")
+        expected_hash = current_identity.get("sha256")
         expected_blob = entry.get("gitBlob")
-        if isinstance(expected_size, bool) or not isinstance(expected_size, int) or expected_size != len(current_bytes):
+        if (not mutable or path not in METADATA_PATHS) and (isinstance(expected_size, bool) or not isinstance(expected_size, int) or expected_size != len(compared_bytes)):
             add_error(errors, "protected_current_size_mismatch", path)
-        if not isinstance(expected_hash, str) or digest(current_bytes) != expected_hash:
+        if (not mutable or path not in METADATA_PATHS) and (not isinstance(expected_hash, str) or digest(compared_bytes) != expected_hash):
             add_error(errors, "protected_current_hash_mismatch", path)
         if commit is None:
             continue
@@ -358,9 +367,9 @@ def check_protected_files(root: Path, manifest: dict, commit: str | None, errors
         if not isinstance(expected_blob, str) or expected_blob != actual_blob:
             add_error(errors, "protected_git_blob_mismatch", path)
         history_bytes = history[actual_blob]
-        if len(history_bytes) != expected_size or digest(history_bytes) != expected_hash:
+        if len(history_bytes) != entry.get("bytes") or digest(history_bytes) != entry.get("sha256"):
             add_error(errors, "protected_history_digest_mismatch", path)
-        if current_bytes != history_bytes:
+        if (not mutable or path not in METADATA_PATHS) and compared_bytes != history_bytes:
             add_error(errors, "protected_current_differs_from_history", path)
     checks["protected_artifacts"] = not any(error["code"].startswith("protected_") for error in errors)
     checks["protected_artifact_count"] = count
@@ -887,13 +896,15 @@ def check_current_documents(root: Path, manifest: dict, baseline: str, locator: 
     checks["future_documents_allowed"] = not any(e["code"].startswith("current_document_") for e in errors)
 
 
+
 def verify_root(root: Path, *, mode: str = "current", inventory_sha256: str | None = None,
                 baseline_sha256: str = BASELINE_SHA256, successor_binding: str | None = None,
                 successor_binding_sha256: str | None = None) -> dict:
-    root = root.resolve()
     errors: list[dict[str, str]] = []
     checks: dict[str, object] = {"mode": mode}
     try:
+        safe_path(root, BASELINE_FILE)
+        root = root.resolve()
         if mode not in ("package", "current"):
             raise ValueError("unknown validation context")
         pinned = safe_file(root, BASELINE_FILE)
@@ -905,7 +916,15 @@ def verify_root(root: Path, *, mode: str = "current", inventory_sha256: str | No
         if isinstance(manifest.get("schemaVersion"), bool) or manifest.get("schemaVersion") != 1:
             add_error(errors, "baseline_schema_invalid", BASELINE_FILE)
         commit = check_current_head(root, manifest, errors, checks)
-        check_protected_files(root, manifest, commit, errors, checks)
+        historical_view = preserved_inputs(root) if mode == "current" else {}
+        if mode == "current" and any((root / path).exists() for path in METADATA_PATHS):
+            try:
+                checks["mutable_tooling"] = validate_configuration(root)
+            except (OSError, ValueError, KeyError, TypeError):
+                add_error(errors, "mutable_tooling_configuration_invalid")
+        checks["mutable_tooling_paths"] = sorted(METADATA_PATHS) if mode == "current" else []
+        # PACKAGE still demands the original exact current bytes.
+        check_protected_files(root, manifest, commit, errors, checks, historical_view, mutable=mode == "current")
         check_f011(root, manifest, commit, errors, checks)
         if mode == "package":
             check_candidate_diff(root, manifest, commit, errors, checks)
