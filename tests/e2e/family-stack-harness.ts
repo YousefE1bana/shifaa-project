@@ -7,7 +7,7 @@ export async function createFamilyStack(context?: object) {
   const { acquireTestLauncherContext } = await import('../../tools/test-launcher-session.mjs');
   const { revalidateTestResourceContext, connectTestOwner, withTestResource, guardTestHandle } =
     await import('../../tools/test-resource-context.mjs');
-  context ??= await acquireTestLauncherContext('family');
+  context = await acquireTestLauncherContext('family', context);
   revalidateTestResourceContext(context, 'family');
   const [{ default: postgres }, { buildApp }, { loadConfig }] = await Promise.all([
     import('postgres'),

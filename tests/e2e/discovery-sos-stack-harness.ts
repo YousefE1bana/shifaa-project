@@ -26,7 +26,7 @@ export async function createDiscoverySosStack(context?: object) {
     runRecordIds,
     revalidateTestResourceContext,
   } = await import('../../tools/test-resource-context.mjs');
-  context ??= await acquireTestLauncherContext('discovery-sos');
+  context = await acquireTestLauncherContext('discovery-sos', context);
   revalidateTestResourceContext(context, 'discovery-sos');
   const [{ default: postgres }, { buildApp }, { loadConfig }] = await Promise.all([
     import('postgres'),

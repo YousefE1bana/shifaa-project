@@ -60,7 +60,9 @@ instances under tsx. Capabilities remain real WeakMap keys; serialized values,
 child processes, wrong scopes, nested sessions, closed sessions and reused
 harness capabilities confer no authority. Every harness acquisition creates a
 fresh database, including the five worker-security scenarios. Existing direct
-E2E commands still fail before adapter construction.
+E2E commands still fail before adapter construction. Direct argument injection,
+even of a genuine older capability, cannot bypass the active provider or its
+single-consumption check.
 
 The existing guard performs absent-to-owned output admission. A new directory
 is exclusively created inside an already-private parent, then protected with an
@@ -99,8 +101,9 @@ Docker daemon are trusted; they cannot defeat a malicious daemon or administrato
 Run the launcher mocked suite with
 `node --test tools/trusted-disposable-test-launcher.test.mjs`. It includes the
 original 109 guard tests. Separately run the existing 117-test harness suite
-with Node experimental module mocks and the installed tsx loader. The original
-109 are shared between those suites, not additional unique tests.
+plus three direct-capability injection negatives (120 total) with Node
+experimental module mocks and the installed tsx loader. The original 109 are
+shared between those suites, not additional unique tests.
 
 The entrypoint probe executes actual Node/tsx registration and deliberately
 denies provider acquisition for all 17 scenarios across 13 files. Network and

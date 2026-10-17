@@ -19,7 +19,7 @@ export async function createPrivacyStack(context?: object) {
     registerRunRecord,
     assertRunOwned,
   } = await import('../../tools/test-resource-context.mjs');
-  context ??= await acquireTestLauncherContext('privacy');
+  context = await acquireTestLauncherContext('privacy', context);
   revalidateTestResourceContext(context, 'privacy');
   const [{ default: postgres }, { buildApp }, { loadConfig }] = await Promise.all([
     import('postgres'),

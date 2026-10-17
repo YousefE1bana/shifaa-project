@@ -31,6 +31,24 @@ async function registerTests() {
         await assert.rejects(create(value), /test-resource-denied/);
       }
     });
+    test(`${name} rejects direct injection of a genuine old capability before any client`, async (t) => {
+      const f = fixture(t, name);
+      const context = verifyTestResourceContext(f.authority, f.manifest);
+      let acquisitions = 0;
+      await withTestLauncherSession(
+        name,
+        async () => {
+          acquisitions++;
+          return context;
+        },
+        async () => {
+          await assert.rejects(create(context), /direct capability injection/);
+        },
+      );
+      assert.equal(acquisitions, 0);
+      assert.equal(f.effects.clients, 0);
+      assert.equal(f.queries.length, 0);
+    });
   }
 
   test('scoped entry points have no shared URLs, trigger suppression or global history cleanup', () => {

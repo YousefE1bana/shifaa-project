@@ -25,7 +25,11 @@ export async function withTestLauncherSession(scope, acquire, execute) {
   }
 }
 
-export async function acquireTestLauncherContext(scope) {
+export async function acquireTestLauncherContext(scope, suppliedCapability) {
+  // Entry points cannot bypass session consumption with an old run's otherwise
+  // genuine capability. Only the active provider may deliver a harness lease.
+  if (suppliedCapability !== undefined)
+    throw new Error('test-resource-denied: direct capability injection is not supported');
   // node:test creates callback AsyncResources outside the importing context.
   // Its no-isolation runner therefore needs this process-private, exclusive
   // session bridge. There is no global/env/JSON registration or child handoff.
