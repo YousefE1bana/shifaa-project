@@ -16,7 +16,8 @@ import type { MessagingAdapter } from '../../services/worker/src/privacy-dsr-not
 export async function createDiscoverySosStack(context?: object) {
   // Dynamic imports retain one ESM capability authority under Node/tsx's
   // CommonJS TypeScript loader; require(ESM) would create a second module realm.
-  const { acquireTestLauncherContext } = await import('../../tools/test-launcher-session.mjs');
+  const { acquireTestLauncherContext, releaseTestLauncherContext, trackTestLauncherClose } =
+    await import('../../tools/test-launcher-session.mjs');
   const {
     connectTestOwner,
     withTestResource,
@@ -168,12 +169,13 @@ export async function createDiscoverySosStack(context?: object) {
             '../../services/worker/src/discovery-sos.ts'
           );
           revalidateTestResourceContext(context, 'discovery-sos');
-          return guardTestHandle(
-            context,
+          const worker = new PostgresDiscoverySosProcessor(url, adapter, workerId);
+          worker.close = trackTestLauncherClose(
             'discovery-sos',
-            new PostgresDiscoverySosProcessor(url, adapter, workerId),
-            ['processNext'],
+            context,
+            worker.close.bind(worker),
           );
+          return guardTestHandle(context, 'discovery-sos', worker, ['processNext']);
         }),
       createDurableProvider: async () =>
         withTestResource(context, 'discovery-sos', 'worker', async (url: string) => {
@@ -181,12 +183,13 @@ export async function createDiscoverySosStack(context?: object) {
             '../../services/worker/src/adapters/local-synthetic-messaging.ts'
           );
           revalidateTestResourceContext(context, 'discovery-sos');
-          return guardTestHandle(
-            context,
+          const provider = new DurableLocalSyntheticMessagingAdapter(url);
+          provider.close = trackTestLauncherClose(
             'discovery-sos',
-            new DurableLocalSyntheticMessagingAdapter(url),
-            ['send'],
+            context,
+            provider.close.bind(provider),
           );
+          return guardTestHandle(context, 'discovery-sos', provider, ['send']);
         }),
       setContactPrecision: async (precision: 'none' | 'coarse' | 'exact') => {
         const previous = contact.confirmed;
@@ -216,6 +219,7 @@ export async function createDiscoverySosStack(context?: object) {
         } finally {
           await owner.end({ timeout: 5 });
         }
+        releaseTestLauncherContext('discovery-sos', context);
       },
     };
   } catch (error) {

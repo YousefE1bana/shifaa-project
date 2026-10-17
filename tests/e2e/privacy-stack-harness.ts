@@ -10,7 +10,8 @@ const dpo = '50000000-0000-4000-8000-000000000006';
 export async function createPrivacyStack(context?: object) {
   // Dynamic imports retain one ESM capability authority under Node/tsx's
   // CommonJS TypeScript loader; require(ESM) would create a second module realm.
-  const { acquireTestLauncherContext } = await import('../../tools/test-launcher-session.mjs');
+  const { acquireTestLauncherContext, releaseTestLauncherContext, trackTestLauncherClose } =
+    await import('../../tools/test-launcher-session.mjs');
   const {
     revalidateTestResourceContext,
     connectTestOwner,
@@ -51,12 +52,9 @@ export async function createPrivacyStack(context?: object) {
             '../../services/worker/src/privacy-dsr-notifications.ts'
           );
           revalidateTestResourceContext(context, 'privacy');
-          return guardTestHandle(
-            context,
-            'privacy',
-            new PostgresPrivacyNotificationProcessor(url, adapter),
-            ['processNext'],
-          );
+          const worker = new PostgresPrivacyNotificationProcessor(url, adapter);
+          worker.close = trackTestLauncherClose('privacy', context, worker.close.bind(worker));
+          return guardTestHandle(context, 'privacy', worker, ['processNext']);
         }),
       ids: { patient, guardian, subject, dpo },
       create: async (
@@ -109,6 +107,7 @@ export async function createPrivacyStack(context?: object) {
         } finally {
           await owner.end({ timeout: 5 });
         }
+        releaseTestLauncherContext('privacy', context);
       },
     };
   } catch (error) {
