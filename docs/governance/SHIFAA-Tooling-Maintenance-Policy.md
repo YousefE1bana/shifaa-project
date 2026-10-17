@@ -13,7 +13,14 @@ and SpecKit manifests must agree with it. These four files are mutable tooling
 configuration, not immutable clinical evidence. Historical Git blobs and old
 approval manifests remain unchanged. The old 165-entry protection ledger remains
 a historical record; CURRENT verification checks these four current files by
-schema and managed-source integrity instead of requiring old hashes. PACKAGE
+schema and managed-source integrity instead of requiring old hashes. The six
+upstream-managed PowerShell scripts listed by `MANAGED_SCRIPT_PATHS` in
+`tools/speckit_tooling.py` follow the same CURRENT rule only when the complete
+configuration validates and each body is present in its managed manifest with a
+matching SHA-256. Historical Git bytes remain independently checked. This does
+not exempt templates, overrides, workflows, feature evidence or other protected
+paths. Installed-source and official-tag checks remain required for an upgrade;
+offline CURRENT validation reports declarations, not verified upstream origin. PACKAGE
 verification still checks the original exact modernization release.
 
 [`.specify/tooling-source.json`](../../.specify/tooling-source.json) records the

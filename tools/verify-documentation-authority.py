@@ -2,7 +2,8 @@
 """Read-only documentation checks; no approval or lifecycle is performed.
 
 CURRENT (default, --mode current): retain historical/approval inputs; four
-mutable tooling files use schema/managed-source checks instead of old current hashes,
+mutable tooling files and manifest-verified managed PowerShell scripts use
+schema/managed-source checks instead of old current hashes,
 baseline inventory and accounting checks, but permit later non-protected docs.
 New/changed docs are reported as UNCLASSIFIED, never as approved authority.
 The inventory describes the baseline, not a permanent file-immutability policy.
@@ -308,7 +309,7 @@ def check_current_head(root: Path, manifest: dict, errors: list[dict[str, str]],
     return baseline
 
 
-def check_protected_files(root: Path, manifest: dict, commit: str | None, errors: list[dict[str, str]], checks: dict, historical_view: dict | None = None, *, mutable: bool = True) -> None:
+def check_protected_files(root: Path, manifest: dict, commit: str | None, errors: list[dict[str, str]], checks: dict, historical_view: dict | None = None, *, mutable_paths: frozenset[str] = frozenset()) -> None:
     entries = manifest.get("protectedArtifacts")
     if not isinstance(entries, list):
         add_error(errors, "protected_artifacts_invalid", BASELINE_FILE)
@@ -355,9 +356,9 @@ def check_protected_files(root: Path, manifest: dict, commit: str | None, errors
         expected_size = current_identity.get("bytes")
         expected_hash = current_identity.get("sha256")
         expected_blob = entry.get("gitBlob")
-        if (not mutable or path not in METADATA_PATHS) and (isinstance(expected_size, bool) or not isinstance(expected_size, int) or expected_size != len(compared_bytes)):
+        if (path not in mutable_paths) and (isinstance(expected_size, bool) or not isinstance(expected_size, int) or expected_size != len(compared_bytes)):
             add_error(errors, "protected_current_size_mismatch", path)
-        if (not mutable or path not in METADATA_PATHS) and (not isinstance(expected_hash, str) or digest(compared_bytes) != expected_hash):
+        if (path not in mutable_paths) and (not isinstance(expected_hash, str) or digest(compared_bytes) != expected_hash):
             add_error(errors, "protected_current_hash_mismatch", path)
         if commit is None:
             continue
@@ -369,7 +370,7 @@ def check_protected_files(root: Path, manifest: dict, commit: str | None, errors
         history_bytes = history[actual_blob]
         if len(history_bytes) != entry.get("bytes") or digest(history_bytes) != entry.get("sha256"):
             add_error(errors, "protected_history_digest_mismatch", path)
-        if (not mutable or path not in METADATA_PATHS) and compared_bytes != history_bytes:
+        if (path not in mutable_paths) and compared_bytes != history_bytes:
             add_error(errors, "protected_current_differs_from_history", path)
     checks["protected_artifacts"] = not any(error["code"].startswith("protected_") for error in errors)
     checks["protected_artifact_count"] = count
@@ -917,14 +918,16 @@ def verify_root(root: Path, *, mode: str = "current", inventory_sha256: str | No
             add_error(errors, "baseline_schema_invalid", BASELINE_FILE)
         commit = check_current_head(root, manifest, errors, checks)
         historical_view = preserved_inputs(root) if mode == "current" else {}
+        mutable_paths = frozenset()
         if mode == "current" and any((root / path).exists() for path in METADATA_PATHS):
             try:
                 checks["mutable_tooling"] = validate_configuration(root)
+                mutable_paths = METADATA_PATHS | frozenset(checks["mutable_tooling"]["managedScriptPaths"])
             except (OSError, ValueError, KeyError, TypeError):
                 add_error(errors, "mutable_tooling_configuration_invalid")
-        checks["mutable_tooling_paths"] = sorted(METADATA_PATHS) if mode == "current" else []
+        checks["mutable_tooling_paths"] = sorted(mutable_paths)
         # PACKAGE still demands the original exact current bytes.
-        check_protected_files(root, manifest, commit, errors, checks, historical_view, mutable=mode == "current")
+        check_protected_files(root, manifest, commit, errors, checks, historical_view, mutable_paths=mutable_paths)
         check_f011(root, manifest, commit, errors, checks)
         if mode == "package":
             check_candidate_diff(root, manifest, commit, errors, checks)

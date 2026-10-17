@@ -159,7 +159,7 @@ class ToolingTests(unittest.TestCase):
     def test_official_upstream_resolution_rejects_substituted_commit(self):
         source = json.loads((self.root / tooling.SOURCE_PATH).read_bytes())
         for commit in (source["commit"], "0" * 40):
-            with self.subTest(commit=commit), patch("subprocess.run", return_value=subprocess.CompletedProcess([], 0, f"{commit}\trefs/tags/v1.2.0^{{}}\n")):
+            with self.subTest(commit=commit), patch("subprocess.run", return_value=subprocess.CompletedProcess([], 0, f"{commit}\trefs/tags/{source['tag']}^{{}}\n")):
                 if commit == source["commit"]: tooling.verify_upstream(source)
                 else:
                     with self.assertRaises(ValueError): tooling.verify_upstream(source)

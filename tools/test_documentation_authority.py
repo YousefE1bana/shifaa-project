@@ -63,6 +63,8 @@ class AuthorityVerifierTests(unittest.TestCase):
             sys.path.insert(0, str(TOOL_PATH.parent))
             from test_speckit_tooling import tooling_fixture
             tooling_fixture(root)
+            contents[".specify/templates/plan-template.md"] = "protected template\n"
+            contents[".specify/workflows/speckit/workflow.yml"] = "protected workflow\n"
             for relative in authority.METADATA_PATHS:
                 contents[relative] = (root / relative).read_text(encoding="utf-8")
         for relative, text in contents.items():
@@ -89,7 +91,7 @@ class AuthorityVerifierTests(unittest.TestCase):
                 {"path": path, "bytes": len(baseline_contents[baseline_blobs[path]]),
                  "sha256": hashlib.sha256(baseline_contents[baseline_blobs[path]]).hexdigest(),
                  "gitBlob": baseline_blobs[path]}
-                for path in ("docs/protected.md", "specs/012-example/contract-amendment/approved.md", *(authority.METADATA_PATHS if tooling else []))
+                for path in ("docs/protected.md", "specs/012-example/contract-amendment/approved.md", *((*authority.METADATA_PATHS, ".specify/scripts/powershell/common.ps1", ".specify/templates/plan-template.md", ".specify/workflows/speckit/workflow.yml") if tooling else []))
             ],
             "f011": {"path": f011_path, "files": len([path for path in f011_files if path]), "gitTree": f011_tree},
             "candidateAllowlist": [
@@ -447,7 +449,8 @@ class MutableToolingTests(unittest.TestCase):
         temporary, root = self.make_repository(tooling=True)
         try:
             baseline = (root / authority.BASELINE_FILE).read_bytes()
-            for version in ("1.2.1", "1.3.0"):
+            major, minor, patch_version = map(int, json.loads((root / ".specify/integration.json").read_bytes())["version"].split("."))
+            for version in (f"{major}.{minor}.{patch_version + 1}", f"{major}.{minor + 1}.0"):
                 set_version(root, version)
                 report = self.verify(root, mode="current")
                 self.assertTrue(report["ok"], report["errors"])
@@ -456,6 +459,48 @@ class MutableToolingTests(unittest.TestCase):
                 self.assertIn("protected_current_hash_mismatch", {e["code"] for e in self.verify(root)["errors"]})
             write_text(root, "docs/protected.md", "unapproved historical mutation")
             self.assertIn("protected_current_hash_mismatch", {e["code"] for e in self.verify(root, mode="current")["errors"]})
+        finally:
+            temporary.cleanup()
+
+    def test_managed_script_upgrade_preserves_history_and_package_strictness(self):
+        temporary, root = self.make_repository(tooling=True)
+        try:
+            script = ".specify/scripts/powershell/common.ps1"
+            ledger = (root / authority.BASELINE_FILE).read_bytes()
+            original = (root / script).read_bytes()
+            write_text(root, script, "reviewed newer operational source\n")
+            # A body edit without the corresponding managed manifest fails closed.
+            report = self.verify(root, mode="current")
+            self.assertIn("mutable_tooling_configuration_invalid", {e["code"] for e in report["errors"]})
+            self.assertIn("protected_current_hash_mismatch", {e["code"] for e in report["errors"]})
+            manifest = root / ".specify/integrations/speckit.manifest.json"
+            data = json.loads(manifest.read_bytes())
+            data["files"][script] = hashlib.sha256((root / script).read_bytes()).hexdigest()
+            manifest.write_bytes(json_bytes(data))
+            current = self.verify(root, mode="current")
+            self.assertTrue(current["ok"], current["errors"])
+            self.assertIn(script, current["checks"]["mutable_tooling_paths"])
+            self.assertEqual((root / authority.BASELINE_FILE).read_bytes(), ledger)
+            historical = json.loads(ledger)
+            entry = next(x for x in historical["protectedArtifacts"] if x["path"] == script)
+            self.assertEqual(run_git(root, "cat-file", "blob", entry["gitBlob"]), original)
+            self.assertIn("protected_current_hash_mismatch", {e["code"] for e in self.verify(root, mode="package")["errors"]})
+            # Removing the body from the manifest cannot turn it into mutable history.
+            del data["files"][script]
+            data["files"][".specify/templates/plan-template.md"] = hashlib.sha256(b"template\n").hexdigest()
+            write_text(root, ".specify/templates/plan-template.md", "template\n")
+            manifest.write_bytes(json_bytes(data))
+            self.assertIn("protected_current_hash_mismatch", {e["code"] for e in self.verify(root, mode="current")["errors"]})
+            # Even matching managed hashes cannot exempt templates or workflows.
+            for path in (".specify/templates/plan-template.md", ".specify/workflows/speckit/workflow.yml"):
+                original_body = (root / path).read_bytes()
+                write_text(root, path, "unapproved\n")
+                data["files"][path] = hashlib.sha256((root / path).read_bytes()).hexdigest()
+                manifest.write_bytes(json_bytes(data))
+                report = self.verify(root, mode="current")
+                self.assertTrue(any(e["code"] == "protected_current_hash_mismatch" and e.get("path") == path for e in report["errors"]))
+                (root / path).write_bytes(original_body)
+                del data["files"][path]
         finally:
             temporary.cleanup()
 

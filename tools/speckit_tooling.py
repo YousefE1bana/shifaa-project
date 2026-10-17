@@ -18,6 +18,13 @@ METADATA_PATHS = frozenset((
     ".specify/init-options.json", ".specify/integration.json",
     ".specify/integrations/codex.manifest.json", ".specify/integrations/speckit.manifest.json",
 ))
+# Only upstream-managed operational scripts may evolve with the tool release.
+# Templates, overrides, workflow policy and feature evidence are never exempted.
+MANAGED_SCRIPT_PATHS = frozenset(
+    f".specify/scripts/powershell/{name}.ps1" for name in (
+        "check-prerequisites", "common", "create-new-feature", "resolve-template", "setup-plan", "setup-tasks",
+    )
+)
 SOURCE_PATH = ".specify/tooling-source.json"
 SEMVER = re.compile(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\Z")
 UPSTREAM = "https://github.com/github/spec-kit.git"
@@ -96,6 +103,7 @@ def validate_configuration(root: Path, *, require_runtime: bool = False) -> dict
         raise ValueError("invalid official release provenance declaration")
     missing = []
     managed_count = 0
+    managed_scripts = []
     for integration in ("codex", "speckit"):
         manifest = read_json(root, f".specify/integrations/{integration}.manifest.json")
         if set(manifest) != {"version", "integration", "installed_at", "files"}:
@@ -115,11 +123,13 @@ def validate_configuration(root: Path, *, require_runtime: bool = False) -> dict
             if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
                 raise ValueError(f"managed source drift: {path}")
             managed_count += 1
+            if integration == "speckit" and path in MANAGED_SCRIPT_PATHS:
+                managed_scripts.append(path)
     registry = read_json(root, ".specify/workflows/workflow-registry.json")
     if registry.get("workflows", {}).get("speckit", {}).get("version") != "2.3.0":
         raise ValueError("SHIFAA workflow registration changed")
     return {"version": version, "upstreamCommit": source["commit"], "managedFilesVerified": managed_count,
-            "missingLocalSkills": missing, "provenance": "DECLARATION_ONLY", "installedCli": "NOT_CHECKED",
+            "managedScriptPaths": sorted(managed_scripts), "missingLocalSkills": missing, "provenance": "DECLARATION_ONLY", "installedCli": "NOT_CHECKED",
             "clinicalAuthority": False, "lifecycleAuthorized": False}
 
 
