@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import childProcess from 'node:child_process';
 import timers from 'node:timers/promises';
+import path from 'node:path';
 import { syncBuiltinESMExports, createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { fixture } from './test-resource-context.test.mjs';
@@ -165,6 +166,16 @@ test('launcher refuses a different source worktree before observing resources', 
   f.options.worktree += '-substituted';
   await assert.rejects(createDisposableTestRun(f.options), /another worktree/);
   assert.deepEqual(f.launcherEffects.lifecycle, []);
+  assert.equal(f.effects.clients, 0);
+});
+
+test('equivalent path spelling is canonicalized before source walks and capability binding', async (t) => {
+  const f = launcherFixture(t);
+  f.options.worktree += path.sep + '.' + path.sep;
+  f.options.outputParent += path.sep + '.' + path.sep;
+  const run = await createDisposableTestRun(f.options);
+  assert.ok(run.capability);
+  assert.equal(f.launcherEffects.sql.length, 1);
   assert.equal(f.effects.clients, 0);
 });
 

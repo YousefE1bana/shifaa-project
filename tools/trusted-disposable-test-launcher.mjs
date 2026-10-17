@@ -504,7 +504,14 @@ ALTER ROLE shifaa_owner NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION BYPASS
 
 export async function createDisposableTestRun(options) {
   checkAuthorization(options);
-  const frozen = { ...structuredClone({ ...options, signal: undefined }), signal: options.signal };
+  const frozen = {
+    ...structuredClone({ ...options, signal: undefined }),
+    // Authorization already bound the requested path to this implementation.
+    // Use its exact canonical spelling for source walks and capability binding.
+    worktree: path.resolve(import.meta.dirname, '..'),
+    outputParent: path.resolve(options.outputParent),
+    signal: options.signal,
+  };
   const sources = bootstrapSources(frozen.worktree, frozen.revision);
   assertEngine(frozen);
   const [image] = JSON.parse(
