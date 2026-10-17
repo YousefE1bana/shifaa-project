@@ -47,9 +47,11 @@ loses superuser, database creation, role creation and replication privileges.
 It retains explicit BYPASSRLS solely for existing fixture provisioning in this
 exclusive disposable database. Online API/worker traffic never uses that role.
 This test-only privilege must be included in the later real-run authorization;
-it changes no production role, grant or policy. Bootstrap commits run nonce and
-source digest settings. The original guard's read-only database handshake must
-then succeed before any harness fixture mutation.
+it changes no production role, grant or policy. A read-only database/role
+assertion precedes the captured migration sources, which include seeded rows.
+Run nonce and source settings are bound before those sources execute. Failed
+assertions stop psql before source execution. The original guard's read-only
+database handshake must then succeed before any harness fixture mutation.
 
 ## Capability and output boundaries
 

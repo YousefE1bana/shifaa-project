@@ -176,6 +176,18 @@ test('equivalent path spelling is canonicalized before source walks and capabili
   const run = await createDisposableTestRun(f.options);
   assert.ok(run.capability);
   assert.equal(f.launcherEffects.sql.length, 1);
+  const bootstrap = f.launcherEffects.sql[0];
+  assert.ok(bootstrap.startsWith('DO $shifaa_bootstrap_identity$'));
+  assert.ok(
+    bootstrap.includes(
+      `IF current_database() <> 'test_${f.nonce}' OR current_user <> 'shifaa_owner' THEN`,
+    ),
+  );
+  assert.match(bootstrap, /RAISE EXCEPTION 'test bootstrap database or role identity mismatch'/);
+  const rolesStart = bootstrap.indexOf('CREATE ROLE shifaa_api');
+  assert.ok(bootstrap.indexOf('ALTER DATABASE') < rolesStart);
+  assert.ok(bootstrap.indexOf("SELECT set_config('shifaa.test_run_nonce'") < rolesStart);
+  assert.ok(bootstrap.indexOf("set_config('shifaa.test_source_digest'") < rolesStart);
   assert.equal(f.effects.clients, 0);
 });
 
@@ -245,6 +257,11 @@ test('mocked fresh launcher bootstraps only its admitted target and passes real 
     /postgresql:|POSTGRES_PASSWORD|synthetic_owner|mock-only|CREATE ROLE|field_values/,
   );
   assert.equal(f.launcherEffects.reports[0].report.realIntegrationAccepted, false);
+  const completedBootstrap = f.launcherEffects.reports.find(
+    ({ report }) => report.status === 'BOOTSTRAPPED_NOT_ACCEPTED',
+  );
+  assert.equal(completedBootstrap.report.bootstrapIdentityGuardPassed, true);
+  assert.equal(completedBootstrap.report.database, `test_${f.nonce}`);
   await run.teardown(`REMOVE_RUN_OWNED_RESOURCES:${run.nonce}`);
   assert.deepEqual(f.launcherEffects.lifecycle.slice(-3), [
     'container.rm',

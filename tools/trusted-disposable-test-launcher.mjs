@@ -221,9 +221,11 @@ function report(run, status) {
     imageReference: run.options.imageReference,
     image: run.options.docker.image,
     container: run.container ?? null,
+    database: `test_${run.nonce}`,
     volume: run.volume ?? null,
     network: run.network ?? null,
     bootstrap: run.sources.identities,
+    bootstrapIdentityGuardPassed: run.bootstrapped === true,
     realIntegrationAccepted: false,
   };
 }
@@ -466,11 +468,21 @@ async function admitAndBootstrap(run) {
     }
   }
   checkpoint(run);
-  const sql = `CREATE ROLE shifaa_api LOGIN PASSWORD '${run.passwords.api}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
-CREATE ROLE shifaa_worker LOGIN PASSWORD '${run.passwords.worker}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
-${run.sources.sql}
+  // The historical migrations include seed rows. Assert the live database and
+  // bootstrap role, then bind nonce/source BEFORE any of those sources execute.
+  const sql = `DO $shifaa_bootstrap_identity$
+BEGIN
+  IF current_database() <> '${manifest.database}' OR current_user <> 'shifaa_owner' THEN
+    RAISE EXCEPTION 'test bootstrap database or role identity mismatch';
+  END IF;
+END
+$shifaa_bootstrap_identity$;
 ALTER DATABASE ${manifest.database} SET shifaa.test_run_nonce='${run.nonce}';
 ALTER DATABASE ${manifest.database} SET shifaa.test_source_digest='${run.options.sourceDigest}';
+SELECT set_config('shifaa.test_run_nonce','${run.nonce}',false),set_config('shifaa.test_source_digest','${run.options.sourceDigest}',false);
+CREATE ROLE shifaa_api LOGIN PASSWORD '${run.passwords.api}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
+CREATE ROLE shifaa_worker LOGIN PASSWORD '${run.passwords.worker}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
+${run.sources.sql}
 -- Bootstrap privilege ends here. The fixture owner still needs RLS bypass for
 -- existing fixed fixtures; it is NEVER the online API/worker connection role.
 ALTER ROLE shifaa_owner NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION BYPASSRLS;
@@ -494,6 +506,7 @@ ALTER ROLE shifaa_owner NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION BYPASS
     sql,
   );
   checkpoint(run);
+  run.bootstrapped = true;
   run.output = manifest.output;
   run.outputIdentity = verifyPrivateTestOutput(run.output);
   writePrivateReport(
