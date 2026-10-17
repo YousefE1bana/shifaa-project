@@ -14,7 +14,7 @@ test('real-stack SOS subject lifecycle, matching, caregiver permissions, replay,
     const recordOnlyDelegateId = stack.ids.people.recordOnlyDelegate;
     const unrelatedPersonId = stack.ids.people.unrelated;
 
-    const patientHeaders = (actorId = patientPersonId, purpose = 'emergency_care') => ({
+    const patientHeaders = (actorId: string = patientPersonId, purpose = 'emergency_care') => ({
       authorization: person(actorId),
       'x-shifaa-patient-context': patientId,
       'x-purpose': purpose,
@@ -32,11 +32,7 @@ test('real-stack SOS subject lifecycle, matching, caregiver permissions, replay,
     };
 
     const activateKey = key('patient-sos-001');
-    await stack.owner`
-      update identity.callback_contact_verifications
-      set revoked_at=statement_timestamp()
-      where person_id=${patientPersonId}::uuid
-    `;
+    await stack.setCallbackRevoked(true);
     const revokedCallback = await stack.app.inject({
       method: 'POST',
       url: '/v1/sos/incidents',
@@ -48,11 +44,7 @@ test('real-stack SOS subject lifecycle, matching, caregiver permissions, replay,
       payload: validActivationPayload,
     });
     assert.equal(revokedCallback.statusCode, 403);
-    await stack.owner`
-      update identity.callback_contact_verifications
-      set revoked_at=null
-      where person_id=${patientPersonId}::uuid
-    `;
+    await stack.setCallbackRevoked(false);
     const created = await stack.app.inject({
       method: 'POST',
       url: '/v1/sos/incidents',

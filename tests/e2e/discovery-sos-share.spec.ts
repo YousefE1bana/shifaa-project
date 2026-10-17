@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
 import test from 'node:test';
+import { assertRunOwned } from '../../tools/test-resource-context.mjs';
 
 import { createDiscoverySosStack, key, person } from './discovery-sos-stack-harness.ts';
 
@@ -192,6 +193,7 @@ test('real-stack one-use emergency share scope, token secrecy, 410 expiry/replay
     const shareIdToRevoke = shareToRevoke.json().share.share_id;
 
     // Clear prior create outbox event to allow recording the revoke outbox event
+    assertRunOwned(stack.context, 'discovery-sos', 'share', shareIdToRevoke);
     await stack.owner`delete from platform.outbox_events where aggregate_id = ${shareIdToRevoke}::uuid`;
 
     const wrongContextRevoke = await stack.app.inject({

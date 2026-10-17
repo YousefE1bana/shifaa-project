@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "identity": "SHIFAA-TOOLING-POLICY-HISTORY/1.0.0",
+  "authority": "Product Owner direct tooling-policy implementation/publication instruction, 2026-10-17; normal PR integration required",
+  "historicalBaseline": "181f89d01d7a828b9bdb13b450837f20aea24285",
+  "clinicalAuthority": false,
+  "lifecycleAuthorization": false,
+  "inputs": [
+    {
+      "path": ".specify/memory/constitution.md",
+      "historical": {
+        "bytes": 17725,
+        "sha256": "cc0204a2fcef7ee6e337fada07c160def4a7b51915ced944951cf0c8a1828a44",
+        "gitBlob": "a3d65085e36c0002b5853c9e300e75b5fa748fa2"
+      },
+      "current": {
+        "bytes": 20642,
+        "sha256": "4107a37ce43ae5c6efd6c8198771112b598eb167d3f0788c879d2b3fc747793c"
+      }
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "historical": {
+        "bytes": 96882,
+        "sha256": "831a3aa813dc50d45f4d08a61483b88767af92e5ec2cf51038d164b1a9fa167c",
+        "gitBlob": "eb655a3867cef01fe2413fe5c570021d1bc6cf4f"
+      },
+      "current": {
+        "bytes": 103596,
+        "sha256": "47552ae429fabf0606af98b07080a3db342e6f490fe20d27553a14ddcc9cc63d"
+      }
+    },
+    {
+      "path": "tools/feature-011-constitution-successor.mjs",
+      "historical": {
+        "bytes": 5567,
+        "sha256": "c69c57a054c210e3f6f6ebf119306ab607d1554698f29d47333496bf08a0b864",
+        "gitBlob": "206702ef85e02493f76cc5eb44f4c4887096ce7e"
+      },
+      "current": {
+        "bytes": 5862,
+        "sha256": "079fa1e7bbb994f56814c3a7daf2c1d68776f0e78c621fd3193adad97eb2037f"
+      }
+    },
+    {
+      "path": "tools/feature-011-two-input-successor.mjs",
+      "historical": {
+        "bytes": 5774,
+        "sha256": "c056ab70b34a477de83ca39aaf84cd7b4b7493e2c3d8de3da606c7814867e739",
+        "gitBlob": "158999c2ce97918e352edd8ed6877b70609f289e"
+      },
+      "current": {
+        "bytes": 5843,
+        "sha256": "84b97bcb30d82f124e7308d34a4433b09b450a23fddda0ed295a69d6e7b2123c"
+      }
+    }
+  ]
+}

@@ -10,7 +10,7 @@ Keep existing worktrees, private originals and archives in place. An isolated ch
 
 ## Setup, development and contracts
 
-[Package scripts](../package.json) and tracked version files define runtime commands; [SpecKit integration](../.specify/integration.json) pins 1.1.3, [workflow registry](../.specify/workflows/workflow-registry.json) pins custom 2.3.0. The [maintained onboarding draft](TEAM-ONBOARDING-DRAFT.md) remains useful for procedures but its machine observations and pending-PR narrative are dated. Do not infer current installed Docker, Android, Supabase or agent readiness from that snapshot. Recheck only tools required for the authorized task.
+[Package scripts](../package.json) and tracked version files define runtime commands; [SpecKit integration](../.specify/integration.json) declares the current operational version, [workflow registry](../.specify/workflows/workflow-registry.json) pins custom 2.3.0. The [maintained onboarding draft](TEAM-ONBOARDING-DRAFT.md) remains useful for procedures but its machine observations and pending-PR narrative are dated. Do not infer current installed Docker, Android, Supabase or agent readiness from that snapshot. Recheck only tools required for the authorized task.
 
 The [owned skills guide](agent-skills/README.md) distinguishes repository sources from ignored local runtimes. An authorized sync copies only four policy skills, not official SpecKit or third-party packages. Read each applicable skill; no automatic supplementary-document loading is claimed.
 
@@ -23,3 +23,5 @@ For implemented API claims inspect [route composition](../services/api/src/app.t
 Read-only preparation commands for this candidate are listed in [validation results](governance/repository-modernization-v1/validation-results.json). They establish documentary/configuration integrity only. Actual live Arabic/English, native NVDA/TalkBack/device, runtime RLS/race/rollback, and clinical acceptance remain distinct evidence.
 
 Do not treat development runbooks or Docker startup as production enablement. Preserve clinical/legal/vendor/privacy/facility/security release gates and their designated authorities. No deployment or real-PHI processing is authorized by this guide.
+
+For current tooling installation and upgrades, use the [tooling maintenance policy](governance/SHIFAA-Tooling-Maintenance-Policy.md). Older onboarding version observations are historical; do not copy their version literal.

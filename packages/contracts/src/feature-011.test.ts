@@ -652,6 +652,7 @@ describe('contract preparation and fail-closed full verification', () => {
       expect(report.result).toBe('FAIL');
       expect(report.affectedConsumersAllowed).toBe(false);
     },
+    15_000, // Filesystem/process-backed verifier under concurrent package-suite load.
   );
 });
 

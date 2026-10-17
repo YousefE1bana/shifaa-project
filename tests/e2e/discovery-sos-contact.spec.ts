@@ -4,22 +4,16 @@ import test from 'node:test';
 import { LocalSyntheticMessagingAdapter } from '../../services/worker/src/adapters/local-synthetic-messaging.ts';
 import {
   assertSafeSosEventPayload,
-  PostgresDiscoverySosProcessor,
   projectSosContactDelivery,
   type SosContactCandidate,
   type SosContactTemplateRelease,
 } from '../../services/worker/src/discovery-sos.ts';
-import {
-  createDiscoverySosStack,
-  key,
-  person,
-  workerDatabaseUrl,
-} from './discovery-sos-stack-harness.ts';
+import { createDiscoverySosStack, key, person } from './discovery-sos-stack-harness.ts';
 
 test('real-stack confirmed emergency contact delivery, location precision consent, dedup, and prohibited fields (AC-21..24)', async () => {
   const stack = await createDiscoverySosStack();
   const adapter = new LocalSyntheticMessagingAdapter();
-  const processor = new PostgresDiscoverySosProcessor(workerDatabaseUrl, adapter);
+  const processor = await stack.createWorker(adapter);
 
   try {
     const patientId = stack.ids.patients.subject;

@@ -5,6 +5,8 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { readToolingPolicyInput } from './tooling-history.mjs';
+
 const feature = 'specs/012-prescription-safety-governed-overrides';
 export const twoInputBindingPath = `${feature}/decisions/f011-two-input-successor-v1.json`;
 const bindingSha256 = '7fe1b9ccd5e6f35ec164eae0b2f47f9b661c545799a8f6fa5078ce96769317aa';
@@ -57,7 +59,7 @@ function historicalBytes(root, descriptor) {
 }
 
 function verifiedBytes(root, descriptor) {
-  const bytes = readFileSync(join(root, descriptor.path));
+  const bytes = readToolingPolicyInput(root, descriptor.path);
   assert.equal(bytes.length, descriptor.bytes, `Successor byte length drift: ${descriptor.path}`);
   assert.equal(sha(bytes), descriptor.sha256, `Successor digest drift: ${descriptor.path}`);
   return bytes;
