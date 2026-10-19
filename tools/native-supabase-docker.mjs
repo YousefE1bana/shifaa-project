@@ -414,14 +414,23 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
           // Docker CLI sends repo + separate tag; the SDK may put the tag
           // inside fromImage. Both must remain pinned, with no registry widening.
           const image =
-            /^(?:public\.ecr\.aws\/supabase|supabase)\/[a-z0-9_-]+(?::([A-Za-z0-9_][A-Za-z0-9_.-]{0,127}))?$/.exec(
+            /^((?:public\.ecr\.aws\/supabase|ghcr\.io\/supabase|supabase)\/[a-z0-9_-]+|library\/kong|axllent\/mailpit|postgrest\/postgrest)(?::([A-Za-z0-9_][A-Za-z0-9_.-]{0,127}))?$/.exec(
               url.searchParams.get('fromImage') ?? '',
             );
           assert.ok(image, 'Foreign image registry/reference');
-          const tag = url.searchParams.get('tag') || image[1];
+          const tag = url.searchParams.get('tag') || image[2];
           assert.match(tag ?? '', /^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$/);
-          assert.ok(!image[1] || !url.searchParams.get('tag') || image[1] === tag);
+          assert.ok(!image[2] || !url.searchParams.get('tag') || image[2] === tag);
           assert.ok(tag !== 'latest' && !url.searchParams.has('fromSrc'));
+          // v2.113.0's official image resolver tries ECR, GHCR, then the
+          // original Docker Hub name. Third-party fallback pairs are pinned
+          // exactly to that release's pkg/config/templates/Dockerfile.
+          const thirdParty = {
+            'library/kong': '2.8.1',
+            'axllent/mailpit': 'v1.30.2',
+            'postgrest/postgrest': 'v14.16',
+          };
+          if (Object.hasOwn(thirdParty, image[1])) assert.equal(tag, thirdParty[image[1]]);
         } else throw new Error('Unscoped native Docker mutation denied');
       }
       const requestId = randomUUID();

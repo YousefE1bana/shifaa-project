@@ -598,10 +598,17 @@ test('SDK embedded image tags and CLI separate tags retain registry and version 
   for (const query of [
     'fromImage=public.ecr.aws/supabase/postgres:17.6.1',
     'fromImage=supabase/postgres&tag=17.6.1',
+    'fromImage=ghcr.io/supabase/postgres:17.6.1',
+    'fromImage=library/kong:2.8.1',
+    'fromImage=axllent/mailpit&tag=v1.30.2',
+    'fromImage=postgrest/postgrest:v14.16',
   ])
     assert.equal((await f.send('POST', '/images/create?' + query)).status, 200);
   for (const query of [
     'fromImage=foreign/postgres:17.6.1',
+    'fromImage=ghcr.io/foreign/postgres:17.6.1',
+    'fromImage=library/kong:latest',
+    'fromImage=library/kong:other',
     'fromImage=supabase/postgres:17.6.1&tag=other',
     'fromImage=supabase/postgres',
     'fromImage=supabase/postgres:latest',
