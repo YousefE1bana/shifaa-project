@@ -145,7 +145,6 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
       'network',
       'create',
       ...labels,
-      '--internal',
       '--opt',
       'com.docker.network.bridge.host_binding_ipv4=127.0.0.1',
       networkName,
@@ -305,7 +304,7 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
         env: {
           ...Object.fromEntries(
             Object.entries(process.env).filter(
-              ([key]) => !/^(DOCKER|COMPOSE|PG|DATABASE|SUPABASE_CLI_BINARY_OVERRIDE)/i.test(key),
+              ([key]) => !/^(DOCKER|COMPOSE|PG|DATABASE|SUPABASE_)/i.test(key),
             ),
           ),
           DOCKER_CONTEXT: context,

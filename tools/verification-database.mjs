@@ -15,7 +15,7 @@ const inspect = (command, args) => JSON.parse(command(args));
 const cleanEnv = () =>
   Object.fromEntries(
     Object.entries(process.env).filter(
-      ([key]) => !/^(DOCKER|COMPOSE|PG|DATABASE|SUPABASE_CLI_BINARY_OVERRIDE)/i.test(key),
+      ([key]) => !/^(DOCKER|COMPOSE|PG|DATABASE|SUPABASE_)/i.test(key),
     ),
   );
 

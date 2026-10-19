@@ -109,6 +109,7 @@ function fixture(t, attack = {}) {
         Name: args.at(-1),
         Id: id(),
         Labels: labelArgs(args),
+        Internal: args.includes('--internal'),
         Options: { 'com.docker.network.bridge.host_binding_ipv4': '127.0.0.1' },
         Containers: {},
       };
@@ -140,6 +141,9 @@ function fixture(t, attack = {}) {
       const c = containers.get(args[1]);
       c.State.Running = true;
       Object.values(c.NetworkSettings.Networks)[0].NetworkID = c.HostConfig.NetworkMode;
+      // Docker internal bridges do not program external port connectivity.
+      // Model the real runtime observation, not just the requested bindings.
+      if (networks.get(c.HostConfig.NetworkMode).Internal) c.NetworkSettings.Ports = {};
       return '';
     }
     if (args[0] === 'exec' || args[0] === 'update') return '';
@@ -185,6 +189,12 @@ function fixture(t, attack = {}) {
     assert.ok(args.includes('--network-id'));
     assert.equal(options.env.DOCKER_HOST, 'unix:///mock-engine');
     assert.equal(options.env.SUPABASE_CLI_BINARY_OVERRIDE, undefined);
+    for (const key of ['SUPABASE_DB_PORT', 'SUPABASE_API_PORT', 'SUPABASE_PROJECT_ID'])
+      assert.equal(
+        options.env[key],
+        undefined,
+        'Ambient CLI targets must not override private config',
+      );
     const workdir = value(args, '--workdir');
     assert.ok(workdir.startsWith(temporary) && workdir !== root);
     const config = fs.readFileSync(path.join(workdir, 'supabase/config.toml'), 'utf8');
@@ -280,6 +290,21 @@ test('actual orchestration creates one reusable pair, then deletes only those ex
       .filter((args) => ['rm', 'down', 'prune'].includes(args[0]))
       .every((args) => args[0] === 'rm' && args[2] !== 'shared-container'),
   );
+});
+
+test('ambient Supabase shared-target overrides cannot escape the private configuration', async (t) => {
+  const keys = ['SUPABASE_DB_PORT', 'SUPABASE_API_PORT', 'SUPABASE_PROJECT_ID'];
+  const before = keys.map((key) => process.env[key]);
+  t.after(() =>
+    keys.forEach((key, index) => {
+      if (before[index] === undefined) delete process.env[key];
+      else process.env[key] = before[index];
+    }),
+  );
+  for (const key of keys) process.env[key] = key.endsWith('ID') ? 'shifaa-local-supabase' : '5432';
+  const f = fixture(t);
+  const run = await createVerificationEnvironment(f.root, f.boundaries);
+  await run.close();
 });
 for (const reason of ['image', 'memory', 'output'])
   test(`missing ${reason} prevents resource creation`, async (t) => {

@@ -108,3 +108,15 @@ config. The private test copy now materializes that implicit service before port
 allocation. The real orchestration mock includes Mailpit and rejects its default
 unallocated port and any public interface. Final safety/orchestration results:
 449 passed, 0 failed, 0 skipped. The interface/port guard remains unchanged.
+
+Ambient `SUPABASE_*` CLI overrides are stripped at startup and subsequent native
+operations, alongside Docker/Compose/PostgreSQL target overrides. A real
+orchestration mock injects shared project/port values and proves they never reach
+the CLI. After this source-level safety correction: 450 mocked tests pass with
+0 failures and 0 skips.
+
+The hosted runtime then showed that an internal Docker bridge did not expose the
+requested PostgreSQL host port. The private bridge now uses ordinary bridge
+connectivity with explicit loopback-only publishing. Its nonce, IDs, attachment,
+volume and port checks are unchanged. The orchestration mock models internal
+bridge port suppression so this configuration mistake cannot silently recur.
