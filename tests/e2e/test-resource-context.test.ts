@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, lstatSync, existsSync } from 'node:fs';
 import test, { mock } from 'node:test';
 import net from 'node:net';
 import tls from 'node:tls';
@@ -80,12 +80,18 @@ async function registerTests() {
   // node_modules links into this isolated worktree. External packages are read
   // from the existing checkout's dependency tree, never downloaded.
   const repository = fileURLToPath(new URL('../../', import.meta.url));
-  const gitLocator = readFileSync(path.join(repository, '.git'), 'utf8').trim();
-  const gitDirectory = path.resolve(repository, gitLocator.replace(/^gitdir: /, ''));
-  const commonGit = path.resolve(
-    gitDirectory,
-    readFileSync(path.join(gitDirectory, 'commondir'), 'utf8').trim(),
-  );
+  const locator = path.join(repository, '.git');
+  const gitDirectory = lstatSync(locator).isDirectory()
+    ? locator
+    : path.resolve(
+        repository,
+        readFileSync(locator, 'utf8')
+          .trim()
+          .replace(/^gitdir: /, ''),
+      );
+  const commonGit = existsSync(path.join(gitDirectory, 'commondir'))
+    ? path.resolve(gitDirectory, readFileSync(path.join(gitDirectory, 'commondir'), 'utf8').trim())
+    : gitDirectory;
   const installedDependencies = createRequire(
     path.join(path.dirname(commonGit), 'services/api/package.json'),
   );

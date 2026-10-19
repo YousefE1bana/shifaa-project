@@ -260,8 +260,8 @@
     },
     {
       "path": "tools/verification-ci.mjs",
-      "bytes": 1488,
-      "sha256": "ead128e48c01481f03daa41035f6403f365920ab38d26d701dd2fa35e303b198"
+      "bytes": 2122,
+      "sha256": "0825311fbbf0e8e62ac9574604df40e59d3c4394d296bb40c49d534562be51e4"
     },
     {
       "path": "tools/verification-database.mjs",

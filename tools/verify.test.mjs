@@ -7,7 +7,7 @@ import { syncBuiltinESMExports } from 'node:module';
 import { verify } from './verify.mjs';
 import { verificationPlan, requiredIds, assertComplete } from './verification-plan.mjs';
 import { localVerificationHost, verificationRoutes } from './verification-host.mjs';
-import { verifyCiDatabase } from './verification-ci.mjs';
+import { verifyCiDatabase, ciFailureLocations } from './verification-ci.mjs';
 import { verificationPackageProjection } from './tooling-history.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
@@ -297,3 +297,16 @@ for (const code of ['DOCKER_ENGINE_UNAVAILABLE', 'POSTGIS_IMAGE_MISSING'])
     assert.ok(result.results.every((entry) => entry.status === 'BLOCKED'));
     assert.doesNotMatch(JSON.stringify(result), /private raw error/);
   });
+
+test('CI startup diagnostics reveal source locations without private exception values', () => {
+  const error = new Error('postgres://SECRET value');
+  error.stack = 'Error: SECRET\n at x (file:///private/tools/verification-database.mjs:42:3)';
+  error.cause = new Error('SECRET subprocess argv');
+  error.cause.stack =
+    'Error: SECRET\n at y (file:///private/tools/verification-test-environment.mjs:91:7)';
+  assert.equal(
+    ciFailureLocations(error),
+    'verification-database.mjs:42:3, verification-test-environment.mjs:91:7',
+  );
+  assert.doesNotMatch(ciFailureLocations(error), /SECRET|private|postgres/);
+});
