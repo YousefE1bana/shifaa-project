@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { Value } from '@sinclair/typebox/value';
 import {
@@ -11,6 +12,10 @@ import {
 
 import { buildApp } from '../services/api/src/app.js';
 import { loadConfig } from '../services/api/src/config.js';
+
+const verificationRuntime = (
+  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
+).replace('shifaa-local-', '');
 
 const patient = 'f0101000-0000-4000-8000-000000000002';
 const clinician = 'f0101000-0000-4000-8000-000000000001';
@@ -44,13 +49,11 @@ async function run(mode: string) {
   assert.ok(mode === 'seed' || mode === 'verify', 'Unknown restore API fixture operation.');
   const database = process.env['SHIFAA_F010_RESTORE_DATABASE'];
   assert.match(database ?? '', /^f010_c28_restore_[a-f0-9]{16}_(src|dst)$/);
-  const port = process.env['SHIFAA_PG_PORT'];
-  assert.match(port ?? '', /^\d+$/);
   const harness = await buildApp({
     config: {
       ...loadConfig({ NODE_ENV: 'test' }),
       repositoryAdapter: 'postgres',
-      databaseUrl: `postgresql://shifaa_api:synthetic_api_only@127.0.0.1:${port}/${database}`,
+      databaseUrl: testDatabaseUrl('api', verificationRuntime, database),
       identityOnboardingEnabled: true,
       syntheticMode: true,
     },

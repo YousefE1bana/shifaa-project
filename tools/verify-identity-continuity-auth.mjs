@@ -1,3 +1,4 @@
+import { testDatabaseUrl, testSupabaseStatus } from './verification-database.mjs';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
@@ -54,7 +55,7 @@ if (packageJson.version !== '2.112.2') {
   failures.push(`@supabase/supabase-js must be 2.112.2; found ${packageJson.version}`);
 }
 
-const client = createClient('http://127.0.0.1:54321', 'synthetic-publishable-key', {
+const client = createClient(testSupabaseStatus().API_URL, 'synthetic-publishable-key', {
   auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
 });
 const primitiveChecks = {
@@ -74,8 +75,7 @@ for (const [name, value] of Object.entries(primitiveChecks)) {
     failures.push(`missing public/user-context Auth primitive: ${name}`);
 }
 
-const databaseUrl =
-  process.env.SHIFAA_SUPABASE_DB_URL ?? 'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
+const databaseUrl = testDatabaseUrl('postgres', 'supabase');
 const sql = postgres(databaseUrl, { max: 1, connect_timeout: 5, idle_timeout: 1 });
 let schemaEvidence;
 try {

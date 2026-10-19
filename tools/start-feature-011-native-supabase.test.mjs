@@ -52,7 +52,7 @@ test('native start skips CLI migrations and seeds, then restores exact config by
   }
 });
 
-test('native start default runner invokes the worktree-local CLI with startup arguments', async () => {
+test('native start without verified run context rejects before CLI invocation or config writes', async () => {
   const root = temporaryProject();
   const cliPath = join(root, 'node_modules', 'supabase', 'dist', 'supabase.js');
   writeFileSync(
@@ -60,16 +60,21 @@ test('native start default runner invokes the worktree-local CLI with startup ar
     `import { writeFileSync } from 'node:fs';\nwriteFileSync(new URL('./invocation.json', import.meta.url), JSON.stringify({args:process.argv.slice(2),cwd:process.cwd()}));\n`,
   );
   try {
-    await startFeature011NativeSupabase({ root });
-    assert.deepEqual(
-      JSON.parse(
-        readFileSync(join(root, 'node_modules', 'supabase', 'dist', 'invocation.json'), 'utf8'),
-      ),
-      {
-        args: ['start', '--exclude', 'vector'],
-        cwd: root,
-      },
+    const previous = process.env.SHIFAA_VERIFY_CONTEXT;
+    delete process.env.SHIFAA_VERIFY_CONTEXT;
+    try {
+      await assert.rejects(
+        startFeature011NativeSupabase({ root }),
+        /context|receipt|verification/i,
+      );
+    } finally {
+      if (previous !== undefined) process.env.SHIFAA_VERIFY_CONTEXT = previous;
+    }
+    assert.equal(
+      existsSync(join(root, 'node_modules', 'supabase', 'dist', 'invocation.json')),
+      false,
     );
+    assert.equal(existsSync(startupLockPath(root)), false);
     assert.deepEqual(readFileSync(join(root, 'supabase', 'config.toml')), configBytes);
   } finally {
     rmSync(root, { recursive: true, force: true });

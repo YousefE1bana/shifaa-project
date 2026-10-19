@@ -8,9 +8,26 @@ import path from 'node:path';
 import { syncBuiltinESMExports, createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { fixture } from './test-resource-context.test.mjs';
-import { createDisposableTestRun, testSuiteFiles } from './trusted-disposable-test-launcher.mjs';
-import { withTestLauncherSession, acquireTestLauncherContext } from './test-launcher-session.mjs';
+import {
+  createDisposableTestRun,
+  runDisposableTestSuite,
+  testSuiteFiles,
+} from './trusted-disposable-test-launcher.mjs';
+import {
+  withTestLauncherSession,
+  acquireTestLauncherContext,
+  releaseTestLauncherContext,
+  isTestLauncherContextReleased,
+  trackTestLauncherClose,
+} from './test-launcher-session.mjs';
 import { connectTestOwner, withTestResource, guardTestHandle } from './test-resource-context.mjs';
+
+const systemCommand = childProcess.execFileSync;
+const originalPackage = systemCommand(
+  'git',
+  ['cat-file', 'blob', 'f205a80ae41b5507afaa1a7868fbbc8e84deb217'],
+  { encoding: 'utf8', windowsHide: true },
+);
 
 function launcherFixture(t, scope = 'family') {
   const f = fixture(t, scope);
@@ -49,6 +66,7 @@ function launcherFixture(t, scope = 'family') {
   });
   t.mock.method(childProcess, 'execFileSync', (executable, args, settings) => {
     mutate(executable, args);
+    if (executable === 'git' && args[0] === 'cat-file') return originalPackage;
     if (executable === 'git' && args[0] === 'rev-parse' && args[1].includes(':')) {
       const source = fs.readFileSync(args[1].slice(args[1].indexOf(':') + 1));
       return crypto
@@ -98,6 +116,22 @@ function launcherFixture(t, scope = 'family') {
       assert.equal(compose.networks.private.external, true);
       assert.equal(compose.services.postgres.ports[0].host_ip, '127.0.0.1');
       assert.equal(compose.services.postgres.ports[0].published, '0');
+      if (options.resourceBudget) {
+        assert.equal(compose.services.postgres.cpus, 2);
+        assert.equal(compose.services.postgres.mem_limit, 1024 * 1024 * 1024);
+        assert.equal(compose.services.postgres.memswap_limit, 1024 * 1024 * 1024);
+        Object.assign(f.current.container.HostConfig, {
+          NanoCpus: compose.services.postgres.cpus * 1_000_000_000,
+          Memory: compose.services.postgres.mem_limit,
+          MemorySwap: compose.services.postgres.memswap_limit,
+          PidsLimit: compose.services.postgres.pids_limit,
+          ShmSize: compose.services.postgres.shm_size,
+          LogConfig: {
+            Type: compose.services.postgres.logging.driver,
+            Config: compose.services.postgres.logging.options,
+          },
+        });
+      }
       f.current.container.Created = new Date().toISOString();
       f.current.container.State.Running = false;
       f.current.container.HostConfig.PortBindings = {
@@ -570,15 +604,16 @@ for (const target of ['projects', 'networkNames', 'volumes']) {
   });
 }
 
-test('dirty source checkout rejects before resource creation', async (t) => {
+test('ordinary dirty outputs are allowed while the captured source fingerprint stays exact', async (t) => {
   const f = launcherFixture(t);
   const previous = childProcess.execFileSync;
   t.mock.method(childProcess, 'execFileSync', (exe, args, options) =>
     exe === 'git' && args.includes('status') ? ' M source.ts' : previous(exe, args, options),
   );
   syncBuiltinESMExports();
-  await assert.rejects(createDisposableTestRun(f.options));
-  assert.deepEqual(f.launcherEffects.lifecycle, []);
+  const run = await createDisposableTestRun(f.options);
+  assert.ok(run);
+  assert.ok(f.launcherEffects.lifecycle.length > 0);
 });
 
 test('captured bootstrap bytes must match the exact approved Git blob before any creation', async (t) => {
@@ -605,3 +640,364 @@ test('aborted teardown preserves all resources', async (t) => {
   await assert.rejects(run.teardown(`REMOVE_RUN_OWNED_RESOURCES:${run.nonce}`));
   assert.ok(!f.launcherEffects.lifecycle.some((operation) => operation.endsWith('.rm')));
 });
+
+for (const [field, invalid] of [
+  ['NanoCpus', 0],
+  ['Memory', 2 * 1024 * 1024 * 1024],
+  ['MemorySwap', -1],
+  ['PidsLimit', 0],
+  ['ShmSize', 128 * 1024 * 1024],
+  ['LogConfig', { Type: 'json-file', Config: {} }],
+]) {
+  test(`budget rejects unapplied ${field} before container start or SQL`, async (t) => {
+    const f = launcherFixture(t);
+    f.options.resourceBudget = 'SEQUENTIAL_2CPU_1GIB';
+    f.mutate((_exe, args) => {
+      if (args.includes('inspect') && f.launcherEffects.lifecycle.includes('container.create'))
+        f.current.container.HostConfig[field] = invalid;
+    });
+    await assert.rejects(createDisposableTestRun(f.options), /preserve resources/);
+    assert.ok(!f.launcherEffects.lifecycle.includes('container.start'));
+    assert.equal(f.launcherEffects.sql.length, 0);
+    assert.equal(f.effects.clients, 0);
+    assert.ok(!f.launcherEffects.lifecycle.some((operation) => operation.endsWith('.rm')));
+  });
+}
+
+test('bounded run rechecks limits after admission and preserves storage quota limitation', async (t) => {
+  const f = launcherFixture(t);
+  f.options.resourceBudget = 'SEQUENTIAL_2CPU_1GIB';
+  const run = await createDisposableTestRun(f.options);
+  assert.equal(f.launcherEffects.reports.at(-1).report.storageQuotaEnforced, false);
+  f.current.container.HostConfig.LogConfig.Config = { 'max-file': '2', 'max-size': '10m' };
+  run.checkpoint();
+  f.current.container.HostConfig.MemorySwap = -1;
+  assert.throws(() => run.checkpoint(), /resource limits not applied/);
+  await assert.rejects(run.teardown(`REMOVE_RUN_OWNED_RESOURCES:${run.nonce}`));
+  assert.ok(!f.launcherEffects.lifecycle.some((operation) => operation.endsWith('.rm')));
+});
+
+test('release receipt requires consumed capability and every registered handle close to succeed', async (t) => {
+  const f = launcherFixture(t);
+  const run = await createDisposableTestRun(f.options);
+  assert.throws(() => releaseTestLauncherContext('family', run.capability), /unconsumed/);
+  await withTestLauncherSession(
+    'family',
+    async () => run.capability,
+    async () => {
+      const context = await acquireTestLauncherContext('family');
+      let failClose = true;
+      const close = trackTestLauncherClose('family', context, async () => {
+        if (failClose) throw new Error('mock close failure');
+      });
+      assert.throws(() => releaseTestLauncherContext('family', context), /handles still open/);
+      await assert.rejects(close(), /mock close failure/);
+      assert.throws(() => releaseTestLauncherContext('family', context), /handles still open/);
+      failClose = false;
+      await close();
+      releaseTestLauncherContext('family', context);
+      assert.equal(isTestLauncherContextReleased(context), true);
+      assert.throws(() => releaseTestLauncherContext('family', context), /already released/);
+    },
+  );
+  assert.equal(run.released, true);
+  await run.teardown(`REMOVE_RUN_OWNED_RESOURCES:${run.nonce}`);
+  assert.equal(run.closed, true);
+  assert.deepEqual(f.launcherEffects.lifecycle.slice(-3), [
+    'container.rm',
+    'volume.rm',
+    'network.rm',
+  ]);
+});
+
+test('ownership failure never becomes a release receipt', async (t) => {
+  const f = launcherFixture(t);
+  const run = await createDisposableTestRun(f.options);
+  await withTestLauncherSession(
+    'family',
+    async () => run.capability,
+    async () => {
+      await acquireTestLauncherContext('family');
+      f.current.container.Id = 'e'.repeat(64);
+      assert.throws(
+        () => releaseTestLauncherContext('family', run.capability),
+        /test-resource-denied/,
+      );
+      assert.equal(run.released, false);
+    },
+  );
+  assert.ok(!f.launcherEffects.lifecycle.some((operation) => operation.endsWith('.rm')));
+});
+
+test('session rejects concurrent acquisition while an earlier provider is unresolved', async () => {
+  let finishAcquire;
+  const pending = new Promise((resolve) => {
+    finishAcquire = resolve;
+  });
+  await withTestLauncherSession(
+    'family',
+    async () => pending,
+    async () => {
+      const first = acquireTestLauncherContext('family');
+      await assert.rejects(acquireTestLauncherContext('family'), /concurrent harness acquisition/);
+      finishAcquire({});
+      await assert.rejects(first, /test-resource-denied/);
+    },
+  );
+});
+
+test('aggregate budget requires explicit sequential cleanup before any effects', async (t) => {
+  const f = launcherFixture(t);
+  f.options.resourceBudget = 'SEQUENTIAL_2CPU_1GIB';
+  await assert.rejects(runDisposableTestSuite(f.options), /explicit sequential cleanup/);
+  f.options.resourceBudget = 'unapproved';
+  await assert.rejects(createDisposableTestRun(f.options), /unknown resource budget/);
+  assert.deepEqual(f.launcherEffects.lifecycle, []);
+});
+
+for (const events of [[], [{ type: 'test:pass' }], [{ type: 'test:fail' }]]) {
+  test(`suite without a lease cannot pass with events ${JSON.stringify(events)}`, async (t) => {
+    const f = launcherFixture(t);
+    t.mock.method(test, 'run', () =>
+      (async function* () {
+        yield* events;
+      })(),
+    );
+    const completed = await runDisposableTestSuite(f.options);
+    assert.equal(completed.passed, false);
+    assert.deepEqual(f.launcherEffects.lifecycle, []);
+  });
+}
+
+for (const [name, event] of [
+  ['skipped pass', { type: 'test:pass', data: { skip: true } }],
+  ['skipped pass with empty reason', { type: 'test:pass', data: { skip: '' } }],
+  ['todo pass', { type: 'test:pass', data: { todo: 'pending obligation' } }],
+  ['cancelled outcome', { type: 'test:pass', data: { cancelled: true } }],
+  ['canceled outcome', { type: 'test:pass', data: { canceled: true } }],
+  ['cancelled event', { type: 'test:cancelled' }],
+  ['failed event', { type: 'test:fail' }],
+  ['skipped summary', { type: 'test:summary', data: { counts: { skipped: 1 } } }],
+  ['todo summary', { type: 'test:summary', data: { counts: { todo: 1 } } }],
+  ['cancelled summary', { type: 'test:summary', data: { counts: { cancelled: 1 } } }],
+  ['canceled summary', { type: 'test:summary', data: { counts: { canceled: 1 } } }],
+  ['failed summary', { type: 'test:summary', data: { success: false } }],
+]) {
+  test(`lease-backed suite cannot pass a ${name}`, async (t) => {
+    const f = launcherFixture(t);
+    f.options.cleanup = 'REMOVE_RELEASED_RUNS_BEFORE_NEXT_LEASE';
+    t.mock.method(test, 'run', () =>
+      (async function* () {
+        const context = await acquireTestLauncherContext('family');
+        releaseTestLauncherContext('family', context);
+        yield { type: 'test:pass' };
+        yield event;
+      })(),
+    );
+    const completed = await runDisposableTestSuite(f.options);
+    assert.equal(completed.passed, false);
+    assert.equal(completed.passedTests, 1);
+    assert.equal(completed.failedTests, event.type === 'test:fail' ? 1 : 0);
+    assert.equal(completed.runs.length, 1);
+    assert.equal(completed.runs[0].closed, true);
+  });
+}
+
+test('actual approved aggregate SQL sources all expand before mocked engine denial', async (t) => {
+  const revision = systemCommand('git', ['rev-parse', 'HEAD'], {
+    encoding: 'utf8',
+    windowsHide: true,
+  }).trim();
+  const sqlFiles = [
+    ...new Set(
+      ['db:test', 'db:rls-test', 'test:discovery-sos:db'].flatMap((id) =>
+        [
+          ...JSON.parse(originalPackage).scripts[id].matchAll(
+            /\/workspace\/(infra\/db\/tests\/[a-z0-9_-]+\.sql)/g,
+          ),
+        ].map((match) => match[1]),
+      ),
+    ),
+  ];
+  const sourceFiles = new Set();
+  const gitCommands = [];
+  const dockerAttempts = [];
+  t.mock.method(childProcess, 'execFileSync', (exe, args, settings) => {
+    if (exe === 'docker') {
+      dockerAttempts.push(args);
+      throw new Error('static source preparation ends before engine observation');
+    }
+    assert.equal(exe, 'git');
+    gitCommands.push(args);
+    if (args[0] === 'rev-parse' && args[1].startsWith(revision + ':'))
+      sourceFiles.add(args[1].slice(41));
+    return systemCommand(exe, args, settings);
+  });
+  syncBuiltinESMExports();
+  await assert.rejects(
+    createDisposableTestRun({
+      execute: 'CREATE_NEW_DISPOSABLE_RESOURCES',
+      approval: 'STATIC SOURCE PREPARATION ONLY; NO RESOURCES',
+      worktree: process.cwd(),
+      revision,
+      sourceDigest: 'a'.repeat(64),
+      scope: 'family',
+      outputParent: path.resolve(process.cwd(), '..'),
+      imageReference: `example.invalid/postgres@sha256:${'a'.repeat(64)}`,
+      docker: {
+        context: 'MOCK-DENIED',
+        engine: 'MOCK-DENIED',
+        endpoint: 'MOCK-DENIED',
+        image: `sha256:${'a'.repeat(64)}`,
+      },
+      bootstrap: 'aggregate-baseline',
+      bootstrapSqlFiles: sqlFiles,
+    }),
+    /command failed/,
+  );
+  assert.equal(
+    [...sourceFiles].filter((file) => file.startsWith('supabase/migrations/')).length,
+    26,
+    JSON.stringify(gitCommands),
+  );
+  assert.ok(sourceFiles.has('infra/db/migrations/001_identity_onboarding.sql'));
+  assert.ok(sqlFiles.every((file) => sourceFiles.has(file)));
+  assert.ok(sourceFiles.has('infra/db/fixtures/discovery-sos.sql'));
+  assert.ok(sourceFiles.has('infra/db/policies/001_identity_onboarding_rls.sql'));
+  assert.equal(dockerAttempts.length, 1);
+  assert.deepEqual(dockerAttempts[0], ['context', 'inspect', 'MOCK-DENIED']);
+});
+
+for (const released of [false, true]) {
+  test(`sequential suite ${released ? 'removes a released final lease' : 'preserves an unreleased final lease'}`, async (t) => {
+    const f = launcherFixture(t);
+    f.options.resourceBudget = 'SEQUENTIAL_2CPU_1GIB';
+    f.options.cleanup = 'REMOVE_RELEASED_RUNS_BEFORE_NEXT_LEASE';
+    t.mock.method(test, 'run', () =>
+      (async function* () {
+        const context = await acquireTestLauncherContext('family');
+        if (released) releaseTestLauncherContext('family', context);
+        yield { type: 'test:pass' };
+      })(),
+    );
+    if (released) {
+      const completed = await runDisposableTestSuite(f.options);
+      assert.equal(completed.passedTests, 1);
+      assert.equal(completed.runs[0].closed, true);
+      assert.deepEqual(f.launcherEffects.lifecycle.slice(-3), [
+        'container.rm',
+        'volume.rm',
+        'network.rm',
+      ]);
+    } else {
+      await assert.rejects(runDisposableTestSuite(f.options), /handles and lease must be released/);
+      assert.ok(!f.launcherEffects.lifecycle.some((operation) => operation.endsWith('.rm')));
+    }
+  });
+}
+
+for (const released of [false, true]) {
+  test(`next lease ${released ? 'disposes its predecessor before admission' : 'rejects while its predecessor is unreleased'}`, async (t) => {
+    const f = launcherFixture(t);
+    f.options.cleanup = 'REMOVE_RELEASED_RUNS_BEFORE_NEXT_LEASE';
+    let admittedAgain = false;
+    f.mutate((_exe, args) => {
+      if (args.includes('image') && f.launcherEffects.sql.length) {
+        admittedAgain = true;
+        assert.deepEqual(f.launcherEffects.lifecycle.slice(-3), [
+          'container.rm',
+          'volume.rm',
+          'network.rm',
+        ]);
+      }
+    });
+    t.mock.method(test, 'run', () =>
+      (async function* () {
+        const context = await acquireTestLauncherContext('family');
+        if (released) releaseTestLauncherContext('family', context);
+        // This single-target fixture deliberately cannot admit a second database.
+        // Reaching the second admission must nevertheless follow exact disposal.
+        await assert.rejects(
+          acquireTestLauncherContext('family'),
+          released
+            ? /test-resource-denied|test-launcher-denied/
+            : /handles and lease must be released/,
+        );
+        if (!released) releaseTestLauncherContext('family', context);
+        yield { type: 'test:pass' };
+      })(),
+    );
+    const completed = await runDisposableTestSuite(f.options);
+    assert.equal(admittedAgain, released);
+    assert.equal(completed.runs.length, 1);
+    assert.equal(completed.runs[0].closed, true);
+  });
+}
+
+test('aggregate bootstrap binds all 27 original migrations and selected SQL tests before privilege drop', async (t) => {
+  const f = launcherFixture(t);
+  f.options.bootstrap = 'aggregate-baseline';
+  f.options.bootstrapSqlFiles = [
+    'infra/db/tests/discovery-sos-schema.sql',
+    'infra/db/tests/discovery-sos-rls.sql',
+  ];
+  const run = await createDisposableTestRun(f.options);
+  assert.deepEqual(run.sqlTests, f.options.bootstrapSqlFiles);
+  const sql = f.launcherEffects.sql[0];
+  assert.doesNotMatch(sql, /^\\ir/m);
+  assert.ok(sql.lastIndexOf('ROLLBACK;') < sql.indexOf('ALTER ROLE shifaa_owner NOSUPERUSER'));
+  const completed = f.launcherEffects.reports.at(-1).report;
+  assert.equal(
+    completed.bootstrap.filter(({ path: file }) => file.startsWith('supabase/migrations/')).length,
+    26,
+  );
+  assert.ok(
+    completed.bootstrap.some(({ path: file }) => file === 'infra/db/fixtures/discovery-sos.sql'),
+  );
+  assert.equal(completed.sqlTestsBeforePrivilegeDrop, true);
+  assert.deepEqual(completed.sqlTests, f.options.bootstrapSqlFiles);
+  assert.equal(f.effects.clients, 0);
+});
+
+for (const files of [
+  ['../../unapproved.sql'],
+  ['infra/db/tests/feature-011-schema.sql'],
+  [
+    'infra/db/tests/identity-onboarding-schema.sql',
+    'infra/db/tests/identity-onboarding-schema.sql',
+  ],
+]) {
+  test(`aggregate rejects unapproved or duplicate SQL test list ${JSON.stringify(files)}`, async (t) => {
+    const f = launcherFixture(t);
+    f.options.bootstrap = 'aggregate-baseline';
+    f.options.bootstrapSqlFiles = files;
+    await assert.rejects(createDisposableTestRun(f.options), /unapproved or duplicate/);
+    assert.deepEqual(f.launcherEffects.lifecycle, []);
+    assert.deepEqual(f.launcherEffects.sql, []);
+  });
+}
+
+for (const [name, source] of [
+  ['escape', '\\ir ../../../../outside.sql'],
+  ['cycle', '\\ir identity-onboarding-schema.sql'],
+  ['command', '\\! echo forbidden'],
+]) {
+  test(`aggregate rejects Git-bound SQL include ${name} before creating resources`, async (t) => {
+    const f = launcherFixture(t);
+    f.options.bootstrap = 'aggregate-baseline';
+    f.options.bootstrapSqlFiles = ['infra/db/tests/identity-onboarding-schema.sql'];
+    const previous = fs.readFileSync;
+    t.mock.method(fs, 'readFileSync', (file, ...args) =>
+      path.resolve(String(file)) === path.resolve('infra/db/tests/identity-onboarding-schema.sql')
+        ? Buffer.from(source)
+        : previous(file, ...args),
+    );
+    syncBuiltinESMExports();
+    await assert.rejects(
+      createDisposableTestRun(f.options),
+      /SQL include escape or cycle|unreviewed aggregate meta-command/,
+    );
+    assert.deepEqual(f.launcherEffects.lifecycle, []);
+    assert.deepEqual(f.launcherEffects.sql, []);
+  });
+}

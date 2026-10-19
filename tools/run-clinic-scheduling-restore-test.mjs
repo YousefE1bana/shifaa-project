@@ -1,3 +1,4 @@
+import { testDockerSync, assertTestDatabaseEnvironment } from './verification-database.mjs';
 import { randomUUID } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
 import { spawnSync } from 'node:child_process';
@@ -40,7 +41,7 @@ const migrations = [
 const migrationNames = migrations.map((migration) => `\`${migration}\``).join(', ');
 
 function docker(args, options = {}) {
-  const result = spawnSync('docker', args, {
+  const result = testDockerSync(args, {
     cwd: root,
     encoding: options.binary ? null : 'utf8',
     input: options.input,
@@ -225,14 +226,13 @@ function truth(database, includeOutboxOperationalFields = true) {
   return result.stdout.trim();
 }
 function runWorkerReplay(database) {
-  const ownerDatabaseUrl = `postgres://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/${database}`;
-  const workerDatabaseUrl = `postgres://shifaa_worker:synthetic_worker_only@127.0.0.1:5432/${database}`;
   const workerSource = `
     import postgres from 'postgres';
+    import { testDatabaseUrl } from '../../tools/verification-database.mjs';
     import { DurableClinicSchedulingSyntheticMessagingAdapter } from './src/adapters/local-synthetic-messaging.ts';
     import { PostgresClinicSchedulingNotificationProcessor } from './src/postgres-clinic-scheduling-notification-processor.ts';
-    const ownerDatabaseUrl = process.env.OWNER_DATABASE_URL;
-    const workerDatabaseUrl = process.env.WORKER_DATABASE_URL;
+    const ownerDatabaseUrl = testDatabaseUrl('owner', 'postgres', process.env.SHIFAA_F009_RESTORE_DATABASE);
+    const workerDatabaseUrl = testDatabaseUrl('worker', 'postgres', process.env.SHIFAA_F009_RESTORE_DATABASE);
     const control = postgres(ownerDatabaseUrl, { max: 1, prepare: true });
     const adapter = new DurableClinicSchedulingSyntheticMessagingAdapter(workerDatabaseUrl, 'local');
     const processor = new PostgresClinicSchedulingNotificationProcessor(workerDatabaseUrl, adapter, 'f009-restore-worker');
@@ -249,6 +249,7 @@ function runWorkerReplay(database) {
       await control.end({ timeout: 5 });
     }
   `;
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     ['--import', 'tsx', '--input-type=module', '-e', workerSource],
@@ -257,8 +258,7 @@ function runWorkerReplay(database) {
       encoding: 'utf8',
       env: {
         ...process.env,
-        OWNER_DATABASE_URL: ownerDatabaseUrl,
-        WORKER_DATABASE_URL: workerDatabaseUrl,
+        SHIFAA_F009_RESTORE_DATABASE: database,
         NODE_ENV: 'development',
       },
       maxBuffer: 8 * 1024 * 1024,
@@ -287,11 +287,11 @@ function runWorkerReplay(database) {
   return evidence;
 }
 function runApplicationGates(database) {
-  const databaseUrl = `postgres://shifaa_api:synthetic_api_only@127.0.0.1:5432/${database}`;
   const source = `
     import postgres from 'postgres';
+    import { testDatabaseUrl } from '../../tools/verification-database.mjs';
     import { ClinicSchedulingService } from './src/modules/clinic-scheduling/service.ts';
-    const sql = postgres(process.env.DATABASE_URL, { max: 1, prepare: true });
+    const sql = postgres(testDatabaseUrl('api', 'postgres', process.env.SHIFAA_F009_RESTORE_DATABASE), { max: 1, prepare: true });
     try {
       const [gate] = await sql\`SELECT
         platform.feature_enabled('clinic_scheduling.server','local') AS server,
@@ -327,13 +327,14 @@ function runApplicationGates(database) {
       await sql.end({ timeout: 5 });
     }
   `;
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     ['--import', 'tsx', '--input-type=module', '-e', source],
     {
       cwd: join(root, 'services/api'),
       encoding: 'utf8',
-      env: { ...process.env, DATABASE_URL: databaseUrl, NODE_ENV: 'development' },
+      env: { ...process.env, SHIFAA_F009_RESTORE_DATABASE: database, NODE_ENV: 'development' },
       maxBuffer: 8 * 1024 * 1024,
       stdio: 'pipe',
     },
@@ -479,7 +480,7 @@ function roleGrantEvidence(database) {
 }
 
 let stage = 'PostgreSQL stack readiness';
-docker(['compose', 'up', '-d', '--wait', 'postgres']);
+assertTestDatabaseEnvironment();
 try {
   stage = 'synthetic source migration and seed';
   create(sourceDatabase);

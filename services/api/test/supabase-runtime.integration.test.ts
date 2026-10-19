@@ -1,3 +1,5 @@
+import { testSupabaseStatus } from '../../../tools/verification-database.mjs';
+import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import { execFileSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 
@@ -41,7 +43,7 @@ function runtimeConfig() {
     SUPABASE_JWKS_URL: `${status.API_URL}/auth/v1/.well-known/jwks.json`,
     SUPABASE_JWT_ISSUER: `${status.API_URL}/auth/v1`,
     SUPABASE_JWT_AUDIENCE: 'authenticated',
-    DATABASE_URL: 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:54322/postgres',
+    DATABASE_URL: testDatabaseUrl('shifaa_api', 'supabase', 'postgres'),
     IDENTITY_ENCRYPTION_KEY_BASE64: Buffer.alloc(32).toString('base64'),
     IDENTITY_BLIND_INDEX_KEY_BASE64: Buffer.alloc(32, 1).toString('base64'),
     PREAUTH_HMAC_KEY_BASE64: Buffer.alloc(32, 2).toString('base64'),
@@ -69,16 +71,7 @@ async function otpFor(recipient: string): Promise<string> {
 }
 
 beforeAll(async () => {
-  const statusCommand =
-    process.platform === 'win32'
-      ? {
-          file: process.env['ComSpec'] ?? 'cmd.exe',
-          args: ['/d', '/s', '/c', 'pnpm supabase status -o json'],
-        }
-      : { file: 'pnpm', args: ['supabase', 'status', '-o', 'json'] };
-  status = JSON.parse(
-    execFileSync(statusCommand.file, statusCommand.args, { cwd: '../..', encoding: 'utf8' }),
-  ) as Status;
+  status = testSupabaseStatus() as Status;
   first = await buildApp({ config: runtimeConfig() });
 });
 afterAll(async () => {
@@ -292,7 +285,7 @@ describe.sequential('002 Supabase runtime', () => {
   });
 
   it('runs facility evidence and approval through TCP, PostgreSQL, and private Storage', async () => {
-    const admin = postgres('postgresql://postgres:postgres@127.0.0.1:54322/postgres', { max: 1 });
+    const admin = postgres(testDatabaseUrl('postgres', 'supabase', 'postgres'), { max: 1 });
     const approverId = randomUUID();
     await admin`insert into identity.people(id,user_id,display_name,nationality_code,preferred_locale,profile_status)
       values(${approverId}::uuid,${randomUUID()}::uuid,'Synthetic runtime approver','EG','en-EG','active')`;
@@ -412,7 +405,7 @@ describe.sequential('002 Supabase runtime', () => {
   });
 
   it('collapses concurrent same-key consent into one domain/audit/outbox effect', async () => {
-    const admin = postgres('postgresql://postgres:postgres@127.0.0.1:54322/postgres', { max: 1 });
+    const admin = postgres(testDatabaseUrl('postgres', 'supabase', 'postgres'), { max: 1 });
     const counts = async () => {
       const [row] = await admin<{ consents: number; audits: number; events: number }[]>`
         select
@@ -494,7 +487,7 @@ describe.sequential('002 Supabase runtime', () => {
     });
     expect(upload.ok).toBe(true);
 
-    const sql = postgres('postgresql://shifaa_api:synthetic_api_only@127.0.0.1:54322/postgres', {
+    const sql = postgres(testDatabaseUrl('shifaa_api', 'supabase', 'postgres'), {
       max: 1,
     });
     await sql.begin(async (tx) => {

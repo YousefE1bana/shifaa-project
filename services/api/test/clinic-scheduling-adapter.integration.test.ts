@@ -1,23 +1,20 @@
 import postgres from 'postgres';
+import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { PostgresClinicSchedulingService } from '../src/adapters/postgres/clinic-scheduling-service.js';
 import { PostgresIdentityRepository } from '../src/adapters/postgres/identity-repository.js';
 import type { ClinicSchedulingActor } from '../src/modules/clinic-scheduling/types.js';
 
-const database = process.env['SHIFAA_F009_DATABASE'];
-const testDatabase = database ?? 'shifaa_f009_adapter_skipped';
+const verificationRuntime = (
+  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
+).replace('shifaa-local-', '');
 
-const databaseUrl =
-  process.env['SHIFAA_F009_API_DATABASE_URL'] ??
-  `postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/${testDatabase}`;
-const sql = postgres(databaseUrl, { max: 1, connect_timeout: 10, onnotice: () => undefined });
-const ownerSql = postgres(
-  `postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/${testDatabase}`,
-  { max: 1, connect_timeout: 10, onnotice: () => undefined },
-);
-const identity = new PostgresIdentityRepository(databaseUrl);
-const adapter = new PostgresClinicSchedulingService(identity);
+const database = process.env['SHIFAA_F009_DATABASE'];
+let sql: ReturnType<typeof postgres>;
+let ownerSql: ReturnType<typeof postgres>;
+let identity: PostgresIdentityRepository;
+let adapter: PostgresClinicSchedulingService;
 const actor: ClinicSchedulingActor = {
   personId: 'f0090000-0000-4000-8000-000000000003',
   principal: 'f009-adapter-test',
@@ -63,6 +60,21 @@ async function seedPageActorsAndSchedules() {
 
 describe.skipIf(!database)('Feature 009 non-owner PostgreSQL adapter', () => {
   beforeAll(async () => {
+    if (!database) throw new Error('SHIFAA_F009_DATABASE is required for adapter tests');
+    sql = postgres(testDatabaseUrl('api', verificationRuntime, database), {
+      max: 1,
+      connect_timeout: 10,
+      onnotice: () => undefined,
+    });
+    ownerSql = postgres(testDatabaseUrl('owner', verificationRuntime, database), {
+      max: 1,
+      connect_timeout: 10,
+      onnotice: () => undefined,
+    });
+    identity = new PostgresIdentityRepository(
+      testDatabaseUrl('api', verificationRuntime, database),
+    );
+    adapter = new PostgresClinicSchedulingService(identity);
     const [role] = await sql<{ current_user: string; rolsuper: boolean; rolbypassrls: boolean }[]>`
       select current_user, r.rolsuper, r.rolbypassrls
       from pg_roles r where r.rolname = current_user`;
@@ -74,9 +86,9 @@ describe.skipIf(!database)('Feature 009 non-owner PostgreSQL adapter', () => {
   });
 
   afterAll(async () => {
-    await identity.close();
-    await sql.end({ timeout: 5 });
-    await ownerSql.end({ timeout: 5 });
+    await identity?.close();
+    await sql?.end({ timeout: 5 });
+    await ownerSql?.end({ timeout: 5 });
   });
 
   it('uses fixed availability and subject projections through the runtime role', async () => {

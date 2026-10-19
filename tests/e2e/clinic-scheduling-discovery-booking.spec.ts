@@ -1,3 +1,4 @@
+import { testConnectionOptions, testDatabaseUrl } from '../../tools/verification-database.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
@@ -19,6 +20,10 @@ import {
   canContinueToBooking,
   doctorResultPresentation,
 } from '../../apps/patient/src/clinic-scheduling-discovery.ts';
+
+const verificationRuntime = (
+  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
+).replace('shifaa-local-', '');
 
 const facilityId = '90000000-0000-4000-8000-000000000001';
 const doctorId = '91000000-0000-4000-8000-000000000001';
@@ -199,8 +204,6 @@ test('patient P0 route families are mapped to the T056 structural journey', () =
 });
 
 const databaseName = process.env['SHIFAA_F009_DATABASE'];
-const dbHost = process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1';
-const dbPort = process.env['SHIFAA_PG_PORT'] ?? '5432';
 const realIds = {
   owner: 'f009e100-0000-4000-8c00-000000000001',
   doctor: 'f009e100-0000-4000-8c00-000000000002',
@@ -216,11 +219,7 @@ const realIds = {
 function realDb(): Sql {
   if (!databaseName) throw new Error('SHIFAA_F009_DATABASE is required for the real T056 race');
   return postgres({
-    host: dbHost,
-    port: Number(dbPort),
-    username: 'shifaa_owner',
-    password: 'synthetic_owner_only',
-    database: databaseName,
+    ...testConnectionOptions('owner', verificationRuntime, databaseName),
     max: 1,
   });
 }
@@ -280,7 +279,7 @@ test(
   { skip: !databaseName },
   async () => {
     const sql = realDb();
-    const apiUrl = `postgresql://shifaa_api:synthetic_api_only@${dbHost}:${dbPort}/${databaseName}`;
+    const apiUrl = testDatabaseUrl('api', verificationRuntime, databaseName);
     const identity = new PostgresIdentityRepository(apiUrl);
     let harness: Awaited<ReturnType<typeof buildApp>> | undefined;
     try {

@@ -1,3 +1,4 @@
+import { testSupabaseStatus } from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -50,12 +51,7 @@ function deterministicUuid(run: string, label: string, index: number): string {
 }
 
 function status(): Runtime {
-  const command = process.platform === 'win32' ? (process.env['ComSpec'] ?? 'cmd.exe') : 'corepack';
-  const args =
-    process.platform === 'win32'
-      ? ['/d', '/s', '/c', 'corepack pnpm exec supabase status -o json']
-      : ['pnpm', 'exec', 'supabase', 'status', '-o', 'json'];
-  return JSON.parse(execFileSync(command, args, { encoding: 'utf8' })) as Runtime;
+  return testSupabaseStatus();
 }
 
 function roleUrl(databaseUrl: string, role: string, rolePassword: string): string {

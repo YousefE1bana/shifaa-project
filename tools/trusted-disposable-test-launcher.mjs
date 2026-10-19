@@ -20,13 +20,119 @@ import {
   writePrivateReport,
   ResourceCommandFailure,
 } from './disposable-test-resources.mjs';
-import { withTestLauncherSession } from './test-launcher-session.mjs';
+import {
+  withTestLauncherSession,
+  isTestLauncherContextReleased,
+} from './test-launcher-session.mjs';
 
 const denied = (reason) => {
   throw new Error(`test-launcher-denied: ${reason}`);
 };
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const hex = /^[a-f0-9]{64}$/;
+const budgetName = 'SEQUENTIAL_2CPU_1GIB';
+const sequentialCleanup = 'REMOVE_RELEASED_RUNS_BEFORE_NEXT_LEASE';
+const memoryBytes = 1024 * 1024 * 1024;
+const logOptions = Object.freeze({ 'max-size': '10m', 'max-file': '2' });
+const baselinePackageBlob = 'f205a80ae41b5507afaa1a7868fbbc8e84deb217';
+
+function checkBudgetAuthorization(options) {
+  if (options.resourceBudget !== undefined && options.resourceBudget !== budgetName)
+    denied('unknown resource budget');
+  if (options.cleanup !== undefined && options.cleanup !== sequentialCleanup)
+    denied('unknown cleanup authorization');
+  if (options.bootstrap !== undefined && options.bootstrap !== 'aggregate-baseline')
+    denied('unknown bootstrap mode');
+  if (options.bootstrapSqlFiles !== undefined && options.bootstrap !== 'aggregate-baseline')
+    denied('SQL test files require aggregate bootstrap');
+}
+
+function baselineSqlInventory(worktree) {
+  const original = JSON.parse(
+    resourceCommand('git', ['cat-file', 'blob', baselinePackageBlob], undefined, worktree),
+  );
+  const files = (id) =>
+    original.scripts[id].split(' && ').map((command) => {
+      const match =
+        /^docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f \/workspace\/([a-z0-9_./-]+\.sql)$/.exec(
+          command,
+        );
+      if (!match) denied('original SQL script inventory changed');
+      return match[1];
+    });
+  const migrationFiles = files('db:migrate');
+  if (migrationFiles.length !== 27) denied('original migration count mismatch');
+  return {
+    migrations: migrationFiles,
+    tests: new Set(['db:test', 'db:rls-test', 'test:discovery-sos:db'].flatMap(files)),
+  };
+}
+
+function aggregateSources(options) {
+  const inventory = baselineSqlInventory(options.worktree);
+  const tests = options.bootstrapSqlFiles ?? [];
+  if (
+    !Array.isArray(tests) ||
+    tests.some((file) => !inventory.tests.has(file)) ||
+    new Set(tests).size !== tests.length
+  )
+    denied('unapproved or duplicate bootstrap SQL test file');
+  const captured = new Map();
+  const expand = (file, ancestors = []) => {
+    if (
+      !/^(?:infra\/db\/(?:migrations|policies|fixtures|tests)|supabase\/migrations)\/[a-z0-9_/-]+\.sql$/.test(
+        file,
+      ) ||
+      ancestors.includes(file)
+    )
+      denied('SQL include escape or cycle');
+    if (!captured.has(file))
+      captured.set(file, sourceBytes(options.worktree, file, options.revision));
+    return captured
+      .get(file)
+      .bytes.toString('utf8')
+      .split(/\r?\n/)
+      .map((line) => {
+        const include = /^\\ir ([a-z0-9_./-]+\.sql)$/.exec(line);
+        if (include)
+          return expand(
+            path.posix.normalize(path.posix.join(path.posix.dirname(file), include[1])),
+            [...ancestors, file],
+          );
+        if (/^\s*\\/.test(line) && line !== '\\set ON_ERROR_STOP on')
+          denied('unreviewed aggregate meta-command');
+        return line;
+      })
+      .join('\n');
+  };
+  const sql = [...inventory.migrations, ...tests].map((file) => expand(file)).join('\n');
+  return {
+    sql,
+    sqlTests: [...tests],
+    identities: [...captured].map(([file, source]) => ({
+      path: file,
+      bytes: source.bytes.length,
+      sha256: source.sha256,
+    })),
+  };
+}
+
+function assertResourceBudget(run, container) {
+  if (run.options.resourceBudget !== budgetName) return;
+  const host = container?.HostConfig;
+  if (
+    host?.NanoCpus !== 2_000_000_000 ||
+    host.Memory !== memoryBytes ||
+    host.MemorySwap !== memoryBytes ||
+    host.PidsLimit !== 128 ||
+    host.ShmSize !== 64 * 1024 * 1024 ||
+    host.LogConfig?.Type !== 'local' ||
+    Object.keys(host.LogConfig.Config ?? {}).length !== 2 ||
+    host.LogConfig.Config['max-size'] !== logOptions['max-size'] ||
+    host.LogConfig.Config['max-file'] !== logOptions['max-file']
+  )
+    denied('container resource limits not applied');
+}
 const migrations = [
   'infra/db/migrations/001_identity_onboarding.sql',
   'supabase/migrations/20260811000300_facility_onboarding_rbac.sql',
@@ -65,13 +171,14 @@ function checkAuthorization(options) {
     !path.isAbsolute(options.outputParent ?? '') ||
     !/^[a-f0-9]{40}$/.test(options.revision ?? '') ||
     !hex.test(options.sourceDigest ?? '') ||
-    !/^[a-z0-9][a-z0-9./:_-]*@sha256:[a-f0-9]{64}$/.test(options.imageReference ?? '') ||
+    !/^(?:[a-z0-9][a-z0-9./:_-]*@)?sha256:[a-f0-9]{64}$/.test(options.imageReference ?? '') ||
     !/^sha256:[a-f0-9]{64}$/.test(options.docker?.image ?? '') ||
     !options.docker?.context ||
     !options.docker.engine ||
     !options.docker.endpoint
   )
     denied('separate explicit runtime approval and immutable image identities required');
+  checkBudgetAuthorization(options);
   const implementationRoot = path.resolve(import.meta.dirname, '..');
   const requestedRoot = path.resolve(options.worktree);
   if (
@@ -134,6 +241,7 @@ function observations(run) {
 
 function assertCreatedResources(run, observed, running) {
   const { container, volume, network } = observed;
+  assertResourceBudget(run, container);
   const owned = (labels) =>
     labels?.['com.docker.compose.project'] === run.project &&
     labels?.['shifaa.test.nonce'] === run.nonce;
@@ -226,6 +334,10 @@ function report(run, status) {
     network: run.network ?? null,
     bootstrap: run.sources.identities,
     bootstrapIdentityGuardPassed: run.bootstrapped === true,
+    resourceBudget: run.options.resourceBudget ?? null,
+    storageQuotaEnforced: false,
+    sqlTests: run.bootstrapped ? (run.sources.sqlTests ?? []) : [],
+    sqlTestsBeforePrivilegeDrop: run.bootstrapped && run.options.bootstrap === 'aggregate-baseline',
     realIntegrationAccepted: false,
   };
 }
@@ -243,13 +355,7 @@ function assertSource(run) {
   if (
     sourceFingerprint(run.options.worktree) !== run.options.sourceDigest ||
     resourceCommand('git', ['rev-parse', 'HEAD'], undefined, run.options.worktree) !==
-      run.options.revision ||
-    resourceCommand(
-      'git',
-      ['-c', 'core.longpaths=true', 'status', '--porcelain', '--untracked-files=all'],
-      undefined,
-      run.options.worktree,
-    )
+      run.options.revision
   )
     denied('source drift at phase boundary');
 }
@@ -268,7 +374,8 @@ function checkpoint(run) {
       observed.container.Created !== run.admitted.container.Created)
   )
     denied('resource replacement');
-  if (run.capability) revalidateTestResourceContext(run.capability, run.options.scope);
+  if (run.capability && !isTestLauncherContextReleased(run.capability))
+    revalidateTestResourceContext(run.capability, run.options.scope);
   return observed;
 }
 
@@ -336,6 +443,16 @@ function createResources(run) {
         ],
         networks: ['private'],
         security_opt: ['no-new-privileges:true'],
+        ...(run.options.resourceBudget === budgetName
+          ? {
+              cpus: 2,
+              mem_limit: memoryBytes,
+              memswap_limit: memoryBytes,
+              pids_limit: 128,
+              shm_size: 64 * 1024 * 1024,
+              logging: { driver: 'local', options: logOptions },
+            }
+          : {}),
       },
     },
     volumes: { data: { external: true, name: run.volume } },
@@ -525,7 +642,10 @@ export async function createDisposableTestRun(options) {
     outputParent: path.resolve(options.outputParent),
     signal: options.signal,
   };
-  const sources = bootstrapSources(frozen.worktree, frozen.revision);
+  const sources =
+    frozen.bootstrap === 'aggregate-baseline'
+      ? aggregateSources(frozen)
+      : bootstrapSources(frozen.worktree, frozen.revision);
   assertEngine(frozen);
   const [image] = JSON.parse(
     dockerCommand(frozen.docker.context, ['image', 'inspect', frozen.imageReference]),
@@ -577,6 +697,13 @@ export async function createDisposableTestRun(options) {
   return Object.freeze({
     capability: run.capability,
     nonce,
+    sqlTests: Object.freeze([...(run.sources.sqlTests ?? [])]),
+    get released() {
+      return isTestLauncherContextReleased(run.capability);
+    },
+    get closed() {
+      return run.closed;
+    },
     checkpoint: () => checkpoint(run),
     teardown: async (approval) => {
       if (approval !== `REMOVE_RUN_OWNED_RESOURCES:${nonce}`)
@@ -584,7 +711,8 @@ export async function createDisposableTestRun(options) {
       checkpoint(run);
       try {
         // Socket handles must be closed by the suite before explicit destruction.
-        releaseTestResourceContext(run.capability, frozen.scope);
+        if (!isTestLauncherContextReleased(run.capability))
+          releaseTestResourceContext(run.capability, frozen.scope);
         teardownCheckpoint(run);
         dockerCommand(frozen.docker.context, ['rm', '-f', run.container]);
         // Never remove by project, prune, or use compose down. Revalidate each
@@ -620,14 +748,29 @@ export async function createDisposableTestRun(options) {
 // Node's no-isolation runner keeps test callbacks and the provider in one
 // process. Each harness acquires a NEW database, never a reused per-suite lease.
 export async function runDisposableTestSuite(options) {
+  checkAuthorization(options);
+  if (options.resourceBudget === budgetName && options.cleanup !== sequentialCleanup)
+    denied('aggregate resource budget requires explicit sequential cleanup authorization');
+  if (
+    options.maxRuns !== undefined &&
+    (!Number.isInteger(options.maxRuns) || options.maxRuns < 1 || options.maxRuns > 32)
+  )
+    denied('suite lease budget must be an integer from 1 to 32');
   const runs = [];
-  const { run } = await import('node:test');
+  const { default: nodeTest } = await import('node:test');
   let failed = false;
   let passedTests = 0;
   let failedTests = 0;
   await withTestLauncherSession(
     options.scope,
     async () => {
+      if (options.maxRuns !== undefined && runs.length >= options.maxRuns)
+        denied('suite lease budget exhausted before resource creation');
+      const previous = runs.at(-1);
+      if (previous && options.cleanup === sequentialCleanup) {
+        if (!previous.released) denied('previous harness handles and lease must be released');
+        await previous.teardown(`REMOVE_RUN_OWNED_RESOURCES:${previous.nonce}`);
+      }
       const created = await createDisposableTestRun(options);
       runs.push(created);
       return created.capability;
@@ -635,24 +778,47 @@ export async function runDisposableTestSuite(options) {
     async () => {
       const files = suites[options.scope]?.map((file) => path.resolve(options.worktree, file));
       if (!files) denied('unknown suite');
-      const stream = run({ files, isolation: 'none', concurrency: 1 });
+      const stream = nodeTest.run({ files, isolation: 'none', concurrency: 1 });
       // Never pipe arbitrary test diagnostics/SQL errors to public output.
       for await (const event of stream) {
-        if (event.type === 'test:pass') passedTests++;
+        const data = event.data ?? {};
+        const incomplete =
+          ['test:skip', 'test:todo', 'test:cancelled', 'test:canceled'].includes(event.type) ||
+          ['skip', 'skipped', 'todo', 'cancelled', 'canceled'].some(
+            (field) => data[field] !== undefined && data[field] !== false && data[field] !== 0,
+          ) ||
+          (event.type === 'test:summary' &&
+            (data.success === false ||
+              ['failed', 'skipped', 'todo', 'cancelled', 'canceled'].some(
+                (field) => data.counts?.[field] !== undefined && data.counts[field] !== 0,
+              )));
+        if (incomplete) failed = true;
+        if (event.type === 'test:pass' && !incomplete) passedTests++;
         if (event.type === 'test:fail') {
           failed = true;
           failedTests++;
         }
       }
-      for (const created of runs) created.checkpoint();
+      for (const created of runs) {
+        if (created.closed) continue;
+        created.checkpoint();
+        if (options.cleanup === sequentialCleanup) {
+          if (!created.released) denied('final harness handles and lease must be released');
+          await created.teardown(`REMOVE_RUN_OWNED_RESOURCES:${created.nonce}`);
+        }
+      }
     },
   );
   return Object.freeze({
-    passed: !failed,
+    passed:
+      !failed &&
+      passedTests > 0 &&
+      runs.length > 0 &&
+      (options.cleanup !== sequentialCleanup || runs.every((created) => created.closed)),
     passedTests,
     failedTests,
     runs: Object.freeze(runs),
-    // No automatic cleanup; caller must separately and explicitly authorize it.
+    // Cleanup occurs only under the explicit in-process sequential authorization.
     realIntegrationAccepted: false,
   });
 }

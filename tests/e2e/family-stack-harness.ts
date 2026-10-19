@@ -4,7 +4,9 @@ import { randomUUID } from 'node:crypto';
 export async function createFamilyStack(context?: object) {
   // Dynamic imports retain one ESM capability authority under Node/tsx's
   // CommonJS TypeScript loader; require(ESM) would create a second module realm.
-  const { acquireTestLauncherContext } = await import('../../tools/test-launcher-session.mjs');
+  const { acquireTestLauncherContext, releaseTestLauncherContext } = await import(
+    '../../tools/test-launcher-session.mjs'
+  );
   const { revalidateTestResourceContext, connectTestOwner, withTestResource, guardTestHandle } =
     await import('../../tools/test-resource-context.mjs');
   context = await acquireTestLauncherContext('family', context);
@@ -66,6 +68,7 @@ export async function createFamilyStack(context?: object) {
         } finally {
           await owner.end({ timeout: 5 });
         }
+        releaseTestLauncherContext('family', context);
       },
     };
   } catch (error) {

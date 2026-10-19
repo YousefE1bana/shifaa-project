@@ -1,5 +1,9 @@
+import {
+  testDockerSync,
+  testConnectionOptions,
+  assertTestDatabaseEnvironment,
+} from './verification-database.mjs';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
@@ -45,15 +49,9 @@ const partitions = [
   { month: '2026-06-01', next: '2026-07-01', count: 83_333 },
   { month: '2026-07-01', next: '2026-08-01', count: 83_333 },
 ] as const;
-const connectionOptions = {
-  host: '127.0.0.1',
-  port: 5432,
-  username: 'shifaa_owner',
-  password: 'synthetic_owner_only',
-};
 
 function runDocker(args: readonly string[], quiet = false): void {
-  const result = spawnSync('docker', [...args], {
+  const result = testDockerSync([...args], {
     cwd: process.cwd(),
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
@@ -100,8 +98,8 @@ function applyMigrations(): void {
   }
 }
 
-function connect(username: string, password: string, max: number): Sql {
-  return postgres({ ...connectionOptions, database, username, password, max, prepare: true });
+function connect(username: string, max: number): Sql {
+  return postgres({ ...testConnectionOptions(username, 'postgres', database), max, prepare: true });
 }
 
 async function seedActor(owner: Sql): Promise<void> {
@@ -408,11 +406,11 @@ function rounded(value: number): number {
 }
 
 async function main(): Promise<void> {
-  runDocker(['compose', 'up', '-d', '--wait', 'postgres']);
+  assertTestDatabaseEnvironment();
   recreateDatabase();
-  const owner = connect('shifaa_owner', 'synthetic_owner_only', 2);
-  const api = connect('shifaa_api', 'synthetic_api_only', apiConnectionCount);
-  const worker = connect('shifaa_worker', 'synthetic_worker_only', workerCount);
+  const owner = connect('shifaa_owner', 2);
+  const api = connect('shifaa_api', apiConnectionCount);
+  const worker = connect('shifaa_worker', workerCount);
   try {
     applyMigrations();
     await seedActor(owner);

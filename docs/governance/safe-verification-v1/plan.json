@@ -1,0 +1,184 @@
+{
+  "baseline": "7e9405452e6945b56ccc496ea64170be9dbc0b15",
+  "originalVerify": "pnpm format:check && pnpm agent-skills:check && pnpm agent-skills:test && pnpm lint && pnpm typecheck && pnpm build && pnpm test && pnpm test:a11y && pnpm test:e2e && pnpm contracts:check && pnpm architecture:check && pnpm secrets:check && pnpm dependencies:check && docker compose config --quiet && pnpm db:reset && pnpm db:test && pnpm db:rls-test && pnpm test:idempotency:privacy && pnpm test:discovery-sos:stack && pnpm test:discovery-sos:e2e && pnpm test:discovery-sos:performance && pnpm test:discovery-sos:security && pnpm test:identity-continuity:stack && pnpm test:audit-admin:scope && pnpm test:audit-admin:contract && node tools/verify-feature-008-evidence.mjs --all && pnpm test:audit-admin:stack && pnpm test:audit-admin:e2e && pnpm test:audit-admin:privacy && pnpm test:audit-admin:security && pnpm test:audit-admin:performance && pnpm test:audit-admin:restore && pnpm test:clinic-scheduling:scope && pnpm test:clinic-scheduling:contract && pnpm test:clinic-scheduling:stack && pnpm test:clinic-scheduling:security && pnpm test:clinic-scheduling:performance && pnpm test:clinic-scheduling:restore && pnpm test:clinic-scheduling:privacy && pnpm test:clinic-scheduling:evidence && pnpm test:encounters:verification && pnpm test:feature-011:composition",
+  "requiredSteps": [
+    {
+      "id": "legacy-01",
+      "command": "pnpm format:check"
+    },
+    {
+      "id": "legacy-02",
+      "command": "pnpm agent-skills:check"
+    },
+    {
+      "id": "legacy-03",
+      "command": "pnpm agent-skills:test"
+    },
+    {
+      "id": "legacy-04",
+      "command": "pnpm lint"
+    },
+    {
+      "id": "legacy-05",
+      "command": "pnpm typecheck"
+    },
+    {
+      "id": "legacy-06",
+      "command": "pnpm build"
+    },
+    {
+      "id": "legacy-07",
+      "command": "pnpm test"
+    },
+    {
+      "id": "legacy-08",
+      "command": "pnpm test:a11y"
+    },
+    {
+      "id": "legacy-09",
+      "command": "pnpm test:e2e"
+    },
+    {
+      "id": "legacy-10",
+      "command": "pnpm contracts:check"
+    },
+    {
+      "id": "legacy-11",
+      "command": "pnpm architecture:check"
+    },
+    {
+      "id": "legacy-12",
+      "command": "pnpm secrets:check"
+    },
+    {
+      "id": "legacy-13",
+      "command": "pnpm dependencies:check"
+    },
+    {
+      "id": "legacy-14",
+      "command": "docker compose config --quiet"
+    },
+    {
+      "id": "legacy-15",
+      "command": "pnpm db:reset"
+    },
+    {
+      "id": "legacy-16",
+      "command": "pnpm db:test"
+    },
+    {
+      "id": "legacy-17",
+      "command": "pnpm db:rls-test"
+    },
+    {
+      "id": "legacy-18",
+      "command": "pnpm test:idempotency:privacy"
+    },
+    {
+      "id": "legacy-19",
+      "command": "pnpm test:discovery-sos:stack"
+    },
+    {
+      "id": "legacy-20",
+      "command": "pnpm test:discovery-sos:e2e"
+    },
+    {
+      "id": "legacy-21",
+      "command": "pnpm test:discovery-sos:performance"
+    },
+    {
+      "id": "legacy-22",
+      "command": "pnpm test:discovery-sos:security"
+    },
+    {
+      "id": "legacy-23",
+      "command": "pnpm test:identity-continuity:stack"
+    },
+    {
+      "id": "legacy-24",
+      "command": "pnpm test:audit-admin:scope"
+    },
+    {
+      "id": "legacy-25",
+      "command": "pnpm test:audit-admin:contract"
+    },
+    {
+      "id": "legacy-26",
+      "command": "node tools/verify-feature-008-evidence.mjs --all"
+    },
+    {
+      "id": "legacy-27",
+      "command": "pnpm test:audit-admin:stack"
+    },
+    {
+      "id": "legacy-28",
+      "command": "pnpm test:audit-admin:e2e"
+    },
+    {
+      "id": "legacy-29",
+      "command": "pnpm test:audit-admin:privacy"
+    },
+    {
+      "id": "legacy-30",
+      "command": "pnpm test:audit-admin:security"
+    },
+    {
+      "id": "legacy-31",
+      "command": "pnpm test:audit-admin:performance"
+    },
+    {
+      "id": "legacy-32",
+      "command": "pnpm test:audit-admin:restore"
+    },
+    {
+      "id": "legacy-33",
+      "command": "pnpm test:clinic-scheduling:scope"
+    },
+    {
+      "id": "legacy-34",
+      "command": "pnpm test:clinic-scheduling:contract"
+    },
+    {
+      "id": "legacy-35",
+      "command": "pnpm test:clinic-scheduling:stack"
+    },
+    {
+      "id": "legacy-36",
+      "command": "pnpm test:clinic-scheduling:security"
+    },
+    {
+      "id": "legacy-37",
+      "command": "pnpm test:clinic-scheduling:performance"
+    },
+    {
+      "id": "legacy-38",
+      "command": "pnpm test:clinic-scheduling:restore"
+    },
+    {
+      "id": "legacy-39",
+      "command": "pnpm test:clinic-scheduling:privacy"
+    },
+    {
+      "id": "legacy-40",
+      "command": "pnpm test:clinic-scheduling:evidence"
+    },
+    {
+      "id": "legacy-41",
+      "command": "pnpm test:encounters:verification"
+    },
+    {
+      "id": "legacy-42",
+      "command": "pnpm test:feature-011:composition"
+    }
+  ],
+  "additionalRequiredSuites": ["family", "privacy"],
+  "historicalPackage": {
+    "gitBlob": "f205a80ae41b5507afaa1a7868fbbc8e84deb217",
+    "bytes": 21058,
+    "sha256": "2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200"
+  },
+  "currentPackage": {
+    "bytes": 20371,
+    "sha256": "9cfb3f67899d4c4247522920b05e0c37c85ec13d5e517a45e4d3e0a6df53cd10"
+  }
+}

@@ -1,15 +1,19 @@
+import {
+  testDockerExec,
+  testRuntime,
+  runTestSupabase,
+  testEvidenceDirectory,
+} from './verification-database.mjs';
 // Local native-Auth test setup only. F011 role/owner provisioning uses the
 // already-approved offline admin boundary, never an online or elevated API role.
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
-import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   currentPhysicalSourceDigests,
   verifyFeature011Contracts,
-  currentEvidenceRoot,
 } from './verify-feature-011-contracts.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -28,27 +32,19 @@ export function assertNativeBootstrapScope(labels, cliVersion, workdir = root) {
   );
 }
 
-export function assertNativeSupabaseOwnership(runPnpm) {
+export function assertNativeSupabaseOwnership() {
+  const target = testRuntime('supabase');
   const inspect = JSON.parse(
-    execFileSync('docker', ['inspect', container], {
-      cwd: root,
-      encoding: 'utf8',
-      windowsHide: true,
-    }),
+    testDockerExec(['inspect', target.container], { encoding: 'utf8' }),
   )[0];
-  assertNativeBootstrapScope(
-    inspect.Config.Labels,
-    runPnpm(['exec', 'supabase', '--version'], true).trim(),
-  );
+  assert.equal(inspect.Config.Labels['com.supabase.cli.project'], target.project);
+  assert.equal(resolve(inspect.Config.Labels['com.supabase.cli.workdir']), resolve(target.workdir));
+  assert.equal(runTestSupabase(['--version'], { encoding: 'utf8' }).trim(), '2.113.0');
   assert.equal(inspect.State.Health.Status, 'healthy');
-  assert.match(
-    readFileSync(join(root, 'supabase/config.toml'), 'utf8'),
-    /^project_id = "shifaa-local-supabase"$/m,
-  );
 }
 
-export async function resetFeature011NativeSupabase(runPnpm) {
-  assertNativeSupabaseOwnership(runPnpm);
+export async function resetFeature011NativeSupabase() {
+  assertNativeSupabaseOwnership();
   const parity = await verifyFeature011Contracts({ root });
   assert.equal(parity.result, 'PASS', parity.failures.join('\n'));
   const pins = currentPhysicalSourceDigests(root);
@@ -69,8 +65,7 @@ export async function resetFeature011NativeSupabase(runPnpm) {
     return { path, version: file.split('_')[0], sha256: hash(bytes), bytes };
   });
   const psql = (input) =>
-    execFileSync(
-      'docker',
+    testDockerExec(
       [
         'exec',
         '-i',
@@ -105,7 +100,7 @@ export async function resetFeature011NativeSupabase(runPnpm) {
   const startedAt = new Date().toISOString();
   // Preserve native Auth's official local reset semantics. This is the existing
   // worktree-owned synthetic reset; the exact predecessor chain still uses CLI.
-  runPnpm(['exec', 'supabase', 'db', 'reset', '--local', '--version', predecessorVersion]);
+  runTestSupabase(['db', 'reset', '--local', '--version', predecessorVersion]);
   // A cold native database has no SHIFAA roles until the approved predecessor
   // chain creates them. Compare the F011 tail against that populated baseline.
   const before = roles();
@@ -129,9 +124,7 @@ export async function resetFeature011NativeSupabase(runPnpm) {
     console.log('PASS offline-admin migration ' + migration.path);
   }
   // Mark only files actually committed above, using the official local tracker.
-  runPnpm([
-    'exec',
-    'supabase',
+  runTestSupabase([
     'migration',
     'repair',
     '--local',
@@ -166,8 +159,7 @@ export async function resetFeature011NativeSupabase(runPnpm) {
   const after = roles();
   assert.deepEqual(after, before, 'Existing runtime role attributes changed');
   assert.deepEqual(currentPhysicalSourceDigests(root), pins, 'Pinned source changed');
-  const evidence = join(root, currentEvidenceRoot(root));
-  assert(existsSync(evidence));
+  const evidence = testEvidenceDirectory('feature-011');
   mkdirSync(join(evidence, 'native-bootstrap'), { recursive: true });
   const path = join(evidence, 'native-bootstrap', randomUUID() + '.json');
   writeFileSync(
@@ -177,8 +169,8 @@ export async function resetFeature011NativeSupabase(runPnpm) {
         result: 'PASS_OFFLINE_ADMIN_NATIVE_TEST_BOOTSTRAP',
         startedAt,
         finishedAt: new Date().toISOString(),
-        project,
-        workdir: root,
+        project: testRuntime('supabase').project,
+        workdir: testRuntime('supabase').workdir,
         cliVersion: '2.113.0',
         predecessorVersion,
         migrations: migrations.map(({ bytes, ...m }) => m),

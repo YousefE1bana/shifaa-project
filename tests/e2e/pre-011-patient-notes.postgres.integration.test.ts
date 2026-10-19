@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from '../../tools/verification-database.mjs';
 import { randomUUID } from 'node:crypto';
 import postgres from 'postgres';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -5,6 +6,10 @@ import { createFeature010Client } from '@shifaa/api-client/feature-010';
 
 import { buildApp } from '../../services/api/src/app.js';
 import { loadConfig } from '../../services/api/src/config.js';
+
+const verificationRuntime = (
+  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
+).replace('shifaa-local-', '');
 
 const database = process.env['SHIFAA_F010_C28_DATABASE'];
 const patientId = 'f0101000-0000-4000-8000-000000000002';
@@ -49,7 +54,7 @@ describe.skipIf(!database)(
   () => {
     beforeAll(async () => {
       if (!database) throw new Error('The isolated C28 PostgreSQL database is required.');
-      const url = `postgresql://shifaa_api:synthetic_api_only@${process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1'}:${process.env['SHIFAA_PG_PORT'] ?? '5432'}/${database}`;
+      const url = testDatabaseUrl('api', verificationRuntime, database);
       sql = postgres(url, { max: 1, onnotice: () => undefined });
       const [connection] = await sql<{ role: string }[]>`select current_user as role`;
       expect(connection?.role).toBe('shifaa_api');

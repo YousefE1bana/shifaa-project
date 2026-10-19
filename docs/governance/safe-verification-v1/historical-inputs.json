@@ -1,0 +1,297 @@
+{
+  "identity": "SHIFAA-SAFE-VERIFICATION-HISTORY/1",
+  "authority": "Product Owner FINAL CORRECTION FOR PR #500: source-level shared-resource safety repair; exact historical compatibility permitted; human merge remains required",
+  "historicalBaseline": "7e9405452e6945b56ccc496ea64170be9dbc0b15",
+  "scope": "Exact operational successors only. Original P4/P5 reports and their historical source digests are preserved; current operational sources are validated independently. Other normative/generated/physical inputs remain live. No acceptance is regenerated.",
+  "clinicalAuthority": false,
+  "freshPhysicalAcceptance": false,
+  "lifecycleAuthorization": false,
+  "inputs": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "historical": {
+        "gitBlob": "66199253e1d8c9d03034abc7f9eb6f4b1b596d64",
+        "bytes": 6134,
+        "sha256": "d070253268ca8db1e28054b8a68e2b596b5c19a115a70900fbad456f24b407d2"
+      }
+    },
+    {
+      "path": "package.json",
+      "historical": {
+        "gitBlob": "f205a80ae41b5507afaa1a7868fbbc8e84deb217",
+        "bytes": 21058,
+        "sha256": "2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200"
+      }
+    },
+    {
+      "path": "tools/feature-011-native-supabase-bootstrap.mjs",
+      "historical": {
+        "gitBlob": "c0063f5b148aa39c0a509ac632756d364e93839b",
+        "bytes": 8376,
+        "sha256": "6d235d24a7d9d3a9ffbcdd9364ce431ba8f6e2a1fe43663856963496e1d1e28c"
+      }
+    },
+    {
+      "path": "tools/feature-011-offline-proof.mjs",
+      "historical": {
+        "gitBlob": "2e2217b0a4be1f8b54cebaaf0aca9eb03dfa5911",
+        "bytes": 9227,
+        "sha256": "67d632cbd1704c89f9f0fe0d9c338cd3c4b1c3110db3c44649119e1a9ad2c4be"
+      }
+    },
+    {
+      "path": "tools/feature-011-physical-races.mjs",
+      "historical": {
+        "gitBlob": "325545ef6574295b2533ff82123099b7bb5af358",
+        "bytes": 120133,
+        "sha256": "ec5a14e11d68330ee0c6cee0607ac28af23404bb2f659f3f3333c89b18b2e7fd"
+      }
+    },
+    {
+      "path": "tools/feature-011-predecessor-races.mjs",
+      "historical": {
+        "gitBlob": "e14ba96da2499e0a5c0aefeee5aa42cfa109ebf0",
+        "bytes": 13401,
+        "sha256": "99930b2f785b1502a33b9cbb92e3f3e10e47b127954ffcc82388e0deccc84f04"
+      }
+    },
+    {
+      "path": "tools/reset-feature-011-native-supabase.mjs",
+      "historical": {
+        "gitBlob": "a2cd60c45e6fa121f1ed4a122978a38844838029",
+        "bytes": 1124,
+        "sha256": "2bef0af0bc6811339237a74aeb448463d8094dcbdc3393105b2c1f48950775bd"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-allergy-api-test.mjs",
+      "historical": {
+        "gitBlob": "8a451f5698e5bef2d9b8de2de422cbd19bc72942",
+        "bytes": 29976,
+        "sha256": "2fdea47d364258622ff7164c10ddaa2f7d16174244204c1ed70a4016de42b19f"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-composition-test.mjs",
+      "historical": {
+        "gitBlob": "b52e64d8758d448ddb35479e259871d95d907be2",
+        "bytes": 16958,
+        "sha256": "5564299b37822f611dfc172824e0ac158379827d8db969fd6e8019686954cc51"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-concurrency-test.mjs",
+      "historical": {
+        "gitBlob": "9c00ac1b99f22a91e1f30da88b7f247d0432236a",
+        "bytes": 7662,
+        "sha256": "5b441a5e30627e1a473ac4cc75fc55f97548a5f111c0ab5df0e5bd4b797ee207"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-evidence-test.mjs",
+      "historical": {
+        "gitBlob": "6154c7617dfe841c39363636cedea597e1dcef23",
+        "bytes": 29184,
+        "sha256": "d7d718f9bede146f9c542f3abb3a832a9e65558c490f1742e5800b4d495083d5"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-handoff-test.mjs",
+      "historical": {
+        "gitBlob": "c4dc8e4cde011d2224dbc8ea88f82daa11e18f7a",
+        "bytes": 11152,
+        "sha256": "122a1843908890d8b75fbc064f3a62c9560e5fd72cf32b84fca43d90ad351bdb"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-postgres-test.mjs",
+      "historical": {
+        "gitBlob": "8ba2568f4108ca5e09b2e6baa4f32efc54b8d649",
+        "bytes": 14790,
+        "sha256": "23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-protection-test.mjs",
+      "historical": {
+        "gitBlob": "7dc49a141fc764cdca297f63907cfff1906abf8b",
+        "bytes": 22841,
+        "sha256": "0e57d04e9dc9c6103c53683ea1bd76538e5e76637a04323413206d62bb28bd82"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-restore.mjs",
+      "historical": {
+        "gitBlob": "648eb67fc375e7b4c3144180b496222fe308bf7c",
+        "bytes": 18882,
+        "sha256": "9321675ef914bbc1bafa697fc0f467b0b10770a367c4ad373ea85816301c5964"
+      }
+    },
+    {
+      "path": "tools/run-feature-011-verify-api-test.mjs",
+      "historical": {
+        "gitBlob": "4cc4e5682a118d52a53e9753f7e33c640e758d7f",
+        "bytes": 20887,
+        "sha256": "9c64133e7945176340b4ff877efa01c3f16aa54bee6fe699c78b5e3bc02993a4"
+      }
+    },
+    {
+      "path": "tools/start-feature-011-native-supabase.mjs",
+      "historical": {
+        "gitBlob": "b990fd605c1a77d289464f6e16ec252e61fe23d3",
+        "bytes": 5431,
+        "sha256": "c9ce768fabd6cbd01a670e0d6cc516dec8a9ca0313a352d300303c50d782f114"
+      }
+    },
+    {
+      "path": "tools/start-feature-011-native-supabase.test.mjs",
+      "historical": {
+        "gitBlob": "68a03a3004ea3dd24c04de1356752fe6ea54f436",
+        "bytes": 5259,
+        "sha256": "ad867848acd3d6914533582ed04eca8dbdb7b90556b7b64b644b3dcec6d31bad"
+      }
+    }
+  ],
+  "currentInputs": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 6107,
+      "sha256": "ee7f5f0d3070879495722c25c737b7646c910f2131397685c41ead9e1946eab2"
+    },
+    {
+      "path": "package.json",
+      "bytes": 20371,
+      "sha256": "9cfb3f67899d4c4247522920b05e0c37c85ec13d5e517a45e4d3e0a6df53cd10"
+    },
+    {
+      "path": "tools/disposable-test-resources.mjs",
+      "bytes": 6486,
+      "sha256": "7783a970711243ee73c949d66382eed07491e296c17e2e292d3567798c80d585"
+    },
+    {
+      "path": "tools/feature-011-native-supabase-bootstrap.mjs",
+      "bytes": 8381,
+      "sha256": "b70bda8d1c723a628a7a8477e0088ee2f37647b978b8f7abcb4d687c024dc15c"
+    },
+    {
+      "path": "tools/feature-011-offline-proof.mjs",
+      "bytes": 8871,
+      "sha256": "3bae17107a1e370e4b2edb14cf2772bb311e700da3a9bc113d6ac0953d96aa4b"
+    },
+    {
+      "path": "tools/feature-011-physical-races.mjs",
+      "bytes": 120221,
+      "sha256": "7a4bf86297589490ab1fc7a074b7ae3e2885a791dc1db9eed3b0dd641b03ac32"
+    },
+    {
+      "path": "tools/feature-011-predecessor-races.mjs",
+      "bytes": 13489,
+      "sha256": "d91da62d0b01ed4240a0b3d6eae8cbbacfe27d4a000d00d54f6237f66034cf9e"
+    },
+    {
+      "path": "tools/reset-feature-011-native-supabase.mjs",
+      "bytes": 1400,
+      "sha256": "1f7a0a5dd6476e9a7a8b727d0b0c2ff832db9d721bbca6e994fe770b56cbf2d2"
+    },
+    {
+      "path": "tools/run-feature-011-allergy-api-test.mjs",
+      "bytes": 30064,
+      "sha256": "74809b33fad2cd1f56a4a5ee398d32c3bf4305aacfbb3b53eb46769badc3e04e"
+    },
+    {
+      "path": "tools/run-feature-011-composition-test.mjs",
+      "bytes": 17039,
+      "sha256": "114a981f0f850fed77755a733b21dbe832c7e04ef1ff72bf4dfae7bf00a4a62a"
+    },
+    {
+      "path": "tools/run-feature-011-concurrency-test.mjs",
+      "bytes": 7715,
+      "sha256": "47989e76df1393e98c6d8b0ebed0c1109e91cebdfd8af3318bce75191de42bca"
+    },
+    {
+      "path": "tools/run-feature-011-evidence-test.mjs",
+      "bytes": 29272,
+      "sha256": "3d11c2dd5961ceb61b628b9e3ab5fab9687de78359c79dc180e5643430d45956"
+    },
+    {
+      "path": "tools/run-feature-011-handoff-test.mjs",
+      "bytes": 11273,
+      "sha256": "4dfe6720a2db3184eba8f00921683a644e24a6432b7f54af842132dbb8cdcf5c"
+    },
+    {
+      "path": "tools/run-feature-011-postgres-test.mjs",
+      "bytes": 14838,
+      "sha256": "e9b4e6bbcd876157fe6493d694c2f48c8a4e91e1543f20bc6aec5ebe76588c87"
+    },
+    {
+      "path": "tools/run-feature-011-protection-test.mjs",
+      "bytes": 22929,
+      "sha256": "f7a88e233f9271a2ae344ad5f53aaaa671c26964dbfc8343ee216482e22899a0"
+    },
+    {
+      "path": "tools/run-feature-011-restore.mjs",
+      "bytes": 18985,
+      "sha256": "da6856d3c71d967a236f7c0f94787236423f2a14ac040f240b25ad9091f3b6b5"
+    },
+    {
+      "path": "tools/run-feature-011-verify-api-test.mjs",
+      "bytes": 20975,
+      "sha256": "e5bc6485f2250d77c500fddff5708081822bf282df253fcb4012c3c2f7c90bb6"
+    },
+    {
+      "path": "tools/start-feature-011-native-supabase.mjs",
+      "bytes": 4977,
+      "sha256": "2e7812eb485b8de6516562c632ddf80790b1dff166b21e66d3cf8c79161ee9b8"
+    },
+    {
+      "path": "tools/start-feature-011-native-supabase.test.mjs",
+      "bytes": 5502,
+      "sha256": "ae65e12bd1b20fa3c6a5c8ccfe2cd4e1426c90d30baab2634dd8c88a4a35028f"
+    },
+    {
+      "path": "tools/test-database-command.mjs",
+      "bytes": 2011,
+      "sha256": "3cc32d64a4eab3ceffc2788fa455a916901ea9687e9a6032a4a2f2e712952d4a"
+    },
+    {
+      "path": "tools/trusted-disposable-test-launcher.mjs",
+      "bytes": 30350,
+      "sha256": "e7615fe84214e4041a4911713bb44bfd907adab270d8e916442e6dba337eb57a"
+    },
+    {
+      "path": "tools/verification-ci.mjs",
+      "bytes": 2122,
+      "sha256": "0825311fbbf0e8e62ac9574604df40e59d3c4394d296bb40c49d534562be51e4"
+    },
+    {
+      "path": "tools/verification-database.mjs",
+      "bytes": 18757,
+      "sha256": "305db2c872ecba83ee78abc9552fb7baddcc3718f74550766fd616e425eaf921"
+    },
+    {
+      "path": "tools/verification-e2e.mjs",
+      "bytes": 1359,
+      "sha256": "897df118cd7c57723ecb9c0af61a737dc9a2e9dfb2a46cf33b8c18c59f6d2091"
+    },
+    {
+      "path": "tools/verification-host.mjs",
+      "bytes": 2942,
+      "sha256": "6cdfdd37870ec7e91de4c538fa9edd1d3e53e554ccb8b346073d7978dd6d99b8"
+    },
+    {
+      "path": "tools/verification-plan.mjs",
+      "bytes": 2683,
+      "sha256": "5a7f14f81c1a94539348ae277f041a00a562c07f1995abdbd77a9b1b90a79e64"
+    },
+    {
+      "path": "tools/verification-test-environment.mjs",
+      "bytes": 20747,
+      "sha256": "93bcd3f6ab68a53bb22c53442e2834f5f54c468618a47cb500c143a8b6581f3a"
+    },
+    {
+      "path": "tools/verify.mjs",
+      "bytes": 3498,
+      "sha256": "2d44e01835fe885796351a9c3f6da60202ea7e336c8a61f71e1737f8817bfb90"
+    }
+  ]
+}

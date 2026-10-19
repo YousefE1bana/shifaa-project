@@ -1,3 +1,4 @@
+import { testRuntime } from './verification-database.mjs';
 // K13 synthetic clinical fixtures, real native Auth/AES/SQL and independent sessions.
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -384,7 +385,7 @@ async function writer(h) {
     `SELECT json_build_object('id',id,'version',version) FROM identity.facility_memberships WHERE person_id=${q(person)}::uuid AND facility_id=${q(facility)}::uuid AND membership_status='active';`,
   );
   const repo = new PostgresIdentityRepository(
-    `postgres://shifaa_api:synthetic_api_only@127.0.0.1:${h.runtime === runtimes[0] ? 5432 : 54322}/${h.database}`,
+    `postgres://shifaa_api:synthetic_api_only@127.0.0.1:${testRuntime(h.runtime === runtimes[0] ? 'postgres' : 'supabase').port}/${h.database}`,
   );
   const service = new PostgresFacilityOnboardingService(
     repo,

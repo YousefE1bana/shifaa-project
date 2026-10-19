@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
@@ -9,8 +10,8 @@ import { idempotencyScopeHash } from '../services/api/src/platform/idempotency.t
 import postgres from 'postgres';
 
 const samples = 100;
-const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
-const apiUrl = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa';
+const ownerUrl = testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa');
+const apiUrl = testDatabaseUrl('shifaa_api', 'postgres', 'shifaa');
 const p95 = (values: number[]) =>
   [...values].sort((left, right) => left - right)[Math.ceil(values.length * 0.95) - 1] ?? Infinity;
 const uuidExpression = (run: string, label: string) => `md5('${run}:${label}:' || i::text)::uuid`;
