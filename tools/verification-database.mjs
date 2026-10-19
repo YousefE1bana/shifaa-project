@@ -19,6 +19,15 @@ const cleanEnv = () =>
     ),
   );
 
+// Docker inspect returns mounts from an unordered daemon map. Keep every
+// identity/access-mode field, but compare in stable destination order.
+export function testResourceMounts(mounts) {
+  assert.ok(Array.isArray(mounts));
+  for (const mount of mounts) assert.equal(typeof mount.Destination, 'string');
+  assert.equal(new Set(mounts.map((mount) => mount.Destination)).size, mounts.length);
+  return [...mounts].sort((a, b) => a.Destination.localeCompare(b.Destination));
+}
+
 // This is an inventory comparison, not label/name-based adoption. Every ID must
 // have been absent before this invocation and recorded after exclusive creation.
 export function validateTestResource(record, observed) {
@@ -352,7 +361,7 @@ export function runTestSupabase(args, options = {}) {
       assert.equal(actual.Id, previous.id);
       assert.equal(actual.Image, previous.image);
       assert.equal(actual.Created, previous.created);
-      assert.deepEqual(actual.Mounts, previous.mounts);
+      assert.deepEqual(testResourceMounts(actual.Mounts), testResourceMounts(previous.mounts));
     }
     for (const volume of environment.nativeVolumes) {
       assert.deepEqual(JSON.parse(command(['volume', 'inspect', volume.Name]))[0], volume);

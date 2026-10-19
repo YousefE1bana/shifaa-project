@@ -120,3 +120,11 @@ requested PostgreSQL host port. The private bridge now uses ordinary bridge
 connectivity with explicit loopback-only publishing. Its nonce, IDs, attachment,
 volume and port checks are unchanged. The orchestration mock models internal
 bridge port suppression so this configuration mistake cannot silently recur.
+
+The following CI run completed the database SQL matrix and all seven native
+Auth/Storage tests, then rejected teardown because Docker enumerated mounts in a
+different order. Mount comparison now sorts by destination while retaining every
+identity/mode field and rejecting duplicate destinations. Mocks reverse actual
+orchestration mount order; changed identities/modes still fail. Final local
+safety/orchestration results: 451 passed, 0 failed, 0 skipped. This does not
+claim a complete aggregate or local real-resource acceptance.

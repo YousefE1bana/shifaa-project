@@ -13,7 +13,7 @@ import {
   resourceInventory,
   resourceCommand,
 } from './disposable-test-resources.mjs';
-import { testRuntime } from './verification-database.mjs';
+import { testRuntime, testResourceMounts } from './verification-database.mjs';
 
 const rejectedPorts = new Set([5432, 54322, 55432]);
 async function freePort() {
@@ -440,7 +440,7 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
           const previous = environment.nativeContainers[index];
           assert.equal(item.Image, previous.image);
           assert.equal(item.Created, previous.created);
-          assert.deepEqual(item.Mounts, previous.mounts);
+          assert.deepEqual(testResourceMounts(item.Mounts), testResourceMounts(previous.mounts));
         }
         const ownedIds = new Set([
           environment.postgres.container,
@@ -491,7 +491,11 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
           assert.equal(actual.Id, expected.id);
           assert.equal(actual.Image, expected.image);
           if (expected.created) assert.equal(actual.Created, expected.created);
-          if (expected.mounts) assert.deepEqual(actual.Mounts, expected.mounts);
+          if (expected.mounts)
+            assert.deepEqual(
+              testResourceMounts(actual.Mounts),
+              testResourceMounts(expected.mounts),
+            );
           docker('rm', '-f', id);
         }
         for (const name of volumes) {

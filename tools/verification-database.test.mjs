@@ -11,7 +11,27 @@ import {
   resolveTestDockerCommand,
   testRuntime,
   runTestSupabase,
+  testResourceMounts,
 } from './verification-database.mjs';
+
+test('mount ordering is irrelevant but complete mount identity and mode remain mandatory', () => {
+  const mounts = [
+    { Type: 'volume', Name: 'run-volume', Destination: '/data', RW: true },
+    { Type: 'bind', Source: '/run/workdir', Destination: '/config', RW: false },
+  ];
+  assert.deepEqual(testResourceMounts([...mounts].reverse()), testResourceMounts(mounts));
+  for (const alteration of [
+    { Name: 'shared-volume' },
+    { RW: false },
+    { Type: 'bind' },
+    { Destination: '/foreign' },
+  ]) {
+    const changed = structuredClone(mounts);
+    Object.assign(changed[0], alteration);
+    assert.notDeepEqual(testResourceMounts(changed), testResourceMounts(mounts));
+  }
+  assert.throws(() => testResourceMounts([mounts[0], mounts[0]]));
+});
 
 export function resourceFixture() {
   const nonce = 'a'.repeat(32);

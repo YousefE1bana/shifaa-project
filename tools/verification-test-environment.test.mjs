@@ -216,6 +216,12 @@ function fixture(t, attack = {}) {
       volume,
       { 'com.supabase.cli.project': project, 'com.supabase.cli.workdir': workdir },
     );
+    const configuration = makeVolume(project + '-config', { 'com.supabase.cli.project': project });
+    c.Mounts.push({
+      Type: 'volume',
+      Name: configuration.Name,
+      Destination: '/etc/postgresql-custom',
+    });
     attack.nativeContainer?.(c);
     const mailpitPort = Number(/\[local_smtp\]\nenabled = true\nport = (\d+)/.exec(config)?.[1]);
     assert.ok(mailpitPort > 55432, 'Implicit Mailpit port must be allocated explicitly');
@@ -280,6 +286,9 @@ test('actual orchestration creates one reusable pair, then deletes only those ex
   const run = await createVerificationEnvironment(f.root, f.boundaries);
   assert.equal(f.nativeStarts(), 1);
   assert.equal(f.containers.size, 3);
+  // Include multiple real-looking native mounts and change only enumeration
+  // order across inspect calls, as Docker's daemon map is allowed to do.
+  for (const c of f.containers.values()) c.Mounts.reverse();
   assert.equal(f.calls.filter((args) => args[0] === 'create').length, 1);
   assert.ok(f.calls.find((args) => args[0] === 'create').includes('--memory'));
   await run.close();
