@@ -393,6 +393,23 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
         const v = /^\/volumes\/([^/]+)$/.exec(route);
         const e = /^\/exec\/([^/]+)\/(start|resize)$/.exec(route);
         if (c) {
+          // db reset probes excluded Realtime/pooler services. Preserve the
+          // daemon's not-found semantics without forwarding any mutation.
+          if (
+            req.method === 'POST' &&
+            c[2] === 'restart' &&
+            ['realtime', 'pooler'].some(
+              (service) => c[1] === `supabase_${service}_${scope.project}`,
+            )
+          ) {
+            const found = await fetch('GET', `/containers/${encodeURIComponent(c[1])}/json`);
+            if (found.status === 404) {
+              res.writeHead(404, { 'content-type': 'application/json' });
+              res.end(JSON.stringify({ message: 'No such container' }));
+              return;
+            }
+            assert.equal(found.status, 200, 'Resource identity unavailable');
+          }
           const actual = await ownContainer(decodeURIComponent(c[1]));
           assert.ok(
             (req.method === 'DELETE' && !c[2]) ||

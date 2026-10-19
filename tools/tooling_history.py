@@ -16,7 +16,7 @@ RECORD_SHA256 = "e38049b11787c49e01d0c6cfe0ef3cb3f825fc68f207be5bb224eebc4567fb0
 
 
 VERIFICATION_RECORD = "docs/governance/safe-verification-v1/historical-inputs.json"
-VERIFICATION_RECORD_SHA256 = "d4dc5876227f6f22c2ec79af42bb7d2f2acff08b78c62ad6dc9f428c29099582"
+VERIFICATION_RECORD_SHA256 = "26c836446519eb1eb4e0a1a46e0b68ad3a9dae905a5ecaafbfadcc78f158f5fc"
 
 
 def verification_inputs(root: Path) -> dict[str, bytes]:

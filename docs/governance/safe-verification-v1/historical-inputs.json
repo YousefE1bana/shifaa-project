@@ -295,8 +295,8 @@
     },
     {
       "path": "tools/native-supabase-docker.mjs",
-      "bytes": 28775,
-      "sha256": "023f06d8c4a859f80245d6821027594588b785abc356992a2fb385d034a9a426"
+      "bytes": 29565,
+      "sha256": "350d0b5b1d43f5f71611ed0e0aae29ab51cefbea0055d09c23d5f0efc75e03dd"
     }
   ]
 }

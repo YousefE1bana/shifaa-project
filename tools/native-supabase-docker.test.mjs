@@ -199,6 +199,23 @@ async function fixture(t, streamForwarder) {
   };
 }
 
+test('reset preserves absent optional service semantics without forwarding mutations or adopting existing services', async (t) => {
+  const f = await fixture(t);
+  for (const service of ['realtime', 'pooler']) {
+    const name = `supabase_${service}_${f.project}`;
+    assert.equal((await f.send('POST', `/containers/${name}/restart`)).status, 404);
+    f.containers.set(name, { Id: 'development' });
+    assert.equal((await f.send('POST', `/containers/${name}/restart`)).status, 403);
+    assert.equal((await f.send('POST', `/containers/${name}-foreign/restart`)).status, 403);
+  }
+  assert.equal(f.requests.length, 0);
+  f.setEngine('foreign');
+  assert.equal(
+    (await f.send('POST', `/containers/supabase_realtime_${f.project}/restart`)).status,
+    403,
+  );
+});
+
 test('actual Docker CLI serializes create through the boundary with explicit loopback, not network defaults', async (t) => {
   const f = await fixture(t);
   const result = await new Promise((resolve, reject) => {
