@@ -565,6 +565,16 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
       },
     };
   } catch (error) {
+    // Closed diagnostic metadata only; never subprocess argv/stderr or values.
+    const startupDiagnostic = {
+      code: ['ETIMEDOUT', 'ENOENT', 'ENOBUFS'].includes(error.code) ? error.code : 'STARTUP_FAILED',
+      exitCode: Number.isInteger(error.status) ? error.status : null,
+      denied: readNativeJournal(environment)
+        .filter((entry) => entry.state === 'DENIED')
+        .slice(-5)
+        .map(({ stage, method, route, check }) => ({ stage, method, route, check })),
+    };
+    console.error('Verification startup diagnostic:', JSON.stringify(startupDiagnostic));
     environment.failed = true;
     save();
     if (previousContext === undefined) delete process.env.SHIFAA_VERIFY_CONTEXT;

@@ -355,6 +355,9 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
         res.end(bytes);
       } else {
         res.writeHead(response.statusCode, response.headers);
+        // docker run waits for attach headers before starting the container.
+        // A quiet bootstrap stream must not hold that handshake until output.
+        res.flushHeaders();
         response.pipe(res);
       }
     } catch (error) {

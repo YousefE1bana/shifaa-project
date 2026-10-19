@@ -285,8 +285,8 @@
     },
     {
       "path": "tools/verification-test-environment.mjs",
-      "bytes": 22261,
-      "sha256": "0a0205b5e529ffe4f95db7cad470eda247a23789f7fd6641242e770dd70c710a"
+      "bytes": 22844,
+      "sha256": "a464bcd4ef30ebf203a53048eb39fd132ba3d1c8e54eff77ccac5d230b898a5c"
     },
     {
       "path": "tools/verify.mjs",
@@ -295,8 +295,8 @@
     },
     {
       "path": "tools/native-supabase-docker.mjs",
-      "bytes": 22144,
-      "sha256": "5b228fa2f82a258cdcaa682eca61765cf1f64e2209137b4a16e6fa18d4ed7968"
+      "bytes": 22329,
+      "sha256": "e57ac3b577361841fd759729c580bfdf0349da489c52aaa83763b6f7cd87c90d"
     }
   ]
 }

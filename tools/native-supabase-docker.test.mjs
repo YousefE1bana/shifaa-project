@@ -121,6 +121,11 @@ async function fixture(t) {
         return containers.has(match[1])
           ? response(200, containers.get(match[1]))
           : response(404, { message: 'No such container' });
+      if (match[2] === 'attach')
+        return Object.assign(new Readable({ read() {} }), {
+          statusCode: 200,
+          headers: { 'content-type': 'application/vnd.docker.raw-stream' },
+        });
       if (match[2] === 'exec') return response(201, { Id: 'owned-exec' });
       requests.push({ method, route });
       return response(204, '');
@@ -456,3 +461,26 @@ test(
     assert.equal(f.containers.size, 0, 'No actual native or mocked running resource is required');
   },
 );
+
+test('stream headers reach CLI before bootstrap starts', async (t) => {
+  const f = await fixture(t),
+    id = 'c'.repeat(64);
+  await f.send('POST', '/containers/create?name=supabase_db_' + f.project, f.container());
+  await new Promise((resolve, reject) => {
+    const r = http.request(
+      f.boundary.host.replace('tcp:', 'http:') + '/containers/' + id + '/attach',
+      { method: 'POST', headers: f.boundary.headers },
+      (res) => {
+        clearTimeout(timer);
+        res.destroy();
+        resolve();
+      },
+    );
+    r.on('error', reject);
+    const timer = setTimeout(() => {
+      r.destroy();
+      reject(new Error('Attach headers withheld until container output; docker run cannot start'));
+    }, 1000);
+    r.end();
+  });
+});
