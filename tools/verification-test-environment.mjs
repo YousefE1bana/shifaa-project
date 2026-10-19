@@ -265,6 +265,12 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
     }
     let config = readFileSync(path.join(workdir, 'supabase/config.toml'), 'utf8');
     config = config.replace(/^project_id = "[^"]+"/m, `project_id = "${nativeProject}"`);
+    // The optional pg-delta catalog cache launches an unlabelled Deno job
+    // with a writable workspace bind. Auth/Storage/migration verification does
+    // not use declarative schema diffing; disable its cache in this copy only.
+    if (/^\[experimental\.pgdelta\]$/m.test(config))
+      config = config.replace(/(\[experimental\.pgdelta\][\s\S]*?^enabled = )true/m, '$1false');
+    else config += '\n[experimental.pgdelta]\nenabled = false\n';
     // The CLI enables Mailpit by default even when no SMTP table is present.
     // Materialize that implicit service so its default host port cannot escape
     // the same allocation/admission rules as explicitly configured services.

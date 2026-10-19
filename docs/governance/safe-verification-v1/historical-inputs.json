@@ -285,8 +285,8 @@
     },
     {
       "path": "tools/verification-test-environment.mjs",
-      "bytes": 23322,
-      "sha256": "376e16f215c4fdeec20306465770509e6aa58709e899e542b5858c6b8385f158"
+      "bytes": 23773,
+      "sha256": "da814e594ef8799c2378c1ebeaf132c990ffa527c1a604ce6ee96d96d4e3bd59"
     },
     {
       "path": "tools/verify.mjs",

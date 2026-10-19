@@ -190,7 +190,12 @@ function fixture(t, attack = {}) {
     assert.ok(args.includes('--network-id'));
     assert.equal(options.env.DOCKER_HOST, 'unix:///mock-engine');
     assert.equal(options.env.SUPABASE_CLI_BINARY_OVERRIDE, undefined);
-    for (const key of ['SUPABASE_DB_PORT', 'SUPABASE_API_PORT', 'SUPABASE_PROJECT_ID'])
+    for (const key of [
+      'SUPABASE_DB_PORT',
+      'SUPABASE_API_PORT',
+      'SUPABASE_PROJECT_ID',
+      'SUPABASE_EXPERIMENTAL_PG_DELTA',
+    ])
       assert.equal(
         options.env[key],
         undefined,
@@ -201,6 +206,7 @@ function fixture(t, attack = {}) {
     const config = fs.readFileSync(path.join(workdir, 'supabase/config.toml'), 'utf8');
     assert.match(config, /\[db.migrations\]\nenabled = false/);
     assert.match(config, /\[db.pooler\]\nenabled = false/);
+    assert.match(config, /\[experimental\.pgdelta\]\nenabled = false/);
     if (attack.nativeFailure) throw Error('SECRET partial startup failed');
     const configuredProject = /project_id = "([^"]+)"/.exec(config)[1];
     // Match official CLI sanitization, not a mock that accepts overlong IDs.
@@ -308,6 +314,24 @@ test('actual orchestration creates one reusable pair, then deletes only those ex
   );
 });
 
+test('experimental pg-delta cache is disabled only in the private copy, preserving migrations and source', async (t) => {
+  const f = fixture(t);
+  const sourcePath = path.join(f.root, 'supabase/config.toml');
+  fs.appendFileSync(sourcePath, '\n[experimental.pgdelta]\nenabled = true\n');
+  const source = fs.readFileSync(sourcePath);
+  const run = await createVerificationEnvironment(f.root, f.boundaries);
+  const config = fs.readFileSync(
+    path.join(run.environment.supabase.workdir, 'supabase/config.toml'),
+    'utf8',
+  );
+  assert.match(config, /\[experimental\.pgdelta\]\nenabled = false/);
+  assert.match(config, /\[db.migrations\]\nenabled = true/);
+  assert.match(config, /\[db.seed\]\nenabled = true/);
+  assert.deepEqual(fs.readFileSync(sourcePath), source);
+  await run.close();
+  assert.deepEqual(fs.readFileSync(sourcePath), source);
+});
+
 test('Docker 29 live network counters may change through identity-checked teardown', async (t) => {
   const f = fixture(t);
   const run = await createVerificationEnvironment(f.root, f.boundaries);
@@ -330,7 +354,12 @@ test('Docker 29 live network counters may change through identity-checked teardo
 });
 
 test('ambient Supabase shared-target overrides cannot escape the private configuration', async (t) => {
-  const keys = ['SUPABASE_DB_PORT', 'SUPABASE_API_PORT', 'SUPABASE_PROJECT_ID'];
+  const keys = [
+    'SUPABASE_DB_PORT',
+    'SUPABASE_API_PORT',
+    'SUPABASE_PROJECT_ID',
+    'SUPABASE_EXPERIMENTAL_PG_DELTA',
+  ];
   const before = keys.map((key) => process.env[key]);
   t.after(() =>
     keys.forEach((key, index) => {
@@ -339,6 +368,7 @@ test('ambient Supabase shared-target overrides cannot escape the private configu
     }),
   );
   for (const key of keys) process.env[key] = key.endsWith('ID') ? 'shifaa-local-supabase' : '5432';
+  process.env.SUPABASE_EXPERIMENTAL_PG_DELTA = 'true';
   const f = fixture(t);
   const run = await createVerificationEnvironment(f.root, f.boundaries);
   await run.close();
