@@ -352,11 +352,18 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
           assert.ok(execs.has(e[1]), 'Unowned exec');
           await ownContainer(execs.get(e[1]));
         } else if (route === '/images/create' && req.method === 'POST') {
-          assert.match(
-            url.searchParams.get('fromImage') ?? '',
-            /^(?:public\.ecr\.aws\/supabase|supabase)\/[a-z0-9_-]+$/,
-          );
-          assert.ok(url.searchParams.get('tag') && !url.searchParams.has('fromSrc'));
+          stage = 'image-pull';
+          // Docker CLI sends repo + separate tag; the SDK may put the tag
+          // inside fromImage. Both must remain pinned, with no registry widening.
+          const image =
+            /^(?:public\.ecr\.aws\/supabase|supabase)\/[a-z0-9_-]+(?::([A-Za-z0-9_][A-Za-z0-9_.-]{0,127}))?$/.exec(
+              url.searchParams.get('fromImage') ?? '',
+            );
+          assert.ok(image, 'Foreign image registry/reference');
+          const tag = url.searchParams.get('tag') || image[1];
+          assert.match(tag ?? '', /^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$/);
+          assert.ok(!image[1] || !url.searchParams.get('tag') || image[1] === tag);
+          assert.ok(tag !== 'latest' && !url.searchParams.has('fromSrc'));
         } else throw new Error('Unscoped native Docker mutation denied');
       }
       const requestId = randomUUID();

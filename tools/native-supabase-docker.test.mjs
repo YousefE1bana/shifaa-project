@@ -590,3 +590,20 @@ test('denial diagnostics classify request shape without disclosing host paths or
   assert.deepEqual(denial.shape.binds, [{ source: 'absolute', target: '/workspace' }]);
   assert.ok(!JSON.stringify(denial).includes('private-'));
 });
+
+test('SDK embedded image tags and CLI separate tags retain registry and version restrictions', async (t) => {
+  const f = await fixture(t);
+  for (const query of [
+    'fromImage=public.ecr.aws/supabase/postgres:17.6.1',
+    'fromImage=supabase/postgres&tag=17.6.1',
+  ])
+    assert.equal((await f.send('POST', '/images/create?' + query)).status, 200);
+  for (const query of [
+    'fromImage=foreign/postgres:17.6.1',
+    'fromImage=supabase/postgres:17.6.1&tag=other',
+    'fromImage=supabase/postgres',
+    'fromImage=supabase/postgres:latest',
+    'fromImage=supabase/postgres:17.6.1&fromSrc=https://foreign/archive',
+  ])
+    assert.equal((await f.send('POST', '/images/create?' + query)).status, 403);
+});
