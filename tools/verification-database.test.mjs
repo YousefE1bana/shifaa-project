@@ -99,6 +99,49 @@ test('exact created resource is admitted and ordinary output writes do not inval
   assert.equal(validateTestResource(record, observed), record);
 });
 
+// First real Windows aggregate run, 2026-10-19: Docker Desktop translates
+// drive-letter sources before returning both HostConfig.Mounts and Mounts.
+test('Docker Desktop admits the exact translated read-only Windows repository mount', () => {
+  const { record, observed } = resourceFixture();
+  record.sourceMount = 'D:\\ECU\\Gradution-Project';
+  record.endpoint = observed.endpoint = 'npipe:////./pipe/dockerDesktopLinuxEngine';
+  observed.container.Mounts[1].Source = '/run/desktop/mnt/host/d/ECU/Gradution-Project';
+  assert.equal(validateTestResource(record, observed), record);
+});
+
+test('Desktop path translation cannot admit another source, write access or daemon', () => {
+  for (const attack of [
+    (f) => {
+      f.observed.container.Mounts[1].Source = '/run/desktop/mnt/host/c/ECU/Gradution-Project';
+    },
+    (f) => {
+      f.observed.container.Mounts[1].Source += '-other';
+    },
+    (f) => {
+      f.observed.container.Mounts[1].Source += '/../other';
+    },
+    (f) => {
+      f.observed.container.Mounts[1].RW = true;
+    },
+    (f) => {
+      f.record.endpoint = f.observed.endpoint = 'tcp://foreign';
+    },
+  ]) {
+    const fixture = resourceFixture();
+    fixture.record.sourceMount = 'D:\\ECU\\Gradution-Project';
+    fixture.record.endpoint = fixture.observed.endpoint =
+      'npipe:////./pipe/dockerDesktopLinuxEngine';
+    fixture.observed.container.Mounts[1].Source = '/run/desktop/mnt/host/d/ECU/Gradution-Project';
+    attack(fixture);
+    let operations = 0;
+    assert.throws(() => {
+      validateTestResource(fixture.record, fixture.observed);
+      operations++;
+    });
+    assert.equal(operations, 0);
+  }
+});
+
 const attacks = {
   'shared PostgreSQL port': (f) => {
     f.record.port = 5432;

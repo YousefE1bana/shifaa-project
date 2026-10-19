@@ -265,8 +265,8 @@
     },
     {
       "path": "tools/verification-database.mjs",
-      "bytes": 18757,
-      "sha256": "305db2c872ecba83ee78abc9552fb7baddcc3718f74550766fd616e425eaf921"
+      "bytes": 19470,
+      "sha256": "e728be5e1c3aee14766cf676b69240a05094ddc6ff61150e03b294116761f622"
     },
     {
       "path": "tools/verification-e2e.mjs",

@@ -28,6 +28,21 @@ export function testResourceMounts(mounts) {
   return [...mounts].sort((a, b) => a.Destination.localeCompare(b.Destination));
 }
 
+function repositoryBindSource(record, source) {
+  if (source === record.sourceMount) return true;
+  // Docker Desktop's Linux daemon reports the translated host path, not the
+  // drive-letter spelling submitted to docker create. Accept only this exact
+  // mapping on the independently verified local Desktop endpoint.
+  if (
+    record.endpoint !== 'npipe:////./pipe/dockerDesktopLinuxEngine' ||
+    !/^[A-Za-z]:\\/.test(record.sourceMount ?? '')
+  )
+    return false;
+  const [drive, ...parts] = record.sourceMount.split('\\');
+  if (parts.some((part) => !part || part === '.' || part === '..')) return false;
+  return source === `/run/desktop/mnt/host/${drive[0].toLowerCase()}/${parts.join('/')}`;
+}
+
 // This is an inventory comparison, not label/name-based adoption. Every ID must
 // have been absent before this invocation and recorded after exclusive creation.
 export function validateTestResource(record, observed) {
@@ -81,7 +96,7 @@ export function validateTestResource(record, observed) {
       assert.ok(
         mount.Type === 'bind' &&
           mount.RW === false &&
-          mount.Source === record.sourceMount &&
+          repositoryBindSource(record, mount.Source) &&
           mount.Destination === '/workspace',
         'Unexpected mount',
       );
