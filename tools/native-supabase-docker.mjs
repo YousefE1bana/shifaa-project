@@ -192,17 +192,22 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
       let create, action, actionContainer;
       if (req.method === 'POST' && route === '/containers/create') {
         const b = JSON.parse(raw);
+        stage = 'container-project';
         assert.equal(b.Labels?.['com.supabase.cli.project'], scope.project, 'Foreign project');
         // The CLI also uses unnamed `docker run --rm` bootstrap jobs. Give
         // those an exclusive name before creation; never adopt an existing job.
-        if (!url.searchParams.has('name')) {
-          assert.equal(b.HostConfig.AutoRemove, true, 'Unnamed persistent container');
+        stage = 'container-name';
+        if (!url.searchParams.get('name')) {
+          // The Go CLI also runs one-shot jobs without AutoRemove so it can
+          // inspect their exit status. Exclusive naming and the creation
+          // receipt establish ownership before either form can start.
           url.searchParams.set('name', `supabase_bootstrap_${randomUUID()}_${scope.project}`);
         }
         assert.ok(
           url.searchParams.get('name')?.endsWith('_' + scope.project),
           'Foreign container name',
         );
+        stage = 'container-network';
         assert.ok(
           [scope.network, scope.networkName].includes(b.HostConfig.NetworkMode),
           'Foreign network',
@@ -228,13 +233,30 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
             assert.ok(scope.ports.includes(Number(bind.HostPort)), 'Unallocated native port');
             bind.HostIp = '127.0.0.1';
           }
-        for (const bind of b.HostConfig.Binds ?? []) {
-          const name = bind.split(':')[0];
-          // docker -v implicitly creates missing named volumes without a
-          // separate VolumeCreate request. Create and journal them explicitly
-          // first, so even an interrupted one-shot job leaves ownership proof.
-          await ensureVolume(name);
-        }
+        stage = 'container-binds';
+        b.HostConfig.Binds = await Promise.all(
+          (b.HostConfig.Binds ?? []).map(async (bind) => {
+            // A destination-only Docker -v argument requests an anonymous
+            // volume, not a host bind. Give it a receipted run-owned identity.
+            if (!bind.includes(':')) {
+              assert.ok(
+                bind.startsWith('/') &&
+                  bind !== '/' &&
+                  path.posix.normalize(bind) === bind &&
+                  !bind.includes('..'),
+              );
+              const name = `supabase_anonymous_${randomUUID()}_${scope.project}`;
+              await ensureVolume(name);
+              return name + ':' + bind;
+            }
+            const name = bind.split(':')[0];
+            // docker -v implicitly creates missing named volumes without a
+            // separate VolumeCreate request. Create and journal them explicitly
+            // first, so even an interrupted one-shot job leaves ownership proof.
+            await ensureVolume(name);
+            return bind;
+          }),
+        );
         const endpoints = Object.keys(b.NetworkingConfig?.EndpointsConfig ?? {});
         assert.ok(
           endpoints.every((n) => n === scope.network || n === scope.networkName),
@@ -420,27 +442,8 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
   };
 }
 
-export async function runNativeCli(file, args) {
-  verifyRunOutput(path.dirname(file));
-  const environment = JSON.parse(readFileSync(file));
-  assert.equal(environment.root, path.resolve(import.meta.dirname, '..'));
-  assert.equal(path.dirname(file), environment.output);
-  assert.ok(!environment.finished && !environment.failed);
-  process.kill(environment.parentPid, 0);
-  const endpoint = environment.postgres.endpoint;
-  assert.ok(
-    endpoint.startsWith('unix:///') || endpoint === 'npipe:////./pipe/dockerDesktopLinuxEngine',
-  );
-  const socketPath = endpoint.startsWith('unix:')
-    ? endpoint.slice(7)
-    : '\\\\.\\pipe\\dockerDesktopLinuxEngine';
-  const upstream = (method, url, headers, body) =>
-    new Promise((resolve, reject) => {
-      const request = http.request({ socketPath, path: url, method, headers }, resolve);
-      request.on('error', reject);
-      request.end(body);
-    });
-  const boundary = await nativeDockerBoundary(environment, upstream, async (req, socket, head) => {
+export function nativeStreamForwarder(socketPath) {
+  return async (req, socket, head) => {
     const length = Number(req.headers['content-length'] ?? 0);
     assert.ok(Number.isInteger(length) && length >= 0 && length <= 1024 * 1024);
     while (head.length < length) {
@@ -471,10 +474,56 @@ export async function runNativeCli(file, args) {
       socket.once('close', () => remote.destroy());
       remote.once('error', () => socket.destroy());
     });
-    request.on('response', () => socket.destroy());
+    request.on('response', (response) => {
+      // Docker permits legacy HTTP 200 attach streams as well as 101 upgrades.
+      // Present a 101 handshake to current Docker clients, preserving the raw
+      // duplex stream, before docker run can issue ContainerStart.
+      if (response.statusCode !== 200) {
+        response.resume();
+        socket.destroy();
+        return;
+      }
+      const remote = response.socket;
+      socket.write(
+        'HTTP/1.1 101 Switching Protocols\r\nConnection: Upgrade\r\nUpgrade: tcp\r\n\r\n',
+      );
+      if (pending.length) remote.write(pending);
+      response.pipe(socket);
+      socket.pipe(remote);
+      socket.once('close', () => remote.destroy());
+      remote.once('error', () => socket.destroy());
+      response.once('error', () => socket.destroy());
+    });
     request.end(body);
     socket.once('close', () => request.destroy());
-  });
+  };
+}
+
+export async function runNativeCli(file, args) {
+  verifyRunOutput(path.dirname(file));
+  const environment = JSON.parse(readFileSync(file));
+  assert.equal(environment.root, path.resolve(import.meta.dirname, '..'));
+  assert.equal(path.dirname(file), environment.output);
+  assert.ok(!environment.finished && !environment.failed);
+  process.kill(environment.parentPid, 0);
+  const endpoint = environment.postgres.endpoint;
+  assert.ok(
+    endpoint.startsWith('unix:///') || endpoint === 'npipe:////./pipe/dockerDesktopLinuxEngine',
+  );
+  const socketPath = endpoint.startsWith('unix:')
+    ? endpoint.slice(7)
+    : '\\\\.\\pipe\\dockerDesktopLinuxEngine';
+  const upstream = (method, url, headers, body) =>
+    new Promise((resolve, reject) => {
+      const request = http.request({ socketPath, path: url, method, headers }, resolve);
+      request.on('error', reject);
+      request.end(body);
+    });
+  const boundary = await nativeDockerBoundary(
+    environment,
+    upstream,
+    nativeStreamForwarder(socketPath),
+  );
   try {
     const env = Object.fromEntries(
       Object.entries(process.env).filter(

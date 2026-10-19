@@ -8,11 +8,12 @@ import os from 'node:os';
 import path from 'node:path';
 import {
   nativeDockerBoundary,
+  nativeStreamForwarder,
   readNativeJournal,
   currentNativeVolumes,
 } from './native-supabase-docker.mjs';
 
-async function fixture(t) {
+async function fixture(t, streamForwarder) {
   const output = mkdtempSync(path.join(os.tmpdir(), 'shifaa-native-api-test-'));
   const nonce = 'a'.repeat(32),
     project = `sv-${nonce}-sb`;
@@ -126,6 +127,7 @@ async function fixture(t) {
           statusCode: 200,
           headers: { 'content-type': 'application/vnd.docker.raw-stream' },
         });
+      if (match[2] === 'wait') return response(200, { StatusCode: 0 });
       if (match[2] === 'exec') return response(201, { Id: 'owned-exec' });
       requests.push({ method, route });
       return response(204, '');
@@ -133,10 +135,17 @@ async function fixture(t) {
     throw Error('Unmodelled engine request: ' + method + ' ' + route);
   };
   const upgrades = [];
-  const boundary = await nativeDockerBoundary(environment, upstream, async (req, socket) => {
-    upgrades.push(req.url);
-    socket.end('HTTP/1.1 101 Switching Protocols\r\nConnection: Upgrade\r\nUpgrade: tcp\r\n\r\n');
-  });
+  const boundary = await nativeDockerBoundary(
+    environment,
+    upstream,
+    streamForwarder ??
+      (async (req, socket) => {
+        upgrades.push(req.url);
+        socket.end(
+          'HTTP/1.1 101 Switching Protocols\r\nConnection: Upgrade\r\nUpgrade: tcp\r\n\r\n',
+        );
+      }),
+  );
   t.after(async () => {
     await boundary.close();
     rmSync(output, { recursive: true });
@@ -483,4 +492,90 @@ test('stream headers reach CLI before bootstrap starts', async (t) => {
     }, 1000);
     r.end();
   });
+});
+
+for (const status of [101, 200])
+  test('actual Docker CLI bootstrap forwards native pipe attach status ' + status, async (t) => {
+    const socketPath =
+      process.platform === 'win32'
+        ? '\\\\.\\pipe\\shifaa-native-mock-' + process.pid + '-' + status
+        : path.join(os.tmpdir(), 'shifaa-native-' + process.pid + '-' + status + '.sock');
+    const daemon = http.createServer(),
+      sockets = new Set();
+    daemon.on('connection', (s) => {
+      sockets.add(s);
+      s.on('close', () => sockets.delete(s));
+    });
+    daemon.on('upgrade', (req, socket) => {
+      socket.write(
+        status === 101
+          ? 'HTTP/1.1 101 Switching Protocols\r\nConnection: Upgrade\r\nUpgrade: tcp\r\n\r\n'
+          : 'HTTP/1.1 200 OK\r\nContent-Type: application/vnd.docker.raw-stream\r\nConnection: close\r\n\r\n',
+      );
+      setTimeout(() => socket.end(), 100);
+    });
+    await new Promise((r) => daemon.listen(socketPath, r));
+    t.after(
+      () =>
+        new Promise((r) => {
+          daemon.close(r);
+          for (const s of sockets) s.destroy();
+        }),
+    );
+    const f = await fixture(t, nativeStreamForwarder(socketPath));
+    const env = Object.fromEntries(
+      Object.entries(process.env).filter(([k]) => !k.startsWith('DOCKER')),
+    );
+    env.DOCKER_CUSTOM_HEADERS = f.boundary.authorization;
+    const result = await new Promise((resolve, reject) => {
+      const p = spawn(
+        'docker',
+        [
+          '--host',
+          f.boundary.host,
+          'run',
+          '--rm',
+          '--pull=never',
+          '--network',
+          f.network,
+          '--label',
+          'com.supabase.cli.project=' + f.project,
+          f.image,
+          'echo',
+          'mock',
+        ],
+        { env, windowsHide: true, timeout: 10000 },
+      );
+      let diagnostic = '';
+      for (const s of [p.stdout, p.stderr]) s.on('data', (b) => (diagnostic += b));
+      p.on('error', reject);
+      p.on('close', (code) => resolve({ code, diagnostic }));
+    });
+    assert.equal(result.code, 0, result.diagnostic);
+    assert.ok(f.requests.some((r) => r.route.endsWith('/start')));
+  });
+
+test('Go bootstrap without AutoRemove still requires exact project/network and receives an exclusive receipt', async (t) => {
+  const f = await fixture(t),
+    b = f.container();
+  b.HostConfig.AutoRemove = false;
+  assert.equal((await f.send('POST', '/containers/create?name=', b)).status, 201);
+  assert.ok(readNativeJournal(f.environment).some((e) => e.container));
+  const wrong = f.container();
+  wrong.Labels['com.supabase.cli.project'] = 'development';
+  assert.equal((await f.send('POST', '/containers/create?name=', wrong)).status, 403);
+});
+test('destination-only anonymous mount is explicitly created and journaled, never treated as a host bind', async (t) => {
+  const f = await fixture(t),
+    b = f.container();
+  b.HostConfig.Binds = ['/root/.cache/deno'];
+  assert.equal((await f.send('POST', '/containers/create', b)).status, 201);
+  const v = readNativeJournal(f.environment).find((e) => e.volume)?.volume;
+  assert.ok(v.Name.endsWith('_' + f.project));
+  assert.deepEqual(f.requests.find((r) => r.route === '/containers/create').body.HostConfig.Binds, [
+    v.Name + ':/root/.cache/deno',
+  ]);
+  const wrong = f.container();
+  wrong.HostConfig.Binds = ['/development:/root/.cache/deno'];
+  assert.equal((await f.send('POST', '/containers/create', wrong)).status, 403);
 });
