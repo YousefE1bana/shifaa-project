@@ -313,3 +313,16 @@ test('native reset replacement substitution preserves failed receipt and cannot 
   assert.equal(JSON.parse(fs.readFileSync(f.file)).failed, true);
   assert.throws(() => testRuntime('supabase'), /finished or failed/);
 });
+
+for (const state of ['created', 'foreign-config', 'foreign-attachment', 'running-empty'])
+  test(`network admission distinguishes Docker create/start: ${state}`, () => {
+    const { record, observed } = resourceFixture();
+    const c = observed.container;
+    c.State.Running = state === 'running-empty';
+    c.HostConfig.NetworkMode = state === 'foreign-config' ? 'foreign' : record.network.Id;
+    c.HostConfig.PortBindings = structuredClone(c.NetworkSettings.Ports);
+    c.NetworkSettings.Networks[record.network.Name].NetworkID =
+      state === 'foreign-attachment' ? 'foreign' : '';
+    if (state === 'created') assert.equal(validateTestResource(record, observed), record);
+    else assert.throws(() => validateTestResource(record, observed));
+  });

@@ -88,11 +88,16 @@ export function validateTestResource(record, observed) {
   const stableNetwork = ({ Containers: _containers, ...value }) => value;
   assert.deepEqual(stableNetwork(observed.network), stableNetwork(record.network));
   assert.ok(Object.hasOwn(observed.container.NetworkSettings.Networks, record.network.Name));
-  assert.equal(
-    observed.container.NetworkSettings.Networks[record.network.Name].NetworkID,
-    record.network.Id,
-    'Container network identity substitution',
-  );
+  const attachedNetwork =
+    observed.container.NetworkSettings.Networks[record.network.Name].NetworkID;
+  if (observed.container.State.Running)
+    assert.equal(attachedNetwork, record.network.Id, 'Container network identity substitution');
+  else {
+    // Docker leaves NetworkID empty until start. Admission still requires the
+    // exact independently inspected network ID in the create configuration.
+    assert.equal(observed.container.HostConfig.NetworkMode, record.network.Id);
+    assert.ok(attachedNetwork === '' || attachedNetwork === record.network.Id);
+  }
   assert.equal(Object.keys(observed.container.NetworkSettings.Networks).length, 1);
   return record;
 }

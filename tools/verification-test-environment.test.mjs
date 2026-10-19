@@ -130,10 +130,19 @@ function fixture(t, attack = {}) {
         labelArgs(args),
         [{ Type: 'bind', Source: root, Destination: '/workspace', RW: false }],
       );
+      container.State.Running = false;
+      container.HostConfig.PortBindings = structuredClone(container.NetworkSettings.Ports);
+      Object.values(container.NetworkSettings.Networks)[0].NetworkID = '';
       return container.Id;
     }
     if (args[0] === 'inspect') return JSON.stringify([containers.get(args[1])]);
-    if (args[0] === 'start' || args[0] === 'exec' || args[0] === 'update') return '';
+    if (args[0] === 'start') {
+      const c = containers.get(args[1]);
+      c.State.Running = true;
+      Object.values(c.NetworkSettings.Networks)[0].NetworkID = c.HostConfig.NetworkMode;
+      return '';
+    }
+    if (args[0] === 'exec' || args[0] === 'update') return '';
     if (args[0] === 'ps') {
       const filter = value(args, '--filter');
       if (filter.startsWith('volume='))
