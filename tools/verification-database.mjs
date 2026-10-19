@@ -24,9 +24,7 @@ const cleanEnv = () =>
 export function validateTestResource(record, observed) {
   assert.match(record.nonce, /^[a-f0-9]{32}$/);
   assert.ok(
-    [`shifaa-verify-${record.nonce}`, `shifaa-verify-${record.nonce}-native`].includes(
-      record.project,
-    ),
+    [`shifaa-verify-${record.nonce}`, `sv-${record.nonce}-sb`].includes(record.project),
     'Cross-run project',
   );
   assert.equal(observed.engine, record.engine);

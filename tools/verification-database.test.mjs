@@ -215,7 +215,7 @@ function nativeResetFixture(t, attack) {
   fs.writeFileSync(path.join(directory, 'supabase/config.toml'), config);
   const f = resourceFixture();
   const target = f.record;
-  target.project += '-native';
+  target.project = `sv-${target.nonce}-sb`;
   target.workdir = directory;
   target.configSha256 = createHash('sha256').update(config).digest('hex');
   target.volumes = [target.volume];

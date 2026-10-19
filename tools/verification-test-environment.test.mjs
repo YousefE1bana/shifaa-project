@@ -191,7 +191,11 @@ function fixture(t, attack = {}) {
     assert.match(config, /\[db.migrations\]\nenabled = false/);
     assert.match(config, /\[db.pooler\]\nenabled = false/);
     if (attack.nativeFailure) throw Error('SECRET partial startup failed');
-    const project = /project_id = "([^"]+)"/.exec(config)[1];
+    const configuredProject = /project_id = "([^"]+)"/.exec(config)[1];
+    // Match official CLI sanitization, not a mock that accepts overlong IDs.
+    const project = configuredProject.slice(0, 40);
+    assert.equal(configuredProject, project);
+    assert.match(project, /^sv-[a-f0-9]{32}-sb$/);
     const port = Number(/\[db\]\nport = (\d+)/.exec(config)[1]);
     const volume = makeVolume(project + '-db', { 'com.supabase.cli.project': project });
     const c = makeContainer(

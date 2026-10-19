@@ -93,7 +93,9 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
   );
   const before = inventory(context);
   assert.ok(
-    !before.projects.some((project) => /^shifaa-verify-[a-f0-9]{32}(?:-native)?$/.test(project)),
+    !before.projects.some((project) =>
+      /^(?:shifaa-verify-[a-f0-9]{32}(?:-native)?|sv-[a-f0-9]{32}-sb)$/.test(project),
+    ),
     'An earlier verification run still owns resources; inspect its private receipt before another run',
   );
   const nonce = randomBytes(16).toString('hex');
@@ -228,7 +230,9 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
     // Auth, Storage, Mailpit and reset behavior. Copy only public tracked inputs.
     const workdir = path.join(output, 'native');
     mkdirSync(workdir);
-    const nativeProject = project + '-native';
+    // Supabase v2.113.0 truncates IDs above 40 characters. Keep all 128 nonce bits.
+    const nativeProject = `sv-${nonce}-sb`;
+    assert.ok(nativeProject.length <= 40);
     assert.ok(!inventory(context).projects.includes(nativeProject), 'Native project collision');
     const nativeNetwork = docker(
       'network',
@@ -256,7 +260,7 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
       cpSync(path.join(root, relative), destination);
     }
     let config = readFileSync(path.join(workdir, 'supabase/config.toml'), 'utf8');
-    config = config.replace(/^project_id = "[^"]+"/m, `project_id = "${project}-native"`);
+    config = config.replace(/^project_id = "[^"]+"/m, `project_id = "${nativeProject}"`);
     // Every published native port is run-specific, not merely the SQL port.
     const assigned = new Set();
     const mappings = new Map();

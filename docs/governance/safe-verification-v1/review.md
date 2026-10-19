@@ -70,7 +70,7 @@ with the Product Owner; no new clinical or production authority is established.
   skipped as designed; this is unit coverage, not database acceptance.
 - Typecheck, lint, contracts (90 contracts / 39 API-client tests), architecture,
   secrets, four owned skills, formatting and whitespace: exit 0.
-- Documentation CURRENT and F011 FULL_PARITY_EVIDENCE: exit 0; P1–P5 still required.
+- Documentation CURRENT and F011 FULL_PARITY_EVIDENCE: exit 0; P1-P5 still required.
   Documentation checker regressions: 16 passed; tooling regressions: 12 passed.
 - Preservation: 2,774 F011 files and 40 F012 feature files unchanged; original
   ledger bytes, 150 incident records and post-incident dump unchanged. Sixteen
@@ -83,3 +83,22 @@ fixture initially omitted new dependencies; the binding was narrowed to the
 actual historical operational inputs and their runtime helpers, avoiding new
 immutability requirements for unrelated ordinary tests. Final successor tests
 pass using a disposable index; no assertion or historical evidence was weakened.
+
+## CI compatibility corrections
+
+The first fresh CI run found a normal-checkout `.git` directory assumption in
+our harness mock test and a Docker create/start network-state assumption in the
+new admission boundary. The mock tests now support primary checkouts and linked
+worktrees. Pre-start admission verifies the exact configured network identity;
+running admission still requires its exact attached identity. New negatives reject
+foreign configured/attached networks and an empty running attachment. CI startup
+errors expose only source locations, never raw messages or connection values.
+
+After these corrections, the safety/orchestration suite reports 447 passed,
+0 failed and 0 skipped; actual-harness mocks report 123 passed. These suites overlap
+original guard regressions and do not establish real-resource acceptance.
+
+The next CI attempt exposed Supabase's 40-character project-ID sanitization.
+The native project uses `sv-<full 128-bit nonce>-sb`, preserving uniqueness within
+that limit. The mock CLI now applies the actual truncation rule. No foreign
+project is adopted to work around a mismatch.
