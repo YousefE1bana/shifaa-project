@@ -174,6 +174,7 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
     assert.equal(req.headers['x-shifaa-invocation'], token, 'Foreign native API client');
   const server = http.createServer(async (req, res) => {
     let stage = 'invocation';
+    let shape;
     try {
       authenticated(req);
       stage = 'engine';
@@ -192,6 +193,35 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
       let create, action, actionContainer;
       if (req.method === 'POST' && route === '/containers/create') {
         const b = JSON.parse(raw);
+        // Closed diagnostic vocabulary only: never log argv, environment,
+        // host paths, image credentials or request bodies.
+        shape = {
+          project:
+            b.Labels?.['com.supabase.cli.project'] === scope.project
+              ? 'own'
+              : b.Labels?.['com.supabase.cli.project']
+                ? 'foreign'
+                : 'missing',
+          service:
+            ['db', 'auth', 'storage', 'kong', 'edge_runtime', 'vector', 'mailpit'].find((name) =>
+              url.searchParams.get('name')?.startsWith(`supabase_${name}_`),
+            ) ?? 'other',
+          binds: (b.HostConfig?.Binds ?? []).map((bind) => ({
+            source: bind.startsWith('/')
+              ? 'absolute'
+              : /^[A-Za-z]:/.test(bind)
+                ? 'windows'
+                : 'named',
+            target:
+              [
+                '/var/run/docker.sock',
+                '/workspace',
+                '/mnt',
+                '/var/lib/postgresql/data',
+                '/root/.cache/deno',
+              ].find((target) => bind.includes(target)) ?? 'other',
+          })),
+        };
         stage = 'container-project';
         assert.equal(b.Labels?.['com.supabase.cli.project'], scope.project, 'Foreign project');
         // The CLI also uses unnamed `docker run --rm` bootstrap jobs. Give
@@ -389,6 +419,7 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
         method: req.method,
         route: new URL(req.url, 'http://localhost').pathname,
         check: error.code === 'ERR_ASSERTION' ? error.operator : 'request',
+        ...(shape ? { shape } : {}),
       });
       // Neither engine responses nor request bodies (credentials/SQL) enter logs.
       if (!res.headersSent) res.writeHead(403, { 'content-type': 'application/json' });

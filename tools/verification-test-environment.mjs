@@ -572,7 +572,7 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
       denied: readNativeJournal(environment)
         .filter((entry) => entry.state === 'DENIED')
         .slice(-5)
-        .map(({ stage, method, route, check }) => ({ stage, method, route, check })),
+        .map(({ stage, method, route, check, shape }) => ({ stage, method, route, check, shape })),
     };
     console.error('Verification startup diagnostic:', JSON.stringify(startupDiagnostic));
     environment.failed = true;

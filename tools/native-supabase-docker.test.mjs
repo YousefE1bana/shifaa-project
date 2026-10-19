@@ -579,3 +579,14 @@ test('destination-only anonymous mount is explicitly created and journaled, neve
   wrong.HostConfig.Binds = ['/development:/root/.cache/deno'];
   assert.equal((await f.send('POST', '/containers/create', wrong)).status, 403);
 });
+
+test('denial diagnostics classify request shape without disclosing host paths or credentials', async (t) => {
+  const f = await fixture(t),
+    b = f.container();
+  b.Env = ['PASSWORD=private-secret'];
+  b.HostConfig.Binds = ['/private-sensitive-path:/workspace:ro'];
+  assert.equal((await f.send('POST', '/containers/create', b)).status, 403);
+  const denial = readNativeJournal(f.environment).find((e) => e.state === 'DENIED');
+  assert.deepEqual(denial.shape.binds, [{ source: 'absolute', target: '/workspace' }]);
+  assert.ok(!JSON.stringify(denial).includes('private-'));
+});
