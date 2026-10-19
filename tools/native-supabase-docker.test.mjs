@@ -3,9 +3,10 @@ import test from 'node:test';
 import http from 'node:http';
 import { Readable } from 'node:stream';
 import { spawn } from 'node:child_process';
-import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, mkdirSync, writeFileSync, renameSync, symlinkSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import {
   nativeDockerBoundary,
   nativeStreamForwarder,
@@ -93,11 +94,12 @@ async function fixture(t, streamForwarder) {
       requests.push({ method, route, body: b });
       if (rejectCreate) return response(500, { message: 'Intentional mocked startup failure' });
       const id = 'c'.repeat(64);
-      const mounts = (b.HostConfig.Binds ?? []).map((bind) => ({
-        Type: 'volume',
-        Name: bind.split(':')[0],
-        Destination: '/data',
-      }));
+      const mounts = (b.HostConfig.Binds ?? []).map((bind) => {
+        const host = /^(.*):([^:]+):(ro|rw)$/.exec(bind);
+        return host && (host[1].startsWith('/') || /^[A-Za-z]:/.test(host[1]))
+          ? { Type: 'bind', Source: host[1], Destination: host[2], RW: host[3] === 'rw' }
+          : { Type: 'volume', Name: bind.split(':')[0], Destination: '/data' };
+      });
       // Simulate an anonymous image-declared volume that the CLI never named.
       if (b.Volumes?.['/anonymous']) {
         const v = { Name: 'e'.repeat(64), Labels: null, CreatedAt: new Date().toISOString() };
@@ -606,4 +608,121 @@ test('SDK embedded image tags and CLI separate tags retain registry and version 
     'fromImage=supabase/postgres:17.6.1&fromSrc=https://foreign/archive',
   ])
     assert.equal((await f.send('POST', '/images/create?' + query)).status, 403);
+});
+
+function emailTemplate(f) {
+  const dir = path.join(f.environment.output, 'native/supabase/templates');
+  mkdirSync(dir, { recursive: true });
+  const source = path.join(dir, 'confirmation.html');
+  writeFileSync(source, '<p>Synthetic confirmation template</p>');
+  const destination = '/home/kong/templates/email/confirmation.html';
+  f.environment.nativeAdmission.templateBinds = [
+    {
+      source,
+      destination,
+      sha256: createHash('sha256').update('<p>Synthetic confirmation template</p>').digest('hex'),
+    },
+  ];
+  return { source, destination };
+}
+
+test('only exact private copied email templates mount read-only; source drift blocks startup', async (t) => {
+  const f = await fixture(t),
+    { source, destination } = emailTemplate(f),
+    b = f.container();
+  b.HostConfig.Binds = [`${source}:${destination}:rw`];
+  assert.equal(
+    (await f.send('POST', '/containers/create?name=supabase_kong_' + f.project, b)).status,
+    201,
+  );
+  const actual = f.requests.find((r) => r.route === '/containers/create').body;
+  assert.deepEqual(actual.HostConfig.Binds, [`${source}:${destination}:ro`]);
+  writeFileSync(source, 'altered');
+  assert.equal((await f.send('POST', '/containers/' + 'c'.repeat(64) + '/start')).status, 403);
+  assert.ok(!f.requests.some((r) => r.route.endsWith('/start')));
+});
+
+test('template admission rejects substituted host paths, destinations and non-Kong consumers', async (t) => {
+  const f = await fixture(t),
+    { source, destination } = emailTemplate(f);
+  for (const [name, bind] of [
+    ['kong', `${source}.other:${destination}:ro`],
+    ['kong', `${source}:/etc/foreign:ro`],
+    ['db', `${source}:${destination}:ro`],
+  ]) {
+    const b = f.container();
+    b.HostConfig.Binds = [bind];
+    assert.equal(
+      (await f.send('POST', '/containers/create?name=supabase_' + name + '_' + f.project, b))
+        .status,
+      403,
+    );
+  }
+  assert.ok(!f.requests.some((r) => r.route === '/containers/create'));
+});
+
+test('a writable template mount substituted by the engine is rejected before start', async (t) => {
+  const f = await fixture(t),
+    { source, destination } = emailTemplate(f),
+    b = f.container();
+  b.HostConfig.Binds = [`${source}:${destination}:ro`];
+  assert.equal(
+    (await f.send('POST', '/containers/create?name=supabase_kong_' + f.project, b)).status,
+    201,
+  );
+  f.containers.get('c'.repeat(64)).Mounts[0].RW = true;
+  assert.equal((await f.send('POST', '/containers/' + 'c'.repeat(64) + '/start')).status, 403);
+});
+
+test('a junction or symlink replacing the private template directory is rejected before create', async (t) => {
+  const f = await fixture(t),
+    { source, destination } = emailTemplate(f);
+  const dir = path.dirname(source);
+  renameSync(dir, dir + '-original');
+  symlinkSync(dir + '-original', dir, process.platform === 'win32' ? 'junction' : 'dir');
+  const b = f.container();
+  b.HostConfig.Binds = [`${source}:${destination}:ro`];
+  assert.equal(
+    (await f.send('POST', '/containers/create?name=supabase_kong_' + f.project, b)).status,
+    403,
+  );
+  assert.ok(!f.requests.some((r) => r.route === '/containers/create'));
+});
+
+test('actual Docker CLI email-template create is rewritten read-only through the real request path', async (t) => {
+  const f = await fixture(t),
+    { source, destination } = emailTemplate(f);
+  const env = Object.fromEntries(
+    Object.entries(process.env).filter(
+      ([k]) => !/^(DOCKER|COMPOSE|PG|DATABASE|SUPABASE_)/i.test(k),
+    ),
+  );
+  env.DOCKER_HOST = f.boundary.host;
+  env.DOCKER_CUSTOM_HEADERS = f.boundary.authorization;
+  const result = await new Promise((resolve, reject) => {
+    const p = spawn(
+      'docker',
+      [
+        'create',
+        '--name',
+        'supabase_kong_' + f.project,
+        '--network',
+        f.network,
+        '--label',
+        'com.supabase.cli.project=' + f.project,
+        '-v',
+        `${source}:${destination}:rw`,
+        f.image,
+      ],
+      { env, windowsHide: true, timeout: 10000 },
+    );
+    let diagnostic = '';
+    for (const stream of [p.stdout, p.stderr]) stream.on('data', (b) => (diagnostic += b));
+    p.on('error', reject);
+    p.on('close', (code) => resolve({ code, diagnostic }));
+  });
+  assert.equal(result.code, 0, result.diagnostic);
+  assert.deepEqual(f.requests.find((r) => r.route === '/containers/create').body.HostConfig.Binds, [
+    `${source}:${destination}:ro`,
+  ]);
 });

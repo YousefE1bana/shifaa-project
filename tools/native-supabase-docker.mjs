@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { spawn } from 'node:child_process';
-import { randomUUID, randomBytes } from 'node:crypto';
+import { randomUUID, randomBytes, createHash } from 'node:crypto';
 import { appendFileSync, readFileSync, existsSync, lstatSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -51,6 +51,50 @@ export function currentNativeVolumes(environment, names, inspect) {
     else assert.fail('Native volume has no creation receipt');
     return actual;
   });
+}
+
+export function verifyNativeTemplateMount(environment, mount) {
+  assert.equal(mount.Type, 'bind');
+  assert.equal(mount.RW, false, 'Writable template mount');
+  const { Source: source, Destination: destination } = mount;
+  const scope = environment.nativeAdmission;
+  const expected = (scope.templateBinds ?? []).find((entry) => {
+    if (entry.destination !== destination) return false;
+    if (source === entry.source) return true;
+    if (
+      environment.postgres.endpoint !== 'npipe:////./pipe/dockerDesktopLinuxEngine' ||
+      !/^[A-Za-z]:\\/.test(entry.source)
+    )
+      return false;
+    const [drive, ...parts] = entry.source.split('\\');
+    return (
+      source === `/run/desktop/mnt/host/${drive[0].toLowerCase()}/${parts.join('/')}` ||
+      source === `/${drive[0].toLowerCase()}/${parts.join('/')}` ||
+      source === entry.source.replaceAll('\\', '/')
+    );
+  });
+  assert.ok(expected, 'Unapproved host bind');
+  assert.ok(['confirmation.html', 'recovery.html'].includes(path.basename(expected.source)));
+  assert.equal(
+    expected.destination,
+    '/home/kong/templates/email/' + path.basename(expected.source),
+  );
+  assert.equal(
+    path.dirname(expected.source),
+    path.join(environment.output, 'native/supabase/templates'),
+  );
+  let cursor = expected.source;
+  while (cursor !== environment.output) {
+    assert.ok(!lstatSync(cursor).isSymbolicLink(), 'Linked template source');
+    cursor = path.dirname(cursor);
+  }
+  assert.equal(realpathSync.native(expected.source), expected.source);
+  assert.equal(lstatSync(expected.source).nlink, 1);
+  assert.equal(
+    createHash('sha256').update(readFileSync(expected.source)).digest('hex'),
+    expected.sha256,
+  );
+  return expected;
 }
 
 // Testable HTTP boundary; tests use an in-memory Engine, never the local daemon.
@@ -123,6 +167,9 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
     assert.equal(c.HostConfig.NetworkMode, scope.network);
     await ownNetwork();
     assert.ok(!c.HostConfig.Privileged && !c.HostConfig.PublishAllPorts);
+    for (const mount of c.Mounts.filter((m) => m.Type === 'bind')) {
+      verifyNativeTemplateMount(environment, mount);
+    }
     for (const bindings of Object.values(c.HostConfig.PortBindings ?? {}))
       for (const binding of bindings) {
         assert.equal(binding.HostIp, '127.0.0.1');
@@ -266,6 +313,17 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
         stage = 'container-binds';
         b.HostConfig.Binds = await Promise.all(
           (b.HostConfig.Binds ?? []).map(async (bind) => {
+            const host = /^(.*):([^:]+):(ro|rw)$/.exec(bind);
+            if (host && (host[1].startsWith('/') || /^[A-Za-z]:/.test(host[1]))) {
+              assert.ok(url.searchParams.get('name').startsWith('supabase_kong_'));
+              verifyNativeTemplateMount(environment, {
+                Type: 'bind',
+                Source: host[1],
+                Destination: host[2],
+                RW: false,
+              });
+              return `${host[1]}:${host[2]}:ro`;
+            }
             // A destination-only Docker -v argument requests an anonymous
             // volume, not a host bind. Give it a receipted run-owned identity.
             if (!bind.includes(':')) {
@@ -397,7 +455,6 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
             const snapshot = identity(actual);
             containers.set(actual.Id, snapshot);
             record({ requestId, state: 'CREATED', container: snapshot });
-            await ownContainer(actual.Id);
             // Docker may create anonymous image-declared volumes as part of
             // ContainerCreate. Record them before the CLI can start/remove it.
             for (const mount of actual.Mounts.filter((m) => m.Type === 'volume')) {
@@ -408,6 +465,7 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
               volumes.set(volume.Name, volume);
               record({ requestId, state: 'CREATED', parentContainer: actual.Id, volume });
             }
+            await ownContainer(actual.Id);
           } else execs.set(value.Id, actionContainer);
         }
         res.writeHead(response.statusCode, response.headers);

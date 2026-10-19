@@ -14,7 +14,11 @@ import {
   resourceCommand,
 } from './disposable-test-resources.mjs';
 import { testRuntime, testResourceMounts, testResourceNetwork } from './verification-database.mjs';
-import { readNativeJournal, currentNativeVolumes } from './native-supabase-docker.mjs';
+import {
+  readNativeJournal,
+  currentNativeVolumes,
+  verifyNativeTemplateMount,
+} from './native-supabase-docker.mjs';
 
 const rejectedPorts = new Set([5432, 54322, 55432]);
 async function freePort() {
@@ -293,6 +297,15 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
       network: nativeNetwork,
       networkName: nativeProject + '-net',
       ports: [...assigned],
+      templateBinds: tracked
+        .filter((relative) => /^supabase\/templates\/(confirmation|recovery)\.html$/.test(relative))
+        .map((relative) => ({
+          source: path.join(workdir, relative),
+          destination: '/home/kong/templates/email/' + path.basename(relative),
+          sha256: createHash('sha256')
+            .update(readFileSync(path.join(workdir, relative)))
+            .digest('hex'),
+        })),
     };
     save();
     execute(
@@ -431,11 +444,11 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
           );
       assert.ok(!before.containers.includes(item.Id));
       assert.ok(
-        item.Mounts.every((mount) =>
-          mount.Type === 'volume'
-            ? !before.volumes.includes(mount.Name)
-            : mount.Type === 'bind' && mount.Source.startsWith(workdir + path.sep),
-        ),
+        item.Mounts.every((mount) => {
+          if (mount.Type === 'volume') return !before.volumes.includes(mount.Name);
+          verifyNativeTemplateMount(environment, mount);
+          return true;
+        }),
         'Foreign native mount',
       );
       docker(
