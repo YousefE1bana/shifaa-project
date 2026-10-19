@@ -261,6 +261,11 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
     }
     let config = readFileSync(path.join(workdir, 'supabase/config.toml'), 'utf8');
     config = config.replace(/^project_id = "[^"]+"/m, `project_id = "${nativeProject}"`);
+    // The CLI enables Mailpit by default even when no SMTP table is present.
+    // Materialize that implicit service so its default host port cannot escape
+    // the same allocation/admission rules as explicitly configured services.
+    if (!/^\[(?:local_smtp|inbucket)\]$/m.test(config))
+      config += '\n[local_smtp]\nenabled = true\nport = 54324\n';
     // Every published native port is run-specific, not merely the SQL port.
     const assigned = new Set();
     const mappings = new Map();

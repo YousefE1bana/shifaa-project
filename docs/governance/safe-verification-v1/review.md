@@ -102,3 +102,9 @@ The next CI attempt exposed Supabase's 40-character project-ID sanitization.
 The native project uses `sv-<full 128-bit nonce>-sb`, preserving uniqueness within
 that limit. The mock CLI now applies the actual truncation rule. No foreign
 project is adopted to work around a mismatch.
+
+Native startup also enables Mailpit when no SMTP table is present in the project
+config. The private test copy now materializes that implicit service before port
+allocation. The real orchestration mock includes Mailpit and rejects its default
+unallocated port and any public interface. Final safety/orchestration results:
+449 passed, 0 failed, 0 skipped. The interface/port guard remains unchanged.

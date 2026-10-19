@@ -207,6 +207,17 @@ function fixture(t, attack = {}) {
       { 'com.supabase.cli.project': project, 'com.supabase.cli.workdir': workdir },
     );
     attack.nativeContainer?.(c);
+    const mailpitPort = Number(/\[local_smtp\]\nenabled = true\nport = (\d+)/.exec(config)?.[1]);
+    assert.ok(mailpitPort > 55432, 'Implicit Mailpit port must be allocated explicitly');
+    const mail = makeContainer(
+      'supabase_inbucket_' + project,
+      image,
+      value(args, '--network-id'),
+      mailpitPort,
+      volume,
+      { 'com.supabase.cli.project': project },
+    );
+    attack.mailpitContainer?.(mail);
     return '';
   }
   const boundaries = {
@@ -258,7 +269,7 @@ test('actual orchestration creates one reusable pair, then deletes only those ex
   const f = fixture(t);
   const run = await createVerificationEnvironment(f.root, f.boundaries);
   assert.equal(f.nativeStarts(), 1);
-  assert.equal(f.containers.size, 2);
+  assert.equal(f.containers.size, 3);
   assert.equal(f.calls.filter((args) => args[0] === 'create').length, 1);
   assert.ok(f.calls.find((args) => args[0] === 'create').includes('--memory'));
   await run.close();
@@ -318,5 +329,19 @@ for (const loss of ['loseEngine', 'foreignAttachment'])
     f[loss]();
     await assert.rejects(run.close());
     assert.equal(f.calls.filter((args) => args[0] === 'rm').length, 0);
-    assert.equal(f.containers.size, 2);
+    assert.equal(f.containers.size, 3);
+  });
+
+for (const [name, mutate] of Object.entries({
+  'default unallocated port': (c) => {
+    c.NetworkSettings.Ports['5432/tcp'][0].HostPort = '54324';
+  },
+  'public interface': (c) => {
+    c.NetworkSettings.Ports['5432/tcp'][0].HostIp = '0.0.0.0';
+  },
+}))
+  test(`Mailpit ${name} is rejected without cleanup`, async (t) => {
+    const f = fixture(t, { mailpitContainer: mutate });
+    await assert.rejects(createVerificationEnvironment(f.root, f.boundaries));
+    assert.equal(f.calls.filter((args) => args[0] === 'rm').length, 0);
   });
