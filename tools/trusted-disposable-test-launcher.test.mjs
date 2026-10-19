@@ -604,15 +604,16 @@ for (const target of ['projects', 'networkNames', 'volumes']) {
   });
 }
 
-test('dirty source checkout rejects before resource creation', async (t) => {
+test('ordinary dirty outputs are allowed while the captured source fingerprint stays exact', async (t) => {
   const f = launcherFixture(t);
   const previous = childProcess.execFileSync;
   t.mock.method(childProcess, 'execFileSync', (exe, args, options) =>
     exe === 'git' && args.includes('status') ? ' M source.ts' : previous(exe, args, options),
   );
   syncBuiltinESMExports();
-  await assert.rejects(createDisposableTestRun(f.options));
-  assert.deepEqual(f.launcherEffects.lifecycle, []);
+  const run = await createDisposableTestRun(f.options);
+  assert.ok(run);
+  assert.ok(f.launcherEffects.lifecycle.length > 0);
 });
 
 test('captured bootstrap bytes must match the exact approved Git blob before any creation', async (t) => {

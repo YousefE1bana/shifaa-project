@@ -171,7 +171,7 @@ function checkAuthorization(options) {
     !path.isAbsolute(options.outputParent ?? '') ||
     !/^[a-f0-9]{40}$/.test(options.revision ?? '') ||
     !hex.test(options.sourceDigest ?? '') ||
-    !/^[a-z0-9][a-z0-9./:_-]*@sha256:[a-f0-9]{64}$/.test(options.imageReference ?? '') ||
+    !/^(?:[a-z0-9][a-z0-9./:_-]*@)?sha256:[a-f0-9]{64}$/.test(options.imageReference ?? '') ||
     !/^sha256:[a-f0-9]{64}$/.test(options.docker?.image ?? '') ||
     !options.docker?.context ||
     !options.docker.engine ||
@@ -355,13 +355,7 @@ function assertSource(run) {
   if (
     sourceFingerprint(run.options.worktree) !== run.options.sourceDigest ||
     resourceCommand('git', ['rev-parse', 'HEAD'], undefined, run.options.worktree) !==
-      run.options.revision ||
-    resourceCommand(
-      'git',
-      ['-c', 'core.longpaths=true', 'status', '--porcelain', '--untracked-files=all'],
-      undefined,
-      run.options.worktree,
-    )
+      run.options.revision
   )
     denied('source drift at phase boundary');
 }

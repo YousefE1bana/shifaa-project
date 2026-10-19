@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import postgres from 'postgres';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Value } from '@sinclair/typebox/value';
@@ -10,6 +11,10 @@ import {
 
 import { buildApp } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
+
+const verificationRuntime = (
+  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
+).replace('shifaa-local-', '');
 
 const database = process.env['SHIFAA_F010_C28_DATABASE'];
 const patient = 'f0101000-0000-4000-8000-000000000002';
@@ -41,7 +46,7 @@ async function read(person: string, encounter = openEncounter, fields = 'partici
 describe.skipIf(!database)('C28 prerequisite encounter contract against real PostgreSQL', () => {
   beforeAll(async () => {
     if (!database) throw new Error('The isolated C28 PostgreSQL database is required.');
-    const url = `postgresql://shifaa_api:synthetic_api_only@${process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1'}:${process.env['SHIFAA_PG_PORT'] ?? '5432'}/${database}`;
+    const url = testDatabaseUrl('api', verificationRuntime, database);
     sql = postgres(url, { max: 1, onnotice: () => undefined });
     harness = await buildApp({
       config: {

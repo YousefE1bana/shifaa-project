@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
@@ -5,13 +6,16 @@ import { after, before, describe, it } from 'node:test';
 
 import postgres, { type Sql } from 'postgres';
 
+const verificationRuntime = (
+  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
+).replace('shifaa-local-', '');
+
 const realtimeUrl = new URL('./feature-010-realtime.ts', import.meta.url);
 const realtimeModule = existsSync(realtimeUrl)
   ? ((await import(realtimeUrl.href)) as Record<string, unknown>)
   : undefined;
-const ownerDatabaseUrl = process.env['SHIFAA_F010_C23_OWNER_DATABASE_URL'];
-const workerDatabaseUrl = process.env['SHIFAA_F010_C23_WORKER_DATABASE_URL'];
-const databaseReady = Boolean(ownerDatabaseUrl && workerDatabaseUrl);
+const database = process.env['SHIFAA_F010_C23_DATABASE'];
+const databaseReady = Boolean(database);
 const markerType = 'clinical.context_message.created.v1';
 const consumer = 'feature-010-realtime-hints';
 const safeErrorCodes = {
@@ -82,9 +86,15 @@ describe('Feature 010 realtime durable PostgreSQL behavior', { skip: !databaseRe
   before(
     async () => {
       const Store = storeConstructor();
-      owner = postgres(ownerDatabaseUrl!, { max: 4, connect_timeout: 10 });
-      worker = postgres(workerDatabaseUrl!, { max: 2, connect_timeout: 10 });
-      store = new Store(workerDatabaseUrl!, 'local');
+      owner = postgres(testDatabaseUrl('owner', verificationRuntime, database), {
+        max: 4,
+        connect_timeout: 10,
+      });
+      worker = postgres(testDatabaseUrl('worker', verificationRuntime, database), {
+        max: 2,
+        connect_timeout: 10,
+      });
+      store = new Store(testDatabaseUrl('worker', verificationRuntime, database), 'local');
       await owner`
       update platform.feature_flags set enabled=true
       where code='feature_010.realtime_hints' and environment='local'

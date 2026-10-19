@@ -1,3 +1,9 @@
+import {
+  testDockerSync,
+  testDatabaseUrl,
+  assertTestDatabaseEnvironment,
+  testRuntime as verifiedRuntime,
+} from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
@@ -234,15 +240,27 @@ let currentStage = 'runner initialization';
 const runtimeConfigs: Runtime[] = [
   {
     name: 'shifaa-local-postgres',
-    container: 'shifaa-local-postgres-postgres-1',
-    user: 'shifaa_owner',
-    adminDatabase: 'shifaa',
+    get container() {
+      return verifiedRuntime('postgres').container;
+    },
+    get user() {
+      return verifiedRuntime('postgres').user;
+    },
+    get adminDatabase() {
+      return verifiedRuntime('postgres').adminDatabase;
+    },
   },
   {
     name: 'shifaa-local-supabase',
-    container: 'supabase_db_shifaa-local-supabase',
-    user: 'supabase_admin',
-    adminDatabase: 'postgres',
+    get container() {
+      return verifiedRuntime('supabase').container;
+    },
+    get user() {
+      return verifiedRuntime('supabase').user;
+    },
+    get adminDatabase() {
+      return verifiedRuntime('supabase').adminDatabase;
+    },
   },
 ];
 const fixtureIds = {
@@ -272,7 +290,7 @@ function runDocker(runtime: Runtime, args: string[], label: string, input?: stri
   const dockerArgs = ['exec'];
   if (input !== undefined) dockerArgs.push('-i');
   dockerArgs.push(runtime.container, ...args);
-  const child = spawnSync('docker', dockerArgs, {
+  const child = testDockerSync(dockerArgs, {
     cwd: root,
     encoding: 'utf8',
     input,
@@ -380,20 +398,9 @@ function databaseName(runtime: Runtime): string {
   return `shifaa_test_f010_perf_${slug}_${process.pid}_${randomBytes(4).toString('hex')}`;
 }
 
-function portFor(runtime: Runtime): number {
-  const result = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
-    cwd: root,
-    encoding: 'utf8',
-    windowsHide: true,
-  });
-  const port = result.stdout.trim().split(/\r?\n/)[0]?.split(':').at(-1);
-  if (result.error || result.status !== 0 || !port || !/^\d+$/.test(port))
-    throw new Error(`${runtime.name} PostgreSQL has no mapped loopback port.`);
-  return Number(port);
-}
-
 function runBrowserProfile(output: string): Record<string, unknown> {
   currentStage = 'desktop Chromium browser measurements';
+  assertTestDatabaseEnvironment();
   const child = spawnSync(
     process.execPath,
     [
@@ -455,7 +462,11 @@ async function provisionDatabase(
 }
 
 function apiDatabaseUrl(runtime: Runtime, database: string): string {
-  return `postgresql://shifaa_api:synthetic_api_only@127.0.0.1:${portFor(runtime)}/${database}`;
+  return testDatabaseUrl(
+    'api',
+    runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase',
+    database,
+  );
 }
 
 function verifyFixture(runtime: Runtime, database: string): void {

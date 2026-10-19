@@ -1,3 +1,4 @@
+import { testDockerSync } from './verification-database.mjs';
 import { randomBytes, createHash } from 'node:crypto';
 import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve, dirname, relative, isAbsolute } from 'node:path';
@@ -60,7 +61,7 @@ function execSql(runtime, database, input, user = runtime.user) {
         PGPASSWORD: user === 'shifaa_api' ? 'synthetic_api_only' : 'synthetic_worker_only',
       }
     : process.env;
-  const result = spawnSync('docker', command, {
+  const result = testDockerSync(command, {
     cwd: root,
     env,
     input,
@@ -201,8 +202,7 @@ export function harnessInputs() {
   };
 }
 export function runtimeManifest(runtime) {
-  const inspect = spawnSync(
-    'docker',
+  const inspect = testDockerSync(
     [
       'inspect',
       '--format',

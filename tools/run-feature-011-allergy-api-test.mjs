@@ -1,3 +1,4 @@
+import { testRuntime } from './verification-database.mjs';
 // K11: real native Auth and real application AES over the two isolated databases.
 // Control-plane account provisioning is synthetic, narrowly owned and cleaned.
 import assert from 'node:assert/strict';
@@ -89,7 +90,7 @@ export async function withAllergyApi(runtime, work, options = {}) {
         actors = {};
       const pool = postgres({
         host: '127.0.0.1',
-        port: runtime.name === 'shifaa-local-postgres' ? 5432 : 54322,
+        port: testRuntime(runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase').port,
         database,
         username: 'shifaa_api',
         password: 'synthetic_api_only',

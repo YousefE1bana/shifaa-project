@@ -1,8 +1,15 @@
+import {
+  testDockerSync,
+  testDocker,
+  testConnectionOptions,
+  assertTestDatabaseEnvironment,
+  testRuntime as verifiedRuntime,
+} from './verification-database.mjs';
 import { randomBytes } from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { spawn, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 
 const featureMigration =
   'supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql';
@@ -125,15 +132,27 @@ if (
 const configuredRuntimes = [
   {
     name: 'shifaa-local-postgres',
-    container: 'shifaa-local-postgres-postgres-1',
-    user: 'shifaa_owner',
-    adminDatabase: 'shifaa',
+    get container() {
+      return verifiedRuntime('postgres').container;
+    },
+    get user() {
+      return verifiedRuntime('postgres').user;
+    },
+    get adminDatabase() {
+      return verifiedRuntime('postgres').adminDatabase;
+    },
   },
   {
     name: 'shifaa-local-supabase',
-    container: 'supabase_db_shifaa-local-supabase',
-    user: 'supabase_admin',
-    adminDatabase: 'postgres',
+    get container() {
+      return verifiedRuntime('supabase').container;
+    },
+    get user() {
+      return verifiedRuntime('supabase').user;
+    },
+    get adminDatabase() {
+      return verifiedRuntime('supabase').adminDatabase;
+    },
   },
 ];
 const requestedRuntime = process.env['SHIFAA_TEST_POSTGRES_RUNTIME'];
@@ -153,7 +172,7 @@ function runDocker(runtime, args, { input, label }) {
   const dockerArgs = ['exec'];
   if (input !== undefined) dockerArgs.push('-i');
   dockerArgs.push(runtime.container, ...args);
-  const dockerProcess = spawnSync('docker', dockerArgs, {
+  const dockerProcess = testDockerSync(dockerArgs, {
     cwd: root,
     encoding: 'utf8',
     input,
@@ -188,8 +207,7 @@ function runPsqlTuples(runtime, database, sql, label) {
 }
 
 function startPsqlSession(runtime, database, label) {
-  const child = spawn(
-    'docker',
+  const child = testDocker(
     [
       'exec',
       '-i',
@@ -791,20 +809,12 @@ function commitMessagesFixture(runtime, database) {
 
 function runMessageApiPostgresTest(runtime, database, projection = false, authorityRace = false) {
   if (authorityRace && runtime.name !== 'shifaa-local-postgres') return;
-  const dockerPort = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
-    cwd: root,
-    encoding: 'utf8',
-    windowsHide: true,
-  });
-  if (dockerPort.error || dockerPort.status !== 0) {
-    throw new Error(
-      `${runtime.name} PostgreSQL host port lookup failed: ${dockerPort.stderr ?? dockerPort.error?.message ?? ''}`,
-    );
-  }
-  const port = dockerPort.stdout.trim().split(/\r?\n/)[0]?.split(':').at(-1);
-  if (!port || !/^\d+$/.test(port)) {
-    throw new Error(`${runtime.name} has no usable host-mapped PostgreSQL port.`);
-  }
+  const connection = testConnectionOptions(
+    'owner',
+    runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase',
+    database,
+  );
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -823,8 +833,9 @@ function runMessageApiPostgresTest(runtime, database, projection = false, author
         ...process.env,
         SHIFAA_F010_C22_DATABASE: database,
         SHIFAA_F010_C28_DATABASE: database,
-        SHIFAA_PG_HOST: '127.0.0.1',
-        SHIFAA_PG_PORT: port,
+        SHIFAA_PG_HOST: connection.host,
+        SHIFAA_PG_PORT: String(connection.port),
+        SHIFAA_TEST_POSTGRES_RUNTIME: runtime.name,
       },
       encoding: 'utf8',
       stdio: 'inherit',
@@ -859,20 +870,12 @@ function checkEncounterProjectionApi(runtime, templateDatabase) {
 }
 
 function runPatientNotesPostgresTest(runtime, database, expectRed) {
-  const dockerPort = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
-    cwd: root,
-    encoding: 'utf8',
-    windowsHide: true,
-  });
-  if (dockerPort.error || dockerPort.status !== 0) {
-    throw new Error(
-      `${runtime.name} PostgreSQL host port lookup failed: ${dockerPort.stderr ?? dockerPort.error?.message ?? ''}`,
-    );
-  }
-  const port = dockerPort.stdout.trim().split(/\r?\n/)[0]?.split(':').at(-1);
-  if (!port || !/^\d+$/.test(port)) {
-    throw new Error(`${runtime.name} has no usable host-mapped PostgreSQL port.`);
-  }
+  const connection = testConnectionOptions(
+    'owner',
+    runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase',
+    database,
+  );
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -886,8 +889,9 @@ function runPatientNotesPostgresTest(runtime, database, expectRed) {
       env: {
         ...process.env,
         SHIFAA_F010_C28_DATABASE: database,
-        SHIFAA_PG_HOST: '127.0.0.1',
-        SHIFAA_PG_PORT: port,
+        SHIFAA_PG_HOST: connection.host,
+        SHIFAA_PG_PORT: String(connection.port),
+        SHIFAA_TEST_POSTGRES_RUNTIME: runtime.name,
       },
       encoding: 'utf8',
       windowsHide: true,

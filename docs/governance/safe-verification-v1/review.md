@@ -1,82 +1,85 @@
-# PR #500 correction review
+# PR #500 practical verification correction
 
 Baseline: `7e9405452e6945b56ccc496ea64170be9dbc0b15`.
-The Product Owner's final P0 directive rejects the Hyper-V architecture and
-allows safe static/mocked checks and publication to this same PR only.
-No real local resource execution is authorized or claimed.
+Authority: Product Owner FINAL CORRECTION FOR PR #500. Safe static/mocked
+verification and publication to this PR are authorized; real local resource
+execution and merge are not.
 
-## Execution graph
+## Old and new graph
 
 Old: the exact 42 shell commands in [plan.json](plan.json), including nested
-Compose volume teardown, fixed Supabase resets, shared PostgreSQL clients and
-historical evidence writers.
-
-Current:
+shared Compose resets, fixed native Supabase projects and hardcoded clients.
 
 ```text
-pnpm verify -> immutable 42 + Family/Privacy coverage validation
-            -> read-only complete-graph admission / concrete unsafe-source checks
-            -> BLOCKED (44 results; zero test/resource subprocesses or imports)
+pnpm verify -> verify immutable 42 + Family/Privacy = 44 obligations
+            -> read-only engine/image/CLI/resource-budget preflight
+            -> create private run-owned PostgreSQL + native Auth/Storage
+            -> execute original checks sequentially using repaired source callers
+            -> verify exact resource ownership and teardown
+            -> PASS / FAIL / BLOCKED with all 44 result identities
 ```
 
-This is a safety correction and an explicitly incomplete aggregate implementation.
-The plan reads its immutable original package with a read-only Git command.
-The rejected VM/guest/provider code, generated 975-node over-approximation and
-obsolete VM test report were removed. They are not required project evidence.
-Existing immutable feature evidence and approvals are not edited.
+Discovery/SOS, Family and Privacy receive genuine trusted-launcher capabilities.
+The native CLI uses a private configuration/workdir, network and allocated ports.
+Database/restore/performance/composition callers receive verified actual targets;
+no shared fallback remains in these admitted routes. Ordinary report and fixture
+writes remain allowed. Accepted F011 reports alone are redirected to fresh output.
 
-## Guarded resource paths
+The rejected Hyper-V/guest/appliance/provisioning backend and VM-only generated
+inventories/tests were removed. The previous unconditional aggregate BLOCKED
+implementation is replaced with execution, not another permanent admission stub.
+No additional developer-facing command or per-run manual manifest is needed.
 
-The merged launcher is extended with opt-in sequential resource limits and
-verified harness-release receipts. It can prepare the original source-bound SQL
-bootstrap/test inputs without the shared Compose project. These paths are unit
-and mock tested; they are not yet a complete aggregate dispatcher. The three
-harness close methods now track and close separately created worker/provider
-handles before releasing capability ownership. Default direct E2E execution
-continues to deny missing launcher authority.
+## Historical preservation
 
-## Incomplete routes
+[historical-inputs.json](historical-inputs.json) binds current operational bytes
+and exact predecessor Git blobs separately. Only listed operational inputs use
+historical projections in old evidence comparisons. Other source/generated/
+physical checks and P4/P5 remain mandatory. Original protection ledgers and
+accepted evidence are not rewritten. This binding is not fresh physical,
+clinical, production or lifecycle acceptance.
 
-The admission table preserves every required check and explicitly blocks legacy
-idempotency/Discovery physical tests, native F007, F008/F009 physical, restore and
-performance, and F010/F011 two-runtime composition. The table is not a list of
-approved command strings and offers no arbitrary shell execution. Native Auth/
-Storage coverage cannot be satisfied by the PostgreSQL launcher. Data-volume
-storage limits also remain unresolved; no hard quota is falsely claimed.
+## Verification record and limitations
 
-See [developer guidance](../../testing/SHIFAA-Safe-Verification.md) for exact
-limitations. PR #500 must remain unmerged while this aggregate blocker remains.
-Fresh CI results validate only their actual configured checks, not full aggregate
-or real local resource acceptance. Local aggregate and live UI acceptance were
-not executed under the Product Owner's task-specific safe-check restriction.
-The restriction supplies no standing verification exemption.
+Local OS/resource boundaries are mocked. The original guard regressions and
+actual harness import/startup tests run without a real database. Negative cases
+cover shared/substituted resources, fixed targets, missing engine, preexisting
+volumes, native reset substitution, partial creation, cleanup ownership loss,
+failed/missing/duplicate results and corrupted historical bindings. Node's
+actual-harness mock suite requires `--experimental-test-module-mocks`.
 
-## Preservation
+Read-only F011 full-parity and documentation CURRENT checks are required alongside
+these tests. Exact local commands/counts, protected-file comparisons and final CI
+results are reported with the PR; CI is not full local aggregate acceptance.
+No real local reset, migration, E2E, performance, restore or aggregate was run.
 
-The root package's sole semantic change from merged main remains the verify
-entrypoint. `tools/tooling-history.mjs` independently validates exact old/current
-bytes and permits only that replacement for historical P4/P5 comparisons.
-Protected old ledgers, physical evidence, clinical contracts and 2,774 F011 files
-remain bound to their original bytes. No F012 lifecycle or gate is advanced.
+See [developer guidance](../../testing/SHIFAA-Safe-Verification.md) for setup,
+budgets, residual startup/disk limits and the first real-run authorization.
+Issue #493 stays OPEN. F012 stays PRE_SPECIFY_BLOCKED. Human squash merge remains
+with the Product Owner; no new clinical or production authority is established.
 
-## Local verification of this correction
+## Final local results before publication
 
-- Coordinator/accounting: 15 mocked tests passed.
-- Launcher and original guard regressions: 199 mocked tests passed.
-- Actual harness import/close integration under mocked boundaries: 123 tests passed.
-  These suites overlap; their counts are not a count of unique acceptance cases.
-- Historical F011 successor negatives: 32 passed. The fixture was run with a
-  disposable Git index reflecting the six authorized VM-only deletions; the real
-  index was unchanged. An initial fixture attempt still enumerated a deleted VM
-  file and failed; no historical assertion was relaxed to correct that setup.
-- Read-only F011 full-parity verification, CURRENT authority, 16 authority
-  regressions, 90 contracts tests, 39 API-client tests, architecture, secrets,
-  skills, lint, targeted TypeScript, formatting and whitespace checks passed.
-  Repository type tasks also passed from cache; targeted TypeScript was fresh.
-- Preservation comparison: 2,954 protected identities, including 2,774 F011
-  files, matched; 150 original incident files and the private post-incident dump
-  matched. Dump restoration and pre-incident recovery remain unverified.
+- Mocked guards, launcher, repaired runner boundaries, native bootstrap/start/reset
+  and evidence helpers: 431 passed, 0 failed, 0 skipped.
+- Actual harness imports/startup/teardown under SDK/process mocks (with Node's
+  module-mocking flag): 123 passed, 0 failed, 0 skipped.
+- Coordinator/history and existing documentation/two-input successor negatives:
+  66 passed, 0 failed, 0 skipped. Counts overlap the suites above.
+- `pnpm test`: 21 tasks succeeded, none cached. Its opt-in database cases remained
+  skipped as designed; this is unit coverage, not database acceptance.
+- Typecheck, lint, contracts (90 contracts / 39 API-client tests), architecture,
+  secrets, four owned skills, formatting and whitespace: exit 0.
+- Documentation CURRENT and F011 FULL_PARITY_EVIDENCE: exit 0; P1–P5 still required.
+  Documentation checker regressions: 16 passed; tooling regressions: 12 passed.
+- Preservation: 2,774 F011 files and 40 F012 feature files unchanged; original
+  ledger bytes, 150 incident records and post-incident dump unchanged. Sixteen
+  operational tools from the protection inventory have authorized safety changes
+  and independently checked historical projections; they are not unchanged files.
 
-No real database, Docker lifecycle, aggregate verification, restore, performance
-or live bilingual UI acceptance ran. Fresh GitHub CI must be read on the final
-PR head; it cannot establish completion of the blocked aggregate.
+Initial local invocation mistakes (missing Node module-mocking flag, uppercase
+checker mode) failed and were rerun with the required flags. The old successor
+fixture initially omitted new dependencies; the binding was narrowed to the
+actual historical operational inputs and their runtime helpers, avoiding new
+immutability requirements for unrelated ordinary tests. Final successor tests
+pass using a disposable index; no assertion or historical evidence was weakened.

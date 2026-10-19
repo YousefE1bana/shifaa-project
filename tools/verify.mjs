@@ -13,49 +13,67 @@ import { localVerificationHost } from './verification-host.mjs';
 // No VM or per-run JSON is used.
 export async function verify(host, plan) {
   const results = requiredIds(plan).map((id) => ({ id, status: 'BLOCKED', exitCode: null }));
-  try {
-    const admission = await host.preflight(plan);
-    if (admission?.status !== 'PASS')
+  let finalResult;
+  async function executeChecks() {
+    try {
+      const admission = await host.preflight(plan);
+      if (admission?.status !== 'PASS')
+        return {
+          status: 'BLOCKED',
+          results,
+          code: admission?.code ?? 'PREFLIGHT_INCOMPLETE',
+          reason: admission?.reason ?? 'Required safety admission did not pass.',
+          blocked: admission?.blocked,
+          evidence: admission?.evidence,
+        };
+      for (const result of results) {
+        const actual = await host.execute(result.id);
+        // A zero test exit is insufficient when owned resource disposition is
+        // unverified. Unknown or partial teardown must preserve resources.
+        if (actual?.cleanupVerified !== true) throw new Error('Unverified resource disposition');
+        result.exitCode = actual.exitCode;
+        result.status = actual.exitCode === 0 ? 'PASS' : 'FAIL';
+        publicResults(plan, results);
+        if (result.status === 'FAIL') return { status: 'FAIL', results };
+      }
+      assertComplete(plan, results);
+      return { status: 'PASS', results };
+    } catch {
+      // No raw subprocess errors, SQL, URLs, credentials or guessed cleanup.
       return {
-        status: 'BLOCKED',
-        results,
-        code: admission?.code ?? 'PREFLIGHT_INCOMPLETE',
-        reason: admission?.reason ?? 'Required safety admission did not pass.',
-        blocked: admission?.blocked,
-        evidence: admission?.evidence,
+        status: results.some((r) => r.status === 'FAIL') ? 'FAIL' : 'BLOCKED',
+        results: results.map((r) => ({
+          id: r.id,
+          status:
+            r.status === 'PASS' && r.exitCode === 0
+              ? 'PASS'
+              : r.status === 'FAIL'
+                ? 'FAIL'
+                : 'BLOCKED',
+          exitCode:
+            Number.isInteger(r.exitCode) && r.exitCode >= 0 && r.exitCode <= 255
+              ? r.exitCode
+              : null,
+        })),
+        code: 'EXECUTION_INCOMPLETE',
+        reason:
+          'Required verification or identity-checked teardown did not complete. No acceptance claimed.',
       };
-    for (const result of results) {
-      const actual = await host.execute(result.id);
-      // A zero test exit is insufficient when owned resource disposition is
-      // unverified. Unknown or partial teardown must preserve resources.
-      if (actual?.cleanupVerified !== true) throw new Error('Unverified resource disposition');
-      result.exitCode = actual.exitCode;
-      result.status = actual.exitCode === 0 ? 'PASS' : 'FAIL';
-      publicResults(plan, results);
-      if (result.status === 'FAIL') return { status: 'FAIL', results };
     }
-    assertComplete(plan, results);
-    return { status: 'PASS', results };
+  }
+  finalResult = await executeChecks();
+  try {
+    if (host.close) await host.close();
   } catch {
-    // No raw subprocess errors, SQL, URLs, credentials or guessed cleanup.
     return {
-      status: results.some((r) => r.status === 'FAIL') ? 'FAIL' : 'BLOCKED',
-      results: results.map((r) => ({
-        id: r.id,
-        status:
-          r.status === 'PASS' && r.exitCode === 0
-            ? 'PASS'
-            : r.status === 'FAIL'
-              ? 'FAIL'
-              : 'BLOCKED',
-        exitCode:
-          Number.isInteger(r.exitCode) && r.exitCode >= 0 && r.exitCode <= 255 ? r.exitCode : null,
-      })),
-      code: 'EXECUTION_INCOMPLETE',
+      ...finalResult,
+      status: finalResult.status === 'FAIL' ? 'FAIL' : 'BLOCKED',
+      code: 'OWNED_RESOURCE_CLEANUP_INCOMPLETE',
       reason:
-        'Required verification or identity-checked teardown did not complete. No acceptance claimed.',
+        'Resource ownership or teardown could not be verified. Preserve resources and the private run receipt.',
     };
   }
+  return finalResult;
 }
 
 export async function main() {

@@ -1,69 +1,82 @@
-# Verification safety correction (PR #500)
+# Safe repository verification (PR #500)
 
-`pnpm verify` remains the only aggregate command. Exit codes: 0 PASS, 1 FAIL,
-2 BLOCKED. It currently returns **BLOCKED before executing any check or creating
-resources**. This is incomplete implementation, not full integration acceptance.
+Run `pnpm verify`. It keeps the original 42 verification checks and adds Family
+and Privacy E2E coverage, for 44 required result identities. Exit codes are
+0 PASS, 1 FAIL and 2 BLOCKED. A failed check stops execution; remaining checks
+are reported BLOCKED, never PASS. PASS also requires verified resource teardown.
 
-The rejected Hyper-V backend, VM appliance/provenance, guest credentials,
-PowerShell Direct, offline guest provisioning and per-run authorization JSON have
-been removed. No replacement virtualization platform was added.
+## One-time setup and safety admission
 
-## Required coverage
+Install the repository-pinned Node/pnpm dependencies and Docker with a Linux
+engine. Build the repository PostGIS image from `infra/db/Dockerfile.postgis`
+as `shifaa/postgis:17-3.5-006-local`. The run records its immutable image ID;
+there is no fallback to a different image or an existing database. The local
+Supabase CLI must be the package-pinned 2.113.0. Its pinned service images must
+be available, or downloadable by that CLI, before native startup succeeds.
 
-The immutable old 42-command chain and Family/Privacy remain 44 distinct required
-result identities in `docs/governance/safe-verification-v1/plan.json`. Neither
-missing/duplicate results nor SKIP, BLOCKED, nonzero exit or uncertain teardown
-can yield PASS. A successful mocked dispatch is only algorithm evidence.
+The read-only preflight checks engine/context identity, the image, CLI version,
+free memory and disk, and existing resource inventory. Defaults require at least
+5 GiB assigned to Docker, 3 GiB currently free host memory and 8 GiB free output
+disk. Stop other workloads if necessary. An unfinished earlier verification run
+blocks admission; inspect its private receipt rather than deleting by name.
+No VM, appliance, guest credentials or per-run authorization JSON is required.
 
-The aggregate never invokes the old chain through a shell. Its admission table
-in `tools/verification-host.mjs` identifies unported operations and checks their
-actual unsafe source locations. Environment variables, project-name overrides,
-ports and container names are not substitutes for run-owned capabilities.
+The command itself authorizes only creation and identity-checked disposal of
+that invocation's new resources. It supplies no authority over existing resources.
+The first real run of this implementation still requires the Product Owner's
+bounded real-resource execution authorization.
 
-## Implemented launcher corrections
+## Execution and isolation
 
-The existing trusted launcher has an opt-in sequential profile: two CPUs, 1 GiB
-RAM, no additional swap, 128 PIDs, 64 MiB shared memory and bounded container logs.
-Actual Docker HostConfig is checked before startup, connection and teardown.
-Every harness must close its tracked owner/API/worker/provider handles and
-release its genuine capability before the next lease may be created. Unreleased
-or substituted resources block and remain preserved. No cleanup by name pattern,
-Compose down, prune or old-run adoption exists in the launcher.
+The existing check order is retained. Heavy suites run sequentially. One new
+PostgreSQL container and one private native Supabase Auth/Storage project can
+be reused and reset during the same run. Fixed SQL aliases in older scripts are
+translated only after independently validating the actual owned container;
+they are not external targets. API/worker/owner connections receive explicit
+run-owned credentials. Missing context fails before connection or reset.
 
-The aggregate SQL bootstrap option binds the original 27 migration paths and
-selected original schema/RLS SQL tests to Git bytes. Tests run before owner
-privilege demotion; application clients cannot inherit that bootstrap privilege.
-This is prepared code with mocked validation, not real migration/test evidence.
+Engine, container/image IDs, creation times, network, ports, volumes, mounts and
+pre-creation inventory are checked. Published database ports are loopback-only
+and exclude 5432, 54322 and 55432. Existing projects/volumes, host networking,
+unexpected mounts and substituted identities are rejected. Native reset may
+replace its own database container/data volume; the replacement is checked and
+the private ownership receipt is updated before further use.
 
-**Storage limitation:** the accepted guard admits plain local named volumes,
-with empty driver options. Container CPU/RAM/log limits do not impose a hard
-PostgreSQL data-volume quota. A disk-space observation is not a storage quota.
-No complete aggregate resource admission is claimed.
+Discovery/SOS, Family and Privacy use the merged trusted launcher and genuine
+in-process capabilities. Direct E2E commands still reject missing capabilities.
+No environment variable or JSON token substitutes for those capabilities.
 
-## Concrete remaining blocker
+PostgreSQL has a 2 CPU/1 GiB limit; native database 1 CPU/1 GiB and native
+satellites 1 CPU/256 MiB each. Native CLI-created containers receive limits after
+creation, so startup has a transient uncapped interval. Logs are bounded. Named
+data volumes have no hard disk quota; free-space admission is not a quota.
 
-The PostgreSQL-only launcher does not supply isolated native Supabase Auth and
-Storage. The F007 native runner still stops/resets a fixed project. F008/F009
-physical/restore/performance runners and F010/F011 two-runtime composition still
-contain fixed shared targets and retained evidence paths. These runners have not
-yet been ported to verified run-owned execution and private output. Direct legacy
-commands remain unsafe and must not be run on the developer machine.
+## Outputs, failures and teardown
 
-The smallest remaining repair is to port those existing resource operations to
-identity-checked run-owned targets, including an isolated native Supabase test
-context where coverage requires it, and solve the volume budget. Replacing native
-coverage with plain PostgreSQL, silently omitting checks, or marking them PASS is
-not acceptable. The aggregate blocks the **whole** graph before any side effect
-until those paths are implemented. No first real aggregate run is ready yet.
+Ordinary fixtures, generated files, source and test reports retain their original
+legitimate write behavior. Only genuinely protected historical evidence is
+immutable. Fresh F011 execution reports use a private run directory rather than
+overwriting accepted historical reports. Private receipts contain sensitive
+connection material and must never be published.
 
-## Real-run boundary
+Teardown checks exact newly created identities and attachment ownership before
+removing containers, volumes and networks. There is no blanket Compose down,
+prune, pattern-based deletion or adoption of older resources. Partial startup,
+ownership loss or uncertain cleanup preserves resources and returns BLOCKED.
+Inspect the private receipt; do not guess which resources can be deleted.
 
-No real Docker/PostgreSQL/Supabase lifecycle, restore/performance/E2E or destructive
-aggregate was executed during this correction. A later bounded real-run approval
-must identify the installed immutable images, verified disposable engine/project,
-private output root, resource/storage budgets and exact identity-checked cleanup.
-That run must verify actual native and PostgreSQL execution; mocked results and
-GitHub CI do not establish local integration acceptance.
+## Historical verification and acceptance limits
 
-F012 remains PRE_SPECIFY_BLOCKED. Issue #493 stays open. Clinical, legal,
-professional, privacy and production authority is unchanged.
+The versioned [historical input binding](../governance/safe-verification-v1/historical-inputs.json)
+checks exact current operational sources independently and projects only their
+approved historical bytes for old F011 evidence comparisons. P4/P5 evidence,
+other normative/generated/physical inputs, and existing successor negatives stay
+mandatory. No historical acceptance is regenerated.
+
+Implementation validation uses static and mocked boundaries. No real local
+Docker/PostgreSQL/Supabase lifecycle, aggregate run, restore, performance or E2E
+acceptance is claimed. GitHub CI results cover only the jobs actually executed;
+they are not the entire aggregate. First real acceptance must execute all 44
+checks, inspect native and PostgreSQL identity/cleanup evidence, and record failures.
+F012 remains PRE_SPECIFY_BLOCKED, Issue #493 OPEN, and clinical/legal/production
+gates are unchanged.

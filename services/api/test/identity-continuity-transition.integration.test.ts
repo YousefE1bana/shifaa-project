@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import { randomBytes, randomUUID } from 'node:crypto';
 
 import type { ContinuityAuthPort, VerifiedContinuitySession } from '@shifaa/auth';
@@ -15,8 +16,12 @@ import { registerIdentityContinuityRoutes } from '../src/routes/identity-continu
 
 const enabled = process.env['SHIFAA_RUN_IDENTITY_CONTINUITY_TRANSITION'] === 'true';
 const now = new Date('2026-08-25T10:00:00.000Z');
-const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
-const apiUrl = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa';
+const ownerUrl = enabled
+  ? testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa')
+  : 'postgresql://disabled:disabled@127.0.0.1:1/disabled';
+const apiUrl = enabled
+  ? testDatabaseUrl('shifaa_api', 'postgres', 'shifaa')
+  : 'postgresql://disabled:disabled@127.0.0.1:1/disabled';
 
 type Fixture = Awaited<ReturnType<typeof seedTransitionFixture>>;
 

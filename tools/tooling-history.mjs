@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, lstatSync, readFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const recordPath = 'docs/governance/tooling-maintenance-v1/historical-compatibility.json';
 export const toolingPolicyInputPaths = [
@@ -17,17 +18,55 @@ const recordSha256 = 'e38049b11787c49e01d0c6cfe0ef3cb3f825fc68f207be5bb224eebc45
 const sha = (raw) => createHash('sha256').update(raw).digest('hex');
 const immutableObjects = new Map();
 
-// The aggregate entrypoint is operational tooling, not a new physical F011
-// acceptance. Project ONLY this reviewed script replacement for old P4/P5
-// comparisons; validate the complete current file independently every time.
-export function verificationPackageProjection(current, historical) {
-  assert.equal(sha(historical), '2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200');
-  assert.equal(historical.length, 21058);
-  assert.equal(sha(current), '8910c0366041499875a2df0c4b09529da49471dec4df0d6434b07058039200dc');
-  assert.equal(current.length, 19816);
-  const expected = JSON.parse(historical);
-  expected.scripts.verify = 'node tools/verify.mjs';
-  assert.deepEqual(JSON.parse(current), expected, 'Unrelated package semantics changed');
+// Exact operational successors are checked independently before historical P4/P5
+// comparisons. This creates no fresh physical acceptance or clinical authority.
+const verificationRecord = 'docs/governance/safe-verification-v1/historical-inputs.json';
+const verificationRecordSha256 = '3e4fac6a411695b991233557a7f8cbc3f5aa721a5d60f65289a3611f14e27b06';
+export function verificationHistoricalInputs(root) {
+  const file = safeFile(root, verificationRecord);
+  if (!existsSync(file)) return new Map();
+  const raw = readFileSync(file);
+  assert.equal(sha(raw), verificationRecordSha256, 'Verification history binding drift');
+  const record = JSON.parse(raw);
+  assert.equal(record.identity, 'SHIFAA-SAFE-VERIFICATION-HISTORY/1');
+  assert.equal(record.clinicalAuthority, false);
+  assert.equal(record.freshPhysicalAcceptance, false);
+  const historical = new Map();
+  for (const input of record.currentInputs) {
+    const current = readFileSync(safeFile(root, input.path));
+    assert.equal(current.length, input.bytes, `Operational source drift: ${input.path}`);
+    assert.equal(sha(current), input.sha256, `Operational source drift: ${input.path}`);
+  }
+  for (const input of record.inputs) {
+    const old = input.historical;
+    assert.match(old.gitBlob, /^[a-f0-9]{40}$/);
+    const key = `${resolve(root)}:${old.gitBlob}`;
+    if (!immutableObjects.has(key))
+      immutableObjects.set(
+        key,
+        execFileSync('git', ['cat-file', 'blob', old.gitBlob], {
+          cwd: root,
+          stdio: ['ignore', 'pipe', 'pipe'],
+          maxBuffer: 4 * 1024 * 1024,
+        }),
+      );
+    const bytes = immutableObjects.get(key);
+    assert.equal(bytes.length, old.bytes);
+    assert.equal(sha(bytes), old.sha256, 'Historical verification bytes drift');
+    historical.set(input.path, bytes);
+  }
+  return historical;
+}
+export function verificationPackageProjection(
+  current,
+  historical,
+  root = new URL('../', import.meta.url),
+) {
+  root = root instanceof URL ? fileURLToPath(root) : root;
+  const expected = verificationHistoricalInputs(root).get('package.json');
+  assert.ok(expected, 'Exact verification history binding required');
+  assert.deepEqual(historical, expected);
+  assert.deepEqual(current, readFileSync(safeFile(root, 'package.json')));
   return historical;
 }
 
@@ -54,12 +93,13 @@ function safeFile(root, relative) {
 }
 
 export function toolingPolicyHistoricalInputs(root) {
+  const operational = verificationHistoricalInputs(root);
   const file = safeFile(root, recordPath);
-  if (!existsSync(file)) return new Map();
+  if (!existsSync(file)) return operational;
   const raw = readFileSync(file);
   assert.equal(sha(raw), recordSha256, 'Tooling policy history binding drift');
   const record = JSON.parse(raw);
-  const historical = new Map();
+  const historical = new Map(operational);
   for (const input of record.inputs) {
     const current = readFileSync(safeFile(root, input.path));
     assert.equal(current.length, input.current.bytes, `Tooling policy source drift: ${input.path}`);
@@ -81,22 +121,6 @@ export function toolingPolicyHistoricalInputs(root) {
     assert.equal(bytes.length, old.bytes);
     assert.equal(sha(bytes), old.sha256, 'Historical tooling policy bytes drift');
     historical.set(input.path, bytes);
-  }
-  // Partial contracts-only fixtures intentionally omit physical-source inputs.
-  // Full P4/P5 source collection still requires package.json independently.
-  const packageFile = safeFile(root, 'package.json');
-  const currentPackage = existsSync(packageFile) ? readFileSync(packageFile) : undefined;
-  if (currentPackage && JSON.parse(currentPackage).scripts?.verify === 'node tools/verify.mjs') {
-    const old = execFileSync(
-      'git',
-      ['cat-file', 'blob', 'f205a80ae41b5507afaa1a7868fbbc8e84deb217'],
-      {
-        cwd: root,
-        stdio: ['ignore', 'pipe', 'pipe'],
-        maxBuffer: 128 * 1024,
-      },
-    );
-    historical.set('package.json', verificationPackageProjection(currentPackage, old));
   }
   return historical;
 }

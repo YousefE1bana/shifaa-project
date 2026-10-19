@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import { randomUUID } from 'node:crypto';
 
 import postgres from 'postgres';
@@ -12,8 +13,12 @@ import {
 } from '../src/platform/idempotency.js';
 
 const enabled = process.env['SHIFAA_RUN_IDEMPOTENCY_POSTGRES'] === 'true';
-const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
-const apiUrl = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa';
+const ownerUrl = enabled
+  ? testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa')
+  : 'postgresql://disabled:disabled@127.0.0.1:1/disabled';
+const apiUrl = enabled
+  ? testDatabaseUrl('shifaa_api', 'postgres', 'shifaa')
+  : 'postgresql://disabled:disabled@127.0.0.1:1/disabled';
 const route = '/v1/security/sec-008-idempotency';
 
 describe.skipIf(!enabled).sequential('SEC-008 PostgreSQL idempotency privacy', () => {

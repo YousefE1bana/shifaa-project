@@ -1,3 +1,4 @@
+import { testRuntime, testEvidenceDirectory } from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { randomUUID, randomBytes } from 'node:crypto';
@@ -7,7 +8,7 @@ import { PostgresIdentityRepository } from '../services/api/src/adapters/postgre
 import { PostgresFeature010EncounterRepository } from '../services/api/src/adapters/postgres/feature-010-encounters.ts';
 import { PostgresFeature010NotesRepository } from '../services/api/src/adapters/postgres/feature-010-notes.ts';
 import { currentEvidenceRoot } from './verify-feature-011-contracts.mjs';
-const e = `${currentEvidenceRoot()}/handoff-regression`;
+const e = testEvidenceDirectory('feature-011/handoff-regression');
 const handoffOnly = process.argv.includes('--handoff-only');
 assert.ok(process.argv.slice(2).every((arg) => arg === '--handoff-only'));
 const encounter = 'f0110000-0000-4000-8400-000000000001',
@@ -19,7 +20,7 @@ for (const runtime of runtimes) {
   results.push(
     await withAllergyApi(runtime, async (h) => {
       const repo = new PostgresIdentityRepository(
-        `postgres://shifaa_api:synthetic_api_only@127.0.0.1:${runtime.name === 'shifaa-local-postgres' ? 5432 : 54322}/${h.database}`,
+        `postgres://shifaa_api:synthetic_api_only@127.0.0.1:${testRuntime(runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase').port}/${h.database}`,
       );
       const tests = [];
       try {

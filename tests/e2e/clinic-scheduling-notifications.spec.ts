@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from '../../tools/verification-database.mjs';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
@@ -16,9 +17,9 @@ import { canonicalTemplateDigest } from '../../packages/core/src/privacy-dsr-not
 import { DurableClinicSchedulingSyntheticMessagingAdapter } from '../../services/worker/src/adapters/local-synthetic-messaging.ts';
 import { PostgresClinicSchedulingNotificationProcessor } from '../../services/worker/src/postgres-clinic-scheduling-notification-processor.ts';
 
-const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
-const apiUrl = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa';
-const workerUrl = 'postgresql://shifaa_worker:synthetic_worker_only@127.0.0.1:5432/shifaa';
+const ownerUrl = testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa');
+const apiUrl = testDatabaseUrl('shifaa_api', 'postgres', 'shifaa');
+const workerUrl = testDatabaseUrl('shifaa_worker', 'postgres', 'shifaa');
 
 const ids = {
   owner: 'f009e000-0000-4000-8c00-000000000001',

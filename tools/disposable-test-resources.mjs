@@ -92,10 +92,11 @@ export function createPrivateOutput({ path: destination, nonce }) {
   // already-private parent prevents access before the new protected ACL is set.
   const literal = destination.replaceAll("'", "''");
   mkdirSync(destination, { mode: 0o700 });
-  powershell(
-    `$p='${literal}'; $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User; $acl=New-Object Security.AccessControl.DirectorySecurity; $acl.SetAccessRuleProtection($true,$false); $acl.SetOwner($sid); foreach($s in @($sid,(New-Object Security.Principal.SecurityIdentifier 'S-1-5-18'))){$r=New-Object Security.AccessControl.FileSystemAccessRule($s,'FullControl','ContainerInherit,ObjectInherit','None','Allow'); $acl.AddAccessRule($r)}; Set-Acl -LiteralPath $p -AclObject $acl`,
-  );
-  assertCanonicalDirectory(destination);
+  if (process.platform === 'win32')
+    powershell(
+      `$p='${literal}'; $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User; $acl=New-Object Security.AccessControl.DirectorySecurity; $acl.SetAccessRuleProtection($true,$false); $acl.SetOwner($sid); foreach($s in @($sid,(New-Object Security.Principal.SecurityIdentifier 'S-1-5-18'))){$r=New-Object Security.AccessControl.FileSystemAccessRule($s,'FullControl','ContainerInherit,ObjectInherit','None','Allow'); $acl.AddAccessRule($r)}; Set-Acl -LiteralPath $p -AclObject $acl`,
+    );
+  verifyRunOutput(destination);
   const stat = lstatSync(destination, { bigint: true });
   return {
     path: destination,
@@ -136,4 +137,16 @@ export function sourceBytes(worktree, file, revision) {
   if (resourceCommand('git', ['rev-parse', `${revision}:${file}`], undefined, worktree) !== blob)
     denied('bootstrap bytes differ from approved revision');
   return { bytes, sha256: createHash('sha256').update(bytes).digest('hex') };
+}
+
+// The launcher retains Windows SID/ACL checks. Hosted Linux CI uses the same
+// canonical-path boundary plus current-UID ownership and private mode bits.
+export function verifyRunOutput(destination) {
+  assertCanonicalDirectory(destination);
+  if (process.platform === 'win32') return verifyPrivateTestOutput(destination);
+  if (process.platform !== 'linux') denied('unsupported private-output platform');
+  const stat = lstatSync(destination);
+  if (stat.uid !== process.getuid() || (stat.mode & 0o077) !== 0)
+    denied('output must be current-user owned and private');
+  return { dev: stat.dev, ino: stat.ino };
 }

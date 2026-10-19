@@ -6,11 +6,8 @@ import childProcess from 'node:child_process';
 import { syncBuiltinESMExports } from 'node:module';
 import { verify } from './verify.mjs';
 import { verificationPlan, requiredIds, assertComplete } from './verification-plan.mjs';
-import {
-  localVerificationHost,
-  verificationRoutes,
-  inspectUnsafeEntrypoints,
-} from './verification-host.mjs';
+import { localVerificationHost, verificationRoutes } from './verification-host.mjs';
+import { verifyCiDatabase } from './verification-ci.mjs';
 import { verificationPackageProjection } from './tooling-history.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
@@ -43,43 +40,75 @@ for (const change of [
     assert.throws(() => assertComplete(plan, results));
   });
 
-test('actual unsafe entrypoints remain visibly blocked, not environment-retargeted', () => {
-  const evidence = inspectUnsafeEntrypoints(root);
-  assert.equal(evidence.length, 6);
-  assert.ok(evidence.every((item) => item.lines.every((line) => line > 0)));
-  assert.equal(
-    verificationRoutes(plan).find((r) => r.id === 'legacy-23').route,
-    'unported-native-supabase',
+test('all required checks have executable routes without an unported/BLOCKED stub', () => {
+  assert.ok(
+    verificationRoutes(plan).every((entry) =>
+      ['original-check', 'guarded-e2e'].includes(entry.route),
+    ),
   );
-  assert.equal(
-    verificationRoutes(plan).find((r) => r.id === 'legacy-42').route,
-    'unported-two-runtime',
-  );
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'package.json')));
+  assert.doesNotMatch(manifest.scripts['db:reset'], /compose down|compose up/);
+  for (const name of ['db:reset', 'db:migrate', 'db:test', 'db:rls-test', 'supabase:reset'])
+    assert.match(manifest.scripts[name], /test-database-command/);
 });
 
-test('real aggregate admission blocks before every subprocess, DB import or lifecycle action', async (t) => {
+test('actual local dispatcher executes all 44 obligations only after successful resource admission', async () => {
   const calls = [];
-  for (const method of ['execFileSync', 'spawnSync', 'spawn', 'exec', 'execSync'])
-    t.mock.method(childProcess, method, (...args) => {
-      calls.push(args);
-      throw new Error('Unexpected process');
-    });
-  syncBuiltinESMExports();
-  t.after(() => {
-    t.mock.restoreAll();
-    syncBuiltinESMExports();
+  let closed = 0;
+  const host = localVerificationHost(root, {
+    createEnvironment: async () => ({
+      close: async () => {
+        closed++;
+      },
+    }),
+    run: (program, args) => {
+      calls.push([program, args]);
+      return { status: 0 };
+    },
   });
-  const host = localVerificationHost(root);
-  host.execute = () => {
-    calls.push('execute');
-    throw new Error('Must never execute');
-  };
+  const result = await verify(host, plan);
+  assert.equal(result.status, 'PASS');
+  assert.equal(calls.length, 44);
+  assert.equal(closed, 1);
+  assert.equal(calls.filter((call) => call[1].includes('tools/verification-e2e.mjs')).length, 3);
+  assert.equal(
+    calls.filter((call) => call[1].includes('test:identity-continuity:stack')).length,
+    1,
+  );
+  assert.equal(calls.filter((call) => call[1].includes('test:feature-011:composition')).length, 1);
+});
+
+test('missing engine denies actual dispatcher before a test process and never falls back', async () => {
+  let commands = 0;
+  const host = localVerificationHost(root, {
+    createEnvironment: async () => {
+      throw new Error('engine unavailable');
+    },
+    run: () => {
+      commands++;
+      return { status: 0 };
+    },
+  });
   const result = await verify(host, plan);
   assert.equal(result.status, 'BLOCKED');
-  assert.equal(result.code, 'ISOLATED_LEGACY_RUNNERS_INCOMPLETE');
-  assert.equal(result.results.length, 44);
-  assert.ok(result.results.every((r) => r.status === 'BLOCKED' && r.exitCode === null));
-  assert.deepEqual(calls, []);
+  assert.equal(commands, 0);
+  assert.ok(result.results.every((entry) => entry.status === 'BLOCKED'));
+});
+
+test('identity loss at final teardown cannot produce PASS or leak raw errors', async () => {
+  const result = await verify(
+    {
+      preflight: () => ({ status: 'PASS' }),
+      execute: () => ({ exitCode: 0, cleanupVerified: true }),
+      close: () => {
+        throw new Error('SECRET ownership loss');
+      },
+    },
+    plan,
+  );
+  assert.equal(result.status, 'BLOCKED');
+  assert.equal(result.code, 'OWNED_RESOURCE_CLEANUP_INCOMPLETE');
+  assert.doesNotMatch(JSON.stringify(result), /SECRET/);
 });
 
 test('preflight denial, missing engine and interruption never trigger execution or guessed teardown', async () => {
@@ -169,7 +198,7 @@ test('no VM backend, appliance, credential or per-run configuration dependency s
     assert.equal(fs.existsSync(path.join(root, 'tools', file)), false);
 });
 
-test('package historical projection allows only the exact original verify replacement', () => {
+test('package historical projection requires the exact source-level safety repair binding', () => {
   const original = childProcess.execFileSync(
     'git',
     ['cat-file', 'blob', plan.historicalPackage.gitBlob],
@@ -184,3 +213,87 @@ test('package historical projection allows only the exact original verify replac
     verificationPackageProjection(current, Buffer.concat([original, Buffer.from('\n')])),
   );
 });
+
+// The CI entrypoints exercise the same boundary without legacy Compose teardown.
+test('CI database suites require admission, preserve failures and close only their owner', async () => {
+  for (const scope of ['database', 'native']) {
+    let closed = 0;
+    const scripts = [];
+    const result = await verifyCiDatabase(scope, {
+      createEnvironment: async () => ({
+        close: async () => {
+          closed++;
+        },
+      }),
+      run: (_program, args) => {
+        scripts.push(args[1]);
+        return { status: 0 };
+      },
+    });
+    assert.equal(result, 0);
+    assert.deepEqual(
+      scripts,
+      scope === 'database' ? ['db:migrate', 'db:test', 'db:rls-test'] : ['supabase:test'],
+    );
+    assert.equal(closed, 1);
+  }
+  let commands = 0,
+    closed = 0;
+  await assert.rejects(verifyCiDatabase('foreign', { createEnvironment: () => assert.fail() }));
+  await assert.rejects(
+    verifyCiDatabase('database', {
+      createEnvironment: () => {
+        throw Error('missing engine');
+      },
+      run: () => {
+        commands++;
+      },
+    }),
+  );
+  assert.equal(commands, 0);
+  assert.equal(
+    await verifyCiDatabase('database', {
+      createEnvironment: async () => ({
+        close: () => {
+          closed++;
+        },
+      }),
+      run: () => ({ status: 13 }),
+    }),
+    13,
+  );
+  assert.equal(closed, 1);
+  await assert.rejects(
+    verifyCiDatabase('database', {
+      createEnvironment: async () => ({
+        close: () => {
+          throw Error('ownership lost');
+        },
+      }),
+      run: () => ({ status: 0 }),
+    }),
+    /ownership lost/,
+  );
+});
+
+for (const code of ['DOCKER_ENGINE_UNAVAILABLE', 'POSTGIS_IMAGE_MISSING'])
+  test(`${code} returns an actionable prerequisite without running any check`, async () => {
+    let executions = 0;
+    const result = await verify(
+      localVerificationHost(root, {
+        createEnvironment: async () => {
+          throw Object.assign(new Error('private raw error'), { verificationPrerequisite: code });
+        },
+        run: () => {
+          executions++;
+          assert.fail('preflight must stop');
+        },
+      }),
+      plan,
+    );
+    assert.equal(result.status, 'BLOCKED');
+    assert.equal(result.code, code);
+    assert.equal(executions, 0);
+    assert.ok(result.results.every((entry) => entry.status === 'BLOCKED'));
+    assert.doesNotMatch(JSON.stringify(result), /private raw error/);
+  });

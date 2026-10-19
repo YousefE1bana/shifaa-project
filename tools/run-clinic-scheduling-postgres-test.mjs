@@ -1,3 +1,8 @@
+import {
+  testDockerSync,
+  testConnectionOptions,
+  assertTestDatabaseEnvironment,
+} from './verification-database.mjs';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import process from 'node:process';
@@ -56,7 +61,7 @@ const rlsFixture = 'infra/db/tests/clinic-scheduling-rls.sql';
 const db = `shifaa_f009_${requestedMode.replaceAll('-', '_')}`;
 const databases = requestedMode === 'migration' ? [db, `${db}_upgrade`] : [db];
 function docker(args, options = {}) {
-  const result = spawnSync('docker', args, {
+  const result = testDockerSync(args, {
     cwd: root,
     encoding: 'utf8',
     stdio: options.quiet ? 'pipe' : 'inherit',
@@ -153,6 +158,7 @@ function ensureRlsServiceRole(database) {
   );
 }
 function runRaceTests(database) {
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -162,7 +168,12 @@ function runRaceTests(database) {
     ],
     {
       cwd: root,
-      env: { ...process.env, SHIFAA_F009_DATABASE: database },
+      env: {
+        ...process.env,
+        SHIFAA_F009_DATABASE: database,
+        SHIFAA_PG_HOST: testConnectionOptions('owner', 'postgres', database).host,
+        SHIFAA_PG_PORT: String(testConnectionOptions('owner', 'postgres', database).port),
+      },
       encoding: 'utf8',
       stdio: 'inherit',
     },
@@ -172,6 +183,7 @@ function runRaceTests(database) {
     throw new Error(`Feature 009 race tests failed with status ${result.status}`);
 }
 function runAdapterTests(database) {
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -181,7 +193,12 @@ function runAdapterTests(database) {
     ],
     {
       cwd: root,
-      env: { ...process.env, SHIFAA_F009_DATABASE: database },
+      env: {
+        ...process.env,
+        SHIFAA_F009_DATABASE: database,
+        SHIFAA_PG_HOST: testConnectionOptions('owner', 'postgres', database).host,
+        SHIFAA_PG_PORT: String(testConnectionOptions('owner', 'postgres', database).port),
+      },
       encoding: 'utf8',
       stdio: 'inherit',
     },
@@ -191,6 +208,7 @@ function runAdapterTests(database) {
     throw new Error(`Feature 009 adapter tests failed with status ${result.status}`);
 }
 function runAtomicApiTests(database) {
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -200,7 +218,12 @@ function runAtomicApiTests(database) {
     ],
     {
       cwd: root,
-      env: { ...process.env, SHIFAA_F009_DATABASE: database },
+      env: {
+        ...process.env,
+        SHIFAA_F009_DATABASE: database,
+        SHIFAA_PG_HOST: testConnectionOptions('owner', 'postgres', database).host,
+        SHIFAA_PG_PORT: String(testConnectionOptions('owner', 'postgres', database).port),
+      },
       encoding: 'utf8',
       stdio: 'inherit',
     },
@@ -210,6 +233,7 @@ function runAtomicApiTests(database) {
     throw new Error(`Feature 009 atomic API tests failed with status ${result.status}`);
 }
 function runDiscoveryBookingE2e(database) {
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -220,7 +244,13 @@ function runDiscoveryBookingE2e(database) {
     ],
     {
       cwd: root,
-      env: { ...process.env, SHIFAA_F009_DATABASE: database, SHIFAA_F009_PROVISIONED: '1' },
+      env: {
+        ...process.env,
+        SHIFAA_F009_DATABASE: database,
+        SHIFAA_PG_HOST: testConnectionOptions('owner', 'postgres', database).host,
+        SHIFAA_PG_PORT: String(testConnectionOptions('owner', 'postgres', database).port),
+        SHIFAA_F009_PROVISIONED: '1',
+      },
       encoding: 'utf8',
       stdio: 'inherit',
     },
@@ -230,6 +260,7 @@ function runDiscoveryBookingE2e(database) {
     throw new Error(`Feature 009 discovery-booking E2E failed with status ${result.status}`);
 }
 function runAppointmentsE2e(database) {
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -249,6 +280,8 @@ function runAppointmentsE2e(database) {
           .filter(Boolean)
           .join(path.delimiter),
         SHIFAA_F009_DATABASE: database,
+        SHIFAA_PG_HOST: testConnectionOptions('owner', 'postgres', database).host,
+        SHIFAA_PG_PORT: String(testConnectionOptions('owner', 'postgres', database).port),
         SHIFAA_F009_PROVISIONED: '1',
       },
       encoding: 'utf8',
@@ -260,6 +293,7 @@ function runAppointmentsE2e(database) {
     throw new Error(`Feature 009 appointments E2E failed with status ${result.status}`);
 }
 function runQueueE2e(database) {
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -279,6 +313,8 @@ function runQueueE2e(database) {
           .filter(Boolean)
           .join(path.delimiter),
         SHIFAA_F009_DATABASE: database,
+        SHIFAA_PG_HOST: testConnectionOptions('owner', 'postgres', database).host,
+        SHIFAA_PG_PORT: String(testConnectionOptions('owner', 'postgres', database).port),
         SHIFAA_F009_PROVISIONED: '1',
       },
       encoding: 'utf8',
@@ -290,6 +326,7 @@ function runQueueE2e(database) {
     throw new Error(`Feature 009 queue E2E failed with status ${result.status}`);
 }
 function runScheduleDelayAbsenceE2e(database) {
+  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     [
@@ -309,6 +346,8 @@ function runScheduleDelayAbsenceE2e(database) {
           .filter(Boolean)
           .join(path.delimiter),
         SHIFAA_F009_DATABASE: database,
+        SHIFAA_PG_HOST: testConnectionOptions('owner', 'postgres', database).host,
+        SHIFAA_PG_PORT: String(testConnectionOptions('owner', 'postgres', database).port),
         SHIFAA_F009_PROVISIONED: '1',
       },
       encoding: 'utf8',

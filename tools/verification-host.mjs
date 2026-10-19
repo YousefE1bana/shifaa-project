@@ -1,113 +1,82 @@
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { requiredIds } from './verification-plan.mjs';
-
-// Coverage/admission table, NOT a shell dispatcher. Appearing in plan.json
-// never authorizes a legacy resource command on the developer machine.
-const resourceRoutes = new Map([
-  ['legacy-15', 'guarded-sql'],
-  ['legacy-16', 'guarded-sql'],
-  ['legacy-17', 'guarded-sql'],
-  ['legacy-18', 'unported-postgres'],
-  ['legacy-19', 'unported-postgres'],
-  ['legacy-20', 'guarded-discovery-sos'],
-  ['legacy-21', 'unported-performance'],
-  ['legacy-22', 'unported-postgres'],
-  ['legacy-23', 'unported-native-supabase'],
-  ['legacy-27', 'unported-postgres'],
-  ['legacy-28', 'unported-postgres'],
-  ['legacy-31', 'unported-performance'],
-  ['legacy-32', 'unported-restore'],
-  ['legacy-35', 'unported-postgres'],
-  ['legacy-36', 'unported-postgres'],
-  ['legacy-37', 'unported-performance'],
-  ['legacy-38', 'unported-restore'],
-  ['legacy-41', 'unported-two-runtime'],
-  ['legacy-42', 'unported-two-runtime'],
-  ['guarded-family', 'guarded-family'],
-  ['guarded-privacy', 'guarded-privacy'],
-]);
+import { createVerificationEnvironment } from './verification-test-environment.mjs';
 
 export function verificationRoutes(plan) {
   const ids = requiredIds(plan);
   assert.equal(ids.length, 44);
   assert.equal(new Set(ids).size, 44);
-  for (const id of resourceRoutes.keys()) assert.ok(ids.includes(id));
-  return ids.map((id) => ({ id, route: resourceRoutes.get(id) ?? 'local-check' }));
+  return ids.map((id) => ({
+    id,
+    route: ['legacy-20', 'guarded-family', 'guarded-privacy'].includes(id)
+      ? 'guarded-e2e'
+      : 'original-check',
+  }));
 }
 
-// Concrete unsafe call-chain evidence. A changed source requires a reviewed
-// reclassification; disappearance of a marker is not a silent safety waiver.
-export const unsafeEntrypoints = Object.freeze([
-  {
-    path: 'package.json',
-    needles: ['docker compose down -v', 'supabase db reset --local'],
-    impact: 'Shared Compose teardown and fixed-project Supabase reset',
-  },
-  {
-    path: 'tools/run-identity-continuity-supabase-test.mjs',
-    needles: ['supabase:stop', 'resetFeature011NativeSupabase'],
-    impact: 'F007 requires isolated native Auth/Storage, not only PostgreSQL',
-  },
-  {
-    path: 'tools/run-audit-admin-postgres-test.mjs',
-    needles: ['127.0.0.1', '5432', 'DROP DATABASE', 'WITH (FORCE)'],
-    impact: 'F008 fixed databases and shared-engine administration',
-  },
-  {
-    path: 'tools/run-clinic-scheduling-postgres-test.mjs',
-    needles: ['compose', 'DROP DATABASE', 'WITH (FORCE)'],
-    impact: 'F009 fixed Compose execution and database replacement',
-  },
-  {
-    path: 'tools/run-clinic-scheduling-restore-test.mjs',
-    needles: ['compose', 'DROP DATABASE'],
-    impact: 'F009 restore uses the development Compose engine',
-  },
-  {
-    path: 'tools/run-feature-011-postgres-test.mjs',
-    needles: ['shifaa-local-postgres-postgres-1', 'supabase_db_shifaa-local-supabase'],
-    impact: 'F011 composition requires both physical runtimes and private outputs',
-  },
-]);
-
-export function inspectUnsafeEntrypoints(root) {
-  return unsafeEntrypoints.map((entry) => {
-    const text = fs.readFileSync(path.join(root, entry.path), 'utf8');
-    for (const needle of entry.needles)
-      assert.ok(text.includes(needle), `Resource call-chain changed: ${entry.path}`);
-    return {
-      path: entry.path,
-      impact: entry.impact,
-      lines: entry.needles.map((needle) => text.slice(0, text.indexOf(needle)).split('\n').length),
-    };
-  });
-}
-
-export function localVerificationHost(root) {
+export function localVerificationHost(
+  root,
+  { createEnvironment = createVerificationEnvironment, run = spawnSync } = {},
+) {
+  let environment;
+  let commands;
   return {
-    preflight(plan) {
-      const blocked = verificationRoutes(plan).filter(({ route }) => route.startsWith('unported-'));
-      const evidence = inspectUnsafeEntrypoints(root);
-      if (blocked.length)
-        return {
-          status: 'BLOCKED',
-          code: 'ISOLATED_LEGACY_RUNNERS_INCOMPLETE',
-          reason:
-            'Native Supabase and legacy physical/restore/performance runners lack verified run-owned execution adapters. No test, database or Docker command was started.',
-          blocked,
-          evidence,
+    async preflight(plan) {
+      verificationRoutes(plan);
+      commands = new Map(plan.requiredSteps.map((step) => [step.id, step.command]));
+      try {
+        environment = await createEnvironment(root);
+      } catch (error) {
+        const prerequisites = {
+          DOCKER_ENGINE_UNAVAILABLE:
+            'Start the intended Linux Docker engine; no shared database fallback is allowed.',
+          POSTGIS_IMAGE_MISSING:
+            'Build the repository infra/db/Dockerfile.postgis image as shifaa/postgis:17-3.5-006-local before verification.',
         };
-      // Never fall back to shared targets or arbitrary shell command dispatch.
-      return {
-        status: 'BLOCKED',
-        code: 'COMPLETE_ISOLATED_EXECUTOR_REQUIRED',
-        reason: 'The complete isolated execution graph has not been implemented.',
-      };
+        if (Object.hasOwn(prerequisites, error.verificationPrerequisite ?? ''))
+          return {
+            status: 'BLOCKED',
+            code: error.verificationPrerequisite,
+            reason: prerequisites[error.verificationPrerequisite],
+          };
+        throw error;
+      }
+      return { status: 'PASS' };
     },
-    execute() {
-      throw new Error('No legacy command may bypass complete aggregate admission');
+    execute(id) {
+      assert.ok(environment, 'Test environment must be admitted first');
+      let executable;
+      let args;
+      if (['legacy-20', 'guarded-family', 'guarded-privacy'].includes(id)) {
+        executable = process.execPath;
+        const scope = id === 'legacy-20' ? 'discovery-sos' : id.slice('guarded-'.length);
+        args = ['--import', 'tsx', 'tools/verification-e2e.mjs', scope];
+      } else {
+        const command = commands.get(id);
+        assert.ok(command, 'Unknown verification obligation');
+        const [program, ...arguments_] = command.split(' ');
+        executable =
+          program === 'pnpm'
+            ? process.platform === 'win32'
+              ? 'corepack.cmd'
+              : 'corepack'
+            : program;
+        args = program === 'pnpm' ? ['pnpm', ...arguments_] : arguments_;
+      }
+      console.log(`VERIFY ${id}`);
+      const result = run(executable, args, {
+        cwd: root,
+        env: { ...process.env },
+        stdio: 'inherit',
+        windowsHide: true,
+        shell: process.platform === 'win32' && executable === 'corepack.cmd',
+      });
+      if (result.error) throw result.error;
+      return { exitCode: result.status ?? 1, cleanupVerified: true };
+    },
+    async close() {
+      if (environment) await environment.close();
     },
   };
 }

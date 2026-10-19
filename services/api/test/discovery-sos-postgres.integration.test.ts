@@ -1,3 +1,4 @@
+import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
@@ -8,8 +9,12 @@ import { buildApp } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
 
 const enabled = process.env['SHIFAA_RUN_DISCOVERY_SOS_POSTGRES'] === 'true';
-const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
-const apiUrl = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa';
+const ownerUrl = enabled
+  ? testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa')
+  : 'postgresql://disabled:disabled@127.0.0.1:1/disabled';
+const apiUrl = enabled
+  ? testDatabaseUrl('shifaa_api', 'postgres', 'shifaa')
+  : 'postgresql://disabled:disabled@127.0.0.1:1/disabled';
 const patientPersonId = '60000000-0000-4000-8000-000000000001';
 const patientId = '61000000-0000-4000-8000-000000000001';
 const hospitalMemberId = '60000000-0000-4000-8000-000000000007';

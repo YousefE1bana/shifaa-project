@@ -1,5 +1,9 @@
+import {
+  testDockerSync,
+  testConnectionOptions,
+  assertTestDatabaseEnvironment,
+} from './verification-database.mjs';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -32,13 +36,6 @@ const securityMigration = 'supabase/migrations/20260908000800_sec_008_idempotenc
 const restoreFixture = 'infra/db/fixtures/audit-admin-restore.sql';
 const sourceDatabase = 'shifaa_f008_restore_source';
 const targetDatabase = 'shifaa_f008_restore_target';
-const connectionOptions = {
-  host: '127.0.0.1',
-  port: 5432,
-  username: 'shifaa_owner',
-  password: 'synthetic_owner_only',
-  max: 1,
-};
 const objectBytes = Buffer.from(
   '{"fixture":"feature-008-c3a","partitions":["2026-05-01","2026-06-01"],"version":1}\n',
   'utf8',
@@ -52,7 +49,7 @@ const reportPath = join(
 );
 
 function runDocker(args, { input, quiet = false, binary = false } = {}) {
-  const result = spawnSync('docker', args, {
+  const result = testDockerSync(args, {
     cwd: root,
     encoding: binary ? null : 'utf8',
     input,
@@ -108,7 +105,7 @@ function applySql(database, path) {
 }
 
 async function readEvidence(database) {
-  const sql = postgres({ ...connectionOptions, database });
+  const sql = postgres({ ...testConnectionOptions('owner', 'postgres', database), max: 1 });
   try {
     const partitions = await sql`
       SELECT
@@ -151,7 +148,7 @@ function evidenceMatches(expected, actual) {
 }
 
 async function proveFailClosedRestore(database, expectedEvidence, restoredObjectBytes) {
-  const sql = postgres({ ...connectionOptions, database });
+  const sql = postgres({ ...testConnectionOptions('owner', 'postgres', database), max: 1 });
   try {
     const contentTamperRejected = await sql.begin(async (transaction) => {
       await transaction.unsafe('SAVEPOINT f008_restore_content_tamper');
@@ -259,7 +256,7 @@ async function writeReport({ rpoMinutes, rtoMinutes, dumpBytes, failClosed }) {
   await writeFile(reportPath, report, 'utf8');
 }
 
-runDocker(['compose', 'up', '-d', '--wait', 'postgres']);
+assertTestDatabaseEnvironment();
 recreateDatabase(sourceDatabase);
 const temporaryRoot = await mkdtemp(join(tmpdir(), 'shifaa-f008-restore-'));
 

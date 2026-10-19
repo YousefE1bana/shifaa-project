@@ -1,3 +1,4 @@
+import { testConnectionOptions, testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import postgres, { type Sql, type TransactionSql } from 'postgres';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
@@ -7,16 +8,13 @@ import { PostgresClinicSchedulingService } from '../src/adapters/postgres/clinic
 import { PostgresIdentityRepository } from '../src/adapters/postgres/identity-repository.js';
 import { ClinicSchedulingService } from '../src/modules/clinic-scheduling/service.js';
 
+const verificationRuntime = (
+  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
+).replace('shifaa-local-', '');
+
 type QueryClient = Sql | TransactionSql;
 
 const database = process.env['SHIFAA_F009_DATABASE'];
-const options = {
-  host: process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1',
-  port: Number(process.env['SHIFAA_PG_PORT'] ?? 5432),
-  username: 'shifaa_owner',
-  password: 'synthetic_owner_only',
-  max: 1,
-};
 const ids = {
   owner: 'f0090000-0000-4000-8c00-000000000001',
   doctor: 'f0090000-0000-4000-8c00-000000000002',
@@ -28,11 +26,8 @@ const ids = {
 
 function client() {
   if (!database) throw new Error('SHIFAA_F009_DATABASE is required for PostgreSQL race tests');
-  return postgres({ ...options, database });
+  return postgres({ ...testConnectionOptions('owner', verificationRuntime, database), max: 1 });
 }
-const apiDatabaseUrl = database
-  ? `postgresql://shifaa_api:synthetic_api_only@${process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1'}:${process.env['SHIFAA_PG_PORT'] ?? 5432}/${database}`
-  : undefined;
 let apiHarness: Awaited<ReturnType<typeof buildApp>> | undefined;
 let apiIdentity: PostgresIdentityRepository | undefined;
 let testFailureOperation: string | undefined;
@@ -245,7 +240,8 @@ async function snapshot(sql: Sql) {
 
 describe.skipIf(!database)('Feature 009 PostgreSQL races and fault boundaries', () => {
   beforeAll(async () => {
-    if (!apiDatabaseUrl) throw new Error('SHIFAA_F009_DATABASE is required for the HTTP harness');
+    if (!database) throw new Error('SHIFAA_F009_DATABASE is required for the HTTP harness');
+    const apiDatabaseUrl = testDatabaseUrl('api', verificationRuntime, database);
     const identity = new PostgresIdentityRepository(apiDatabaseUrl);
     apiIdentity = identity;
     await identity.ready();
