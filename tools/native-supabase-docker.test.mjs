@@ -98,7 +98,7 @@ async function fixture(t, streamForwarder) {
         const host = /^(.*):([^:]+):(ro|rw)$/.exec(bind);
         return host && (host[1].startsWith('/') || /^[A-Za-z]:/.test(host[1]))
           ? { Type: 'bind', Source: host[1], Destination: host[2], RW: host[3] === 'rw' }
-          : { Type: 'volume', Name: bind.split(':')[0], Destination: '/data' };
+          : { Type: 'volume', Name: bind.split(':')[0], Destination: bind.split(':')[1] };
       });
       // Simulate an anonymous image-declared volume that the CLI never named.
       if (b.Volumes?.['/anonymous']) {
@@ -214,6 +214,25 @@ test('reset preserves absent optional service semantics without forwarding mutat
     (await f.send('POST', `/containers/supabase_realtime_${f.project}/restart`)).status,
     403,
   );
+});
+
+test('container mount identity ignores Docker enumeration order but rejects altered records and duplicate targets', async (t) => {
+  const f = await fixture(t);
+  const c = f.container();
+  c.HostConfig.Binds = ['first_' + f.project + ':/first', 'second_' + f.project + ':/second'];
+  assert.equal(
+    (await f.send('POST', `/containers/create?name=supabase_db_${f.project}`, c)).status,
+    201,
+  );
+  const id = 'c'.repeat(64);
+  const actual = f.containers.get(id);
+  actual.Mounts.reverse();
+  assert.equal((await f.send('PUT', `/containers/${id}/archive`)).status, 204);
+  actual.Mounts[0].Name = 'development';
+  assert.equal((await f.send('PUT', `/containers/${id}/archive`)).status, 403);
+  actual.Mounts[0].Name = 'second_' + f.project;
+  actual.Mounts[0].Destination = actual.Mounts[1].Destination;
+  assert.equal((await f.send('PUT', `/containers/${id}/archive`)).status, 403);
 });
 
 test('actual Docker CLI serializes create through the boundary with explicit loopback, not network defaults', async (t) => {

@@ -12,11 +12,17 @@ import { verifyRunOutput } from './disposable-test-resources.mjs';
 
 const nonceLabel = 'shifaa.verify.nonce';
 const sharedPorts = new Set([5432, 54322, 55432]);
+const orderedMounts = (mounts) => {
+  assert.ok(Array.isArray(mounts));
+  for (const mount of mounts) assert.equal(typeof mount.Destination, 'string');
+  assert.equal(new Set(mounts.map((m) => m.Destination)).size, mounts.length);
+  return [...mounts].sort((a, b) => a.Destination.localeCompare(b.Destination));
+};
 const identity = (c) => ({
   id: c.Id,
   image: c.Image,
   created: c.Created,
-  mounts: c.Mounts,
+  mounts: orderedMounts(c.Mounts),
 });
 export function readNativeJournal(environment) {
   const file = path.join(environment.output, 'native-creations.jsonl');
@@ -160,7 +166,7 @@ export async function nativeDockerBoundary(environment, upstream, upgrade) {
       id: expected.id,
       image: expected.image,
       created: expected.created,
-      mounts: expected.mounts,
+      mounts: orderedMounts(expected.mounts),
     });
     assert.equal(c.Config.Labels[nonceLabel], environment.nonce);
     assert.equal(c.Config.Labels['com.supabase.cli.project'], scope.project);
