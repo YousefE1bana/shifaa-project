@@ -5,6 +5,7 @@ import { readFileSync, writeFileSync, lstatSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { verifyRunOutput } from './disposable-test-resources.mjs';
+import { readNativeJournal, currentNativeVolumes } from './native-supabase-docker.mjs';
 
 const sharedPorts = new Set([5432, 54322, 55432]);
 const deny = (message) => {
@@ -398,14 +399,14 @@ export function runTestSupabase(args, options = {}) {
         'Foreign attachment blocks native reset',
       );
     }
-    guarded.push('--network-id', target.network.Id);
+    guarded.push('--network-id', target.network.Name);
   }
   const startedAt = Math.floor(Date.now() / 1000) * 1000;
   const file = process.env.SHIFAA_VERIFY_CONTEXT;
   try {
     const result = execFileSync(
       process.execPath,
-      [path.resolve(import.meta.dirname, '../node_modules/supabase/dist/supabase.js'), ...guarded],
+      [path.resolve(import.meta.dirname, 'native-supabase-docker.mjs'), ...guarded],
       {
         ...options,
         env: testSupabaseEnvironment(),
@@ -457,6 +458,20 @@ export function runTestSupabase(args, options = {}) {
       );
       environment.nativeVolumes = environment.nativeVolumes.map(
         (item) => volumes.find((volume) => volume.Name === item.Name) ?? item,
+      );
+      const existing = new Set(command(['volume', 'ls', '-q']).split(/\r?\n/).filter(Boolean));
+      const names = [
+        ...new Set([
+          ...environment.nativeVolumes.map((v) => v.Name),
+          ...readNativeJournal(environment)
+            .filter((e) => e.volume)
+            .map((e) => e.volume.Name),
+        ]),
+      ].filter((name) => existing.has(name));
+      environment.nativeVolumes = currentNativeVolumes(
+        environment,
+        names,
+        (name) => JSON.parse(command(['volume', 'inspect', name]))[0],
       );
       environment.nativeResets = (environment.nativeResets ?? 0) + 1;
       writeFileSync(file, JSON.stringify(environment), { mode: 0o600 });

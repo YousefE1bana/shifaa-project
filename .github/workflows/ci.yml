@@ -46,7 +46,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: node --test tools/start-feature-011-native-supabase.test.mjs tools/reset-feature-011-native-supabase.test.mjs tools/feature-011-native-supabase-bootstrap.test.mjs tools/feature-011-evidence-head.test.mjs tools/feature-011-pr-review-binding.test.mjs
-      - run: node --test tools/verify.test.mjs tools/tooling-history.test.mjs tools/test-resource-context.test.mjs tools/trusted-disposable-test-launcher.test.mjs tools/verification-database.test.mjs tools/verification-test-environment.test.mjs tools/verification-runner-targets.test.mjs
+      - run: node --test tools/verify.test.mjs tools/tooling-history.test.mjs tools/test-resource-context.test.mjs tools/trusted-disposable-test-launcher.test.mjs tools/verification-database.test.mjs tools/verification-test-environment.test.mjs tools/verification-runner-targets.test.mjs tools/native-supabase-docker.test.mjs
       - run: node --experimental-test-module-mocks --import tsx --test tests/e2e/test-resource-context.test.ts
       - run: pnpm contracts:check
       - run: node tools/verify-feature-011-contracts.mjs

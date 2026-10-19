@@ -319,6 +319,8 @@ function nativeResetFixture(t, attack) {
     nonce: target.nonce,
     startedAt: target.startedAt,
     context: 'mock',
+    output: directory,
+    postgres: { before: target.before },
     supabase: target,
     nativeContainers: [
       {
@@ -355,7 +357,7 @@ function nativeResetFixture(t, attack) {
     if (program === process.execPath) {
       assert.ok(original.includes('--local'));
       assert.equal(original[original.indexOf('--workdir') + 1], directory);
-      assert.equal(original[original.indexOf('--network-id') + 1], target.network.Id);
+      assert.equal(original[original.indexOf('--network-id') + 1], target.network.Name);
       reset = true;
       f.observed.container.Id = 'e'.repeat(64);
       f.observed.container.Created = new Date().toISOString();
@@ -370,7 +372,8 @@ function nativeResetFixture(t, attack) {
       return JSON.stringify([{ Endpoints: { docker: { Host: target.endpoint } } }]);
     if (args[0] === 'info') return JSON.stringify({ ID: target.engine });
     if (args[0] === 'inspect') return JSON.stringify([f.observed.container]);
-    if (args[0] === 'volume') return JSON.stringify([target.volume]);
+    if (args[0] === 'volume')
+      return args[1] === 'ls' ? target.volume.Name : JSON.stringify([target.volume]);
     if (args[0] === 'network') return JSON.stringify([target.network]);
     if (args[0] === 'ps')
       return attack === 'attachment' ? 'shared-container' : f.observed.container.Id;

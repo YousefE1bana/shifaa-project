@@ -88,6 +88,7 @@ function fixture(t, attack = {}) {
     assert.equal(program, 'docker');
     const args = original[0] === '--context' ? original.slice(2) : original;
     calls.push([...args]);
+    if (args.join(' ') === 'volume ls -q') return [...volumes.keys()].join('\n');
     if (attack.command) attack.command(args);
     if (args[0] === 'context' && args[1] === 'show') return 'mock';
     if (args[0] === 'info')
@@ -208,14 +209,14 @@ function fixture(t, attack = {}) {
     assert.match(project, /^sv-[a-f0-9]{32}-sb$/);
     const port = Number(/\[db\]\nport = (\d+)/.exec(config)[1]);
     const volume = makeVolume(project + '-db', { 'com.supabase.cli.project': project });
-    const c = makeContainer(
-      'supabase_db_' + project,
-      image,
-      value(args, '--network-id'),
-      port,
-      volume,
-      { 'com.supabase.cli.project': project, 'com.supabase.cli.workdir': workdir },
-    );
+    const networkId = [...networks.values()].find(
+      (n) => n.Name === value(args, '--network-id'),
+    )?.Id;
+    assert.ok(networkId, 'CLI must receive the verified network name');
+    const c = makeContainer('supabase_db_' + project, image, networkId, port, volume, {
+      'com.supabase.cli.project': project,
+      'com.supabase.cli.workdir': workdir,
+    });
     const configuration = makeVolume(project + '-config', { 'com.supabase.cli.project': project });
     c.Mounts.push({
       Type: 'volume',
@@ -228,12 +229,18 @@ function fixture(t, attack = {}) {
     const mail = makeContainer(
       'supabase_inbucket_' + project,
       image,
-      value(args, '--network-id'),
+      networkId,
       mailpitPort,
       volume,
       { 'com.supabase.cli.project': project },
     );
     attack.mailpitContainer?.(mail);
+    const receipt = JSON.parse(fs.readFileSync(process.env.SHIFAA_VERIFY_CONTEXT));
+    for (const v of [volume, configuration])
+      fs.appendFileSync(
+        path.join(receipt.output, 'native-creations.jsonl'),
+        JSON.stringify({ nonce: receipt.nonce, state: 'CREATED', volume: v }) + '\n',
+      );
     return '';
   }
   const boundaries = {

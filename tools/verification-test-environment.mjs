@@ -14,6 +14,7 @@ import {
   resourceCommand,
 } from './disposable-test-resources.mjs';
 import { testRuntime, testResourceMounts, testResourceNetwork } from './verification-database.mjs';
+import { readNativeJournal, currentNativeVolumes } from './native-supabase-docker.mjs';
 
 const rejectedPorts = new Set([5432, 54322, 55432]);
 async function freePort() {
@@ -287,15 +288,22 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
       .replace(/(\[db.seed\][\s\S]*?enabled = )true/, '$1false');
     writeFileSync(path.join(workdir, 'supabase/config.toml'), config);
     const nativePort = Number(/\[db\][\s\S]*?^port = (\d+)/m.exec(config)?.[1]);
+    environment.nativeAdmission = {
+      project: nativeProject,
+      network: nativeNetwork,
+      networkName: nativeProject + '-net',
+      ports: [...assigned],
+    };
+    save();
     execute(
       process.execPath,
       [
-        cli,
+        path.join(root, 'tools/native-supabase-docker.mjs'),
         'start',
         '--workdir',
         workdir,
         '--network-id',
-        nativeNetwork,
+        nativeProject + '-net',
         '--exclude',
         'studio,postgres-meta,vector,logflare,supavisor,edge-runtime,imgproxy',
       ],
@@ -366,13 +374,24 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
       ),
       network: json(docker('network', 'inspect', nativeNetworkName))[0],
     };
-    environment.nativeVolumes = [
-      ...new Set(
-        containers.flatMap((item) =>
-          item.Mounts.filter((mount) => mount.Type === 'volume').map((mount) => mount.Name),
+    const existingVolumeNames = new Set(
+      docker('volume', 'ls', '-q').split(/\r?\n/).filter(Boolean),
+    );
+    const nativeVolumeNames = [
+      ...new Set([
+        ...readNativeJournal(environment)
+          .filter((e) => e.volume)
+          .map((e) => e.volume.Name),
+        ...containers.flatMap((item) =>
+          item.Mounts.filter((m) => m.Type === 'volume').map((m) => m.Name),
         ),
-      ),
-    ].map((name) => json(docker('volume', 'inspect', name))[0]);
+      ]),
+    ].filter((name) => existingVolumeNames.has(name));
+    environment.nativeVolumes = currentNativeVolumes(
+      environment,
+      nativeVolumeNames,
+      (name) => json(docker('volume', 'inspect', name))[0],
+    );
     for (const volume of environment.nativeVolumes)
       assert.ok(!before.volumes.includes(volume.Name), 'Preexisting native volume');
     environment.nativeContainers = containers.map((item) => ({
@@ -460,6 +479,7 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
         ]);
         const volumes = new Set([
           environment.postgres.volume.Name,
+          ...environment.nativeVolumes.map((volume) => volume.Name),
           ...current.flatMap((item) =>
             item.Mounts.filter((mount) => mount.Type === 'volume').map((mount) => mount.Name),
           ),

@@ -155,8 +155,8 @@
   "currentInputs": [
     {
       "path": ".github/workflows/ci.yml",
-      "bytes": 6107,
-      "sha256": "ee7f5f0d3070879495722c25c737b7646c910f2131397685c41ead9e1946eab2"
+      "bytes": 6145,
+      "sha256": "73f0d36b56a424df69cffd76e4bd1fbae40dc4348fbe4086b52de8493eb5e95a"
     },
     {
       "path": "package.json",
@@ -265,8 +265,8 @@
     },
     {
       "path": "tools/verification-database.mjs",
-      "bytes": 19863,
-      "sha256": "66fbcb352b42843a95fb90b2c5f777a7d0d99f99930d11c460805745e5369bec"
+      "bytes": 20487,
+      "sha256": "f72e6f2289e3e2341d36d23cef7194276ac781c1fb8bc1bad2b88f640e421623"
     },
     {
       "path": "tools/verification-e2e.mjs",
@@ -275,8 +275,8 @@
     },
     {
       "path": "tools/verification-host.mjs",
-      "bytes": 3242,
-      "sha256": "63cea548a0d3ae9716ada3236c016a2aed4cfe5cc20b91c33fe36558de4bf3a0"
+      "bytes": 3197,
+      "sha256": "9341946acb125f43629db4647376f73c8fcc22bba7481b17bba60667dedebc03"
     },
     {
       "path": "tools/verification-plan.mjs",
@@ -285,13 +285,18 @@
     },
     {
       "path": "tools/verification-test-environment.mjs",
-      "bytes": 21489,
-      "sha256": "48c4142a26f1abf7c2b3561828f65c511b19a50632e58872ccd0ab4553892d48"
+      "bytes": 22261,
+      "sha256": "0a0205b5e529ffe4f95db7cad470eda247a23789f7fd6641242e770dd70c710a"
     },
     {
       "path": "tools/verify.mjs",
       "bytes": 3498,
       "sha256": "2d44e01835fe885796351a9c3f6da60202ea7e336c8a61f71e1737f8817bfb90"
+    },
+    {
+      "path": "tools/native-supabase-docker.mjs",
+      "bytes": 22144,
+      "sha256": "5b228fa2f82a258cdcaa682eca61765cf1f64e2209137b4a16e6fa18d4ed7968"
     }
   ]
 }
