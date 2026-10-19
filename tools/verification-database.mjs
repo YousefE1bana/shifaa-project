@@ -28,6 +28,17 @@ export function testResourceMounts(mounts) {
   return [...mounts].sort((a, b) => a.Destination.localeCompare(b.Destination));
 }
 
+// Docker 29 adds live IP allocation counters to network inspect. They change
+// when this run attaches/detaches containers; configuration and identity do not.
+export function testResourceNetwork(network) {
+  const { Containers: _containers, ...identity } = structuredClone(network);
+  for (const subnet of Object.values(identity.Status?.IPAM?.Subnets ?? {})) {
+    delete subnet.IPsInUse;
+    delete subnet.DynamicIPsAvailable;
+  }
+  return identity;
+}
+
 function repositoryBindSource(record, source) {
   if (source === record.sourceMount) return true;
   // Docker Desktop's Linux daemon reports the translated host path, not the
@@ -107,8 +118,7 @@ export function validateTestResource(record, observed) {
     record.volumes ?? [record.volume],
     'Additional volume substitution',
   );
-  const stableNetwork = ({ Containers: _containers, ...value }) => value;
-  assert.deepEqual(stableNetwork(observed.network), stableNetwork(record.network));
+  assert.deepEqual(testResourceNetwork(observed.network), testResourceNetwork(record.network));
   assert.ok(Object.hasOwn(observed.container.NetworkSettings.Networks, record.network.Name));
   const attachedNetwork =
     observed.container.NetworkSettings.Networks[record.network.Name].NetworkID;

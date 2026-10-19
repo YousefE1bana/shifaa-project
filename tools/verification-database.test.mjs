@@ -99,6 +99,34 @@ test('exact created resource is admitted and ordinary output writes do not inval
   assert.equal(validateTestResource(record, observed), record);
 });
 
+// Real admission on Docker 29, 2026-10-19: live IP usage changes after start.
+test('Docker 29 network usage changes preserve admission but configuration drift does not', () => {
+  const { record, observed } = resourceFixture();
+  record.network.IPAM = { Config: [{ Subnet: '172.21.0.0/16', Gateway: '172.21.0.1' }] };
+  record.network.Status = {
+    IPAM: { Subnets: { '172.21.0.0/16': { IPsInUse: 3, DynamicIPsAvailable: 65533 } } },
+  };
+  observed.network = structuredClone(record.network);
+  observed.network.Status.IPAM.Subnets['172.21.0.0/16'].IPsInUse++;
+  observed.network.Status.IPAM.Subnets['172.21.0.0/16'].DynamicIPsAvailable--;
+  assert.equal(validateTestResource(record, observed), record);
+  for (const mutate of [
+    (n) => {
+      n.IPAM.Config[0].Gateway = '172.21.0.2';
+    },
+    (n) => {
+      n.Options['com.docker.network.bridge.host_binding_ipv4'] = '0.0.0.0';
+    },
+    (n) => {
+      n.Status.IPAM.Subnets['172.21.0.0/16'].Unexpected = true;
+    },
+  ]) {
+    const altered = structuredClone(observed);
+    mutate(altered.network);
+    assert.throws(() => validateTestResource(record, altered));
+  }
+});
+
 // First real Windows aggregate run, 2026-10-19: Docker Desktop translates
 // drive-letter sources before returning both HostConfig.Mounts and Mounts.
 test('Docker Desktop admits the exact translated read-only Windows repository mount', () => {

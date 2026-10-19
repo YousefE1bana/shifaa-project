@@ -276,7 +276,11 @@ test('CI database suites require admission, preserve failures and close only the
   );
 });
 
-for (const code of ['DOCKER_ENGINE_UNAVAILABLE', 'POSTGIS_IMAGE_MISSING'])
+for (const code of [
+  'DOCKER_ENGINE_UNAVAILABLE',
+  'POSTGIS_IMAGE_MISSING',
+  'NATIVE_LOOPBACK_BINDING_REQUIRED',
+])
   test(`${code} returns an actionable prerequisite without running any check`, async () => {
     let executions = 0;
     const result = await verify(

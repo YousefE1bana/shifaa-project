@@ -29,6 +29,8 @@ export function localVerificationHost(
         environment = await createEnvironment(root);
       } catch (error) {
         const prerequisites = {
+          NATIVE_LOOPBACK_BINDING_REQUIRED:
+            'Native Supabase published non-loopback ports. On Docker Desktop select Resources > Network > Port binding behavior > Localhost by default. Preserve the failed run receipt and verify ownership before cleanup; do not accept wildcard bindings.',
           DOCKER_ENGINE_UNAVAILABLE:
             'Start the intended Linux Docker engine; no shared database fallback is allowed.',
           POSTGIS_IMAGE_MISSING:

@@ -13,7 +13,7 @@ import {
   resourceInventory,
   resourceCommand,
 } from './disposable-test-resources.mjs';
-import { testRuntime, testResourceMounts } from './verification-database.mjs';
+import { testRuntime, testResourceMounts, testResourceNetwork } from './verification-database.mjs';
 
 const rejectedPorts = new Set([5432, 54322, 55432]);
 async function freePort() {
@@ -382,6 +382,18 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
       mounts: item.Mounts,
     }));
     save();
+    // Docker Desktop can ignore the bridge's default bind-address option.
+    // Never reinterpret wildcard publication as loopback-only admission.
+    if (
+      containers.some((item) =>
+        Object.values(item.NetworkSettings.Ports ?? {}).some((bindings) =>
+          (bindings ?? []).some((binding) => binding.HostIp !== '127.0.0.1'),
+        ),
+      )
+    )
+      throw Object.assign(new Error('Native services require loopback-only publication'), {
+        verificationPrerequisite: 'NATIVE_LOOPBACK_BINDING_REQUIRED',
+      });
     validateRuntime('supabase');
     for (const item of containers) {
       assert.equal(item.HostConfig.Privileged, false);
@@ -518,8 +530,11 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
           const expected = [environment.postgres.network, environment.supabase.network].find(
             (item) => item.Id === id,
           );
-          const stable = ({ Containers: _containers, ...value }) => value;
-          assert.deepEqual(stable(actual), stable(expected), 'Network changed before teardown');
+          assert.deepEqual(
+            testResourceNetwork(actual),
+            testResourceNetwork(expected),
+            'Network changed before teardown',
+          );
           assert.equal(Object.keys(actual.Containers ?? {}).length, 0, 'Network remains attached');
           docker('network', 'rm', id);
         }
@@ -534,9 +549,12 @@ export async function createVerificationEnvironment(root, boundaries = {}) {
     save();
     if (previousContext === undefined) delete process.env.SHIFAA_VERIFY_CONTEXT;
     else process.env.SHIFAA_VERIFY_CONTEXT = previousContext;
-    throw new Error(
+    const failure = new Error(
       `Verification startup BLOCKED; preserve run ${nonce}. Private receipt: ${file}`,
       { cause: error },
     );
+    if (error.verificationPrerequisite === 'NATIVE_LOOPBACK_BINDING_REQUIRED')
+      failure.verificationPrerequisite = error.verificationPrerequisite;
+    throw failure;
   }
 }

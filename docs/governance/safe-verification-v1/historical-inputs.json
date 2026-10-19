@@ -265,8 +265,8 @@
     },
     {
       "path": "tools/verification-database.mjs",
-      "bytes": 19470,
-      "sha256": "e728be5e1c3aee14766cf676b69240a05094ddc6ff61150e03b294116761f622"
+      "bytes": 19863,
+      "sha256": "66fbcb352b42843a95fb90b2c5f777a7d0d99f99930d11c460805745e5369bec"
     },
     {
       "path": "tools/verification-e2e.mjs",
@@ -275,8 +275,8 @@
     },
     {
       "path": "tools/verification-host.mjs",
-      "bytes": 2942,
-      "sha256": "6cdfdd37870ec7e91de4c538fa9edd1d3e53e554ccb8b346073d7978dd6d99b8"
+      "bytes": 3242,
+      "sha256": "63cea548a0d3ae9716ada3236c016a2aed4cfe5cc20b91c33fe36558de4bf3a0"
     },
     {
       "path": "tools/verification-plan.mjs",
@@ -285,8 +285,8 @@
     },
     {
       "path": "tools/verification-test-environment.mjs",
-      "bytes": 20747,
-      "sha256": "93bcd3f6ab68a53bb22c53442e2834f5f54c468618a47cb500c143a8b6581f3a"
+      "bytes": 21489,
+      "sha256": "48c4142a26f1abf7c2b3561828f65c511b19a50632e58872ccd0ab4553892d48"
     },
     {
       "path": "tools/verify.mjs",

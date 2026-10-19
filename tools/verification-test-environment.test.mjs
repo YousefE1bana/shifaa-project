@@ -301,6 +301,27 @@ test('actual orchestration creates one reusable pair, then deletes only those ex
   );
 });
 
+test('Docker 29 live network counters may change through identity-checked teardown', async (t) => {
+  const f = fixture(t);
+  const run = await createVerificationEnvironment(f.root, f.boundaries);
+  for (const [id, network] of f.networks) {
+    const recorded = [run.environment.postgres.network, run.environment.supabase.network].find(
+      (n) => n.Id === id,
+    );
+    const status = {
+      IPAM: { Subnets: { '172.21.0.0/16': { IPsInUse: 4, DynamicIPsAvailable: 65532 } } },
+    };
+    recorded.Status = structuredClone(status);
+    network.Status = structuredClone(status);
+    network.Status.IPAM.Subnets['172.21.0.0/16'].IPsInUse--;
+    network.Status.IPAM.Subnets['172.21.0.0/16'].DynamicIPsAvailable++;
+  }
+  // The private receipt retains the creation record, rather than live counters.
+  fs.writeFileSync(run.file, JSON.stringify(run.environment));
+  await run.close();
+  assert.equal(f.containers.size + f.volumes.size + f.networks.size, 0);
+});
+
 test('ambient Supabase shared-target overrides cannot escape the private configuration', async (t) => {
   const keys = ['SUPABASE_DB_PORT', 'SUPABASE_API_PORT', 'SUPABASE_PROJECT_ID'];
   const before = keys.map((key) => process.env[key]);
@@ -353,7 +374,11 @@ for (const [name, attack] of Object.entries({
 }))
   test(`native ${name} is rejected without guessed cleanup`, async (t) => {
     const f = fixture(t, { nativeContainer: attack });
-    await assert.rejects(createVerificationEnvironment(f.root, f.boundaries));
+    await assert.rejects(createVerificationEnvironment(f.root, f.boundaries), (error) => {
+      if (name === 'exposed port')
+        assert.equal(error.verificationPrerequisite, 'NATIVE_LOOPBACK_BINDING_REQUIRED');
+      return /BLOCKED/.test(error.message);
+    });
     assert.equal(f.calls.filter((args) => args[0] === 'rm').length, 0);
   });
 for (const loss of ['loseEngine', 'foreignAttachment'])
