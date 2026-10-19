@@ -650,7 +650,13 @@ export async function createDisposableTestRun(options) {
   const [image] = JSON.parse(
     dockerCommand(frozen.docker.context, ['image', 'inspect', frozen.imageReference]),
   );
-  if (image?.Id !== frozen.docker.image || !image.RepoDigests?.includes(frozen.imageReference))
+  // Local Docker image IDs and repository manifest digests are distinct pins.
+  // The aggregate supplies an exact image ID; published references must also
+  // match a RepoDigest, rather than treating the two representations as equal.
+  if (
+    image?.Id !== frozen.docker.image ||
+    (frozen.imageReference !== image.Id && !image.RepoDigests?.includes(frozen.imageReference))
+  )
     denied('immutable image not locally verified');
   const { authority, nonce } = beginTestRun(frozen);
   const run = {

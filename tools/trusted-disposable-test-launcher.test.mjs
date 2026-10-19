@@ -52,6 +52,7 @@ function launcherFixture(t, scope = 'family') {
     outputParent: f.before.output.canonical,
     imageReference: `example.invalid/postgres@sha256:${'a'.repeat(64)}`,
   };
+  const imageObservation = { Id: f.manifest.image, RepoDigests: [options.imageReference] };
   t.mock.method(crypto, 'randomBytes', (size) =>
     size === 16 ? Buffer.from(f.nonce, 'hex') : previousRandom(size),
   );
@@ -77,8 +78,7 @@ function launcherFixture(t, scope = 'family') {
     }
     if (executable === 'git' && args.includes('status')) return '';
     if (executable !== 'docker') return previousCommand(executable, args, settings);
-    if (args.includes('image'))
-      return JSON.stringify([{ Id: f.manifest.image, RepoDigests: [options.imageReference] }]);
+    if (args.includes('image')) return JSON.stringify([imageObservation]);
     if (args.includes('network') && args.includes('ls')) return '';
     if (args.includes('network') && args.includes('create')) {
       effects.lifecycle.push('network.create');
@@ -170,6 +170,7 @@ function launcherFixture(t, scope = 'family') {
   return {
     ...f,
     options,
+    imageObservation,
     launcherEffects: effects,
     mutate: (callback) => {
       mutate = callback;
@@ -194,6 +195,32 @@ test('launcher rejects absent runtime approval before any resource observer or c
   await assert.rejects(createDisposableTestRun(), /separate explicit runtime approval/);
   await assert.rejects(acquireTestLauncherContext('family'), /trusted in-process/);
 });
+
+test('aggregate immutable local image ID is accepted without a repository digest', async (t) => {
+  const f = launcherFixture(t, 'discovery-sos');
+  f.options.imageReference = f.manifest.image;
+  f.imageObservation.RepoDigests = [];
+  const run = await createDisposableTestRun(f.options);
+  assert.ok(run.capability);
+  assert.ok(f.launcherEffects.lifecycle.includes('container.start'));
+});
+
+for (const pin of ['local image ID', 'repository digest']) {
+  test(`substituted ${pin} is rejected before resource creation`, async (t) => {
+    const f = launcherFixture(t);
+    if (pin === 'local image ID') {
+      f.options.imageReference = f.manifest.image;
+      f.imageObservation.Id = `sha256:${'0'.repeat(64)}`;
+    } else f.imageObservation.RepoDigests = [];
+    await assert.rejects(
+      createDisposableTestRun(f.options),
+      /immutable image not locally verified/,
+    );
+    assert.deepEqual(f.launcherEffects.lifecycle, []);
+    assert.deepEqual(f.launcherEffects.sql, []);
+    assert.equal(f.effects.clients, 0);
+  });
+}
 
 test('launcher refuses a different source worktree before observing resources', async (t) => {
   const f = launcherFixture(t);

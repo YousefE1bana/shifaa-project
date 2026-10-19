@@ -21,7 +21,7 @@ const immutableObjects = new Map();
 // Exact operational successors are checked independently before historical P4/P5
 // comparisons. This creates no fresh physical acceptance or clinical authority.
 const verificationRecord = 'docs/governance/safe-verification-v1/historical-inputs.json';
-const verificationRecordSha256 = '110f2c08d432a61a9e4d2a5bc315a38ce4a865879946f523df887523d0f91c05';
+const verificationRecordSha256 = '1793c4ea7826de55a065978754153f9499843f6b3651d7cd417b100282e1024b';
 export function verificationHistoricalInputs(root) {
   const file = safeFile(root, verificationRecord);
   if (!existsSync(file)) return new Map();

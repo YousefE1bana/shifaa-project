@@ -255,8 +255,8 @@
     },
     {
       "path": "tools/trusted-disposable-test-launcher.mjs",
-      "bytes": 30350,
-      "sha256": "e7615fe84214e4041a4911713bb44bfd907adab270d8e916442e6dba337eb57a"
+      "bytes": 30639,
+      "sha256": "7a45ba63bdc0e5bcbedf79b57706df1b556d5edbea938929b7f69885ec0b0ea2"
     },
     {
       "path": "tools/verification-ci.mjs",
