@@ -1252,3 +1252,70 @@ test('failed real-test events retain assertion source locations but never sensit
     /private-password|private row|SQL row/,
   );
 });
+
+test('individual outcomes include declaration locations and bounded classifications without event names or values', async (t) => {
+  const f = launcherFixture(t);
+  f.options.cleanup = 'REMOVE_RELEASED_RUNS_BEFORE_NEXT_LEASE';
+  t.mock.method(test, 'run', () =>
+    (async function* () {
+      const context = await acquireTestLauncherContext('family');
+      releaseTestLauncherContext('family', context);
+      const file = path.join(f.options.worktree, 'tests/e2e/family-delegation.spec.ts');
+      yield {
+        type: 'test:pass',
+        data: { testNumber: 1, file, line: 10, column: 1, name: 'private patient body' },
+      };
+      yield {
+        type: 'test:fail',
+        data: {
+          testNumber: 2,
+          file,
+          line: 20,
+          column: 1,
+          details: {
+            error: Object.assign(new Error('private SQL credentials'), {
+              cause: Object.assign(new Error('private actual expected'), {
+                code: 'ERR_ASSERTION',
+                stack: `Error: private actual expected\n    at TestContext.<anonymous> (${file}:27:9)`,
+              }),
+            }),
+          },
+        },
+      };
+      yield {
+        type: 'test:fail',
+        data: {
+          testNumber: 3,
+          file,
+          line: 30,
+          column: 1,
+          details: {
+            error: new Error('test-resource-denied: network creation identity or shared namespace'),
+          },
+        },
+      };
+    })(),
+  );
+  const result = await runDisposableTestSuite(f.options);
+  assert.equal(result.passed, false);
+  assert.equal(result.passedTests, 1);
+  assert.equal(result.failedTests, 2);
+  const records = f.launcherEffects.reports
+    .filter(({ destination }) => destination?.includes('-test-result-'))
+    .map(({ report }) => report);
+  assert.equal(records.length, 3);
+  assert.deepEqual(
+    records.map(({ status, exitCode }) => [status, exitCode]),
+    [
+      ['PASS', 0],
+      ['FAIL', 1],
+      ['FAIL', 1],
+    ],
+  );
+  assert.equal(records[1].classification, 'ASSERTION');
+  assert.equal(records[1].location.line, 20);
+  assert.equal(records[1].diagnostic.cause.location.line, 27);
+  assert.equal(records[2].classification, 'RESOURCE_GUARD');
+  assert.equal(records[2].diagnostic.guardReason, 'network creation identity or shared namespace');
+  assert.doesNotMatch(JSON.stringify(records), /private|credentials|SQL/);
+});

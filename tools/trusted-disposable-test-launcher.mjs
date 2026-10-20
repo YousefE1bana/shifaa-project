@@ -69,6 +69,37 @@ function failureDiagnostic(error, worktree, depth = 0) {
   return diagnostic;
 }
 
+function testEventDiagnostic(data, options) {
+  const diagnostic = failureDiagnostic(data.details?.error, options.worktree);
+  const file =
+    typeof data.file === 'string'
+      ? path.relative(options.worktree, data.file).replaceAll('\\', '/')
+      : '';
+  const location =
+    /^tests\/e2e\/[a-zA-Z0-9_.-]+\.(?:ts|mjs)$/.test(file) &&
+    Number.isInteger(data.line) &&
+    data.line > 0
+      ? { path: file, line: data.line, column: Number.isInteger(data.column) ? data.column : null }
+      : null;
+  const chain = [];
+  for (let item = diagnostic; item; item = item.cause) chain.push(item);
+  const classification = !data.details?.error
+    ? 'NONE'
+    : chain.some((item) => item.guardReason)
+      ? 'RESOURCE_GUARD'
+      : chain.some((item) => item.code === 'ERR_ASSERTION')
+        ? 'ASSERTION'
+        : chain.some((item) => /^[0-9A-Z]{5}$/.test(item.code ?? ''))
+          ? 'DATABASE'
+          : 'TEST_FAILURE';
+  return {
+    testNumber: Number.isInteger(data.testNumber) ? data.testNumber : null,
+    location,
+    classification,
+    diagnostic,
+  };
+}
+
 function checkBudgetAuthorization(options) {
   if (options.resourceBudget !== undefined && options.resourceBudget !== budgetName)
     denied('unknown resource budget');
@@ -824,6 +855,7 @@ export async function runDisposableTestSuite(options) {
   let failed = false;
   let passedTests = 0;
   let failedTests = 0;
+  let completedTests = 0;
   await withTestLauncherSession(
     options.scope,
     async () => {
@@ -856,6 +888,17 @@ export async function runDisposableTestSuite(options) {
                 (field) => data.counts?.[field] !== undefined && data.counts[field] !== 0,
               )));
         if (incomplete) failed = true;
+        if (['test:pass', 'test:fail'].includes(event.type)) {
+          completedTests++;
+          writePrivateReport(
+            path.join(options.outputParent, `${options.scope}-test-result-${completedTests}.json`),
+            {
+              status: event.type === 'test:pass' && !incomplete ? 'PASS' : 'FAIL',
+              exitCode: event.type === 'test:pass' && !incomplete ? 0 : 1,
+              ...testEventDiagnostic(data, options),
+            },
+          );
+        }
         if (event.type === 'test:pass' && !incomplete) passedTests++;
         if (event.type === 'test:fail') {
           failed = true;
