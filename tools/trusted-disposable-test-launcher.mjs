@@ -335,6 +335,7 @@ function report(run, status) {
     network: run.network ?? null,
     bootstrap: run.sources.identities,
     bootstrapIdentityGuardPassed: run.bootstrapped === true,
+    failure: run.failure ?? null,
     resourceBudget: run.options.resourceBudget ?? null,
     storageQuotaEnforced: false,
     sqlTests: run.bootstrapped ? (run.sources.sqlTests ?? []) : [],
@@ -432,7 +433,7 @@ function createResources(run) {
         image: run.options.imageReference,
         environment: {
           POSTGRES_DB: `test_${run.nonce}`,
-          POSTGRES_USER: 'shifaa_owner',
+          POSTGRES_USER: 'shifaa_bootstrap',
           POSTGRES_PASSWORD: run.passwords.owner,
         },
         labels: { 'shifaa.test.nonce': run.nonce },
@@ -496,6 +497,7 @@ function createResources(run) {
 }
 
 async function admitAndBootstrap(run) {
+  run.phase = 'resource-admission';
   const observed = checkpoint(run);
   const bindings = observed.container.NetworkSettings?.Ports;
   const portBindings = bindings?.['5432/tcp'];
@@ -551,6 +553,7 @@ async function admitAndBootstrap(run) {
   await withTestOutputCreation(run.authority, run.capability, createPrivateOutput);
   checkpoint(run);
   // Readiness checks occur only AFTER complete out-of-band resource admission.
+  run.phase = 'postgres-readiness';
   for (let attempt = 0; ; attempt++) {
     checkpoint(run);
     try {
@@ -572,7 +575,7 @@ async function admitAndBootstrap(run) {
         'pg_isready',
         '--timeout=2',
         '-U',
-        'shifaa_owner',
+        'shifaa_bootstrap',
         '-d',
         manifest.database,
       ]);
@@ -593,7 +596,7 @@ async function admitAndBootstrap(run) {
   // bootstrap role, then bind nonce/source BEFORE any of those sources execute.
   const sql = `DO $shifaa_bootstrap_identity$
 BEGIN
-  IF current_database() <> '${manifest.database}' OR current_user <> 'shifaa_owner' THEN
+  IF current_database() <> '${manifest.database}' OR current_user <> 'shifaa_bootstrap' THEN
     RAISE EXCEPTION 'test bootstrap database or role identity mismatch';
   END IF;
 END
@@ -601,13 +604,21 @@ $shifaa_bootstrap_identity$;
 ALTER DATABASE ${manifest.database} SET shifaa.test_run_nonce='${run.nonce}';
 ALTER DATABASE ${manifest.database} SET shifaa.test_source_digest='${run.options.sourceDigest}';
 SELECT set_config('shifaa.test_run_nonce','${run.nonce}',false),set_config('shifaa.test_source_digest','${run.options.sourceDigest}',false);
+-- initdb's original superuser cannot lose SUPERUSER. Create a separate fixture
+-- owner, run migrations under it, then demote it from the bootstrap session.
+CREATE ROLE shifaa_owner LOGIN PASSWORD '${run.passwords.owner}' SUPERUSER;
+ALTER DATABASE ${manifest.database} OWNER TO shifaa_owner;
+SET ROLE shifaa_owner;
 CREATE ROLE shifaa_api LOGIN PASSWORD '${run.passwords.api}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
 CREATE ROLE shifaa_worker LOGIN PASSWORD '${run.passwords.worker}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
 ${run.sources.sql}
 -- Bootstrap privilege ends here. The fixture owner still needs RLS bypass for
 -- existing fixed fixtures; it is NEVER the online API/worker connection role.
+RESET ROLE;
 ALTER ROLE shifaa_owner NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION BYPASSRLS;
+ALTER ROLE shifaa_bootstrap NOLOGIN;
 `;
+  run.phase = 'bootstrap-sql';
   dockerCommand(
     run.options.docker.context,
     [
@@ -620,12 +631,13 @@ ALTER ROLE shifaa_owner NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION BYPASS
       '-v',
       'ON_ERROR_STOP=1',
       '-U',
-      'shifaa_owner',
+      'shifaa_bootstrap',
       '-d',
       manifest.database,
     ],
     sql,
   );
+  run.phase = 'bootstrap-postcondition';
   checkpoint(run);
   run.bootstrapped = true;
   run.output = manifest.output;
@@ -691,10 +703,16 @@ export async function createDisposableTestRun(options) {
     // Docker volume timestamps can have second precision. Cross a complete
     // second AFTER admission, rather than weakening the guard's freshness check.
     await pause(1005 - (Date.now() % 1000), undefined, { signal: options.signal });
+    run.phase = 'resource-creation';
     createResources(run);
     await admitAndBootstrap(run);
-  } catch {
+  } catch (error) {
     run.failed = true;
+    run.failure = {
+      phase: run.phase ?? 'pre-creation',
+      exitCode: error instanceof ResourceCommandFailure ? (error.exitCode ?? null) : null,
+      timedOut: error instanceof ResourceCommandFailure && error.timedOut,
+    };
     // No automatic teardown, resource adoption, retry or raw error reporting.
     writePrivateReport(
       path.join(frozen.outputParent, `${nonce}-failure.json`),

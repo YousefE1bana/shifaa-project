@@ -33,7 +33,14 @@ function launcherFixture(t, scope = 'family') {
   const f = fixture(t, scope);
   const previousCommand = childProcess.execFileSync;
   const previousRandom = crypto.randomBytes;
-  const effects = { lifecycle: [], sql: [], reports: [], directories: [], network: 0 };
+  const effects = {
+    lifecycle: [],
+    sql: [],
+    reports: [],
+    directories: [],
+    network: 0,
+    bootstrapUsers: [],
+  };
   let mutate = () => {};
   let network;
   const options = {
@@ -119,6 +126,7 @@ function launcherFixture(t, scope = 'family') {
     if (args.includes('compose')) {
       effects.lifecycle.push('container.create');
       const compose = JSON.parse(settings.input);
+      effects.bootstrapUsers.push(compose.services.postgres.environment.POSTGRES_USER);
       assert.equal(compose.services.postgres.image, options.imageReference);
       assert.equal(compose.volumes.data.external, true);
       assert.equal(compose.networks.private.external, true);
@@ -158,8 +166,17 @@ function launcherFixture(t, scope = 'family') {
     }
     if (args.includes('exec')) {
       if (args.includes('/proc/1/comm')) return 'postgres';
-      if (args.includes('psql')) effects.sql.push(settings.input);
-      else assert.ok(args.includes('pg_isready'));
+      if (args.includes('psql')) {
+        // PostgreSQL refuses to demote the original initdb bootstrap superuser.
+        // Model that observed server restriction at the subprocess boundary.
+        assert.equal(args[args.indexOf('-U') + 1], effects.bootstrapUsers.at(-1));
+        if (settings.input.includes(`ALTER ROLE ${effects.bootstrapUsers.at(-1)} NOSUPERUSER`))
+          throw Object.assign(
+            new Error('The bootstrap superuser must have the SUPERUSER attribute'),
+            { status: 1 },
+          );
+        effects.sql.push(settings.input);
+      } else assert.ok(args.includes('pg_isready'));
       return '';
     }
     if (args.includes('rm')) {
@@ -250,7 +267,7 @@ test('equivalent path spelling is canonicalized before source walks and capabili
   assert.ok(bootstrap.startsWith('DO $shifaa_bootstrap_identity$'));
   assert.ok(
     bootstrap.includes(
-      `IF current_database() <> 'test_${f.nonce}' OR current_user <> 'shifaa_owner' THEN`,
+      `IF current_database() <> 'test_${f.nonce}' OR current_user <> 'shifaa_bootstrap' THEN`,
     ),
   );
   assert.match(bootstrap, /RAISE EXCEPTION 'test bootstrap database or role identity mismatch'/);
@@ -260,6 +277,35 @@ test('equivalent path spelling is canonicalized before source walks and capabili
   assert.ok(bootstrap.indexOf("set_config('shifaa.test_source_digest'") < rolesStart);
   assert.equal(f.effects.clients, 0);
 });
+
+for (const bootstrap of [undefined, 'aggregate-baseline']) {
+  test(`fixture owner is demoted without demoting initdb bootstrap role (${bootstrap ?? 'feature'})`, async (t) => {
+    const f = launcherFixture(t);
+    if (bootstrap) f.options.bootstrap = bootstrap;
+    await createDisposableTestRun(f.options);
+    const sql = f.launcherEffects.sql[0];
+    assert.equal(f.launcherEffects.bootstrapUsers[0], 'shifaa_bootstrap');
+    assert.match(sql, /CREATE ROLE shifaa_owner LOGIN PASSWORD '[a-f0-9]{64}' SUPERUSER/);
+    const enterOwner = sql.indexOf('SET ROLE shifaa_owner;');
+    assert.ok(enterOwner > sql.indexOf('CREATE ROLE shifaa_owner'));
+    assert.ok(enterOwner < sql.indexOf('CREATE ROLE shifaa_api'));
+    const reset = sql.lastIndexOf('RESET ROLE;');
+    const demote = sql.indexOf('ALTER ROLE shifaa_owner NOSUPERUSER');
+    assert.ok(reset > sql.indexOf('CREATE SCHEMA'));
+    assert.ok(reset < demote);
+    assert.ok(demote < sql.indexOf('ALTER ROLE shifaa_bootstrap NOLOGIN'));
+    assert.doesNotMatch(sql, /ALTER ROLE shifaa_bootstrap NOSUPERUSER/);
+    assert.match(
+      sql,
+      /shifaa_api LOGIN PASSWORD '[a-f0-9]{64}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS/,
+    );
+    assert.match(
+      sql,
+      /shifaa_worker LOGIN PASSWORD '[a-f0-9]{64}' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS/,
+    );
+    assert.equal(f.effects.clients, 0);
+  });
+}
 
 test('unbound pre-start namespace rejects before container start or PostgreSQL', async (t) => {
   const f = launcherFixture(t);
@@ -477,6 +523,17 @@ for (const boundary of ['network', 'volume', 'compose', 'start', 'pg_isready', '
     await assert.rejects(createDisposableTestRun(f.options), /preserve resources/);
     assert.ok(!f.launcherEffects.lifecycle.some((operation) => operation.endsWith('.rm')));
     assert.doesNotMatch(JSON.stringify(f.launcherEffects.reports), /secret password/);
+    const failure = f.launcherEffects.reports.at(-1).report.failure;
+    assert.equal(
+      failure.phase,
+      boundary === 'psql'
+        ? 'bootstrap-sql'
+        : boundary === 'pg_isready'
+          ? 'postgres-readiness'
+          : 'resource-creation',
+    );
+    assert.equal(failure.exitCode, null);
+    assert.equal(failure.timedOut, true);
   });
 }
 
