@@ -102,14 +102,22 @@ export function testNetworkIdentity(network) {
 }
 
 export function isTestNetworkPolicy(network) {
+  // Docker 29 records these default protocol options even when create did not
+  // specify them. Accept only their exact defaults, never arbitrary options.
+  const {
+    'com.docker.network.enable_ipv4': ipv4 = 'true',
+    'com.docker.network.enable_ipv6': ipv6 = 'false',
+    ...options
+  } = network.Options ?? {};
+  if (ipv4 !== 'true' || ipv6 !== 'false') return false;
   // Historical internal networks remain valid. Host-side E2E clients require
   // a dedicated bridge with explicit loopback publication and disabled ICC.
   return network.Internal === true
-    ? Object.keys(network.Options ?? {}).length === 0
+    ? Object.keys(options).length === 0
     : network.Internal === false &&
-        Object.keys(network.Options ?? {}).length === 2 &&
-        network.Options['com.docker.network.bridge.host_binding_ipv4'] === '127.0.0.1' &&
-        network.Options['com.docker.network.bridge.enable_icc'] === 'false';
+        Object.keys(options).length === 2 &&
+        options['com.docker.network.bridge.host_binding_ipv4'] === '127.0.0.1' &&
+        options['com.docker.network.bridge.enable_icc'] === 'false';
 }
 
 export function sourceFingerprint(worktree) {

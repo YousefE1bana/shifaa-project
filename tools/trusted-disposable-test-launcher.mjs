@@ -739,7 +739,10 @@ export async function createDisposableTestRun(options) {
         );
         const { Containers: _previousContainers, ...previousNetwork } = run.admitted.network;
         const { Containers: connected, ...currentNetwork } = network;
-        if (!same(currentNetwork, previousNetwork) || Object.keys(connected ?? {}).length)
+        if (
+          !same(testNetworkIdentity(currentNetwork), testNetworkIdentity(previousNetwork)) ||
+          Object.keys(connected ?? {}).length
+        )
           denied('network changed before teardown');
         dockerCommand(frozen.docker.context, ['network', 'rm', run.network]);
         run.closed = true;

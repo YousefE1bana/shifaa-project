@@ -92,6 +92,8 @@ function launcherFixture(t, scope = 'family') {
         Options: {
           'com.docker.network.bridge.host_binding_ipv4': '127.0.0.1',
           'com.docker.network.bridge.enable_icc': 'false',
+          'com.docker.network.enable_ipv4': 'true',
+          'com.docker.network.enable_ipv6': 'false',
         },
         Containers: {},
         Status: {
@@ -1084,3 +1086,57 @@ for (const [name, mutate] of [
     assert.ok(!f.launcherEffects.lifecycle.some((x) => x.endsWith('.rm')));
   });
 }
+
+for (const [name, mutate] of [
+  [
+    'disabled IPv4',
+    (n) => {
+      n.Options['com.docker.network.enable_ipv4'] = 'false';
+    },
+  ],
+  [
+    'enabled IPv6',
+    (n) => {
+      n.Options['com.docker.network.enable_ipv6'] = 'true';
+    },
+  ],
+  [
+    'unknown network option',
+    (n) => {
+      n.Options['foreign.option'] = 'true';
+    },
+  ],
+]) {
+  test(`Docker network protocol defaults reject ${name} before connection`, async (t) => {
+    const f = launcherFixture(t);
+    f.mutate((_exe, args) => {
+      if (args.includes('network') && args.includes('inspect')) mutate(f.network());
+    });
+    await assert.rejects(createDisposableTestRun(f.options));
+    assert.equal(f.effects.clients, 0);
+    assert.deepEqual(f.launcherEffects.sql, []);
+    assert.ok(!f.launcherEffects.lifecycle.includes('container.start'));
+  });
+}
+
+test('teardown accepts only changing allocation counters after exact container removal', async (t) => {
+  const f = launcherFixture(t);
+  const run = await createDisposableTestRun(f.options);
+  f.mutate((_exe, args) => {
+    if (
+      f.launcherEffects.lifecycle.includes('container.rm') &&
+      args.includes('network') &&
+      args.includes('inspect')
+    ) {
+      f.network().Status.IPAM.Subnets['172.25.0.0/16'].IPsInUse--;
+      f.network().Status.IPAM.Subnets['172.25.0.0/16'].DynamicIPsAvailable++;
+    }
+  });
+  await run.teardown(`REMOVE_RUN_OWNED_RESOURCES:${run.nonce}`);
+  assert.equal(run.closed, true);
+  assert.deepEqual(f.launcherEffects.lifecycle.slice(-3), [
+    'container.rm',
+    'volume.rm',
+    'network.rm',
+  ]);
+});
