@@ -3,6 +3,8 @@ import { setTimeout as pause } from 'node:timers/promises';
 import path from 'node:path';
 import {
   beginTestRun,
+  testNetworkIdentity,
+  isTestNetworkPolicy,
   sourceFingerprint,
   verifyTestResourceContext,
   revalidateTestResourceContext,
@@ -288,11 +290,10 @@ function assertCreatedResources(run, observed, running) {
     !hex.test(network.Id) ||
     !owned(network.Labels) ||
     network.Driver !== 'bridge' ||
-    network.Internal !== true ||
+    !isTestNetworkPolicy(network) ||
     network.Scope !== 'local' ||
     network.Ingress ||
     network.Attachable ||
-    Object.keys(network.Options ?? {}).length ||
     Object.keys(network.Containers ?? {}).some((containerId) => containerId !== run.container) ||
     run.before.networks.includes(network.Id) ||
     !Number.isFinite(Date.parse(network.Created)) ||
@@ -369,7 +370,7 @@ function checkpoint(run) {
   if (
     run.admitted &&
     (!same(observed.volume, run.admitted.volume) ||
-      !same(observed.network, run.admitted.network) ||
+      !same(testNetworkIdentity(observed.network), testNetworkIdentity(run.admitted.network)) ||
       !same(observed.container.Mounts, run.admitted.container.Mounts) ||
       observed.container.Created !== run.admitted.container.Created)
   )
@@ -400,7 +401,10 @@ function createResources(run) {
   run.network = dockerCommand(context, [
     'network',
     'create',
-    '--internal',
+    '--opt',
+    'com.docker.network.bridge.host_binding_ipv4=127.0.0.1',
+    '--opt',
+    'com.docker.network.bridge.enable_icc=false',
     '--driver',
     'bridge',
     ...labels,

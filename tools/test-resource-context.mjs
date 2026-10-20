@@ -91,6 +91,27 @@ const resourceObservers = {
   },
 };
 
+// Ignore only Docker 29 live allocation counters, never network identity or policy.
+export function testNetworkIdentity(network) {
+  const identity = structuredClone(network);
+  for (const subnet of Object.values(identity.Status?.IPAM?.Subnets ?? {})) {
+    delete subnet.IPsInUse;
+    delete subnet.DynamicIPsAvailable;
+  }
+  return identity;
+}
+
+export function isTestNetworkPolicy(network) {
+  // Historical internal networks remain valid. Host-side E2E clients require
+  // a dedicated bridge with explicit loopback publication and disabled ICC.
+  return network.Internal === true
+    ? Object.keys(network.Options ?? {}).length === 0
+    : network.Internal === false &&
+        Object.keys(network.Options ?? {}).length === 2 &&
+        network.Options['com.docker.network.bridge.host_binding_ipv4'] === '127.0.0.1' &&
+        network.Options['com.docker.network.bridge.enable_icc'] === 'false';
+}
+
 export function sourceFingerprint(worktree) {
   const tracked = command('git', ['-c', 'core.longpaths=true', 'ls-files', '-z'], worktree)
     .split('\0')
@@ -332,10 +353,16 @@ function validate(manifest, authority, observed, output, integrity) {
     const network = observed.network;
     const attachments = container.NetworkSettings?.Networks;
     if (
-      !same(network, manifest.network) ||
+      !same(testNetworkIdentity(network), testNetworkIdentity(manifest.network)) ||
       !id.test(network?.Id ?? '') ||
       network.Driver !== 'bridge' ||
-      network.Internal !== true ||
+      !isTestNetworkPolicy(network) ||
+      network.Scope !== 'local' ||
+      network.Ingress ||
+      network.Attachable ||
+      Object.keys(network.Containers ?? {}).some(
+        (containerId) => containerId !== manifest.container,
+      ) ||
       container.HostConfig?.Binds?.length ||
       container.HostConfig?.PidMode ||
       !['', 'private', undefined].includes(container.HostConfig?.IpcMode) ||

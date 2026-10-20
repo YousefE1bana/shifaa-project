@@ -87,10 +87,16 @@ function launcherFixture(t, scope = 'family') {
         Id: 'f'.repeat(64),
         Name: name,
         Driver: 'bridge',
-        Internal: true,
+        Internal: args.includes('--internal'),
         Scope: 'local',
-        Options: {},
+        Options: {
+          'com.docker.network.bridge.host_binding_ipv4': '127.0.0.1',
+          'com.docker.network.bridge.enable_icc': 'false',
+        },
         Containers: {},
+        Status: {
+          IPAM: { Subnets: { '172.25.0.0/16': { IPsInUse: 2, DynamicIPsAvailable: 251 } } },
+        },
         Created: new Date().toISOString(),
         Labels: f.current.container.Config.Labels,
       };
@@ -145,6 +151,7 @@ function launcherFixture(t, scope = 'family') {
       f.current.container.State.Running = true;
       f.current.container.NetworkSettings.Networks[network.Name].NetworkID = network.Id;
       network.Containers = { [f.manifest.container]: { Name: 'mock-container' } };
+      if (network.Internal) f.current.container.NetworkSettings.Ports = {};
       return f.manifest.container;
     }
     if (args.includes('exec')) {
@@ -395,7 +402,7 @@ for (const [name, change] of [
   [
     'shared network',
     (f) => {
-      f.network().Internal = false;
+      f.network().Options['com.docker.network.bridge.host_binding_ipv4'] = '0.0.0.0';
     },
   ],
   [
@@ -1026,5 +1033,54 @@ for (const [name, source] of [
     );
     assert.deepEqual(f.launcherEffects.lifecycle, []);
     assert.deepEqual(f.launcherEffects.sql, []);
+  });
+}
+
+// Docker 29 internal bridges suppress the host publication needed by Node clients.
+test('host E2E bridge keeps loopback publication and tolerates only live allocation counters', async (t) => {
+  const f = launcherFixture(t);
+  const run = await createDisposableTestRun(f.options);
+  assert.equal(f.network().Internal, false);
+  f.network().Status = {
+    IPAM: { Subnets: { '172.25.0.0/16': { IPsInUse: 3, DynamicIPsAvailable: 250 } } },
+  };
+  let calls = 0;
+  const handle = guardTestHandle(run.capability, 'family', { query: () => ++calls }, ['query']);
+  await handle.query();
+  f.network().Status.IPAM.Subnets['172.25.0.0/16'].IPsInUse++;
+  await handle.query();
+  assert.equal(calls, 2);
+});
+
+for (const [name, mutate] of [
+  [
+    'wildcard bridge',
+    (n) => {
+      n.Options['com.docker.network.bridge.host_binding_ipv4'] = '0.0.0.0';
+    },
+  ],
+  [
+    'inter-container sharing',
+    (n) => {
+      n.Options['com.docker.network.bridge.enable_icc'] = 'true';
+    },
+  ],
+  [
+    'foreign attachment',
+    (n) => {
+      n.Containers['e'.repeat(64)] = {};
+    },
+  ],
+]) {
+  test(`live E2E bridge rejects ${name} before SQL or teardown`, async (t) => {
+    const f = launcherFixture(t);
+    const run = await createDisposableTestRun(f.options);
+    let calls = 0;
+    const handle = guardTestHandle(run.capability, 'family', { query: () => ++calls }, ['query']);
+    mutate(f.network());
+    assert.throws(() => handle.query());
+    assert.equal(calls, 0);
+    await assert.rejects(run.teardown(`REMOVE_RUN_OWNED_RESOURCES:${run.nonce}`));
+    assert.ok(!f.launcherEffects.lifecycle.some((x) => x.endsWith('.rm')));
   });
 }

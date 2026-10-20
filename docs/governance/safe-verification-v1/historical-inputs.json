@@ -255,8 +255,8 @@
     },
     {
       "path": "tools/trusted-disposable-test-launcher.mjs",
-      "bytes": 30639,
-      "sha256": "7a45ba63bdc0e5bcbedf79b57706df1b556d5edbea938929b7f69885ec0b0ea2"
+      "bytes": 30801,
+      "sha256": "64e689ff298c0e80c2f22a5047d2827ee2def28730c52c42409e5f34c1d14c2a"
     },
     {
       "path": "tools/verification-ci.mjs",
@@ -297,6 +297,11 @@
       "path": "tools/native-supabase-docker.mjs",
       "bytes": 29910,
       "sha256": "1e30e33ae0996d1f3baa869a75679463ffc4ef6cfa404a26d13ba1b188fcd1e0"
+    },
+    {
+      "path": "tools/test-resource-context.mjs",
+      "bytes": 28045,
+      "sha256": "ec229461453fd45d33e80817e7a3d758a57b126a032e8668f32a1629264f0ce5"
     }
   ]
 }
