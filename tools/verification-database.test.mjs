@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { createPrivateOutput } from './disposable-test-resources.mjs';
 import {
   validateTestResource,
   resolveTestDockerCommand,
@@ -13,6 +14,44 @@ import {
   runTestSupabase,
   testResourceMounts,
 } from './verification-database.mjs';
+
+test('tsx performance consumers resolve the canonical root before rejecting a missing resource receipt', (t) => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'shifaa-tsx-context-test-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const output = path.join(directory, 'private');
+  const nonce = 'a'.repeat(32);
+  createPrivateOutput({ path: output, nonce });
+  const context = path.join(output, 'environment.json');
+  const root = path.resolve(import.meta.dirname, '..');
+  fs.writeFileSync(
+    context,
+    JSON.stringify({
+      schema: 'SHIFAA-VERIFY-ENVIRONMENT/1',
+      root,
+      parentPid: process.pid,
+      nonce,
+    }),
+  );
+  const execution = childProcess.spawnSync(
+    process.execPath,
+    [
+      path.join(root, 'node_modules/tsx/dist/cli.mjs'),
+      path.join(root, 'tools/discovery-sos-performance.ts'),
+    ],
+    {
+      env: { ...process.env, SHIFAA_VERIFY_CONTEXT: context },
+      encoding: 'utf8',
+      windowsHide: true,
+      timeout: 15000,
+    },
+  );
+  assert.ifError(execution.error);
+  assert.equal(execution.status, 1, execution.stderr);
+  assert.match(
+    execution.stderr,
+    /verification-resource-denied: postgres test environment not created/,
+  );
+});
 
 test('mount ordering is irrelevant but complete mount identity and mode remain mandatory', () => {
   const mounts = [

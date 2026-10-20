@@ -4,9 +4,11 @@ import { spawn, spawnSync, execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, lstatSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import { verifyRunOutput } from './disposable-test-resources.mjs';
 import { readNativeJournal, currentNativeVolumes } from './native-supabase-docker.mjs';
 
+const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const sharedPorts = new Set([5432, 54322, 55432]);
 const deny = (message) => {
   throw new Error(`verification-resource-denied: ${message}`);
@@ -147,7 +149,7 @@ function readEnvironment() {
   verifyRunOutput(path.dirname(file));
   const record = JSON.parse(readFileSync(file, 'utf8'));
   assert.equal(record.schema, 'SHIFAA-VERIFY-ENVIRONMENT/1');
-  assert.equal(record.root, path.resolve(import.meta.dirname, '..'));
+  assert.equal(record.root, path.resolve(moduleDirectory, '..'));
   assert.ok(Number.isInteger(record.parentPid) && record.parentPid > 0);
   try {
     process.kill(record.parentPid, 0);
@@ -343,7 +345,7 @@ export function testSupabaseEnvironment() {
 export function testSupabaseStatus() {
   const args = testSupabaseArgs(['status', '-o', 'json']);
   const target = testRuntime('supabase');
-  const cli = path.resolve(import.meta.dirname, '../node_modules/supabase/dist/supabase.js');
+  const cli = path.resolve(moduleDirectory, '../node_modules/supabase/dist/supabase.js');
   const result = JSON.parse(
     execFileSync(process.execPath, [cli, ...args], {
       env: testSupabaseEnvironment(),
@@ -406,7 +408,7 @@ export function runTestSupabase(args, options = {}) {
   try {
     const result = execFileSync(
       process.execPath,
-      [path.resolve(import.meta.dirname, 'native-supabase-docker.mjs'), ...guarded],
+      [path.resolve(moduleDirectory, 'native-supabase-docker.mjs'), ...guarded],
       {
         ...options,
         env: testSupabaseEnvironment(),
