@@ -1,9 +1,3 @@
-import {
-  testDockerSync,
-  testDatabaseUrl,
-  assertTestDatabaseEnvironment,
-  testRuntime as verifiedRuntime,
-} from './verification-database.mjs';
 import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -40,27 +34,15 @@ if (
 const runtimes = [
   {
     name: 'shifaa-local-postgres',
-    get container() {
-      return verifiedRuntime('postgres').container;
-    },
-    get user() {
-      return verifiedRuntime('postgres').user;
-    },
-    get adminDatabase() {
-      return verifiedRuntime('postgres').adminDatabase;
-    },
+    container: 'shifaa-local-postgres-postgres-1',
+    user: 'shifaa_owner',
+    adminDatabase: 'shifaa',
   },
   {
     name: 'shifaa-local-supabase',
-    get container() {
-      return verifiedRuntime('supabase').container;
-    },
-    get user() {
-      return verifiedRuntime('supabase').user;
-    },
-    get adminDatabase() {
-      return verifiedRuntime('supabase').adminDatabase;
-    },
+    container: 'supabase_db_shifaa-local-supabase',
+    user: 'supabase_admin',
+    adminDatabase: 'postgres',
   },
 ];
 const requestedRuntime = process.env['SHIFAA_TEST_POSTGRES_RUNTIME'];
@@ -74,7 +56,7 @@ function runDocker(runtime, args, { input, label }) {
   const dockerArgs = ['exec'];
   if (input !== undefined) dockerArgs.push('-i');
   dockerArgs.push(runtime.container, ...args);
-  const result = testDockerSync(dockerArgs, {
+  const result = spawnSync('docker', dockerArgs, {
     cwd: root,
     encoding: 'utf8',
     input,
@@ -137,6 +119,39 @@ function dropScratch(runtime, database) {
     `DROP DATABASE IF EXISTS "${database}" WITH (FORCE);`,
     `${runtime.name} drop C23 scratch database`,
   );
+}
+
+function hostPort(runtime) {
+  const result = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
+    cwd: root,
+    encoding: 'utf8',
+    windowsHide: true,
+  });
+  if (result.error || result.status !== 0)
+    throw new Error(`${runtime.name} PostgreSQL port lookup failed.`);
+  const port = result.stdout.trim().split(/\r?\n/)[0]?.split(':').at(-1);
+  if (!port || !/^\d+$/.test(port))
+    throw new Error(`${runtime.name} has no usable host PostgreSQL port.`);
+  return port;
+}
+
+function supabasePostgresPassword(runtime) {
+  const result = spawnSync(
+    'docker',
+    ['inspect', '--format', '{{range .Config.Env}}{{println .}}{{end}}', runtime.container],
+    { cwd: root, encoding: 'utf8', windowsHide: true },
+  );
+  if (result.error || result.status !== 0)
+    throw new Error('Could not inspect the local Supabase database container.');
+  const value = result.stdout
+    .split(/\r?\n/)
+    .find((entry) => entry.startsWith('POSTGRES_PASSWORD='));
+  if (value) return value.slice('POSTGRES_PASSWORD='.length);
+  return 'postgres';
+}
+
+function connectionUrl(username, password, port, database) {
+  return `postgresql://${encodeURIComponent(username)}:${encodeURIComponent(password)}@127.0.0.1:${port}/${encodeURIComponent(database)}?connect_timeout=10`;
 }
 
 function prepareSupabaseFixtureWriter(runtime, database) {
@@ -214,18 +229,18 @@ function setLocalGate(runtime, database, enabled) {
 }
 
 function runWorkerVectors(runtime, database) {
-  const target = runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase';
-  const owner = testDatabaseUrl(target === 'postgres' ? 'owner' : 'postgres', target, database);
-  const worker = testDatabaseUrl('worker', target, database);
-  assertTestDatabaseEnvironment();
+  const port = hostPort(runtime);
+  const owner =
+    runtime.name === 'shifaa-local-postgres'
+      ? connectionUrl('shifaa_owner', 'synthetic_owner_only', port, database)
+      : connectionUrl('postgres', supabasePostgresPassword(runtime), port, database);
+  const worker = connectionUrl('shifaa_worker', 'synthetic_worker_only', port, database);
   const result = spawnSync(process.execPath, ['--test', testFile], {
     cwd: resolve(root, 'services/worker'),
     env: {
       ...process.env,
       SHIFAA_F010_C23_OWNER_DATABASE_URL: owner,
       SHIFAA_F010_C23_WORKER_DATABASE_URL: worker,
-      SHIFAA_F010_C23_DATABASE: database,
-      SHIFAA_TEST_POSTGRES_RUNTIME: runtime.name,
     },
     encoding: 'utf8',
     stdio: 'inherit',

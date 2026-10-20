@@ -1,4 +1,4 @@
-import { testRuntime } from './verification-database.mjs';
+import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import {
   closeSync,
@@ -90,6 +90,21 @@ function releaseLock(lock) {
   unlinkSync(lock.path);
 }
 
+function runPinnedCli(root, args) {
+  const cliPath = join(root, 'node_modules', 'supabase', 'dist', 'supabase.js');
+  const env = { ...process.env };
+  delete env.SUPABASE_CLI_BINARY_OVERRIDE;
+  const result = spawnSync(process.execPath, [cliPath, ...args], {
+    cwd: root,
+    env,
+    stdio: 'inherit',
+    windowsHide: true,
+  });
+  if (result.error) throw result.error;
+  if (result.status !== 0)
+    throw new Error(`Pinned Supabase CLI exited with status ${result.status}.`);
+}
+
 async function startWithMigrationsDisabled(root, runCli) {
   const path = configPath(root);
   const originalConfig = readFileSync(path);
@@ -123,13 +138,9 @@ async function startWithMigrationsDisabled(root, runCli) {
 }
 
 export async function startFeature011NativeSupabase({ root = workspaceRoot, runCli } = {}) {
-  if (!runCli) {
-    testRuntime('supabase');
-    return;
-  }
   root = resolve(root);
   assertPinnedCli(root);
-  const executeCli = runCli;
+  const executeCli = runCli ?? ((args) => runPinnedCli(root, args));
   const lock = acquireLock(root);
   let startError;
   try {

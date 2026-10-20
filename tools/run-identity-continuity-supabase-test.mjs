@@ -1,4 +1,3 @@
-import { testSupabaseStatus, runTestSupabase } from './verification-database.mjs';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import {
@@ -12,11 +11,6 @@ const { createClient } = requireFromApi('@supabase/supabase-js');
 const postgres = requireFromApi('postgres');
 
 function runPnpm(args, capture = false, extraEnv = {}) {
-  if (args[0] === 'exec' && args[1] === 'supabase')
-    return runTestSupabase(args.slice(2), {
-      encoding: capture ? 'utf8' : undefined,
-      stdio: capture ? ['ignore', 'pipe', 'ignore'] : 'inherit',
-    });
   const command = process.platform === 'win32' ? 'cmd.exe' : 'corepack';
   const commandArgs =
     process.platform === 'win32'
@@ -32,10 +26,15 @@ function runPnpm(args, capture = false, extraEnv = {}) {
 
 const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-// Reset only the already-created, independently verified disposable project.
+// A database reset does not recreate Auth, Kong, or Mailpit. Recreate the current
+// local project with the repository's safe startup profile so those containers
+// load this checkout's templates without deleting its volumes on stop. The
+// reset below rebuilds this project's synthetic database from checked-in files.
 assertNativeSupabaseOwnership(runPnpm);
+runPnpm(['supabase:stop']);
+runPnpm(['supabase:start'], true);
 await resetFeature011NativeSupabase(runPnpm);
-const status = testSupabaseStatus();
+const status = JSON.parse(runPnpm(['exec', 'supabase', 'status', '-o', 'json'], true));
 const client = createClient(status.API_URL, status.ANON_KEY, {
   auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
 });

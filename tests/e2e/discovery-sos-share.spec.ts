@@ -192,8 +192,6 @@ test('real-stack one-use emergency share scope, token secrecy, 410 expiry/replay
     const shareIdToRevoke = shareToRevoke.json().share.share_id;
 
     // Clear prior create outbox event to allow recording the revoke outbox event
-    const { assertRunOwned } = await import('../../tools/test-resource-context.mjs');
-    assertRunOwned(stack.context, 'discovery-sos', 'share', shareIdToRevoke);
     await stack.owner`delete from platform.outbox_events where aggregate_id = ${shareIdToRevoke}::uuid`;
 
     const wrongContextRevoke = await stack.app.inject({

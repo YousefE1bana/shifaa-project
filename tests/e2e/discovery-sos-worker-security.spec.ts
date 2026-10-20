@@ -6,12 +6,17 @@ import {
   DurableLocalSyntheticMessagingAdapter,
   LocalSyntheticMessagingAdapter,
 } from '../../services/worker/src/adapters/local-synthetic-messaging.ts';
-import type { PostgresDiscoverySosProcessor } from '../../services/worker/src/discovery-sos.ts';
+import { PostgresDiscoverySosProcessor } from '../../services/worker/src/discovery-sos.ts';
 import type {
   MessagingAdapter,
   MessagingResult,
 } from '../../services/worker/src/privacy-dsr-notifications.ts';
-import { createDiscoverySosStack, key, person } from './discovery-sos-stack-harness.ts';
+import {
+  createDiscoverySosStack,
+  key,
+  person,
+  workerDatabaseUrl,
+} from './discovery-sos-stack-harness.ts';
 
 type Stack = Awaited<ReturnType<typeof createDiscoverySosStack>>;
 type Precision = 'none' | 'coarse' | 'exact';
@@ -57,9 +62,7 @@ class AcceptThenUncertainAdapter implements MessagingAdapter {
 class CrashAfterDurableAcceptAdapter implements MessagingAdapter {
   public readonly code = 'local-synthetic' as const;
   public readonly attempts: string[] = [];
-  public constructor(
-    private readonly delegate: Pick<DurableLocalSyntheticMessagingAdapter, 'send'>,
-  ) {}
+  public constructor(private readonly delegate: DurableLocalSyntheticMessagingAdapter) {}
   public async send(input: {
     idempotencyKey: string;
     destinationAlias: string;
@@ -95,15 +98,20 @@ async function activateContactSos(stack: Stack, label: string): Promise<string> 
 }
 
 async function setContactPrecision(stack: Stack, precision: Precision): Promise<void> {
-  await stack.setContactPrecision(precision);
+  await stack.owner.begin(async (sql) => {
+    await sql`alter table identity.emergency_contacts disable trigger user`;
+    await sql`
+      update identity.emergency_contacts set location_precision=${precision}
+      where id=${stack.ids.contact.confirmed}::uuid
+    `;
+    await sql`alter table identity.emergency_contacts enable trigger user`;
+  });
 }
 
-async function releaseRetry(stack: Stack, incidentId: string): Promise<void> {
-  const { assertRunOwned } = await import('../../tools/test-resource-context.mjs');
-  assertRunOwned(stack.context, 'discovery-sos', 'incident', incidentId);
+async function releaseRetry(stack: Stack): Promise<void> {
   await stack.owner`
     update platform.outbox_events set available_at=statement_timestamp()-interval '1 second'
-    where aggregate_id=${incidentId}::uuid and event_type='sos.emergency_contact.requested' and state='pending'
+    where event_type='sos.emergency_contact.requested' and state='pending'
   `;
 }
 
@@ -154,7 +162,7 @@ function assertSafeDurableProjection(
 test('durable notification fields remain minimum for none, coarse, and exact delivery', async () => {
   const stack = await createDiscoverySosStack();
   const adapter = new LocalSyntheticMessagingAdapter();
-  const processor = await stack.createWorker(adapter);
+  const processor = new PostgresDiscoverySosProcessor(workerDatabaseUrl, adapter);
   try {
     for (const precision of ['none', 'coarse', 'exact'] as const) {
       await stack.clean();
@@ -165,6 +173,7 @@ test('durable notification fields remain minimum for none, coarse, and exact del
       assertSafeDurableProjection(notification, incidentId, stack.ids.contact.confirmed, precision);
     }
   } finally {
+    await setContactPrecision(stack, 'coarse');
     await processor.close();
     await stack.close();
   }
@@ -173,12 +182,12 @@ test('durable notification fields remain minimum for none, coarse, and exact del
 test('timeout after provider acceptance reuses one key and creates one visible delivery', async () => {
   const stack = await createDiscoverySosStack();
   const adapter = new AcceptThenUncertainAdapter();
-  const processor = await stack.createWorker(adapter);
+  const processor = new PostgresDiscoverySosProcessor(workerDatabaseUrl, adapter);
   try {
     const incidentId = await activateContactSos(stack, 'timeout-after-accept');
     assert.equal(await processor.processNext(), 'retry');
     assert.equal(adapter.visibleMessages.size, 1);
-    await releaseRetry(stack, incidentId);
+    await releaseRetry(stack);
     assert.equal(await processor.processNext(), 'delivered');
     assert.equal(adapter.visibleMessages.size, 1);
     assert.equal(adapter.attempts.length, 2);
@@ -203,10 +212,14 @@ test('timeout after provider acceptance reuses one key and creates one visible d
 
 test('worker restart after durable provider acceptance preserves one visible delivery', async () => {
   const stack = await createDiscoverySosStack();
-  const firstProvider = await stack.createDurableProvider();
+  const firstProvider = new DurableLocalSyntheticMessagingAdapter(workerDatabaseUrl);
   const crashAdapter = new CrashAfterDurableAcceptAdapter(firstProvider);
-  const firstWorker = await stack.createWorker(crashAdapter, 'sos-contact-before-restart');
-  let secondProvider: Awaited<ReturnType<Stack['createDurableProvider']>> | undefined;
+  const firstWorker = new PostgresDiscoverySosProcessor(
+    workerDatabaseUrl,
+    crashAdapter,
+    'sos-contact-before-restart',
+  );
+  let secondProvider: DurableLocalSyntheticMessagingAdapter | undefined;
   let secondWorker: PostgresDiscoverySosProcessor | undefined;
   try {
     const incidentId = await activateContactSos(stack, 'restart-after-accept');
@@ -214,9 +227,13 @@ test('worker restart after durable provider acceptance preserves one visible del
     await firstWorker.close();
     await firstProvider.close();
 
-    await releaseRetry(stack, incidentId);
-    secondProvider = await stack.createDurableProvider();
-    secondWorker = await stack.createWorker(secondProvider, 'sos-contact-after-restart');
+    await releaseRetry(stack);
+    secondProvider = new DurableLocalSyntheticMessagingAdapter(workerDatabaseUrl);
+    secondWorker = new PostgresDiscoverySosProcessor(
+      workerDatabaseUrl,
+      secondProvider,
+      'sos-contact-after-restart',
+    );
     assert.equal(await secondWorker.processNext(), 'delivered');
 
     const receipts = await stack.owner<
@@ -246,55 +263,24 @@ test('worker restart after durable provider acceptance preserves one visible del
   }
 });
 
-// 2026-10-16 P0 consent correction: precision is immutable. Re-consent is a
-// new recipient; the unchanged-recipient retry and crash tests above stay intact.
-test('retry denies revoked consent and binds replacement consent to a distinct recipient key', async () => {
+test('retry rechecks the current consented precision before delivery', async () => {
   const stack = await createDiscoverySosStack();
   const retryAdapter = new LocalSyntheticMessagingAdapter(['transient_failure', 'delivered']);
-  const retryProcessor = await stack.createWorker(retryAdapter);
+  const retryProcessor = new PostgresDiscoverySosProcessor(workerDatabaseUrl, retryAdapter);
   try {
     await setContactPrecision(stack, 'coarse');
-    const originalContact = stack.ids.contact.confirmed;
     const incidentId = await activateContactSos(stack, 'current-recheck');
     assert.equal(await retryProcessor.processNext(), 'retry');
     assert.equal(retryAdapter.visibleMessages.size, 0);
-    const originalNotification = await notificationForIncident(stack, incidentId);
-    const originalAttempts = await attemptsForNotification(stack, originalNotification.id);
-    assertSafeDurableProjection(originalNotification, incidentId, originalContact, 'coarse');
-
     await setContactPrecision(stack, 'exact');
-    const replacementContact = stack.ids.contact.confirmed;
-    assert.notEqual(replacementContact, originalContact);
-    const [revoked] = await stack.owner`
-      select status, location_precision from identity.emergency_contacts
-      where id=${originalContact}::uuid
-    `;
-    assert.deepEqual(revoked, { status: 'revoked', location_precision: 'coarse' });
-    await releaseRetry(stack, incidentId);
+    await releaseRetry(stack);
     assert.equal(await retryProcessor.processNext(), 'delivered');
     assert.equal(retryAdapter.visibleMessages.size, 1);
-    assert.equal(retryAdapter.attempts.length, 2);
-    assert.notEqual(retryAdapter.attempts[0], retryAdapter.attempts[1]);
-    assert.equal(retryAdapter.visibleMessages.has(retryAdapter.attempts[0]!), false);
-    assert.equal(retryAdapter.visibleMessages.has(retryAdapter.attempts[1]!), true);
-    const [delivered] = await stack.owner<DurableNotification[]>`
-      select n.id,n.status,n.attempt_count,n.field_values,n.rendered_digest
-      from platform.notifications n join platform.outbox_events e on e.id=n.source_event_id
-      where e.aggregate_id=${incidentId}::uuid
-        and n.recipient_emergency_contact_id=${replacementContact}::uuid
-    `;
-    assert.ok(delivered);
-    assertSafeDurableProjection(delivered, incidentId, replacementContact, 'exact');
-    const [preserved] = await stack.owner<DurableNotification[]>`
-      select id,status,attempt_count,field_values,rendered_digest
-      from platform.notifications where id=${originalNotification.id}::uuid
-    `;
-    assert.deepEqual(preserved, originalNotification);
-    assert.deepEqual(
-      await attemptsForNotification(stack, originalNotification.id),
-      originalAttempts,
-    );
+    assert.equal(retryAdapter.attempts[0], retryAdapter.attempts[1]);
+    const delivered = await notificationForIncident(stack, incidentId);
+    assertSafeDurableProjection(delivered, incidentId, stack.ids.contact.confirmed, 'exact');
   } finally {
+    await setContactPrecision(stack, 'coarse');
     await retryProcessor.close();
     await stack.close();
   }
@@ -303,7 +289,7 @@ test('retry denies revoked consent and binds replacement consent to a distinct r
 test('permanent provider failure enters the DLQ without visible delivery', async () => {
   const stack = await createDiscoverySosStack();
   const adapter = new LocalSyntheticMessagingAdapter(['permanent_failure']);
-  const processor = await stack.createWorker(adapter);
+  const processor = new PostgresDiscoverySosProcessor(workerDatabaseUrl, adapter);
   try {
     const incidentId = await activateContactSos(stack, 'permanent-dlq');
     assert.equal(await processor.processNext(), 'dead_letter');

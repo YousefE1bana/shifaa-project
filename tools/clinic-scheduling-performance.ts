@@ -1,7 +1,6 @@
-import { testDockerSync, testDatabaseUrl } from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -52,7 +51,11 @@ const browserDiagnostics: {
   route_statuses: {},
 };
 const startUtc = Date.parse(`${date}T07:00:00.000Z`);
+const host = process.env.SHIFAA_PG_HOST ?? '127.0.0.1';
+const port = numberEnv('SHIFAA_PG_PORT', 5432, 1, 65535);
 let db = '';
+let ownerUrl = '';
+let apiUrl = '';
 let runnerStage = 'database-provisioning';
 let runnerFile: string | undefined;
 
@@ -121,7 +124,7 @@ const evidence: Record<string, any> = {
     node: process.version,
     api: 'Feature 009 Fastify app with Postgres-backed identity and clinic scheduling adapters; API load uses Fastify app.inject',
     browser: 'local Expo web app + headless Chromium on loopback; not device/network acceptance',
-    postgres_endpoint: 'verified run-owned PostgreSQL/isolated shifaa_test_t074_perf_*',
+    postgres_endpoint: `${host}:${port}/isolated shifaa_test_t074_perf_*`,
   },
   profile: {
     synthetic_only: true,
@@ -252,7 +255,8 @@ function safeResponseCode(response: any): string | undefined {
   }
 }
 function applySqlFile(database: string, file: string) {
-  const result = testDockerSync(
+  const result = spawnSync(
+    'docker',
     [
       'compose',
       'exec',
@@ -380,7 +384,7 @@ async function makeFixture(owner: Sql): Promise<Fixture> {
 }
 
 async function makeApp(f: Fixture) {
-  const identity = new PostgresIdentityRepository(testDatabaseUrl('api', 'postgres', db));
+  const identity = new PostgresIdentityRepository(apiUrl);
   await identity.ready();
   const adapter = new PostgresClinicSchedulingService(
     { withRawTransaction: (work) => identity.withRawTransaction(work) },
@@ -406,12 +410,7 @@ async function makeApp(f: Fixture) {
   });
   const config = loadConfig({ NODE_ENV: 'test' });
   const app = await buildApp({
-    config: {
-      ...config,
-      databaseUrl: testDatabaseUrl('api', 'postgres', db),
-      repositoryAdapter: 'postgres',
-      syntheticMode: true,
-    },
+    config: { ...config, databaseUrl: apiUrl, repositoryAdapter: 'postgres', syntheticMode: true },
     clinicSchedulingService: service,
     clock: { now: () => new Date('2030-01-01T00:00:00.000Z') },
   });
@@ -1222,7 +1221,11 @@ async function main() {
   let failure: Record<string, unknown> | undefined;
   try {
     runnerStage = 'database-provisioning';
-    admin = postgres(testDatabaseUrl('owner', 'postgres', 'postgres'), {
+    assert.ok(
+      ['127.0.0.1', 'localhost', '::1'].includes(host),
+      'Only loopback PostgreSQL is allowed.',
+    );
+    admin = postgres(`postgresql://shifaa_owner:synthetic_owner_only@${host}:${port}/postgres`, {
       max: 1,
       connect_timeout: 10,
       onnotice: () => undefined,
@@ -1234,7 +1237,9 @@ async function main() {
     assert.equal(before?.exists, false, 'Generated T074 database name must be unused.');
     await admin.unsafe(`create database ${db}`);
     createdDatabase = true;
-    const migrationDb = postgres(testDatabaseUrl('owner', 'postgres', db), {
+    ownerUrl = `postgresql://shifaa_owner:synthetic_owner_only@${host}:${port}/${db}`;
+    apiUrl = `postgresql://shifaa_api:synthetic_api_only@${host}:${port}/${db}`;
+    const migrationDb = postgres(ownerUrl, {
       max: 1,
       connect_timeout: 10,
       prepare: false,
@@ -1277,11 +1282,7 @@ async function main() {
       await migrationDb.end({ timeout: 5 });
     }
     runnerStage = 'database-inspection';
-    owner = postgres(testDatabaseUrl('owner', 'postgres', db), {
-      max: 2,
-      connect_timeout: 10,
-      onnotice: () => undefined,
-    });
+    owner = postgres(ownerUrl, { max: 2, connect_timeout: 10, onnotice: () => undefined });
     const [pg] = await owner<
       {
         version: string;

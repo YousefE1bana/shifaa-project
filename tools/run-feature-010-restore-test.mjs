@@ -1,9 +1,3 @@
-import {
-  testDockerSync,
-  testConnectionOptions,
-  assertTestDatabaseEnvironment,
-  testRuntime as verifiedRuntime,
-} from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { randomBytes, createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
@@ -37,27 +31,15 @@ const checks = [
 const runtimes = [
   {
     name: 'shifaa-local-postgres',
-    get container() {
-      return verifiedRuntime('postgres').container;
-    },
-    get user() {
-      return verifiedRuntime('postgres').user;
-    },
-    get admin() {
-      return verifiedRuntime('postgres').adminDatabase;
-    },
+    container: 'shifaa-local-postgres-postgres-1',
+    user: 'shifaa_owner',
+    admin: 'shifaa',
   },
   {
     name: 'shifaa-local-supabase',
-    get container() {
-      return verifiedRuntime('supabase').container;
-    },
-    get user() {
-      return verifiedRuntime('supabase').user;
-    },
-    get admin() {
-      return verifiedRuntime('supabase').adminDatabase;
-    },
+    container: 'supabase_db_shifaa-local-supabase',
+    user: 'supabase_admin',
+    admin: 'postgres',
   },
 ];
 
@@ -213,7 +195,7 @@ export function verifyF04ForwardUpgrade(before, after) {
 }
 
 function docker(runtime, args, input, binary = false) {
-  const result = testDockerSync(['exec', '-i', runtime.container, ...args], {
+  const result = spawnSync('docker', ['exec', '-i', runtime.container, ...args], {
     input,
     encoding: binary ? undefined : 'utf8',
     maxBuffer: 64 * 1024 * 1024,
@@ -273,22 +255,24 @@ function databaseRoleClock(runtime, database) {
 
 function restoreApiFixture(runtime, database, mode, fixtureIds) {
   assert.ok(mode === 'seed' || mode === 'verify');
-  const connection = testConnectionOptions(
-    'api',
-    runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase',
-    database,
-  );
+  const portResult = spawnSync('docker', ['port', runtime.container, '5432/tcp'], {
+    encoding: 'utf8',
+    windowsHide: true,
+  });
+  if (portResult.error || portResult.status !== 0)
+    throw new Error(
+      `${runtime.name} C28 restore API fixture could not resolve its PostgreSQL port`,
+    );
+  const port = portResult.stdout.trim().split(/\r?\n/)[0]?.split(':').at(-1);
+  assert.match(port ?? '', /^\d+$/, `${runtime.name} has no usable host-mapped PostgreSQL port`);
 
   const env = {
     ...process.env,
     SHIFAA_F010_RESTORE_DATABASE: database,
-    SHIFAA_PG_HOST: connection.host,
-    SHIFAA_PG_PORT: String(connection.port),
-    SHIFAA_TEST_POSTGRES_RUNTIME: runtime.name,
+    SHIFAA_PG_PORT: port,
   };
   if (mode === 'seed') delete env['SHIFAA_F010_RESTORE_API_FIXTURE'];
   else env['SHIFAA_F010_RESTORE_API_FIXTURE'] = JSON.stringify(fixtureIds);
-  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     ['--import', 'tsx', resolve('tools/feature-010-restore-api-fixture.ts'), mode],

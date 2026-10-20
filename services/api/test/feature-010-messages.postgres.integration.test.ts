@@ -1,14 +1,14 @@
-import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
 
-const verificationRuntime = (
-  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
-).replace('shifaa-local-', '');
-
 const database = process.env['SHIFAA_F010_C22_DATABASE'];
+const host = process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1';
+const port = process.env['SHIFAA_PG_PORT'] ?? '5432';
+const apiDatabaseUrl = database
+  ? `postgresql://shifaa_api:synthetic_api_only@${host}:${port}/${database}`
+  : undefined;
 const patientId = 'f0101000-0000-4000-8000-000000000002';
 const clinicianId = 'f0101000-0000-4000-8000-000000000001';
 const endedClinicianId = 'f0101000-0000-4000-8000-000000000003';
@@ -78,9 +78,8 @@ async function observeRefreshHintAndRefetch(
 
 describe.skipIf(!database)('Feature 010 message API against PostgreSQL', () => {
   beforeAll(async () => {
-    if (!database)
+    if (!apiDatabaseUrl)
       throw new Error('SHIFAA_F010_C22_DATABASE is required for the PostgreSQL API smoke.');
-    const apiDatabaseUrl = testDatabaseUrl('api', verificationRuntime, database);
     const base = loadConfig({ NODE_ENV: 'test' });
     harness = await buildApp({
       config: {

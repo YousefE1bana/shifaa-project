@@ -1,11 +1,7 @@
-import {
-  testDockerSync,
-  testDocker,
-  testRuntime as verifiedRuntime,
-} from './verification-database.mjs';
 import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { spawn, spawnSync } from 'node:child_process';
 
 const root = process.cwd();
 const featureMigration =
@@ -58,27 +54,15 @@ if (
 const configuredRuntimes = [
   {
     name: 'shifaa-local-postgres',
-    get container() {
-      return verifiedRuntime('postgres').container;
-    },
-    get user() {
-      return verifiedRuntime('postgres').user;
-    },
-    get adminDatabase() {
-      return verifiedRuntime('postgres').adminDatabase;
-    },
+    container: 'shifaa-local-postgres-postgres-1',
+    user: 'shifaa_owner',
+    adminDatabase: 'shifaa',
   },
   {
     name: 'shifaa-local-supabase',
-    get container() {
-      return verifiedRuntime('supabase').container;
-    },
-    get user() {
-      return verifiedRuntime('supabase').user;
-    },
-    get adminDatabase() {
-      return verifiedRuntime('supabase').adminDatabase;
-    },
+    container: 'supabase_db_shifaa-local-supabase',
+    user: 'supabase_admin',
+    adminDatabase: 'postgres',
   },
 ];
 const requestedRuntime = process.argv.find((arg) => arg.startsWith('--runtime='))?.slice(10);
@@ -101,7 +85,7 @@ function runDocker(runtime, args, { input, label }) {
   const dockerArgs = ['exec'];
   if (input !== undefined) dockerArgs.push('-i');
   dockerArgs.push(runtime.container, ...args);
-  const result = testDockerSync(dockerArgs, {
+  const result = spawnSync('docker', dockerArgs, {
     cwd: root,
     encoding: 'utf8',
     input,
@@ -134,7 +118,8 @@ function runPsqlTuples(runtime, database, sql, label) {
 }
 
 function startPsqlSession(runtime, database, label) {
-  const child = testDocker(
+  const child = spawn(
+    'docker',
     [
       'exec',
       '-i',

@@ -1,4 +1,3 @@
-import { testDockerExec, testEvidenceDirectory } from './verification-database.mjs';
 // K22 preserves accepted evidence and records exact disposable-copy changes:
 // output redirection and current approved preflight bindings only.
 import assert from 'node:assert/strict';
@@ -25,10 +24,12 @@ import { readDocumentationSuccessor } from './feature-011-documentation-successo
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 process.chdir(root);
-// Resolve lazily: unit imports remain pure; executable suites require the run owner.
-export const evidence = process.env.SHIFAA_VERIFY_CONTEXT
-  ? testEvidenceDirectory('feature-011/composition')
-  : null;
+export const evidence =
+  currentEvidenceRoot(root) === prReviewEvidenceRoot
+    ? `${prReviewEvidenceRoot}/composition`
+    : readDocumentationSuccessor(root)
+      ? 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/composition'
+      : 'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K22';
 const logs = evidence + '/logs';
 const hash = (p) => createHash('sha256').update(readFileSync(p)).digest('hex');
 const write = (p, v) => {
@@ -68,7 +69,6 @@ export function inventory() {
   };
 }
 export async function command(id, args, env = {}) {
-  assert.ok(evidence, 'Verified test environment required before composition');
   mkdirSync(logs, { recursive: true });
   const path = logs + '/' + id + '.log';
   if (existsSync(path)) copyFileSync(path, path + '.attempt-' + hash(path).slice(0, 12));
@@ -383,7 +383,6 @@ async function main() {
     ),
     'Unknown stage',
   );
-  assert.ok(evidence, 'Verified test environment required before composition');
   const found = inventory();
   assert(found.suites.length > 20);
   assert(found.tooling.length > 0);
@@ -396,7 +395,8 @@ async function main() {
   assert.equal(parity.result, 'PASS', parity.failures.join('\n'));
   const manifests = runtimes.map((r) => ({
     ...runtimeManifest(r),
-    serverVersion: testDockerExec(
+    serverVersion: execFileSync(
+      'docker',
       [
         'exec',
         r.container,

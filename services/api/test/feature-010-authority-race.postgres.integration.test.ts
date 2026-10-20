@@ -1,10 +1,5 @@
-import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import postgres, { type TransactionSql } from 'postgres';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-
-const verificationRuntime = (
-  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
-).replace('shifaa-local-', '');
 
 const database = process.env['SHIFAA_F010_C28_DATABASE'];
 const clinician = 'f0101000-0000-4000-8000-000000000001';
@@ -90,10 +85,10 @@ describe.skipIf(!database)(
   'PR394 encounter authority revocation races against real PostgreSQL',
   () => {
     beforeAll(() => {
-      sql = postgres(testDatabaseUrl('owner', verificationRuntime, database), {
-        max: 4,
-        onnotice: () => undefined,
-      });
+      sql = postgres(
+        `postgres://shifaa_owner:synthetic_owner_only@127.0.0.1:${process.env['SHIFAA_PG_PORT'] ?? '5432'}/${database}`,
+        { max: 4, onnotice: () => undefined },
+      );
     });
     afterAll(async () => {
       await sql?.end();

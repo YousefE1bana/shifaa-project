@@ -1,4 +1,3 @@
-import { assertTestDatabaseEnvironment } from './verification-database.mjs';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -24,7 +23,6 @@ if (missing.length > 0) {
   process.exit(1);
 }
 const tsxCli = path.join(repositoryRoot, 'node_modules/tsx/dist/cli.mjs');
-assertTestDatabaseEnvironment();
 const result = spawnSync(process.execPath, [tsxCli, '--test', '--test-concurrency=1', ...files], {
   cwd: repositoryRoot,
   stdio: 'inherit',

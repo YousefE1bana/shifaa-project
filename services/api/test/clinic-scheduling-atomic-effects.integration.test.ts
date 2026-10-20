@@ -1,4 +1,3 @@
-import { testConnectionOptions } from '../../../tools/verification-database.mjs';
 import postgres, { type Sql, type TransactionSql } from 'postgres';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -7,12 +6,15 @@ import {
   clinicSchedulingTelemetry,
 } from '@shifaa/observability/clinic-scheduling';
 
-const verificationRuntime = (
-  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
-).replace('shifaa-local-', '');
-
 type Query = Sql | TransactionSql;
 const database = process.env['SHIFAA_F009_DATABASE'];
+const options = {
+  host: process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1',
+  port: Number(process.env['SHIFAA_PG_PORT'] ?? 5432),
+  username: 'shifaa_owner',
+  password: 'synthetic_owner_only',
+  max: 1,
+};
 const ids = {
   owner: 'a0450000-0000-4000-8000-000000000001',
   doctor: 'a0450000-0000-4000-8000-000000000002',
@@ -25,7 +27,7 @@ const ids = {
 
 function client() {
   if (!database) throw new Error('SHIFAA_F009_DATABASE is required for atomic-effects tests');
-  return postgres({ ...testConnectionOptions('owner', verificationRuntime, database), max: 1 });
+  return postgres({ ...options, database });
 }
 
 async function context(sql: Query, person: string, key = '', hash = '', fail = '') {

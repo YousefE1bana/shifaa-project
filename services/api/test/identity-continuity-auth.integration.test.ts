@@ -1,4 +1,3 @@
-import { testSupabaseStatus } from '../../../tools/verification-database.mjs';
 import { execFileSync } from 'node:child_process';
 import { createHmac, randomUUID } from 'node:crypto';
 
@@ -25,7 +24,16 @@ let status: SupabaseStatus;
 let adapter: SupabaseAuthIssuer;
 
 function readSupabaseStatus(): SupabaseStatus {
-  return testSupabaseStatus();
+  const command =
+    process.platform === 'win32'
+      ? {
+          file: process.env['ComSpec'] ?? 'cmd.exe',
+          args: ['/d', '/s', '/c', 'corepack pnpm exec supabase status -o json'],
+        }
+      : { file: 'corepack', args: ['pnpm', 'exec', 'supabase', 'status', '-o', 'json'] };
+  return JSON.parse(
+    execFileSync(command.file, command.args, { encoding: 'utf8' }),
+  ) as SupabaseStatus;
 }
 
 async function mailpitMessageIds(recipient: string): Promise<Set<string>> {

@@ -1,4 +1,3 @@
-import { testDocker } from './verification-database.mjs';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -41,7 +40,7 @@ export function session(runtime, database, label, user = 'shifaa_api') {
     '-d',
     database,
   ];
-  const child = testDocker(command, {
+  const child = spawn('docker', command, {
     cwd: root,
     windowsHide: true,
     env: user === 'shifaa_api' ? { ...process.env, PGPASSWORD: 'synthetic_api_only' } : process.env,
