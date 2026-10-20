@@ -543,10 +543,10 @@ export async function withTestOutputCreation(authorityToken, capability, createE
       receipt.nonce !== authority.nonce ||
       receipt.exclusive !== true ||
       !validDirectoryIdentity(receipt.identity) ||
-      // Windows file timestamps and Date.now() straddle a millisecond boundary.
-      // This bounded precision allowance is not ownership: absence, exclusive
+      // Native Windows creation timestamps can lag Date.now() by a timer tick
+      // (6.30 ms observed). Bound the allowance to 20 ms; absence, exclusive
       // creation, exact inode/nonce/path and private ACL checks remain mandatory.
-      BigInt(receipt.identity.birthtimeNs) + (process.platform === 'win32' ? 999_999n : 0n) <
+      BigInt(receipt.identity.birthtimeNs) + (process.platform === 'win32' ? 19_999_999n : 0n) <
         startedNs
     )
       fail('exclusive output creation receipt');

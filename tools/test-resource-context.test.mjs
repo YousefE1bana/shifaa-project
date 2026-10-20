@@ -1201,8 +1201,8 @@ test('source drift denies output transition before the trusted creator runs', as
   assert.equal(f.effects.dockerLifecycle, 0);
 });
 
-for (const offset of [-87_100n, -1_000_001n]) {
-  test(`Windows exclusive output creation respects millisecond clock precision (${offset})`, async (t) => {
+for (const offset of [-87_100n, -6_297_400n, -19_999_999n, -20_000_000n]) {
+  test(`Windows exclusive output creation respects bounded filesystem clock precision (${offset})`, async (t) => {
     const f = fixture(t);
     const context = verifyTestResourceContext(f.authority, f.manifest);
     const now = Date.now();
@@ -1213,7 +1213,7 @@ for (const offset of [-87_100n, -1_000_001n]) {
       f.current.output.identity.birthtimeNs = receipt.identity.birthtimeNs;
       return receipt;
     };
-    if (process.platform === 'win32' && offset > -1_000_000n) {
+    if (process.platform === 'win32' && offset > -20_000_000n) {
       await withTestOutputCreation(f.authority, context, create);
       revalidateTestResourceContext(context, 'discovery-sos');
     } else {
