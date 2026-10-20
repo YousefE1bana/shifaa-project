@@ -737,7 +737,7 @@ const unownedMutations = [
   [
     'contact revocation',
     (sql, foreign) =>
-      sql`update identity.emergency_contacts set status='revoked',revoked_by_person_id=${record}::uuid,revoked_at=statement_timestamp() where id=${foreign}::uuid and subject_patient_id=${record}::uuid`,
+      sql`update identity.emergency_contacts set status='revoked',revoked_by_person_id=${record}::uuid,revoked_at=statement_timestamp(),decision_reason_code='owner_revoked' where id=${foreign}::uuid and subject_patient_id=${record}::uuid`,
   ],
   [
     'facility capacity',
@@ -773,6 +773,22 @@ for (const [name, mutation] of unownedMutations) {
     await owner.end();
   });
 }
+
+test('owned contact revocation requires its complete decision evidence', async (t) => {
+  const f = fixture(t);
+  const context = verifyTestResourceContext(f.authority, f.manifest);
+  const owner = await connectTestOwner(context, 'discovery-sos', f.factory);
+  registerRunRecord(context, 'discovery-sos', 'contact', record);
+  assert.throws(
+    () =>
+      owner`update identity.emergency_contacts set status='revoked',revoked_by_person_id=${record}::uuid,revoked_at=statement_timestamp() where id=${record}::uuid and subject_patient_id=${record}::uuid`,
+    /test-resource-denied/,
+  );
+  assert.equal(f.effects.mutations, 0);
+  await owner`update identity.emergency_contacts set status='revoked',revoked_by_person_id=${record}::uuid,revoked_at=statement_timestamp(),decision_reason_code='owner_revoked' where id=${record}::uuid and subject_patient_id=${record}::uuid`;
+  assert.equal(f.effects.mutations, 1);
+  await owner.end();
+});
 
 test('privacy assignment update requires a positively registered request', async (t) => {
   const f = fixture(t, 'privacy');

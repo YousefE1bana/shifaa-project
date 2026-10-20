@@ -300,8 +300,8 @@
     },
     {
       "path": "tools/test-resource-context.mjs",
-      "bytes": 28676,
-      "sha256": "b4d7ee34ed9fcf6158bc3e4209a19ca9d36c1a84caefc9843ecd0efe66f6d102"
+      "bytes": 28713,
+      "sha256": "5fcfa0577f9fedd736e3b2ff3bf4b4f8b87464f2fad05af4614f93bd1c8f1667"
     }
   ]
 }

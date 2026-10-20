@@ -57,7 +57,9 @@ class AcceptThenUncertainAdapter implements MessagingAdapter {
 class CrashAfterDurableAcceptAdapter implements MessagingAdapter {
   public readonly code = 'local-synthetic' as const;
   public readonly attempts: string[] = [];
-  public constructor(private readonly delegate: DurableLocalSyntheticMessagingAdapter) {}
+  public constructor(
+    private readonly delegate: Pick<DurableLocalSyntheticMessagingAdapter, 'send'>,
+  ) {}
   public async send(input: {
     idempotencyKey: string;
     destinationAlias: string;
@@ -204,7 +206,7 @@ test('worker restart after durable provider acceptance preserves one visible del
   const firstProvider = await stack.createDurableProvider();
   const crashAdapter = new CrashAfterDurableAcceptAdapter(firstProvider);
   const firstWorker = await stack.createWorker(crashAdapter, 'sos-contact-before-restart');
-  let secondProvider: DurableLocalSyntheticMessagingAdapter | undefined;
+  let secondProvider: Awaited<ReturnType<Stack['createDurableProvider']>> | undefined;
   let secondWorker: PostgresDiscoverySosProcessor | undefined;
   try {
     const incidentId = await activateContactSos(stack, 'restart-after-accept');

@@ -648,7 +648,7 @@ function guardTestSql(capability, scope, sql) {
               owned('callback', 1) &&
               values[1] === values[2]) ||
             (normalized ===
-              "update identity.emergency_contacts set status='revoked',revoked_by_person_id=?::uuid,revoked_at=statement_timestamp() where id=?::uuid and subject_patient_id=?::uuid" &&
+              "update identity.emergency_contacts set status='revoked',revoked_by_person_id=?::uuid,revoked_at=statement_timestamp(),decision_reason_code='owner_revoked' where id=?::uuid and subject_patient_id=?::uuid" &&
               owned('contact', 1)) ||
             (normalized.startsWith(
               'update hospital.capacity_projections set observed_at = statement_timestamp()',

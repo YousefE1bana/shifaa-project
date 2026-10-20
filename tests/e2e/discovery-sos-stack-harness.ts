@@ -189,7 +189,12 @@ export async function createDiscoverySosStack(context?: object) {
             context,
             provider.close.bind(provider),
           );
-          return guardTestHandle(context, 'discovery-sos', provider, ['send']);
+          const guarded = guardTestHandle(context, 'discovery-sos', provider, ['send']);
+          return Object.freeze({
+            code: provider.code,
+            send: guarded.send,
+            close: guarded.close,
+          });
         }),
       setContactPrecision: async (precision: 'none' | 'coarse' | 'exact') => {
         const previous = contact.confirmed;
@@ -198,7 +203,7 @@ export async function createDiscoverySosStack(context?: object) {
         const invitation = randomBytes(32);
         await owner.begin(async (sql) => {
           await sql`select set_config('shifaa.person_id',${discoverySosSyntheticPeople.patient},true)`;
-          await sql`update identity.emergency_contacts set status='revoked',revoked_by_person_id=${discoverySosSyntheticPeople.patient}::uuid,revoked_at=statement_timestamp() where id=${previous}::uuid and subject_patient_id=${discoverySosSyntheticPatients.subject}::uuid`;
+          await sql`update identity.emergency_contacts set status='revoked',revoked_by_person_id=${discoverySosSyntheticPeople.patient}::uuid,revoked_at=statement_timestamp(),decision_reason_code='owner_revoked' where id=${previous}::uuid and subject_patient_id=${discoverySosSyntheticPatients.subject}::uuid`;
           await sql`insert into identity.emergency_contacts(id,subject_patient_id,created_by_person_id,display_name_ciphertext,display_name_nonce,display_name_authentication_tag,display_name_key_version,phone_ciphertext,phone_nonce,phone_authentication_tag,phone_key_version,masked_phone,phone_blind_index,preferred_locale,location_precision,status,invite_token_digest,invite_key_version,invite_expires_at)
           select ${replacement}::uuid,subject_patient_id,created_by_person_id,display_name_ciphertext,display_name_nonce,display_name_authentication_tag,display_name_key_version,phone_ciphertext,phone_nonce,phone_authentication_tag,phone_key_version,masked_phone,phone_blind_index,preferred_locale,${precision},'pending',${invitation},invite_key_version,statement_timestamp()+interval '1 day' from identity.emergency_contacts where id=${previous}::uuid and subject_patient_id=${discoverySosSyntheticPatients.subject}::uuid`;
           await sql`select * from platform.respond_emergency_contact_invite(${invitation},'confirmed')`;

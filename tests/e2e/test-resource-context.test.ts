@@ -238,6 +238,11 @@ async function registerTests() {
           const previousContact = sos.ids.contact.confirmed;
           await sos.setContactPrecision('exact');
           assert.notEqual(sos.ids.contact.confirmed, previousContact);
+          const revocation = f.queries.find(({ text }) =>
+            text.startsWith("update identity.emergency_contacts set status='revoked'"),
+          );
+          assert.ok(revocation);
+          assert.match(revocation.text, /decision_reason_code='owner_revoked'/);
           assert.ok(
             f.queries.some(({ text }) =>
               /where person_id=\?::uuid and person_id=\?::uuid/.test(text),
@@ -287,8 +292,14 @@ async function registerTests() {
             renderedBody: 'Synthetic boundary probe',
           });
           assert.equal(receipt.providerReceiptReference, 'mocked-durable-receipt');
-          await provider.close();
-          await worker.close();
+          try {
+            const restartedWorker = await sos.createWorker(provider);
+            assert.equal(Reflect.get(provider, 'sql'), undefined);
+            await restartedWorker.close();
+          } finally {
+            await provider.close();
+            await worker.close();
+          }
         }
         const before = { ...f.effects };
         if (scope === 'privacy') {
