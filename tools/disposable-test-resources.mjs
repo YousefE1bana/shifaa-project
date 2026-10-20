@@ -22,7 +22,11 @@ export class ResourceCommandFailure extends Error {
 // Failure messages intentionally exclude argv, environment, stdout and stderr.
 export function resourceCommand(executable, args, input, cwd) {
   const environment = Object.fromEntries(
-    Object.entries(process.env).filter(([key]) => !/^(PG|DATABASE|DOCKER|COMPOSE)/i.test(key)),
+    Object.entries(process.env).filter(
+      ([key]) =>
+        !/^(PG|DATABASE|DOCKER|COMPOSE)/i.test(key) &&
+        (executable !== 'powershell.exe' || !/^PSModulePath$/i.test(key)),
+    ),
   );
   try {
     return execFileSync(executable, args, {

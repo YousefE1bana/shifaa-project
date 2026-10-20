@@ -28,6 +28,13 @@ function command(executable, args, cwd) {
     timeout: 10_000,
     stdio: ['ignore', 'pipe', 'pipe'],
     windowsHide: true,
+    // Windows PowerShell must discover its own modules when called from PowerShell 7.
+    env:
+      executable === 'powershell.exe'
+        ? Object.fromEntries(
+            Object.entries(process.env).filter(([key]) => !/^PSModulePath$/i.test(key)),
+          )
+        : process.env,
   }).trim();
 }
 

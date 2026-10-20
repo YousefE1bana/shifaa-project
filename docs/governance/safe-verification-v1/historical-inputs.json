@@ -165,8 +165,8 @@
     },
     {
       "path": "tools/disposable-test-resources.mjs",
-      "bytes": 6486,
-      "sha256": "7783a970711243ee73c949d66382eed07491e296c17e2e292d3567798c80d585"
+      "bytes": 6584,
+      "sha256": "8d67d3bbbe2de1cdc5b3be311b5e5c1b346b5e3e7c5973cb8e275598a98d6897"
     },
     {
       "path": "tools/feature-011-native-supabase-bootstrap.mjs",
@@ -300,8 +300,8 @@
     },
     {
       "path": "tools/test-resource-context.mjs",
-      "bytes": 28713,
-      "sha256": "5fcfa0577f9fedd736e3b2ff3bf4b4f8b87464f2fad05af4614f93bd1c8f1667"
+      "bytes": 29001,
+      "sha256": "21f26cdb6562a36835e6435d64c46e8b64e73a471e78d112592d41e918f36473"
     }
   ]
 }

@@ -256,6 +256,31 @@ test('launcher refuses a different source worktree before observing resources', 
   assert.equal(f.effects.clients, 0);
 });
 
+test('private output ACLs use native Windows PowerShell module discovery', async (t) => {
+  const f = launcherFixture(t);
+  const previousModulePath = process.env.PSModulePath;
+  process.env.PSModulePath = 'incompatible-parent-PowerShell-7-modules';
+  t.after(() => {
+    if (previousModulePath === undefined) delete process.env.PSModulePath;
+    else process.env.PSModulePath = previousModulePath;
+  });
+  const previousCommand = childProcess.execFileSync;
+  let aclCommands = 0;
+  t.mock.method(childProcess, 'execFileSync', (executable, args, options) => {
+    if (executable === 'powershell.exe') {
+      aclCommands++;
+      assert.ok(options.env, 'ACL subprocess environment must be explicit');
+      assert.ok(!Object.keys(options.env).some((key) => /^PSModulePath$/i.test(key)));
+    }
+    return previousCommand(executable, args, options);
+  });
+  syncBuiltinESMExports();
+  const run = await createDisposableTestRun(f.options);
+  assert.ok(run.capability);
+  assert.ok(aclCommands > 1);
+  assert.equal(process.env.PSModulePath, 'incompatible-parent-PowerShell-7-modules');
+});
+
 test('equivalent path spelling is canonicalized before source walks and capability binding', async (t) => {
   const f = launcherFixture(t);
   f.options.worktree += path.sep + '.' + path.sep;
