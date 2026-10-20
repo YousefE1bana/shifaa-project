@@ -1197,3 +1197,58 @@ test('teardown accepts only changing allocation counters after exact container r
     'network.rm',
   ]);
 });
+
+test('failed admission preserves its fixed guard reason without accepting or removing resources', async (t) => {
+  const f = launcherFixture(t);
+  f.mutate((_exe, args) => {
+    if (args.includes('inspect') && f.launcherEffects.lifecycle.includes('container.start'))
+      f.network().Labels = {};
+  });
+  await assert.rejects(createDisposableTestRun(f.options), /preserve resources/);
+  const failure = f.launcherEffects.reports.at(-1).report.failure;
+  assert.equal(failure.phase, 'resource-admission');
+  assert.equal(failure.diagnostic.guardReason, 'network creation identity or shared namespace');
+  assert.equal(f.effects.clients, 0);
+  assert.deepEqual(f.launcherEffects.sql, []);
+  assert.ok(!f.launcherEffects.lifecycle.some((operation) => operation.endsWith('.rm')));
+});
+
+test('failed real-test events retain assertion source locations but never sensitive payloads', async (t) => {
+  const f = launcherFixture(t);
+  f.options.cleanup = 'REMOVE_RELEASED_RUNS_BEFORE_NEXT_LEASE';
+  const cause = Object.assign(new Error('private-password SQL row body'), {
+    code: 'ERR_ASSERTION',
+    actual: 'private-password',
+    expected: 'private row',
+    stack: `AssertionError: private-password\n    at TestContext.<anonymous> (${path.join(f.options.worktree, 'tests/e2e/discovery-sos-contact.spec.ts')}:123:7)`,
+  });
+  t.mock.method(test, 'run', () =>
+    (async function* () {
+      const context = await acquireTestLauncherContext('family');
+      releaseTestLauncherContext('family', context);
+      yield {
+        type: 'test:fail',
+        data: {
+          testNumber: 1,
+          details: { error: Object.assign(new Error('private row'), { cause }) },
+        },
+      };
+    })(),
+  );
+  const completed = await runDisposableTestSuite(f.options);
+  assert.equal(completed.passed, false);
+  assert.equal(completed.failedTests, 1);
+  assert.equal(completed.runs[0].closed, true);
+  const report = f.launcherEffects.reports.find(({ report }) => report.status === 'TEST_FAILED');
+  assert.ok(report);
+  assert.equal(report.report.diagnostic.cause.code, 'ERR_ASSERTION');
+  assert.deepEqual(report.report.diagnostic.cause.location, {
+    path: 'tests/e2e/discovery-sos-contact.spec.ts',
+    line: 123,
+    column: 7,
+  });
+  assert.doesNotMatch(
+    JSON.stringify(f.launcherEffects.reports),
+    /private-password|private row|SQL row/,
+  );
+});

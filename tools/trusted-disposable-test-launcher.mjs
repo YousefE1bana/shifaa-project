@@ -38,6 +38,37 @@ const memoryBytes = 1024 * 1024 * 1024;
 const logOptions = Object.freeze({ 'max-size': '10m', 'max-file': '2' });
 const baselinePackageBlob = 'f205a80ae41b5507afaa1a7868fbbc8e84deb217';
 
+// Keep actionable diagnostics without serializing assertion values, SQL, URLs,
+// arbitrary exception messages or complete stacks into evidence or stdout.
+function failureDiagnostic(error, worktree, depth = 0) {
+  if (!error || depth >= 3) return null;
+  const diagnostic = {};
+  if (/^(?:[A-Z][A-Z0-9_]{0,47}|[0-9A-Z]{5})$/.test(error.code ?? '')) diagnostic.code = error.code;
+  const reason = /^test-(?:resource|launcher)-denied: ([a-z /;-]{1,160})$/.exec(
+    error.message ?? '',
+  );
+  if (reason) diagnostic.guardReason = reason[1];
+  const root = path.resolve(worktree).replaceAll('\\', '/') + '/';
+  for (const line of (typeof error.stack === 'string' ? error.stack : '').split('\n').slice(1)) {
+    const frame = line.replaceAll('\\', '/');
+    const index = frame.toLowerCase().indexOf(root.toLowerCase());
+    if (index < 0) continue;
+    const location =
+      /^((?:tools|tests|services|packages|apps)\/[a-zA-Z0-9_./-]+):([0-9]+):([0-9]+)/.exec(
+        frame.slice(index + root.length),
+      );
+    if (!location || location[1].split('/').includes('..')) continue;
+    diagnostic.location = {
+      path: location[1],
+      line: Number(location[2]),
+      column: Number(location[3]),
+    };
+    break;
+  }
+  if (error.cause) diagnostic.cause = failureDiagnostic(error.cause, worktree, depth + 1);
+  return diagnostic;
+}
+
 function checkBudgetAuthorization(options) {
   if (options.resourceBudget !== undefined && options.resourceBudget !== budgetName)
     denied('unknown resource budget');
@@ -712,6 +743,7 @@ export async function createDisposableTestRun(options) {
       phase: run.phase ?? 'pre-creation',
       exitCode: error instanceof ResourceCommandFailure ? (error.exitCode ?? null) : null,
       timedOut: error instanceof ResourceCommandFailure && error.timedOut,
+      diagnostic: failureDiagnostic(error, frozen.worktree),
     };
     // No automatic teardown, resource adoption, retry or raw error reporting.
     writePrivateReport(
@@ -828,6 +860,14 @@ export async function runDisposableTestSuite(options) {
         if (event.type === 'test:fail') {
           failed = true;
           failedTests++;
+          writePrivateReport(
+            path.join(options.outputParent, `${options.scope}-test-failure-${failedTests}.json`),
+            {
+              status: 'TEST_FAILED',
+              testNumber: Number.isInteger(data.testNumber) ? data.testNumber : null,
+              diagnostic: failureDiagnostic(data.details?.error, options.worktree),
+            },
+          );
         }
       }
       for (const created of runs) {
