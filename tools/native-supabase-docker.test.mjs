@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import http from 'node:http';
 import { Readable } from 'node:stream';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, mkdirSync, writeFileSync, renameSync, symlinkSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -13,6 +13,54 @@ import {
   readNativeJournal,
   currentNativeVolumes,
 } from './native-supabase-docker.mjs';
+
+test('tsx CommonJS consumers load the database boundary and still reject a missing run context', (t) => {
+  const directory = mkdtempSync(path.join(os.tmpdir(), 'shifaa-tsx-import-test-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const consumer = path.join(directory, 'consumer.ts');
+  const databaseModule = path
+    .join(import.meta.dirname, 'verification-database.mjs')
+    .replaceAll('\\', '/');
+  writeFileSync(
+    consumer,
+    `import { testDatabaseUrl } from ${JSON.stringify(databaseModule)};
+import assert from 'node:assert/strict';
+assert.throws(() => testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa'), /verification-resource-denied/);
+`,
+  );
+  const env = { ...process.env };
+  delete env.SHIFAA_VERIFY_CONTEXT;
+  const execution = spawnSync(
+    process.execPath,
+    [path.join(import.meta.dirname, '../node_modules/tsx/dist/cli.mjs'), consumer],
+    {
+      env,
+      encoding: 'utf8',
+      windowsHide: true,
+      timeout: 10000,
+    },
+  );
+  assert.ifError(execution.error);
+  assert.equal(execution.status, 0, execution.stderr);
+});
+
+test('direct native CLI invocation without a run context exits with the boundary failure code', () => {
+  const env = { ...process.env };
+  delete env.SHIFAA_VERIFY_CONTEXT;
+  const execution = spawnSync(
+    process.execPath,
+    [path.join(import.meta.dirname, 'native-supabase-docker.mjs')],
+    {
+      env,
+      encoding: 'utf8',
+      windowsHide: true,
+      timeout: 10000,
+    },
+  );
+  assert.ifError(execution.error);
+  assert.equal(execution.status, 2, execution.stderr);
+  assert.match(execution.stderr, /Native verification boundary failed/);
+});
 
 async function fixture(t, streamForwarder) {
   const output = mkdtempSync(path.join(os.tmpdir(), 'shifaa-native-api-test-'));

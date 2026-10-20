@@ -677,10 +677,13 @@ export async function runNativeCli(file, args) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  try {
-    process.exitCode = await runNativeCli(process.env.SHIFAA_VERIFY_CONTEXT, process.argv.slice(2));
-  } catch {
-    console.error('Native verification boundary failed; preserve private receipt.');
-    process.exitCode = 2;
-  }
+  runNativeCli(process.env.SHIFAA_VERIFY_CONTEXT, process.argv.slice(2)).then(
+    (code) => {
+      process.exitCode = code;
+    },
+    () => {
+      console.error('Native verification boundary failed; preserve private receipt.');
+      process.exitCode = 2;
+    },
+  );
 }
