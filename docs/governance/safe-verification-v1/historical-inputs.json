@@ -255,8 +255,8 @@
     },
     {
       "path": "tools/trusted-disposable-test-launcher.mjs",
-      "bytes": 35077,
-      "sha256": "db156249f6e03f3cfe47812e2ce44c415a4b57eaa3ba8937c604abd75dc85129"
+      "bytes": 35078,
+      "sha256": "a5044df82613983fb62bdaa05905edf695e57191bea438ce3d33df2b6328297f"
     },
     {
       "path": "tools/verification-ci.mjs",
@@ -300,8 +300,8 @@
     },
     {
       "path": "tools/test-resource-context.mjs",
-      "bytes": 28376,
-      "sha256": "6cd11b05d9ae95910a0afff88fde40b2f1156769d082f63f7300e147c746fffa"
+      "bytes": 28676,
+      "sha256": "b4d7ee34ed9fcf6158bc3e4209a19ca9d36c1a84caefc9843ecd0efe66f6d102"
     }
   ]
 }

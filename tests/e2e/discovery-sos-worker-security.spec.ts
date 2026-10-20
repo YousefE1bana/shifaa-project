@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import test from 'node:test';
-import { assertRunOwned } from '../../tools/test-resource-context.mjs';
 
 import {
   DurableLocalSyntheticMessagingAdapter,
@@ -98,6 +97,7 @@ async function setContactPrecision(stack: Stack, precision: Precision): Promise<
 }
 
 async function releaseRetry(stack: Stack, incidentId: string): Promise<void> {
+  const { assertRunOwned } = await import('../../tools/test-resource-context.mjs');
   assertRunOwned(stack.context, 'discovery-sos', 'incident', incidentId);
   await stack.owner`
     update platform.outbox_events set available_at=statement_timestamp()-interval '1 second'

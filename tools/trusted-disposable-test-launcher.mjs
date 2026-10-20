@@ -44,7 +44,7 @@ function failureDiagnostic(error, worktree, depth = 0) {
   if (!error || depth >= 3) return null;
   const diagnostic = {};
   if (/^(?:[A-Z][A-Z0-9_]{0,47}|[0-9A-Z]{5})$/.test(error.code ?? '')) diagnostic.code = error.code;
-  const reason = /^test-(?:resource|launcher)-denied: ([a-z /;-]{1,160})$/.exec(
+  const reason = /^test-(?:resource|launcher)-denied: ([a-z ,/;-]{1,160})$/.exec(
     error.message ?? '',
   );
   if (reason) diagnostic.guardReason = reason[1];

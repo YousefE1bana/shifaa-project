@@ -1290,7 +1290,7 @@ test('individual outcomes include declaration locations and bounded classificati
           line: 30,
           column: 1,
           details: {
-            error: new Error('test-resource-denied: network creation identity or shared namespace'),
+            error: new Error('test-resource-denied: closed, interrupted or failed run'),
           },
         },
       };
@@ -1316,6 +1316,38 @@ test('individual outcomes include declaration locations and bounded classificati
   assert.equal(records[1].location.line, 20);
   assert.equal(records[1].diagnostic.cause.location.line, 27);
   assert.equal(records[2].classification, 'RESOURCE_GUARD');
-  assert.equal(records[2].diagnostic.guardReason, 'network creation identity or shared namespace');
+  assert.equal(records[2].diagnostic.guardReason, 'closed, interrupted or failed run');
   assert.doesNotMatch(JSON.stringify(records), /private|credentials|SQL/);
+});
+
+test('actual Node tsx spec imports retain the native in-process capability authority', () => {
+  const root = process.cwd();
+  const imported = pathToFileURL(path.join(root, 'tools/test-resource-context.mjs')).href;
+  for (const file of ['discovery-sos-share.spec.ts', 'discovery-sos-worker-security.spec.ts']) {
+    const source = fs.readFileSync(path.join(root, 'tests/e2e', file), 'utf8');
+    assert.doesNotMatch(source, /import \{ assertRunOwned \} from/);
+    const statement = source.match(
+      /const \{ assertRunOwned \} = await import\('..\/..\/tools\/test-resource-context.mjs'\);/,
+    );
+    assert.ok(statement);
+    const directory = fs.mkdtempSync(
+      path.join(process.env.TEMP ?? process.env.TMP ?? '/tmp', 'shifaa-capability-regression-'),
+    );
+    const fixture = path.join(directory, 'capability.ts');
+    try {
+      fs.writeFileSync(
+        fixture,
+        `async function main(){${statement[0].replace('../../tools/test-resource-context.mjs', imported)}const native=await import('${imported}');if(assertRunOwned!==native.assertRunOwned)throw new Error('separate capability authority');console.log('SAME_AUTHORITY');}main();`,
+      );
+      const output = systemCommand(process.execPath, ['--import', 'tsx', fixture], {
+        cwd: root,
+        encoding: 'utf8',
+        windowsHide: true,
+      });
+      assert.equal(output.trim(), 'SAME_AUTHORITY');
+    } finally {
+      fs.unlinkSync(fixture);
+      fs.rmdirSync(directory);
+    }
+  }
 });

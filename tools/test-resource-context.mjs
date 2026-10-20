@@ -536,7 +536,11 @@ export async function withTestOutputCreation(authorityToken, capability, createE
       receipt.nonce !== authority.nonce ||
       receipt.exclusive !== true ||
       !validDirectoryIdentity(receipt.identity) ||
-      BigInt(receipt.identity.birthtimeNs) < startedNs
+      // Windows file timestamps and Date.now() straddle a millisecond boundary.
+      // This bounded precision allowance is not ownership: absence, exclusive
+      // creation, exact inode/nonce/path and private ACL checks remain mandatory.
+      BigInt(receipt.identity.birthtimeNs) + (process.platform === 'win32' ? 999_999n : 0n) <
+        startedNs
     )
       fail('exclusive output creation receipt');
     const owned = { phase: 'owned', identity: structuredClone(receipt.identity) };
