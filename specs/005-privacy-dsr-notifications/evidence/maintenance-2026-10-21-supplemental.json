@@ -1,0 +1,24 @@
+{
+  "recordedAt": "2026-10-21T16:47:38.972730+00:00",
+  "custodian": "Yousef Osama; maintenance root agent",
+  "feature": "005-privacy-dsr-notifications",
+  "classification": "Separate real PostgreSQL E2E; not part of original 42-command aggregate",
+  "command": "pnpm test:privacy:e2e",
+  "result": "4 PASS / 0 FAIL",
+  "baseCommit": "750dabf4abfa78841d3ea7ce05579243264a3a54",
+  "sourceState": "750dabf4 plus Family E2E test-only canonical audit query/context assertions; application/runtime source unchanged",
+  "retainedEvidence": [
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\supplemental-750dabf\\privacy-e2e-receipt.json",
+      "bytes": 345,
+      "sha256": "10d2efc8757b1f6711032596bf6de3486d0734fddb6b0228851634348d2f26ee"
+    },
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\supplemental-750dabf\\privacy-e2e.log",
+      "bytes": 705,
+      "sha256": "b8758c3737f41ea94f424b17b2a160f0b5a12259f203479510a6f2363b32a8ed"
+    }
+  ],
+  "recovery": "Verify referenced manifest hash, select this feature prefix, verify retained regular-file size and SHA-256, and recover into a separate scratch directory. Do not overwrite approved historical evidence.",
+  "approvalLimits": "Engineering execution only; no human live Arabic/English, native accessibility, clinical, legal, production, lifecycle or feature-finalization approval. Family/Privacy E2E are separate from the original 42 commands."
+}

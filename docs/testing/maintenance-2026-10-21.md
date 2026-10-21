@@ -28,6 +28,12 @@ This record does not start F012 or close Issue #493 or professional approval gat
 - [The existing verification guide](SHIFAA-Safe-Verification.md) now documents
   durable native PowerShell execution logs, exact exit receipts and generated
   evidence preservation. No aggregate launcher was introduced.
+- The separately callable Family E2E still queried pre-F008 audit columns
+  `action`/`metadata`. Its real initial execution failed with PostgreSQL 42703
+  (2 PASS, 1 FAIL). It now reads canonical `action_code` and the full structured
+  audit row, retaining the prohibited-content assertion and adding exact
+  actor/patient/relationship/version/outcome assertions. The same real suite then
+  passed 3/3. No application, migration, audit writer or security policy changed.
 
 ## Dependency review
 
@@ -127,9 +133,22 @@ Local Supabase publishes ports on all host interfaces under the current CLI.
 Standalone PostgreSQL is loopback-only. No firewall/global Docker changes were
 made. Keep Supabase restricted to a trusted development host; a supported local
 binding/firewall hardening change needs its own connectivity proof. The optional
-Edge container was observed exited 137 with `OOMKilled=false`; the logs show a
-normal serving banner, not a proven application fault. Its lifecycle disposition
-must be checked with final acceptance rather than inventing a cause.
+Edge container was initially observed exited 137 with `OOMKilled=false`; the logs
+show a normal serving banner, not a proven application fault. Following the
+ordinary CLI reset/start during acceptance it is running with `OOMKilled=false`.
+All 12 required SHIFAA containers are running; all configured health checks are
+healthy. Edge and PostgREST have no configured health check.
+
+Final inventory after acceptance and supplemental tests: **17 containers,
+24 images, 8 volumes, 7 networks, 18 build-cache records**. The eighth volume is
+the required Edge cache recreated by the CLI on 2026-10-21 at 15:40:43Z; its
+older unmounted predecessor was backed up before removal. Final volumes account
+for 993.6 MB after fresh database/test state. The 8.95 GB figure above describes
+the cleanup checkpoint, not this later database growth or physical disk space.
+Standalone PostgreSQL contains only `postgres`/`shifaa`; native Supabase contains
+only `_supabase`/`postgres`. No disposable scratch database remains. Normal local
+development infrastructure intentionally remains available. The authorized
+synthetic SHIFAA development databases were reset; they are not claimed unchanged.
 
 ## Evidence, worktrees and historical verification
 
@@ -140,6 +159,24 @@ before restoring known generated outputs. Feature-specific additive indices live
 in F006, F007, F008 and F011 `evidence/maintenance-2026-10-21-retention.json`.
 F011's index also links 486 composition diagnostics/attempt files and the unchanged
 K06 reproduction input. Historical failures are retained, not replaced by new PASS.
+
+The private maintenance folder inherited broad local read/modify access. Its DACL
+was restricted to the current owner, SYSTEM and local Administrators; a recursive
+check rejects other principals and reparse points. Raw Docker configuration stays
+private. This changes only the maintenance retention directory, not global ACLs.
+
+Four old F001 `.qa/clean-*` clones retain their source, Git repositories, private
+configuration and captures. Only their ignored, regenerable `node_modules` trees
+were removed after dependency/reference/process checks and source/configuration
+hash verification. Removed regular files total 3,160,556,778 logical bytes;
+hard links and concurrent builds prevent a physical-reclaimed-space claim.
+The [F001 retention index](../../specs/001-identity-onboarding/evidence/maintenance-2026-10-21-retention.json)
+records all four commits and recovery inputs. No worktree or branch was deleted.
+Another 111 setup QA files (1,871,723 bytes, including 17 PNGs) were copied and
+re-read in `retained-setup-qa`; originals remain. F011's additive acceptance index
+records their historical/reproduction classification and incomplete attribution.
+The missing setup HTML referenced by historical F011 evidence was not recovered
+or reconstructed; the accepted preservation-loss disposition remains unchanged.
 
 There is **no complete saved post-merge aggregate console log** for b53f5d3.
 The Product Owner reports exit 0 and a partial 8,849-line transcript; the partial
@@ -154,22 +191,84 @@ content reconciliation and verification of required indices in merged main;
 a whole-worktree archive alone would not satisfy the Finalization Gate. Clean
 checkout status alone is not grounds to delete a feature worktree.
 
-The optional documentation CURRENT checker also fails on four verifier sources
-already changed by merged PRs #500/#501 relative to its older modernization
-ledger. That is baseline drift, not new evidence corruption. The historical
-ledger is preserved. Reconciliation of the candidate checker's CURRENT semantics
-needs a separately reviewed correction; this maintenance does not silently
-activate proposed change-class policy or weaken immutable-history assertions.
+The optional documentation CURRENT checker exits 1 with 15 findings: 12 older
+hash/size/history bindings for four verifier sources, plus three F011 whole-tree
+count/path/tree findings. The four sources had already changed in merged PRs
+#500/#501; this maintenance also changes the two current scope guards for the
+Node security pin. Additive maintenance indices change the F011 tree while its
+historical original files remain intact. The frozen ledger is preserved. A
+reviewed correction must distinguish current tooling/evidence successors from
+immutable historical originals. This candidate checker is outside the original
+42 commands and current CI; its failure is explicitly outstanding. This work
+does not activate proposed change-class policy or relax historical assertions.
 
 ## Validation and remaining integration gate
 
-Focused fixture RED/GREEN, lint, types and the fresh uncached unit suite passed
-before the Node update. The Node pin regression then passed 25/25, including
-rejection of the prior runtime and a mismatched engine declaration. Final full
-original-42 acceptance, final CI and resource/integrity receipts are recorded in
-the subsequent acceptance addendum after execution; these are **pending** here.
-The original aggregate and literal Compose reset are unchanged. Family/Privacy
-E2E remain separate. No full 44-check claim applies.
+The real original aggregate **passed all 42 commands with process exit 0** on
+`750dabf4abfa78841d3ea7ce05579243264a3a54`, using Node 24.22.1 and pnpm 11.13.0.
+Execution ran from 2026-10-21 15:35:33.766Z to 16:35:47.048Z, taking
+**3613.2501411 seconds (60m13s)**. Exact command: `pnpm verify`, directly from
+native PowerShell 7.6.5. `TURBO_FORCE=true` forced fresh execution: lint 16/16,
+types 16/16, build 12/12 and unit 21/21 tasks, all four summaries **0 cached**.
+The root verify chain and literal `docker compose down -v` reset are byte-identical
+to baseline b53f5d3. Family/Privacy E2E remain separate; there is no 44-check claim.
+
+The complete log and receipt live in private `acceptance-750dabf/`:
+
+- `pnpm-verify.log` SHA-256:
+  `ffeda2d9467bf4fe20a7c88de333d120d7f5b42910ad2b4f2712e69fb78715c2`.
+- `execution.json`: exact source, command, times, duration, runtime and process exit.
+- `aggregate-review.json`: all 42 individual commands, skip and cache analysis.
+- `diagnostic-disposition.json`: reviewed expected errors, notices and limitations.
+- `generated-files.json`: 122 generated files, 23,892,194 bytes, retained/re-read.
+- `child-evidence.json`: 588 files, 86,178,692 bytes. This snapshot includes older
+  attempts and historical failures; it is not 588 newly executed results.
+- `integrity-and-generated-cleanup.json`: 92 tracked generated files selectively
+  restored, 30 new generated files removed after retention, and all 5,656 pre-run
+  tracked files re-read with matching hashes. The K06 input hash is unchanged.
+- `docker-final-inventory.json`: exact engine/container identity, health, database
+  catalogs, unrelated-resource preservation and remaining required infrastructure.
+
+Current feature-specific acceptance indices in F006/F007/F008/F011 link these
+private manifests and hashes; F010 owns its fixture regression index. Approved
+historical outputs were preserved byte-for-byte. `pnpm-workspace.yaml`'s ordinary
+package-manager normalization (`auditConfig: {}` to `ignoreGhsas: null`) was saved
+then restored. Intentional dependency/CI YAML changes remain explicitly in Git.
+
+Discovery/SOS achieved **10/10 real E2E PASS** during this aggregate. Its unchanged
+performance workload measured read p95 254.21/400 ms, mutation 440.13/800 ms,
+reported matching 440.13/2000 ms and worker claim 39.91/800 ms. Matching remains
+an alias of mutation latency, not an independent matching measurement. All
+original concurrency, pool, warmup and threshold settings were preserved.
+
+The F010 browser matrices passed patient 69/69 and clinic 33/33 selected cases;
+7 patient-run and 4 clinic-run opposite-app cases remained explicit SKIP. API unit
+output includes 65 conditional cases skipped; native harnesses execute their own
+opt-ins. This is not a claim that every optional test ran. The two standalone
+identity-continuity compatibility cases were subsequently enabled and passed
+separately (2 PASS; 3 native-group cases excluded by the targeted name filter).
+
+Two SQL `ERROR` lines are the required pre-migration F010 C08 RED in the two
+runtimes: missing `clinical.book_appointment_internal_v1(jsonb,integer,jsonb)`.
+The existing runner requires this precise failure plus F009 parity before running
+migrated GREEN and races. Role REVOKE/absent-policy notices are defensive migration
+operations. The native bootstrap wraps a historical migration containing its own
+BEGIN/COMMIT, explaining three nested-transaction and three no-transaction notices.
+The migration is preserved and both-runtime security/atomicity checks passed.
+There were 49 color-environment warnings and **zero duplicate-key warnings**.
+
+Separate supplemental results on 750dabf4 plus the Family test-only repair:
+Family **3/3, exit 0, 1.975 s** after demonstrated RED; Privacy **4/4, exit 0,
+4.289 s**; standalone identity compatibility **2/2, exit 0, 2.680 s**. F004/F005/F007
+indices retain logs and exact receipts. No runtime/configuration source changed
+after the aggregate. The later evidence/test-only commit has not had another
+full aggregate execution; focused validation and fresh head-specific CI are
+reported separately. CI must not be described as that missing exact-head run.
+
+The Product Owner explicitly authorized publishing this maintenance branch as a
+**Draft PR** to obtain fresh CI before human live acceptance. This is a one-time
+publication-order exception, not an acceptance waiver. Fresh maintenance CI is
+pending at publication; its exact head/run belongs in the PR and final report.
 
 Human live Arabic/English acceptance and Yousef's squash merge remain distinct
 integration requirements. Automated browser tests do not supply human acceptance.
