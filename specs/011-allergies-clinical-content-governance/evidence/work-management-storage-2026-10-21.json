@@ -1,0 +1,9 @@
+{
+  "feature": "011-allergies-clinical-content-governance",
+  "scope": "Additive retained-evidence storage disposition; existing approved bytes and evidence paths unchanged",
+  "ownerIndex": "../../001-identity-onboarding/evidence/work-management-storage-2026-10-21.json",
+  "privateValidation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\storage-after-validation.json",
+  "privateValidationSHA256": "6239590a39c1456d87b414f6b0dbaf294be0808c24c983f2d65b2cde4521d453",
+  "result": "All retained baseline files freshly hashed with zero mismatches or unauthorized missing paths; only manifest-listed regenerable caches removed",
+  "limitations": "Read-only same-root hardlinks are shared physical copies. No database restore or new feature acceptance. Historical loss limits and OPEN gates remain."
+}

@@ -1,0 +1,64 @@
+{
+  "recordedAt": "2026-10-21T18:08:08.424322+00:00",
+  "scope": "Additive cross-feature storage preservation and GitHub classification index; no historical acceptance replaced",
+  "sourceBaseCommit": "b1fe533fd3676acfb0b9e42bcc43bd00ce3f7826",
+  "ownerIssue": "https://github.com/YousefE1bana/shifaa-project/issues/504",
+  "custodian": "Yousef Osama; maintenance root agent",
+  "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021",
+  "access": "Local owner, SYSTEM and Administrators; do not auto-stage raw manifests or archives",
+  "receipts": [
+    {
+      "path": "storage-before-corrected.json",
+      "bytes": 22291459,
+      "sha256": "4eca45094f47ac78e8032b17236a51b1bbde1f86c4c53f76263340666a796c3d"
+    },
+    {
+      "path": "storage-after-validation.json",
+      "bytes": 11069,
+      "sha256": "6239590a39c1456d87b414f6b0dbaf294be0808c24c983f2d65b2cde4521d453"
+    },
+    {
+      "path": "storage-cache-disposition.json",
+      "bytes": 520902,
+      "sha256": "c852928fad0eba8cfccc8ddd8303d75a2a17be5cf63b5ae052304f8569da4eb9"
+    },
+    {
+      "path": "storage-dedup-plan.json",
+      "bytes": 4876699,
+      "sha256": "4990b0a6a7151cb0cd3bea277d5a08248ad78c22fe92f5f6ed58f302e0634e55"
+    },
+    {
+      "path": "storage-dedup-actions.jsonl",
+      "bytes": 6275518,
+      "sha256": "b38837a37a8649efd72695dc7c7b60aec0dda112cd9f0b22e77bb47cd768ccd1"
+    },
+    {
+      "path": "storage-compression-receipt.json",
+      "bytes": 551,
+      "sha256": "d02a119436a042a41005f5f6524e1aafd81fbcc625fab60808633c5de41dd252"
+    },
+    {
+      "path": "f011-git-recovery-validation.json",
+      "bytes": 97,
+      "sha256": "79e04dea0925b47b299855cafc44aa51c47448a44a97bf0a2b9c499a65b1d46e"
+    },
+    {
+      "path": "history-classification-reviewed.json",
+      "bytes": 834125,
+      "sha256": "18e32238b4e735d65421616d15298fdd42e69bce277d708555470909a3899dbf"
+    }
+  ],
+  "integrity": {
+    "baselineRetainedFilesHashed": 38650,
+    "contentMismatches": 0,
+    "unauthorizedMissingPaths": 0,
+    "authorizedDisposableCacheFilesRemoved": 1849,
+    "dockerTarArchivesFullyStreamed": 7
+  },
+  "disposition": "Original paths retained. Identical >=64KiB immutable files consolidated with same-root hardlinks after SHA-256 and ACL equality checks; transparent NTFS compression. Only manifest-listed regenerable TSX caches deleted.",
+  "recovery": "Retained evidence is readable at original indexed paths; use original per-file SHA inventory and fresh validation receipt. Seven TAR files fully streamed without extraction. F011 git bundle verify and bare clone fsck --full exit 0. No database boot/restore tested.",
+  "hardlinkWarning": "Hardlinked names are one physical copy, not independent backups. Shared bytes are read-only; copy outside the retained set before editing. Original metadata is preserved in inventories; live hardlink timestamps share the canonical file metadata.",
+  "history": "Earlier accepted evidence-loss limits and OPEN gates remain. No deleted historical material was recreated or reaccepted.",
+  "publication": "Pending repository integration gates; this is an evidence index, not acceptance or permission to advance F012",
+  "publicReport": "../../../docs/work-management/maintenance-2026-10-21.md"
+}
