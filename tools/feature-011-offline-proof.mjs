@@ -1,6 +1,6 @@
-import { testConnectionOptions } from './verification-database.mjs';
 // Test-only authenticated neutral source over actual restricted owner SQL.
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -14,12 +14,22 @@ const instant = (v) =>
   v === null ? null : new Date(v).toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
 export async function governedOfflineProof(runtime, database, config, external) {
   // Use existing runtime credentials in memory only, never evidence/logs.
+  const env = JSON.parse(
+    execFileSync('docker', ['inspect', '--format', '{{json .Config.Env}}', runtime.container], {
+      encoding: 'utf8',
+      windowsHide: true,
+    }),
+  );
+  const password = env
+    .find((v) => v.startsWith('POSTGRES_PASSWORD='))
+    ?.slice('POSTGRES_PASSWORD='.length);
+  assert(password, 'Existing local runtime owner credential required');
   const pool = postgres({
-    ...testConnectionOptions(
-      runtime.user,
-      runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase',
-      database,
-    ),
+    host: '127.0.0.1',
+    port: runtime.name === 'shifaa-local-postgres' ? 5432 : 54322,
+    database,
+    username: runtime.user,
+    password,
     prepare: false,
     max: 1,
     onnotice: () => {},

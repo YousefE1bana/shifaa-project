@@ -1,4 +1,3 @@
-import { testDockerSync, testRuntime } from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
@@ -69,7 +68,8 @@ export function restoreSnapshot(runtime, database) {
 }
 function backup(runtime, database) {
   assertOwnedDatabase(runtime, database);
-  const captured = testDockerSync(
+  const captured = spawnSync(
+    'docker',
     ['exec', runtime.container, 'pg_dump', '-Fc', '-U', runtime.user, '-d', database],
     { windowsHide: true, maxBuffer: 64 * 1024 * 1024, timeout: 60000 },
   );
@@ -79,7 +79,8 @@ function backup(runtime, database) {
 }
 function restore(runtime, database, dump) {
   assertOwnedDatabase(runtime, database);
-  const captured = testDockerSync(
+  const captured = spawnSync(
+    'docker',
     [
       'exec',
       '-i',
@@ -197,8 +198,7 @@ export async function runRestore() {
             assert.deepEqual(currentStatus(runtime, database, now), sourceStatus);
             const pool = postgres({
               host: '127.0.0.1',
-              port: testRuntime(runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase')
-                .port,
+              port: runtime.name === 'shifaa-local-postgres' ? 5432 : 54322,
               database,
               username: 'shifaa_api',
               password: 'synthetic_api_only',

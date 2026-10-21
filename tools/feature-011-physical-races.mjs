@@ -1,4 +1,3 @@
-import { testRuntime } from './verification-database.mjs';
 // K07 T028 physical race suite. The parent GREEN dispatcher owns database execution.
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
@@ -2361,7 +2360,7 @@ async function startFacilityServiceWriter(runtime, database, schedule) {
     pathToFileURL(resolve(root, 'services/api/src/adapters/postgres/facility-service.ts')).href,
     import.meta.url,
   );
-  const port = testRuntime(runtime === runtimes[0] ? 'postgres' : 'supabase').port;
+  const port = runtime === runtimes[0] ? 5432 : 54322;
   const repository = new PostgresIdentityRepository(
     `postgres://shifaa_api:synthetic_api_only@127.0.0.1:${port}/${database}`,
   );

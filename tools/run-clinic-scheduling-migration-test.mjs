@@ -1,6 +1,4 @@
-import { assertTestDatabaseEnvironment } from './verification-database.mjs';
 import { spawnSync } from 'node:child_process';
-assertTestDatabaseEnvironment();
 const result = spawnSync('node', ['tools/run-clinic-scheduling-postgres-test.mjs', 'migration'], {
   cwd: process.cwd(),
   encoding: 'utf8',

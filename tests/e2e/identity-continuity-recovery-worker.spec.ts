@@ -1,4 +1,3 @@
-import { testDatabaseUrl } from '../../tools/verification-database.mjs';
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
 import test from 'node:test';
@@ -7,8 +6,8 @@ import { LocalSyntheticMessagingAdapter } from '../../services/worker/src/adapte
 import { PostgresIdentityNotificationProcessor } from '../../services/worker/src/identity-continuity.ts';
 import postgres from 'postgres';
 
-const ownerUrl = testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa');
-const workerUrl = testDatabaseUrl('shifaa_worker', 'postgres', 'shifaa');
+const ownerUrl = 'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa';
+const workerUrl = 'postgresql://shifaa_worker:synthetic_worker_only@127.0.0.1:5432/shifaa';
 
 test('real recovery worker projects one completed bound patient notification without contact or recovery secrets', async () => {
   const owner = postgres(ownerUrl, { max: 1 });

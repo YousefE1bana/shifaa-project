@@ -1,4 +1,3 @@
-import { testDatabaseUrl } from '../../tools/verification-database.mjs';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import test from 'node:test';
@@ -14,9 +13,7 @@ import {
 } from '../../services/api/test/identity-continuity-mfa-harness.ts';
 
 const enabled = process.env['SHIFAA_RUN_IDENTITY_CONTINUITY_RECOVERY'] === 'true';
-const workerUrl = enabled
-  ? testDatabaseUrl('shifaa_worker', 'supabase', 'postgres')
-  : 'postgresql://disabled:disabled@127.0.0.1:1/disabled';
+const workerUrl = 'postgresql://shifaa_worker:synthetic_worker_only@127.0.0.1:54322/postgres';
 
 async function mailboxIds(mailpitUrl: string, email: string): Promise<Set<string>> {
   const mailbox = await fetch(`${mailpitUrl}/api/v1/messages`).then(

@@ -1,4 +1,3 @@
-import { testConnectionOptions, testDatabaseUrl } from '../../tools/verification-database.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import postgres, { type Sql, type TransactionSql } from 'postgres';
@@ -16,11 +15,9 @@ import { PostgresClinicSchedulingService } from '../../services/api/src/adapters
 import { PostgresIdentityRepository } from '../../services/api/src/adapters/postgres/identity-repository.ts';
 import { ClinicSchedulingService } from '../../services/api/src/modules/clinic-scheduling/service.ts';
 
-const verificationRuntime = (
-  process.env['SHIFAA_TEST_POSTGRES_RUNTIME'] ?? 'shifaa-local-postgres'
-).replace('shifaa-local-', '');
-
 const databaseName = process.env['SHIFAA_F009_DATABASE'];
+const dbHost = process.env['SHIFAA_PG_HOST'] ?? '127.0.0.1';
+const dbPort = process.env['SHIFAA_PG_PORT'] ?? '5432';
 const apiBaseUrl = 'https://synthetic.invalid';
 const ids = {
   owner: 'f009a700-0000-4000-8c00-000000000001',
@@ -40,7 +37,11 @@ const ids = {
 function db(): Sql {
   if (!databaseName) throw new Error('SHIFAA_F009_DATABASE is required for schedule E2E');
   return postgres({
-    ...testConnectionOptions('owner', verificationRuntime, databaseName),
+    host: dbHost,
+    port: Number(dbPort),
+    username: 'shifaa_owner',
+    password: 'synthetic_owner_only',
+    database: databaseName,
     max: 1,
   });
 }
@@ -136,7 +137,7 @@ test(
   { skip: !databaseName },
   async () => {
     const sql = db();
-    const databaseUrl = testDatabaseUrl('api', verificationRuntime, databaseName);
+    const databaseUrl = `postgresql://shifaa_api:synthetic_api_only@${dbHost}:${dbPort}/${databaseName}`;
     const identity = new PostgresIdentityRepository(databaseUrl);
     let harness: Awaited<ReturnType<typeof buildApp>> | undefined;
     try {

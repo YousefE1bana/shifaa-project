@@ -1,4 +1,3 @@
-import { testDockerSync } from './verification-database.mjs';
 import { randomBytes, createHash } from 'node:crypto';
 import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve, dirname, relative, isAbsolute } from 'node:path';
@@ -7,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { feature011HarnessFixture } from '../packages/test-kit/src/feature-011/fixtures.ts';
 import { readFeature011ProtocolMetadata } from './generate-feature-011-contract.mjs';
+import { readHistoricalVerificationInputs } from './feature-011-documentation-successor.mjs';
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const runtimes = Object.freeze([
   {
@@ -61,7 +61,7 @@ function execSql(runtime, database, input, user = runtime.user) {
         PGPASSWORD: user === 'shifaa_api' ? 'synthetic_api_only' : 'synthetic_worker_only',
       }
     : process.env;
-  const result = testDockerSync(command, {
+  const result = spawnSync('docker', command, {
     cwd: root,
     env,
     input,
@@ -150,9 +150,7 @@ export function readMigration(path, seen = new Set()) {
   );
 }
 export function digest(path) {
-  return createHash('sha256')
-    .update(readFileSync(resolve(root, path)))
-    .digest('hex');
+  return createHash('sha256').update(readHistoricalVerificationInputs(root)(path)).digest('hex');
 }
 export function harnessInputs() {
   readFeature011ProtocolMetadata(root);
@@ -202,7 +200,8 @@ export function harnessInputs() {
   };
 }
 export function runtimeManifest(runtime) {
-  const inspect = testDockerSync(
+  const inspect = spawnSync(
+    'docker',
     [
       'inspect',
       '--format',

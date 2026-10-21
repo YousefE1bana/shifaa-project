@@ -1,4 +1,3 @@
-import { assertTestDatabaseEnvironment } from './verification-database.mjs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
@@ -34,7 +33,6 @@ if (selector === undefined) {
   ];
   const runnerPath = fileURLToPath(import.meta.url);
   for (const selected of selectors) {
-    assertTestDatabaseEnvironment();
     const result = spawnSync(process.execPath, [runnerPath, selected, ...userArgs], {
       cwd: root,
       env: process.env,
@@ -46,7 +44,6 @@ if (selector === undefined) {
   process.exit(0);
 }
 if (selector === 'discovery-booking' && process.env['SHIFAA_F009_PROVISIONED'] !== '1') {
-  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     ['tools/run-clinic-scheduling-postgres-test.mjs', 'discovery-booking'],
@@ -61,7 +58,6 @@ if (selector === 'discovery-booking' && process.env['SHIFAA_F009_PROVISIONED'] !
   process.exit(result.status ?? 1);
 }
 if (selector === 'appointments' && process.env['SHIFAA_F009_PROVISIONED'] !== '1') {
-  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     ['tools/run-clinic-scheduling-postgres-test.mjs', 'appointments'],
@@ -76,7 +72,6 @@ if (selector === 'appointments' && process.env['SHIFAA_F009_PROVISIONED'] !== '1
   process.exit(result.status ?? 1);
 }
 if (selector === 'queue' && process.env['SHIFAA_F009_PROVISIONED'] !== '1') {
-  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     ['tools/run-clinic-scheduling-postgres-test.mjs', 'queue'],
@@ -86,7 +81,6 @@ if (selector === 'queue' && process.env['SHIFAA_F009_PROVISIONED'] !== '1') {
   process.exit(result.status ?? 1);
 }
 if (selector === 'schedule-delay-absence' && process.env['SHIFAA_F009_PROVISIONED'] !== '1') {
-  assertTestDatabaseEnvironment();
   const result = spawnSync(
     process.execPath,
     ['tools/run-clinic-scheduling-postgres-test.mjs', 'schedule-delay-absence'],
@@ -106,7 +100,6 @@ const selectedIndex = allSpecs.indexOf(
 );
 const specs = selectedIndex >= 0 ? [allSpecs[selectedIndex]] : allSpecs;
 const tsx = fileURLToPath(new URL('../node_modules/tsx/dist/cli.mjs', import.meta.url));
-assertTestDatabaseEnvironment();
 const result = spawnSync(
   process.execPath,
   [tsx, '--test', '--test-concurrency=1', ...specs, ...userArgs.slice(1)],

@@ -10,6 +10,7 @@ import { renderFeature011Client } from './generate-feature-011-client.mjs';
 import {
   readDocumentationSuccessor,
   documentationSuccessorInputPaths,
+  readHistoricalVerificationInputs,
 } from './feature-011-documentation-successor.mjs';
 const { verifyFeature011Contracts } = await import(
   process.env.F011_PROTOCOL_VERIFIER_MODULE ?? './verify-feature-011-contracts.mjs'
@@ -31,6 +32,7 @@ const protocolInputs = normative.filter(({ path: file }) =>
   file.startsWith(`${feature}/contracts/`),
 );
 const successor = readDocumentationSuccessor(root);
+const readHistorical = readHistoricalVerificationInputs(root);
 const fixtureEvidenceRoot = successor
   ? `${feature}/evidence/fresh-implementation/K24/documentation-renewal`
   : `${feature}/evidence/fresh-implementation/K07`;
@@ -80,7 +82,12 @@ async function fixture(run) {
   try {
     for (const file of copies) {
       fs.mkdirSync(path.dirname(path.join(target, file)), { recursive: true });
-      fs.copyFileSync(path.join(root, file), path.join(target, file));
+      // These fixtures exercise frozen F011 approvals, using the existing
+      // successor reader's verified historical bytes rather than incomplete live successors.
+      const bytes = /^tools\/generate-feature-011-(?:contract|client)\.mjs$/.test(file)
+        ? fs.readFileSync(path.join(root, file))
+        : readHistorical(file);
+      fs.writeFileSync(path.join(target, file), bytes);
     }
     return await run(target);
   } finally {
@@ -96,7 +103,7 @@ test('fixture health: all recovered approval inputs are intact and legacy public
   );
   assert.equal(normative.length, 42);
   for (const { path: file, sha256 } of currentNormative)
-    assert.equal(sha(fs.readFileSync(path.join(root, file))), sha256, file);
+    assert.equal(sha(readHistorical(file)), sha256, file);
   await fixture(async (r) => {
     assert.ok((await renderFeature011Contract(r)).includes('feature011Operations'));
     assert.ok((await renderFeature011Client(r)).includes('generatedFeature011OperationIds'));

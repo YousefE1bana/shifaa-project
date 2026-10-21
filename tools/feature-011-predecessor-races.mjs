@@ -1,4 +1,3 @@
-import { testRuntime } from './verification-database.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -133,7 +132,7 @@ async function pair(runtime, database, writer, schedule) {
         import.meta.url,
       );
       repository = new PostgresIdentityRepository(
-        `postgres://shifaa_api:synthetic_api_only@127.0.0.1:${testRuntime(runtime === runtimes[0] ? 'postgres' : 'supabase').port}/${database}`,
+        `postgres://shifaa_api:synthetic_api_only@127.0.0.1:${runtime === runtimes[0] ? 5432 : 54322}/${database}`,
       );
       const membership = JSON.parse(
         sql(

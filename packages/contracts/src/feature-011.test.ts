@@ -307,7 +307,7 @@ async function verifierFixture(
   const {
     readDocumentationSuccessor,
     documentationSuccessorInputPaths,
-    constitutionSuccessorInputPaths,
+    readHistoricalVerificationInputs,
   } = await import(
     pathToFileURL(path.join(root, 'tools/feature-011-documentation-successor.mjs')).href
   );
@@ -324,9 +324,6 @@ async function verifierFixture(
         ]
       : []),
     'tools/feature-011-documentation-successor.mjs',
-    ...constitutionSuccessorInputPaths.filter((file: string) =>
-      fs.existsSync(path.join(root, file)),
-    ),
     ...(() => {
       const manifest = JSON.parse(
         fs.readFileSync(
@@ -355,10 +352,18 @@ async function verifierFixture(
     'packages/api-client/package.json',
   ];
   try {
+    const readHistorical = readHistoricalVerificationInputs(root);
     for (const file of copies) {
       const target = path.join(fixtureRoot, file);
       fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.copyFileSync(path.join(root, file), target);
+      // Exercise frozen approvals without copying a partial live successor graph.
+      // Generator validation still uses the exact current implementation bytes.
+      fs.writeFileSync(
+        target,
+        /^tools\/generate-feature-011-(?:contract|client)\.mjs$/.test(file)
+          ? fs.readFileSync(path.join(root, file))
+          : readHistorical(file),
+      );
     }
     mutate?.(fixtureRoot);
     await inspect?.(fixtureRoot);
@@ -648,7 +653,10 @@ describe('contract preparation and fail-closed full verification', () => {
         (fixtureRoot) => invalidPhysicalFixture(fixtureRoot, defect),
         true,
       );
-      expect(report.failures.some((failure: string) => expected.test(failure))).toBe(true);
+      expect(
+        report.failures.some((failure: string) => expected.test(failure)),
+        report.failures.join('\n'),
+      ).toBe(true);
       expect(report.result).toBe('FAIL');
       expect(report.affectedConsumersAllowed).toBe(false);
     },

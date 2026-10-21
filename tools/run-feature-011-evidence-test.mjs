@@ -1,4 +1,3 @@
-import { testRuntime } from './verification-database.mjs';
 // Real local application AES composition over isolated approved SQL. Neutral
 // synthetic authority/material only; no production KMS/evidence authenticity.
 import assert from 'node:assert/strict';
@@ -102,7 +101,7 @@ async function prove(runtime, database) {
   sql(runtime, database, readFileSync('infra/db/fixtures/feature-011-k06.sql', 'utf8'));
   const pool = postgres({
     host: '127.0.0.1',
-    port: testRuntime(runtime.name === 'shifaa-local-postgres' ? 'postgres' : 'supabase').port,
+    port: runtime.name === 'shifaa-local-postgres' ? 5432 : 54322,
     database,
     username: 'shifaa_api',
     password: 'synthetic_api_only',

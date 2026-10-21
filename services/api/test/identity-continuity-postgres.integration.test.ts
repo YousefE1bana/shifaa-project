@@ -1,5 +1,3 @@
-import { testSupabaseStatus } from '../../../tools/verification-database.mjs';
-import { testDatabaseUrl } from '../../../tools/verification-database.mjs';
 import { execFileSync } from 'node:child_process';
 import { randomBytes, randomUUID } from 'node:crypto';
 
@@ -29,21 +27,21 @@ const enabled = process.env['SHIFAA_RUN_IDENTITY_CONTINUITY_SESSIONS'] === 'true
 const standaloneEnabled = process.env['SHIFAA_RUN_IDENTITY_CONTINUITY_POSTGRES'] === 'true';
 
 function localStatus(): SupabaseStatus {
-  return testSupabaseStatus();
+  const command = process.platform === 'win32' ? (process.env['ComSpec'] ?? 'cmd.exe') : 'corepack';
+  const args =
+    process.platform === 'win32'
+      ? ['/d', '/s', '/c', 'corepack pnpm exec supabase status -o json']
+      : ['pnpm', 'exec', 'supabase', 'status', '-o', 'json'];
+  return JSON.parse(execFileSync(command, args, { encoding: 'utf8' })) as SupabaseStatus;
 }
 
 describe.skipIf(!standaloneEnabled)(
   'identity continuity standalone PostgreSQL compatibility',
   () => {
     it('migrates the continuity schema without fabricating a native Auth schema', async () => {
-      const sql = postgres(
-        standaloneEnabled
-          ? testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa')
-          : 'postgresql://disabled:disabled@127.0.0.1:1/disabled',
-        {
-          max: 1,
-        },
-      );
+      const sql = postgres('postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa', {
+        max: 1,
+      });
       try {
         const [shape] = await sql`
           select
@@ -62,9 +60,7 @@ describe.skipIf(!standaloneEnabled)(
     });
 
     it('stores staged native mutation results encrypted and commits factor evidence atomically', async () => {
-      const apiUrl = standaloneEnabled
-        ? testDatabaseUrl('shifaa_api', 'postgres', 'shifaa')
-        : 'postgresql://disabled:disabled@127.0.0.1:1/disabled';
+      const apiUrl = 'postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa';
       const repository = new PostgresIdentityRepository(apiUrl);
       await repository.ready();
       const continuity = new PostgresIdentityContinuityService(
@@ -73,9 +69,7 @@ describe.skipIf(!standaloneEnabled)(
         'ci',
       );
       const owner = postgres(
-        standaloneEnabled
-          ? testDatabaseUrl('shifaa_owner', 'postgres', 'shifaa')
-          : 'postgresql://disabled:disabled@127.0.0.1:1/disabled',
+        'postgresql://shifaa_owner:synthetic_owner_only@127.0.0.1:5432/shifaa',
         { max: 1 },
       );
       const refreshMarkerKey = 'a'.repeat(64);

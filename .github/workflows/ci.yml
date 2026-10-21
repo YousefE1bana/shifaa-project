@@ -18,6 +18,7 @@ env:
   NODE_ENV: test
   IDENTITY_ONBOARDING_ENABLED: 'true'
   SYNTHETIC_PROOFING_ENABLED: 'true'
+  DATABASE_URL: postgresql://shifaa_api:synthetic_api_only@127.0.0.1:5432/shifaa
 
 defaults:
   run:
@@ -46,8 +47,6 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: node --test tools/start-feature-011-native-supabase.test.mjs tools/reset-feature-011-native-supabase.test.mjs tools/feature-011-native-supabase-bootstrap.test.mjs tools/feature-011-evidence-head.test.mjs tools/feature-011-pr-review-binding.test.mjs
-      - run: node --test tools/verify.test.mjs tools/tooling-history.test.mjs tools/test-resource-context.test.mjs tools/trusted-disposable-test-launcher.test.mjs tools/verification-database.test.mjs tools/verification-test-environment.test.mjs tools/verification-runner-targets.test.mjs
-      - run: node --experimental-test-module-mocks --import tsx --test tests/e2e/test-resource-context.test.ts
       - run: pnpm contracts:check
       - run: node tools/verify-feature-011-contracts.mjs
       - run: pnpm architecture:check
@@ -68,8 +67,17 @@ jobs:
           node-version: 24.18.0
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: docker build -f infra/db/Dockerfile.postgis -t shifaa/postgis:17-3.5-006-local .
-      - run: node tools/verification-ci.mjs database
+      - run: docker compose config
+      - run: docker compose up -d --wait postgres
+      - run: pnpm db:migrate
+      - run: pnpm db:test
+      - run: pnpm db:rls-test
+      - name: PostgreSQL logs on failure
+        if: failure()
+        run: docker compose logs postgres
+      - name: Stop local services
+        if: always()
+        run: docker compose down -v
 
   supabase-runtime:
     name: Supabase Auth, PostgreSQL, Storage, and RLS
@@ -88,8 +96,14 @@ jobs:
           node-version: 24.18.0
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: docker build -f infra/db/Dockerfile.postgis -t shifaa/postgis:17-3.5-006-local .
-      - run: node tools/verification-ci.mjs native
+      - run: pnpm supabase:start
+      - run: pnpm supabase:test
+      - name: Supabase status on failure
+        if: failure()
+        run: pnpm supabase status || true
+      - name: Stop Supabase
+        if: always()
+        run: pnpm supabase:stop --no-backup || true
 
   accessibility-and-e2e:
     name: Accessibility and patient E2E

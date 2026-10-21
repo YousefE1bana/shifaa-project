@@ -1,10 +1,8 @@
-import { testDockerExec, assertTestDatabaseEnvironment } from './verification-database.mjs';
 import { execFileSync } from 'node:child_process';
 
 const workspace = new URL('..', import.meta.url);
 
 function run(command, args, extraEnv = {}) {
-  if (command === 'docker') return testDockerExec(args, { stdio: 'inherit' });
   execFileSync(command, args, {
     cwd: workspace,
     stdio: 'inherit',
@@ -20,7 +18,7 @@ function pnpm(args, extraEnv = {}) {
   }
 }
 
-assertTestDatabaseEnvironment();
+run('docker', ['compose', 'up', '-d', '--wait', 'postgres']);
 run('docker', [
   'compose',
   'exec',

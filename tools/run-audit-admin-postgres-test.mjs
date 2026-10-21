@@ -1,9 +1,5 @@
-import {
-  testDockerSync,
-  testConnectionOptions,
-  assertTestDatabaseEnvironment,
-} from './verification-database.mjs';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import process from 'node:process';
 import postgres from 'postgres';
@@ -46,9 +42,16 @@ const databaseNames = {
   export: 'shifaa_f008_export',
   rls: 'shifaa_f008_rls',
 };
+const connectionOptions = {
+  host: '127.0.0.1',
+  port: 5432,
+  username: 'shifaa_owner',
+  password: 'synthetic_owner_only',
+  max: 24,
+};
 
 function runDocker(args, { expectFailure = false, quiet = false } = {}) {
-  const result = testDockerSync(args, {
+  const result = spawnSync('docker', args, {
     cwd: root,
     encoding: 'utf8',
     stdio: quiet ? 'pipe' : 'inherit',
@@ -112,13 +115,15 @@ function applyBaseline(database) {
 }
 
 function connect(database) {
-  return postgres({ ...testConnectionOptions('owner', 'postgres', database), max: 24 });
+  return postgres({ ...connectionOptions, database });
 }
 
-function connectAs(database, username) {
+function connectAs(database, username, password) {
   return postgres({
-    ...testConnectionOptions(username, 'postgres', database),
-    max: 24,
+    ...connectionOptions,
+    database,
+    username,
+    password,
   });
 }
 
@@ -706,7 +711,7 @@ async function seedAuditAdminActors(sql) {
 }
 
 async function requestAuditExport(database, input) {
-  const sql = connectAs(database, 'shifaa_api');
+  const sql = connectAs(database, 'shifaa_api', 'synthetic_api_only');
   try {
     return await sql.begin(async (transaction) => {
       await transaction`SELECT pg_catalog.set_config('shifaa.person_id',${input.personId ?? ''},true)`;
@@ -729,7 +734,7 @@ async function requestAuditExport(database, input) {
 }
 
 async function readAuditEvents(database, input) {
-  const sql = connectAs(database, 'shifaa_api');
+  const sql = connectAs(database, 'shifaa_api', 'synthetic_api_only');
   try {
     return await sql.begin(async (transaction) => {
       await transaction`SELECT pg_catalog.set_config('shifaa.person_id',${input.personId ?? ''},true)`;
@@ -981,8 +986,8 @@ async function runRlsMode() {
         }
       }
 
-      const api = connectAs(database, 'shifaa_api');
-      const worker = connectAs(database, 'shifaa_worker');
+      const api = connectAs(database, 'shifaa_api', 'synthetic_api_only');
+      const worker = connectAs(database, 'shifaa_worker', 'synthetic_worker_only');
       try {
         await expectDatabaseError(() => api`SELECT * FROM audit.events`, '42501');
         await expectDatabaseError(() => api`SELECT * FROM audit.signature_evidence`, '42501');
@@ -1214,7 +1219,7 @@ async function runRlsMode() {
   }
 }
 
-assertTestDatabaseEnvironment();
+runDocker(['compose', 'up', '-d', '--wait', 'postgres']);
 
 if (requestedMode === 'all' || requestedMode === 'schema') await runSchemaMode();
 if (requestedMode === 'all' || requestedMode === 'chain') await runChainMode();

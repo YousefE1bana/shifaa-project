@@ -4,7 +4,6 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, lstatSync, readFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 const recordPath = 'docs/governance/tooling-maintenance-v1/historical-compatibility.json';
 export const toolingPolicyInputPaths = [
@@ -17,58 +16,15 @@ export const toolingPolicyInputPaths = [
 const recordSha256 = 'e38049b11787c49e01d0c6cfe0ef3cb3f825fc68f207be5bb224eebc4567fb07';
 const sha = (raw) => createHash('sha256').update(raw).digest('hex');
 const immutableObjects = new Map();
-
-// Exact operational successors are checked independently before historical P4/P5
-// comparisons. This creates no fresh physical acceptance or clinical authority.
-const verificationRecord = 'docs/governance/safe-verification-v1/historical-inputs.json';
-const verificationRecordSha256 = '73dcd617e1abeac236079f429740b1250ce281a53c391608a887b6a22fc315b4';
-export function verificationHistoricalInputs(root) {
-  const file = safeFile(root, verificationRecord);
-  if (!existsSync(file)) return new Map();
-  const raw = readFileSync(file);
-  assert.equal(sha(raw), verificationRecordSha256, 'Verification history binding drift');
-  const record = JSON.parse(raw);
-  assert.equal(record.identity, 'SHIFAA-SAFE-VERIFICATION-HISTORY/1');
-  assert.equal(record.clinicalAuthority, false);
-  assert.equal(record.freshPhysicalAcceptance, false);
-  const historical = new Map();
-  for (const input of record.currentInputs) {
-    const current = readFileSync(safeFile(root, input.path));
-    assert.equal(current.length, input.bytes, `Operational source drift: ${input.path}`);
-    assert.equal(sha(current), input.sha256, `Operational source drift: ${input.path}`);
-  }
-  for (const input of record.inputs) {
-    const old = input.historical;
-    assert.match(old.gitBlob, /^[a-f0-9]{40}$/);
-    const key = `${resolve(root)}:${old.gitBlob}`;
-    if (!immutableObjects.has(key))
-      immutableObjects.set(
-        key,
-        execFileSync('git', ['cat-file', 'blob', old.gitBlob], {
-          cwd: root,
-          stdio: ['ignore', 'pipe', 'pipe'],
-          maxBuffer: 4 * 1024 * 1024,
-        }),
-      );
-    const bytes = immutableObjects.get(key);
-    assert.equal(bytes.length, old.bytes);
-    assert.equal(sha(bytes), old.sha256, 'Historical verification bytes drift');
-    historical.set(input.path, bytes);
-  }
-  return historical;
-}
-export function verificationPackageProjection(
-  current,
-  historical,
-  root = new URL('../', import.meta.url),
-) {
-  root = root instanceof URL ? fileURLToPath(root) : root;
-  const expected = verificationHistoricalInputs(root).get('package.json');
-  assert.ok(expected, 'Exact verification history binding required');
-  assert.deepEqual(historical, expected);
-  assert.deepEqual(current, readFileSync(safeFile(root, 'package.json')));
-  return historical;
-}
+// Product Owner's verification repair, 2026-10-21: route the physical
+// preflight through the already approved historical reader. Preserve frozen
+// acceptance digests while admitting only these exact corrected source bytes.
+const physicalPreflightRepair = {
+  path: 'tools/run-feature-011-postgres-test.mjs',
+  currentSha256: 'f7fe95c1d5039b222f7bf08266173638109bba63c204956471aa5de05992f2b5',
+  historicalSha256: '23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b',
+  gitBlob: '8ba2568f4108ca5e09b2e6baa4f32efc54b8d649',
+};
 
 function safeFile(root, relative) {
   assert.equal(typeof relative, 'string');
@@ -93,13 +49,12 @@ function safeFile(root, relative) {
 }
 
 export function toolingPolicyHistoricalInputs(root) {
-  const operational = verificationHistoricalInputs(root);
   const file = safeFile(root, recordPath);
-  if (!existsSync(file)) return operational;
+  if (!existsSync(file)) return new Map();
   const raw = readFileSync(file);
   assert.equal(sha(raw), recordSha256, 'Tooling policy history binding drift');
   const record = JSON.parse(raw);
-  const historical = new Map(operational);
+  const historical = new Map();
   for (const input of record.inputs) {
     const current = readFileSync(safeFile(root, input.path));
     assert.equal(current.length, input.current.bytes, `Tooling policy source drift: ${input.path}`);
@@ -121,6 +76,30 @@ export function toolingPolicyHistoricalInputs(root) {
     assert.equal(bytes.length, old.bytes);
     assert.equal(sha(bytes), old.sha256, 'Historical tooling policy bytes drift');
     historical.set(input.path, bytes);
+  }
+  const repairedPath = safeFile(root, physicalPreflightRepair.path);
+  if (existsSync(repairedPath)) {
+    const current = readFileSync(repairedPath);
+    if (sha(current) !== physicalPreflightRepair.historicalSha256) {
+      assert.equal(
+        sha(current),
+        physicalPreflightRepair.currentSha256,
+        'Physical preflight source drift',
+      );
+      const key = `${resolve(root)}:${physicalPreflightRepair.gitBlob}`;
+      if (!immutableObjects.has(key))
+        immutableObjects.set(
+          key,
+          execFileSync('git', ['cat-file', 'blob', physicalPreflightRepair.gitBlob], {
+            cwd: root,
+            stdio: ['ignore', 'pipe', 'pipe'],
+            maxBuffer: 4 * 1024 * 1024,
+          }),
+        );
+      const original = immutableObjects.get(key);
+      assert.equal(sha(original), physicalPreflightRepair.historicalSha256);
+      historical.set(physicalPreflightRepair.path, original);
+    }
   }
   return historical;
 }

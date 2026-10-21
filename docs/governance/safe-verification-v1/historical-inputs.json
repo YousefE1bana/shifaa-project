@@ -155,8 +155,8 @@
   "currentInputs": [
     {
       "path": ".github/workflows/ci.yml",
-      "bytes": 6107,
-      "sha256": "ee7f5f0d3070879495722c25c737b7646c910f2131397685c41ead9e1946eab2"
+      "bytes": 6145,
+      "sha256": "73f0d36b56a424df69cffd76e4bd1fbae40dc4348fbe4086b52de8493eb5e95a"
     },
     {
       "path": "package.json",
@@ -165,8 +165,8 @@
     },
     {
       "path": "tools/disposable-test-resources.mjs",
-      "bytes": 6486,
-      "sha256": "7783a970711243ee73c949d66382eed07491e296c17e2e292d3567798c80d585"
+      "bytes": 6584,
+      "sha256": "8d67d3bbbe2de1cdc5b3be311b5e5c1b346b5e3e7c5973cb8e275598a98d6897"
     },
     {
       "path": "tools/feature-011-native-supabase-bootstrap.mjs",
@@ -255,8 +255,8 @@
     },
     {
       "path": "tools/trusted-disposable-test-launcher.mjs",
-      "bytes": 30350,
-      "sha256": "e7615fe84214e4041a4911713bb44bfd907adab270d8e916442e6dba337eb57a"
+      "bytes": 35078,
+      "sha256": "a5044df82613983fb62bdaa05905edf695e57191bea438ce3d33df2b6328297f"
     },
     {
       "path": "tools/verification-ci.mjs",
@@ -265,8 +265,8 @@
     },
     {
       "path": "tools/verification-database.mjs",
-      "bytes": 18757,
-      "sha256": "305db2c872ecba83ee78abc9552fb7baddcc3718f74550766fd616e425eaf921"
+      "bytes": 20587,
+      "sha256": "d7a409138858197aab01f9a1422561b5642a7a7e7e390315f5b3ab4a18f8bd8d"
     },
     {
       "path": "tools/verification-e2e.mjs",
@@ -275,8 +275,8 @@
     },
     {
       "path": "tools/verification-host.mjs",
-      "bytes": 2942,
-      "sha256": "6cdfdd37870ec7e91de4c538fa9edd1d3e53e554ccb8b346073d7978dd6d99b8"
+      "bytes": 3197,
+      "sha256": "9341946acb125f43629db4647376f73c8fcc22bba7481b17bba60667dedebc03"
     },
     {
       "path": "tools/verification-plan.mjs",
@@ -285,13 +285,23 @@
     },
     {
       "path": "tools/verification-test-environment.mjs",
-      "bytes": 20747,
-      "sha256": "93bcd3f6ab68a53bb22c53442e2834f5f54c468618a47cb500c143a8b6581f3a"
+      "bytes": 23773,
+      "sha256": "da814e594ef8799c2378c1ebeaf132c990ffa527c1a604ce6ee96d96d4e3bd59"
     },
     {
       "path": "tools/verify.mjs",
       "bytes": 3498,
       "sha256": "2d44e01835fe885796351a9c3f6da60202ea7e336c8a61f71e1737f8817bfb90"
+    },
+    {
+      "path": "tools/native-supabase-docker.mjs",
+      "bytes": 29946,
+      "sha256": "55c7629ba9d61664c35046522bf09b9588c8795a72756826636f4af019505bf7"
+    },
+    {
+      "path": "tools/test-resource-context.mjs",
+      "bytes": 29001,
+      "sha256": "0cf02c84bd1662c6200a19d0e7436476191921687fa4b692ba5fd6f44d2d6746"
     }
   ]
 }
