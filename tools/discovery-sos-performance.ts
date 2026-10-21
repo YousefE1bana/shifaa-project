@@ -9,6 +9,7 @@ import { idempotencyScopeHash } from '../services/api/src/platform/idempotency.t
 import { LocalSyntheticMessagingAdapter } from '../services/worker/src/adapters/local-synthetic-messaging.ts';
 import { PostgresDiscoverySosProcessor } from '../services/worker/src/discovery-sos.ts';
 import postgres from 'postgres';
+import { sosReplayHasProhibitedData } from './discovery-sos-performance-privacy.ts';
 
 const samples = 100;
 const apiPoolConnections = 20;
@@ -159,12 +160,13 @@ async function main() {
       return {
         duration: performance.now() - started,
         incidentId: response.json().incident.incident_id as string,
+        responseBody: response.json(),
       };
     };
 
     const warmupPeople = people.slice(0, mutationWarmupSamples);
     const warmupPatients = patients.slice(0, mutationWarmupSamples);
-    await Promise.all(
+    const warmupMutations = await Promise.all(
       warmupPeople.map(({ id: personId }, index) =>
         createIncident(personId, warmupPatients[index]!.id, index, 'warmup'),
       ),
@@ -270,16 +272,27 @@ async function main() {
     }
 
     // 5. Prohibited Sentinel & Privacy Leak Scan
+    const replayKeys = Array.from({ length: totalSyntheticSubjects }, (_, index) =>
+      idempotencyScopeHash(
+        'key',
+        `sos-perf-${run}-${index < mutationWarmupSamples ? 'warmup' : 'measured'}-${index}`,
+      ),
+    );
+    const replayRows = await owner<{ key_hash: string; response_body: unknown }[]>`
+      select key_hash,response_body from platform.idempotency_records
+      where key_hash = any(${replayKeys}::text[])`;
+    assert.equal(replayRows.length, totalSyntheticSubjects);
+    const replayByKey = new Map(replayRows.map((row) => [row.key_hash, row.response_body]));
+    assert.equal(replayByKey.size, totalSyntheticSubjects);
+    const idempotencyLeaks = [...warmupMutations, ...mutations].filter((mutation, index) =>
+      sosReplayHasProhibitedData(
+        replayByKey.get(replayKeys[index]!),
+        base.identityEncryptionKey,
+        mutation.responseBody,
+      ),
+    ).length;
     const [leaks] = await owner<any[]>`
       select
-        (select count(*)::int from platform.idempotency_records
-         where key_hash = any(${Array.from({ length: totalSyntheticSubjects }, (_, index) =>
-           idempotencyScopeHash(
-             'key',
-             `sos-perf-${run}-${index < mutationWarmupSamples ? 'warmup' : 'measured'}-${index}`,
-           ),
-         )}::text[])
-           and response_body::text ~* 'token|phone_e164|secret|diagnos|medicat') idempotency,
         (select count(*)::int from platform.notifications
          where recipient_emergency_contact_id in (select ${owner.unsafe(uuidExpression(run, 'contact'))} from generate_series(${mutationWarmupSamples + 1}::integer,${totalSyntheticSubjects}::integer)i)
            and field_values::text ~* 'token|diagnos|medicat|lab|admission|record_link') notifications,
@@ -294,13 +307,16 @@ async function main() {
            and (to_jsonb(event)-'previous_hash'-'event_hash')::text
              ~* 'token|diagnos|medicat|coordinates|SYNTHETIC-QUERY-COORDINATE') audit_leaks
     `;
-    assert.deepEqual(leaks, {
-      idempotency: 0,
-      notifications: 0,
-      attempts: 0,
-      outbox: 0,
-      audit_leaks: 0,
-    });
+    assert.deepEqual(
+      { idempotency: idempotencyLeaks, ...leaks },
+      {
+        idempotency: 0,
+        notifications: 0,
+        attempts: 0,
+        outbox: 0,
+        audit_leaks: 0,
+      },
+    );
 
     const readP95 = p95(readTimes);
     const mutationP95 = p95(mutationTimes);
