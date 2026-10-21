@@ -295,7 +295,7 @@ describe('Feature 011 generated closed wire contract', () => {
 });
 
 async function verifierFixture(
-  mutate?: (fixtureRoot: string) => void,
+  mutate?: (fixtureRoot: string) => void | Promise<void>,
   full = false,
   inspect?: (fixtureRoot: string) => Promise<void>,
 ) {
@@ -360,7 +360,7 @@ async function verifierFixture(
       fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.copyFileSync(path.join(root, file), target);
     }
-    mutate?.(fixtureRoot);
+    await mutate?.(fixtureRoot);
     await inspect?.(fixtureRoot);
     const { verifyFeature011Contracts } = await import(pathToFileURL(tool).href);
     return await verifyFeature011Contracts({ root: fixtureRoot, contractsOnly: !full });
@@ -372,7 +372,7 @@ async function verifierFixture(
 
 // Deliberately invalid evidence records exercise the file validator, not database
 // behavior. These copies live only in the isolated, disposable test directory.
-function invalidPhysicalFixture(
+async function invalidPhysicalFixture(
   fixtureRoot: string,
   defect: 'stale' | 'owner' | 'race' | 'rls' | 'canonical' | 'canonical-digest',
 ) {
@@ -405,7 +405,18 @@ function invalidPhysicalFixture(
       'content_status_projection',
     ].map((suffix, index) => `supabase/migrations/2026100200110${index + 1}_f011_${suffix}.sql`),
   ];
-  for (const file of files) write(file, 'SYNTHETIC INVALID EVIDENCE FIXTURE; NEVER EXECUTED');
+  const { readHistoricalVerificationInputs } = await import(
+    pathToFileURL(path.join(root, 'tools/feature-011-documentation-successor.mjs')).href
+  );
+  for (const file of files)
+    write(
+      file,
+      // Keep the source-admission prerequisite valid so each deliberately invalid
+      // physical bundle reaches its own security/coverage rejection below.
+      file === 'tools/run-feature-011-postgres-test.mjs'
+        ? readHistoricalVerificationInputs(root)(file).toString('utf8')
+        : 'SYNTHETIC INVALID EVIDENCE FIXTURE; NEVER EXECUTED',
+    );
   const inputs = [
     `${feature}/contracts/openapi.yaml`,
     `${feature}/contracts/scope-manifest.json`,
@@ -648,7 +659,10 @@ describe('contract preparation and fail-closed full verification', () => {
         (fixtureRoot) => invalidPhysicalFixture(fixtureRoot, defect),
         true,
       );
-      expect(report.failures.some((failure: string) => expected.test(failure))).toBe(true);
+      expect(
+        report.failures.some((failure: string) => expected.test(failure)),
+        report.failures.join('\n'),
+      ).toBe(true);
       expect(report.result).toBe('FAIL');
       expect(report.affectedConsumersAllowed).toBe(false);
     },
