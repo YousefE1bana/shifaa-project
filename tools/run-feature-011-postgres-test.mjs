@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { feature011HarnessFixture } from '../packages/test-kit/src/feature-011/fixtures.ts';
 import { readFeature011ProtocolMetadata } from './generate-feature-011-contract.mjs';
+import { readHistoricalVerificationInputs } from './feature-011-documentation-successor.mjs';
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const runtimes = Object.freeze([
   {
@@ -149,9 +150,7 @@ export function readMigration(path, seen = new Set()) {
   );
 }
 export function digest(path) {
-  return createHash('sha256')
-    .update(readFileSync(resolve(root, path)))
-    .digest('hex');
+  return createHash('sha256').update(readHistoricalVerificationInputs(root)(path)).digest('hex');
 }
 export function harnessInputs() {
   readFeature011ProtocolMetadata(root);
