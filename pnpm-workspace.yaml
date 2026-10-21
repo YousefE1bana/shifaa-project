@@ -5,10 +5,16 @@ packages:
 
 catalog:
   typescript: 7.0.2
-  vitest: 4.1.0
+  vitest: 4.1.11
 
 allowBuilds:
   esbuild: true
+
+# Security patches; retain SHA-bound historical consumer manifests unchanged.
+overrides:
+  'vitest@4.1.0': 4.1.11
+  'vite@>=7.0.0 <7.3.7': 7.3.7
+  'yaml@>=2.0.0 <2.8.3': 2.8.3
 
 minimumReleaseAgeExclude:
   - '@expo/cli@57.0.14'

@@ -18,7 +18,7 @@ const approvedTasksHash = 'e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957
 const approvedMapHash = '5a6037838bc644a5dbb61c17a5504a662822f8d5ee0925379b823737f17b738d';
 const approvedPlanManifestHash = '79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548';
 const fixtureParent = path.join(root, 'artifacts/feature-011/k01-fixtures');
-const tooling = { node: 'v24.18.0', pnpm: '11.13.0', supabase: '2.113.0' };
+const tooling = { node: 'v24.22.1', pnpm: '11.13.0', supabase: '2.113.0' };
 
 async function withFixture(mutator, observedTooling = tooling) {
   fs.mkdirSync(fixtureParent, { recursive: true });
@@ -65,7 +65,10 @@ async function withFixture(mutator, observedTooling = tooling) {
       fs.mkdirSync(path.dirname(target), { recursive: true });
       // Preserve the immutable approval baseline through the already verified
       // successor boundary; mutations below still exercise the original negatives.
-      fs.writeFileSync(target, readHistorical(file));
+      fs.writeFileSync(
+        target,
+        file === 'package.json' ? fs.readFileSync(path.join(root, file)) : readHistorical(file),
+      );
     }
     // The disposable K01 fixture owns its pointer; leave the repository's active context intact.
     writeJson(fixtureRoot, '.specify/feature.json', { feature_directory: feature });
@@ -382,6 +385,16 @@ test('Feature 012 remains an explicit exclusion even when counts remain unchange
 test('toolchain checks use pinned Node, pnpm, and local Supabase CLI without Docker startup', async () => {
   const report = await withFixture(undefined, { ...tooling, pnpm: '11.0.0' });
   expectFailure(report, /pnpm/i);
+});
+
+test('toolchain rejects the previous Node runtime and a mismatched engine declaration', async () => {
+  expectFailure(await withFixture(undefined, { ...tooling, node: 'v24.18.0' }), /Node|node/i);
+  const report = await withFixture((fixtureRoot) => {
+    const manifest = readJson(fixtureRoot, 'package.json');
+    manifest.engines.node = '24.18.0';
+    writeJson(fixtureRoot, 'package.json', manifest);
+  });
+  expectFailure(report, /Node.*pin inconsistency/i);
 });
 
 test('unreadable current scope input fails closed with its path', async () => {

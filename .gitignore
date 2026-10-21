@@ -44,6 +44,8 @@ expo-env.d.ts
 /apps/lab/CLAUDE.md
 /apps/patient/.gitignore
 .pnpm-store/
+__pycache__/
+*.pyc
 artifacts/
 .specify/extensions/.cache/
 
