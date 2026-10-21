@@ -295,7 +295,7 @@ describe('Feature 011 generated closed wire contract', () => {
 });
 
 async function verifierFixture(
-  mutate?: (fixtureRoot: string) => void | Promise<void>,
+  mutate?: (fixtureRoot: string) => void,
   full = false,
   inspect?: (fixtureRoot: string) => Promise<void>,
 ) {
@@ -307,7 +307,7 @@ async function verifierFixture(
   const {
     readDocumentationSuccessor,
     documentationSuccessorInputPaths,
-    constitutionSuccessorInputPaths,
+    readHistoricalVerificationInputs,
   } = await import(
     pathToFileURL(path.join(root, 'tools/feature-011-documentation-successor.mjs')).href
   );
@@ -324,9 +324,6 @@ async function verifierFixture(
         ]
       : []),
     'tools/feature-011-documentation-successor.mjs',
-    ...constitutionSuccessorInputPaths.filter((file: string) =>
-      fs.existsSync(path.join(root, file)),
-    ),
     ...(() => {
       const manifest = JSON.parse(
         fs.readFileSync(
@@ -355,12 +352,20 @@ async function verifierFixture(
     'packages/api-client/package.json',
   ];
   try {
+    const readHistorical = readHistoricalVerificationInputs(root);
     for (const file of copies) {
       const target = path.join(fixtureRoot, file);
       fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.copyFileSync(path.join(root, file), target);
+      // Exercise frozen approvals without copying a partial live successor graph.
+      // Generator validation still uses the exact current implementation bytes.
+      fs.writeFileSync(
+        target,
+        /^tools\/generate-feature-011-(?:contract|client)\.mjs$/.test(file)
+          ? fs.readFileSync(path.join(root, file))
+          : readHistorical(file),
+      );
     }
-    await mutate?.(fixtureRoot);
+    mutate?.(fixtureRoot);
     await inspect?.(fixtureRoot);
     const { verifyFeature011Contracts } = await import(pathToFileURL(tool).href);
     return await verifyFeature011Contracts({ root: fixtureRoot, contractsOnly: !full });
@@ -372,7 +377,7 @@ async function verifierFixture(
 
 // Deliberately invalid evidence records exercise the file validator, not database
 // behavior. These copies live only in the isolated, disposable test directory.
-async function invalidPhysicalFixture(
+function invalidPhysicalFixture(
   fixtureRoot: string,
   defect: 'stale' | 'owner' | 'race' | 'rls' | 'canonical' | 'canonical-digest',
 ) {
@@ -405,18 +410,7 @@ async function invalidPhysicalFixture(
       'content_status_projection',
     ].map((suffix, index) => `supabase/migrations/2026100200110${index + 1}_f011_${suffix}.sql`),
   ];
-  const { readHistoricalVerificationInputs } = await import(
-    pathToFileURL(path.join(root, 'tools/feature-011-documentation-successor.mjs')).href
-  );
-  for (const file of files)
-    write(
-      file,
-      // Keep the source-admission prerequisite valid so each deliberately invalid
-      // physical bundle reaches its own security/coverage rejection below.
-      file === 'tools/run-feature-011-postgres-test.mjs'
-        ? readHistoricalVerificationInputs(root)(file).toString('utf8')
-        : 'SYNTHETIC INVALID EVIDENCE FIXTURE; NEVER EXECUTED',
-    );
+  for (const file of files) write(file, 'SYNTHETIC INVALID EVIDENCE FIXTURE; NEVER EXECUTED');
   const inputs = [
     `${feature}/contracts/openapi.yaml`,
     `${feature}/contracts/scope-manifest.json`,
