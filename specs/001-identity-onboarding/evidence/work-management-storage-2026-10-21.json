@@ -46,6 +46,41 @@
       "path": "history-classification-reviewed.json",
       "bytes": 834125,
       "sha256": "18e32238b4e735d65421616d15298fdd42e69bce277d708555470909a3899dbf"
+    },
+    {
+      "path": "history-classification-actions.jsonl",
+      "bytes": 166042,
+      "sha256": "5eaa7a23b194aba347e2b1004eabf7512bbcbf07bc42f20524bcfbab8a91066c"
+    },
+    {
+      "path": "history-readback-validation.json",
+      "bytes": 1589,
+      "sha256": "c00424e790430d9f890dc0c8740323a4a93b0517e26f7cfd79aa253ab2825329"
+    },
+    {
+      "path": "feature-storage-index.json",
+      "bytes": 8128319,
+      "sha256": "e73af5a35a3561f56f2a0e3d7dd67bbae5ddb1f08879334a3a52dee49f117dbe"
+    },
+    {
+      "path": "storage-pre-acceptance-allocation.json",
+      "bytes": 5660,
+      "sha256": "254fe9492c84a9ad996de58eac1083e58d9b114f60a1711abcd971779518334b"
+    },
+    {
+      "path": "docker-readback.json",
+      "bytes": 7128,
+      "sha256": "8f99d962913f9df4928d4abd8c72ec68e6f2ffd216301e695f3c5d0639928863"
+    },
+    {
+      "path": "focused-tooling-receipt.json",
+      "bytes": 15961,
+      "sha256": "1ba916f24a8dbaf2bb47f8dc4575f1d8719a90c3f984ed1fbaa6ab40f029f8d4"
+    },
+    {
+      "path": "source-review-receipt.json",
+      "bytes": 3002,
+      "sha256": "92768179e873717f3fc4bd0389b78177cb543aac02179b3f2e6f8638fe9f1f92"
     }
   ],
   "integrity": {
@@ -59,6 +94,38 @@
   "recovery": "Retained evidence is readable at original indexed paths; use original per-file SHA inventory and fresh validation receipt. Seven TAR files fully streamed without extraction. F011 git bundle verify and bare clone fsck --full exit 0. No database boot/restore tested.",
   "hardlinkWarning": "Hardlinked names are one physical copy, not independent backups. Shared bytes are read-only; copy outside the retained set before editing. Original metadata is preserved in inventories; live hardlink timestamps share the canonical file metadata.",
   "history": "Earlier accepted evidence-loss limits and OPEN gates remain. No deleted historical material was recreated or reaccepted.",
-  "publication": "Pending repository integration gates; this is an evidence index, not acceptance or permission to advance F012",
-  "publicReport": "../../../docs/work-management/maintenance-2026-10-21.md"
+  "publication": "Product Owner explicitly chose to keep this follow-on source unpublished until all normal gates pass. No PR-specific exception granted; 42-command verification, human AR/EN acceptance, fresh CI after publication and Yousef human squash merge remain applicable.",
+  "publicReport": "../../../docs/work-management/maintenance-2026-10-21.md",
+  "historicalClassification": {
+    "entries": 504,
+    "issues": 461,
+    "pullRequests": 43,
+    "freshReadback": "PASS; exact labels and all state/body/assignment/merge identity preservation checks; only authorized #504 scope successor differs"
+  },
+  "storageMeasurement": {
+    "recordedAt": "2026-10-21T18:20:47.519683+00:00",
+    "root": "D:\\ECU\\GP-STUFF",
+    "baselineLogicalBytes": 5233093076,
+    "baselineUniqueAllocatedBytes": 5309333968,
+    "files": 38790,
+    "logicalBytes": 5321590490,
+    "uniqueAllocatedBytes": 2973628936,
+    "uniqueFileIds": 31153,
+    "physicalBytesReclaimedNet": 2335705032,
+    "errors": [],
+    "method": "Win32 FileStandardInfo.AllocationSize summed once per fresh file identity; includes current audit files, excludes filesystem metadata and this receipt final write. Not drive free-space attribution. Content integrity is separately bound by storage-after-validation.json."
+  },
+  "featurePathCounts": {
+    "011": 7533,
+    "008": 88,
+    "007": 190,
+    "006": 102,
+    "010": 460,
+    "009": 1078,
+    "005": 85,
+    "004": 76,
+    "003": 95,
+    "001": 37,
+    "002": 30
+  }
 }
