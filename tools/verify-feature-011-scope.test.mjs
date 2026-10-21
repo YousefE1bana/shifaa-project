@@ -8,6 +8,7 @@ import { parse, stringify } from 'yaml';
 import {
   readDocumentationSuccessor,
   documentationSuccessorInputPaths,
+  readHistoricalVerificationInputs,
 } from './feature-011-documentation-successor.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -25,6 +26,7 @@ async function withFixture(mutator, observedTooling = tooling) {
   assert.ok(path.resolve(fixtureRoot).startsWith(`${path.resolve(fixtureParent)}${path.sep}`));
   try {
     const manifest = JSON.parse(fs.readFileSync(path.join(root, manifestPath), 'utf8'));
+    const readHistorical = readHistoricalVerificationInputs(root);
     const files = new Set([
       ...Object.values(manifest.normativeApprovalInputs).flatMap((entries) =>
         Array.isArray(entries) ? entries.map(({ path: file }) => file) : [],
@@ -61,8 +63,12 @@ async function withFixture(mutator, observedTooling = tooling) {
     for (const file of files) {
       const target = path.join(fixtureRoot, file);
       fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.copyFileSync(path.join(root, file), target);
+      // Preserve the immutable approval baseline through the already verified
+      // successor boundary; mutations below still exercise the original negatives.
+      fs.writeFileSync(target, readHistorical(file));
     }
+    // The disposable K01 fixture owns its pointer; leave the repository's active context intact.
+    writeJson(fixtureRoot, '.specify/feature.json', { feature_directory: feature });
     // Exercise the immutable K01 approval baseline, not later accepted completion.
     // Exact approved hashes below reject any change beyond completion bookkeeping.
     const tasksFile = path.join(fixtureRoot, `${feature}/tasks.md`);
@@ -282,6 +288,7 @@ test('verifyAllergy entered-in-error reconciliation remains asserted', async () 
     );
   });
   expectFailure(report, /verifyAllergy|entered_in_error|reconciliation/i);
+  expectFailure(report, /Unreadable or malformed baseline\/tooling/);
 });
 
 test('listClinicalContent metadata-only reconciliation remains asserted', async () => {

@@ -562,22 +562,24 @@ async function generatedWireFailures(inputs, root) {
 
 export async function verifyFeature011Scope({ root = repositoryRoot, tooling }) {
   const parity = pendingParity();
+  const failures = [];
   try {
     const inputs = readInputs(root);
     if (digest(inputs.read(approvalManifestPath)) !== approvalManifestHash)
       return { failures: ['Recovered Plan approval manifest hash mismatch'], parity };
-    const failures = [
+    failures.push(
       ...approvalFailures(inputs, root),
       ...inventoryFailures(inputs),
       ...uxFailures(inputs),
       ...reconciliationFailures(inputs),
       ...catalogOperationFailures(inputs),
       ...toolingFailures(inputs, tooling),
-      ...(await generatedWireFailures(inputs, root)),
-    ];
+    );
+    failures.push(...(await generatedWireFailures(inputs, root)));
     return { failures, parity };
   } catch (error) {
-    return { failures: [`Unreadable or malformed baseline/tooling: ${error.message}`], parity };
+    failures.push(`Unreadable or malformed baseline/tooling: ${error.message}`);
+    return { failures, parity };
   }
 }
 

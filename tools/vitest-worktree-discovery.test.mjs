@@ -42,3 +42,39 @@ test('root integration discovery selects the active checkout without archived wo
     rmSync(fixture, { recursive: true, force: true });
   }
 });
+
+test('Playwright matrix discovery does not import archived checkout suites', () => {
+  const fixture = mkdtempSync(join(tmpdir(), 'shifaa-playwright-discovery-'));
+  try {
+    const active = 'tests/e2e/feature-010-accessibility.spec.ts';
+    const path = join(fixture, active);
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(
+      path,
+      `import { test } from ${JSON.stringify(join(root, 'node_modules/playwright/test.js'))};\n` +
+        `test('active checkout discovery', () => {});\n`,
+    );
+    const archived = join(fixture, '.worktrees/archived', active);
+    mkdirSync(dirname(archived), { recursive: true });
+    writeFileSync(archived, 'throw new Error("Archived checkout must not be imported");\n');
+    const config = join(fixture, 'playwright.config.ts');
+    writeFileSync(
+      config,
+      `import matrix from ${JSON.stringify(join(root, 'tools/feature-010-accessibility-playwright.config.ts'))};\n` +
+        `export default { ...matrix, testDir: ${JSON.stringify(fixture)}, webServer: undefined };\n`,
+    );
+    const listed = execFileSync(
+      process.execPath,
+      [join(root, 'node_modules/playwright/cli.js'), 'test', '--config', config, '--list'],
+      {
+        cwd: root,
+        encoding: 'utf8',
+        windowsHide: true,
+        env: { ...process.env, SHIFAA_F010_ACCESSIBILITY_APP: 'patient' },
+      },
+    );
+    assert.match(listed, /Total: 1 test in 1 file/);
+  } finally {
+    rmSync(fixture, { recursive: true, force: true });
+  }
+});
