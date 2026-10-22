@@ -1,0 +1,7 @@
+{
+  "scope": "Additive F011 API-client metadata-test loading diagnosis; approved contracts, assertions and historical evidence unchanged",
+  "ownerIndex": "../../001-identity-onboarding/evidence/work-management-validation-2026-10-22.json",
+  "correctionCommit": "b3c6bb9d35353fa83522618eb16f9d35b898718e",
+  "frozenContract": "../contracts/artifact-canonicalization-v1.md",
+  "limits": "No new F011 lifecycle, clinical approval or physical acceptance claim; full local acceptance is established only by the actual aggregate receipt."
+}

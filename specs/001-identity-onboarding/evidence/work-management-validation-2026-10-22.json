@@ -1,0 +1,140 @@
+{
+  "recordedAt": "2026-10-22T06:38:05.543546+00:00",
+  "ownerIssue": "https://github.com/YousefE1bana/shifaa-project/issues/504",
+  "scope": "Additive verification diagnosis and representative classification review; no historical acceptance replaced",
+  "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\timeout-resolution-20261022",
+  "access": "Restricted local retained audit. Do not auto-stage raw records, logs or private configuration.",
+  "correctionCommit": "b3c6bb9d35353fa83522618eb16f9d35b898718e",
+  "receipts": [
+    {
+      "path": "diagnosis.json",
+      "bytes": 4895,
+      "sha256": "f120831eb95cf173229c2dfc78967c58a0f4be64cf4571e5a8e83bce48045e7c"
+    },
+    {
+      "path": "classification-sample-review.json",
+      "bytes": 78250,
+      "sha256": "52ecf9f20ed099a8f04ba453cac82f8210f6a5b272aacad30cc1f683ca7be14d"
+    },
+    {
+      "path": "classification-sample-correction.json",
+      "bytes": 17918,
+      "sha256": "280536bfa4626ff781618c6a912bea3ac012101f89d54bf01ef9125ed3188d43"
+    },
+    {
+      "path": "history-classification-before-sample-correction.csv",
+      "bytes": 395729,
+      "sha256": "b7e95beb75edbe324b89e2e5cf1ffa269b04ab452d70877cad3b79132f3cc6a4"
+    },
+    {
+      "path": "feature-011.original.test.ts",
+      "bytes": 7200,
+      "sha256": "018bab1060cd5f9ea8f108ffb2f31a4a03eb2bc680185f7959b3870947ebc822"
+    },
+    {
+      "path": "feature-011.instrumented.test.ts",
+      "bytes": 7674,
+      "sha256": "f5ef74a7e52468190afe16e5f734564c497fc0dff46abacd253492045d1f1fc0"
+    },
+    {
+      "path": "measure-test-workload.py",
+      "bytes": 4143,
+      "sha256": "913b6354250a0520fce6d6e342ffdefadbd45baf95ae9079ab078e20e6ced546"
+    },
+    {
+      "path": "delayed-contract-import.mjs",
+      "bytes": 2126,
+      "sha256": "89894c3d10a69e52d271062fd9c2aeeac58633e86e42a7d8274f4e9802458b45"
+    },
+    {
+      "path": "delayed-original.json",
+      "bytes": 642,
+      "sha256": "51920d840f838d060a6b1e83f12d217e791ad29ff030f1028f69f3f08de8d4e0"
+    },
+    {
+      "path": "delayed-original.log",
+      "bytes": 1255,
+      "sha256": "a9d26f69bd89417f60b7fdcfb1ca91e640d83b43f77997eed9c26b495a24a5a1"
+    },
+    {
+      "path": "delayed-prepared.json",
+      "bytes": 658,
+      "sha256": "7f5968e19fedf96b7ea1881b85fa2511682fdab0415fc37732e730b085576e39"
+    },
+    {
+      "path": "delayed-prepared.log",
+      "bytes": 280,
+      "sha256": "7fb2a280b57f269ed096fa897174c4e1264593eceb7531707ab8dfb8f898183b"
+    },
+    {
+      "path": "diagnostic-concurrent/console.log",
+      "bytes": 58150,
+      "sha256": "3511aa389cf9aba0ca3a8f63abded2e1aaf7c5e6b36c9f9940cb00eab375fbf8"
+    },
+    {
+      "path": "diagnostic-concurrent/execution.json",
+      "bytes": 628,
+      "sha256": "a3d2234a9484a2ab2556d20111c9b6feb753a90cb7305a6d1c6956955385ea86"
+    },
+    {
+      "path": "diagnostic-concurrent/samples.json",
+      "bytes": 184007,
+      "sha256": "11db269e73cc61f342ebbeb157fcfa3a908c9177c0fdabbcbbde4a5e6805dcc0"
+    },
+    {
+      "path": "diagnostic-concurrent/run.ps1",
+      "bytes": 111,
+      "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
+    },
+    {
+      "path": "corrected-uncached-1/console.log",
+      "bytes": 57434,
+      "sha256": "66571d8fbc29d7fd757d9556ad1d105d2ab7f53a7764ad247e57e0042a4052d8"
+    },
+    {
+      "path": "corrected-uncached-1/execution.json",
+      "bytes": 573,
+      "sha256": "19e8e1d194d8766584bf6ae5a4bfde3f6968fbe9660be8c67c0b18c0e8bf9e52"
+    },
+    {
+      "path": "corrected-uncached-1/samples.json",
+      "bytes": 171655,
+      "sha256": "8913062c955a0cc040f014c2badfeff313bf0ebfe1d39841eb829e8497a5d046"
+    },
+    {
+      "path": "corrected-uncached-1/run.ps1",
+      "bytes": 111,
+      "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
+    },
+    {
+      "path": "corrected-uncached-2/console.log",
+      "bytes": 57252,
+      "sha256": "f19893dc44bff4784e5fe2755fe26faa118c521bd1ccc7529c85ff2d89cc4e72"
+    },
+    {
+      "path": "corrected-uncached-2/execution.json",
+      "bytes": 632,
+      "sha256": "e74a89cdf04a308da4e33304fa7804b75d73e7a00542a1c17105c80a9f236506"
+    },
+    {
+      "path": "corrected-uncached-2/samples.json",
+      "bytes": 178779,
+      "sha256": "854a11f257e7bd5baf408ca89b11ec19c0cf5d9ecbe7108c885c34c1819dd4b2"
+    },
+    {
+      "path": "corrected-uncached-2/run.ps1",
+      "bytes": 111,
+      "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
+    }
+  ],
+  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022",
+  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at the acceptance location when produced. This pre-execution index claims no aggregate PASS.",
+  "historicalFailureLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-9c7391d",
+  "historicalStorageIndex": "work-management-storage-2026-10-21.json",
+  "limitations": [
+    "Injected delay is a diagnostic reproduction, not application-performance acceptance.",
+    "The first corrected run had clean source; only the classification CSV was dirty during the second. Test source bytes were identical.",
+    "Historical run has no resource samples; current monitored runs do not prove historical CPU or memory exhaustion.",
+    "Human live Arabic/English acceptance, publication, current-head CI and human squash merge remain separate mandatory gates."
+  ]
+}
