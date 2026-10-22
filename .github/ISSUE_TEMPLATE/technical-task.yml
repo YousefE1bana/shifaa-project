@@ -1,0 +1,44 @@
+name: Technical task
+description: Record a bounded engineering checkpoint or implementation task.
+title: 'task: '
+labels:
+  - type:task
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        A task does not imply feature approval or acceptance. Do not include PHI, credentials, tokens, or sensitive uploads.
+  - type: textarea
+    id: task
+    attributes:
+      label: Bounded task and outcome
+      description: One discrete work item with clear exclusions.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source and authority
+      description: Link the exact spec/task/decision source. Leave blank if not established.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Verification and acceptance evidence
+      description: List commands, expected results, negative cases, and unresolved evidence. No inferred approvals.
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Owning spec (optional)
+      description: Exact 001–012 only when directly supported.
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (optional)
+      options:
+        - Unspecified
+        - p0
+        - p1
+        - p2
+        - p3

@@ -1,0 +1,227 @@
+[
+  {
+    "name": "type:bug",
+    "color": "d73a4a",
+    "description": "Proven unexpected behavior; severity is separate."
+  },
+  {
+    "name": "type:feature",
+    "color": "1d76db",
+    "description": "Delivery of a user-facing capability."
+  },
+  {
+    "name": "type:task",
+    "color": "0e8a16",
+    "description": "Bounded engineering work."
+  },
+  {
+    "name": "type:epic",
+    "color": "5319e7",
+    "description": "Umbrella outcome with linked child work; not lifecycle approval."
+  },
+  {
+    "name": "type:maintenance",
+    "color": "6f42c1",
+    "description": "Tooling, cleanup, reliability or technical-debt remediation."
+  },
+  {
+    "name": "type:documentation",
+    "color": "0075ca",
+    "description": "Documentation or evidence organization as the primary deliverable."
+  },
+  {
+    "name": "priority:p0",
+    "color": "b60205",
+    "description": "Immediate coordination priority; requires explicit rationale."
+  },
+  {
+    "name": "priority:p1",
+    "color": "d93f0b",
+    "description": "Next priority; requires explicit rationale."
+  },
+  {
+    "name": "priority:p2",
+    "color": "fbca04",
+    "description": "Planned priority."
+  },
+  {
+    "name": "priority:p3",
+    "color": "c2e0c6",
+    "description": "Backlog priority."
+  },
+  {
+    "name": "severity:s1",
+    "color": "b60205",
+    "description": "Critical: verified exposure, data loss or complete outage. Bugs only; not clinical severity."
+  },
+  {
+    "name": "severity:s2",
+    "color": "d93f0b",
+    "description": "High: major capability broken without a safe workaround. Bugs only; not clinical severity."
+  },
+  {
+    "name": "severity:s3",
+    "color": "fbca04",
+    "description": "Moderate: limited failure or safe workaround available. Bugs only; not clinical severity."
+  },
+  {
+    "name": "severity:s4",
+    "color": "c2e0c6",
+    "description": "Minor impact: cosmetic or low-impact defect. Bugs only; not clinical severity."
+  },
+  {
+    "name": "area:backend",
+    "color": "bfd4f2",
+    "description": "Engineering domain: backend. Does not assign a human owner."
+  },
+  {
+    "name": "area:frontend",
+    "color": "bfd4f2",
+    "description": "Engineering domain: frontend. Does not assign a human owner."
+  },
+  {
+    "name": "area:mobile",
+    "color": "bfd4f2",
+    "description": "Engineering domain: mobile. Does not assign a human owner."
+  },
+  {
+    "name": "area:database",
+    "color": "bfd4f2",
+    "description": "Engineering domain: database. Does not assign a human owner."
+  },
+  {
+    "name": "area:devops",
+    "color": "bfd4f2",
+    "description": "Engineering domain: devops. Does not assign a human owner."
+  },
+  {
+    "name": "area:infrastructure",
+    "color": "bfd4f2",
+    "description": "Engineering domain: infrastructure. Does not assign a human owner."
+  },
+  {
+    "name": "area:security",
+    "color": "bfd4f2",
+    "description": "Engineering domain: security. Does not assign a human owner."
+  },
+  {
+    "name": "area:testing",
+    "color": "bfd4f2",
+    "description": "Engineering domain: testing. Does not assign a human owner."
+  },
+  {
+    "name": "area:documentation",
+    "color": "bfd4f2",
+    "description": "Engineering domain: documentation. Does not assign a human owner."
+  },
+  {
+    "name": "area:governance",
+    "color": "bfd4f2",
+    "description": "Engineering domain: governance. Does not assign a human owner."
+  },
+  {
+    "name": "area:contracts",
+    "color": "bfd4f2",
+    "description": "Engineering domain: contracts. Does not assign a human owner."
+  },
+  {
+    "name": "spec:001",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 001. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:002",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 002. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:003",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 003. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:004",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 004. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:005",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 005. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:006",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 006. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:007",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 007. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:008",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 008. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:009",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 009. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:010",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 010. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:011",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 011. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "spec:012",
+    "color": "d4c5f9",
+    "description": "Traceability to feature 012. Does not indicate implementation, acceptance or approval."
+  },
+  {
+    "name": "blocked:governance",
+    "color": "b60205",
+    "description": "Current documented governance gate blocks this work; identify gate in body."
+  },
+  {
+    "name": "blocked:external",
+    "color": "d93f0b",
+    "description": "Current dependency outside repository implementation; name dependency in body."
+  },
+  {
+    "name": "approval:product-owner",
+    "color": "e99695",
+    "description": "Applicable Product Owner acceptance remains outstanding; not approval itself."
+  },
+  {
+    "name": "approval:clinical",
+    "color": "e99695",
+    "description": "Applicable professional clinical approval remains outstanding."
+  },
+  {
+    "name": "approval:legal",
+    "color": "e99695",
+    "description": "Applicable legal/regulatory approval remains outstanding."
+  },
+  {
+    "name": "debt:technical",
+    "color": "fef2c0",
+    "description": "Confirmed maintainability or upgrade debt with a concrete follow-up."
+  },
+  {
+    "name": "needs:triage",
+    "color": "ededed",
+    "description": "Classification or reproduction needs evidence; no invented priority/severity."
+  },
+  {
+    "name": "duplicate",
+    "color": "cfd3d7",
+    "description": "Duplicate work item; canonical reference belongs in its body."
+  }
+]

@@ -1,0 +1,639 @@
+{
+  "recordedAt": "2026-10-21T18:08:08.424322+00:00",
+  "scope": "Additive cross-feature storage preservation and GitHub classification index; no historical acceptance replaced",
+  "sourceBaseCommit": "b1fe533fd3676acfb0b9e42bcc43bd00ce3f7826",
+  "ownerIssue": "https://github.com/YousefE1bana/shifaa-project/issues/504",
+  "custodian": "Yousef Osama; maintenance root agent",
+  "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021",
+  "access": "Local owner, SYSTEM and Administrators; do not auto-stage raw manifests or archives",
+  "receipts": [
+    {
+      "path": "storage-before-corrected.json",
+      "bytes": 22291459,
+      "sha256": "4eca45094f47ac78e8032b17236a51b1bbde1f86c4c53f76263340666a796c3d"
+    },
+    {
+      "path": "storage-after-validation.json",
+      "bytes": 11069,
+      "sha256": "6239590a39c1456d87b414f6b0dbaf294be0808c24c983f2d65b2cde4521d453"
+    },
+    {
+      "path": "storage-cache-disposition.json",
+      "bytes": 520902,
+      "sha256": "c852928fad0eba8cfccc8ddd8303d75a2a17be5cf63b5ae052304f8569da4eb9"
+    },
+    {
+      "path": "storage-dedup-plan.json",
+      "bytes": 4876699,
+      "sha256": "4990b0a6a7151cb0cd3bea277d5a08248ad78c22fe92f5f6ed58f302e0634e55"
+    },
+    {
+      "path": "storage-dedup-actions.jsonl",
+      "bytes": 6275518,
+      "sha256": "b38837a37a8649efd72695dc7c7b60aec0dda112cd9f0b22e77bb47cd768ccd1"
+    },
+    {
+      "path": "storage-compression-receipt.json",
+      "bytes": 551,
+      "sha256": "d02a119436a042a41005f5f6524e1aafd81fbcc625fab60808633c5de41dd252"
+    },
+    {
+      "path": "f011-git-recovery-validation.json",
+      "bytes": 97,
+      "sha256": "79e04dea0925b47b299855cafc44aa51c47448a44a97bf0a2b9c499a65b1d46e"
+    },
+    {
+      "path": "history-classification-reviewed.json",
+      "bytes": 834125,
+      "sha256": "18e32238b4e735d65421616d15298fdd42e69bce277d708555470909a3899dbf"
+    },
+    {
+      "path": "history-classification-actions.jsonl",
+      "bytes": 166042,
+      "sha256": "5eaa7a23b194aba347e2b1004eabf7512bbcbf07bc42f20524bcfbab8a91066c"
+    },
+    {
+      "path": "history-readback-validation.json",
+      "bytes": 1589,
+      "sha256": "c00424e790430d9f890dc0c8740323a4a93b0517e26f7cfd79aa253ab2825329"
+    },
+    {
+      "path": "feature-storage-index.json",
+      "bytes": 8128319,
+      "sha256": "e73af5a35a3561f56f2a0e3d7dd67bbae5ddb1f08879334a3a52dee49f117dbe"
+    },
+    {
+      "path": "storage-pre-acceptance-allocation.json",
+      "bytes": 5660,
+      "sha256": "254fe9492c84a9ad996de58eac1083e58d9b114f60a1711abcd971779518334b"
+    },
+    {
+      "path": "docker-readback.json",
+      "bytes": 7128,
+      "sha256": "8f99d962913f9df4928d4abd8c72ec68e6f2ffd216301e695f3c5d0639928863"
+    },
+    {
+      "path": "focused-tooling-receipt.json",
+      "bytes": 15961,
+      "sha256": "1ba916f24a8dbaf2bb47f8dc4575f1d8719a90c3f984ed1fbaa6ab40f029f8d4"
+    },
+    {
+      "path": "source-review-receipt.json",
+      "bytes": 3002,
+      "sha256": "92768179e873717f3fc4bd0389b78177cb543aac02179b3f2e6f8638fe9f1f92"
+    },
+    {
+      "path": "acceptance-9c7391d/execution.json",
+      "bytes": 446,
+      "sha256": "664a10b0a597b30ae743fb31cb3cf462b540484544f904541ff9cea09fb93170"
+    },
+    {
+      "path": "acceptance-9c7391d/pnpm-verify.log",
+      "bytes": 77464,
+      "sha256": "b8b1fa8716b1cec401cdb46b6b80320e563b946097954d45a18d556272f83ff8"
+    },
+    {
+      "path": "acceptance-9c7391d/command-results.json",
+      "bytes": 6316,
+      "sha256": "9c3efa72e7eec85ef3f233be9a6d20f12bcdff3c86672f265a553ddaed6a6954"
+    },
+    {
+      "path": "acceptance-9c7391d/focused-feature011.json",
+      "bytes": 394,
+      "sha256": "070ffa5cb81b9c11bfee21f5fed72ad8dfb3e6de70485a5b2e083b9e1ad571d6"
+    },
+    {
+      "path": "acceptance-9c7391d/focused-feature011.log",
+      "bytes": 279,
+      "sha256": "df369684ff5c7b39d9ff06bc11272477d4f937c16b9215f69f62ab881b7776b7"
+    },
+    {
+      "path": "acceptance-9c7391d/post-run-integrity.json",
+      "bytes": 740,
+      "sha256": "cdb51088e0610d6fbf9e05ac253f5727f21da597fb2105030bfe1248affe8c75"
+    },
+    {
+      "path": "docker-after-failed-aggregate.json",
+      "bytes": 583,
+      "sha256": "23479cbbea949aebf1448843134bc767f8840c71b958de07e264dce9a1e3c059"
+    },
+    {
+      "path": "pr503-completion-ci.json",
+      "bytes": 2611,
+      "sha256": "3771594b6e4f8bb51a96063bd257cdc58606ee398b6a489073f42553cb53e08a"
+    },
+    {
+      "path": "issue-504-acceptance-readback.json",
+      "bytes": 240,
+      "sha256": "d74c8eed0f8ece9fec0d9f65bbf3765a8808011128010f2d10943a66522e84fc"
+    },
+    {
+      "path": "storage-post-acceptance-allocation.json",
+      "bytes": 5660,
+      "sha256": "b835e616cfb6be82e4ee2a8cc37028efb72a6ca8d3b9436725839ec41bda047c"
+    },
+    {
+      "path": "audit-final-compression.json",
+      "bytes": 301,
+      "sha256": "26fa6c259060d6ff86cc8bafbd81a0bd57698532308e2114633e5dfa7109886f"
+    },
+    {
+      "path": "project-board-final-proof.png",
+      "bytes": 81863,
+      "sha256": "6a5c1f6336653a8e7a9ac05016da6feb96a5ac4a0ea58344dd713a28f316a0fd"
+    },
+    {
+      "path": "metadata-final-test.json",
+      "bytes": 315,
+      "sha256": "0b6c41f1ab9cbe5a7cd63d73deb7bd68ea75f4537a1707f19194443a32c60224"
+    },
+    {
+      "path": "metadata-final-test.log",
+      "bytes": 601,
+      "sha256": "5d0d399a23e14d4610fd940071a49b4b21d7acdf384f9027ca5cb41938440522"
+    },
+    {
+      "path": "metadata-final-supported-format.json",
+      "bytes": 462,
+      "sha256": "43b54924f88686e06ab4e85a47cdecbcd8677755a4c29c7959ef316d5261fd99"
+    },
+    {
+      "path": "metadata-final-supported-format.log",
+      "bytes": 68,
+      "sha256": "f20510a9da4717c51c4cffee6d0dd88d6c9a723d0a83711d01216f5b48961283"
+    },
+    {
+      "path": "completion-engineering-review.json",
+      "bytes": 1348,
+      "sha256": "7e413334a0f00673710db8193f79b9d0e89110312a3951fec860a35b1c165035"
+    },
+    {
+      "path": "storage-completion-allocation.json",
+      "bytes": 5660,
+      "sha256": "302108118c6921da4d7a423ffdc9e5073801699549dec1756e45fc4634441b2b"
+    }
+  ],
+  "integrity": {
+    "baselineRetainedFilesHashed": 38650,
+    "contentMismatches": 0,
+    "unauthorizedMissingPaths": 0,
+    "authorizedDisposableCacheFilesRemoved": 1849,
+    "dockerTarArchivesFullyStreamed": 7
+  },
+  "disposition": "Original paths retained. Identical >=64KiB immutable files consolidated with same-root hardlinks after SHA-256 and ACL equality checks; transparent NTFS compression. Only manifest-listed regenerable TSX caches deleted.",
+  "recovery": "Retained evidence is readable at original indexed paths; use original per-file SHA inventory and fresh validation receipt. Seven TAR files fully streamed without extraction. F011 git bundle verify and bare clone fsck --full exit 0. No database boot/restore tested.",
+  "hardlinkWarning": "Hardlinked names are one physical copy, not independent backups. Shared bytes are read-only; copy outside the retained set before editing. Original metadata is preserved in inventories; live hardlink timestamps share the canonical file metadata.",
+  "history": "Earlier accepted evidence-loss limits and OPEN gates remain. No deleted historical material was recreated or reaccepted.",
+  "publication": "Product Owner explicitly chose to keep this follow-on source unpublished until all normal gates pass. No PR-specific exception granted; 42-command verification, human AR/EN acceptance, fresh CI after publication and Yousef human squash merge remain applicable.",
+  "publicReport": "../../../docs/work-management/maintenance-2026-10-21.md",
+  "historicalClassification": {
+    "entries": 504,
+    "issues": 461,
+    "pullRequests": 43,
+    "freshReadback": "PASS; exact labels and all state/body/assignment/merge identity preservation checks; only authorized #504 scope successor differs"
+  },
+  "storageMeasurement": {
+    "recordedAt": "2026-10-21T18:20:47.519683+00:00",
+    "root": "D:\\ECU\\GP-STUFF",
+    "baselineLogicalBytes": 5233093076,
+    "baselineUniqueAllocatedBytes": 5309333968,
+    "files": 38790,
+    "logicalBytes": 5321590490,
+    "uniqueAllocatedBytes": 2973628936,
+    "uniqueFileIds": 31153,
+    "physicalBytesReclaimedNet": 2335705032,
+    "errors": [],
+    "method": "Win32 FileStandardInfo.AllocationSize summed once per fresh file identity; includes current audit files, excludes filesystem metadata and this receipt final write. Not drive free-space attribution. Content integrity is separately bound by storage-after-validation.json."
+  },
+  "featurePathCounts": {
+    "011": 7533,
+    "008": 88,
+    "007": 190,
+    "006": 102,
+    "010": 460,
+    "009": 1078,
+    "005": 85,
+    "004": 76,
+    "003": 95,
+    "001": 37,
+    "002": 30
+  },
+  "postAcceptanceStorageAllocation": {
+    "recordedAt": "2026-10-21T20:56:21.635648+00:00",
+    "root": "D:\\ECU\\GP-STUFF",
+    "baselineLogicalBytes": 5233093076,
+    "baselineUniqueAllocatedBytes": 5309333968,
+    "files": 38817,
+    "logicalBytes": 5330062996,
+    "uniqueAllocatedBytes": 2976388424,
+    "uniqueFileIds": 31180,
+    "physicalBytesReclaimedNet": 2332945544,
+    "groups": {
+      "ECU_FCIS_Graduation_Project_Thesis_Template.docx": {
+        "files": 1,
+        "logicalBytes": 119146,
+        "uniqueAllocatedBytes": 122880
+      },
+      "feature009-tasks-runner-ownership.patch": {
+        "files": 1,
+        "logicalBytes": 5880,
+        "uniqueAllocatedBytes": 8192
+      },
+      "Graduation_Project_SHIFAA.docx": {
+        "files": 1,
+        "logicalBytes": 102929,
+        "uniqueAllocatedBytes": 106496
+      },
+      "pr501-current-body.md": {
+        "files": 1,
+        "logicalBytes": 5579,
+        "uniqueAllocatedBytes": 8192
+      },
+      "pr501-final-documentation.json": {
+        "files": 1,
+        "logicalBytes": 5757,
+        "uniqueAllocatedBytes": 8192
+      },
+      "pr501-final-f011.json": {
+        "files": 1,
+        "logicalBytes": 23821,
+        "uniqueAllocatedBytes": 24576
+      },
+      "pr501-final-harness.log": {
+        "files": 1,
+        "logicalBytes": 12491,
+        "uniqueAllocatedBytes": 16384
+      },
+      "pr501-final-history.log": {
+        "files": 1,
+        "logicalBytes": 4082,
+        "uniqueAllocatedBytes": 4096
+      },
+      "pr501-final-safe.log": {
+        "files": 1,
+        "logicalBytes": 48322,
+        "uniqueAllocatedBytes": 49152
+      },
+      "pr501-final-types.log": {
+        "files": 1,
+        "logicalBytes": 4321,
+        "uniqueAllocatedBytes": 8192
+      },
+      "pr501-postrun-launcher.log": {
+        "files": 1,
+        "logicalBytes": 19008,
+        "uniqueAllocatedBytes": 20480
+      },
+      "pr501-preflight-f011.json": {
+        "files": 1,
+        "logicalBytes": 23625,
+        "uniqueAllocatedBytes": 24576
+      },
+      "pr501-preflight-harness.log": {
+        "files": 1,
+        "logicalBytes": 12496,
+        "uniqueAllocatedBytes": 16384
+      },
+      "pr501-preflight-history.log": {
+        "files": 1,
+        "logicalBytes": 3514,
+        "uniqueAllocatedBytes": 4096
+      },
+      "pr501-preflight-launcher.log": {
+        "files": 1,
+        "logicalBytes": 18631,
+        "uniqueAllocatedBytes": 20480
+      },
+      "pr501-preflight-safe.log": {
+        "files": 1,
+        "logicalBytes": 48541,
+        "uniqueAllocatedBytes": 49152
+      },
+      "pr501-preflight-types.log": {
+        "files": 1,
+        "logicalBytes": 4322,
+        "uniqueAllocatedBytes": 8192
+      },
+      "pr501-updated-body.md": {
+        "files": 1,
+        "logicalBytes": 4774,
+        "uniqueAllocatedBytes": 8192
+      },
+      "security-audit-model-ox-alpha.md": {
+        "files": 1,
+        "logicalBytes": 37749,
+        "uniqueAllocatedBytes": 40960
+      },
+      "SECURITY-PENTEST-REPORT.md": {
+        "files": 1,
+        "logicalBytes": 33645,
+        "uniqueAllocatedBytes": 36864
+      },
+      "SHIFAA-CHAT-CONTINUITY-HANDOFF.md": {
+        "files": 1,
+        "logicalBytes": 10494,
+        "uniqueAllocatedBytes": 12288
+      },
+      "SHIFAA-Comprehensive-Security-Audit-2026-08-26.md": {
+        "files": 1,
+        "logicalBytes": 32070,
+        "uniqueAllocatedBytes": 32768
+      },
+      "SHIFAA-discovery-target-current.txt": {
+        "files": 1,
+        "logicalBytes": 65,
+        "uniqueAllocatedBytes": 72
+      },
+      "SHIFAA-Letter.docx": {
+        "files": 1,
+        "logicalBytes": 265130,
+        "uniqueAllocatedBytes": 266240
+      },
+      "SHIFAA-real-verify-current-task-path.txt": {
+        "files": 1,
+        "logicalBytes": 48,
+        "uniqueAllocatedBytes": 48
+      },
+      "SHIFAA-real-verify-final-current-path.txt": {
+        "files": 1,
+        "logicalBytes": 54,
+        "uniqueAllocatedBytes": 56
+      },
+      "SHIFAA-Team-Kickoff-Interactive-Guide.html": {
+        "files": 1,
+        "logicalBytes": 74274,
+        "uniqueAllocatedBytes": 77824
+      },
+      "SHIFAA-Team-Launch-Playbook.html": {
+        "files": 1,
+        "logicalBytes": 55841,
+        "uniqueAllocatedBytes": 57344
+      },
+      "SHIFAA-Artifact-Finalization": {
+        "files": 31,
+        "logicalBytes": 68447481,
+        "uniqueAllocatedBytes": 25769128
+      },
+      "SHIFAA-Commit-Review": {
+        "files": 3,
+        "logicalBytes": 90223,
+        "uniqueAllocatedBytes": 94600
+      },
+      "SHIFAA-Final-Cleanup": {
+        "files": 32394,
+        "logicalBytes": 3603534809,
+        "uniqueAllocatedBytes": 2134901840
+      },
+      "SHIFAA-final-target-20261020T073257Z-b1a1ee65": {
+        "files": 133,
+        "logicalBytes": 2811808,
+        "uniqueAllocatedBytes": 1554680
+      },
+      "SHIFAA-finish-20261020-b2a4e2d61e16": {
+        "files": 4405,
+        "logicalBytes": 513462094,
+        "uniqueAllocatedBytes": 366138208
+      },
+      "SHIFAA-Maintenance-20261021": {
+        "files": 1576,
+        "logicalBytes": 1003350321,
+        "uniqueAllocatedBytes": 391055168
+      },
+      "SHIFAA-Onboarding-Doc-Review": {
+        "files": 5,
+        "logicalBytes": 93150,
+        "uniqueAllocatedBytes": 103080
+      },
+      "SHIFAA-Repo-Hygiene": {
+        "files": 75,
+        "logicalBytes": 13172557,
+        "uniqueAllocatedBytes": 3423872
+      },
+      "SHIFAA-Work-Management-20261021": {
+        "files": 167,
+        "logicalBytes": 124123944,
+        "uniqueAllocatedBytes": 52315480
+      }
+    },
+    "errors": [],
+    "method": "Win32 FileStandardInfo.AllocationSize summed once per fresh file identity; includes current audit files, excludes filesystem metadata and this receipt final write. Not drive free-space attribution. Content integrity is separately bound by storage-after-validation.json."
+  },
+  "followOnAcceptance": {
+    "testedCommit": "9c7391d912f20edd7cf7cb2faf45089511570cb6",
+    "command": "pnpm verify",
+    "exitCode": 1,
+    "durationSeconds": 138.8172894,
+    "commandResults": {
+      "pass": 6,
+      "fail": 1,
+      "notExecuted": 35
+    },
+    "firstFailure": "pnpm test; F011 API-client canonicalization metadata test exceeded 5000 ms; underlying cause unproven",
+    "focusedResult": "Unchanged four-test file PASS; exit 0; Vitest 381 ms, process 1.3407597 seconds; no repair or full acceptance claimed",
+    "databaseResetReached": false,
+    "aggregateRetried": false,
+    "sourcePublication": "Withheld by Product Owner instruction; no new PR or hosted CI",
+    "humanArabicEnglishAcceptance": "PENDING",
+    "merge": "Yousef human squash only; not performed"
+  },
+  "completionStorageAllocation": {
+    "recordedAt": "2026-10-21T20:59:41.363221+00:00",
+    "root": "D:\\ECU\\GP-STUFF",
+    "baselineLogicalBytes": 5233093076,
+    "baselineUniqueAllocatedBytes": 5309333968,
+    "files": 38829,
+    "logicalBytes": 5330159119,
+    "uniqueAllocatedBytes": 2976472920,
+    "uniqueFileIds": 31192,
+    "physicalBytesReclaimedNet": 2332861048,
+    "groups": {
+      "ECU_FCIS_Graduation_Project_Thesis_Template.docx": {
+        "files": 1,
+        "logicalBytes": 119146,
+        "uniqueAllocatedBytes": 122880
+      },
+      "feature009-tasks-runner-ownership.patch": {
+        "files": 1,
+        "logicalBytes": 5880,
+        "uniqueAllocatedBytes": 8192
+      },
+      "Graduation_Project_SHIFAA.docx": {
+        "files": 1,
+        "logicalBytes": 102929,
+        "uniqueAllocatedBytes": 106496
+      },
+      "pr501-current-body.md": {
+        "files": 1,
+        "logicalBytes": 5579,
+        "uniqueAllocatedBytes": 8192
+      },
+      "pr501-final-documentation.json": {
+        "files": 1,
+        "logicalBytes": 5757,
+        "uniqueAllocatedBytes": 8192
+      },
+      "pr501-final-f011.json": {
+        "files": 1,
+        "logicalBytes": 23821,
+        "uniqueAllocatedBytes": 24576
+      },
+      "pr501-final-harness.log": {
+        "files": 1,
+        "logicalBytes": 12491,
+        "uniqueAllocatedBytes": 16384
+      },
+      "pr501-final-history.log": {
+        "files": 1,
+        "logicalBytes": 4082,
+        "uniqueAllocatedBytes": 4096
+      },
+      "pr501-final-safe.log": {
+        "files": 1,
+        "logicalBytes": 48322,
+        "uniqueAllocatedBytes": 49152
+      },
+      "pr501-final-types.log": {
+        "files": 1,
+        "logicalBytes": 4321,
+        "uniqueAllocatedBytes": 8192
+      },
+      "pr501-postrun-launcher.log": {
+        "files": 1,
+        "logicalBytes": 19008,
+        "uniqueAllocatedBytes": 20480
+      },
+      "pr501-preflight-f011.json": {
+        "files": 1,
+        "logicalBytes": 23625,
+        "uniqueAllocatedBytes": 24576
+      },
+      "pr501-preflight-harness.log": {
+        "files": 1,
+        "logicalBytes": 12496,
+        "uniqueAllocatedBytes": 16384
+      },
+      "pr501-preflight-history.log": {
+        "files": 1,
+        "logicalBytes": 3514,
+        "uniqueAllocatedBytes": 4096
+      },
+      "pr501-preflight-launcher.log": {
+        "files": 1,
+        "logicalBytes": 18631,
+        "uniqueAllocatedBytes": 20480
+      },
+      "pr501-preflight-safe.log": {
+        "files": 1,
+        "logicalBytes": 48541,
+        "uniqueAllocatedBytes": 49152
+      },
+      "pr501-preflight-types.log": {
+        "files": 1,
+        "logicalBytes": 4322,
+        "uniqueAllocatedBytes": 8192
+      },
+      "pr501-updated-body.md": {
+        "files": 1,
+        "logicalBytes": 4774,
+        "uniqueAllocatedBytes": 8192
+      },
+      "security-audit-model-ox-alpha.md": {
+        "files": 1,
+        "logicalBytes": 37749,
+        "uniqueAllocatedBytes": 40960
+      },
+      "SECURITY-PENTEST-REPORT.md": {
+        "files": 1,
+        "logicalBytes": 33645,
+        "uniqueAllocatedBytes": 36864
+      },
+      "SHIFAA-CHAT-CONTINUITY-HANDOFF.md": {
+        "files": 1,
+        "logicalBytes": 10494,
+        "uniqueAllocatedBytes": 12288
+      },
+      "SHIFAA-Comprehensive-Security-Audit-2026-08-26.md": {
+        "files": 1,
+        "logicalBytes": 32070,
+        "uniqueAllocatedBytes": 32768
+      },
+      "SHIFAA-discovery-target-current.txt": {
+        "files": 1,
+        "logicalBytes": 65,
+        "uniqueAllocatedBytes": 72
+      },
+      "SHIFAA-Letter.docx": {
+        "files": 1,
+        "logicalBytes": 265130,
+        "uniqueAllocatedBytes": 266240
+      },
+      "SHIFAA-real-verify-current-task-path.txt": {
+        "files": 1,
+        "logicalBytes": 48,
+        "uniqueAllocatedBytes": 48
+      },
+      "SHIFAA-real-verify-final-current-path.txt": {
+        "files": 1,
+        "logicalBytes": 54,
+        "uniqueAllocatedBytes": 56
+      },
+      "SHIFAA-Team-Kickoff-Interactive-Guide.html": {
+        "files": 1,
+        "logicalBytes": 74274,
+        "uniqueAllocatedBytes": 77824
+      },
+      "SHIFAA-Team-Launch-Playbook.html": {
+        "files": 1,
+        "logicalBytes": 55841,
+        "uniqueAllocatedBytes": 57344
+      },
+      "SHIFAA-Artifact-Finalization": {
+        "files": 31,
+        "logicalBytes": 68447481,
+        "uniqueAllocatedBytes": 25769128
+      },
+      "SHIFAA-Commit-Review": {
+        "files": 3,
+        "logicalBytes": 90223,
+        "uniqueAllocatedBytes": 94600
+      },
+      "SHIFAA-Final-Cleanup": {
+        "files": 32394,
+        "logicalBytes": 3603534809,
+        "uniqueAllocatedBytes": 2134901840
+      },
+      "SHIFAA-final-target-20261020T073257Z-b1a1ee65": {
+        "files": 133,
+        "logicalBytes": 2811808,
+        "uniqueAllocatedBytes": 1554680
+      },
+      "SHIFAA-finish-20261020-b2a4e2d61e16": {
+        "files": 4405,
+        "logicalBytes": 513462094,
+        "uniqueAllocatedBytes": 366138208
+      },
+      "SHIFAA-Maintenance-20261021": {
+        "files": 1576,
+        "logicalBytes": 1003350321,
+        "uniqueAllocatedBytes": 391055168
+      },
+      "SHIFAA-Onboarding-Doc-Review": {
+        "files": 5,
+        "logicalBytes": 93150,
+        "uniqueAllocatedBytes": 103080
+      },
+      "SHIFAA-Repo-Hygiene": {
+        "files": 75,
+        "logicalBytes": 13172557,
+        "uniqueAllocatedBytes": 3423872
+      },
+      "SHIFAA-Work-Management-20261021": {
+        "files": 179,
+        "logicalBytes": 124220067,
+        "uniqueAllocatedBytes": 52399976
+      }
+    },
+    "errors": [],
+    "method": "Win32 FileStandardInfo.AllocationSize summed once per fresh file identity; includes current audit files, excludes filesystem metadata and this receipt final write. Not drive free-space attribution. Content integrity is separately bound by storage-after-validation.json."
+  }
+}

@@ -1,0 +1,30 @@
+name: Documentation
+description: Track documentation or evidence-organization work as the primary deliverable.
+title: 'docs: '
+labels:
+  - type:documentation
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        A documentation issue does not change authority or acceptance by itself. Preserve source versions and distinguish proposals, approvals, integration, and verification. Do not include PHI, credentials, tokens, or sensitive uploads.
+  - type: textarea
+    id: change
+    attributes:
+      label: Documentation outcome and audience
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Authoritative sources and version context
+      description: Link exact records and identify any unresolved conflict; do not infer authority.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Review and verification evidence
+      description: State what was checked and what remains unverified.
+    validations:
+      required: true

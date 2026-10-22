@@ -1,0 +1,78 @@
+name: Bug report
+description: Report a reproducible engineering defect without sensitive data.
+title: 'bug: '
+labels:
+  - type:bug
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        Do not include PHI, credentials, tokens, private identifiers, or sensitive uploads. Use approved synthetic data only. Priority and severity are optional and must follow documented evidence; leave them blank when uncertain.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: State the observed defect and affected engineering surface.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Give deterministic steps with synthetic inputs only.
+      placeholder: "1. ...\n2. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment and revision
+      description: Include app/runtime, OS, and commit SHA when known. Do not include identifiers or secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Tested evidence
+      description: List commands, outcomes, and safe synthetic evidence references. Never attach sensitive data.
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Owning spec, if directly supported
+      description: Optional exact spec ID (001–012) and source reference. Leave blank if uncertain.
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (optional)
+      description: Select only when existing explicit coordination evidence supports it.
+      options:
+        - Unspecified
+        - p0
+        - p1
+        - p2
+        - p3
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Engineering impact severity (optional; bugs only)
+      description: Select only when documented impact supports it. This is not clinical severity.
+      options:
+        - Unspecified
+        - s1
+        - s2
+        - s3
+        - s4

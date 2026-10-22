@@ -1,0 +1,37 @@
+name: Epic
+description: Track a genuine multi-task umbrella with linked child work.
+title: 'epic: '
+labels:
+  - type:epic
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        Use only for a real umbrella spanning linked child issues. An epic does not approve lifecycle work, clinical policy, or production use. Do not include PHI, credentials, tokens, or sensitive uploads.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Umbrella outcome and boundaries
+    validations:
+      required: true
+  - type: textarea
+    id: children
+    attributes:
+      label: Child issues and dependency order
+      description: Link existing children or describe the bounded breakdown.
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Source authority, gates, and exclusions
+      description: Cite exact records and preserve unresolved gates/owners.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Completion evidence
+      description: State what proves each child and umbrella outcome; distinguish implementation, verification, acceptance, and professional approval.
+    validations:
+      required: true

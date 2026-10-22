@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
+// Prepare the contract graph during collection; this test asserts metadata, not import latency.
+import * as contracts from '@shifaa/contracts/feature-011';
 import { describe, expect, it, vi } from 'vitest';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -159,10 +161,6 @@ describe('C02A client canonicalization metadata', () => {
   it('exports only metadata and agrees with contract bindings without exposing an encoder', async () => {
     const module = await generated();
     expect(module).toHaveProperty('feature011ArtifactCanonicalizationMetadata');
-    const contractModuleUrl = pathToFileURL(
-      path.join(root, 'packages/contracts/src/feature-011.ts'),
-    ).href;
-    const contracts = await import(contractModuleUrl);
     expect(module).toHaveProperty(
       'feature011ArtifactCanonicalizationMetadata',
       contracts.feature011ArtifactCanonicalizationMetadata,

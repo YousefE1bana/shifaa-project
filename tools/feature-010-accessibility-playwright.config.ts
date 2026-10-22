@@ -12,7 +12,8 @@ const baseURL = `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: '..',
-  testIgnore: '**/.worktrees/**',
+  // Exclude archived children, including when this checkout itself is a worktree.
+  testIgnore: path.resolve(__dirname, '../.worktrees/**').replaceAll('\\', '/'),
   testMatch: patient
     ? [
         'tests/e2e/feature-010-accessibility.spec.ts',

@@ -1,0 +1,51 @@
+name: Feature proposal
+description: Track a proposed user-facing capability without implying approval or lifecycle authorization.
+title: 'feature: '
+labels:
+  - type:feature
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        This form records work context only. It does not approve a spec, lifecycle stage, product scope, clinical/legal decision, or production use. Do not include PHI, credentials, tokens, or sensitive uploads.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: User outcome and bounded scope
+      description: Describe the proposed result and exclusions.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Spec or authority source
+      description: Link exact source records and quote applicable requirement IDs. Leave blank if unresolved.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance evidence and negative cases
+      description: Identify expected evidence, untested states, and relevant failure cases. Do not claim approvals not recorded.
+    validations:
+      required: true
+  - type: textarea
+    id: unknowns
+    attributes:
+      label: Unknowns, gates, and exclusions
+      description: Preserve exact open gate IDs/owners or write unknown; do not infer closure.
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Owning spec (optional)
+      description: Exact 001–012 only when directly supported by the linked source.
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (optional)
+      options:
+        - Unspecified
+        - p0
+        - p1
+        - p2
+        - p3

@@ -1,0 +1,140 @@
+{
+  "recordedAt": "2026-10-22T12:19:30.518074+00:00",
+  "ownerIssue": "https://github.com/YousefE1bana/shifaa-project/issues/504",
+  "scope": "Additive post-503 squash reconciliation and source/evidence binding; publication pending #504-specific acceptance disposition",
+  "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021",
+  "access": "Restricted retained evidence; do not publish raw API bodies, Docker records, backups or local settings",
+  "originalTestedCommit": "2b41bcdd563eba3191f6c7806abc1170ca34869b",
+  "rollbackRef": "codex/github-work-management-tested-2b41bcdd",
+  "mergedMain": "4511c2574e50e59609578256eb77b0dd55a6cbd3",
+  "exactTreeReconciledCommit": "967d0737efb3fcf77881148e6bbcb6d4d2bf3e98",
+  "identicalTestedAndReconciledTree": "245e9ae917032d0cd3ae214f9d40cdc16655906e",
+  "full42": {
+    "actuallyTestedCommit": "2b41bcdd563eba3191f6c7806abc1170ca34869b",
+    "pass": 42,
+    "fail": 0,
+    "notExecuted": 0,
+    "exitCode": 0,
+    "durationSeconds": 4142.5824463,
+    "turboCacheHits": 0,
+    "repeatedAfterReconciliation": false,
+    "familyPrivacy": "Outside original42"
+  },
+  "focused": {
+    "metadataDiscoveryScope": 35,
+    "apiClientF011": 4,
+    "contractsSuccessor": 14,
+    "exitCodes": [0, 0, 0],
+    "turboReplay": false
+  },
+  "receipts": [
+    {
+      "path": "integration-20261022/reconciliation.json",
+      "bytes": 2219,
+      "sha256": "554d4cd9e32ac669da17f021399324cd55004efb53698cc98b6213cbec1dd206"
+    },
+    {
+      "path": "integration-20261022/before.json",
+      "bytes": 1360,
+      "sha256": "fbcefdc09c58e1ec37091d7b33fa67f76bb7cdd21d0cbf21d17a79ee90e62d9f"
+    },
+    {
+      "path": "integration-20261022/rebase.log",
+      "bytes": 261,
+      "sha256": "4ff3f3679da088be5d85b14e8944ae2684e22bb60cd9bb023181352ba33d2deb"
+    },
+    {
+      "path": "integration-20261022/follow-on-before.patch",
+      "bytes": 544398,
+      "sha256": "0a304d181118d38eef07a6d2cef80acaf16390ad3c3b514857094527b65f5237"
+    },
+    {
+      "path": "integration-20261022/follow-on-after.patch",
+      "bytes": 544398,
+      "sha256": "0a304d181118d38eef07a6d2cef80acaf16390ad3c3b514857094527b65f5237"
+    },
+    {
+      "path": "integration-20261022/range-diff.txt",
+      "bytes": 1109,
+      "sha256": "43c3ad0013b4f50a34e428007d73be405f7504c41af381370d98e5d3b1ee2683"
+    },
+    {
+      "path": "integration-20261022/live-metadata-validation.json",
+      "bytes": 1013,
+      "sha256": "68fa815e8462d41be882e5c9416d4bd49edf3fabf73a51ccccbccc67fc00fc4a"
+    },
+    {
+      "path": "integration-20261022/evidence-integrity.json",
+      "bytes": 1133,
+      "sha256": "2e0dbf8296d6e98946a824255762019beab23be0104df035484a28860f5e84f6"
+    },
+    {
+      "path": "integration-20261022/focused-summary.json",
+      "bytes": 1870,
+      "sha256": "a2006f864799a16d029af654f31e0cf10ff48646de84b43c8661469ce93a8c08"
+    },
+    {
+      "path": "integration-20261022/metadata-discovery-scope.json",
+      "bytes": 511,
+      "sha256": "160a51462c8ea0d5b68bdad30a83cc31d9119af7db2ae46817ac9af8ba08b566"
+    },
+    {
+      "path": "integration-20261022/metadata-discovery-scope.log",
+      "bytes": 2611,
+      "sha256": "f895e048b9b5f787be281d68000176b4a94275f01bbff2f6f77990a7141847a1"
+    },
+    {
+      "path": "integration-20261022/api-client-focused.json",
+      "bytes": 451,
+      "sha256": "34ae86ef2237e9ab89d1b15f6bfcf645e4d56d011dbcf68d4de2c5c311bf002d"
+    },
+    {
+      "path": "integration-20261022/api-client-focused.log",
+      "bytes": 271,
+      "sha256": "77498893a0518b3b3432bb435826e811bdbd3d4bbab6b9cccb9f12cfbe6198f1"
+    },
+    {
+      "path": "integration-20261022/contracts-focused.json",
+      "bytes": 459,
+      "sha256": "3aa950d3cc14c7dbf22ee5b887654ad4505d8abe18c3148ce1838854dd9ffa3e"
+    },
+    {
+      "path": "integration-20261022/contracts-focused.log",
+      "bytes": 272,
+      "sha256": "27c8bf52ab555d9257030e8e705a2942514df4273d4c779780c766773cc81e3b"
+    },
+    {
+      "path": "integration-20261022/forms-cli.json",
+      "bytes": 1258,
+      "sha256": "81e30e9e52a6bbb61f77bef8ada13eb0a7257d1301055ef72d738c7b068d97b6"
+    },
+    {
+      "path": "integration-20261022/forms-cli.log",
+      "bytes": 867,
+      "sha256": "2fa50e985c4eecc7ce46b161af28b824b5d8e297592b4e2d9a9199838b25cdbc"
+    },
+    {
+      "path": "acceptance-20261022/complete-original42-confirmation/final-receipt-manifest.json",
+      "bytes": 2528,
+      "sha256": "eeeb8a819e27ec4d2a6d281638abee8f0de2e4293628f1c85dcee57e5569df9c"
+    },
+    {
+      "path": "acceptance-20261022/complete-original42-confirmation/execution.json",
+      "bytes": 447,
+      "sha256": "8cc82bacded636a4576a52b8970198d8e059e196008b7c27df1e97d4953eec70"
+    },
+    {
+      "path": "acceptance-20261022/complete-original42-confirmation/command-results.json",
+      "bytes": 4968,
+      "sha256": "f79b478347fcb045d41706290c11f7f7ac3d91237ef8a2b6c6fdaebd6a91cd31"
+    },
+    {
+      "path": "acceptance-20261022/complete-original42-confirmation/pnpm-verify.log",
+      "bytes": 382617,
+      "sha256": "07cf80e72b8a7c44d00bf5f1078d523a612bbf8706f5985279000bdec3eeee3e"
+    }
+  ],
+  "currentRecord": "../../../docs/work-management/integration-2026-10-22.md",
+  "preservation": "No cleanup repeated; historical receipts, original commits, hardlink paths and recovery limits preserved",
+  "acceptance": "No new human acceptance. PR503 exception does not transfer. Proposed bounded #504 disposition pending Product Owner decision."
+}

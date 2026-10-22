@@ -1,0 +1,38 @@
+name: Maintenance
+description: Track tooling, cleanup, reliability, or technical-debt maintenance.
+title: 'maintenance: '
+labels:
+  - type:maintenance
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        Keep scope bounded. Do not include PHI, credentials, tokens, or sensitive uploads; do not turn maintenance evidence into product or clinical approval.
+  - type: textarea
+    id: scope
+    attributes:
+      label: Maintenance scope and reason
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source and compatibility constraints
+      description: Link exact records, affected contracts, and exclusions.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Verification evidence
+      description: Give focused commands, expected outcomes, and rollback/preservation considerations where relevant.
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (optional)
+      options:
+        - Unspecified
+        - p0
+        - p1
+        - p2
+        - p3

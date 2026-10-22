@@ -1,0 +1,12 @@
+{
+  "scope": "Additive active-worktree Playwright discovery correction; existing assertions, inventory, timeout and retries unchanged",
+  "ownerIndex": "../../001-identity-onboarding/evidence/work-management-validation-2026-10-22.json",
+  "regression": "Primary and nested checkout discovery, including archived-copy rejection: 3/3 PASS. Previous nested-checkout regression was RED with No tests found.",
+  "browser": {
+    "patientPassed": 69,
+    "clinicPassed": 33,
+    "appSelectionSkips": 11,
+    "exitCode": 0
+  },
+  "limits": "Headless browser evidence is not human live Arabic/English or native assistive-technology acceptance."
+}
