@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-22T06:38:05.543546+00:00",
+  "recordedAt": "2026-10-22T07:19:27.985547+00:00",
   "ownerIssue": "https://github.com/YousefE1bana/shifaa-project/issues/504",
   "scope": "Additive verification diagnosis and representative classification review; no historical acceptance replaced",
   "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021",
@@ -175,10 +175,155 @@
       "path": "timeout-resolution-20261022/native-ownership-correction/focused-guards.log",
       "bytes": 820,
       "sha256": "4a4de16baf4c228fdb37e6d7c1919c770af3f29858248f0151209487143e6a73"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/command-results.json",
+      "bytes": 5014,
+      "sha256": "fcace50a712f2341173d905097c20f65e75bc33fdffd688728a6f6bddff6d066"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/execution.json",
+      "bytes": 447,
+      "sha256": "f0eb3cb3e1e0ca44ff67a617e8f45f977fdd812328de6cdd6d30aad6e0054884"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-file-disposition.json",
+      "bytes": 5738,
+      "sha256": "22e66584806acb7be33b407c5b58fd2234b8b72b3cb4e9d69e6f87a27e0473ba"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-worktree/pnpm-workspace.yaml",
+      "bytes": 746,
+      "sha256": "b14b2a74f04187eecf4e55e4e8cb3ff365a99a2ffd59455a3e8c28f7475de617"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-worktree/specs/006-discovery-sos-foundation/evidence/performance.json",
+      "bytes": 3417,
+      "sha256": "48fadb418afe3a1753c3e0144a5d5d471fb0ba4140d7a456244e284401187bda"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-worktree/specs/007-identity-continuity-sessions-mfa-recovery/evidence/performance.json",
+      "bytes": 1265,
+      "sha256": "df7abc4092aa08e6a7294257f974a7c22e9104f67e54c4c2ce75e6c190b644f1"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-worktree/specs/008-audit-admin-aggregates-observability/evidence/operations/restore-report.md",
+      "bytes": 1714,
+      "sha256": "66686e3299e6d3c3176f60dd3762c6d092fec75b134488ae5aeaa066fd8c3c8b"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-worktree/specs/008-audit-admin-aggregates-observability/evidence/performance/load-profile.json",
+      "bytes": 1431,
+      "sha256": "d9bbf677f08f5ad8a995cbf769615ff02574b196ab3f9fac79ab6f7759360202"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-worktree/specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/native-bootstrap/0cab4ca0-8437-4a72-b1f9-fef8fa961091.json",
+      "bytes": 28550,
+      "sha256": "caca286fd9d17822385760c891549b6f8267768f5756f9391f3cca42094cc4cd"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-worktree/specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/native-bootstrap/46dae95b-33b5-44c4-b80e-ee9485c3a6ac.json",
+      "bytes": 28550,
+      "sha256": "33167cda59ce7b35ab80a1bb50ba812bbd55c38e2e91d5923879935d5c77d009"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/generated-worktree/specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K24/pr-review-remediation-2026-10-12/prerequisite-remediation/native-bootstrap/5fe29856-fc14-460a-a65a-3e8f202ae2cc.json",
+      "bytes": 28550,
+      "sha256": "fc76fe46d619497b7ccaf541f1c5bc605f34e1f58855da81e81a43f212524e93"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/pnpm-verify.log",
+      "bytes": 354077,
+      "sha256": "94ebd8f00fe568faf9b003b0578f84c9807dc088351f93e733f8e62aef161b05"
+    },
+    {
+      "path": "acceptance-20261022/owned-native-confirmation/post-run-integrity.json",
+      "bytes": 603,
+      "sha256": "3e43db590221993ded54974220226e29f8f34894cd296d8fc7b6c0284c8bd886"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/actual-matrix-execution.json",
+      "bytes": 258,
+      "sha256": "ce079a74d557ab4d5b1acab73471b3b44b0e060ccd914b9f991f5c2379c3b941"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/actual-matrix-execution.log",
+      "bytes": 23603,
+      "sha256": "6d5e2bcd21abfdc3dce735ed9e08610e1c6689cfde87c2e7e8f04050fbf16386"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/actual-matrix-list.json",
+      "bytes": 149,
+      "sha256": "4666aec208835debf7166f8cf83a70bce080a50d881756a3b34d61cf9101000e"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/actual-matrix-list.log",
+      "bytes": 15011,
+      "sha256": "343ec11c6ee9b694ba5fbfb9ae6d44730960ea581b82537620d94c404a18c9eb"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/f011-contract-parity.json",
+      "bytes": 207,
+      "sha256": "f7e6cd480b0e78e2c94df1462612902a5eaf93401ff7783d32678b9c4899e483"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/f011-contract-parity.log",
+      "bytes": 23625,
+      "sha256": "46882078c9a99b7628a00c8708d0931b3e9279f198e8d06c4d4a78a8be3fa9ff"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/feature-010-accessibility-playwright.config.ts",
+      "bytes": 2056,
+      "sha256": "fd67cb5e4d21b47cbe837ac04de9a10fb21daed4679d4f4210185b298a50319b"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/green-discovery-2.json",
+      "bytes": 247,
+      "sha256": "eed3639506e2ccf4bfe811be3e3a73397c1a9928b6812e798e4505006d256b5a"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/green-discovery-2.log",
+      "bytes": 385,
+      "sha256": "7fce0dae37fe5ecc1fbfdcbb323dd58b3b1d9a98d00cfd699613db69e925cda4"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/green-discovery.json",
+      "bytes": 216,
+      "sha256": "5cb0120e6a30471fffc442a32fdd123d9ccc703fe30f5e93c21a4dd5ab380b5a"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/green-discovery.log",
+      "bytes": 26843,
+      "sha256": "db5377f9d25781b451b4633d749ab47719fb116464052532a8a1586299466cb4"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/matrix-inventory-parity.json",
+      "bytes": 358,
+      "sha256": "7b63acae8d820cfa06a10b2d382da7687653f5c699ce892623dfe7e899517a2f"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/primary-matrix-list.log",
+      "bytes": 15011,
+      "sha256": "343ec11c6ee9b694ba5fbfb9ae6d44730960ea581b82537620d94c404a18c9eb"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/red-discovery.json",
+      "bytes": 217,
+      "sha256": "1db97f6b57f9c2d33bbcc8e443ff3e0f153ad3a9ae6544ce1381b337957e8dfd"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/red-discovery.log",
+      "bytes": 1866,
+      "sha256": "e92f3d74aa9a4fd298061684d25802b8963124a2b201d4ae09f0a2bb00f0e8c1"
+    },
+    {
+      "path": "timeout-resolution-20261022/playwright-discovery/vitest-worktree-discovery.test.mjs",
+      "bytes": 3064,
+      "sha256": "fc935e94286c54189ca50ed3eb93b17e3e5ff9dd0285c2342de3d8487ddf1084"
     }
   ],
-  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022\\owned-native-confirmation",
-  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at the owned-native-confirmation location when produced. This pre-execution index claims no final aggregate PASS.",
+  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022\\worktree-discovery-confirmation",
+  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at worktree-discovery-confirmation when produced. Pre-execution index claims no final PASS.",
   "historicalFailureLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-9c7391d",
   "historicalStorageIndex": "work-management-storage-2026-10-21.json",
   "limitations": [
@@ -188,13 +333,32 @@
     "Human live Arabic/English acceptance, publication, current-head CI and human squash merge remain separate mandatory gates."
   ],
   "previousAggregateLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022",
-  "previousAggregateResult": {
-    "commit": "6ea2d6c384f1e03f651a5461fafdfc59710bd3b2",
-    "exitCode": 1,
-    "pass": 22,
-    "fail": 1,
-    "notExecuted": 19,
-    "durationSeconds": 248.9469738,
-    "cause": "Exact native Supabase workdir differed from current worktree; ownership guard correctly failed closed."
+  "aggregateAttempts": [
+    {
+      "commit": "6ea2d6c384f1e03f651a5461fafdfc59710bd3b2",
+      "exitCode": 1,
+      "pass": 22,
+      "fail": 1,
+      "notExecuted": 19,
+      "durationSeconds": 248.9469738,
+      "cause": "Exact native Supabase workdir differed from current worktree; ownership guard correctly failed closed."
+    },
+    {
+      "commit": "2c058b72210fce33d82a9e94f101fcf6ec60b6fc",
+      "exitCode": 1,
+      "passCount": 40,
+      "failCount": 1,
+      "notExecuted": 1,
+      "durationSeconds": 1039.5662031,
+      "cause": "Command 41 F010 matrix discovery excluded the active checkout because its absolute path contains .worktrees; no tests found."
+    }
+  ],
+  "focusedBrowserResult": {
+    "patientPassed": 69,
+    "clinicPassed": 33,
+    "appSelectionSkips": 11,
+    "exitCode": 0,
+    "durationSeconds": 125.83142370000132,
+    "inventoryUnchanged": true
   }
 }
