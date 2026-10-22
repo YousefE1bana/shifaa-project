@@ -47,7 +47,16 @@ const sourceFixtureRoots = [
 function candidateFiles() {
   const output = execFileSync(
     'git',
-    ['ls-files', '--cached', '--others', '--exclude-standard', '-z'],
+    [
+      '-c',
+      'core.longpaths=true',
+      '--no-optional-locks',
+      'ls-files',
+      '--cached',
+      '--others',
+      '--exclude-standard',
+      '-z',
+    ],
     {
       cwd: repoRoot,
       encoding: 'utf8',

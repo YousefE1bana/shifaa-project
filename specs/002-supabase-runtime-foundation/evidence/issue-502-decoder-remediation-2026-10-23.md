@@ -27,7 +27,7 @@ validated Expo/Metro combination. It is not a claim that upstream query-string's
 older Node support range now supports synchronous ESM loading. Retire the patch
 and scoped override when Expo Router supplies a compatible fixed decoder path;
 revalidate URL semantics before removal. Package licenses remain in installed
-upstream packages. No new package, audit exclusion or threshold change is added.
+upstream packages. No new dependency identity, audit exclusion or threshold change is added.
 
 ## Reproduction and required validation
 
@@ -52,6 +52,23 @@ no published patched versions in the inspected registry. Forge's
 [proposed correction](https://github.com/digitalbazaar/forge/pull/1152) remains
 unmerged; it is not an accepted release. No unreviewed crypto/AST fork or false
 clean-audit result is introduced to bypass this blocker.
+
+## Windows secret-scan coverage correction
+
+The committed-source secret scan returned exit 0 while Git warned that a deep
+directory could not be opened. A real disposable Git repository with local
+`core.longpaths=false` reproduced the defect: a synthetic, nonfunctional private
+key header in a deep untracked text file was missed and the scanner returned 0.
+Tracked-file enumeration is not claimed to have failed by this reproduction.
+
+The scanner now enables Git long-path handling for that subprocess only, without
+changing local or global Git configuration. The focused regression exercises the
+actual scanner and Git, accepts ordinary text and rejects the synthetic marker
+with exit 1. It verifies the fixture's local configuration remains false and
+removes only its identity-checked disposable fixture. Detection patterns,
+exclusions and the original verification command are unchanged. Run the regression
+with `node --test tools/verify-secrets.test.mjs`; it is not represented as part of
+the earlier 138-test execution or as a new full aggregate run.
 
 ## Preservation and integration
 
