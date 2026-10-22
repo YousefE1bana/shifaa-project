@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-22T07:28:38.321914+00:00",
+  "recordedAt": "2026-10-22T08:47:49.667380+00:00",
   "ownerIssue": "https://github.com/YousefE1bana/shifaa-project/issues/504",
   "scope": "Additive verification diagnosis and representative classification review; no historical acceptance replaced",
   "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021",
@@ -450,10 +450,115 @@
       "path": "timeout-resolution-20261022/successor-timeout/original.test.ts",
       "bytes": 6571,
       "sha256": "f4752d5fc2ad45fc45827f225ef5ed9aa673511334d58a305f0bab0e7d425508"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/assertion-preservation.json",
+      "bytes": 378,
+      "sha256": "7f9b5f68d0d44eacaf4e0e928640d646febdd3f8676ec117529c141a7150a058"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/atomic-confirmation.json",
+      "bytes": 392,
+      "sha256": "599372f34b45feb9d3c2a80c44d06b93f490183aa82bd2bb4f345a59cdc5d77f"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/atomic-confirmation.log",
+      "bytes": 133,
+      "sha256": "518bc4871b79a2b28575901daa825091fafee3a477c986eecb86b41245a930f4"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/composition-execution.json",
+      "bytes": 314,
+      "sha256": "678490035193030d7952da35ba4279138baa4414bea8f733a2612ff81d599048"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/composition.log",
+      "bytes": 2062,
+      "sha256": "8b1427babe54e5d5769aaa9f5a92fdab83f6bef4d5880f0bfddc00100bf8071b"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/composition.ps1",
+      "bytes": 110,
+      "sha256": "efb1d383f8f37098f7bc131a17ce17e37292d01aeea7b7ec5b461fbc83d0aa90"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/focused.json",
+      "bytes": 439,
+      "sha256": "e6d853d606aa954dd48037ff7bcdb7af1ec43cc2913cf2a36363d58372232e50"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/focused.log",
+      "bytes": 1863,
+      "sha256": "9bd629d206ed6ff0e3a790a1a7f554d82ae0d5cce4b280a87d9db877c00f8ca7"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/generated-file-disposition.json",
+      "bytes": 94121,
+      "sha256": "35c6ea90fd1304cf305f7aaae359337d69ac7b3cf2918bf4331a2ec7808de37d"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/original.test.mjs",
+      "bytes": 16905,
+      "sha256": "a8c6fcffdf89bdccc421ea58479271b9941184c50629e92a6d9852fd37ef3a6e"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/physical-races-confirmation.json",
+      "bytes": 562,
+      "sha256": "d19009ad3cc3ddf17bd2df974a745310927bb12ec73bb41793ef79c1fde5a179"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/physical-races-confirmation.log",
+      "bytes": 781,
+      "sha256": "8692bccf541ff1e27988ce626499eb97280c31d331862407f85293487ee449a6"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/post-run-integrity.json",
+      "bytes": 987,
+      "sha256": "f81a8528d5fdb3603f27efd7a09d44149c7eb25777821cd7f8bb76d6500ed4c8"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/reproducibility-input-restoration.json",
+      "bytes": 655,
+      "sha256": "3448e2165514aff84883c1015d12d9c08f3efb2ad46a8de95c456416cc81e53e"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/security-confirmation.json",
+      "bytes": 393,
+      "sha256": "56a0cdfeef7c25a415caeeac468f3717102b34125f5a8626b592bb471099f46b"
+    },
+    {
+      "path": "timeout-resolution-20261022/scope-fixture-pointer/security-confirmation.log",
+      "bytes": 202,
+      "sha256": "abbf0d163e2d8f8b088450a923dad6ef124a93b17c0b84871fb8ac8e863d3d94"
+    },
+    {
+      "path": "acceptance-20261022/successor-preparation-confirmation/execution.json",
+      "bytes": 447,
+      "sha256": "b105e77fe761ae1abe42d440dd40bbbff45ed19b1923fe6739705bc76171df59"
+    },
+    {
+      "path": "acceptance-20261022/successor-preparation-confirmation/command-results.json",
+      "bytes": 5089,
+      "sha256": "c8eef043023c888d8bd47fe92ffd31e1dbbc69b30474901b5ec70c1ecf54bb8a"
+    },
+    {
+      "path": "acceptance-20261022/successor-preparation-confirmation/generated-file-disposition.json",
+      "bytes": 57303,
+      "sha256": "4761a3f5d3599d77ab2389637cfe78d94ea71603394d55474c04f382f16c9aa2"
+    },
+    {
+      "path": "acceptance-20261022/successor-preparation-confirmation/post-run-integrity.json",
+      "bytes": 987,
+      "sha256": "581597cfc2e0a62ddead93af004ad64aafd21ae7eb150de1bc036485e40899cd"
+    },
+    {
+      "path": "acceptance-20261022/successor-preparation-confirmation/pnpm-verify.log",
+      "bytes": 379089,
+      "sha256": "e082f71a379d91f286af431ab629febe4ee6331fc1bb031e332ffee7f64a6de5"
     }
   ],
-  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022\\successor-preparation-confirmation",
-  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at successor-preparation-confirmation when produced. This pre-execution binding claims no final aggregate PASS.",
+  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022\\complete-original42-confirmation",
+  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at complete-original42-confirmation when produced. This pre-execution binding claims no final aggregate PASS.",
   "historicalFailureLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-9c7391d",
   "historicalStorageIndex": "work-management-storage-2026-10-21.json",
   "limitations": [
@@ -490,6 +595,15 @@
       "notExecuted": 35,
       "durationSeconds": 119.7838568,
       "cause": "Command 7 contracts successor metadata test timed out at 6486 ms while awaiting cold tooling preparation; original API-client F011 passed. Historical phase-level timing unavailable."
+    },
+    {
+      "commit": "e45efea69a562f86593e06128f68b879b6ceacb6",
+      "exitCode": 1,
+      "passCount": 41,
+      "failCount": 1,
+      "notExecuted": 0,
+      "durationSeconds": 1252.6833535,
+      "cause": "Command 42 tooling: all 25 scope cases copied an absent ignored active pointer before constructing their own disposable F011 pointer; 182 other tooling tests passed."
     }
   ],
   "focusedBrowserResult": {
@@ -509,5 +623,75 @@
     "durationsSeconds": [31.363346999998612, 31.750263000001723],
     "successorTestsPassed": [14, 14],
     "assertionExpressionsUnchanged": 15
+  },
+  "maintenanceFixtureCorrectionCommit": "37d853ea4ac74142bb381cc93698c2eb3f108924",
+  "targetedComposition": {
+    "testedCommit": "37d853ea4ac74142bb381cc93698c2eb3f108924",
+    "completeCommand": {
+      "exitCode": 1,
+      "durationSeconds": 1139.777877099994,
+      "firstFailure": "Accepted historical K06 proof absent from maintenance worktree before physical races; prior units/browser/five API stages passed."
+    },
+    "scopeFocused": {
+      "pass": 25,
+      "exitCode": 0,
+      "durationSeconds": 8.065692500000296,
+      "allOtherTestBytesUnchanged": true,
+      "activeFeaturePointerCreated": false
+    },
+    "restoredHistoricalInput": {
+      "ownerIndex": "../../011-allergies-clinical-content-governance/evidence/maintenance-2026-10-21-retention.json",
+      "relativePath": "artifacts/feature-011/k05-k06/remediation/consumer-proof.json",
+      "bytes": 168497,
+      "sha256": "ef39dd0a40178cd18d935b4c36dc137f621dd311f41a1376b74e69364962fdf6",
+      "exactOriginalK06HashMatched": true
+    },
+    "separatelyExecutedStages": [
+      {
+        "command": [
+          "node",
+          "--import",
+          "tsx",
+          "--input-type=module",
+          "-e",
+          "import {physical} from './tools/run-feature-011-composition-test.mjs'; console.log(JSON.stringify(await physical('races')))"
+        ],
+        "testedCommit": "37d853ea4ac74142bb381cc93698c2eb3f108924",
+        "startedAt": "2026-10-22T08:17:50.910149+00:00",
+        "durationSeconds": 278.5595205999998,
+        "exitCode": 0,
+        "logSHA256": "8692bccf541ff1e27988ce626499eb97280c31d331862407f85293487ee449a6",
+        "restorationReceipt": "reproducibility-input-restoration.json"
+      },
+      {
+        "command": [
+          "node",
+          "--import",
+          "tsx",
+          "tools/run-feature-011-composition-test.mjs",
+          "--security"
+        ],
+        "testedCommit": "37d853ea4ac74142bb381cc93698c2eb3f108924",
+        "startedAt": "2026-10-22T08:22:48.812102+00:00",
+        "durationSeconds": 939.476828599989,
+        "exitCode": 0,
+        "logSHA256": "abbf0d163e2d8f8b088450a923dad6ef124a93b17c0b84871fb8ac8e863d3d94"
+      },
+      {
+        "command": [
+          "node",
+          "--import",
+          "tsx",
+          "tools/run-feature-011-composition-test.mjs",
+          "--atomic"
+        ],
+        "testedCommit": "37d853ea4ac74142bb381cc93698c2eb3f108924",
+        "startedAt": "2026-10-22T08:38:28.296840+00:00",
+        "durationSeconds": 329.3821051999985,
+        "exitCode": 0,
+        "logSHA256": "518bc4871b79a2b28575901daa825091fafee3a477c986eecb86b41245a930f4"
+      }
+    ],
+    "completeAggregatePassClaimed": false
   }
 }
