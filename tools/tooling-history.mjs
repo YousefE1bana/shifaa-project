@@ -25,13 +25,14 @@ const physicalPreflightRepair = {
   historicalSha256: '23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b',
   gitBlob: '8ba2568f4108ca5e09b2e6baa4f32efc54b8d649',
 };
-// Maintenance changes only runtime/security dependency pins in these two inputs.
+// Maintenance changes runtime/security pins and removes the audit ignore-writer
+// flag; no unrelated script or workflow change is admitted by these exact digests.
 // Their sealed F011 acceptance view stays historical; current execution and CI
 // validate the new runtime separately. Any further byte change fails closed.
 const maintenancePins = [
   {
     path: 'package.json',
-    currentSha256: '7da9bea3954b9c012bc13c7f118c4c649c3ec648ff68a0ffff2696639d4b1c37',
+    currentSha256: 'b922e33712a9b003cb5f46e7661d06db0e6a985d8178ada9c341b878d577c738',
     historicalSha256: '2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200',
     gitBlob: 'f205a80ae41b5507afaa1a7868fbbc8e84deb217',
   },
