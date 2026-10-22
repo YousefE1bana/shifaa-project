@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-22T07:19:27.985547+00:00",
+  "recordedAt": "2026-10-22T07:28:38.321914+00:00",
   "ownerIssue": "https://github.com/YousefE1bana/shifaa-project/issues/504",
   "scope": "Additive verification diagnosis and representative classification review; no historical acceptance replaced",
   "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021",
@@ -320,10 +320,140 @@
       "path": "timeout-resolution-20261022/playwright-discovery/vitest-worktree-discovery.test.mjs",
       "bytes": 3064,
       "sha256": "fc935e94286c54189ca50ed3eb93b17e3e5ff9dd0285c2342de3d8487ddf1084"
+    },
+    {
+      "path": "acceptance-20261022/worktree-discovery-confirmation/command-results.json",
+      "bytes": 5221,
+      "sha256": "c8911269854af3cb7080f503d73adb7255b786a3b189a47efa089e1c04e0a1c5"
+    },
+    {
+      "path": "acceptance-20261022/worktree-discovery-confirmation/execution.json",
+      "bytes": 446,
+      "sha256": "2f56d2dad9147729404f2dff16cc742bc7f03bec42541630c9587e8d5559c856"
+    },
+    {
+      "path": "acceptance-20261022/worktree-discovery-confirmation/pnpm-verify.log",
+      "bytes": 81966,
+      "sha256": "4541673d083d2b97a096e3df6ec92feb77f815c690e53e076675a0d702cd0c31"
+    },
+    {
+      "path": "acceptance-20261022/worktree-discovery-confirmation/post-run-integrity.json",
+      "bytes": 393,
+      "sha256": "b5df4837361bda89911d894ef70f851727bf6c43fe887210093e215defc19ba0"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-corrected-uncached-1/console.log",
+      "bytes": 57421,
+      "sha256": "32df87faca57fc7c46b2c166e3f94dde2ab9dadbca122a1ef705c8d5fded1ada"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-corrected-uncached-1/execution.json",
+      "bytes": 573,
+      "sha256": "2f00431ed0a68f99132d72362c67ff6b70b506202635f258a1edf120f9d43c69"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-corrected-uncached-1/run.ps1",
+      "bytes": 111,
+      "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-corrected-uncached-1/samples.json",
+      "bytes": 175772,
+      "sha256": "598126d340bb28f585ad80115eebcd468c094aa9dcd6a3bf6b48e5114ca780e1"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-corrected-uncached-2/console.log",
+      "bytes": 57593,
+      "sha256": "00b8cd9f62230e827a4d20701db45a2eb4b324e785b1491426fd524c892367da"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-corrected-uncached-2/execution.json",
+      "bytes": 573,
+      "sha256": "e0d21f0434e2a656d259ffd14f5aa5c64cf8f3817cb7e42ffa5cf3a860eb8c43"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-corrected-uncached-2/run.ps1",
+      "bytes": 111,
+      "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-corrected-uncached-2/samples.json",
+      "bytes": 177469,
+      "sha256": "8e7d3b8c75e02f8b8cd228437982a663eba6ed4333a56a870c9c0e3824577832"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-diagnostic-concurrent/console.log",
+      "bytes": 58063,
+      "sha256": "18e266a02dbb0ecfc633bed862fedd9bf04ea3a7697b38a58287b8f27284bc3a"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-diagnostic-concurrent/execution.json",
+      "bytes": 636,
+      "sha256": "8fe0226d1aabbff0e1ef644698e52397e44aaac85f4e546532cf76f89a346068"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-diagnostic-concurrent/run.ps1",
+      "bytes": 111,
+      "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-diagnostic-concurrent/samples.json",
+      "bytes": 175944,
+      "sha256": "5ee4c8d7c95c5bb84a8a5474c6ef845b1a255b823b9223bbffa184491a90b066"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/assertion-preservation.json",
+      "bytes": 282,
+      "sha256": "2c6ecd60fc6c63196267a8af117eb55450c6bfabbcde25039b611a83b73a0b58"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/delay-preparation.mjs",
+      "bytes": 2181,
+      "sha256": "1db13800fa349e94b946735b414dc0055805ef4ecdedd2afab0ff3e45cd342b8"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/delayed-original-process.json",
+      "bytes": 148,
+      "sha256": "9c55eda4544b82db3ea62941114ac0d857b839005c7e84781c86b2a449d7b3ce"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/delayed-original.json",
+      "bytes": 661,
+      "sha256": "c15cad77d1c2c0a3fb3a9b8b77ab3faa9bdb15f80ef633fe8ddc28dbb486c795"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/delayed-original.log",
+      "bytes": 1326,
+      "sha256": "523c7835c71b6bbce6407cd1e2815cbf41256c27a9834b49660f2c1f25d6dad7"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/delayed-prepared-process.json",
+      "bytes": 146,
+      "sha256": "7f7f80231e4793ca5c93c5b74dba5bedc25cade6a0cb396748f693eb6155a414"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/delayed-prepared.json",
+      "bytes": 662,
+      "sha256": "8991d91c5e729246f81a10f78444cd803a0f2533028d8a89ac0d2183ed4f9d9d"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/delayed-prepared.log",
+      "bytes": 273,
+      "sha256": "eadf76b4b42f76adfd9e2b5ac84f3d5db7b5941ebdbce5825bc038629a48fd65"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/instrumented.test.ts",
+      "bytes": 6983,
+      "sha256": "e223e9dc5d792e2991c2bb80beb982b47d97967c0168b62359607d06da5a768e"
+    },
+    {
+      "path": "timeout-resolution-20261022/successor-timeout/original.test.ts",
+      "bytes": 6571,
+      "sha256": "f4752d5fc2ad45fc45827f225ef5ed9aa673511334d58a305f0bab0e7d425508"
     }
   ],
-  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022\\worktree-discovery-confirmation",
-  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at worktree-discovery-confirmation when produced. Pre-execution index claims no final PASS.",
+  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022\\successor-preparation-confirmation",
+  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at successor-preparation-confirmation when produced. This pre-execution binding claims no final aggregate PASS.",
   "historicalFailureLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-9c7391d",
   "historicalStorageIndex": "work-management-storage-2026-10-21.json",
   "limitations": [
@@ -351,6 +481,15 @@
       "notExecuted": 1,
       "durationSeconds": 1039.5662031,
       "cause": "Command 41 F010 matrix discovery excluded the active checkout because its absolute path contains .worktrees; no tests found."
+    },
+    {
+      "commit": "16f2e38814b33c4d78ccafdbde7e206dc1c68520",
+      "exitCode": 1,
+      "passCount": 6,
+      "failCount": 1,
+      "notExecuted": 35,
+      "durationSeconds": 119.7838568,
+      "cause": "Command 7 contracts successor metadata test timed out at 6486 ms while awaiting cold tooling preparation; original API-client F011 passed. Historical phase-level timing unavailable."
     }
   ],
   "focusedBrowserResult": {
@@ -360,5 +499,15 @@
     "exitCode": 0,
     "durationSeconds": 125.83142370000132,
     "inventoryUnchanged": true
+  },
+  "successorCorrectionCommit": "3dc2ec499d8a918e9aa58896cc02c94da2544c12",
+  "successorRepeatability": {
+    "testedCommit": "3dc2ec499d8a918e9aa58896cc02c94da2544c12",
+    "uncachedTurboTasks": 21,
+    "cacheHits": 0,
+    "exits": [0, 0],
+    "durationsSeconds": [31.363346999998612, 31.750263000001723],
+    "successorTestsPassed": [14, 14],
+    "assertionExpressionsUnchanged": 15
   }
 }
