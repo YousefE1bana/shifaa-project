@@ -2,6 +2,8 @@
 
 Additive continuation: [CI bootstrap correction and remaining blockers](issue-502-ci-bootstrap-2026-10-23.md). The original observations below remain historical; the successor resolves the separately reported installer warning without claiming a green project dependency gate.
 
+Further local candidate: [bounded RSA backport and actual consumer regressions](issue-502-forge-backport-2026-10-23.md). The registry audit and Supabase containment remain blocked; this is not a new publication or acceptance disposition.
+
 Engineering candidate, 22 October 2026. Base main:
 `baa44d5590760eaca73f4ca1ddcea01c113c8ebe`. This record grants no lifecycle,
 clinical, legal or production approval. Issue #502 and Issue #493 remain OPEN.

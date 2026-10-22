@@ -101,6 +101,21 @@ const malformedProbe = spawnSync(
 assert.ifError(malformedProbe.error);
 assert.equal(malformedProbe.status, 0, malformedProbe.stderr);
 
+// Exercise the real patched RSA consumer; the upstream advisory is still
+// reported by the unchanged audit gate until its release/disposition is resolved.
+const signatures = spawnSync(
+  process.execPath,
+  [
+    '--max-old-space-size=128',
+    '--test',
+    '--test-timeout=20000',
+    join(root, 'tools/verify-forge-signatures.test.mjs'),
+  ],
+  { encoding: 'utf8', timeout: 25000, maxBuffer: 1024 * 1024 },
+);
+assert.ifError(signatures.error);
+assert.equal(signatures.status, 0, signatures.stdout + signatures.stderr);
+
 process.stdout.write(
-  `Expo dependency verification passed: ${packageNames.length} installed patient dependencies satisfy declared ranges and the expo@${expoPackage.version} bundled native-module map; Xcode UUID and Expo query decoding checks passed.\n`,
+  `Expo dependency verification passed: ${packageNames.length} installed patient dependencies satisfy declared ranges and the expo@${expoPackage.version} bundled native-module map; Xcode UUID, Expo query decoding and RSA signature checks passed.\n`,
 );
