@@ -52,7 +52,6 @@ async function withFixture(mutator, observedTooling = tooling) {
       'packages/contracts/src/feature-011.ts',
       'package.json',
       'pnpm-lock.yaml',
-      '.specify/feature.json',
       '.node-version',
       '.nvmrc',
       'shifaa-prd.md',
