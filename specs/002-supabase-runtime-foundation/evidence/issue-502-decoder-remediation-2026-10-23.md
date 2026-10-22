@@ -93,3 +93,30 @@ Required security corrections, safe aggregate-verification disposition,
 PR-specific human acceptance, fresh current-head CI, human squash merge and
 finalization remain pending. The previous publication exceptions do not transfer.
 Issues #493 and #502 remain OPEN; no F012 lifecycle or team onboarding begins.
+
+## Final-source workspace validation and recovery successor
+
+The [current workspace receipt](issue-502-current-workspace-validation-2026-10-23.json)
+records an uncached execution on clean `ea537b69fc665c35e4b2fab44c702bb2227a4ea1`:
+60/60 lint, typecheck, build and test tasks passed, zero Turbo cache hits,
+exit 0 in 131.62 seconds. The API reported 702 passed and 65 environment-gated
+tests skipped. This does not supply the missing database/runtime acceptance or
+a new 42-command aggregate PASS.
+
+Before the ordinary patient build replaced ignored `dist`, all 108 earlier
+web/iOS/Android export files were copied to private retained storage and their
+hashes verified. The old ignored paths are no longer present. Use
+`next-platform-export-preservation.json` and `next-platform-export-retained/`
+under the private evidence root for recovery; earlier receipts remain intact.
+The additive manifest seals 121 files, reverifies 155 previously sealed files,
+and confirms 2,778 F011 files match main. All 17 containers, seven networks and
+eight volumes retain their captured identities and metadata.
+
+Bounded installed-package diagnostics confirmed Forge's malformed structure
+acceptance and braces' under-length-limit expansion stack overflow. These are
+local diagnostic observations, not complete remote exploit proofs or security
+PASS results. Registry readback still found no published fixed versions for
+these two advisories. Read-only Windows inspection still found wildcard
+listeners and an overlapping Docker Allow rule; this non-administrator session
+cannot apply the proposed mitigation, and no separate-device reachability test
+was performed. Security and network blockers therefore remain open.
