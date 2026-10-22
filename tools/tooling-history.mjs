@@ -26,7 +26,8 @@ const physicalPreflightRepair = {
   gitBlob: '8ba2568f4108ca5e09b2e6baa4f32efc54b8d649',
 };
 // Maintenance changes runtime/security pins and removes the audit ignore-writer
-// flag; no unrelated script or workflow change is admitted by these exact digests.
+// flag and updates the CI bootstrap action; no unrelated script or workflow
+// change is admitted by these exact digests.
 // Their sealed F011 acceptance view stays historical; current execution and CI
 // validate the new runtime separately. Any further byte change fails closed.
 const maintenancePins = [
@@ -38,7 +39,7 @@ const maintenancePins = [
   },
   {
     path: '.github/workflows/ci.yml',
-    currentSha256: '79e16ac1adc71fc20b9cb80d16e0c3ba2e1f133c1350d2728d476aee9f82529c',
+    currentSha256: 'fd78bd9143813c864b990ba6789eb2ae4478b348a7c7c17ba2f9162897b44c05',
     historicalSha256: 'd070253268ca8db1e28054b8a68e2b596b5c19a115a70900fbad456f24b407d2',
     gitBlob: '66199253e1d8c9d03034abc7f9eb6f4b1b596d64',
   },

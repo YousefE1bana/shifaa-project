@@ -113,7 +113,11 @@ test('maintenance pins preserve sealed F011 inputs without admitting unrelated s
     assert.equal(
       readFileSync(join(root, pins[1]), 'utf8')
         .replaceAll('24.22.1', '24.18.0')
-        .replaceAll('11.13.1', '11.13.0'),
+        .replaceAll('11.13.1', '11.13.0')
+        .replaceAll(
+          'pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10',
+          'pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9',
+        ),
       historical.get(pins[1]).toString('utf8'),
       'CI jobs, commands and security settings must remain unchanged',
     );
