@@ -71,3 +71,52 @@ test('physical preflight compatibility rejects live drift after a successful cac
     rmSync(root, { recursive: true });
   }
 });
+
+test('maintenance pins preserve sealed F011 inputs without admitting script or workflow drift', () => {
+  const pins = ['package.json', '.github/workflows/ci.yml'];
+  const parent = join(source, 'artifacts/feature-011/physical-preflight-history-fixtures');
+  mkdirSync(parent, { recursive: true });
+  const root = mkdtempSync(join(parent, 'maintenance-'));
+  try {
+    for (const file of [...toolingPolicyInputPaths, ...pins]) {
+      mkdirSync(dirname(join(root, file)), { recursive: true });
+      copyFileSync(join(source, file), join(root, file));
+    }
+    const gitDir = execFileSync('git', ['rev-parse', '--absolute-git-dir'], {
+      cwd: source,
+      encoding: 'utf8',
+    }).trim();
+    writeFileSync(join(root, '.git'), `gitdir: ${gitDir}\n`);
+    const historical = toolingPolicyHistoricalInputs(root);
+    const oldPackage = JSON.parse(historical.get('package.json'));
+    const currentPackage = JSON.parse(readFileSync(join(root, 'package.json')));
+    assert.equal(currentPackage.engines.node, '24.22.1');
+    assert.deepEqual(
+      ['tsx', 'vitest', 'yaml'].map((key) => currentPackage.devDependencies[key]),
+      ['4.23.15', '4.1.11', '2.8.3'],
+    );
+    const normalized = structuredClone(currentPackage);
+    normalized.engines.node = oldPackage.engines.node;
+    for (const key of ['tsx', 'vitest', 'yaml'])
+      normalized.devDependencies[key] = oldPackage.devDependencies[key];
+    assert.deepEqual(normalized, oldPackage, 'Only the enumerated pins may differ');
+    assert.equal(
+      readFileSync(join(root, pins[1]), 'utf8').replaceAll('24.22.1', '24.18.0'),
+      historical.get(pins[1]).toString('utf8'),
+      'CI jobs, commands and security settings must remain unchanged',
+    );
+    for (const file of pins) {
+      const current = readFileSync(join(root, file));
+      writeFileSync(join(root, file), Buffer.concat([current, Buffer.from('\nDRIFT\n')]));
+      assert.throws(() => toolingPolicyHistoricalInputs(root), /Physical preflight source drift/);
+      writeFileSync(join(root, file), current);
+      assert.deepEqual(toolingPolicyHistoricalInputs(root).get(file), historical.get(file));
+    }
+    const unbound = 'application.ts';
+    writeFileSync(join(root, unbound), 'changed application source');
+    assert.equal(toolingPolicyHistoricalInputs(root).has(unbound), false);
+  } finally {
+    assert.ok(resolve(root).startsWith(resolve(parent) + sep));
+    rmSync(root, { recursive: true });
+  }
+});

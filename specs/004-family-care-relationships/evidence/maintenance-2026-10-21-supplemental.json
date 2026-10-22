@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-10-21T16:47:38.972730+00:00",
+  "custodian": "Yousef Osama; maintenance root agent",
+  "feature": "004-family-care-relationships",
+  "classification": "Separate real PostgreSQL E2E; not part of original 42-command aggregate",
+  "command": "pnpm test:family:e2e",
+  "result": "3 PASS / 0 FAIL",
+  "baseCommit": "750dabf4abfa78841d3ea7ce05579243264a3a54",
+  "sourceState": "750dabf4 plus Family E2E test-only canonical audit query/context assertions; application/runtime source unchanged",
+  "retainedEvidence": [
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\supplemental-750dabf\\execution.json",
+      "bytes": 476,
+      "sha256": "beba330fad09bd484837fda66644ab7718c91b1579f7aefe32ea386fb6e25908"
+    },
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\supplemental-750dabf\\test-family-e2e.log",
+      "bytes": 2223,
+      "sha256": "d7f5c99fe34205353ee4294dc1339a0d79bf55178aca661cf4381e2196ec88d2"
+    },
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\supplemental-750dabf\\family-current-schema-green-receipt.json",
+      "bytes": 362,
+      "sha256": "b9563ae725aa512f1ade3b78dca7800f5b99ad74b7a46fdb560cf2a897efafd4"
+    },
+    {
+      "path": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\supplemental-750dabf\\family-current-schema-green.log",
+      "bytes": 546,
+      "sha256": "b630840210b2e250abc63bcb94825aed3cfb0b981433ea0a4463bcf25723e9aa"
+    }
+  ],
+  "recovery": "Verify referenced manifest hash, select this feature prefix, verify retained regular-file size and SHA-256, and recover into a separate scratch directory. Do not overwrite approved historical evidence.",
+  "approvalLimits": "Engineering execution only; no human live Arabic/English, native accessibility, clinical, legal, production, lifecycle or feature-finalization approval. Family/Privacy E2E are separate from the original 42 commands.",
+  "red": "Initial 2 PASS / 1 FAIL, exit 1: PostgreSQL 42703 for obsolete audit.events.action/metadata. Canonical F008 schema uses action_code and strict structured fields.",
+  "correction": "Read action_code and full canonical audit row; preserve prohibited-content checks and assert exact actor/patient/relationship/version/outcome. No runtime/security change."
+}

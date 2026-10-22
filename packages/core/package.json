@@ -33,6 +33,6 @@
     "@shifaa/test-kit": "workspace:*",
     "@types/node": "24.10.1",
     "typescript": "7.0.2",
-    "vitest": "4.1.0"
+    "vitest": "4.1.11"
   }
 }

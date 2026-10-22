@@ -1,0 +1,53 @@
+{
+  "recordedAt": "2026-10-21T15:50:36.131430+00:00",
+  "custodian": "Yousef Osama; maintenance root agent",
+  "scope": "Additive F001 local reproduction/dependency cleanup index; no historical acceptance replaced",
+  "sourceCommit": "750dabf4abfa78841d3ea7ce05579243264a3a54",
+  "classification": "Regenerable ignored dependencies removed; historical clone source/config/evidence retained",
+  "targets": [
+    {
+      "target": "D:\\ECU\\Gradution-Project\\.qa\\clean-09ab869\\node_modules",
+      "sourceCommit": "09ab8692b485ce8f315c545b9f3f47e6e1d71bd1",
+      "regularFiles": 46432,
+      "regularBytes": 790138144,
+      "links": 2084,
+      "removed": true,
+      "preservedInputsVerified": true
+    },
+    {
+      "target": "D:\\ECU\\Gradution-Project\\.qa\\clean-450094d\\node_modules",
+      "sourceCommit": "450094d5e26bdde66f6a252621dc83f36db30e89",
+      "regularFiles": 46432,
+      "regularBytes": 790138144,
+      "links": 2084,
+      "removed": true,
+      "preservedInputsVerified": true
+    },
+    {
+      "target": "D:\\ECU\\Gradution-Project\\.qa\\clean-483d35b\\node_modules",
+      "sourceCommit": "483d35b93f36667d0d0992391aa27cf73d7b2663",
+      "regularFiles": 46432,
+      "regularBytes": 790138144,
+      "links": 2084,
+      "removed": true,
+      "preservedInputsVerified": true
+    },
+    {
+      "target": "D:\\ECU\\Gradution-Project\\.qa\\clean-a89ffe8\\node_modules",
+      "sourceCommit": "a89ffe8c20dbf44740e16e4de0e5e5b37c60523c",
+      "regularFiles": 46438,
+      "regularBytes": 790142346,
+      "links": 2084,
+      "removed": true,
+      "preservedInputsVerified": true
+    }
+  ],
+  "privateReceipt": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\old-clone-dependency-cleanup-receipt.json",
+  "privateReceiptSHA256": "6ca11995e44324426c1bcb92e3ccdcd9da042c06004b6e7cf38d36129f8d6872",
+  "preserved": "Clone repositories, source, tracked harmless generated differences, .env.local and all unique QA captures retained in original locations. All four source commits also resolve in the primary repository. No worktree or branch deleted.",
+  "reproduce": "Read original package/lock/runtime pins from retained clone. Install its dependencies with pnpm install --frozen-lockfile only when needed. This is not a fresh validation of old toolchain availability.",
+  "validation": "No running clone processes or code harness references; dependency targets were ignored/untracked, exact children of .qa clones, not junction roots. Long-path removal did not traverse links. Re-read retained package, lock and private configuration hashes after removal.",
+  "limits": "3.16 GB is logical regular-file bytes, not physical reclaimed storage; pnpm hard links and concurrent build prevent attribution. No fresh historical verification claimed.",
+  "feature": "001-identity-onboarding",
+  "finalization": "BLOCKED: no feature worktree or branch deleted; finalization requires reconciled evidence and human-merged indices."
+}

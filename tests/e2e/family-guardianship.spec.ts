@@ -75,8 +75,14 @@ test('real guardianship create, independent review, explicit use, revoke, and ne
     });
     assert.equal(visible.statusCode, 200, visible.body);
     const [useEvidence] = await stack.owner<
-      any[]
-    >`select u.permission_code,u.purpose_code,u.relationship_version,a.action,a.metadata from identity.relationship_authorization_uses u join audit.events a on a.request_id=u.request_id::uuid where u.relationship_id=${relation.id}::uuid order by u.occurred_at desc limit 1`;
+      {
+        permission_code: string;
+        purpose_code: string;
+        relationship_version: number;
+        action: string;
+        audit_record: Record<string, unknown>;
+      }[]
+    >`select u.permission_code,u.purpose_code,u.relationship_version,a.action_code as action,to_jsonb(a) as audit_record from identity.relationship_authorization_uses u join audit.events a on a.request_id=u.request_id::uuid where u.relationship_id=${relation.id}::uuid order by u.occurred_at desc limit 1`;
     assert.deepEqual(
       {
         permission: useEvidence.permission_code,
@@ -89,6 +95,22 @@ test('real guardianship create, independent review, explicit use, revoke, and ne
         purpose: 'dependent_care',
         version: 2,
         action: 'relationship.guardianship.used',
+      },
+    );
+    assert.deepEqual(
+      {
+        actor: useEvidence.audit_record['actor_person_id'],
+        patient: useEvidence.audit_record['patient_id'],
+        resource: useEvidence.audit_record['resource_id'],
+        version: useEvidence.audit_record['resource_version'],
+        outcome: useEvidence.audit_record['outcome'],
+      },
+      {
+        actor: stack.ids.guardian,
+        patient: stack.ids.dependentPatient,
+        resource: relation.id,
+        version: 2,
+        outcome: 'success',
       },
     );
     assert.doesNotMatch(

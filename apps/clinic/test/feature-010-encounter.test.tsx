@@ -131,7 +131,7 @@ async function openWorkspace(
       const key = request.headers()['idempotency-key']!;
       if (signedOperations.has(key)) return json(201, signedOperations.get(key));
       const note = {
-        id: '97000000-0000-4000-8000-000000000001',
+        id: `97000000-0000-4000-8000-${String(signedOperations.size + 1).padStart(12, '0')}`,
         encounterId,
         authorId: responsibleId,
         noteType: body?.noteType,
@@ -565,6 +565,14 @@ test('Arabic RTL and English LTR keep encounter actions keyboard accessible at c
 test('committed note with lost response replays one immutable signing operation; changed payload gets a new key', async ({
   page,
 }) => {
+  const duplicateKeyWarnings: string[] = [];
+  page.on('console', (message) => {
+    if (
+      ['warning', 'error'].includes(message.type()) &&
+      /same key|unique.*key|duplicate key/i.test(message.text())
+    )
+      duplicateKeyWarnings.push(message.text());
+  });
   const api = await openWorkspace(page);
   await page.getByLabel('Note type').fill('Consultation');
   await page.getByLabel('Note body').fill('Synthetic response lost note.');
@@ -581,6 +589,7 @@ test('committed note with lost response replays one immutable signing operation;
   expect(posts()).toHaveLength(2);
   expect(posts()[1]!.headers['idempotency-key']).toBe(posts()[0]!.headers['idempotency-key']);
   expect(api.active().notes).toHaveLength(1);
+  const replayedNoteId = api.active().notes[0]!.id;
   await page.getByLabel('Note type').fill('Consultation');
   await page.getByLabel('Note body').fill('Synthetic changed note.');
   await page.getByLabel('Note visibility').selectOption('private');
@@ -593,4 +602,11 @@ test('committed note with lost response replays one immutable signing operation;
   await page.getByRole('button', { name: 'Sign note', exact: true }).click();
   await expect(page.getByLabel('Note body')).toHaveValue('');
   expect(posts()[3]!.headers['idempotency-key']).not.toBe(posts()[2]!.headers['idempotency-key']);
+  expect(api.active().notes).toHaveLength(3);
+  expect(api.active().notes.map((note) => note.id)).toEqual([
+    replayedNoteId,
+    '97000000-0000-4000-8000-000000000002',
+    '97000000-0000-4000-8000-000000000003',
+  ]);
+  expect(duplicateKeyWarnings).toEqual([]);
 });

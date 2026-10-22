@@ -25,6 +25,23 @@ const physicalPreflightRepair = {
   historicalSha256: '23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b',
   gitBlob: '8ba2568f4108ca5e09b2e6baa4f32efc54b8d649',
 };
+// Maintenance changes only runtime/security dependency pins in these two inputs.
+// Their sealed F011 acceptance view stays historical; current execution and CI
+// validate the new runtime separately. Any further byte change fails closed.
+const maintenancePins = [
+  {
+    path: 'package.json',
+    currentSha256: '9095297077dd41577f2348430fc6fcaf70cf6311fb6500e287bbe8a191c33447',
+    historicalSha256: '2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200',
+    gitBlob: 'f205a80ae41b5507afaa1a7868fbbc8e84deb217',
+  },
+  {
+    path: '.github/workflows/ci.yml',
+    currentSha256: 'ce55e31c1f36499b5d7ddcbcf13a11620a07ebf68537b95d631a4de581a56952',
+    historicalSha256: 'd070253268ca8db1e28054b8a68e2b596b5c19a115a70900fbad456f24b407d2',
+    gitBlob: '66199253e1d8c9d03034abc7f9eb6f4b1b596d64',
+  },
+];
 
 function safeFile(root, relative) {
   assert.equal(typeof relative, 'string');
@@ -77,28 +94,30 @@ export function toolingPolicyHistoricalInputs(root) {
     assert.equal(sha(bytes), old.sha256, 'Historical tooling policy bytes drift');
     historical.set(input.path, bytes);
   }
-  const repairedPath = safeFile(root, physicalPreflightRepair.path);
-  if (existsSync(repairedPath)) {
-    const current = readFileSync(repairedPath);
-    if (sha(current) !== physicalPreflightRepair.historicalSha256) {
-      assert.equal(
-        sha(current),
-        physicalPreflightRepair.currentSha256,
-        'Physical preflight source drift',
-      );
-      const key = `${resolve(root)}:${physicalPreflightRepair.gitBlob}`;
-      if (!immutableObjects.has(key))
-        immutableObjects.set(
-          key,
-          execFileSync('git', ['cat-file', 'blob', physicalPreflightRepair.gitBlob], {
-            cwd: root,
-            stdio: ['ignore', 'pipe', 'pipe'],
-            maxBuffer: 4 * 1024 * 1024,
-          }),
+  for (const binding of [physicalPreflightRepair, ...maintenancePins]) {
+    const repairedPath = safeFile(root, binding.path);
+    if (existsSync(repairedPath)) {
+      const current = readFileSync(repairedPath);
+      if (sha(current) !== binding.historicalSha256) {
+        assert.equal(
+          sha(current),
+          binding.currentSha256,
+          `Physical preflight source drift: ${binding.path}`,
         );
-      const original = immutableObjects.get(key);
-      assert.equal(sha(original), physicalPreflightRepair.historicalSha256);
-      historical.set(physicalPreflightRepair.path, original);
+        const key = `${resolve(root)}:${binding.gitBlob}`;
+        if (!immutableObjects.has(key))
+          immutableObjects.set(
+            key,
+            execFileSync('git', ['cat-file', 'blob', binding.gitBlob], {
+              cwd: root,
+              stdio: ['ignore', 'pipe', 'pipe'],
+              maxBuffer: 4 * 1024 * 1024,
+            }),
+          );
+        const original = immutableObjects.get(key);
+        assert.equal(sha(original), binding.historicalSha256);
+        historical.set(binding.path, original);
+      }
     }
   }
   return historical;

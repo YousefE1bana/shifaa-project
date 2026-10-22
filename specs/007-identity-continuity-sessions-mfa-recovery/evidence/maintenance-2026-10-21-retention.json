@@ -1,0 +1,20 @@
+{
+  "recordedAt": "2026-10-21T15:14:42.593195+00:00",
+  "custodian": "Yousef Osama; maintenance root agent",
+  "scope": "Additive preservation index; no historical acceptance is replaced",
+  "baselineCommit": "b53f5d3e5988f7eff4f3431cc4ad0a574e75198b",
+  "classification": "Current generated outputs observed after reported successful post-merge original 42-command verification; not sealed approval evidence",
+  "completeHistoricalAggregateLogAvailable": false,
+  "historicalExitCodeEvidence": "Product Owner reports post-merge exit 0; shell history confirms direct invocation. No complete console log retained. Partial transcript has not been supplied.",
+  "originalPaths": [
+    "specs/007-identity-continuity-sessions-mfa-recovery/evidence/performance.json"
+  ],
+  "retainedFiles": 1,
+  "retainedBytes": 1263,
+  "privateManifest": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\initial-dirty-files.json",
+  "privateManifestSHA256": "27378f5725ace53a26e54f0f8a758903cb7825e808ecc2345d8cf0a33be020fd",
+  "retainedRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Maintenance-20261021\\initial-dirty-files",
+  "validation": "Every listed regular file copied and SHA-256 compared; retained copy re-read. Tracked generated files restored to baseline Git version after preservation.",
+  "recovery": "Read the private manifest, select originalPaths for this feature, validate bytes and SHA-256 before copying retained files into a separate scratch directory. Never overwrite sealed history. Machine-local location; relocation requires revalidation.",
+  "approvalLimits": "Engineering evidence only; no clinical, legal, human UI, production or feature-stage approval."
+}
