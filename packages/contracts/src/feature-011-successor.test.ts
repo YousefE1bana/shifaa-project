@@ -17,6 +17,10 @@ const sha = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex');
 const successor = await import(
   pathToFileURL(path.join(root, 'tools/feature-011-documentation-successor.mjs')).href
 );
+// Prepare tooling during collection; assertions below verify immutable bindings.
+const { readFeature011ProtocolMetadata } = await import(
+  pathToFileURL(path.join(root, 'tools/generate-feature-011-contract.mjs')).href
+);
 
 function fixture(run: (fixtureRoot: string) => void) {
   const parent = path.join(root, 'artifacts/feature-011');
@@ -46,9 +50,6 @@ function fixture(run: (fixtureRoot: string) => void) {
 
 describe('F011 historical Constitution and conditional successor compatibility', () => {
   it('preserves the historical binding when the exact conditional successor is approved', async () => {
-    const { readFeature011ProtocolMetadata } = await import(
-      pathToFileURL(path.join(root, 'tools/generate-feature-011-contract.mjs')).href
-    );
     const metadata = readFeature011ProtocolMetadata(root);
     expect(metadata.normativeInputDigests['.specify/memory/constitution.md']).toBe(
       '25419aa07eca0c7846a80acb9720e3f4041c0970cd78025fbf1107bae659c30a',
