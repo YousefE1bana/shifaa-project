@@ -80,6 +80,19 @@ for (const exponent of [3, 65537]) {
     assert.throws(() => publicKey.verify(digest, signature), invalidDigestInfo);
   });
 
+  for (const paddingBytes of [1, 64]) {
+    test(`nonempty NULL parameter rejected, bytes=${paddingBytes}, exponent ${exponent}`, () => {
+      const malformed = digestInfo(digest, true);
+      malformed.value[0].value[1].value = 'x'.repeat(paddingBytes);
+      const signature = privateKey.sign(asn1.toDer(malformed).getBytes(), 'NONE');
+      assert.equal(
+        crypto.verify('sha256', message, keys.publicKey, Buffer.from(signature, 'binary')),
+        false,
+      );
+      assert.throws(() => publicKey.verify(digest, signature), invalidDigestInfo);
+    });
+  }
+
   test(`wrong digest remains rejected, exponent ${exponent}`, () => {
     const signature = crypto.sign('sha256', message, keys.privateKey);
     const wrongDigest = crypto
@@ -140,6 +153,28 @@ for (const exponent of [3, 65537]) {
       asn1.toDer(digestInfo(certificateDigest, true, extra)).getBytes(),
       'NONE',
     );
+    assert.throws(
+      () => certificates.validateSelfSignedCertificate(parsed, pair),
+      invalidDigestInfo,
+    );
+  });
+
+  test(`actual Expo certificate validation rejects nonempty NULL, exponent ${exponent}`, () => {
+    const pair = { privateKey, publicKey };
+    const certificate = certificates.generateSelfSignedCodeSigningCertificate({
+      keyPair: pair,
+      validityNotBefore: new Date(Date.now() - 60000),
+      validityNotAfter: new Date(Date.now() + 60000),
+      commonName: 'SHIFAA synthetic malformed NULL regression',
+    });
+    const parsed = certificates.convertCertificatePEMToCertificate(
+      certificates.convertCertificateToCertificatePEM(certificate),
+    );
+    const tbs = Buffer.from(asn1.toDer(forge.pki.getTBSCertificate(parsed)).getBytes(), 'binary');
+    const certificateDigest = crypto.createHash('sha256').update(tbs).digest('binary');
+    const malformed = digestInfo(certificateDigest, true);
+    malformed.value[0].value[1].value = 'synthetic invalid NULL contents';
+    parsed.signature = privateKey.sign(asn1.toDer(malformed).getBytes(), 'NONE');
     assert.throws(
       () => certificates.validateSelfSignedCertificate(parsed, pair),
       invalidDigestInfo,

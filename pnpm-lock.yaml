@@ -12,7 +12,7 @@ overrides:
   yaml@>=2.0.0 <2.8.3: 2.8.3
 
 patchedDependencies:
-  node-forge@1.4.0: 17f32de12e78ff6579733b89f13976a383e39ebfb86f35951c43c8724c079b8e
+  node-forge@1.4.0: 4fb325f239179010622da7fa55772a29593bf5cd7d2ad7c34a281da4346bff73
   query-string@7.1.3: ad69bd2ae62205b103280abf369b25d3bf3dbc406f9aaa4a8962867453ea28f8
 
 importers:
@@ -5060,7 +5060,7 @@ snapshots:
       glob: 13.0.6
       lan-network: 0.2.1
       multitars: 1.0.2
-      node-forge: 1.4.0(patch_hash=17f32de12e78ff6579733b89f13976a383e39ebfb86f35951c43c8724c079b8e)
+      node-forge: 1.4.0(patch_hash=4fb325f239179010622da7fa55772a29593bf5cd7d2ad7c34a281da4346bff73)
       npm-package-arg: 11.0.3
       ora: 3.4.0
       picomatch: 4.0.7
@@ -5097,7 +5097,7 @@ snapshots:
 
   '@expo/code-signing-certificates@0.0.6':
     dependencies:
-      node-forge: 1.4.0(patch_hash=17f32de12e78ff6579733b89f13976a383e39ebfb86f35951c43c8724c079b8e)
+      node-forge: 1.4.0(patch_hash=4fb325f239179010622da7fa55772a29593bf5cd7d2ad7c34a281da4346bff73)
 
   '@expo/config-plugins@57.0.10(typescript@6.0.3)':
     dependencies:
@@ -7750,7 +7750,7 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  node-forge@1.4.0(patch_hash=17f32de12e78ff6579733b89f13976a383e39ebfb86f35951c43c8724c079b8e): {}
+  node-forge@1.4.0(patch_hash=4fb325f239179010622da7fa55772a29593bf5cd7d2ad7c34a281da4346bff73): {}
 
   node-int64@0.4.0: {}
 
