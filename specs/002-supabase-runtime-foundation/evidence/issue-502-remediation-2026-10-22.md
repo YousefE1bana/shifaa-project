@@ -16,7 +16,7 @@ receipt of new human testing, permission to merge on his behalf, or F012 initiat
 - Upgrade the five Next.js applications from 16.3.8 to 16.4.1, and the active
   Vitest pins/catalog and historical-consumer override from 4.1.11 to 4.1.12.
   Regenerate the lockfile with pnpm 11.13.1; retain peer/build security settings.
-  No application behavior, assertions or thresholds are changed.
+  No application source logic, assertions or thresholds are changed.
 - Reconcile CURRENT documentation verification using the exact
   [source supplement](issue-502-current-bindings-2026-10-22.json). It binds only
   four operational verifier files and four evidence additions already integrated
@@ -106,7 +106,25 @@ receipt is rewritten, and no worktree, rollback reference or backup is deleted.
 
 Focused current-source validation is not a final-head full aggregate or a new
 human Arabic/English acceptance. Exact tested commits, commands, durations,
-failures and omissions belong in the accompanying validation receipt.
+failures and omissions are indexed in the
+[validation and preservation receipt](issue-502-validation-2026-10-22.json).
+It pins the private integrity manifest containing 40 verified command receipts
+and their complete logs. The broad uncached workspace execution passed 60/60
+tasks at `7e870ecd`; later targeted checks cover the documented follow-on repairs.
+At `82d93a55`, 138 Node regressions and CURRENT passed; the corrected dependency
+gate failed truthfully. The standalone F011 scope probe also failed because this
+maintenance worktree has no active-feature pointer. No pointer was manufactured,
+and no new physical parity or complete 42-command PASS is claimed.
+
+The final preservation readback verified 9,774 feature-indexed artifacts, all
+seven Docker archives, 38 investigation files, 37 original private files and
+the protected F011 bytes against their existing hashes. Current identities and
+hardlink counts are retained privately; no file was relinked or removed. The
+three intentional tracked YAML changes are CI, the workspace and the lockfile.
+The earlier preservation JSON's abbreviated intentional-change list omitted the
+lockfile; its actual changed-file list included it. This clarification preserves
+the earlier receipt unchanged. Existing containers, networks and volumes have
+unchanged identities and metadata. Backup hashes do not claim a restore today.
 
 The aggregate contains `db:reset` (`docker compose down -v`) and later F011
 harnesses selecting the existing `shifaa-local-supabase` runtime. The latter
