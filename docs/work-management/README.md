@@ -2,6 +2,8 @@
 
 Operational tooling prepared under the Product Owner’s 2026-10-21 GitHub/storage maintenance authorization, based on PR #503 head `b1fe533fd3676acfb0b9e42bcc43bd00ce3f7826`. This is no amendment to SHIFAA authority or integration policy.
 
+Current integration successor: [2026-10-22 reconciliation](integration-2026-10-22.md). PR #503 is now squash-merged; the historical receipts below retain their original preparation context.
+
 [Issue #504](https://github.com/YousefE1bana/shifaa-project/issues/504) owns this work. [SHIFAA Engineering](https://github.com/users/YousefE1bana/projects/1) is a private personal-account Project linked to this repository. Human team setup alone is deferred.
 
 ## Classification
@@ -36,7 +38,7 @@ Focused local command: `node --test tools/github-metadata.test.mjs`. Event valid
 
 Saved views: **Engineering backlog** (Table), **Engineering board** (Status), **Engineering roadmap** (Iteration start/end). Fields: Status, optional Priority, Feature / Spec, numeric Effort and native Iteration. Effort is relative engineering size, not a promised duration. No priority, effort, iteration assignment or delivery commitment was invented. #493’s Feature / Spec is 012; cross-repository maintenance has no forced single-feature allocation.
 
-Statuses: Todo, In Progress, Review / acceptance, Blocked, Done. #493 is Blocked; #504 In Progress; #502/#503 Review / acceptance. Done is a coordination disposition, not clinical/legal/production approval or permission to advance SpecKit. A closed/rejected item’s Issue body remains the disposition authority.
+Statuses: Todo, In Progress, Review / acceptance, Blocked, Done. On the 2026-10-22 readback, #493 is Blocked, #504 In Progress, #502 Review / acceptance, and merged PR #503 Done. Done is a coordination disposition, not clinical/legal/production approval or permission to advance SpecKit. A closed/rejected item’s Issue body remains the disposition authority.
 
 Native workflows automatically intake new/updated open SHIFAA Issues/PRs, add sub-issues, initialize Todo, reflect actual closure/merge as Done, and return reopened work to Todo. Status-driven **Auto-close issue is OFF**, as is automatic In Progress on PR linkage. Code-review approval, auto-archive and other unconfigured workflows stay off. No automation closes #493 or interprets human/professional approval. Project access remains private and unchanged; its default repository and repository Projects listing are SHIFAA.
 
@@ -44,4 +46,4 @@ Native workflows automatically intake new/updated open SHIFAA Issues/PRs, add su
 
 The [maintenance receipt](maintenance-2026-10-21.md) and [classification audit](history-classification.csv) distinguish live configuration, local source validation and pending publication/integration. Full private inputs, per-item reasons/body hashes, API responses and storage manifests are indexed from [F001](../../specs/001-identity-onboarding/evidence/work-management-storage-2026-10-21.json), with additive storage references from affected feature owners. Do not upload private Docker backups or raw environment/configuration records.
 
-PR #503 remains Draft and unchanged. The source branch for this follow-on is separate and stacked above #503. Its publication must satisfy AGENTS.md or have its own exact attributable disposition; the #503-only exception does not transfer. Yousef Osama performs human squash merges. No invitations, onboarding, collaborator changes, team-specific CODEOWNERS, human assignments, Organization transfer or F012 lifecycle is executed here. Issue #493 stays OPEN and clinical/legal gates remain unchanged.
+PR #503 was squash-merged as `4511c2574e50e59609578256eb77b0dd55a6cbd3`. This separate follow-on branch is reconciled onto that main commit; the original tested branch remains reachable through `codex/github-work-management-tested-2b41bcdd`. Publication must satisfy AGENTS.md or have its own exact attributable disposition; the #503-only exception does not transfer. Yousef Osama performs human squash merges. No invitations, onboarding, collaborator changes, team-specific CODEOWNERS, human assignments, Organization transfer or F012 lifecycle is executed here. Issue #493 stays OPEN and clinical/legal gates remain unchanged.
