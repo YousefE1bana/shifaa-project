@@ -2,133 +2,183 @@
   "recordedAt": "2026-10-22T06:38:05.543546+00:00",
   "ownerIssue": "https://github.com/YousefE1bana/shifaa-project/issues/504",
   "scope": "Additive verification diagnosis and representative classification review; no historical acceptance replaced",
-  "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\timeout-resolution-20261022",
+  "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021",
   "access": "Restricted local retained audit. Do not auto-stage raw records, logs or private configuration.",
   "correctionCommit": "b3c6bb9d35353fa83522618eb16f9d35b898718e",
   "receipts": [
     {
-      "path": "diagnosis.json",
+      "path": "timeout-resolution-20261022/diagnosis.json",
       "bytes": 4895,
       "sha256": "f120831eb95cf173229c2dfc78967c58a0f4be64cf4571e5a8e83bce48045e7c"
     },
     {
-      "path": "classification-sample-review.json",
+      "path": "timeout-resolution-20261022/classification-sample-review.json",
       "bytes": 78250,
       "sha256": "52ecf9f20ed099a8f04ba453cac82f8210f6a5b272aacad30cc1f683ca7be14d"
     },
     {
-      "path": "classification-sample-correction.json",
+      "path": "timeout-resolution-20261022/classification-sample-correction.json",
       "bytes": 17918,
       "sha256": "280536bfa4626ff781618c6a912bea3ac012101f89d54bf01ef9125ed3188d43"
     },
     {
-      "path": "history-classification-before-sample-correction.csv",
+      "path": "timeout-resolution-20261022/history-classification-before-sample-correction.csv",
       "bytes": 395729,
       "sha256": "b7e95beb75edbe324b89e2e5cf1ffa269b04ab452d70877cad3b79132f3cc6a4"
     },
     {
-      "path": "feature-011.original.test.ts",
+      "path": "timeout-resolution-20261022/feature-011.original.test.ts",
       "bytes": 7200,
       "sha256": "018bab1060cd5f9ea8f108ffb2f31a4a03eb2bc680185f7959b3870947ebc822"
     },
     {
-      "path": "feature-011.instrumented.test.ts",
+      "path": "timeout-resolution-20261022/feature-011.instrumented.test.ts",
       "bytes": 7674,
       "sha256": "f5ef74a7e52468190afe16e5f734564c497fc0dff46abacd253492045d1f1fc0"
     },
     {
-      "path": "measure-test-workload.py",
+      "path": "timeout-resolution-20261022/measure-test-workload.py",
       "bytes": 4143,
       "sha256": "913b6354250a0520fce6d6e342ffdefadbd45baf95ae9079ab078e20e6ced546"
     },
     {
-      "path": "delayed-contract-import.mjs",
+      "path": "timeout-resolution-20261022/delayed-contract-import.mjs",
       "bytes": 2126,
       "sha256": "89894c3d10a69e52d271062fd9c2aeeac58633e86e42a7d8274f4e9802458b45"
     },
     {
-      "path": "delayed-original.json",
+      "path": "timeout-resolution-20261022/delayed-original.json",
       "bytes": 642,
       "sha256": "51920d840f838d060a6b1e83f12d217e791ad29ff030f1028f69f3f08de8d4e0"
     },
     {
-      "path": "delayed-original.log",
+      "path": "timeout-resolution-20261022/delayed-original.log",
       "bytes": 1255,
       "sha256": "a9d26f69bd89417f60b7fdcfb1ca91e640d83b43f77997eed9c26b495a24a5a1"
     },
     {
-      "path": "delayed-prepared.json",
+      "path": "timeout-resolution-20261022/delayed-prepared.json",
       "bytes": 658,
       "sha256": "7f5968e19fedf96b7ea1881b85fa2511682fdab0415fc37732e730b085576e39"
     },
     {
-      "path": "delayed-prepared.log",
+      "path": "timeout-resolution-20261022/delayed-prepared.log",
       "bytes": 280,
       "sha256": "7fb2a280b57f269ed096fa897174c4e1264593eceb7531707ab8dfb8f898183b"
     },
     {
-      "path": "diagnostic-concurrent/console.log",
+      "path": "timeout-resolution-20261022/diagnostic-concurrent/console.log",
       "bytes": 58150,
       "sha256": "3511aa389cf9aba0ca3a8f63abded2e1aaf7c5e6b36c9f9940cb00eab375fbf8"
     },
     {
-      "path": "diagnostic-concurrent/execution.json",
+      "path": "timeout-resolution-20261022/diagnostic-concurrent/execution.json",
       "bytes": 628,
       "sha256": "a3d2234a9484a2ab2556d20111c9b6feb753a90cb7305a6d1c6956955385ea86"
     },
     {
-      "path": "diagnostic-concurrent/samples.json",
+      "path": "timeout-resolution-20261022/diagnostic-concurrent/samples.json",
       "bytes": 184007,
       "sha256": "11db269e73cc61f342ebbeb157fcfa3a908c9177c0fdabbcbbde4a5e6805dcc0"
     },
     {
-      "path": "diagnostic-concurrent/run.ps1",
+      "path": "timeout-resolution-20261022/diagnostic-concurrent/run.ps1",
       "bytes": 111,
       "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
     },
     {
-      "path": "corrected-uncached-1/console.log",
+      "path": "timeout-resolution-20261022/corrected-uncached-1/console.log",
       "bytes": 57434,
       "sha256": "66571d8fbc29d7fd757d9556ad1d105d2ab7f53a7764ad247e57e0042a4052d8"
     },
     {
-      "path": "corrected-uncached-1/execution.json",
+      "path": "timeout-resolution-20261022/corrected-uncached-1/execution.json",
       "bytes": 573,
       "sha256": "19e8e1d194d8766584bf6ae5a4bfde3f6968fbe9660be8c67c0b18c0e8bf9e52"
     },
     {
-      "path": "corrected-uncached-1/samples.json",
+      "path": "timeout-resolution-20261022/corrected-uncached-1/samples.json",
       "bytes": 171655,
       "sha256": "8913062c955a0cc040f014c2badfeff313bf0ebfe1d39841eb829e8497a5d046"
     },
     {
-      "path": "corrected-uncached-1/run.ps1",
+      "path": "timeout-resolution-20261022/corrected-uncached-1/run.ps1",
       "bytes": 111,
       "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
     },
     {
-      "path": "corrected-uncached-2/console.log",
+      "path": "timeout-resolution-20261022/corrected-uncached-2/console.log",
       "bytes": 57252,
       "sha256": "f19893dc44bff4784e5fe2755fe26faa118c521bd1ccc7529c85ff2d89cc4e72"
     },
     {
-      "path": "corrected-uncached-2/execution.json",
+      "path": "timeout-resolution-20261022/corrected-uncached-2/execution.json",
       "bytes": 632,
       "sha256": "e74a89cdf04a308da4e33304fa7804b75d73e7a00542a1c17105c80a9f236506"
     },
     {
-      "path": "corrected-uncached-2/samples.json",
+      "path": "timeout-resolution-20261022/corrected-uncached-2/samples.json",
       "bytes": 178779,
       "sha256": "854a11f257e7bd5baf408ca89b11ec19c0cf5d9ecbe7108c885c34c1819dd4b2"
     },
     {
-      "path": "corrected-uncached-2/run.ps1",
+      "path": "timeout-resolution-20261022/corrected-uncached-2/run.ps1",
       "bytes": 111,
       "sha256": "be8f64316444adbb6e17c4644707afcf1a7958a82bbdc93503d6d267190c952d"
+    },
+    {
+      "path": "acceptance-20261022/pnpm-verify.log",
+      "bytes": 188478,
+      "sha256": "624a64fa0545ae36523ffb7b6ddc1b3ede07d4a27ba55c8f6a4e9a258fb4d9ee"
+    },
+    {
+      "path": "acceptance-20261022/execution.json",
+      "bytes": 446,
+      "sha256": "d2ff7133efb68c5b6015582b2d7e31f2a4574fe7391f2556ae4c062dd32cc64d"
+    },
+    {
+      "path": "acceptance-20261022/command-results.json",
+      "bytes": 5338,
+      "sha256": "7b38df7ca8a42f1029100ccb801d939283c32c96631f6ba086dbb15eb72f5ed8"
+    },
+    {
+      "path": "acceptance-20261022/generated-file-disposition.json",
+      "bytes": 814,
+      "sha256": "ead24801a6ca805ed509a996e8d0a1a2d54a655616a01f593715f1c745d048f9"
+    },
+    {
+      "path": "acceptance-20261022/post-run-integrity.json",
+      "bytes": 682,
+      "sha256": "2e74fc246d3962e32adc4aeded4f7912a36b5860967ba41ef13a6ae7022afc32"
+    },
+    {
+      "path": "timeout-resolution-20261022/native-ownership-correction/scope.json",
+      "bytes": 932,
+      "sha256": "23bc758a855a7feba0122593f468c12d4b906891f3dd91a80d5871b5acddccea"
+    },
+    {
+      "path": "timeout-resolution-20261022/native-ownership-correction/readback.json",
+      "bytes": 668,
+      "sha256": "8fa7df66a5b2c31e149176fb75a92230a5a99b75def57dbad3523414ee91a058"
+    },
+    {
+      "path": "timeout-resolution-20261022/native-ownership-correction/execution.json",
+      "bytes": 593,
+      "sha256": "62e38723a8cb089158a7ebfa8f83da4acff5a0e84d0d1d2655596bf2cfcc38b1"
+    },
+    {
+      "path": "timeout-resolution-20261022/native-ownership-correction/focused-guards.json",
+      "bytes": 307,
+      "sha256": "41e3248368fc84cb597aae56287ba81d6c5541fe06198e1e12f33a7224dc5462"
+    },
+    {
+      "path": "timeout-resolution-20261022/native-ownership-correction/focused-guards.log",
+      "bytes": 820,
+      "sha256": "4a4de16baf4c228fdb37e6d7c1919c770af3f29858248f0151209487143e6a73"
     }
   ],
-  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022",
-  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at the acceptance location when produced. This pre-execution index claims no aggregate PASS.",
+  "original42AcceptanceLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022\\owned-native-confirmation",
+  "acceptanceStatus": "Read execution.json, command-results.json and post-run-integrity.json at the owned-native-confirmation location when produced. This pre-execution index claims no final aggregate PASS.",
   "historicalFailureLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-9c7391d",
   "historicalStorageIndex": "work-management-storage-2026-10-21.json",
   "limitations": [
@@ -136,5 +186,15 @@
     "The first corrected run had clean source; only the classification CSV was dirty during the second. Test source bytes were identical.",
     "Historical run has no resource samples; current monitored runs do not prove historical CPU or memory exhaustion.",
     "Human live Arabic/English acceptance, publication, current-head CI and human squash merge remain separate mandatory gates."
-  ]
+  ],
+  "previousAggregateLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Work-Management-20261021\\acceptance-20261022",
+  "previousAggregateResult": {
+    "commit": "6ea2d6c384f1e03f651a5461fafdfc59710bd3b2",
+    "exitCode": 1,
+    "pass": 22,
+    "fail": 1,
+    "notExecuted": 19,
+    "durationSeconds": 248.9469738,
+    "cause": "Exact native Supabase workdir differed from current worktree; ownership guard correctly failed closed."
+  }
 }
