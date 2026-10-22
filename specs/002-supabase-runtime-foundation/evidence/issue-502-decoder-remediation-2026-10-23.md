@@ -79,6 +79,16 @@ unchanged. The original 42-command chain is not rerun while its security gate
 fails. Supabase services, Docker resources, Firewall rules, protected evidence,
 backups, active-feature pointers and other worktrees are unchanged.
 
+The [continuation validation receipt](issue-502-continuation-validation-2026-10-23.json)
+records exact tested commits, true exits, durations and the sealed private
+manifest. The final scanner and CURRENT checks passed on `589d204`; the earlier
+`8cdb7e2` passed 72 patient tests and web, iOS and Android exports. These exports
+are retained as 108 ignored generated files with a private hash inventory.
+All 99 previously sealed files and 2,778 F011 files matched their retained
+identities. Read-only comparison found no changes to 17 containers, seven
+networks or eight volumes. This is metadata and file preservation evidence,
+not a database-content or backup-restoration claim.
+
 Required security corrections, safe aggregate-verification disposition,
 PR-specific human acceptance, fresh current-head CI, human squash merge and
 finalization remain pending. The previous publication exceptions do not transfer.

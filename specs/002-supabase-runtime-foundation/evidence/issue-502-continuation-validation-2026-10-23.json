@@ -1,0 +1,277 @@
+{
+  "status": "ENGINEERING_CANDIDATE_BLOCKED_FROM_PUBLICATION",
+  "issue": 502,
+  "recordedUtc": "2026-10-22T21:10:46.839207+00:00",
+  "localRecordDate": "2026-10-23 Africa/Cairo",
+  "baseMain": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "testedSourceHead": "589d2043534f4f263c9c2e66e7ea28ba6fb9e332",
+  "sourceCommits": [
+    "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+    "589d2043534f4f263c9c2e66e7ea28ba6fb9e332"
+  ],
+  "priorReceipt": "issue-502-validation-2026-10-22.json",
+  "privateEvidence": {
+    "root": "D:\\ECU\\GP-STUFF\\SHIFAA-Issue-502-Remediation-20261022",
+    "manifest": "continue-integrity-manifest.json",
+    "sha256": "ef4ff431438f245dc14316d39f99f4f59b021fbdca400714512a25a5971b48d3",
+    "filesSealed": 56,
+    "commandReceiptsVerified": 21,
+    "originalSealedFilesReverified": 99,
+    "restriction": "Private logs, registry metadata, generated-output inventories and resource identities; no auto-staging"
+  },
+  "verification": [
+    {
+      "receipt": "continue-decoder-red.json",
+      "command": ["node", "tools/verify-expo-dependencies.mjs"],
+      "testedCommit": "dfba652f337c7b264c7bd3fedc69e6558c5bf5dc",
+      "initialStatus": " M tools/verify-expo-dependencies.mjs\n",
+      "durationSeconds": 5.219909400002507,
+      "exitCode": 1,
+      "log": "continue-decoder-red.log",
+      "logSHA256": "5e0bb095fc87384816fe96e0980c40ac234e5069ea2a696fe6ca842e18132a8d"
+    },
+    {
+      "receipt": "continue-decoder-green.json",
+      "command": ["node", "tools/verify-expo-dependencies.mjs"],
+      "testedCommit": "dfba652f337c7b264c7bd3fedc69e6558c5bf5dc",
+      "initialStatus": " M pnpm-lock.yaml\n M pnpm-workspace.yaml\n M tools/verify-expo-dependencies.mjs\n?? patches/\n",
+      "durationSeconds": 0.21394290000171168,
+      "exitCode": 0,
+      "log": "continue-decoder-green.log",
+      "logSHA256": "5bd663fb05d47f59cbb6a4236ffa2ca77d0e1b72e9d47df993d91232f640e786"
+    },
+    {
+      "receipt": "continue-committed-frozen-install.json",
+      "command": ["pnpm@11.13.1", "install", "--frozen-lockfile"],
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+      "initialStatus": "",
+      "durationSeconds": 0.4430696999988868,
+      "exitCode": 0,
+      "log": "continue-committed-frozen-install.log",
+      "logSHA256": "a429bc0bf384c1ee30078c0f795fd3a5f0fbabcd32fd6cfefe51dad725e5a018"
+    },
+    {
+      "receipt": "continue-committed-decoder.json",
+      "command": ["node", "tools/verify-expo-dependencies.mjs"],
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+      "initialStatus": "",
+      "durationSeconds": 0.21005919999879552,
+      "exitCode": 0,
+      "log": "continue-committed-decoder.log",
+      "logSHA256": "5bd663fb05d47f59cbb6a4236ffa2ca77d0e1b72e9d47df993d91232f640e786"
+    },
+    {
+      "receipt": "continue-committed-patient-tests.json",
+      "command": ["pnpm@11.13.1", "--filter", "@shifaa/patient", "test"],
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+      "initialStatus": "",
+      "durationSeconds": 1.6976283000003605,
+      "exitCode": 0,
+      "log": "continue-committed-patient-tests.log",
+      "logSHA256": "212dbb97fcb6e8e6bba849bb1446b8bd496fe63e19b1fd7a1e22308fd4ab6a3f"
+    },
+    {
+      "receipt": "continue-committed-platform-export.json",
+      "command": [
+        "pnpm@11.13.1",
+        "--filter",
+        "@shifaa/patient",
+        "exec",
+        "expo",
+        "export",
+        "--platform",
+        "all",
+        "--max-workers",
+        "2",
+        "--output-dir",
+        "dist/issue-502-compatibility"
+      ],
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+      "initialStatus": "",
+      "durationSeconds": 49.54985570000281,
+      "exitCode": 0,
+      "log": "continue-committed-platform-export.log",
+      "logSHA256": "498c5b09b28a6f0739d61519266ba919d2259569cd095f8c732e9c8a1030b57b"
+    },
+    {
+      "receipt": "continue-committed-audit-gate.json",
+      "command": ["pnpm@11.13.1", "run", "dependencies:check"],
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+      "initialStatus": "",
+      "durationSeconds": 4.004871200002526,
+      "exitCode": 1,
+      "log": "continue-committed-audit-gate.log",
+      "logSHA256": "07cc5e188aa039f15ddb89bc579e6cfc0f142fc6009b031d70493637755fa438"
+    },
+    {
+      "receipt": "continue-committed-architecture.json",
+      "command": ["node", "tools/verify-architecture.mjs"],
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+      "initialStatus": "",
+      "durationSeconds": 2.6580957000005583,
+      "exitCode": 0,
+      "log": "continue-committed-architecture.log",
+      "logSHA256": "a012fe1a8f90af827da9e1b0a2b9617c2ae8926233a09fc8b32db65bcd671ae5"
+    },
+    {
+      "receipt": "continue-secrets-negative-red.json",
+      "command": ["node", "--test", "tools/verify-secrets.test.mjs"],
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+      "initialStatus": "?? tools/verify-secrets.test.mjs\n",
+      "durationSeconds": 0.43637890000172774,
+      "exitCode": 1,
+      "log": "continue-secrets-negative-red.log",
+      "logSHA256": "a9564b282010a17deb46c9b970bde4545c241d96f47cb587e4a22019670ab254"
+    },
+    {
+      "receipt": "continue-secrets-green.json",
+      "command": ["node", "--test", "tools/verify-secrets.test.mjs"],
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38",
+      "initialStatus": " M tools/verify-secrets.mjs\n?? tools/verify-secrets.test.mjs\n",
+      "durationSeconds": 0.4505360999974073,
+      "exitCode": 0,
+      "log": "continue-secrets-green.log",
+      "logSHA256": "d1263266b5a662533732440ab596c43dfaf76a0809b0e1149673ef71be1cbc1c"
+    },
+    {
+      "receipt": "continue-final-secret-regression.json",
+      "command": ["node", "--test", "tools/verify-secrets.test.mjs"],
+      "testedCommit": "589d2043534f4f263c9c2e66e7ea28ba6fb9e332",
+      "initialStatus": "",
+      "durationSeconds": 0.4968031999997038,
+      "exitCode": 0,
+      "log": "continue-final-secret-regression.log",
+      "logSHA256": "49dbf87d03f344fe1402d8a3e3d6b048f059ef3ee6f57c9432c2ea6493339f64"
+    },
+    {
+      "receipt": "continue-final-secrets.json",
+      "command": ["node", "tools/verify-secrets.mjs"],
+      "testedCommit": "589d2043534f4f263c9c2e66e7ea28ba6fb9e332",
+      "initialStatus": "",
+      "durationSeconds": 0.7186822000003303,
+      "exitCode": 0,
+      "log": "continue-final-secrets.log",
+      "logSHA256": "fb385c6898a9f2933966649bff5373b3366eb8dae2ed70435318954656606c53"
+    },
+    {
+      "receipt": "continue-final-current.json",
+      "command": ["python", "-B", "tools/verify_doc_sources.py", "--verify-live-parity"],
+      "testedCommit": "589d2043534f4f263c9c2e66e7ea28ba6fb9e332",
+      "initialStatus": "",
+      "durationSeconds": 0.03891220000150497,
+      "exitCode": 2,
+      "log": "continue-final-current.log",
+      "logSHA256": "a89bca7e94e701d2e67fb7f61dfd70be21121dba9c85465bb3dca5223367f2d2"
+    },
+    {
+      "receipt": "continue-final-current-corrected.json",
+      "command": ["python", "-B", "tools/verify-documentation-authority.py", "--mode", "current"],
+      "testedCommit": "589d2043534f4f263c9c2e66e7ea28ba6fb9e332",
+      "initialStatus": "",
+      "durationSeconds": 5.751481400002376,
+      "exitCode": 0,
+      "log": "continue-final-current-corrected.log",
+      "logSHA256": "40200b8d14fe9b9aa8601f63f0f5635ae8ccc8237086e217654321ef838bf2bc"
+    },
+    {
+      "receipt": "continue-final-format.json",
+      "command": [
+        "pnpm@11.13.1",
+        "exec",
+        "prettier",
+        "--check",
+        "tools/verify-secrets.mjs",
+        "tools/verify-secrets.test.mjs",
+        "specs/002-supabase-runtime-foundation/evidence/issue-502-decoder-remediation-2026-10-23.md"
+      ],
+      "testedCommit": "589d2043534f4f263c9c2e66e7ea28ba6fb9e332",
+      "initialStatus": "",
+      "durationSeconds": 0.7054681000008713,
+      "exitCode": 0,
+      "log": "continue-final-format.log",
+      "logSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "results": {
+    "patientUnitTests": {
+      "passed": 72,
+      "failed": 0,
+      "skipped": 0,
+      "testedCommit": "8cdb7e293b7758ff6a0ec31e2cccba0b2edf6f38"
+    },
+    "platformExports": ["web", "ios", "android"],
+    "nativeDeviceAcceptance": false,
+    "cacheHitsNotMeasured": true,
+    "secretRegression": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "unrestrictedAudit": {
+      "high": 2,
+      "moderate": 0,
+      "critical": 0,
+      "exitCode": 1
+    },
+    "full42CommandAggregate": "NOT_RUN; dependency gate fails and destructive resource safety not established"
+  },
+  "dispositions": [
+    "Decoder RED hit bounded child timeout; GREEN preserves actual Expo Router URL semantics with upstream 0.5.0.",
+    "Secret RED missed a synthetic marker under a deep untracked path, returning 0; corrected scanner returns 1 for that marker.",
+    "continue-committed-secrets recorded exit 0 with a Git long-path warning and is not complete-coverage acceptance.",
+    "continue-final-current invoked a nonexistent script, exit 2; retained as an operator invocation error. The actual CURRENT checker then passed.",
+    "Patient tests, export, architecture and audit executed on 8cdb7e2. Subsequent 589d204 changes only the scanner, its regression and documentation.",
+    "This receipt is an additive documentation binding, not an exact-final-document-head aggregate PASS."
+  ],
+  "preservation": {
+    "docker": {
+      "containers": {
+        "before": 17,
+        "after": 17,
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "networks": {
+        "before": 7,
+        "after": 7,
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "volumes": {
+        "before": 8,
+        "after": 8,
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    "f011": {
+      "count": 2778,
+      "mismatches": []
+    },
+    "generatedExports": {
+      "files": 108,
+      "disposition": "Retained ignored outputs, indexed privately"
+    },
+    "original42CommandChainUnchanged": true,
+    "priorPrivateEvidenceUnchanged": true,
+    "backupAndHardlinkVerification": "Earlier complete verification is sealed in prior receipt; not repeated here.",
+    "noExistingResourceOrRetainedArtifactDeletionOrMutation": true,
+    "noRestorationClaim": true
+  },
+  "remainingGates": [
+    "High node-forge and braces advisories remain; no published fixed versions in inspected registry. No exclusions or threshold waiver.",
+    "Existing six Supabase services remain wildcard-bound. No Firewall mitigation, external reachability proof or supported all-service containment established.",
+    "Safe full-verification resource boundaries, PR-specific human acceptance/disposition, publication and fresh required current-head CI remain pending.",
+    "Yousef retains human squash merge; finalization, Issues #493/#502 and F012 gates remain open."
+  ],
+  "authority": {
+    "published": false,
+    "newHumanAcceptance": false,
+    "f012Started": false,
+    "issues493And502": "OPEN",
+    "finalization": "BLOCKED; no branches/worktrees/backups deleted"
+  }
+}
