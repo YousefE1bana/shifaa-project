@@ -77,7 +77,7 @@ const uxRoutes = [
   'clinic:/clinical-content/status',
   'admin:/clinical-content',
 ];
-const expectedTooling = { node: 'v24.22.1', pnpm: '11.13.0', supabase: '2.113.0' };
+const expectedTooling = { node: 'v24.22.1', pnpm: '11.13.1', supabase: '2.113.0' };
 
 function pendingParity() {
   return {
@@ -532,7 +532,8 @@ function toolingFailures(inputs, tooling) {
   )
     failures.push('Supabase CLI declared/locked pin inconsistency');
   if (
-    inputs.package.packageManager !== 'pnpm@11.13.0' ||
+    inputs.package.packageManager !== `pnpm@${expectedTooling.pnpm}` ||
+    inputs.package.engines.pnpm !== expectedTooling.pnpm ||
     inputs.package.engines.node !== expectedTooling.node.slice(1) ||
     inputs.nodePin !== '24.22.1' ||
     inputs.nvmPin !== '24.22.1'
