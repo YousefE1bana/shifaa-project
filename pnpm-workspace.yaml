@@ -12,6 +12,7 @@ allowBuilds:
 
 # Security patches; retain SHA-bound historical consumer manifests unchanged.
 overrides:
+  'xcode@3.0.1>uuid': 11.1.1
   'vitest@4.1.0': 4.1.12
   'vite@>=7.0.0 <7.3.7': 7.3.7
   'yaml@>=2.0.0 <2.8.3': 2.8.3

@@ -49,6 +49,15 @@ for (const packageName of packageNames) {
   }
 }
 
+// The Xcode tooling uses only the CommonJS uuid.v4 API. Exercise its actual
+// consumer after the parent-scoped security override, without generating iOS files.
+const pluginsRequire = createRequire(expoRequire.resolve('@expo/config-plugins/package.json'));
+const project = pluginsRequire('xcode').project('in-memory-compatibility.pbxproj');
+project.hash = { project: { objects: {} } };
+const generatedIds = Array.from({ length: 100 }, () => project.generateUuid());
+for (const id of generatedIds) assert.match(id, /^[A-F0-9]{24}$/);
+assert.equal(new Set(generatedIds).size, generatedIds.length);
+
 process.stdout.write(
   `Expo dependency verification passed: ${packageNames.length} installed patient dependencies satisfy declared ranges and the expo@${expoPackage.version} bundled native-module map.\n`,
 );
