@@ -21,6 +21,10 @@ It is verification evidence, not a new governance approval procedure. An operato
 must obtain the exact record digest through the existing approval process.
 Both modes are non-mutating; no hooks, fetch, index refresh or lifecycle commands.
 
+CURRENT also checks an exact Issue #502 source-binding supplement. It reconciles
+four operational verifier repairs and already merged additive F011 evidence;
+original protected bytes and PACKAGE mode remain independently checked.
+
 """
 
 from __future__ import annotations
@@ -50,6 +54,14 @@ INVENTORY_FILE = f"{MODERNIZATION_DIR}/documentation-inventory.jsonl"
 PUBLICATION_FILE = f"{MODERNIZATION_DIR}/publication-inventory.json"
 BASELINE_SHA256 = "bf53264a9ce6fcaa3c0467a398a9c6aa2c67d4cd57068c9db9c3a9250bfba429"
 F011_PATH = "specs/011-allergies-clinical-content-governance"
+CURRENT_BINDINGS_PATH = "specs/002-supabase-runtime-foundation/evidence/issue-502-current-bindings-2026-10-22.json"
+CURRENT_BINDINGS_SHA256 = "159786d0ddf08f994e9303c36760868fe29dc838300ec882d4898fb853476beb"
+CURRENT_TOOLING_PATHS = frozenset((
+    "tools/feature-011-protocol-parity.test.mjs",
+    "tools/run-feature-011-postgres-test.mjs",
+    "tools/verify-feature-011-scope.mjs",
+    "tools/verify-feature-011-scope.test.mjs",
+))
 REQUIRED_SKILLS = (
     ".shifaa/skills/shifaa-project-guardrails/SKILL.md",
     ".shifaa/skills/shifaa-ui-governor/SKILL.md",
@@ -376,7 +388,60 @@ def check_protected_files(root: Path, manifest: dict, commit: str | None, errors
     checks["protected_artifact_count"] = count
 
 
-def check_f011(root: Path, manifest: dict, commit: str | None, errors: list[dict[str, str]], checks: dict) -> None:
+def current_tooling_history(root: Path, manifest: dict, tools: list[dict]) -> dict[str, bytes]:
+    if len(tools) != len(CURRENT_TOOLING_PATHS) or {entry["path"] for entry in tools} != CURRENT_TOOLING_PATHS:
+        raise ValueError("unexpected current tooling projection")
+    originals = {entry["path"]: entry for entry in manifest["protectedArtifacts"]}
+    historical = {}
+    for entry in tools:
+        relative = entry["path"]
+        current = safe_path(root, relative).read_bytes()
+        if len(current) != entry["bytes"] or digest(current) != entry["sha256"]:
+            raise ValueError("current tooling source drift: " + relative)
+        original = originals[relative]
+        historical[relative] = git_bytes(root, "cat-file", "blob", original["gitBlob"])
+    return historical
+
+
+def current_evidence_additions(root: Path, source_commit: str, additions: list[dict]) -> set[str]:
+    paths = {entry["path"] for entry in additions}
+    if len(paths) != len(additions):
+        raise ValueError("duplicate additive evidence path")
+    source_blobs = git_tree_blobs(root, source_commit)
+    for entry in additions:
+        relative = entry["path"]
+        if not relative.startswith(F011_PATH + "/evidence/"):
+            raise ValueError("non-evidence addition")
+        current = safe_path(root, relative).read_bytes()
+        if (len(current) != entry["bytes"] or digest(current) != entry["sha256"]
+                or source_blobs.get(relative) != entry["gitBlob"]
+                or current != git_bytes(root, "cat-file", "blob", entry["gitBlob"])):
+            raise ValueError("additive evidence source drift: " + relative)
+    return paths
+
+
+def current_source_bindings(root: Path, manifest: dict) -> tuple[dict[str, bytes], set[str]]:
+    target = safe_path(root, CURRENT_BINDINGS_PATH)
+    if not target.exists():
+        return {}, set()
+    raw = target.read_bytes()
+    if digest(raw) != CURRENT_BINDINGS_SHA256:
+        raise ValueError("current source-binding record changed")
+    record = json.loads(raw)
+    if (record.get("schemaVersion") != 1 or record.get("clinicalAuthority") is not False
+            or record.get("lifecycleAuthorized") is not False
+            or record.get("historicalBaselineCommit") != manifest["baselineCommit"]):
+        raise ValueError("invalid current source-binding scope")
+    source_commit = record["integratedSourceCommit"]
+    if (not re.fullmatch(r"[a-f0-9]{40}", source_commit)
+            or git_run(root, ["merge-base", "--is-ancestor", source_commit, "HEAD"]).returncode):
+        raise ValueError("source-binding integration unavailable")
+    return (current_tooling_history(root, manifest, record["tooling"]),
+            current_evidence_additions(root, source_commit, record["f011Additions"]))
+
+
+def check_f011(root: Path, manifest: dict, commit: str | None, errors: list[dict[str, str]], checks: dict,
+               *, additions: set[str] | None = None) -> None:
     record = manifest.get("f011")
     if not isinstance(record, dict):
         add_error(errors, "f011_record_invalid", BASELINE_FILE)
@@ -397,6 +462,9 @@ def check_f011(root: Path, manifest: dict, commit: str | None, errors: list[dict
         worktree_changes = git_paths(root, "diff", "--name-only", "-z", "HEAD", "--", f"{path}/")
         current_tree = git_text(root, "rev-parse", "--verify", f"HEAD:{path}")
         names = git_paths(root, "ls-tree", "-r", "--name-only", "-z", "HEAD", "--", f"{path}/")
+        baseline_names = git_paths(root, "ls-tree", "-r", "--name-only", "-z", commit, "--", f"{path}/")
+        baseline_tree = git_text(root, "rev-parse", "--verify", f"{commit}:{path}")
+        untracked = git_paths(root, "ls-files", "--others", "--exclude-standard", "-z", "--", f"{path}/")
     except (OSError, RuntimeError, UnicodeError):
         add_error(errors, "f011_tree_unavailable", path)
         checks["f011_unchanged"] = False
@@ -404,11 +472,15 @@ def check_f011(root: Path, manifest: dict, commit: str | None, errors: list[dict
     unchanged = not committed_changes and not worktree_changes and current_tree == expected_tree and len(names) == count
     checks["f011_file_count"] = len(names)
     checks["f011_unchanged"] = unchanged
-    if committed_changes or worktree_changes:
+    allowed = additions or set()
+    original_changes = committed_changes - allowed
+    checks["f011_historical_unchanged"] = not original_changes and not worktree_changes and not untracked
+    checks["f011_additive_paths"] = sorted(allowed)
+    if original_changes or worktree_changes or untracked or allowed & baseline_names:
         add_error(errors, "f011_tracked_files_changed", path)
-    if current_tree != expected_tree:
+    if baseline_tree != expected_tree or (not allowed and current_tree != expected_tree):
         add_error(errors, "f011_tree_mismatch", path)
-    if len(names) != count:
+    if len(baseline_names) != count or names != baseline_names | allowed:
         add_error(errors, "f011_file_count_mismatch", path)
 
 
@@ -720,6 +792,9 @@ def markdown_link_errors(root: Path, relative: str) -> list[dict[str, str]]:
                 errors.append({"code": "markdown_link_outside_root", "path": f"{relative}:{line_number}"})
                 continue
             if candidate.is_dir():
+                # GitHub renders directory links even without a README/index.
+                if not fragment:
+                    continue
                 candidate = next((candidate / index for index in ("README.md", "index.md") if (candidate / index).is_file()), candidate)
             if not candidate.is_file():
                 errors.append({"code": "markdown_link_target_missing", "path": f"{relative}:{line_number}"})
@@ -918,6 +993,13 @@ def verify_root(root: Path, *, mode: str = "current", inventory_sha256: str | No
             add_error(errors, "baseline_schema_invalid", BASELINE_FILE)
         commit = check_current_head(root, manifest, errors, checks)
         historical_view = preserved_inputs(root) if mode == "current" else {}
+        additions: set[str] = set()
+        if mode == "current":
+            try:
+                source_history, additions = current_source_bindings(root, manifest)
+                historical_view.update(source_history)
+            except (OSError, RuntimeError, ValueError, KeyError, TypeError):
+                add_error(errors, "current_source_binding_invalid", CURRENT_BINDINGS_PATH)
         mutable_paths = frozenset()
         if mode == "current" and any((root / path).exists() for path in METADATA_PATHS):
             try:
@@ -928,7 +1010,7 @@ def verify_root(root: Path, *, mode: str = "current", inventory_sha256: str | No
         checks["mutable_tooling_paths"] = sorted(mutable_paths)
         # PACKAGE still demands the original exact current bytes.
         check_protected_files(root, manifest, commit, errors, checks, historical_view, mutable_paths=mutable_paths)
-        check_f011(root, manifest, commit, errors, checks)
+        check_f011(root, manifest, commit, errors, checks, additions=additions)
         if mode == "package":
             check_candidate_diff(root, manifest, commit, errors, checks)
             check_package(root, manifest, inventory_sha256, errors, checks)

@@ -40,7 +40,9 @@ function Invoke-Native([string]$FilePath, [string[]]$Arguments, [string]$Working
 function Get-RepositoryStatus([string]$Git, [string]$Root) {
   Push-Location -LiteralPath $Root
   try {
-    return @(& $Git status --porcelain=v1 --untracked-files=all 2>&1 | ForEach-Object { $_.ToString() })
+    $status = @(& $Git -c core.longpaths=true --no-optional-locks status --porcelain=v1 --untracked-files=all 2>&1 | ForEach-Object { $_.ToString() })
+    if ($LASTEXITCODE -ne 0) { throw "Repository status failed with exit code $LASTEXITCODE." }
+    return $status
   } finally {
     Pop-Location
   }

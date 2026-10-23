@@ -1,0 +1,335 @@
+{
+  "status": "ENGINEERING_CANDIDATE_BLOCKED_FROM_PUBLICATION",
+  "recordedUtc": "2026-10-22T20:42:53.582378+00:00",
+  "issue": 502,
+  "owner": "002-supabase-runtime-foundation",
+  "baseMain": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "testedSourceHead": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+  "sourceCommits": [
+    "7e870ecd273982f6d0fc6fa66995f2b55960f628",
+    "3a9c991790dd0edfa4a590a9f3a1e0ac0108ba03",
+    "82d93a55146faa663f617ae3abbad45b868b8b4a"
+  ],
+  "branch": "codex/issue-502-tooling-bindings-20261022",
+  "privateEvidence": {
+    "root": "D:\\ECU\\GP-STUFF\\SHIFAA-Issue-502-Remediation-20261022",
+    "manifest": "validation-integrity-manifest.json",
+    "bytes": 16851,
+    "sha256": "3cb640101e085fe173694c29a4ec1574e0388026a0457434c114be59a71b59a8",
+    "commandReceiptsVerified": 40,
+    "restriction": "Private full logs, registry snapshots and resource metadata; do not auto-stage"
+  },
+  "verification": [
+    {
+      "receipt": "final-documentation-regressions.json",
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_documentation_authority.py"
+      ],
+      "testedCommit": "7e870ecd273982f6d0fc6fa66995f2b55960f628",
+      "initiallyClean": true,
+      "durationSeconds": 72.45441270000083,
+      "exitCode": 0,
+      "log": "final-documentation-regressions.log",
+      "logSHA256": "aa2955855003d3cd20fb8287911b4af49d16923bced1008a0578f9f06248fc5b"
+    },
+    {
+      "receipt": "final-workspace.json",
+      "command": [
+        "pnpm@11.13.1",
+        "exec",
+        "turbo",
+        "run",
+        "lint",
+        "typecheck",
+        "build",
+        "test",
+        "--force",
+        "--concurrency=2"
+      ],
+      "testedCommit": "7e870ecd273982f6d0fc6fa66995f2b55960f628",
+      "initiallyClean": true,
+      "durationSeconds": 160.6154400000014,
+      "exitCode": 0,
+      "log": "final-workspace.log",
+      "logSHA256": "6b14c733ff4dd8e2cd2ede7e771473543da4e7b11837f0dc372faa63f70135d3"
+    },
+    {
+      "receipt": "committed-tooling-regressions.json",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=2",
+        "tools/verify-feature-011-scope.test.mjs",
+        "tools/feature-011-physical-preflight.test.mjs",
+        "tools/feature-011-protocol-parity.test.mjs"
+      ],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 19.06694819999757,
+      "exitCode": 0,
+      "log": "committed-tooling-regressions.log",
+      "logSHA256": "d16453f7c4d2f991bbe89389297442c5553e7b2b3033dc3714398aef3fec315b"
+    },
+    {
+      "receipt": "committed-current.json",
+      "command": ["python", "-B", "tools/verify-documentation-authority.py", "--mode", "current"],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 7.396695699997508,
+      "exitCode": 0,
+      "log": "committed-current.log",
+      "logSHA256": "f3ccb4d87f44467ae1e41d1f8166e2770d2bbb28d8c8a7d4264178d89f1c97e7"
+    },
+    {
+      "receipt": "committed-f011-contracts.json",
+      "command": ["node", "tools/verify-feature-011-contracts.mjs"],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 1.608593999997538,
+      "exitCode": 0,
+      "log": "committed-f011-contracts.log",
+      "logSHA256": "46882078c9a99b7628a00c8708d0931b3e9279f198e8d06c4d4a78a8be3fa9ff"
+    },
+    {
+      "receipt": "committed-scope.json",
+      "command": ["node", "tools/verify-feature-011-scope.mjs"],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 6.1778172000013,
+      "exitCode": 1,
+      "log": "committed-scope.log",
+      "logSHA256": "f8ef7717ad508244d05c44a0b706f0b9154dc4878292a56bd00294f2e8d553ee"
+    },
+    {
+      "receipt": "committed-skills-selftest.json",
+      "command": ["pnpm@11.13.1", "run", "agent-skills:test"],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 1.6326389000023482,
+      "exitCode": 0,
+      "log": "committed-skills-selftest.log",
+      "logSHA256": "f4fa7593667c1046e9f05ce81fcd535d5fcebe3ded0fb9ab2fcbb2ffed0213c4"
+    },
+    {
+      "receipt": "committed-frozen-install.json",
+      "command": ["pnpm@11.13.1", "install", "--frozen-lockfile"],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 0.4278262000007089,
+      "exitCode": 0,
+      "log": "committed-frozen-install.log",
+      "logSHA256": "0ccc9566df3aaeaae8578403b055aa41fb9688c43be8008624b63397d8877183"
+    },
+    {
+      "receipt": "committed-expo.json",
+      "command": ["node", "tools/verify-expo-dependencies.mjs"],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 0.13243560000046273,
+      "exitCode": 0,
+      "log": "committed-expo.log",
+      "logSHA256": "4e07aa03751e24e17a9f977050a0d7a7fba531d3b3a5956f4886f0af8510a82e"
+    },
+    {
+      "receipt": "committed-compose-config.json",
+      "command": ["docker", "compose", "config", "--quiet"],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 0.6316869000002043,
+      "exitCode": 0,
+      "log": "committed-compose-config.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "receipt": "committed-format.json",
+      "command": [
+        "pnpm@11.13.1",
+        "exec",
+        "prettier",
+        "--check",
+        "package.json",
+        "pnpm-workspace.yaml",
+        "tools/tooling-history.mjs",
+        "tools/feature-011-physical-preflight.test.mjs",
+        "tools/verify-expo-dependencies.mjs",
+        "specs/002-supabase-runtime-foundation/evidence/issue-502-remediation-2026-10-22.md"
+      ],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 0.6896344999986468,
+      "exitCode": 0,
+      "log": "committed-format.log",
+      "logSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "receipt": "committed-audit-gate.json",
+      "command": ["pnpm@11.13.1", "run", "dependencies:check"],
+      "testedCommit": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+      "initiallyClean": true,
+      "durationSeconds": 3.494204800001171,
+      "exitCode": 1,
+      "log": "committed-audit-gate.log",
+      "logSHA256": "94031ce5a4f37bbe91f14615086a46783b9e04d0e0864e9090f3d5208919e250"
+    },
+    {
+      "receipt": "postfix-architecture-check.json",
+      "command": ["pnpm@11.13.1", "run", "architecture:check"],
+      "testedCommit": "3a9c991790dd0edfa4a590a9f3a1e0ac0108ba03",
+      "initiallyClean": false,
+      "durationSeconds": 0.5437968999976874,
+      "exitCode": 0,
+      "log": "postfix-architecture-check.log",
+      "logSHA256": "36c8b2bab2b7328cb9b99acf9f83901ee558e9ff4d6564d07b28ccad848ccb4a"
+    },
+    {
+      "receipt": "postfix-secrets-check.json",
+      "command": ["pnpm@11.13.1", "run", "secrets:check"],
+      "testedCommit": "3a9c991790dd0edfa4a590a9f3a1e0ac0108ba03",
+      "initiallyClean": false,
+      "durationSeconds": 2.525022699999681,
+      "exitCode": 0,
+      "log": "postfix-secrets-check.log",
+      "logSHA256": "a0c28d08a9749ee5e57ca501640fcd3552a3d18f5ffba142bcc4ffb8032fa803"
+    },
+    {
+      "receipt": "postfix-contracts-check.json",
+      "command": ["pnpm@11.13.1", "run", "contracts:check"],
+      "testedCommit": "3a9c991790dd0edfa4a590a9f3a1e0ac0108ba03",
+      "initiallyClean": false,
+      "durationSeconds": 13.390989999999874,
+      "exitCode": 0,
+      "log": "postfix-contracts-check.log",
+      "logSHA256": "aa7c6d1baed97ca56dec189a554bfd487830d044e49f679b1f5885d6e6cf11ea"
+    },
+    {
+      "receipt": "postfix-patient-build.json",
+      "command": ["pnpm@11.13.1", "--filter", "@shifaa/patient", "build"],
+      "testedCommit": "3a9c991790dd0edfa4a590a9f3a1e0ac0108ba03",
+      "initiallyClean": false,
+      "durationSeconds": 3.0211726000015915,
+      "exitCode": 0,
+      "log": "postfix-patient-build.log",
+      "logSHA256": "59782104a4329dd2c43fc4ff85d8930e046259d6531f35e95dfac7acc325939f"
+    }
+  ],
+  "resultInterpretation": {
+    "uncachedWorkspace": "60/60 tasks, zero cache hits at 7e870ecd: lint, typecheck, build, test. API included 65 skipped tests; this is not database E2E or full-42 acceptance.",
+    "documentation": "21/21 regressions at 7e870ecd; checker and its tests unchanged through testedSourceHead. Final committed CURRENT check exits 0.",
+    "tooling": "138/138 Node regressions at testedSourceHead; no skips. These do not substitute for physical runtime parity.",
+    "dependencyAudit": "Nine advisories reduced to three: two high, one moderate, zero critical. Corrected high-severity gate exits 1. No waiver, ignore list or clean-audit claim.",
+    "oldAuditZeroExit": "postfix-dependencies-check exit 0 used --ignore-unfixable. pnpm 11 executed the ignore-setting writer instead of the vulnerability gate; that zero is not security acceptance.",
+    "scope": "Standalone F011 scope exits 1: maintenance worktree has no .specify/feature.json. No active feature pointer was created or changed. Parity remains PENDING in that result.",
+    "historicalContract": "F011 contract checker validates retained historical evidence; not a new two-runtime physical execution.",
+    "fullAggregate": "Not executed. Existing original chain resets the fixed Compose database and later creates temporary databases on the existing Supabase service; whole-chain isolation is not established.",
+    "finalAddendum": "This receipt and its linked documentation are additive evidence only, after testedSourceHead; no exact-head full aggregate is claimed."
+  },
+  "preservation": {
+    "docker": {
+      "containers": {
+        "before": 17,
+        "after": 17,
+        "removed": [],
+        "added": [],
+        "changed": []
+      },
+      "networks": {
+        "before": 7,
+        "after": 7,
+        "removed": [],
+        "added": [],
+        "changed": []
+      },
+      "volumes": {
+        "before": 8,
+        "after": 8,
+        "removed": [],
+        "added": [],
+        "changed": []
+      }
+    },
+    "retainedDockerArchives": {
+      "count": 7,
+      "allHashesMatch": true
+    },
+    "blockedCandidateProtected": {
+      "count": 2807,
+      "mismatches": []
+    },
+    "currentF011Bytes": {
+      "count": 2778,
+      "mismatches": []
+    },
+    "originalPrivateFiles": {
+      "count": 37,
+      "mismatches": []
+    },
+    "priorInvestigationFiles": {
+      "count": 38,
+      "mismatches": 0
+    },
+    "featureStorage": {
+      "count": 9774,
+      "mismatches": 0,
+      "entriesWithMultipleHardlinks": 1121,
+      "topologyLimit": "Current identities and link counts recorded privately; no relinking or deduplication performed"
+    },
+    "recoveryManifests": {
+      "count": 3,
+      "allHashesMatch": true
+    },
+    "yaml": {
+      "intentionalChanges": [".github/workflows/ci.yml", "pnpm-lock.yaml", "pnpm-workspace.yaml"],
+      "clarification": "preservation-current.json intentionalChanges omitted pnpm-lock.yaml; its changed list correctly included it. Lockfile changes implement the documented security pins."
+    },
+    "worktrees": {
+      "maintenance": {
+        "head": "82d93a55146faa663f617ae3abbad45b868b8b4a",
+        "clean": true,
+        "untracked": 0,
+        "ignored": 71369
+      },
+      "main": {
+        "head": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+        "clean": true,
+        "untracked": 0,
+        "ignored": 82884
+      },
+      "blockedContainment": {
+        "head": "2a578b28c1f4eb945d0065d1633f28c5bb1995a1",
+        "clean": true,
+        "untracked": 0,
+        "ignored": 0
+      }
+    },
+    "maintenanceIgnoredClassification": "Installed dependencies, generated builds/caches, and five tsconfig.tsbuildinfo files. All retained; no unrelated storage cleanup.",
+    "limits": [
+      "No restore performed; original recovery limitations retained",
+      "No database contents or credentials inspected",
+      "No tracked, untracked, ignored, backup or worktree material removed"
+    ]
+  },
+  "remainingGates": [
+    "Compatible upstream or separately validated consumer remediation for node-forge and braces high findings; review decode-uri-component CommonJS migration.",
+    "Supabase actual host publication remains wildcard on both address families. Proposed Firewall interim mitigation is not applied or accepted; administrator execution and independent IPv4/IPv6 tests required.",
+    "No publication before truthful security, safe required verification and PR-specific human acceptance obligations are met or legitimately disposed of; previous exceptions do not transfer.",
+    "Current-head required CI, Yousef human squash merge, merged-main verification and Feature Artifact Finalization Gate remain pending."
+  ],
+  "authority": {
+    "newHumanAcceptance": false,
+    "clinicalLegalProductionApproval": false,
+    "f012LifecycleStarted": false,
+    "issue493": "OPEN",
+    "issue502": "OPEN",
+    "publication": "NOT_PUSHED",
+    "ci": "NOT_RUN_ON_THIS_UNPUBLISHED_BRANCH",
+    "finalization": "BLOCKED; no closure or worktree deletion"
+  }
+}
