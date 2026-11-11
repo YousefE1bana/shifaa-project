@@ -76,7 +76,11 @@ results stop the operation. A negative access check is not functional acceptance
 
 For a teammate transfer, the current owner publishes with `--to github-login`.
 This writes `HANDOFF_TRANSFER <exact-commit> TO @login` on the Issue and transfers
-its assignment. The recipient runs `team:start --pr N --resume`. Both the exact
+its assignment. The recipient must first be assignable in this repository; this
+is checked before publication. Assignment replacement uses one GitHub request,
+so a rejected transfer does not first remove the existing owner. If the response
+is lost, inspect the Issue's actual assignment and published PR before retrying.
+The recipient runs `team:start --pr N --resume`. Both the exact
 owner-authored transfer and exclusive current assignment are required. The
 ownership reference advances by a non-forced append-only commit; concurrent
 transfers cannot overwrite one another. The recipient's first subsequent handoff

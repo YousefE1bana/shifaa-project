@@ -81,6 +81,8 @@ function fixture() {
     comments: [],
     failPush: false,
     dependencies: [],
+    rejectRecipient: false,
+    rejectTransfer: false,
   };
   const runner = (bin, args, options = {}) => {
     if (bin === 'git') {
@@ -122,6 +124,10 @@ function fixture() {
       method = args.includes('--method') ? args[args.indexOf('--method') + 1] : 'GET';
     const body = options.input ? JSON.parse(options.input) : null;
     if (endpoint === 'user') return JSON.stringify({ login: state.login });
+    if (endpoint.endsWith('/assignees/next-owner')) {
+      if (state.rejectRecipient) throw new Error('recipient not assignable');
+      return '';
+    }
     if (endpoint.endsWith('/git/refs') && method === 'POST') {
       if (state.claim) throw new Error('ownership collision');
       state.claim = body.sha;
@@ -154,7 +160,13 @@ function fixture() {
       state.comments.push({ ...body, user: { login: state.login } });
       return '{}';
     }
-    if (endpoint.endsWith('/issues/12')) return JSON.stringify(state.issue);
+    if (endpoint.endsWith('/issues/12')) {
+      if (method === 'PATCH') {
+        if (state.rejectTransfer) throw new Error('transfer assignment rejected');
+        state.issue.assignees = body.assignees.map((login) => ({ login }));
+      }
+      return JSON.stringify(state.issue);
+    }
     throw new Error(`Unexpected GitHub boundary: ${endpoint}`);
   };
   const args = [
@@ -327,6 +339,43 @@ test('explicit current-owner transfer admits a new teammate without changing the
       'next-owner',
     );
     assert.equal(f.git('show', `${saved}:source.ts`), 'export const count = 7;');
+  } finally {
+    process.chdir(original);
+  }
+});
+
+test('unassignable transfer recipient stops before publication or ownership reservation', () => {
+  const f = fixture(),
+    original = process.cwd();
+  try {
+    process.chdir(f.repo);
+    f.state.rejectRecipient = true;
+    assert.throws(() => main([...f.args, '--to', 'next-owner'], f.runner), /not assignable/);
+    assert.equal(f.state.prs.length, 0);
+    assert.equal(f.state.claim, null);
+    assert.deepEqual(f.state.issue.assignees, []);
+    assert.equal(f.git('for-each-ref', '--format=%(refname)', 'refs/team-handoffs/'), '');
+  } finally {
+    process.chdir(original);
+  }
+});
+
+test('rejected transfer retains the existing owner and recoverable published payload', () => {
+  const f = fixture(),
+    original = process.cwd();
+  try {
+    process.chdir(f.repo);
+    f.state.rejectTransfer = true;
+    assert.throws(() => main([...f.args, '--to', 'next-owner'], f.runner), /assignment rejected/);
+    assert.deepEqual(f.state.issue.assignees, [{ login: 'teammate' }]);
+    assert.equal(f.state.prs.length, 1);
+    assert.equal(
+      f.git('ls-remote', 'origin', `refs/heads/${f.state.prs[0].headRefName}`).split('\t')[0],
+      f.state.claim,
+    );
+    main(['handoff', '--retry', f.state.claim], f.runner);
+    assert.equal(f.state.prs.length, 1);
+    assert.deepEqual(f.state.issue.assignees, [{ login: 'teammate' }]);
   } finally {
     process.chdir(original);
   }

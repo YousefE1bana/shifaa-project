@@ -168,6 +168,14 @@ function currentIssue(remote, number) {
     );
   return issue;
 }
+function validateRecipient(remote, recipient) {
+  if (!recipient) return;
+  if (!/^[\w-]+$/.test(recipient) || recipient.toLowerCase() === remote.login.toLowerCase())
+    throw new Error('Supply another GitHub login with --to.');
+  // GitHub returns 204 only for a currently assignable repository recipient.
+  // Validate before saving/publishing, rather than dropping the current owner.
+  gh(['api', `repos/${remote.repo}/assignees/${recipient}`]);
+}
 function inventory(ctx, base = ctx.head) {
   const names = [
     ...new Set([
@@ -290,6 +298,7 @@ function handoff(options) {
     if (m.owner !== remote.login || m.repository !== remote.repo)
       throw new Error('Cannot retry another actor/repository handoff.');
     currentIssue(remote, issueNumber(m.issue));
+    validateRecipient(remote, options.to);
     return publish(ctx, remote, m, options.retry, options);
   }
   const ctx = context();
@@ -323,6 +332,7 @@ function handoff(options) {
   const number = issueNumber(options.issue),
     remote = remoteContext();
   currentIssue(remote, number);
+  validateRecipient(remote, options.to);
   const deps = dependencies(remote, options);
   // Fetch without touching the working tree or index.
   git(['fetch', 'origin']);
@@ -495,28 +505,32 @@ function publish(ctx, remote, manifest, commit, options) {
     body: `WIP handoff by @${remote.login}: ${pr.url}\nPublished commit: \`${commit}\`. NOT VERIFIED. Dependencies: ${manifest.dependencies.map((n) => `#${n}`).join(', ') || 'none declared'}. Ownership reservation: \`refs/${claimRef(number)}\`.`,
   });
   if (options.to) {
-    if (!/^[\w-]+$/.test(options.to) || options.to === remote.login)
-      throw new Error('Supply another GitHub login with --to.');
+    currentIssue(remote, number);
     // Transfer is explicit and attributable, never inferred from an unassigned task.
     post(remote.repo, `issues/${number}/comments`, {
       body: `HANDOFF_TRANSFER ${commit} TO @${options.to}`,
     });
-    gh(
-      [
-        'api',
-        `repos/${remote.repo}/issues/${number}/assignees`,
-        '--method',
-        'DELETE',
-        '--input',
-        '-',
-      ],
-      { input: JSON.stringify({ assignees: [remote.login] }) },
+    const transferred = JSON.parse(
+      gh(['api', `repos/${remote.repo}/issues/${number}`, '--method', 'PATCH', '--input', '-'], {
+        input: JSON.stringify({ assignees: [options.to] }),
+      }),
     );
-    post(remote.repo, `issues/${number}/assignees`, { assignees: [options.to] });
+    if (
+      transferred.assignees?.length !== 1 ||
+      transferred.assignees[0].login.toLowerCase() !== options.to.toLowerCase()
+    )
+      throw new Error(
+        'Transfer assignment not confirmed; inspect the saved handoff and Issue before retrying.',
+      );
   }
   console.log(
     JSON.stringify(
-      { publishedCommit: commit, draftPR: pr.url, ownership: remote.login, issue: number },
+      {
+        publishedCommit: commit,
+        draftPR: pr.url,
+        ownership: options.to || remote.login,
+        issue: number,
+      },
       null,
       2,
     ),

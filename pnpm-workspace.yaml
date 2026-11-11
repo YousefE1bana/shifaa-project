@@ -18,6 +18,10 @@ overrides:
   'vitest@4.1.0': 4.1.12
   'vite@>=7.0.0 <7.3.7': 7.3.7
   'yaml@>=2.0.0 <2.8.3': 2.8.3
+  # Fingerprint's published SDK 57 range still selects vulnerable traversal tools.
+  # Keep this exception scoped to that consumer; verify real fingerprint output.
+  '@expo/fingerprint@0.20.14>glob': 14.0.3
+  '@expo/fingerprint@0.20.14>minimatch': 11.0.1
 
 minimumReleaseAgeExclude:
   - '@expo/cli@57.0.14'

@@ -116,6 +116,15 @@ const signatures = spawnSync(
 assert.ifError(signatures.error);
 assert.equal(signatures.status, 0, signatures.stdout + signatures.stderr);
 
+// The remaining traversal overrides are confined to the fingerprint consumer.
+const fingerprints = spawnSync(
+  process.execPath,
+  ['--test', '--test-timeout=15000', join(root, 'tools/verify-expo-fingerprint.test.mjs')],
+  { encoding: 'utf8', timeout: 20000, maxBuffer: 1024 * 1024 },
+);
+assert.ifError(fingerprints.error);
+assert.equal(fingerprints.status, 0, fingerprints.stdout + fingerprints.stderr);
+
 process.stdout.write(
-  `Expo dependency verification passed: ${packageNames.length} installed patient dependencies satisfy declared ranges and the expo@${expoPackage.version} bundled native-module map; Xcode UUID, Expo query decoding and RSA signature checks passed.\n`,
+  `Expo dependency verification passed: ${packageNames.length} installed patient dependencies satisfy declared ranges and the expo@${expoPackage.version} bundled native-module map; Xcode UUID, Expo query decoding, RSA signatures and fingerprint traversal/filtering checks passed.\n`,
 );
