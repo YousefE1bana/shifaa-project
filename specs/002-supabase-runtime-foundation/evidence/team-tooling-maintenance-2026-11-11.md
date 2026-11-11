@@ -59,6 +59,31 @@ Issues #502 and #493 remain open; Yousef retains the human squash merge.
   destroy retained local data. No new human Arabic/English acceptance is claimed.
   Current-head required CI must be inspected after any Draft publication.
 
+## First hosted head failure and bounded correction
+
+[CI run 43018246039](https://github.com/YousefE1bana/shifaa-project/actions/runs/43018246039)
+tested `0c0f7bc3b1c659ad15b745dfb98dbe341ec4afd1`: three required jobs passed
+(PostgreSQL, accessibility/E2E, CodeQL); quality and Supabase failed on approved
+input drift; supply-chain failed on the remaining HIGH Zod advisory.
+
+The new guide link had changed the F011 hash-bound installation checklist. Only
+that added paragraph was removed, restoring its exact approved SHA-256
+`84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c`.
+The guide remains discoverable from the agent-skills README and package commands.
+A second, independent failure was the existing historical reader's exact current
+package/CI bindings: the five new commands and focused CI invocation intentionally
+changed these maintenance inputs. The reader now admits their exact new digests
+alongside the previously accepted digests, still serving the original immutable
+Git blobs to frozen F011 checks. No historical approval/manifest or acceptance
+digest was edited. Live execution and current-head CI remain separate evidence.
+
+All **three focused physical-preflight regressions PASS**, including rejection of
+unrelated live drift after a cached read and exact command/CI delta assertions.
+The approved protocol metadata read also succeeds. These are maintenance binding
+regressions for the new commands, not a Spec Kit upgrade compatibility suite.
+No local database/reset/runtime probe was executed to diagnose this failure.
+The first failing run is preserved; the correction requires fresh final-head CI.
+
 ## Interrupted test publication — retained, not accepted
 
 A test using a newly defaulted CLI entrypoint reached the real process runner.

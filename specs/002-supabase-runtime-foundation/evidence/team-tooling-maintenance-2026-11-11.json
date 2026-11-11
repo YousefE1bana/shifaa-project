@@ -30,7 +30,12 @@
     "humanBilingualAcceptance": "NOT_CLAIMED",
     "liveTeamStart": "PASS_ISSUE_PR_READS",
     "githubProjects": "UNAVAILABLE_MISSING_READ_PROJECT_SCOPE",
-    "securityReviewerExecution": "NOT_RUN"
+    "securityReviewerExecution": "NOT_RUN",
+    "maintenancePhysicalPreflight": {
+      "pass": 3,
+      "fail": 0,
+      "databaseExecuted": false
+    }
   },
   "audit": {
     "before": {
@@ -109,7 +114,7 @@
     ".specify/scripts/powershell/common.ps1": "c4816519ffb0b930427559b3ec729ef04a56162f4ef334958c8c50a3f92def9d",
     ".specify/scripts/powershell/setup-tasks.ps1": "d01c8d9b4d4261d0e7caa590dcacaba6327ed4cc8630b31337c7eb133e95d305",
     ".specify/tooling-source.json": "8422e083b652a9f514d1f92eaf897c1b19e5af790dc0fa56d7c408e70bb08c9e",
-    "docs/TEAM-INSTALLATION-CHECKLIST.md": "2f1fae20ab919539cdd0f20b8f5eb996293d70a84cc6937d4cdd801195684216",
+    "docs/TEAM-INSTALLATION-CHECKLIST.md": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c",
     "docs/agent-skills/README.md": "ef9c120920242a301d6ccb871e6230af9182b0d33e9807a82a146ca7198b4133",
     "package.json": "4cdf91ba4ca331944fde2610a05d75158351b74e96cac2b41ca47894c56731b7",
     "pnpm-lock.yaml": "6eb39e5b4a2fb95678826c9505aa24aa789607feb3efff9149c7f38edf1164b7",
@@ -121,7 +126,22 @@
     "tools/security-review.mjs": "df309cdad1822fc6569b01dd930288dd290574b5819f9deb6c9c0dd063355f7e",
     "tools/team-work.mjs": "4d578b2f5102259049f46fa98875775acc84619a92f19def66833bce0d5ecc16",
     "tools/team-work.test.mjs": "9afac256223236851e62034f9b8ed0fb1626a0a52749a0edc50e97af5d8d8fc1",
-    "tools/speckit.mjs": "40d0f12f74014f079a64cc03e00ef6b0a10c979d80dff2d3299bb71544359249"
+    "tools/speckit.mjs": "40d0f12f74014f079a64cc03e00ef6b0a10c979d80dff2d3299bb71544359249",
+    "tools/tooling-history.mjs": "2aa0af817bed71c793a77362807ea4797350435034fca9330aabf711f1841084",
+    "tools/feature-011-physical-preflight.test.mjs": "a9523e438be3e84a0a8d487c376ca2223646dde416c5e6727796826e9e4111db"
   },
-  "toolingCommit": "0a18707ee9336bdb3c3910a0921e340e8e0d3615"
+  "toolingCommit": "0a18707ee9336bdb3c3910a0921e340e8e0d3615",
+  "firstHostedHead": {
+    "head": "0c0f7bc3b1c659ad15b745dfb98dbe341ec4afd1",
+    "run": 43018246039,
+    "requiredPass": 3,
+    "requiredFail": 3,
+    "causes": [
+      "APPROVED_DOCUMENTATION_INPUT_DRIFT",
+      "MAINTENANCE_PACKAGE_BINDING_DRIFT",
+      "HIGH_ZOD_ADVISORY"
+    ],
+    "checklistOriginalBytesRestored": true,
+    "newHeadCiRequired": true
+  }
 }
