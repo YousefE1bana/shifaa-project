@@ -1,3 +1,5 @@
+name = "explorer"
+description = "Bounded read-only reconnaissance"
 model = "gpt-6-luna"
 model_reasoning_effort = "low"
 model_verbosity = "low"

@@ -1,0 +1,147 @@
+{
+  "date": "2026-11-11",
+  "status": "WIP / NOT VERIFIED FOR INTEGRATION",
+  "startingHead": "147c65bbaae9ecaaf282f6ce2ca0bd480544e376",
+  "specKit": {
+    "version": "1.4.0",
+    "commit": "0019fa14d12f45edabc2cc3176c9168a68bd0f97",
+    "managedFilesVerified": 21,
+    "coreSkillsVerified": 9,
+    "lifecycleExecuted": false,
+    "upgradeTestSuitesExecuted": false,
+    "legacyTaskstoissues": "MOVED_TO_UPSTREAM_GITHUB_EXTENSION_NOT_INSTALLED"
+  },
+  "checks": {
+    "teamTests": {
+      "pass": 8,
+      "fail": 0,
+      "githubBoundary": "MOCKED",
+      "gitBoundary": "REAL_TEMPORARY_REPOSITORIES"
+    },
+    "existingRsaConsumerTests": {
+      "pass": 32,
+      "fail": 0
+    },
+    "expoInstalledConsumer": "PASS",
+    "secretAndSyntheticScanner": "PASS",
+    "peerDependencies": "PASS",
+    "changedFileFormat": "PASS",
+    "fullVerify": "NOT_RUN_DESTRUCTIVE_RESET",
+    "humanBilingualAcceptance": "NOT_CLAIMED",
+    "liveTeamStart": "PASS_ISSUE_PR_READS",
+    "githubProjects": "UNAVAILABLE_MISSING_READ_PROJECT_SCOPE",
+    "securityReviewerExecution": "NOT_RUN",
+    "maintenancePhysicalPreflight": {
+      "pass": 3,
+      "fail": 0,
+      "databaseExecuted": false
+    }
+  },
+  "audit": {
+    "before": {
+      "high": 10,
+      "moderate": 9,
+      "low": 7
+    },
+    "after": {
+      "info": 0,
+      "low": 1,
+      "moderate": 2,
+      "high": 1,
+      "critical": 0
+    },
+    "remaining": [
+      {
+        "package": "zod",
+        "severity": "high",
+        "installed": "3.25.76",
+        "reportedPatched": ">=4.6.6",
+        "advisory": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5"
+      },
+      {
+        "package": "deepmerge",
+        "severity": "low",
+        "installed": "4.3.1",
+        "reportedPatched": ">=4.3.2",
+        "advisory": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4"
+      },
+      {
+        "package": "glob",
+        "severity": "moderate",
+        "installed": "13.0.6",
+        "reportedPatched": ">=14.0.2",
+        "advisory": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4"
+      },
+      {
+        "package": "minimatch",
+        "severity": "moderate",
+        "installed": "10.2.6",
+        "reportedPatched": ">=11.0.1",
+        "advisory": "https://github.com/advisories/GHSA-g3hv-75wg-m249"
+      }
+    ]
+  },
+  "interruptedPublication": {
+    "commit": "2f8ce790d43c26c04e851d07040debe44d6dc715",
+    "branch": "wip/yousefe1bana/issue-502/d5fe3864-1f07-4a05-bbb4-e2ccdd64cc62",
+    "draftPrCreated": false,
+    "ownershipReservationCreated": false,
+    "issueChanged": false,
+    "accepted": false
+  },
+  "f012": {
+    "head": "c571773d6432251d1f52bc94bb501c4e163f1571",
+    "trackedArtifactsUnchanged": true,
+    "untrackedDraftsUnchanged": true,
+    "nac1": "CONTRACT_READY_NOT_ACCEPTED_OR_INTEGRATED",
+    "patientPositiveVisibility": "BLOCKED",
+    "openUx001": "OPEN",
+    "next": "EXISTING_PLAN_REVIEW_AFTER_HUMAN_MAINTENANCE_INTEGRATION"
+  },
+  "changedSourceHashes": {
+    ".codex/agents/deep-worker.toml": "c7fef86637e2509d24943c244ee227d596594d1de35ac500e1c7097121b209ac",
+    ".codex/agents/explorer.toml": "c4a5836d981483c5a7f3ac7c11e5fa20247079b91422bb93d7b320c12d7e0c1b",
+    ".codex/agents/tester.toml": "e49a00fb8558715285402e5ac1942b0458d1b2966d832556a02302e8a3cac044",
+    ".codex/agents/ui-worker.toml": "dc3e9e70e1573d918589bec3dd23a8d324c5a3711fa843fe8bb46a498a208a7f",
+    ".codex/agents/worker.toml": "5106c06315a918e5efa9fe93057c28279e2a1bc2d212203ab99751c4b32667f0",
+    ".codex/config.toml": "b7b5857edd478a5f396bb1c7779711dd71caed06e52589beb5991f687a085c03",
+    ".github/workflows/ci.yml": "b31dbe6aeacafddfb4da49ee65d70afd6ad974a6781bff9fca0e5de9b4fd7435",
+    ".specify/init-options.json": "26f949f07074f62f331138771c7cf8209c3d2eb88aa214e35a5db803e8f119d1",
+    ".specify/integration.json": "f8b9f15576b2d3d055c6cb79b202ea64aab33c21b3fd4eaabaa5a0b2ea018bcc",
+    ".specify/integrations/codex.manifest.json": "b2361688d3238e5e7e6d8b9e180f5a9b71eedb64643c7d93235c1e92c1165439",
+    ".specify/integrations/speckit.manifest.json": "dd3d1101db57598da31658835d44606a09442255a8abda76701a80e9f6d7da12",
+    ".specify/scripts/powershell/check-prerequisites.ps1": "6763a899f957f8ca8e34973730871fee7621d7b17f722373345b57e175f48fce",
+    ".specify/scripts/powershell/common.ps1": "c4816519ffb0b930427559b3ec729ef04a56162f4ef334958c8c50a3f92def9d",
+    ".specify/scripts/powershell/setup-tasks.ps1": "d01c8d9b4d4261d0e7caa590dcacaba6327ed4cc8630b31337c7eb133e95d305",
+    ".specify/tooling-source.json": "8422e083b652a9f514d1f92eaf897c1b19e5af790dc0fa56d7c408e70bb08c9e",
+    "docs/TEAM-INSTALLATION-CHECKLIST.md": "84b99da5826547f584763adc1a472c1a18029960362fb1870aa1c5489359363c",
+    "docs/agent-skills/README.md": "ef9c120920242a301d6ccb871e6230af9182b0d33e9807a82a146ca7198b4133",
+    "package.json": "4cdf91ba4ca331944fde2610a05d75158351b74e96cac2b41ca47894c56731b7",
+    "pnpm-lock.yaml": "6eb39e5b4a2fb95678826c9505aa24aa789607feb3efff9149c7f38edf1164b7",
+    "pnpm-workspace.yaml": "b2ef45f7d93e816754863a7f65c3c9b035f4dc7443383d459275aa4c2d8aef7b",
+    "tools/verify-expo-dependencies.mjs": "b0b934673e63be84d9cbed41e8c67a715c2370ef0b4a1e30a7dd4ad58a3b4c91",
+    ".codex/agents/security-reviewer.toml": "a8676e756af3401fabe6f447b3d596d48cd598a60b403e18917c7ecce6d9f98d",
+    "docs/TEAM-HANDOFF.md": "b8158179121590c5d701f485c47cefe6f7250e9e669bf3f7e6740e86e1009500",
+    "tools/materialize-speckit.py": "8fe0016cd4197c3759bf1820096dc74228656222f772a7a4eeea58d5556522ea",
+    "tools/security-review.mjs": "df309cdad1822fc6569b01dd930288dd290574b5819f9deb6c9c0dd063355f7e",
+    "tools/team-work.mjs": "4d578b2f5102259049f46fa98875775acc84619a92f19def66833bce0d5ecc16",
+    "tools/team-work.test.mjs": "9afac256223236851e62034f9b8ed0fb1626a0a52749a0edc50e97af5d8d8fc1",
+    "tools/speckit.mjs": "40d0f12f74014f079a64cc03e00ef6b0a10c979d80dff2d3299bb71544359249",
+    "tools/tooling-history.mjs": "2aa0af817bed71c793a77362807ea4797350435034fca9330aabf711f1841084",
+    "tools/feature-011-physical-preflight.test.mjs": "a9523e438be3e84a0a8d487c376ca2223646dde416c5e6727796826e9e4111db"
+  },
+  "toolingCommit": "0a18707ee9336bdb3c3910a0921e340e8e0d3615",
+  "firstHostedHead": {
+    "head": "0c0f7bc3b1c659ad15b745dfb98dbe341ec4afd1",
+    "run": 43018246039,
+    "requiredPass": 3,
+    "requiredFail": 3,
+    "causes": [
+      "APPROVED_DOCUMENTATION_INPUT_DRIFT",
+      "MAINTENANCE_PACKAGE_BINDING_DRIFT",
+      "HIGH_ZOD_ADVISORY"
+    ],
+    "checklistOriginalBytesRestored": true,
+    "newHeadCiRequired": true
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "issue": 502,
+  "status": "LOCAL_VALIDATION_COMPLETE_EXTERNAL_GATES_OPEN",
+  "localDate": "2026-10-23 Africa/Cairo",
+  "testedCommit": "ea537b69fc665c35e4b2fab44c702bb2227a4ea1",
+  "testedTree": "97b53141728eeeeaed9a7fc121548be824ba0e7c",
+  "baseMain": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "initialSourceStatus": "CLEAN",
+  "workspaceValidation": {
+    "command": "pnpm@11.13.1 exec turbo run lint typecheck build test --force --concurrency=2",
+    "invocation": "Node 24.22.1 invoked the cached pinned pnpm CLI; full argument vector retained in private command receipt",
+    "startedUtc": "2026-10-22T21:40:41.594436+00:00",
+    "finishedUtc": "2026-10-22T21:42:53.214891+00:00",
+    "durationSeconds": 131.6204493,
+    "exitCode": 0,
+    "tasksPassed": 60,
+    "tasksTotal": 60,
+    "turboCacheHits": 0,
+    "apiTestsPassed": 702,
+    "apiTestsSkipped": 65,
+    "skipDisposition": "Environment-gated database/Auth/runtime tests did not execute; this is not database E2E acceptance",
+    "receipt": "next-current-workspace.json",
+    "log": "next-current-workspace.log",
+    "logSHA256": "1cd3198919abaeb2364d6aab6eed6f103ab1c671fb07770d576518d6f0739256"
+  },
+  "installedDependencyDiagnostics": {
+    "receipt": "next-installed-advisory-probes.json",
+    "exitCode": 0,
+    "meaningOfExitZero": "Bounded observations collected; not security acceptance",
+    "forge": {
+      "version": "1.4.0",
+      "advisory": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+      "observed": "Valid SHA256 signature accepted. Malformed nested DigestAlgorithm accepted by installed Forge and rejected by Node/OpenSSL.",
+      "limitation": "Ephemeral in-memory generated keypair; structural rejection comparison, not a complete private-key-free or remote forgery exploit. No keys or signatures retained.",
+      "caller": "Expo CLI -> @expo/code-signing-certificates -> node-forge"
+    },
+    "braces": {
+      "version": "3.0.3",
+      "advisory": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+      "firstProbe": "20,001-character input exceeded actual MAX_LENGTH 10,000; SyntaxError is not a stack-overflow reproduction",
+      "underLimitReceipt": "next-braces-under-limit.json",
+      "underLimitCharacters": 9999,
+      "underLimitDepth": 4999,
+      "observed": "Normal expansion passed. Under-limit expand raised RangeError: Maximum call stack size exceeded. Compile and stringify completed.",
+      "limitation": "Actual installed package in a bounded local process; does not establish remote application exploitability",
+      "caller": "micromatch public braceExpand path -> braces with expand enabled"
+    }
+  },
+  "upstreamReadback": {
+    "receipt": "next-upstream-readback.json",
+    "forgeLatest": "1.4.0",
+    "forge141RegistryStatus": 404,
+    "forgeProposedFix": "https://github.com/digitalbazaar/forge/pull/1152",
+    "forgeProposedFixState": "OPEN_UNMERGED",
+    "bracesLatest": "3.0.3",
+    "braces304RegistryStatus": 404,
+    "disposition": "No published compatible fix established for the two remaining high advisories. No audit exclusions, threshold changes or unreviewed crypto/AST fork introduced. Earlier true audit exit 1 remains unresolved."
+  },
+  "networkReadback": {
+    "receipt": "next-windows-readonly.json",
+    "administratorToken": false,
+    "profile": "Public",
+    "firewallEnabledAllProfiles": true,
+    "wildcardPorts": [54321, 54322, 54323, 54324, 54327, 54329],
+    "observed": "Docker backend wildcard IPv6 listeners and an overlapping enabled Public TCP Allow rule remain present",
+    "limitation": "COM candidate screening and local listeners are not a full WFP evaluation or proof of separate-device reachability. No independent external IPv4/IPv6 probe.",
+    "disposition": "No supported all-service containment established, Firewall rules changed or live cutover performed. Administrative execution and authorized independent connectivity validation are required before claiming any interim mitigation effective."
+  },
+  "preservation": {
+    "privateRoot": "D:\\ECU\\GP-STUFF\\SHIFAA-Issue-502-Remediation-20261022",
+    "manifest": "next-validation-integrity.json",
+    "manifestSHA256": "cfb249cdd54009e4628af445d38c23f78137a287b4a58fa41f9896e12ccda992",
+    "filesSealed": 121,
+    "commandReceiptsVerified": 5,
+    "priorSealedFilesReverified": 155,
+    "f011FilesMatchedToMain": 2778,
+    "dockerReadOnlySnapshot": "next-docker-readonly.json",
+    "unchangedContainers": 17,
+    "unchangedNetworks": 7,
+    "unchangedVolumes": 8,
+    "comparisonScope": "Exact resource identities and captured metadata, not database-content or backup-restoration proof",
+    "priorPlatformExport": {
+      "files": 108,
+      "hashMismatches": 0,
+      "successorMapping": "next-platform-export-preservation.json",
+      "recoveryDirectory": "next-platform-export-retained",
+      "disposition": "Copied and hash-verified before ordinary patient build replaced ignored dist. Prior ignored export paths no longer exist; use this additive recovery mapping. Historical receipts are unchanged point-in-time records."
+    },
+    "backupAndHardlinkChecks": "Previously sealed verification remains historical; no cleanup, restoration, relinking, deduplication or deletion repeated",
+    "privateEvidenceRestriction": "Do not auto-stage raw logs, local resource inventories or installed source snapshots"
+  },
+  "acceptanceLimits": [
+    "Original 42-command pnpm verify chain and Compose reset unchanged; no new aggregate executed.",
+    "No security advisory waiver, new human Arabic/English acceptance or native-device acceptance.",
+    "Source remains unpublished; no fresh current-head GitHub CI claimed.",
+    "PR-specific publication disposition, safe full-verification boundaries and remaining security/network requirements are unresolved.",
+    "Yousef retains human squash merge. Issues #493/#502 and F012 gates remain open; no F012 lifecycle or team onboarding."
+  ]
+}

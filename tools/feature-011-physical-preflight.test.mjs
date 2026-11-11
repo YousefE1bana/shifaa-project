@@ -72,7 +72,7 @@ test('physical preflight compatibility rejects live drift after a successful cac
   }
 });
 
-test('maintenance pins preserve sealed F011 inputs without admitting script or workflow drift', () => {
+test('maintenance pins preserve sealed F011 inputs without admitting unrelated script or workflow drift', () => {
   const pins = ['package.json', '.github/workflows/ci.yml'];
   const parent = join(source, 'artifacts/feature-011/physical-preflight-history-fixtures');
   mkdirSync(parent, { recursive: true });
@@ -91,17 +91,46 @@ test('maintenance pins preserve sealed F011 inputs without admitting script or w
     const oldPackage = JSON.parse(historical.get('package.json'));
     const currentPackage = JSON.parse(readFileSync(join(root, 'package.json')));
     assert.equal(currentPackage.engines.node, '24.22.1');
+    assert.equal(currentPackage.engines.pnpm, '11.13.1');
+    assert.equal(currentPackage.packageManager, 'pnpm@11.13.1');
+    assert.equal(
+      currentPackage.scripts['dependencies:check'],
+      oldPackage.scripts['dependencies:check'].replace(' --ignore-unfixable', ''),
+      'The audit gate must check vulnerabilities without writing ignored advisories',
+    );
     assert.deepEqual(
       ['tsx', 'vitest', 'yaml'].map((key) => currentPackage.devDependencies[key]),
-      ['4.23.15', '4.1.11', '2.8.3'],
+      ['4.23.15', '4.1.12', '2.8.3'],
     );
     const normalized = structuredClone(currentPackage);
     normalized.engines.node = oldPackage.engines.node;
+    normalized.engines.pnpm = oldPackage.engines.pnpm;
+    normalized.packageManager = oldPackage.packageManager;
+    normalized.scripts['dependencies:check'] = oldPackage.scripts['dependencies:check'];
     for (const key of ['tsx', 'vitest', 'yaml'])
       normalized.devDependencies[key] = oldPackage.devDependencies[key];
-    assert.deepEqual(normalized, oldPackage, 'Only the enumerated pins may differ');
+    const addedCommands = {
+      'team:handoff': 'node tools/team-work.mjs handoff',
+      'team:start': 'node tools/team-work.mjs start',
+      'team:test': 'node --test tools/team-work.test.mjs',
+      'security:review': 'node tools/security-review.mjs',
+      speckit: 'node tools/speckit.mjs',
+    };
+    for (const [key, value] of Object.entries(addedCommands)) {
+      assert.equal(currentPackage.scripts[key], value);
+      assert.equal(oldPackage.scripts[key], undefined);
+      delete normalized.scripts[key];
+    }
+    assert.deepEqual(normalized, oldPackage, 'Only enumerated pins and commands may differ');
     assert.equal(
-      readFileSync(join(root, pins[1]), 'utf8').replaceAll('24.22.1', '24.18.0'),
+      readFileSync(join(root, pins[1]), 'utf8')
+        .replaceAll('24.22.1', '24.18.0')
+        .replaceAll('11.13.1', '11.13.0')
+        .replace('      - run: pnpm team:test\n', '')
+        .replaceAll(
+          'pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10',
+          'pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9',
+        ),
       historical.get(pins[1]).toString('utf8'),
       'CI jobs, commands and security settings must remain unchanged',
     );

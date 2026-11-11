@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "issue": 502,
+  "date": "2026-10-22",
+  "custodian": "Yousef Osama",
+  "status": "CANDIDATE_SOURCE_RECONCILIATION_REQUIRES_NORMAL_PR_INTEGRATION",
+  "integratedSourceCommit": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "historicalBaselineCommit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+  "clinicalAuthority": false,
+  "lifecycleAuthorized": false,
+  "tooling": [
+    {
+      "path": "tools/feature-011-protocol-parity.test.mjs",
+      "bytes": 19346,
+      "sha256": "16916a8758c81df166ef074d0e0d8371857890d30a95f5ddc837e9f746b98793"
+    },
+    {
+      "path": "tools/run-feature-011-postgres-test.mjs",
+      "bytes": 14885,
+      "sha256": "f7fe95c1d5039b222f7bf08266173638109bba63c204956471aa5de05992f2b5"
+    },
+    {
+      "path": "tools/verify-feature-011-scope.mjs",
+      "bytes": 22045,
+      "sha256": "69d7c27bc99ccf7e7522e77a96cfd6d2706d173e3a28c428506dfeb13cdb47b0"
+    },
+    {
+      "path": "tools/verify-feature-011-scope.test.mjs",
+      "bytes": 17499,
+      "sha256": "32832eaa16716126c8e8b313f1f1d172dad27e8ef0569af5eb837eed30362450"
+    }
+  ],
+  "f011Additions": [
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/maintenance-2026-10-21-acceptance.json",
+      "bytes": 3751,
+      "sha256": "1e6e51cae21d3a65e41fe3913cfb3ddf16531f0063de363a3bd9366fd6e78a86",
+      "gitBlob": "6bf84dd0225534d783ab822b09587eaa71243fb9"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/maintenance-2026-10-21-retention.json",
+      "bytes": 21114,
+      "sha256": "3ecfc7f304860a0a4be5fb82e60f267eab7a93174834f9fb3ef04e3fa4043d48",
+      "gitBlob": "dfe2ceb815a0549a885c336a86fba55ff0706fbc"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/work-management-storage-2026-10-21.json",
+      "bytes": 1152,
+      "sha256": "0c73e74e4c49f2b0cfff30c542380b07e814fe4b3ef821a93da24de2aa108ed5",
+      "gitBlob": "d3d3944a085a5629c8bfc9f61526edc7e0996db3"
+    },
+    {
+      "path": "specs/011-allergies-clinical-content-governance/evidence/work-management-validation-2026-10-22.json",
+      "bytes": 772,
+      "sha256": "f6cfc031bad829a575b08ccfb775524bcdff67fa9e582ffa4d54ba3cffdb5b4a",
+      "gitBlob": "239c77962d95e3ec648b80010020fab7c5d9c1e9"
+    }
+  ],
+  "limitations": [
+    "Operational tool hashes are current candidate identities, not historical execution receipts.",
+    "The four evidence supplements were already integrated in PRs 503 and 505.",
+    "Frozen original artifacts and Git objects remain independently verified.",
+    "No physical parity, live acceptance or approval is granted by this record."
+  ]
+}

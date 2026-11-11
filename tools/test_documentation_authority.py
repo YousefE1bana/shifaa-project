@@ -39,7 +39,7 @@ def json_bytes(value: object) -> bytes:
 
 
 class AuthorityVerifierTests(unittest.TestCase):
-    def make_repository(self, *, tooling=False) -> tuple[tempfile.TemporaryDirectory, Path]:
+    def make_repository(self, *, tooling=False, current_sources=False) -> tuple[tempfile.TemporaryDirectory, Path]:
         temporary = tempfile.TemporaryDirectory()
         root = Path(temporary.name)
         contents = {
@@ -67,6 +67,9 @@ class AuthorityVerifierTests(unittest.TestCase):
             contents[".specify/workflows/speckit/workflow.yml"] = "protected workflow\n"
             for relative in authority.METADATA_PATHS:
                 contents[relative] = (root / relative).read_text(encoding="utf-8")
+        if current_sources:
+            for relative in authority.CURRENT_TOOLING_PATHS:
+                contents[relative] = "historical verifier fixture\n"
         for relative, text in contents.items():
             write_text(root, relative, text)
         write_text(root, ".gitignore", "ignored.tmp\n")
@@ -91,7 +94,7 @@ class AuthorityVerifierTests(unittest.TestCase):
                 {"path": path, "bytes": len(baseline_contents[baseline_blobs[path]]),
                  "sha256": hashlib.sha256(baseline_contents[baseline_blobs[path]]).hexdigest(),
                  "gitBlob": baseline_blobs[path]}
-                for path in ("docs/protected.md", "specs/012-example/contract-amendment/approved.md", *((*authority.METADATA_PATHS, ".specify/scripts/powershell/common.ps1", ".specify/templates/plan-template.md", ".specify/workflows/speckit/workflow.yml") if tooling else []))
+                for path in ("docs/protected.md", "specs/012-example/contract-amendment/approved.md", *(authority.CURRENT_TOOLING_PATHS if current_sources else []), *((*authority.METADATA_PATHS, ".specify/scripts/powershell/common.ps1", ".specify/templates/plan-template.md", ".specify/workflows/speckit/workflow.yml") if tooling else []))
             ],
             "f011": {"path": f011_path, "files": len([path for path in f011_files if path]), "gitTree": f011_tree},
             "candidateAllowlist": [
@@ -261,6 +264,116 @@ class AuthorityVerifierTests(unittest.TestCase):
                         self.assertIn("protected_current_differs_from_history", codes)
             finally:
                 temporary.cleanup()
+
+    def test_existing_directory_links_pass_but_missing_directories_and_anchors_fail(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / ".github/ISSUE_TEMPLATE").mkdir(parents=True)
+            for target, expected in ((".github/ISSUE_TEMPLATE/", []),
+                                     (".github/absent/", ["markdown_link_target_missing"]),
+                                     (".github/ISSUE_TEMPLATE/#invented", ["markdown_link_target_missing"])):
+                with self.subTest(target=target):
+                    write_text(root, "guide.md", f"[Forms]({target})\n")
+                    self.assertEqual([entry["code"] for entry in authority.markdown_link_errors(root, "guide.md")], expected)
+
+    def current_binding_fixture(self):
+        temporary, root = self.make_repository(current_sources=True)
+        manifest = json.loads((root / authority.BASELINE_FILE).read_bytes())
+        addition = authority.F011_PATH + "/evidence/retained.json"
+        write_text(root, addition, '{"clinicalAuthority":false}\n')
+        for relative in authority.CURRENT_TOOLING_PATHS:
+            write_text(root, relative, "current repaired verifier fixture\n")
+        run_git(root, "add", "-A")
+        run_git(root, "commit", "-m", "fixture merged operational repairs and additive evidence")
+        def metadata(relative):
+            raw = (root / relative).read_bytes()
+            return {"path": relative, "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
+        record = {"schemaVersion": 1, "clinicalAuthority": False, "lifecycleAuthorized": False,
+                  "historicalBaselineCommit": manifest["baselineCommit"],
+                  "integratedSourceCommit": run_git(root, "rev-parse", "HEAD").decode().strip(),
+                  "tooling": [metadata(relative) for relative in sorted(authority.CURRENT_TOOLING_PATHS)],
+                  "f011Additions": [{**metadata(addition), "gitBlob": run_git(root, "rev-parse", "HEAD:" + addition).decode().strip()}]}
+        raw = json_bytes(record)
+        write_text(root, authority.CURRENT_BINDINGS_PATH, raw.decode())
+        return temporary, root, addition, hashlib.sha256(raw).hexdigest()
+
+    def test_exact_current_bindings_preserve_originals_without_widening_package_mode(self):
+        temporary, root, addition, anchor = self.current_binding_fixture()
+        try:
+            with patch.object(authority, "CURRENT_BINDINGS_SHA256", anchor):
+                report = self.verify(root, mode="current")
+                self.assertTrue(report["ok"], report["errors"])
+                self.assertTrue(report["checks"]["f011_historical_unchanged"])
+                self.assertFalse(report["checks"]["f011_unchanged"])
+                self.assertEqual(report["checks"]["f011_additive_paths"], [addition])
+                self.assertIn("protected_current_hash_mismatch", {error["code"] for error in self.verify(root)["errors"]})
+        finally:
+            temporary.cleanup()
+
+    def test_current_binding_cannot_hide_tool_evidence_original_or_record_drift(self):
+        cases = (("tools/verify-feature-011-scope.mjs", "current_source_binding_invalid"),
+                 (authority.F011_PATH + "/evidence/retained.json", "current_source_binding_invalid"),
+                 (authority.CURRENT_BINDINGS_PATH, "current_source_binding_invalid"),
+                 (authority.F011_PATH + "/frozen.md", "f011_tracked_files_changed"),
+                 (authority.F011_PATH + "/evidence/unbound.json", "f011_tracked_files_changed"),
+                 ("docs/protected.md", "protected_current_hash_mismatch"))
+        temporary, root, _addition, anchor = self.current_binding_fixture()
+        try:
+            with patch.object(authority, "CURRENT_BINDINGS_SHA256", anchor):
+                for relative, expected in cases:
+                    with self.subTest(path=relative):
+                        target = root / relative
+                        original = target.read_bytes() if target.exists() else None
+                        write_text(root, relative, "unreviewed drift\n")
+                        report = self.verify(root, mode="current")
+                        self.assertFalse(report["ok"])
+                        self.assertIn(expected, {entry["code"] for entry in report["errors"]})
+                        if original is None:
+                            target.unlink()
+                        else:
+                            target.write_bytes(original)
+        finally:
+            temporary.cleanup()
+
+    def test_current_binding_rejects_invalid_provenance_and_expanded_scope(self):
+        temporary, root, _addition, _anchor = self.current_binding_fixture()
+        try:
+            target = root / authority.CURRENT_BINDINGS_PATH
+            original = json.loads(target.read_bytes())
+            mutations = (
+                lambda record: record.update(integratedSourceCommit="0" * 40),
+                lambda record: record.update(clinicalAuthority=True),
+                lambda record: record.update(lifecycleAuthorized=True),
+                lambda record: record["tooling"].pop(),
+                lambda record: record["tooling"][0].update(path="docs/protected.md"),
+                lambda record: record["f011Additions"][0].update(gitBlob="0" * 40),
+                lambda record: record["f011Additions"][0].update(path="../outside.json"),
+            )
+            for mutate in mutations:
+                record = json.loads(json.dumps(original))
+                mutate(record)
+                raw = json_bytes(record)
+                target.write_bytes(raw)
+                # Even a reviewed new record cannot expand this implementation's scope.
+                with patch.object(authority, "CURRENT_BINDINGS_SHA256", hashlib.sha256(raw).hexdigest()):
+                    report = self.verify(root, mode="current")
+                    self.assertIn("current_source_binding_invalid", {entry["code"] for entry in report["errors"]})
+            target.unlink()
+            self.assertFalse(self.verify(root, mode="current")["ok"])
+        finally:
+            temporary.cleanup()
+
+    def test_committed_original_f011_change_is_rejected_with_additive_binding(self):
+        temporary, root, _addition, anchor = self.current_binding_fixture()
+        try:
+            write_text(root, authority.F011_PATH + "/frozen.md", "unauthorized committed change\n")
+            run_git(root, "add", "-A")
+            run_git(root, "commit", "-m", "fixture unauthorized historical mutation")
+            with patch.object(authority, "CURRENT_BINDINGS_SHA256", anchor):
+                report = self.verify(root, mode="current")
+                self.assertIn("f011_tracked_files_changed", {entry["code"] for entry in report["errors"]})
+        finally:
+            temporary.cleanup()
 
     def test_unallowlisted_candidate_file_is_rejected(self):
         def add_file(root: Path) -> None:
