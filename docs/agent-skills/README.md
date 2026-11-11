@@ -82,8 +82,8 @@ AGENTS before work. Historical upgrade reports and delegate-runtime-status.json
 are observations at their recorded versions, not live configuration discovery.
 
 The four policy skills are copied by the owned-skill sync. Official SpecKit skills
-remain a separate local installation pinned by `.specify/integration.json` to
-1.1.3; the custom workflow remains 2.3.0. Do not execute an install, updater,
+remain a separate local installation at the version declared by
+`.specify/integration.json`; the custom workflow remains 2.3.0. Do not execute an install, updater,
 lifecycle command or sync merely to inspect discovery. Check actual local paths,
 read the selected SKILL.md and report missing integrations honestly.
 
