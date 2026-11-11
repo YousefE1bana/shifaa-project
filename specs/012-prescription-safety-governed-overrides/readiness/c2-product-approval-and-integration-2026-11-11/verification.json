@@ -1,0 +1,168 @@
+{
+  "status": "PASS_BOUNDED_APPROVAL_DOCUMENT_AND_PRESERVATION_VALIDATION",
+  "recordedAt": "2026-11-11T23:56:05.842467+02:00",
+  "head": "0ad13689a170f325681a260d925e149f669e485a",
+  "branch": "codex/f012-specify-20261023",
+  "preExistingFeatureFilesUnchanged": 2341,
+  "protectedHashesUnchanged": true,
+  "sixSpecifyCheckpointBlobsExact": true,
+  "trackedDiffUnchanged": true,
+  "indexUnchangedAndEmpty": true,
+  "gitDiffCheck": "PASS",
+  "createdOfficialFiles": [
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/integration-status.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/pr-body.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/preflight.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/publication-manifest.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/static-validation.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/verification.json"
+  ],
+  "canonicalChanges": "Five pre-existing nine-line appendices unchanged this turn; predecessor prefixes and exact candidate hashes verified",
+  "approvalSHA256": "244465179975e70ff09e8b13661f5682a89c09991ab4b9b06be3b7c6f407b83a",
+  "userBoundSourceSHA256": "7cf57fac6ff004bbbb6dc8ca843af3154b42c4bedc9347da49d09fc8d470b115",
+  "userBoundBaselineManifestSHA256": "432b98b9fe1daf0b0dd839eec58b92dd27b4529a3d860308786f5707f41119d4",
+  "static": {
+    "checks": 212,
+    "operations": 12,
+    "scope": {
+      "closure": 7,
+      "prerequisites": 2,
+      "nfr": 22,
+      "ac": 16
+    },
+    "schemas": 70,
+    "resolvedReferences": 324,
+    "fullOpenAPI": "VALIDATION_NOT_AVAILABLE"
+  },
+  "publication": {
+    "status": "LOCAL_PREPARATION_ONLY_NOT_STAGED_OR_PUBLISHED",
+    "candidateManifestSHA256": "67268ebad7c859ee92f912c1a598c800c124dae0d8cf2edef94099765be69100",
+    "allowlist": {
+      "files": 111,
+      "PNG": 30,
+      "bytes": 8987892
+    },
+    "additionalMetadata": ["publication-manifest.json", "verification.json"],
+    "primaryReviewFileLinksIncluded": 65,
+    "localFileLinksResolved": 1065,
+    "retainedOnlyHistoricalLinkTargets": [
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/checklists/plan-consistency.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/contract-amendment/native-authority-nac1-successor-v0.1.0.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/plan.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-preflight-2026-10-23.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/plan.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-preflight-2026-10-23.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/plan.md",
+        "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/gallery.html"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+        "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/gallery.html"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+        "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/baselines/manifest.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/static-validation.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/ui-and-governance-resolution.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/c2-control-gallery.html"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-maintenance-and-handoff-2026-11-11.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/content-manifest.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/preservation-validation.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-inventory.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/gallery.html"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/baselines/manifest.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/static-validation.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/validate-static.cjs"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-inventory.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-handoff.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-inventory.json"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-handoff.md",
+        "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/gallery.html"
+      },
+      {
+        "from": "specs/012-prescription-safety-governed-overrides/readiness/post-maintenance-plan-review-2026-11-11.md",
+        "target": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json"
+      }
+    ],
+    "historicalLinkLimit": "Local resolution verified; omitted historical galleries/raw evidence and their links are retained-only, not remote availability. Primary current review navigation is included."
+  },
+  "secretPatternScreen": {
+    "files": 81,
+    "candidateFindings": [],
+    "limit": "Focused literal-pattern screen plus selected synthetic-design/contract provenance; not a full secret/PHI audit or scanner CI PASS"
+  },
+  "github": {
+    "readOnlyCommand": "gh api repos/YousefE1bana/shifaa-project/rules/branches/main",
+    "requiredCurrentHeadContexts": [
+      "Format, lint, types, tests, contracts, boundaries",
+      "PostgreSQL migration and forced-RLS matrix",
+      "Supabase Auth, PostgreSQL, Storage, and RLS",
+      "Accessibility and patient E2E",
+      "Dependencies, secrets, and SBOM",
+      "CodeQL SAST"
+    ],
+    "strict": true,
+    "metadataLabelsValid": true,
+    "taxonomyCount": 45,
+    "currentHeadCIRun": "NOT_EXECUTED_FOR_UNPUBLISHED_BRANCH",
+    "merge": "Human squash only; no PR mutation"
+  },
+  "checksNotRun": {
+    "pnpmVerify": "UNSAFE_RETAINED_VOLUME_AND_NATIVE_DB_RESET_PATHS; NOT_RUN_NOT_WAIVED",
+    "liveArabicEnglishAppAcceptance": "NOT_EXECUTED_FOR_THIS_PR_NOT_WAIVED",
+    "runtimeSecurityRLSRacesAndAndroid": "NOT_EXECUTED_LATER_STAGE"
+  },
+  "OPEN-UX-001": "OPEN_INTEGRATION_PENDING_PRODUCT_VISUAL_EVIDENCE_COMPLETE_UNDER_SELECTED_U1",
+  "J-04_AC-13": "IN_SCOPE_EFFECTIVE_POSITIVE_AUTHORITY_BLOCKED_UNTIL_GOVERNED_INTEGRATION",
+  "Plan": "DRAFT_FOR_REVIEW_NOT_PLAN_APPROVED",
+  "preservation": "No DB/Docker/Auth mutation or data query; no reset, image regeneration, staging, commit, push, merge, lifecycle command, pointer change or cleanup",
+  "review": "SHIFAA guardrails/UI governor plus docs-guard factual/claim/link pass; no other human approval invented"
+}

@@ -1,0 +1,3797 @@
+openapi: 3.1.1
+info:
+  title: SHIFAA F012 synthetic engineering - draft contract
+  version: 0.7.0-final-product-reconciliation
+  description:
+    DRAFT_FOR_REVIEW; not active generated API, not implemented, no PLAN_APPROVED. Exactly
+    twelve approved carriers. Technical choices and proposed VP-2 release/withdrawal/subject-profile
+    delta are bound in the consolidated candidate. Existing D1/D2/P1-P3/S1-S8 policy approvals
+    stand; new permissions remain ineffective pending exact acceptance/integration. No clinical
+    rules, executable vectors, F014 behavior or effective patient release. All clinical assessment
+    stays not_fully_checked.
+servers:
+  - url: /v1
+security:
+  - bearerAuth: []
+x-shifaa-architecture-review:
+  status: BLOCKED_BEFORE_PLAN_APPROVAL
+  decisionPackage: ../readiness/final-po-decisions-2026-11-11/approval-package.md
+  priorApproval: ../readiness/source-fence-architecture-approval-2026-10-23.md
+  technicalSuccessor: ../contract-amendment/source-consumption-successor-v0.1.0.md
+  productArchitecture: S1-S8 and P1-P3 approved; S4 validation-only boundary approved in principle
+  runtimeEvidence: F012_RUNTIME_NOT_RUN
+  effectiveGrant: NONE_CREATED
+  nativeAuthorityOrdering: CONFIG_PINNED_RETAINED_USER_SESSION_SHARE_CONTRACT_READY_ACCEPTANCE_PENDING
+  nativeDecisionPackage: ../readiness/native-authority-n1-technical-decision-2026-10-23.md
+  nativeInternalPort: PROPOSED_INTERNAL_NONOWNER_BOUND_GUARD_NO_GRANT_INSTALLED
+  nativeTechnicalSuccessor: ../contract-amendment/native-authority-nac1-successor-v0.1.0.md
+  nativeScopedEvidence: ../readiness/nac-1-local-auth-maintenance-and-handoff-2026-11-11.md
+  nativeRuntimeScope: SCOPED_NATIVE_COMPATIBILITY_PASSED_F012_GUARD_NOT_IMPLEMENTED
+  patientReleasePolicy: VP2_0_2_PRODUCT_DIRECTION_APPROVED_EXACT_CONTRACT_PENDING
+  fullOpenApiValidation: VALIDATION_NOT_AVAILABLE
+  sourceFence: A_DB_ROW_FENCE_INTERNAL_CAPTURE_EXACT_TECHNICAL_ACCEPTANCE_PENDING
+  patientSubjectRelease: EXPLICIT_SIGN_OR_POST_SIGN_UPDATE_CARRIER_AMENDMENT_NOT_EFFECTIVE
+  prePlan: Exact C1/C2 acceptance/integration; explicit existing-carrier boundary amendment; U1 or
+    actual dual visual attribution and new C2 control compositions; separate exact Plan approval.
+    Runtime tests are later, not claimed passed.
+  laterStage: Installed migrations, generated clients, actual forced-RLS and race/rollback/restore
+    verification; not required runtime PASS before Plan design approval.
+  patientPositiveVisibility: G1_BLOCKED
+  sourceDependentSchemas:
+    [
+      PrescriptionP,
+      PrescriptionC,
+      PrescriptionRead,
+      Medication,
+      MedicationList,
+      ReviewEvidenceMember,
+      DetailResult,
+    ]
+  finalization: DTO candidates are exact reviewable bytes, not approved architecture or installed
+    grants. C1 workforce/source and C2 subject release/currentness are separately attributable.
+  consolidatedContract: ../contract-amendment/plan-closure-consolidated-v0.2.0.md
+  visualProductApproval: C3_V0_3_0_PRODUCT_APPROVED_EXACT_HASH_RECORD
+  visualGovernance: OPEN_UX_001_U1_OR_ACTUAL_DUAL_ACCEPTANCE_AND_NEW_C2_CONTROLS_PENDING
+x-shifaa-specification-sha256: f4d2e7f1113467f5997e27809394c7f03a191dba276bfc895e0398a1bb8fa15a
+x-shifaa-scope:
+  closureFRs:
+    - FR-SAFE-001
+    - FR-SAFE-003
+    - FR-SAFE-004
+    - FR-SAFE-005
+    - FR-SAFE-006
+    - FR-SAFE-007
+    - FR-SAFE-011
+  prerequisiteOnlyFRs:
+    - FR-SAFE-009
+    - FR-SAFE-010
+  nfrs:
+    - NFR-SEC-001
+    - NFR-SEC-002
+    - NFR-SEC-003
+    - NFR-SEC-004
+    - NFR-SEC-005
+    - NFR-SEC-006
+    - NFR-SEC-007
+    - NFR-PRIV-001
+    - NFR-PRIV-002
+    - NFR-PRIV-004
+    - NFR-I18N-001
+    - NFR-A11Y-001
+    - NFR-PERF-001
+    - NFR-PERF-002
+    - NFR-AVAIL-002
+    - NFR-DATA-001
+    - NFR-DATA-002
+    - NFR-API-001
+    - NFR-API-002
+    - NFR-OBS-001
+    - NFR-QUALITY-001
+    - NFR-PORT-001
+  operations: 12
+  acceptanceCriteria: 16
+x-shifaa-proposed-limits:
+  requestBodyBytes: 65536
+  prescriptionItems: 100
+  freeTextCharacters: 4000
+  alternatives: 20
+  discoverPageDefault: 25
+  discoverPageMax: 100
+  cursorSeconds: 300
+  assignmentSeconds: 300 # P1 approved bound; earlier expiry/invalidation controls
+  requestSecondsMax: 1800 # P1 approved maximum; no replay extension
+x-shifaa-rates: 'PROPOSAL for isolated exercises: per actor+facility 60 mutations/minute and 120
+  reads/minute; no clinical priority or production capacity claim. 429 includes retry advice, no
+  partial effect.'
+x-shifaa-cross-field-rules:
+  - Closed JSON object and query validation rejects unknown/duplicate keys and explicit null unless
+    schema permits it.
+  - Current source/authority predicates before response disclosure; denied is not empty/missing.
+  - Request expiry <=30 minutes is a proposed engineering bound, not clinical policy; designation
+    and assignment valid at guarded write.
+  - Signature digests must match server canonical payload; synthetic confirmation is not
+    professional signing.
+  - Fixture input digest and bytes must match approved immutable manifest, not merely pass the
+    structural schema.
+  - No available executable context/vector assumed; separately accepted binding required before
+    mechanism issue/action.
+  - All errors and success headers private/no-store, request ID, selected locale; 409 stale R1
+    detail contains no old detail.
+  - Every mutation requires all contracted domain/audit/outbox/receipt/idempotency effects or none;
+    genuine incomplete produced check differs from producer failure.
+paths:
+  /encounters/{encounterId}/prescriptions:
+    post:
+      operationId: createPrescription
+      summary: createPrescription
+      description:
+        Current care prescriber; real required safety result atomic with draft. Item bytes
+        exactly approved fixture. Predecessor binding proposal supersedes only at replacement sign,
+        not create.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: encounterId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-001
+        - FR-SAFE-003
+        - FR-SAFE-009
+        - FR-SAFE-010
+      x-shifaa-acceptance:
+        - AC-01
+        - AC-02
+        - AC-03
+        - AC-12
+        - AC-16
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '201':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrescriptionMutation'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePrescription'
+      x-shifaa-prerequisite-only:
+        - FR-SAFE-009
+        - FR-SAFE-010
+  /prescriptions/{prescriptionId}:
+    patch:
+      operationId: updatePrescription
+      summary: updatePrescription
+      description: Existing unsigned clinical update remains unchanged. PROPOSED exact C2 boundary
+        successor adds closed release_patient_projection / withdraw_patient_projection branches for
+        projection metadata on immutable signed resources, with distinct current permissions and
+        separate control CAS/ETag. Not an effective permission. Post-sign release only while
+        currently signed/unexpired; withdrawal may withhold released historical states. No clinical
+        edit, re-sign, P2/P3 emission or thirteenth operation. Branch/status/permission checks are
+        independent of schema shape.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: prescriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/UpdateIfMatch'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-001
+        - FR-SAFE-003
+        - FR-SAFE-009
+        - FR-SAFE-010
+      x-shifaa-acceptance:
+        - AC-01
+        - AC-02
+        - AC-03
+        - AC-10
+        - AC-12
+        - AC-13
+        - AC-14
+        - AC-15
+        - AC-16
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+        - ../contract-amendment/plan-closure-consolidated-v0.2.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            ETag:
+              $ref: '#/components/headers/UpdateETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePrescriptionResult'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePrescription'
+      x-shifaa-prerequisite-only:
+        - FR-SAFE-009
+        - FR-SAFE-010
+      x-shifaa-boundary-amendment: C2_EXPLICIT_EXPANSION_OF_PREVIOUS_DRAFT_ONLY_CARRIER_NOT_ACCEPTED_OR_INTEGRATED
+    get:
+      operationId: getPrescription
+      summary: getPrescription
+      description:
+        Current existing reader/source/status/field intersection. Reviewer designation gives no
+        access. Positive patient/pharmacy visibility BLOCKED until actual source predicate proof. No
+        source payload on denial.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: prescriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-011
+        - FR-SAFE-009
+        - FR-SAFE-010
+      x-shifaa-acceptance:
+        - AC-06
+        - AC-09
+        - AC-13
+        - AC-14
+        - AC-15
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrescriptionRead'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      x-shifaa-prerequisite-only:
+        - FR-SAFE-009
+        - FR-SAFE-010
+      x-shifaa-subject-policy:
+        status: PROPOSED_NOT_EFFECTIVE
+        contract: F012-VP-2/0.1.0
+        nativeProfile: subject_projection_read
+        audience: subject
+        prescriptionStatuses:
+          - signed
+          - cancelled
+          - superseded
+          - expired
+        medicationSources:
+          - F012-sign-prescribed
+        medicationStatuses:
+          - prescribed
+        release: resource-revision-specific; current policy/grant; unwithdrawn; independently P/M selected
+        managedReaders: no new guardian/delegate audience; existing current authority alone is insufficient
+  /prescriptions/{prescriptionId}/safety-checks:
+    post:
+      operationId: runPrescriptionSafety
+      summary: runPrescriptionSafety
+      description:
+        If-Match prescription.version. Optional contentVersion is metadata/admissible mechanism
+        binding only; never F011 protected content. Producer failure yields no fresh successful
+        check.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: prescriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-001
+        - FR-SAFE-003
+      x-shifaa-acceptance:
+        - AC-01
+        - AC-02
+        - AC-03
+        - AC-14
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SafetyResult'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SafetyCheckRequest'
+  /detected-issues/{issueId}/acknowledgements:
+    post:
+      operationId: acknowledgeWarning
+      summary: acknowledgeWarning
+      description:
+        Exact bound W-M/W-NA context; warning only. Monitoring mandatory for W-M, optional
+        W-NA. Cannot change server applicability or clear contraindication.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: issueId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-004
+      x-shifaa-acceptance:
+        - AC-02
+        - AC-04
+        - AC-09
+        - AC-12
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '201':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Acknowledgement'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcknowledgeRequest'
+  /detected-issues/{issueId}/override-requests:
+    post:
+      operationId: requestContraindicatedOverride
+      summary: requestContraindicatedOverride
+      description:
+        Current prescriber; expiry explicit. N pharmacist lane; E both lanes and immediate
+        durable pharmacist obligation in same commit. No implicit sign.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: issueId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-005
+        - FR-SAFE-006
+        - FR-SAFE-007
+      x-shifaa-acceptance:
+        - AC-04
+        - AC-05
+        - AC-07
+        - AC-11
+        - AC-12
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '201':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OverrideResult'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OverrideRequest'
+  /override-requests/{overrideId}/decisions:
+    post:
+      operationId: decideOverride
+      summary: decideOverride
+      description:
+        If-Match request.version equals body requestVersion. Current own held independent lane,
+        exact assignment/roster/evidence. Approve/reject only. First second-physician approval
+        starts 60-second virtual clock once; no implicit sign.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: overrideId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-006
+        - FR-SAFE-007
+      x-shifaa-acceptance:
+        - AC-05
+        - AC-06
+        - AC-07
+        - AC-08
+        - AC-09
+        - AC-10
+        - AC-11
+        - AC-12
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionResult'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionRequest'
+  /prescriptions/{prescriptionId}/sign:
+    post:
+      operationId: signPrescription
+      summary: signPrescription
+      description:
+        If-Match prescription.version. Separate simulated action, T2+G and current independent
+        approvals. New actual professional permissions absent. Optional replacement lineage handled
+        atomically at sign; G2 prescribed emission proposed, no dispense/active inference.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: prescriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-001
+        - FR-SAFE-005
+        - FR-SAFE-006
+        - FR-SAFE-007
+      x-shifaa-acceptance:
+        - AC-01
+        - AC-02
+        - AC-05
+        - AC-07
+        - AC-08
+        - AC-09
+        - AC-10
+        - AC-12
+        - AC-13
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignResult'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignRequest'
+  /prescriptions/{prescriptionId}/cancel:
+    post:
+      operationId: cancelPrescription
+      summary: cancelPrescription
+      description: If-Match prescription.version. Append cancellation, invalidate pending reliance,
+        preserve signed bytes and blocked obligations.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: prescriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-011
+      x-shifaa-acceptance:
+        - AC-02
+        - AC-09
+        - AC-10
+        - AC-12
+        - AC-13
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelResult'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelRequest'
+  /patients/{managedPatientId}/medications:
+    get:
+      operationId: listPatientMedications
+      summary: listPatientMedications
+      description:
+        Current self/guardian/record.view/care projection and actual source visibility. No
+        reviewer/pharmacy browsing. Actual seven-status source rows only; absent feeds missing, not
+        empty or active. Positive patient path BLOCKED.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: managedPatientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - prescribed
+              - dispensed
+              - active
+              - completed
+              - discontinued
+              - expired
+              - entered_in_error
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 4096
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 25
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-001
+      x-shifaa-acceptance:
+        - AC-03
+        - AC-06
+        - AC-13
+        - AC-15
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicationList'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      x-shifaa-cursor:
+        HMAC opaque cursor binds internal actor, current relationship/authority revision,
+        patient, facility if relevant, status/filter, projection, stable source revision set,
+        sort=(source update,id), expiry; reauthorize every page. Proposed cursor lifetime 5 minutes;
+        unknown/mixed selectors denied.
+      x-shifaa-subject-policy:
+        status: PROPOSED_NOT_EFFECTIVE
+        contract: F012-VP-2/0.1.0
+        nativeProfile: subject_projection_read
+        audience: subject
+        prescriptionStatuses:
+          - signed
+          - cancelled
+          - superseded
+          - expired
+        medicationSources:
+          - F012-sign-prescribed
+        medicationStatuses:
+          - prescribed
+        release: resource-revision-specific; current policy/grant; unwithdrawn; independently P/M selected
+        managedReaders: no new guardian/delegate audience; existing current authority alone is insufficient
+  /override-review-cases:
+    get:
+      operationId: getOverrideReviewCases
+      summary: getOverrideReviewCases
+      description:
+        'R1: exactly discover/detail closed query union; metadata before claim. Detail requires
+        current own held assignment and exact expected revisions; stale binding 409 without old
+        payload. Own terminal readback current/read-only and lease-bound.'
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: view
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - discover
+              - detail
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+        - name: lane
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - pharmacist
+              - second_physician
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+        - name: scope
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - eligible
+              - own
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 4096
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 25
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+        - name: overrideId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+        - name: requestVersion
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+        - name: assignmentVersion
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+        - name: evidenceRevision
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^[a-f0-9]{64}$
+          description: Validate entire decoded query against ReviewQuery exactly; reject
+            mixed/unknown/duplicate keys.
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-006
+        - FR-SAFE-007
+      x-shifaa-acceptance:
+        - AC-05
+        - AC-06
+        - AC-08
+        - AC-09
+        - AC-10
+        - AC-11
+        - AC-15
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResult'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      x-shifaa-closed-query-union:
+        $ref: '#/components/schemas/ReviewQuery'
+  /override-requests/{overrideId}/assignment-transitions:
+    post:
+      operationId: transitionOverrideReviewAssignment
+      summary: transitionOverrideReviewAssignment
+      description:
+        'R2: claim/release_own/takeover_invalid only; If-Match request.version equals body.
+        Assignee server-derived. Initial unassigned assignmentVersion=1. Atomic invalid-holder
+        proof; cannot steal valid holder or reopen terminal lane. Response has no clinical payload.'
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Purpose'
+        - name: overrideId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      security:
+        - bearerAuth: []
+      x-shifaa-status: PROPOSED_FOR_APPROVAL
+      x-shifaa-requirements:
+        - FR-SAFE-006
+        - FR-SAFE-007
+      x-shifaa-acceptance:
+        - AC-05
+        - AC-06
+        - AC-08
+        - AC-09
+        - AC-10
+        - AC-12
+      x-shifaa-source:
+        - ../spec.md#7-api-endpoint-specifications
+        - ../contract-amendment/reviewer-contract-v0.1.0.md
+      x-shifaa-authorization:
+        'Native current session/action/purpose/subject/facility/relationship as
+        applicable. Workforce sensitive actions: AAL2 + qualifying factor <=5 minutes; isolated
+        roster and distinct underlying persons for review; no role-only grant.'
+      responses:
+        '200':
+          description: Atomic authorized outcome; NOT implemented or runtime accepted.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentResult'
+        '400':
+          $ref: '#/components/responses/Problem400'
+        '401':
+          $ref: '#/components/responses/Problem401'
+        '403':
+          $ref: '#/components/responses/Problem403'
+        '404':
+          $ref: '#/components/responses/Problem404'
+        '409':
+          $ref: '#/components/responses/Problem409'
+        '422':
+          $ref: '#/components/responses/Problem422'
+        '429':
+          $ref: '#/components/responses/Problem429'
+        '503':
+          $ref: '#/components/responses/Problem503'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Existing native F007 session, current authority checked server-side; no JWT-only role grants.
+  parameters:
+    Purpose:
+      name: X-Purpose
+      in: header
+      required: true
+      description:
+        Existing-style requested purpose carrier; server validates current action, scope and
+        purpose independently. Comma-separated tokens as in F011; no purpose value grants access.
+        Exact F012 action/purpose mapping requires API/Security acceptance.
+      schema:
+        type: string
+        minLength: 1
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      schema:
+        type: string
+        enum:
+          - ar-EG
+          - en-EG
+      description: Default ar-EG.
+    RequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+      description: Actor/operation/resource-bound; authorization precedes stored payload disclosure.
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: ^"[1-9][0-9]*"$
+      description: Strong numeric aggregate ETag. Exact aggregate specified per operation; evidence
+        fingerprint is separate.
+    UpdateIfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        oneOf:
+          - type: string
+            pattern: ^"[1-9][0-9]*"$
+          - type: string
+            pattern: ^"ppc:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[1-9][0-9]*"$
+      description: Draft branch requires numeric prescription ETag; projection branch requires exact
+        ppc:<resource UUID>:<signed revision UUID>:<control version> ETag plus matching body/actual
+        versions. Cross-branch token rejected. Strong clinical GET ETag remains distinct; authorized
+        C.projectionControl.etag supplies metadata token.
+  headers:
+    RequestId:
+      schema:
+        type: string
+        format: uuid
+      description: Always returned.
+    CacheControl:
+      schema:
+        const: private, no-store
+      description: All authenticated responses.
+    ContentLanguage:
+      schema:
+        type: string
+        enum:
+          - ar-EG
+          - en-EG
+      description: Selected locale.
+    ETag:
+      schema:
+        type: string
+        pattern: ^"[1-9][0-9]*"$
+      description: Current authorized aggregate version, not an evidence hash.
+    UpdateETag:
+      schema:
+        oneOf:
+          - type: string
+            pattern: ^"[1-9][0-9]*"$
+          - type: string
+            pattern: ^"ppc:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[1-9][0-9]*"$
+      description:
+        'Draft result: strong numeric clinical ETag. Projection-control result: strong ppc
+        resource/signed-revision/control ETag. Header and body versions must match the authorized
+        request branch.'
+  responses:
+    Problem400:
+      description: 'Malformed request or closed-query/unknown-field failure: validation-failed.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem400'
+    Problem401:
+      description: 'No current native session: authentication-required.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem401'
+    Problem403:
+      description: 'Known authorized resource but forbidden action/purpose/AAL: forbidden,
+        purpose-required or mfa-required. Never object existence oracle.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem403'
+    Problem404:
+      description: 'Absent OR not currently visible object: not-found; no hidden source metadata.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem404'
+    Problem409:
+      description: Version/evidence/state/idempotency conflict; original code family retained.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem409'
+    Problem422:
+      description:
+        'Well-formed domain prerequisite invalid: validation-failed, state-transition-invalid,
+        clinical-gate-disabled or legal-gate-disabled.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem422'
+    Problem429:
+      description: Rate limited; no state effects.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem429'
+    Problem503:
+      description: 'Required producer/authority unavailable: vendor-unavailable; no false success.'
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Cache-Control:
+          $ref: '#/components/headers/CacheControl'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem503'
+  schemas:
+    Version:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+    Digest:
+      type: string
+      pattern: ^[a-f0-9]{64}$
+    OpaqueReference:
+      type: string
+      format: uuid
+    Coding:
+      type: object
+      additionalProperties: false
+      required:
+        - system
+        - code
+        - version
+      properties:
+        system:
+          type: string
+          minLength: 1
+          maxLength: 200
+        code:
+          type: string
+          minLength: 1
+          maxLength: 200
+        display:
+          type: string
+          minLength: 1
+          maxLength: 250
+        version:
+          type: string
+          minLength: 1
+          maxLength: 100
+    Quantity:
+      type: object
+      additionalProperties: false
+      required:
+        - value
+        - unitCode
+      properties:
+        value:
+          type: string
+          pattern: ^(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$
+          description: Positive decimal; value greater than zero enforced semantically.
+        unitCode:
+          type: string
+          minLength: 1
+          maxLength: 100
+    Source:
+      type: object
+      additionalProperties: false
+      required:
+        - sourceId
+        - sourceState
+        - freshness
+        - completeness
+        - knownScope
+        - capturedAt
+        - overallAssessment
+      properties:
+        sourceId:
+          type: string
+          minLength: 1
+          maxLength: 200
+        sourceRevision:
+          type: string
+          minLength: 1
+          maxLength: 200
+        sourceState:
+          type: string
+          enum:
+            - present
+            - verified_empty
+            - missing
+            - unavailable
+            - stale
+            - partial
+        freshness:
+          type: string
+          enum:
+            - current
+            - stale
+            - unknown
+        completeness:
+          type: string
+          enum:
+            - complete_within_declared_scope
+            - partial
+            - unknown
+        knownScope:
+          type: string
+          minLength: 1
+          maxLength: 300
+        sourceUpdatedAt:
+          type: string
+          format: date-time
+        capturedAt:
+          type: string
+          format: date-time
+        missingScope:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 200
+        overallAssessment:
+          const: not_fully_checked
+    Receipt:
+      type: object
+      additionalProperties: false
+      required:
+        - receiptId
+        - requestId
+        - committedAt
+        - resourceVersion
+        - simulationOnly
+      properties:
+        receiptId:
+          type: string
+          format: uuid
+        requestId:
+          type: string
+          format: uuid
+        committedAt:
+          type: string
+          format: date-time
+        resourceVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        simulationOnly:
+          const: true
+    ItemP:
+      description:
+        'Proposed D3 coded item projection: actual opaque signed-item correlation and coded
+        product required; other clinical facts optional only if actually supplied and authorized. No
+        invented dose/monitoring or implicit linked-resource read. Correlation permission requires
+        C1 exact acceptance.'
+      type: object
+      additionalProperties: false
+      required:
+        - itemRef
+        - productCoding
+      properties:
+        itemRef:
+          type: string
+          format: uuid
+        productCoding:
+          $ref: '#/components/schemas/Coding'
+        ingredientCoding:
+          $ref: '#/components/schemas/Coding'
+        strength:
+          $ref: '#/components/schemas/Quantity'
+        formCoding:
+          $ref: '#/components/schemas/Coding'
+        routeCoding:
+          $ref: '#/components/schemas/Coding'
+        dose:
+          $ref: '#/components/schemas/Quantity'
+        frequency:
+          $ref: '#/components/schemas/Quantity'
+        duration:
+          $ref: '#/components/schemas/Quantity'
+        quantity:
+          $ref: '#/components/schemas/Quantity'
+    PrescriptionP:
+      type: object
+      additionalProperties: false
+      required:
+        - prescriptionRef
+        - status
+        - version
+        - items
+        - source
+      properties:
+        prescriptionRef:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+            - signed
+            - cancelled
+            - superseded
+            - expired
+        version:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemP'
+          minItems: 1
+        source:
+          $ref: '#/components/schemas/PatientSource'
+        signedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        sourceUpdatedAt:
+          type: string
+          format: date-time
+      not:
+        required:
+          - substitutionAllowed
+    CareIssue:
+      type: object
+      additionalProperties: false
+      required:
+        - issueRef
+        - category
+        - status
+        - sourceVersion
+        - evidenceRevision
+        - checkCompleteness
+      properties:
+        issueRef:
+          type: string
+          format: uuid
+        category:
+          type: string
+          enum:
+            - informational
+            - warning
+            - contraindicated
+        status:
+          type: string
+          enum:
+            - open
+            - acknowledged
+            - invalidated
+            - resolved_as_history
+        sourceVersion:
+          type: string
+          minLength: 1
+          maxLength: 200
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        checkCompleteness:
+          type: string
+          enum:
+            - mechanism_complete
+            - not_fully_checked
+    OwnCareBinding:
+      type: object
+      additionalProperties: false
+      required:
+        - issueRef
+      properties:
+        issueRef:
+          type: string
+          format: uuid
+        acknowledgementRef:
+          type: string
+          format: uuid
+        overrideRef:
+          type: string
+          format: uuid
+        structuredReason:
+          type: string
+          minLength: 1
+          maxLength: 200
+        justification:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        rationale:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        alternativesConsidered:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 4000
+          minItems: 1
+        monitoringPlan:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        expiresAt:
+          type: string
+          format: date-time
+        receiptRef:
+          type: string
+          format: uuid
+    PrescriptionC:
+      type: object
+      additionalProperties: false
+      required:
+        - prescriptionRef
+        - status
+        - version
+        - items
+        - source
+        - issues
+      properties:
+        prescriptionRef:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+            - draft
+            - safety_review
+            - signature_pending
+            - signed
+            - cancelled
+            - expired
+            - superseded
+        version:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemP'
+          minItems: 1
+        source:
+          $ref: '#/components/schemas/Source'
+        signedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        sourceUpdatedAt:
+          type: string
+          format: date-time
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareIssue'
+        itemIndications:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - itemRef
+              - indication
+            properties:
+              itemRef:
+                type: string
+                format: uuid
+              indication:
+                $ref: '#/components/schemas/Coding'
+        itemStates:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - itemRef
+              - itemStatus
+            properties:
+              itemRef:
+                type: string
+                format: uuid
+              itemStatus:
+                type: string
+                minLength: 1
+                maxLength: 80
+        syntheticClassifications:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - itemRef
+              - controlled
+              - nti
+              - fixtureVersion
+            properties:
+              itemRef:
+                type: string
+                format: uuid
+              controlled:
+                type: boolean
+              nti:
+                type: boolean
+              fixtureVersion:
+                type: string
+                minLength: 1
+                maxLength: 80
+        ownBindings:
+          type: array
+          items:
+            $ref: '#/components/schemas/OwnCareBinding'
+        predecessorRef:
+          type: string
+          format: uuid
+        successorRef:
+          type: string
+          format: uuid
+        projectionControl:
+          $ref: '#/components/schemas/ProjectionControlRead'
+    PrescriptionRead:
+      oneOf:
+        - $ref: '#/components/schemas/PrescriptionP'
+        - $ref: '#/components/schemas/PrescriptionC'
+      description:
+        Server selects current authorized P/C projection, never client-selected authority.
+        Patient-positive policy VP-2 C2 remains unapproved; no patient release is effective until
+        governed acceptance/integration. Required C issues distinguish closed branches.
+    Medication:
+      type: object
+      additionalProperties: false
+      required:
+        - statementRef
+        - productCoding
+        - status
+        - source
+      properties:
+        statementRef:
+          type: string
+          format: uuid
+        productCoding:
+          $ref: '#/components/schemas/Coding'
+        status: &id003
+          type: string
+          enum:
+            - prescribed
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        source:
+          $ref: '#/components/schemas/PatientSource'
+        prescriptionItemRef:
+          type: string
+          format: uuid
+      x-shifaa-later-producer-statuses:
+        - dispensed
+        - active
+        - completed
+        - discontinued
+        - expired
+        - entered_in_error
+      description:
+        Current admitted positive source candidate is F012 P3 prescribed only. Later-producer
+        status vocabulary is retained as non-admitted metadata, not a current row or visibility
+        grant; positive later-source schemas require their accepted producer/authorization
+        successor.
+    MedicationList:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Medication'
+        meta:
+          type: object
+          additionalProperties: false
+          required:
+            - sourceStates
+            - requestId
+          properties:
+            nextCursor:
+              type: string
+              minLength: 1
+              maxLength: 4096
+            sourceStates:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatientSource'
+            requestId:
+              type: string
+              format: uuid
+    FixtureInput:
+      type: object
+      additionalProperties: false
+      required:
+        - caseId
+        - inputSha256
+        - item
+      properties:
+        caseId:
+          type: string
+          enum:
+            - SYNTHETIC_CASE_0001
+            - SYNTHETIC_CASE_0002
+            - SYNTHETIC_CASE_0003
+        inputSha256:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        item:
+          $ref: ../readiness/engineering-fixtures.schema.json#/properties/cases/items/properties/item
+    CreatePrescription:
+      description:
+        Draft input; absent mechanismScenarioRef may yield a genuinely produced incomplete
+        result only. T2 mechanism_complete and simulated signing require the separately accepted
+        coherent scenario and all G guards. Required producer failure never becomes partial success.
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - substitutionAllowed
+        - expiresAt
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FixtureInput'
+          minItems: 1
+          maxItems: 100
+        substitutionAllowed:
+          type: boolean
+        expiresAt:
+          type: string
+          format: date-time
+        mechanismScenarioRef:
+          type: string
+          format: uuid
+        replacementIntent:
+          $ref: '#/components/schemas/ReplacementIntent'
+    ReplacementIntent:
+      description: >
+        TECHNICAL_DESIGN_PREPARED API successor for approved P2 intent, not an effective request
+        amendment or correction grant. Both resources require current independent authorization and
+        accepted original-prescriber correction authority. Stored intent binds expected predecessor
+        version; separate successful sign alone supersedes it.
+      type: object
+      additionalProperties: false
+      required:
+        - predecessorPrescriptionRef
+        - expectedPredecessorVersion
+      properties:
+        predecessorPrescriptionRef:
+          type: string
+          format: uuid
+        expectedPredecessorVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+    UpdatePrescription:
+      description:
+        EXACT C2 BOUNDARY AMENDMENT PROPOSED, NOT ACCEPTED/INTEGRATED. Unchanged unsigned draft
+        branch OR closed post-sign projection release/withdrawal metadata branches. Never a general
+        signed clinical edit. Request branch selects separate current permission, ETag/CAS and
+        result. Twelve operation IDs is not approval of expanded capability.
+      oneOf:
+        - $ref: '#/components/schemas/UpdatePrescriptionDraft'
+        - $ref: '#/components/schemas/PostSignProjectionRelease'
+        - $ref: '#/components/schemas/PostSignProjectionWithdrawal'
+    SafetyCheckRequest:
+      description:
+        Draft input; absent mechanismScenarioRef may yield a genuinely produced incomplete
+        result only. T2 mechanism_complete and simulated signing require the separately accepted
+        coherent scenario and all G guards. Required producer failure never becomes partial success.
+      type: object
+      additionalProperties: false
+      properties:
+        contentVersion:
+          type: string
+          minLength: 1
+          maxLength: 200
+        mechanismScenarioRef:
+          type: string
+          format: uuid
+    SafetyResult:
+      type: object
+      additionalProperties: false
+      required:
+        - checkRef
+        - prescriptionVersion
+        - evidenceRevision
+        - checkDigest
+        - mechanismOutcome
+        - overallAssessment
+        - sources
+        - issues
+        - receipt
+      properties:
+        checkRef:
+          type: string
+          format: uuid
+        prescriptionVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        checkDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        mechanismOutcome:
+          type: string
+          enum:
+            - mechanism_complete
+            - not_fully_checked
+        overallAssessment:
+          const: not_fully_checked
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareIssue'
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    PrescriptionMutation:
+      type: object
+      additionalProperties: false
+      required:
+        - prescription
+        - safetyResult
+        - receipt
+      properties:
+        prescription:
+          $ref: '#/components/schemas/PrescriptionC'
+        safetyResult:
+          $ref: '#/components/schemas/SafetyResult'
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    AcknowledgeWM:
+      type: object
+      additionalProperties: false
+      required:
+        - context
+        - evidenceRevision
+        - structuredReason
+        - justification
+        - monitoringPlan
+      properties:
+        context:
+          const: W-M
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        structuredReason:
+          type: string
+          minLength: 1
+          maxLength: 200
+        justification:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        monitoringPlan:
+          type: string
+          minLength: 1
+          maxLength: 4000
+    AcknowledgeWNA:
+      type: object
+      additionalProperties: false
+      required:
+        - context
+        - evidenceRevision
+        - structuredReason
+        - justification
+      properties:
+        context:
+          const: W-NA
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        structuredReason:
+          type: string
+          minLength: 1
+          maxLength: 200
+        justification:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        monitoringPlan:
+          type: string
+          minLength: 1
+          maxLength: 4000
+    AcknowledgeRequest:
+      oneOf:
+        - $ref: '#/components/schemas/AcknowledgeWM'
+        - $ref: '#/components/schemas/AcknowledgeWNA'
+      description:
+        Context must equal the server-bound separately accepted scenario; caller cannot choose
+        applicability.
+    Acknowledgement:
+      type: object
+      additionalProperties: false
+      required:
+        - acknowledgementRef
+        - issueRef
+        - evidenceRevision
+        - acknowledgedAt
+        - receipt
+      properties:
+        acknowledgementRef:
+          type: string
+          format: uuid
+        issueRef:
+          type: string
+          format: uuid
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        acknowledgedAt:
+          type: string
+          format: date-time
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    NormalOverrideRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - evidenceRevision
+        - rationale
+        - alternativesConsidered
+        - monitoringPlan
+        - expiresAt
+        - context
+        - emergency
+      properties:
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        rationale:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        alternativesConsidered:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 4000
+          minItems: 1
+          maxItems: 20
+        monitoringPlan:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        expiresAt:
+          type: string
+          format: date-time
+        predecessorRequestRef:
+          type: string
+          format: uuid
+        context:
+          const: N
+        emergency:
+          const: false
+    EmergencyOverrideRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - evidenceRevision
+        - rationale
+        - alternativesConsidered
+        - monitoringPlan
+        - expiresAt
+        - context
+        - emergency
+        - syntheticPathwayConfirmation
+      properties:
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        rationale:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        alternativesConsidered:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 4000
+          minItems: 1
+          maxItems: 20
+        monitoringPlan:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        expiresAt:
+          type: string
+          format: date-time
+        predecessorRequestRef:
+          type: string
+          format: uuid
+        context:
+          const: E
+        emergency:
+          const: true
+        syntheticPathwayConfirmation:
+          const: true
+    OverrideRequest:
+      oneOf:
+        - $ref: '#/components/schemas/NormalOverrideRequest'
+        - $ref: '#/components/schemas/EmergencyOverrideRequest'
+    LaneState:
+      type: object
+      additionalProperties: false
+      required:
+        - lane
+        - assignmentVersion
+        - decisionState
+      properties:
+        lane:
+          type: string
+          enum:
+            - pharmacist
+            - second_physician
+        assignmentVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        decisionState:
+          type: string
+          enum:
+            - pending
+            - approved
+            - rejected
+        assignmentRef:
+          type: string
+          format: uuid
+        assignmentExpiresAt:
+          type: string
+          format: date-time
+    OverrideResult:
+      type: object
+      additionalProperties: false
+      required:
+        - overrideRef
+        - requestVersion
+        - evidenceRevision
+        - pathway
+        - state
+        - expiresAt
+        - lanes
+        - receipt
+      properties:
+        overrideRef:
+          type: string
+          format: uuid
+        requestVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        pathway:
+          type: string
+          enum:
+            - normal
+            - emergency
+        state:
+          type: string
+          enum:
+            - live
+            - rejected
+            - expired
+            - cancelled
+            - invalidated
+        expiresAt:
+          type: string
+          format: date-time
+        lanes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LaneState'
+          minItems: 1
+          maxItems: 2
+        pharmacistObligationRef:
+          type: string
+          format: uuid
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    DecisionRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - lane
+        - decision
+        - comment
+        - signatureDigest
+        - requestVersion
+        - assignmentVersion
+        - rosterRevision
+        - evidenceRevision
+        - simulationConfirmation
+      properties:
+        lane:
+          type: string
+          enum:
+            - pharmacist
+            - second_physician
+        decision:
+          type: string
+          enum:
+            - approve
+            - reject
+        comment:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        signatureDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        requestVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        assignmentVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        rosterRevision:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        simulationConfirmation:
+          const: true
+    DecisionResult:
+      type: object
+      additionalProperties: false
+      required:
+        - decisionRef
+        - overrideRef
+        - lane
+        - decision
+        - requestVersion
+        - assignmentVersion
+        - evidenceRevision
+        - decidedAt
+        - receipt
+      properties:
+        decisionRef:
+          type: string
+          format: uuid
+        overrideRef:
+          type: string
+          format: uuid
+        lane:
+          type: string
+          enum:
+            - pharmacist
+            - second_physician
+        decision:
+          type: string
+          enum:
+            - approve
+            - reject
+        requestVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        assignmentVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        decidedAt:
+          type: string
+          format: date-time
+        virtualWindowStartedAt:
+          type: string
+          format: date-time
+        virtualWindowEndsAt:
+          type: string
+          format: date-time
+        clockVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        pharmacistObligationState:
+          type: string
+          enum:
+            - pending
+            - reviewed
+            - blocked_unreviewed
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    SignRequest:
+      description: >-
+        Separate guarded sign. Atomic signature/P2/P3/audit/outbox/receipt/idempotency. Optional
+        VP-2 intent is a PROPOSED C2 policy/wire/permission delta, not an approved grant; absent
+        releases neither. No new medication status or implicit release.
+      type: object
+      additionalProperties: false
+      required:
+        - evidenceRevision
+        - signatureConfirmation
+        - simulationConfirmation
+      properties:
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        signatureConfirmation:
+          const: true
+        simulationConfirmation:
+          const: true
+        patientProjectionReleaseIntent:
+          $ref: '#/components/schemas/PatientProjectionReleaseIntent'
+    SignResult:
+      type: object
+      additionalProperties: false
+      required:
+        - prescription
+        - signedRevisionRef
+        - signatureReceiptRef
+        - receipt
+      properties:
+        prescription:
+          $ref: '#/components/schemas/PrescriptionC'
+        signedRevisionRef:
+          type: string
+          format: uuid
+        signatureReceiptRef:
+          type: string
+          format: uuid
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    CancelRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 4000
+    CancelResult:
+      type: object
+      additionalProperties: false
+      required:
+        - prescription
+        - cancellationRef
+        - receipt
+      properties:
+        prescription:
+          $ref: '#/components/schemas/PrescriptionC'
+        cancellationRef:
+          type: string
+          format: uuid
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    DiscoverQuery:
+      type: object
+      additionalProperties: false
+      required:
+        - view
+        - lane
+        - scope
+      properties:
+        view:
+          const: discover
+        lane:
+          type: string
+          enum:
+            - pharmacist
+            - second_physician
+        scope:
+          type: string
+          enum:
+            - eligible
+            - own
+        cursor:
+          type: string
+          minLength: 1
+          maxLength: 4096
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 25
+    DetailQuery:
+      type: object
+      additionalProperties: false
+      required:
+        - view
+        - overrideId
+        - lane
+        - requestVersion
+        - assignmentVersion
+        - evidenceRevision
+      properties:
+        view:
+          const: detail
+        overrideId:
+          type: string
+          format: uuid
+        lane:
+          type: string
+          enum:
+            - pharmacist
+            - second_physician
+        requestVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        assignmentVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+    ReviewQuery:
+      oneOf:
+        - $ref: '#/components/schemas/DiscoverQuery'
+        - $ref: '#/components/schemas/DetailQuery'
+    DiscoverCase:
+      type: object
+      additionalProperties: false
+      required:
+        - overrideRef
+        - originatingFacilityRef
+        - lane
+        - pathway
+        - requestVersion
+        - assignmentVersion
+        - evidenceRevision
+        - state
+        - createdAt
+        - expiresAt
+        - allowedActions
+      properties:
+        overrideRef:
+          type: string
+          format: uuid
+        originatingFacilityRef:
+          type: string
+          format: uuid
+        lane:
+          type: string
+          enum:
+            - pharmacist
+            - second_physician
+        pathway:
+          type: string
+          enum:
+            - normal
+            - emergency
+        requestVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        assignmentVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        state:
+          type: string
+          enum:
+            - eligible
+            - held_own
+            - held_other
+            - released
+            - expired
+            - rejected
+            - cancelled
+            - invalidated
+            - blocked_unreviewed
+            - approved_own
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        assignmentExpiresAt:
+          type: string
+          format: date-time
+        allowedActions:
+          type: array
+          items:
+            type: string
+            enum:
+              - claim
+              - release_own
+              - takeover_invalid
+              - detail
+              - approve
+              - reject
+    DiscoverResult:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscoverCase'
+        meta:
+          type: object
+          additionalProperties: false
+          required:
+            - rosterRevision
+            - requestId
+          properties:
+            rosterRevision:
+              type: integer
+              minimum: 1
+              maximum: 2147483647
+            nextCursor:
+              type: string
+              minLength: 1
+              maxLength: 4096
+            requestId:
+              type: string
+              format: uuid
+    ReviewEvidenceMember:
+      oneOf:
+        - $ref: '#/components/schemas/AllergyEvidenceMember'
+        - $ref: '#/components/schemas/MedicationEvidenceMember'
+        - $ref: '#/components/schemas/MechanismEvidenceMember'
+        - $ref: '#/components/schemas/MissingEvidenceMember'
+      description: Necessary permitted captured evidence only. Missing/empty source metadata has no
+        invented assertion. Present allergy status uses exact F011 public AllergyState; no protected
+        verification facts/signers/rule material. Current cross-source authority requires the exact
+        consolidated A-DB/NAC-1/S4 contract; design prepared, acceptance/integration pending.
+    DetailResult:
+      description: Proposed current own-assignment projection; items include only issue-implicated
+        necessary items, never the whole prescription by default. Each evidence field requires an
+        approved source/reader necessity mapping. Current revalidation design is consolidated;
+        required A-DB/NAC-1/S4 acceptance and integration remain pending.
+      type: object
+      additionalProperties: false
+      required:
+        - case
+        - syntheticPatientRef
+        - prescriptionRef
+        - prescriptionVersion
+        - items
+        - evidence
+        - issue
+        - rationale
+        - alternativesConsidered
+        - monitoringPlan
+        - requesterPersonRef
+        - reviewerPersonRef
+        - decisionProvenance
+        - overallAssessment
+        - rosterRevision
+      properties:
+        case:
+          $ref: '#/components/schemas/DiscoverCase'
+        syntheticPatientRef:
+          type: string
+          format: uuid
+        prescriptionRef:
+          type: string
+          format: uuid
+        prescriptionVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemP'
+          minItems: 1
+        evidence:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewEvidenceMember'
+        issue:
+          $ref: '#/components/schemas/CareIssue'
+        rationale:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        alternativesConsidered:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 4000
+          minItems: 1
+        monitoringPlan:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        requesterPersonRef:
+          type: string
+          format: uuid
+        reviewerPersonRef:
+          type: string
+          format: uuid
+        decisionProvenance:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - decisionRef
+              - lane
+              - decidedAt
+              - decision
+              - evidenceRevision
+            properties:
+              decisionRef:
+                type: string
+                format: uuid
+              lane:
+                type: string
+                enum:
+                  - pharmacist
+                  - second_physician
+              decidedAt:
+                type: string
+                format: date-time
+              decision:
+                type: string
+                enum:
+                  - approve
+                  - reject
+              evidenceRevision:
+                type: string
+                pattern: ^[a-f0-9]{64}$
+        overallAssessment:
+          const: not_fully_checked
+        rosterRevision:
+          $ref: '#/components/schemas/Version'
+    ReviewResult:
+      oneOf:
+        - $ref: '#/components/schemas/DiscoverResult'
+        - $ref: '#/components/schemas/DetailResult'
+    AssignmentRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - action
+        - lane
+        - requestVersion
+        - assignmentVersion
+        - rosterRevision
+        - evidenceRevision
+      properties:
+        action:
+          type: string
+          enum:
+            - claim
+            - release_own
+            - takeover_invalid
+        lane:
+          type: string
+          enum:
+            - pharmacist
+            - second_physician
+        requestVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        assignmentVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        rosterRevision:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+    AssignmentResult:
+      type: object
+      additionalProperties: false
+      required:
+        - assignmentRef
+        - requestVersion
+        - assignmentVersion
+        - evidenceRevision
+        - expiresAt
+        - transition
+        - allowedActions
+        - receipt
+      properties:
+        assignmentRef:
+          type: string
+          format: uuid
+        requestVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        assignmentVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        evidenceRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        expiresAt:
+          type: string
+          format: date-time
+        transition:
+          type: string
+          enum:
+            - claim
+            - release_own
+            - takeover_invalid
+        allowedActions:
+          type: array
+          items:
+            type: string
+            enum:
+              - claim
+              - release_own
+              - takeover_invalid
+              - detail
+              - approve
+              - reject
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    Problem:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - authentication-required
+            - mfa-required
+            - forbidden
+            - purpose-required
+            - not-found
+            - validation-failed
+            - state-transition-invalid
+            - version-conflict
+            - idempotency-key-reused
+            - idempotency-in-progress
+            - rate-limited
+            - vendor-unavailable
+            - legal-gate-disabled
+            - clinical-gate-disabled
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    Problem400:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          const: 400
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - validation-failed
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    Problem401:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          const: 401
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - authentication-required
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    Problem403:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          const: 403
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - forbidden
+            - purpose-required
+            - mfa-required
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    Problem404:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          const: 404
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - not-found
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    Problem409:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          const: 409
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - version-conflict
+            - state-transition-invalid
+            - idempotency-key-reused
+            - idempotency-in-progress
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    Problem422:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          const: 422
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - validation-failed
+            - state-transition-invalid
+            - clinical-gate-disabled
+            - legal-gate-disabled
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    Problem429:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          const: 429
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - rate-limited
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    Problem503:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+        - code
+        - request_id
+        - errors
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          const: 503
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+          enum:
+            - vendor-unavailable
+        request_id:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - field
+              - code
+              - message
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+    AllergyEvidenceMember:
+      type: object
+      additionalProperties: false
+      required:
+        - sourceKind
+        - source
+        - assertionRef
+        - revisionRef
+        - version
+        - status
+        - codingState
+      properties:
+        sourceKind:
+          const: allergy
+        source:
+          allOf:
+            - $ref: '#/components/schemas/Source'
+            - properties:
+                sourceState:
+                  enum:
+                    - present
+                    - stale
+                    - partial
+        assertionRef: &id001
+          type: string
+          format: uuid
+        revisionRef: *id001
+        version: &id002
+          $ref: '#/components/schemas/Version'
+        status:
+          enum:
+            - self_reported
+            - clinician_confirmed
+            - refuted
+            - entered_in_error
+        codingState:
+          enum:
+            - known
+            - unknown
+        substanceCoding:
+          $ref: '#/components/schemas/Coding'
+      allOf:
+        - if:
+            properties:
+              codingState:
+                const: known
+          then:
+            required:
+              - substanceCoding
+          else:
+            not:
+              required:
+                - substanceCoding
+    MedicationEvidenceMember:
+      type: object
+      additionalProperties: false
+      required:
+        - sourceKind
+        - source
+        - assertionRef
+        - revisionRef
+        - version
+        - status
+        - productCoding
+      properties:
+        sourceKind:
+          const: medication
+        source:
+          allOf:
+            - $ref: '#/components/schemas/Source'
+            - properties:
+                sourceState:
+                  enum:
+                    - present
+                    - stale
+                    - partial
+        assertionRef: *id001
+        revisionRef: *id001
+        version: *id002
+        status: *id003
+        productCoding:
+          $ref: '#/components/schemas/Coding'
+    MechanismEvidenceMember:
+      type: object
+      additionalProperties: false
+      required:
+        - sourceKind
+        - source
+        - context
+        - scenarioApprovalRef
+        - mechanismManifestDigest
+      properties:
+        sourceKind:
+          const: mechanism
+        source:
+          allOf:
+            - $ref: '#/components/schemas/Source'
+            - properties:
+                sourceState:
+                  enum:
+                    - present
+                    - stale
+                    - partial
+        context:
+          enum:
+            - W-M
+            - W-NA
+            - N
+            - E
+        scenarioApprovalRef: *id001
+        mechanismManifestDigest:
+          $ref: '#/components/schemas/Digest'
+    MissingEvidenceMember:
+      type: object
+      additionalProperties: false
+      required:
+        - sourceKind
+        - source
+      properties:
+        sourceKind:
+          enum:
+            - allergy
+            - medication
+            - mechanism
+        source:
+          allOf:
+            - $ref: '#/components/schemas/Source'
+            - properties:
+                sourceState:
+                  enum:
+                    - missing
+                    - unavailable
+                    - verified_empty
+    PatientSource:
+      type: object
+      additionalProperties: false
+      required:
+        - sourceId
+        - sourceState
+        - freshness
+        - completeness
+        - knownScope
+        - capturedAt
+        - overallAssessment
+      properties:
+        sourceId:
+          type: string
+          enum:
+            - prescription
+            - prescribed_statement
+            - dispensing_history
+            - other_medication_history
+        sourceRevision:
+          type: string
+          pattern: ^[A-Za-z0-9._:-]{1,200}$
+        sourceState:
+          type: string
+          enum:
+            - present
+            - verified_empty
+            - missing
+            - unavailable
+            - stale
+            - partial
+        freshness:
+          type: string
+          enum:
+            - current
+            - stale
+            - unknown
+        completeness:
+          type: string
+          enum:
+            - complete_within_declared_scope
+            - partial
+            - unknown
+        knownScope:
+          type: string
+          enum:
+            - released_prescription
+            - released_prescribed_statements
+            - dispensing_records
+            - other_medication_history
+        sourceUpdatedAt:
+          type: string
+          format: date-time
+        capturedAt:
+          type: string
+          format: date-time
+        missingScope:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+              - dispensing_records
+              - other_medication_history
+        overallAssessment:
+          const: not_fully_checked
+      description:
+        D3 minimized P/M source projection. Closed category and coverage; no hidden count,
+        source path, signer identity or private source detail. Capture time is read observation, not
+        guessed producer update time.
+    PatientProjectionReleaseIntent:
+      description: Product direction APPROVED; exact C2 permission/wire/Data/RLS amendment pending
+        acceptance/integration. Independent explicit P/M subject release at sign; absence releases
+        neither. Post-sign release is only the separately specified updatePrescription metadata
+        branch, never another signing action.
+      type: object
+      additionalProperties: false
+      required:
+        - policyVersion
+        - audience
+        - projections
+        - confirmation
+      properties:
+        policyVersion:
+          const: F012-VP-2/0.2.0
+        audience:
+          const: subject
+        projections:
+          type: array
+          minItems: 1
+          maxItems: 2
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+              - P
+              - M
+        confirmation:
+          const: true
+    UpdatePrescriptionDraft:
+      description:
+        Draft input; absent mechanismScenarioRef may yield a genuinely produced incomplete
+        result only. T2 mechanism_complete and simulated signing require the separately accepted
+        coherent scenario and all G guards. Required producer failure never becomes partial success.
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - substitutionAllowed
+        - expiresAt
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FixtureInput'
+          minItems: 1
+          maxItems: 100
+        substitutionAllowed:
+          type: boolean
+        expiresAt:
+          type: string
+          format: date-time
+        mechanismScenarioRef:
+          type: string
+          format: uuid
+    ProjectionReleaseTargets:
+      type: object
+      additionalProperties: false
+      required: []
+      properties:
+        prescription:
+          const: true
+        medicationStatementRefs:
+          type: array
+          minItems: 1
+          maxItems: 100
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+      anyOf:
+        - required:
+            - prescription
+        - required:
+            - medicationStatementRefs
+      description:
+        Nonempty independently explicit selection. P targets path prescription/exact signed
+        revision; each M UUID must belong to that same authorized P3 signed item set. Semantic
+        relation enforced by API and forced RLS, not JSON shape alone.
+    PostSignProjectionRelease:
+      type: object
+      additionalProperties: false
+      required:
+        - action
+        - policyVersion
+        - audience
+        - expectedSignedRevisionRef
+        - expectedPrescriptionVersion
+        - expectedProjectionControlVersion
+        - confirmation
+        - targets
+      properties:
+        action:
+          const: release_patient_projection
+        policyVersion:
+          const: F012-VP-2/0.2.0
+        audience:
+          const: subject
+        expectedSignedRevisionRef:
+          type: string
+          format: uuid
+        expectedPrescriptionVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        expectedProjectionControlVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        confirmation:
+          const: true
+        targets:
+          $ref: '#/components/schemas/ProjectionReleaseTargets'
+      description:
+        Only current signed/unexpired source; original prescribing person with distinct release
+        permission, current care/facility/purpose/AAL2/fresh TOTP. Atomic projection metadata only;
+        no sign/clinical edit/P2/P3 effect. All targets authorize or entire operation fails.
+    PostSignProjectionWithdrawal:
+      type: object
+      additionalProperties: false
+      required:
+        - action
+        - policyVersion
+        - audience
+        - expectedSignedRevisionRef
+        - expectedPrescriptionVersion
+        - expectedProjectionControlVersion
+        - confirmation
+        - releaseRefs
+        - reasonCategory
+      properties:
+        action:
+          const: withdraw_patient_projection
+        policyVersion:
+          const: F012-VP-2/0.2.0
+        audience:
+          const: subject
+        expectedSignedRevisionRef:
+          type: string
+          format: uuid
+        expectedPrescriptionVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        expectedProjectionControlVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        confirmation:
+          const: true
+        releaseRefs:
+          type: array
+          minItems: 1
+          maxItems: 101
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        reasonCategory:
+          enum:
+            - patient_request
+            - correction
+            - privacy_restriction
+            - synthetic_policy
+      description: Exact releases on this resource only; independent current withdrawal permission.
+        Historical cancelled/superseded/expired releases may be withheld. Append-only terminal
+        withdrawal; cannot erase prior disclosure or edit signed bytes.
+    ProjectionControlResult:
+      type: object
+      additionalProperties: false
+      required:
+        - kind
+        - action
+        - prescriptionRef
+        - signedRevisionRef
+        - prescriptionVersion
+        - projectionControlVersion
+        - changedReleaseRefs
+        - receipt
+      properties:
+        kind:
+          const: projection_control
+        action:
+          enum:
+            - release_patient_projection
+            - withdraw_patient_projection
+        prescriptionRef:
+          type: string
+          format: uuid
+        signedRevisionRef:
+          type: string
+          format: uuid
+        prescriptionVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        projectionControlVersion:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        changedReleaseRefs:
+          type: array
+          minItems: 1
+          maxItems: 101
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+    UpdatePrescriptionResult:
+      oneOf:
+        - $ref: '#/components/schemas/PrescriptionMutation'
+        - $ref: '#/components/schemas/ProjectionControlResult'
+      description:
+        Server must return the result for the authorized request branch. Metadata branch cannot
+        fabricate safetyResult or a new signature; draft branch retains required atomic safety
+        result.
+    ProjectionControlRead:
+      type: object
+      additionalProperties: false
+      required:
+        - signedRevisionRef
+        - version
+        - etag
+        - prescription
+        - medications
+      properties:
+        signedRevisionRef:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        etag:
+          type: string
+          pattern: ^"ppc:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[1-9][0-9]*"$
+        prescription:
+          $ref: '#/components/schemas/ProjectionTargetControl'
+        medications:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - statementRef
+              - control
+            properties:
+              statementRef:
+                type: string
+                format: uuid
+              control:
+                $ref: '#/components/schemas/ProjectionTargetControl'
+      description:
+        C-only conditional control projection for original prescribing person with current
+        resource release or withdrawal permission and current care/facility/AAL2/fresh TOTP. Omit
+        entirely for other C readers and all P/M/R. Exact target UUIDs are not extra patient
+        disclosure.
+    ProjectionTargetControl:
+      type: object
+      additionalProperties: false
+      required:
+        - state
+      properties:
+        state:
+          enum:
+            - unreleased
+            - released
+            - withdrawn
+        releaseRef:
+          type: string
+          format: uuid
+      allOf:
+        - if:
+            properties:
+              state:
+                enum:
+                  - released
+                  - withdrawn
+            required:
+              - state
+          then:
+            required:
+              - releaseRef
+          else:
+            not:
+              required:
+                - releaseRef
+x-shifaa-approval: DRAFT_FOR_REVIEW; C3 Product approved, C2 direction approved, C1/revised C2 exact
+  contract not accepted; no runtime grants or PLAN_APPROVED

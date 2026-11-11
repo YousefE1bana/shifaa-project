@@ -30,19 +30,49 @@ conversation and explicit starting instruction after approved integration.
 
 PR integration is mandatory from spec 003 onward. Never push directly to `main`
 unless Yousef explicitly authorizes that exception in the conversation.
-The required sequence remains: successful local `pnpm verify`; recorded live
-Arabic and English acceptance; push only the feature branch; open a PR linked
-to its Issue and spec directory; all required checks pass on the current head;
-**Yousef Osama performs the human squash merge**; verify merged remote main.
+The required sequence is: record the change class and verification scope; run
+applicable resource-safe checks; push only the feature branch; open a PR linked
+to its Issue and spec directory; complete code review and required thread
+resolution; all six mandatory CI contexts and metadata checks pass on the current
+head; **Yousef Osama performs the human squash merge**; verify merged remote main.
 No other approver is required for Git integration. Professional domain approvals
-remain separate. A prior PR-specific exception does not transfer to a new PR.
+remain separate. Never bypass failed required CI or transfer a prior PR exception.
 
-`pnpm verify` resets databases and can write evidence. Inspect its scripts and
-resource isolation first; do not run it blindly against existing project data.
-If a required check is unsafe/unavailable, report the exact requirement and seek
-an attributable bounded disposition before publication. Documentation-only work
-has no automatic waiver. Proposed change-class guidance is in the modernization
-package; it is not effective policy.
+Human visual and bilingual acceptance belongs to applicable product/design
+milestones and feature-specific gates, not every push or PR. A Product Owner
+language-review sign-off is not a universal integration prerequisite. Affected UI
+changes retain relevant automated localization, Arabic RTL/English LTR and
+accessibility checks. Automated checks and static screenshots never substitute
+for human, native accessibility or device acceptance where a milestone requires it.
+
+`pnpm verify` remains the comprehensive verification command. Its current chain
+resets databases, removes volumes and can write evidence; it is not an automatic
+pre-push command. Inspect the full chain, target resources, ownership, persistence
+and evidence destinations before execution. Run destructive paths only against
+proven disposable isolated resources. Never reset or modify retained Supabase
+databases or volumes to satisfy verification. A worktree or backup alone does not
+prove isolation. Report unexecuted checks honestly; never weaken tests to pass.
+
+Select checks from the actual diff and affected contracts/callers:
+
+- Documentation, governance, contract and static-design evidence changes without
+  product runtime, generated-client, dependency, executable verification-tooling,
+  migration or CI changes may use relevant focused formatting, link, hash,
+  privacy, scope, contract/schema and static integrity checks plus required CI.
+  This is the normal policy, not a per-PR exception; a fresh local aggregate run
+  and fresh human live Arabic/English acceptance are not required for this class.
+- Runtime, database, UI and executable tooling changes require their affected
+  feature, regression, security/authorization, RLS, concurrency, recovery,
+  localization and accessibility checks as applicable. Use the comprehensive
+  command where required and resource-safe; focused checks do not erase a
+  contracted runtime or milestone obligation.
+- If an applicable mandatory check is unsafe or unavailable, record its precise
+  scope, reason and capability impact. Obtain one attributable bounded
+  disposition only if integration must proceed without that required evidence;
+  ordinary documentation-focused verification needs no repetitive PO exception.
+
+These integration rules do not change SpecKit approvals, F012 C1/C2/C3/U1,
+OPEN-UX-001, other canonical feature obligations, or clinical/legal/production gates.
 
 Apply the [Feature Artifact Finalization Gate](docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md)
 before closeout or any worktree/branch deletion. Official outputs belong in the

@@ -1,0 +1,168 @@
+{
+  "status": "PASS_BROWSER_STATIC_COMPOSITION_ONLY",
+  "captures": 124,
+  "states": 15,
+  "locales": [
+    "ar-EG",
+    "en-EG"
+  ],
+  "viewports": [
+    {
+      "width": 360,
+      "height": 800
+    },
+    {
+      "width": 412,
+      "height": 915
+    },
+    {
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "scalingAndFocus": [
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "state": "confirm_release",
+      "textScale": 2,
+      "result": {
+        "noHorizontalOverflow": true
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "visible": true,
+        "outline": "solid"
+      }
+    },
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "state": "withdraw_confirmation",
+      "textScale": 2,
+      "result": {
+        "noHorizontalOverflow": true
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "visible": true,
+        "outline": "solid"
+      }
+    },
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "state": "confirm_release",
+      "textScale": 2,
+      "result": {
+        "noHorizontalOverflow": true
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "visible": true,
+        "outline": "solid"
+      }
+    },
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "state": "withdraw_confirmation",
+      "textScale": 2,
+      "result": {
+        "noHorizontalOverflow": true
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "visible": true,
+        "outline": "solid"
+      }
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "state": "confirm_release",
+      "textScale": 2,
+      "result": {
+        "noHorizontalOverflow": true
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "visible": true,
+        "outline": "solid"
+      }
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "state": "withdraw_confirmation",
+      "textScale": 2,
+      "result": {
+        "noHorizontalOverflow": true
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "visible": true,
+        "outline": "solid"
+      }
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "state": "confirm_release",
+      "textScale": 2,
+      "result": {
+        "noHorizontalOverflow": true
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "visible": true,
+        "outline": "solid"
+      }
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "state": "withdraw_confirmation",
+      "textScale": 2,
+      "result": {
+        "noHorizontalOverflow": true
+      },
+      "focus": {
+        "tag": "BUTTON",
+        "visible": true,
+        "outline": "solid"
+      }
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "limits": "No native AT, human live-language, application/runtime/security or actual mutation acceptance. C2 control candidates remain unapproved. Full-page renders are distinct from initial viewport proof in preserved C3 evidence."
+}

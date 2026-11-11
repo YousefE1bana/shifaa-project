@@ -1,0 +1,1636 @@
+{
+  "kind": "F012_C2_NEW_RELEASE_CONTROL_DELTA",
+  "approval": "NOT_APPROVED",
+  "c3": "Prior v0.3.0 Product approval preserved; no new control approval inferred",
+  "source": {
+    "index.html": "6970ce6ecf1e51d1c3c3087bd2c0a2d2e7574a11b26878bfac3c869e2bc652fd",
+    "release.css": "76a295bcdf40dd6887fbfce93f326ccacffad47da9e8ab53ca02bc1959e4b275",
+    "release.js": "cdfa01077f357b68dcaffa64fe2c4d02af5027dd9501684d54e039d8cba369a2",
+    "capture.cjs": "94ad62acff38f7b2e6e0cb1de9aec110ae9d38fa5459994ff89f359a0c2cc8e8"
+  },
+  "inheritedCss": {
+    "path": "../c3-mobile-2026-11-11-v0.3.0/compositions.css",
+    "sha256": "dd58f8e1efe3ae230891e7f2f25c48d65b2aeef55da53463749210a01164fa41"
+  },
+  "renderer": {
+    "playwright": "1.63.0",
+    "chromium": "153.0.8010.12",
+    "dpr": 1,
+    "timezone": "UTC",
+    "network": "loopback static allowlist only"
+  },
+  "entries": [
+    {
+      "state": "sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "sign_selection-ar-EG-360x800-light.png",
+      "sha256": "932144b421b432dd695db54b564b3b06772b69ea7055c1f28cb17c4af57e54ba",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "post_sign_selection-ar-EG-360x800-light.png",
+      "sha256": "d0f9b626abd6fdc8e128467c65e89961fb571a3445500717a9d36351fc5c5787",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "confirm_release-ar-EG-360x800-light.png",
+      "sha256": "12b0e349a760e367be1e14aeab760795ee07078d0869628cda6f53b786d0caa9",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "release_success-ar-EG-360x800-light.png",
+      "sha256": "f067ad7c8039b1a6e3d33b3139c731fcdb666e41a4e432de2ac391a0b87de2bc",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-ar-EG-360x800-light.png",
+      "sha256": "d374e094f4ef61f8a0f20cfe74f35088605db44c39dd77fb9f3cfacd1f3e3181",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "withdrawn-ar-EG-360x800-light.png",
+      "sha256": "bd75f465bd1915091899a96f4c70f620547a21aade06e300c8dbcce9347716cd",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "denied",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "denied-ar-EG-360x800-light.png",
+      "sha256": "dc4529406b02c2cac1756212c3ac158a2185f1f5587b32ed5277ef07c199347c",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "step_up",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "step_up-ar-EG-360x800-light.png",
+      "sha256": "7cadca379d7d1f0de192ff46946ad1f4458de06d9d01046c7a21ebdd94421055",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "loading",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "loading-ar-EG-360x800-light.png",
+      "sha256": "da54c1e32579a6e955dce26e425d620af951b6eadceba21cb6b8d00cecfc8d17",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "stale",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "stale-ar-EG-360x800-light.png",
+      "sha256": "84649089f83b6e9c84daba39f5c24e5dbe11b931f2da5d5ddbaa6a5feb6442c4",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "conflict-ar-EG-360x800-light.png",
+      "sha256": "705b26f634c82f446c9a86d4a1c4f2360993065844dc551739ae3b6556e86d96",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "uncertain-ar-EG-360x800-light.png",
+      "sha256": "3715a1da992e9e099ca27f7ca5cf1f7efadd456a9b0835ca88e44eeec09f353c",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "offline",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "offline-ar-EG-360x800-light.png",
+      "sha256": "a2bb0a807e79437717c85f120ce331f7b96419f9477d97b32c996eb10e97a6e6",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "unavailable",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "unavailable-ar-EG-360x800-light.png",
+      "sha256": "5690227624a854cec24f621708a3d9546ae79f4b5d195627a38a136164658009",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "historical-ar-EG-360x800-light.png",
+      "sha256": "d5c103350ed20fca4bfc4a42a45a7104cd0b8ba4b9434118758c926287c72b7e",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "dark",
+      "image": "post_sign_selection-ar-EG-360x800-dark.png",
+      "sha256": "3135d328f99b7b5c9701a4dd681227d35771f046f1b4dad5e35e1c95c5814f53",
+      "capture": "Shared primitive dark reference; full-page composition",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "sign_selection-ar-EG-412x915-light.png",
+      "sha256": "65602b447d3e22ccd242278ba1dd73ff6a596f5537e5d4242edff74bb906decc",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "post_sign_selection-ar-EG-412x915-light.png",
+      "sha256": "319fa8e3781eb98a2efc46b06cae3c1bb9e422e922f3d5d434698a4aac19184c",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "confirm_release-ar-EG-412x915-light.png",
+      "sha256": "0300ae763eaf796e8fcf2e244907e6efd19f03cc8b2e3a0982a12ef12d4dc938",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "release_success-ar-EG-412x915-light.png",
+      "sha256": "f554b2e2678f59d4cec71ca6cde955f2a40ff7646f4031015a6d27e2733398c7",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-ar-EG-412x915-light.png",
+      "sha256": "bcc68c1d815244feb2e127ee017f0ad7a751d1a222e68111d9986284b07f1074",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "withdrawn-ar-EG-412x915-light.png",
+      "sha256": "d4f28dab37a086a159c5ed1b49209f2849f87d3a4b7f71f6cf8210d9ea8630da",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "denied",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "denied-ar-EG-412x915-light.png",
+      "sha256": "c5d950bfcfc6dad16dae4b7ef348e3d8a858919444cb3c150f257471be8aaffa",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "step_up",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "step_up-ar-EG-412x915-light.png",
+      "sha256": "153bac86a9bcf81d1ec7c867fdeb70dcafddc3956effa70093010925c9ce0613",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "loading",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "loading-ar-EG-412x915-light.png",
+      "sha256": "ce16b1ff304d690048ff3cb6b9f563ca51e4433d5a01f57e574199dd546da722",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "stale",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "stale-ar-EG-412x915-light.png",
+      "sha256": "670428f0c08cad25398ef2adf949dc6201d0b6be3a3f24efb0ae37c345a90665",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "conflict-ar-EG-412x915-light.png",
+      "sha256": "e49ed56b82e9a19b6371a1673ea905e075f56a45c21715c98e5e057c1e370a2c",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "uncertain-ar-EG-412x915-light.png",
+      "sha256": "f13dd8f1852f61c28c2eebb32d1334cfa6e6ad1ba171864951bf596e422486a6",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "offline",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "offline-ar-EG-412x915-light.png",
+      "sha256": "be556997e0d9aacc06bee5a321c1657c72f05408f30176627bd6e23a0567482e",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "unavailable",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "unavailable-ar-EG-412x915-light.png",
+      "sha256": "130902fc4670e86d631fa9f1a45d467bb5f5a6863c29ebc3170d373a72d4a2ea",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "historical-ar-EG-412x915-light.png",
+      "sha256": "c1e9e9d0e5b24a8bc427646ce474b162b5e1ba0fe0af9266a9856414029f7554",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "sign_selection-ar-EG-768x1024-light.png",
+      "sha256": "e4b0c1db5e7a4cf501790edf08d0c0254413a9497021ff34b8f0251ffe83c153",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "post_sign_selection-ar-EG-768x1024-light.png",
+      "sha256": "94e64b2007e957cbbcf30f1146485fe9370f80f9571aed55bff62493b9bd46ff",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "confirm_release-ar-EG-768x1024-light.png",
+      "sha256": "4421fdd7be6b78446af6ed28f505940dab84585ad4734175930a99ea4179a378",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "release_success-ar-EG-768x1024-light.png",
+      "sha256": "45454839cc193d7977c82ea9d08e262cd584bb561cf040510b7d9b649b2ea7b0",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-ar-EG-768x1024-light.png",
+      "sha256": "1714955b15c23956defdd7f1e98bdcec92796aae415644b366276009a7addc70",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "withdrawn-ar-EG-768x1024-light.png",
+      "sha256": "cef562ee9096a9084ecb0562052670186ffff0d536676d5aa02cde7790460d0d",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "denied",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "denied-ar-EG-768x1024-light.png",
+      "sha256": "77aa6e51829f9fa99eed5d11b8d953589be021c7597f5201a42083ec8a4cdb02",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "step_up",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "step_up-ar-EG-768x1024-light.png",
+      "sha256": "1d35fe8ee324b89322432a578f0b642738ccc7c68ae683117b7393361daa4d11",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "loading",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "loading-ar-EG-768x1024-light.png",
+      "sha256": "906ed4c548f36923936da1d6a0bf5fc2af7d72494ef936def774a38d5c0c641b",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "stale",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "stale-ar-EG-768x1024-light.png",
+      "sha256": "59125d6dd76637590f85a4c7f522904e16d2e6076f5f72f9bef1974551c4f617",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "conflict-ar-EG-768x1024-light.png",
+      "sha256": "2bd408990ac64c4c3cb10fe068e68eab930d8914e9a26f300b85b4819768e54b",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "uncertain-ar-EG-768x1024-light.png",
+      "sha256": "e72a0ce10c6b72ea37ae45334a72af154461895ba7921383c01ad3810fec77d2",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "offline",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "offline-ar-EG-768x1024-light.png",
+      "sha256": "df0997fb10603d721b89121a9c06aef0de40892c9ded7e5ad79ada3c2236b1c9",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "unavailable",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "unavailable-ar-EG-768x1024-light.png",
+      "sha256": "7e64d2b4e555aa15021166d87f9adf26552f264ebf465ef43ebc9faab6372753",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "historical-ar-EG-768x1024-light.png",
+      "sha256": "99c2e38a0a5b1cf97b1e5ccd2c88e5de9bf34a7f23ad376465efc9cd13da30fe",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "sign_selection-ar-EG-1440x900-light.png",
+      "sha256": "c2510b922f256297b6040fa86b8e877873a764d162e2cc5cbc6277988da236d2",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "post_sign_selection-ar-EG-1440x900-light.png",
+      "sha256": "7349ad22dbdf2489f418a16b1cbbf6905c581d52ee90de62668fe5374f2320bd",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "confirm_release-ar-EG-1440x900-light.png",
+      "sha256": "ccd80be4940ddc4ef157d7c4fb0de90dfa75afc9f2a8d66947d1d3986572054e",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "release_success-ar-EG-1440x900-light.png",
+      "sha256": "c6142ede6d9552b941ad289f393a26bd9588db05e012071c1981b0ebbdc8b20b",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-ar-EG-1440x900-light.png",
+      "sha256": "1932c131b8d943011212d63e2ec341d93190c16fb215620b45e6e85e3678774a",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "withdrawn-ar-EG-1440x900-light.png",
+      "sha256": "08690e9facd9d28e32dc9456e70f489f20de1112640b94ae8b4039e504bfe5e9",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "denied",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "denied-ar-EG-1440x900-light.png",
+      "sha256": "623767d0fe9f232bd23cc8371c9a18dd2ec6cf10147fc30e3cb6da0d58751716",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "step_up",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "step_up-ar-EG-1440x900-light.png",
+      "sha256": "1edffd2f339aa33df98894c4a1e88856637b7f60c1232c69154977c59632ae3b",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "loading",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "loading-ar-EG-1440x900-light.png",
+      "sha256": "aea577e58cb361b51d2c2b65dcfc2fff4b0de55f4e38da3247686a9b78466934",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "stale",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "stale-ar-EG-1440x900-light.png",
+      "sha256": "2f5f9114e1dea39ff84d7910ee86172fc47c1b45c80ead2f20b3388c890b5020",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "conflict-ar-EG-1440x900-light.png",
+      "sha256": "7f6cd19aa0dabe9f210c1d3f7f980661cdb215cbee95497e01104ab523c14663",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "uncertain-ar-EG-1440x900-light.png",
+      "sha256": "95fed2ef4c4a415766454d1676f10deb02d5bde998e65da878ad4713f430a560",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "offline",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "offline-ar-EG-1440x900-light.png",
+      "sha256": "7d543ef305c71103a798bf3de51afc34e03eb6e750e071ae24d8e917e975b12b",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "unavailable",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "unavailable-ar-EG-1440x900-light.png",
+      "sha256": "27eaee3caa0caf197d6c001e8e130f563ceae79968296a512b8ce1813f0895fe",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "historical-ar-EG-1440x900-light.png",
+      "sha256": "6169be5ba651d4d4b48a47aa05e0bad7bcc830d185a3fd2f0b57cee854e1d472",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "image": "post_sign_selection-ar-EG-1440x900-dark.png",
+      "sha256": "406a439b65e434ab4f1431e41984fe0b9baa9e81f7480e76aedec06c2759398f",
+      "capture": "Shared primitive dark reference; full-page composition",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "sign_selection-en-EG-360x800-light.png",
+      "sha256": "44589e8e52d19be07b106e7a860a2e5019f5482adba651392968b2195b266538",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "post_sign_selection-en-EG-360x800-light.png",
+      "sha256": "9d555d0e4e59c1823ed5b627bf5e90eb48aa645bcd6df83b695d8b3724ab3b11",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "confirm_release-en-EG-360x800-light.png",
+      "sha256": "32c2133485fa3ce5b0f88a7043ffccaeb0c0da7a1c622d3f6b0b55401dac48b8",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "release_success-en-EG-360x800-light.png",
+      "sha256": "07b42d7308d648e468548604c1eff4819f45a2307978cf494d3e51fb3e7bd795",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-en-EG-360x800-light.png",
+      "sha256": "31c43e2d45693f1c2868f1bfb112a78a9eef2e654b91a26c5d179644abe015c3",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "withdrawn-en-EG-360x800-light.png",
+      "sha256": "3b6b2d4a4830b3ede34507847d9d1c8365005362dcd55144480a287396d4b53a",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "denied",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "denied-en-EG-360x800-light.png",
+      "sha256": "97555f4607cd621baa21228be3d386e8347c043dc0f03523ba73994e79b135b4",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "step_up",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "step_up-en-EG-360x800-light.png",
+      "sha256": "26ee2b151fad4a4cf72be5ddbc89ae51668d7f4fd2711fa0e8a25fa1b668a6e2",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "loading",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "loading-en-EG-360x800-light.png",
+      "sha256": "bf1deab5648789a8f18379abb53439e85b0324be9bb8fe15e45aa5df6bbf5a03",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "stale",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "stale-en-EG-360x800-light.png",
+      "sha256": "59933d1d0b629d5ea3f4d937c37fdb190bc7ed9464fd2901a51a69d754b1c3b0",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "conflict-en-EG-360x800-light.png",
+      "sha256": "04f7d8c5d1a0e715a7529291e469e691a0f89df8d699d17d8bc15480771a6e72",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "uncertain-en-EG-360x800-light.png",
+      "sha256": "93cd0c15f2a5539e89753579ffe69e8324be3915316a68d4b5b07d8780b7f3b5",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "offline",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "offline-en-EG-360x800-light.png",
+      "sha256": "b856c116ebbe930add1117cc12dbc342cd62cad755ec8105f420ff93108154c1",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "unavailable",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "unavailable-en-EG-360x800-light.png",
+      "sha256": "ab5745afa9db8a7de45ee48d72d3b3231a892b8da35d1b8e5529ac24af7ed4b5",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "historical-en-EG-360x800-light.png",
+      "sha256": "fe1b41eff216a310caaea986c56ec541de70ee9591119bfbde659f6f731e4b85",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "dark",
+      "image": "post_sign_selection-en-EG-360x800-dark.png",
+      "sha256": "9add45846fc6249ed10389482d7d87c709301a32f49912716d68bb6520166bb4",
+      "capture": "Shared primitive dark reference; full-page composition",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "sign_selection-en-EG-412x915-light.png",
+      "sha256": "f6e3a33043dbd8800c5428221c2582a1c337c9850dc9b79dda5558d1e5600cba",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "post_sign_selection-en-EG-412x915-light.png",
+      "sha256": "b206403bb791afe8c846f3a1afc176a7742f11e8ee67f65fad4a40b86d3179a6",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "confirm_release-en-EG-412x915-light.png",
+      "sha256": "b87bb5e830585d66d222c9ac30fda0da40c8370e82b71a03bde760888b09a67a",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "release_success-en-EG-412x915-light.png",
+      "sha256": "9adee35041a3a0268fef58816f5d7d0515b818b5ce3da9eef6465135aeffc25e",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-en-EG-412x915-light.png",
+      "sha256": "1819ff6d43bf1ea115eafc4391cef3df6860dca994410a7344a72dea79fe9efb",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "withdrawn-en-EG-412x915-light.png",
+      "sha256": "925738e7379db2fc0922c17dc5e08129e58e47757b903e39043f6c74ad0ef543",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "denied",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "denied-en-EG-412x915-light.png",
+      "sha256": "148753537190dcd91df8c0a0d894b013ded082dd181db2e5aeee6027678780c2",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "step_up",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "step_up-en-EG-412x915-light.png",
+      "sha256": "aa420233cf2e59d4fc422dff7c52deb3c23647bb523d75150c34d3249967d287",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "loading",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "loading-en-EG-412x915-light.png",
+      "sha256": "f6b94416787baa48b960d66f993dcac881cc92fdd79bb271b418b295c31828ca",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "stale",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "stale-en-EG-412x915-light.png",
+      "sha256": "4b6fe676033f2dee6df339fceb0d58d7eba9540cb7571fc9f4294e073b21d2c7",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "conflict-en-EG-412x915-light.png",
+      "sha256": "1fb9de3f39eb68dda602ee04f4fa942b13c0d92fd979e0ec15cbcc344d928e7d",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "uncertain-en-EG-412x915-light.png",
+      "sha256": "4027d7d1e861b0180a511f42ee83f698820c7506c6081e534eefc9d3821112b5",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "offline",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "offline-en-EG-412x915-light.png",
+      "sha256": "18d147b3e3be400653cf7dbb5e3202e612575078b4f63a9bbf17b6ec3fc5dbae",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "unavailable",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "unavailable-en-EG-412x915-light.png",
+      "sha256": "fc105c910a065b2d0dcd0ba0355b6cd35251ff73250bfd2423071313a04bd775",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "historical-en-EG-412x915-light.png",
+      "sha256": "ef02d707c77bc7d1b0212b090c27bc724ec7fa6e6da16b70fd85818d81fe7e01",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "sign_selection-en-EG-768x1024-light.png",
+      "sha256": "5e3739c8473778aea4393f35979ad752086f476214fac75a2ec8be18d1184276",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "post_sign_selection-en-EG-768x1024-light.png",
+      "sha256": "08f8749f055c90067212e771edc52901e660f997177e8a21a25d06b4821e7bba",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "confirm_release-en-EG-768x1024-light.png",
+      "sha256": "211fdbbf5ea3059c89fab04d323910114b5465d18293978fc0d0a98d258e0a1d",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "release_success-en-EG-768x1024-light.png",
+      "sha256": "85750969e1b00b4ccafcde6c653c7e289e87b300cd66a4f6f216e5364f9514b1",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-en-EG-768x1024-light.png",
+      "sha256": "0fada94cf76af01f7d656c2957067e2ee54bf0312d0bdf21c1704dd4e8c8f0ce",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "withdrawn-en-EG-768x1024-light.png",
+      "sha256": "b55cecdf984362d0e8010231fb4d7375823ff046cbc78d03f551a42c3318b92e",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "denied",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "denied-en-EG-768x1024-light.png",
+      "sha256": "7d0b1eddaadf3a38f8ced4204bdb70073e71e79b7470d9c78b40fc5f69ac5b7b",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "step_up",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "step_up-en-EG-768x1024-light.png",
+      "sha256": "4759dce4c494b4035c57123e533a84a9a7caaeb7c362596112741e5a317f5d04",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "loading",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "loading-en-EG-768x1024-light.png",
+      "sha256": "c95bb4c2127f269a5b05e937b049ccd26d99d123354ea91d66ed342bdd7580f8",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "stale",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "stale-en-EG-768x1024-light.png",
+      "sha256": "bc06ebb1be7dba2aa7376dcd8588285e158e426a3f401822d95ac8bf6e68f5dc",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "conflict-en-EG-768x1024-light.png",
+      "sha256": "3278e8df79e086785ca53a764da2ef3bf2a308577dc07f9b6a34b20f089c4857",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "uncertain-en-EG-768x1024-light.png",
+      "sha256": "3d0ba8d3bb907a8a363031e047b45f66e0442d02a17c14beaf84ca59c907b690",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "offline",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "offline-en-EG-768x1024-light.png",
+      "sha256": "7e79ed9c7054e733f4647ce9a27d7e4f5099431f38674b71bf14cef570af1acf",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "unavailable",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "unavailable-en-EG-768x1024-light.png",
+      "sha256": "7fff52c30874606db32636d701d37b5f5f5f93e8588227cb4c61f803efea83b9",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "theme": "light",
+      "image": "historical-en-EG-768x1024-light.png",
+      "sha256": "cf3d942012e6914ce43fca1daa89697a2b4b689775239f51ecbc907f127d3fd0",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "sign_selection-en-EG-1440x900-light.png",
+      "sha256": "50c1bdf14b37c991488b2a025bf43e29c49013ad503dd28da57d7c4a3274638c",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "post_sign_selection-en-EG-1440x900-light.png",
+      "sha256": "813b324a6f371314a3f685bcf7744def4bc387ca755a0d7ee1ca285f7608caa7",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "confirm_release-en-EG-1440x900-light.png",
+      "sha256": "800b7e6bd18f3cc66df95f0f2d6c7d640230c2413e09244ddc952e610391a238",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "release_success-en-EG-1440x900-light.png",
+      "sha256": "46a3993236ba430fdc3dac66276b743034b3b222ebb48095910817be1e4451ba",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-en-EG-1440x900-light.png",
+      "sha256": "e40d7d41e4610758eb46e2758d6d7051039950ecb7a775a0db74cd74a55bd99a",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "withdrawn-en-EG-1440x900-light.png",
+      "sha256": "da5b59db46afbf556e5cf3b3ca98eaa2591c770bbecfc62eaa643fd14a56f348",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "denied",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "denied-en-EG-1440x900-light.png",
+      "sha256": "0470a21dd18094107b1a8e99991851ef5161510d26a0a3e40745bbaf2d6c6018",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "step_up",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "step_up-en-EG-1440x900-light.png",
+      "sha256": "020aa13a04a221081fb5faf5c5b592b8c70900934a5cfb850a91911bb4cac925",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "loading",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "loading-en-EG-1440x900-light.png",
+      "sha256": "b4fdd6894ae1c1d661f5f14006a8ac858e65437391beaa2c341f610964aa10d0",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "stale",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "stale-en-EG-1440x900-light.png",
+      "sha256": "a2b37835c7bfc1834e193710f3a9c0d3dc94a30562d845056f63841d4896f539",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "conflict-en-EG-1440x900-light.png",
+      "sha256": "cbd8c4382c9da570696831c63f9be9ef02bf015e776f94231dcc7362d53f9e0f",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "uncertain-en-EG-1440x900-light.png",
+      "sha256": "e1e5e4c651b2f41b307e6f3add3be7ed6e2f2697228ca2b402c629d2551acb0a",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "offline",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "offline-en-EG-1440x900-light.png",
+      "sha256": "da9ef4d4d3eb21de1ab64040e154b476913a37aa9092e93830b2ca3b7f5aca76",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "unavailable",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "unavailable-en-EG-1440x900-light.png",
+      "sha256": "ed948eca0f6ba0d2536fbeb883ede5e9b70e11079f52daa4bf43e7c156395d3d",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "historical-en-EG-1440x900-light.png",
+      "sha256": "99244b289841c704b68d05ffba812c6c8e86f142b63858ed53d84dd238d04ed1",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "image": "post_sign_selection-en-EG-1440x900-dark.png",
+      "sha256": "a73d8e148c520ac5f0dd6b5d2905a4d2c71dd25144657e19df084163747d5eb4",
+      "capture": "Shared primitive dark reference; full-page composition",
+      "approval": "NOT_APPROVED"
+    }
+  ]
+}

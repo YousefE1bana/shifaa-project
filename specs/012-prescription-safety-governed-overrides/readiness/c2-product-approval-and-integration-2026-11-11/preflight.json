@@ -1,0 +1,79 @@
+{
+  "status": "PASS_EXACT_APPROVAL_IDENTITY_AND_PRESERVATION_BASELINE",
+  "recordedAt": "2026-11-11T23:49:38.025397+02:00",
+  "head": "0ad13689a170f325681a260d925e149f669e485a",
+  "boundReviewedInputs": 23,
+  "C2SourceSHA256": "7cf57fac6ff004bbbb6dc8ca843af3154b42c4bedc9347da49d09fc8d470b115",
+  "C2BaselineManifestSHA256": "432b98b9fe1daf0b0dd839eec58b92dd27b4529a3d860308786f5707f41119d4",
+  "C2CorrectedImages": 8,
+  "C2InheritedImages": 116,
+  "essentialImages": 22,
+  "C3DeltaImagesVerified": 164,
+  "C3InheritedImagesVerified": 884,
+  "canonical": [
+    {
+      "path": "shifaa-prd.md",
+      "version": "PRD 2.2.1",
+      "predecessorSHA256": "eca3a8dd2955da8b6d91bb6fc0d9722f57801c39fae59a4ca4c3475af6b4ab0f",
+      "predecessorBytes": 100550,
+      "sha256": "4a98237e916b88c2d92c60f2c5b5da25f9b919e6b04f42a73db2e0aa709a50ac",
+      "effective": false,
+      "prefixExact": true,
+      "headPredecessorExactIgnoringCheckoutNewlines": true
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "version": "Master 2.2.2",
+      "predecessorSHA256": "47552ae429fabf0606af98b07080a3db342e6f490fe20d27553a14ddcc9cc63d",
+      "predecessorBytes": 103596,
+      "sha256": "f144e6332cf8363dc127fb1e728e3e1387a51878838c16881d268b24eea2c838",
+      "effective": false,
+      "prefixExact": true,
+      "headPredecessorExactIgnoringCheckoutNewlines": true
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "version": "UI Contract 0.10.0",
+      "predecessorSHA256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+      "predecessorBytes": 28266,
+      "sha256": "8eb104b897bda573e04067e8e3036647349d9ce0c472fc00f1aaac3b1eab35e0",
+      "effective": false,
+      "prefixExact": true,
+      "headPredecessorExactIgnoringCheckoutNewlines": true
+    },
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "version": "API Catalog 1.3.0",
+      "predecessorSHA256": "5e20548ace942acae611f4915dd3f1ab7130b5295a879113435b352e8a771fad",
+      "predecessorBytes": 100106,
+      "sha256": "c1dc848f813c850ed851d06f673f059798d3120033ed1a5e50f60c29eeb2e407",
+      "effective": false,
+      "prefixExact": true,
+      "headPredecessorExactIgnoringCheckoutNewlines": true
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "version": "Data/RLS 1.4.0",
+      "predecessorSHA256": "a6de0ba094415d5a93315db5305c4c8fcf7f37797540a217ccc059f567a52ab5",
+      "predecessorBytes": 86509,
+      "sha256": "9c088fa84c49e9d69285b7be4e96e0d141a77c7be89d8976fdff1989f3fc0f7f",
+      "effective": false,
+      "prefixExact": true,
+      "headPredecessorExactIgnoringCheckoutNewlines": true
+    }
+  ],
+  "checkpointFiles": [
+    "specs/012-prescription-safety-governed-overrides/checklists/requirements.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/po-decision-approval-2026-10-23.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/po-decision-resolution-proposal-2026-10-23.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/specify-preflight-2026-10-23.json",
+    "specs/012-prescription-safety-governed-overrides/spec.md"
+  ],
+  "existingFeatureFiles": 2341,
+  "featurePointers": {
+    "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.specify\\feature.json": "1a7f6f97dcd6c235e144dfa2355a1edfe2911043e7874c1b4c134505c45e1b5f",
+    "D:\\ECU\\Gradution-Project\\.specify\\feature.json": "957ec882110889a1b9dd236f8566f1f286cde597764494127b4243de47a47870"
+  },
+  "mutation": "Only new local documentation; no Docker/DB/remote writes"
+}

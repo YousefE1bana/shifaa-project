@@ -1,0 +1,526 @@
+{
+  "format": "SHIFAA-NAC1-LOCAL-VERIFICATION/0.1.0",
+  "date": "2026-11-11",
+  "authorization": "Yousef Osama directive: existing shifaa-local-supabase maintenance and relevant focused engineering verification; no lifecycle advancement",
+  "worktree": "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023",
+  "head": "c571773d6432251d1f52bc94bb501c4e163f1571",
+  "origin_main_fresh": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "environment": "existing isolated-local SHIFAA stack; previous data/credential synthetic-only classification UNVERIFIED",
+  "source_commit": "0522e7bcf7135a476d258b1603134b97846179fc",
+  "source_binding": "attributable upstream publish-job binding; not independent cryptographic attestation; historical August identity unproven",
+  "backup": {
+    "utc": "2026-11-11T10:16:21.371416+00:00",
+    "auth_before": "517c6a677ab7d6d45d1777a6cfc492a9148087d8b5e76b39295ff6fe1f5b9a98",
+    "db": "06d6e45e6908f016604fc7bded12068b0895000f86b60c9411ac487382f7730c",
+    "archive": "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.tmp\\nac1-maintenance\\private\\postgres-before-auth.dump",
+    "archive_bytes": 2474428,
+    "archive_sha256": "822fd0a9b123ad9b6231d376e1f13bf1e1031baecf5ccdd6b084743f8bc75cdc",
+    "archive_full_decode_sha256": "e3bf6ef940d691df20e607c1b53a0900dea9d91267a5d5b8d553e511d7bdc56e",
+    "table_count": 116,
+    "data_classification": "UNVERIFIED; no row values disclosed; maintenance preserves existing records",
+    "restore_executed": false
+  },
+  "startup": {
+    "utc": "2026-11-11T10:17:40.369372+00:00",
+    "original_container_retained": "supabase_auth_shifaa-local-supabase_before_nac1_20261111",
+    "new_container": "846ea7faaf66be4a5bcabf6ac5f785190703c9b3c3e9e752352d5788ef19a9e4",
+    "image": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
+    "created": "2026-11-11T10:17:29.66055654Z",
+    "started": "2026-11-11T10:17:29.816802641Z",
+    "health": "healthy",
+    "config_carrier": "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.tmp\\nac1-maintenance\\auth-policy.env",
+    "config_sha256": "cd3f7fc0600c7a7bba4e1def36d9b0481c652d797db0fe8bfe8b7634d1136bd6",
+    "command": ["auth", "serve", "--config", "/etc/shifaa-nac1.env"],
+    "policy_override": {
+      "GOTRUE_HOOK_MFA_VERIFICATION_ATTEMPT_ENABLED": "false",
+      "GOTRUE_HOOK_PASSWORD_VERIFICATION_ATTEMPT_ENABLED": "false",
+      "GOTRUE_HOOK_CUSTOM_ACCESS_TOKEN_ENABLED": "false",
+      "GOTRUE_HOOK_SEND_EMAIL_ENABLED": "false",
+      "GOTRUE_HOOK_SEND_SMS_ENABLED": "false",
+      "GOTRUE_HOOK_BEFORE_USER_CREATED_ENABLED": "false",
+      "GOTRUE_HOOK_AFTER_USER_CREATED_ENABLED": "false",
+      "GOTRUE_SESSIONS_SINGLE_PER_USER": "false",
+      "GOTRUE_SECURITY_REFRESH_TOKEN_ALLOW_REUSE": "false",
+      "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_CURRENT_PASSWORD": "false",
+      "GOTRUE_SAML_ENABLED": "false",
+      "GOTRUE_OAUTH_SERVER_ENABLED": "false",
+      "GOTRUE_CUSTOM_OAUTH_ENABLED": "true"
+    },
+    "nil_by_absence": ["GOTRUE_SESSIONS_TAGS", "GOTRUE_SESSIONS_ALLOW_LOW_AAL"],
+    "original_environment_preserved": true,
+    "db_container_unchanged": true,
+    "migrations_seeds_pulls_db_restart": false
+  },
+  "unchanged_explicit_policy": {
+    "GOTRUE_SESSIONS_TIMEBOX": "23h45m0s",
+    "GOTRUE_SESSIONS_INACTIVITY_TIMEOUT": "45m0s",
+    "GOTRUE_JWT_EXP": "900",
+    "GOTRUE_JWT_AUD": "authenticated",
+    "GOTRUE_SECURITY_REFRESH_TOKEN_ROTATION_ENABLED": "true",
+    "GOTRUE_SECURITY_REFRESH_TOKEN_REUSE_INTERVAL": "10",
+    "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_REAUTHENTICATION": "false",
+    "GOTRUE_MFA_MAX_ENROLLED_FACTORS": "10",
+    "GOTRUE_MFA_TOTP_ENROLL_ENABLED": "true",
+    "GOTRUE_MFA_TOTP_VERIFY_ENABLED": "true",
+    "GOTRUE_MFA_PHONE_ENROLL_ENABLED": "false",
+    "GOTRUE_MFA_PHONE_VERIFY_ENABLED": "false",
+    "GOTRUE_MFA_WEB_AUTHN_ENROLL_ENABLED": "false",
+    "GOTRUE_MFA_WEB_AUTHN_VERIFY_ENABLED": "false",
+    "GOTRUE_PASSKEY_ENABLED": "false",
+    "GOTRUE_EXTERNAL_EMAIL_ENABLED": "true",
+    "GOTRUE_EXTERNAL_PHONE_ENABLED": "false",
+    "GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED": "false"
+  },
+  "configuration_checks": [
+    {
+      "check": "Pinned image, read-only carrier and startup command",
+      "status": "PASS",
+      "details": {
+        "image": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
+        "carrier_sha256": "cd3f7fc0600c7a7bba4e1def36d9b0481c652d797db0fe8bfe8b7634d1136bd6",
+        "reload_directory": false
+      }
+    },
+    {
+      "check": "Actual process uses explicit config and serve-only",
+      "status": "PASS",
+      "details": ["auth", "serve", "--config", "/etc/shifaa-nac1.env", ""]
+    },
+    {
+      "check": "Seven explicit disabled hooks",
+      "status": "PASS",
+      "details": {
+        "MFA_VERIFICATION_ATTEMPT": "false",
+        "PASSWORD_VERIFICATION_ATTEMPT": "false",
+        "CUSTOM_ACCESS_TOKEN": "false",
+        "SEND_EMAIL": "false",
+        "SEND_SMS": "false",
+        "BEFORE_USER_CREATED": "false",
+        "AFTER_USER_CREATED": "false"
+      }
+    },
+    {
+      "check": "Native health",
+      "status": "PASS",
+      "details": {
+        "version": "v2.195.0",
+        "name": "GoTrue",
+        "description": "GoTrue is a user registration and authentication API"
+      }
+    },
+    {
+      "check": "Native email mechanism remains enabled",
+      "status": "PASS",
+      "details": {
+        "email_enabled": true,
+        "disable_signup": false
+      }
+    },
+    {
+      "check": "Unauthenticated gateway admin read denied",
+      "status": "PASS",
+      "details": {
+        "http_status": 401
+      }
+    },
+    {
+      "check": "Other original project containers and mounts unchanged",
+      "status": "PASS",
+      "details": {
+        "changed": [],
+        "checked": 10
+      }
+    },
+    {
+      "check": "Original Auth retained stopped for rollback",
+      "status": "PASS",
+      "details": {
+        "id": "517c6a677ab7d6d45d1777a6cfc492a9148087d8b5e76b39295ff6fe1f5b9a98",
+        "state": "exited"
+      }
+    },
+    {
+      "check": "All database table counts and row-content fingerprints preserved",
+      "status": "PASS",
+      "details": {
+        "tables_checked": 116,
+        "changed_tables": []
+      }
+    }
+  ],
+  "f007_pure_test_result": {
+    "files_passed": 5,
+    "tests_passed": 61,
+    "runtime_database_writes": false,
+    "execution_checkout": "D:/ECU/Gradution-Project",
+    "equivalence": "266 relevant worktree/root source files byte-equal; package.json/pnpm-lock.yaml/vitest.config.mts equal; worktree junction resolver failed, preserved as failed attempt"
+  },
+  "native_checks": {
+    "checks": [
+      {
+        "check": "Native password login returns bound session",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Native TOTP produces AAL2 and qualifying AMR",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Current synthetic access works",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "User ban admits current synthetic AAL2 fixture",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "User ban actual native SQL waits on retained guard",
+        "status": "PASS",
+        "evidence": {
+          "blocking_pid_observed": true
+        }
+      },
+      {
+        "check": "User ban completes after guard transaction ends",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Revocation-first ban denied by candidate retained predicate",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Native access rejects committed ban",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "MFA removal/downgrade admits current synthetic AAL2 fixture",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "MFA removal/downgrade actual native SQL waits on retained guard",
+        "status": "PASS",
+        "evidence": {
+          "blocking_pid_observed": true
+        }
+      },
+      {
+        "check": "MFA removal/downgrade completes after guard transaction ends",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Stale AAL2 token denied after native session downgrade",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Native unenrollment commits AAL1",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Native local logout waits on retained session protection",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Committed logout denies candidate currentness",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Native access rejects deleted session",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Every pre-existing row fingerprint retained across native tests",
+        "status": "PASS",
+        "evidence": {
+          "tables_checked": 116,
+          "affected_tables": []
+        }
+      }
+    ],
+    "fixtureAdded": true,
+    "scope": "Native Auth plus SQL conflict compatibility; no installed F012 port, forced-RLS or full NAC-1 runtime acceptance claimed"
+  },
+  "additional_native_checks": {
+    "checks": [
+      {
+        "check": "Fresh login session exists before competing writes",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "KEY SHARE counterexample: ordinary native ban can commit",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Session still exists after ban/unban",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Actual native refresh inverse user/session order observed",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Inverse lock cycle aborts rather than commits both paths",
+        "status": "PASS",
+        "evidence": {
+          "guard_sqlstate": null,
+          "guard_committed": true,
+          "native_http_error": 500
+        }
+      },
+      {
+        "check": "Fresh native retry after deadlock succeeds",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Global-logout fixture has multiple current sessions",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Global native logout removes only fixture sessions and denies both tokens",
+        "status": "PASS",
+        "evidence": {}
+      },
+      {
+        "check": "Non-owner app role cannot read auth.users",
+        "status": "PASS",
+        "evidence": {
+          "sqlstate": "42501"
+        }
+      },
+      {
+        "check": "Non-owner app role cannot read auth.sessions",
+        "status": "PASS",
+        "evidence": {
+          "sqlstate": "42501"
+        }
+      },
+      {
+        "check": "NotAfter equality predicate denies",
+        "status": "PASS",
+        "evidence": {}
+      }
+    ],
+    "scope": "Native compatibility only; no installed F012 port, RLS or idempotency proof"
+  },
+  "deadlock_server_evidence": {
+    "native_log_deadlock_confirmed": true,
+    "sqlstate_40P01_confirmed": true,
+    "deadlock_log_line_count": 3
+  },
+  "final_record_preservation": {
+    "status": "PASS",
+    "tables": 116,
+    "pre_existing_rows_missing_or_changed": [],
+    "net_new_rows": 36,
+    "only_owned_synthetic_fixture_disabled": true
+  },
+  "runtime_acceptance_limit": "Native compatibility and primitive SQL lock checks only; F012 guard port, exact restricted helper/RLS, source fences, domain/audit/outbox/idempotency are NOT IMPLEMENTED/NOT VERIFIED",
+  "local_evidence_index": [
+    {
+      "local_path": ".tmp/nac1-maintenance/maintain.py",
+      "sha256": "fe4a6b101cad5120f3eb3ee2bc0788e00968d5f94434b2a4f8214e1216d16077",
+      "bytes": 9808,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/verify.py",
+      "sha256": "ca2d535529db49140b9b09b24eae702187359739461ef7c9b26aeca425be5765",
+      "bytes": 3618,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/native-checks.cjs",
+      "sha256": "8bf24fa6872346a575febc005ff74cdc62cd3601997dca50b683515b851d5b1b",
+      "bytes": 9201,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/native-additional-checks.cjs",
+      "sha256": "7f8fb63cd6dd6505c5311bc3e8420ffa952fe253b7d9a108ed5957ca7ce2e5a8",
+      "bytes": 7315,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/auth-policy.env",
+      "sha256": "cd3f7fc0600c7a7bba4e1def36d9b0481c652d797db0fe8bfe8b7634d1136bd6",
+      "bytes": 641,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/baseline-files.json",
+      "sha256": "87158e5acd8ceb91f1bcda6360863d00ed624a2d73d8c43e2017ff92e2a2b934",
+      "bytes": 1086299,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/containers-before.json",
+      "sha256": "2d66f921981662835d8d54a34fae3d55052f1ee25cb56817f1b2bbf0cc9de90f",
+      "bytes": 4388,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/dependency-junctions.json",
+      "sha256": "38443af311efe41fe66137ed520a902b4da5578275164417f6d67e45032dbeaf",
+      "bytes": 586,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/f007-unit-results.txt",
+      "sha256": "7b28f13f291fbd73b6adef729b592114f226d5c955fb3bc7a0562fabcb7af4bb",
+      "bytes": 1618,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/f007-equivalent-source-results.txt",
+      "sha256": "f6994e967784808a2fb4f5eeab8874d4ec40de23778a34ce8508f2517defe244",
+      "bytes": 344,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/native-additional-failed-attempt1.json",
+      "sha256": "2b97982f061cf6b62d38b92932e86e4281c5f1d0c73c153b8defd544eac1b1f6",
+      "bytes": 639,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/native-additional-failed-attempt2.json",
+      "sha256": "f9623beddedb290db74325add4f83024386115607543fb682857cd198e20e753",
+      "bytes": 856,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/refresh-lock-graph.json",
+      "sha256": "8cfc0954c411ff333a6b167e23fc9a6af4221ac5b703a3fd20843c19b5fa4809",
+      "bytes": 1085,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/native-checks-output.txt",
+      "sha256": "b18c9c4a1e06935bd1d56ca7efda60611a7b9da38f5d69c88f02e74500d4f673",
+      "bytes": 1668,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    },
+    {
+      "local_path": ".tmp/nac1-maintenance/native-additional-output-attempt3.txt",
+      "sha256": "325d1801db751f1f8028fcc6bccd99dc6c44882d0fb34cad4a31803f4be758e0",
+      "bytes": 1128,
+      "restriction": "local-only; ignored; preserve without automatic staging"
+    }
+  ],
+  "private_evidence_restriction": "Backup, original container configuration, local credentials and fixture identity retained only in ACL-restricted ignored private directory. No user records or credential values published. Full archive decoded, no restore executed.",
+  "final_runtime_readback": {
+    "status": "PASS",
+    "utc": "2026-11-11T10:44:29.677852+00:00",
+    "auth_healthy": true,
+    "auth_id": "846ea7faaf66be4a5bcabf6ac5f785190703c9b3c3e9e752352d5788ef19a9e4",
+    "other_containers_unchanged": 10,
+    "old_auth_stopped_disconnected": true,
+    "carrier_backup_hashes": "equal",
+    "credential_pattern_scan": "no narrow-pattern findings; not comprehensive PHI classification"
+  },
+  "final_static_contract_validation": {
+    "status": "PASS_STATIC_ONLY",
+    "openapi": "3.1.1",
+    "operations": [
+      {
+        "method": "post",
+        "path": "/encounters/{encounterId}/prescriptions",
+        "id": "createPrescription"
+      },
+      {
+        "method": "patch",
+        "path": "/prescriptions/{prescriptionId}",
+        "id": "updatePrescription"
+      },
+      {
+        "method": "get",
+        "path": "/prescriptions/{prescriptionId}",
+        "id": "getPrescription"
+      },
+      {
+        "method": "post",
+        "path": "/prescriptions/{prescriptionId}/safety-checks",
+        "id": "runPrescriptionSafety"
+      },
+      {
+        "method": "post",
+        "path": "/detected-issues/{issueId}/acknowledgements",
+        "id": "acknowledgeWarning"
+      },
+      {
+        "method": "post",
+        "path": "/detected-issues/{issueId}/override-requests",
+        "id": "requestContraindicatedOverride"
+      },
+      {
+        "method": "post",
+        "path": "/override-requests/{overrideId}/decisions",
+        "id": "decideOverride"
+      },
+      {
+        "method": "post",
+        "path": "/prescriptions/{prescriptionId}/sign",
+        "id": "signPrescription"
+      },
+      {
+        "method": "post",
+        "path": "/prescriptions/{prescriptionId}/cancel",
+        "id": "cancelPrescription"
+      },
+      {
+        "method": "get",
+        "path": "/patients/{managedPatientId}/medications",
+        "id": "listPatientMedications"
+      },
+      {
+        "method": "get",
+        "path": "/override-review-cases",
+        "id": "getOverrideReviewCases"
+      },
+      {
+        "method": "post",
+        "path": "/override-requests/{overrideId}/assignment-transitions",
+        "id": "transitionOverrideReviewAssignment"
+      }
+    ],
+    "scope": {
+      "closure": 7,
+      "prerequisites": 2,
+      "nfr": 22,
+      "ac": 16
+    },
+    "schemas": 60,
+    "resolvedReferences": 313,
+    "completeOpenAPIValidation": "VALIDATION_NOT_AVAILABLE",
+    "runtime": "F012_NOT_IMPLEMENTED_NOT_RUN"
+  },
+  "final_preservation_validation": {
+    "baseline_files": 5729,
+    "tracked_unchanged": 5707,
+    "approved_specify_blob_pairs": 6,
+    "specification_checklist": "16/16 unchanged",
+    "only_old_files_changed": "six authorized uncommitted Plan drafts",
+    "pointers": "both unchanged",
+    "local_links": 129,
+    "anchors": 7
+  }
+}

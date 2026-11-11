@@ -1,0 +1,319 @@
+{
+  "recordKind": "F012_PLAN_PREFLIGHT/2026-10-23",
+  "date": "2026-10-23",
+  "status": "PREFLIGHT_PASSED_FOR_DRAFT_PREPARATION; ARCHITECTURE_ACCEPTANCE_BLOCKED",
+  "authorization": {
+    "owner": "Yousef Osama, SHIFAA Product Owner",
+    "source": "Explicit user instruction in this conversation: Approved Specification Checkpoint & Official Plan",
+    "allowed": [
+      "One local approved-Specify checkpoint",
+      "Fresh bounded authority/worktree/preservation preflight",
+      "Official speckit-plan setup, research and Phase 1 design drafts"
+    ],
+    "notGranted": [
+      "PLAN_APPROVED",
+      "Tasks",
+      "Analyze",
+      "Implement",
+      "runtime/API/DB/Docker/Supabase mutations",
+      "installations",
+      "Plan commit",
+      "push/PR/merge/publication",
+      "clinical/production permissions",
+      "cleanup"
+    ]
+  },
+  "worktree": "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023",
+  "branch": "codex/f012-specify-20261023",
+  "baselineHead": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "freshFetchedOriginMain": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "checkpoint": {
+    "commit": "c571773d6432251d1f52bc94bb501c4e163f1571",
+    "message": "docs(f012): record approved specification and decisions",
+    "explicitManifest": [
+      "checklists/requirements.md",
+      "readiness/po-decision-approval-2026-10-23.md",
+      "readiness/po-decision-resolution-proposal-2026-10-23.md",
+      "readiness/specification-approval-2026-10-23.md",
+      "readiness/specify-preflight-2026-10-23.json",
+      "spec.md"
+    ],
+    "approvedWorkingFileSha256": {
+      "spec.md": "f4d2e7f1113467f5997e27809394c7f03a191dba276bfc895e0398a1bb8fa15a",
+      "checklists/requirements.md": "afbf3788059845dbba8355d4fd23485689a69bc53c9ebd34b7d15f2e1e954499",
+      "readiness/specify-preflight-2026-10-23.json": "4d2062840ccbd61b86eea83b661227a5526cbd063a541c4003846c7450a1fb3e",
+      "readiness/po-decision-resolution-proposal-2026-10-23.md": "bc268dc62e95833cb12f56e69b92a87b1ca80dc710676e8f805913c0123e2a98",
+      "readiness/po-decision-approval-2026-10-23.md": "bf00eea22e8ffbdd4887e54716cdf7b691acbf0d3c91dd8b3323b3f1fbfb4b84",
+      "readiness/specification-approval-2026-10-23.md": "de55e0fc7edfc4d2bdfcb678068171cce50afdfbb07a5ec39934f565ae5c2abb"
+    },
+    "stagedBlobEquality": true,
+    "cachedDiffSha256": "058f6907796eb8394321ec4c90936714c9f1d1a3f7da04f0cc26e62db5206914",
+    "localOnly": true,
+    "manifestBase": "specs/012-prescription-safety-governed-overrides/"
+  },
+  "approvedInputValidation": {
+    "specificationChecklist": "16/16 document review",
+    "operations": 12,
+    "closureFRs": 7,
+    "prerequisiteOnlyFRs": 2,
+    "nfrs": 22,
+    "acceptanceCriteria": 16,
+    "materialSpecificationClarifications": 0,
+    "authorityReceiptSourceBindingsReverified": 19,
+    "fixturesReverified": 5,
+    "approvalIntegrationAncestors": ["494", "495", "496", "498"],
+    "noUnrelatedStagedFiles": true
+  },
+  "preservation": {
+    "initialTrackedCount": 5701,
+    "initialTrackedDigest": "019b32abbd669ebbaa63d7f7bbdb03a26e7800f82be7b040a310747a459c5518",
+    "initialUntracked": [
+      "specs/012-prescription-safety-governed-overrides/checklists/requirements.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/po-decision-approval-2026-10-23.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/po-decision-resolution-proposal-2026-10-23.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/specify-preflight-2026-10-23.json",
+      "specs/012-prescription-safety-governed-overrides/spec.md"
+    ],
+    "initialRelevantIgnored": [
+      ".agents/skills/speckit-analyze/SKILL.md",
+      ".agents/skills/speckit-checklist/SKILL.md",
+      ".agents/skills/speckit-clarify/SKILL.md",
+      ".agents/skills/speckit-constitution/SKILL.md",
+      ".agents/skills/speckit-converge/SKILL.md",
+      ".agents/skills/speckit-implement/SKILL.md",
+      ".agents/skills/speckit-plan/SKILL.md",
+      ".agents/skills/speckit-specify/SKILL.md",
+      ".agents/skills/speckit-tasks/SKILL.md",
+      ".agents/skills/speckit-taskstoissues/SKILL.md",
+      ".specify/feature.json"
+    ],
+    "watchedExactSha256": {
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\specs\\012-prescription-safety-governed-overrides\\checklists\\requirements.md": "afbf3788059845dbba8355d4fd23485689a69bc53c9ebd34b7d15f2e1e954499",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\specs\\012-prescription-safety-governed-overrides\\readiness\\po-decision-approval-2026-10-23.md": "bf00eea22e8ffbdd4887e54716cdf7b691acbf0d3c91dd8b3323b3f1fbfb4b84",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\specs\\012-prescription-safety-governed-overrides\\readiness\\po-decision-resolution-proposal-2026-10-23.md": "bc268dc62e95833cb12f56e69b92a87b1ca80dc710676e8f805913c0123e2a98",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\specs\\012-prescription-safety-governed-overrides\\readiness\\specification-approval-2026-10-23.md": "de55e0fc7edfc4d2bdfcb678068171cce50afdfbb07a5ec39934f565ae5c2abb",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\specs\\012-prescription-safety-governed-overrides\\readiness\\specify-preflight-2026-10-23.json": "4d2062840ccbd61b86eea83b661227a5526cbd063a541c4003846c7450a1fb3e",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\specs\\012-prescription-safety-governed-overrides\\spec.md": "f4d2e7f1113467f5997e27809394c7f03a191dba276bfc895e0398a1bb8fa15a",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-analyze\\SKILL.md": "fad1c37a451e017995b15fc3eefe243274642fbb3ff7c8a5ab021908df71aa93",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-checklist\\SKILL.md": "5c1dce9333a2b733422e2dc75de7fc4d63ba91a460833d14ef3966a672328b9d",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-clarify\\SKILL.md": "1e9de2b2a673c923f7ca650fc40e4d5f24654163c577e0f1ceb70edfaa08114b",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-constitution\\SKILL.md": "ff6604c8424d4f4edf80f19ccfda1ede1a1dc5091a397cc1f0078a0bc3b0a538",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-converge\\SKILL.md": "369e168cbcc9f903d1b8f3f360a32d24a7ebf3d07066b8676032cffcafbebd9e",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-implement\\SKILL.md": "4d58a80ede8d837798d13a838b83a88fd4335104d0806d27f8018664a1ee0b85",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-plan\\SKILL.md": "0834b2298c078b0a89ee64a3e47e140cc9b31c4049492bd504491199a0fe3e73",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-specify\\SKILL.md": "a505028de7f6489878696d6656c7d057f3a66119ebb8c0cc82d69fabb7b344ff",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-tasks\\SKILL.md": "1e1d18b34e39d62d6388297f035505905741b07973102e0d44aa8647d85ab093",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.agents\\skills\\speckit-taskstoissues\\SKILL.md": "47d5a13f2a39f2e40d8915feef7ff08cd36e08b176c7f28d107758e9e983b4d2",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.specify\\feature.json": "1a7f6f97dcd6c235e144dfa2355a1edfe2911043e7874c1b4c134505c45e1b5f",
+      "D:\\ECU\\Gradution-Project\\.specify\\feature.json": "957ec882110889a1b9dd236f8566f1f286cde597764494127b4243de47a47870"
+    },
+    "protectedHistoricalFilesWatched": 45,
+    "qualification": "Initial tracked digest is a preflight binding. Final checks separately compare watched hashes, source bindings, committed package blobs and zero tracked Git diff. Existing private-original recovery history is preserved, not a new restore exercise."
+  },
+  "tooling": {
+    "officialVersion": "1.2.1",
+    "remote": "https://github.com/github/spec-kit.git",
+    "tag": "v1.2.1",
+    "tagObject": "0d1be13ed486b6f5737806af24299d5242773b1f",
+    "peeledCommit": "9dca9bf42a031765ee5e5f2371137f2f26967e11",
+    "managedManifestFilesVerified": 12,
+    "ignoredOfficialSkillsVerified": 10,
+    "integration": "codex skills / PowerShell / hyphen command form",
+    "externalInstallations": 0
+  },
+  "featureSelection": {
+    "SPECIFY_FEATURE_DIRECTORY": "specs/012-prescription-safety-governed-overrides",
+    "SPECIFY_FEATURE_NO_PERSIST": "1",
+    "officialCommand": ".specify/scripts/powershell/setup-plan.ps1 -Json",
+    "exitCode": 0,
+    "template": ".specify/templates/overrides/plan-template.md",
+    "existingFeatureSelected": true,
+    "pointersPreserved": true,
+    "setupJsonBranchQualification": "BRANCH is resolved feature-directory basename, independently verified actual Git branch recorded above."
+  },
+  "hooks": {
+    "yamlParsed": true,
+    "beforePlan": [],
+    "afterPlan": [
+      {
+        "extension": "agent-context",
+        "command": "speckit.agent-context.update",
+        "optional": true,
+        "enabled": true,
+        "condition": null,
+        "executed": false,
+        "reason": "Optional context update not needed for bounded planning artifacts; no AGENTS mutation."
+      }
+    ],
+    "mandatoryHooks": 0
+  },
+  "research": {
+    "mode": "Bounded source inspection; one read-only F011 delegate",
+    "actualChildCapacity": 1,
+    "noHarnessParallelism": true,
+    "sourceRegister": "../research.md#1-source-register-and-research-disposition"
+  },
+  "draftOutputs": [
+    "../plan.md",
+    "../research.md",
+    "../data-model.md",
+    "../contracts/openapi.yaml",
+    "../quickstart.md",
+    "../checklists/plan-consistency.md",
+    "plan-preflight-2026-10-23.json"
+  ],
+  "architectureBlockers": [
+    "A2: permitted full-set source and actual native-authority participating currentness/linearization contract not established",
+    "OPEN-UX-001: exact compositions/routes/copy/immutable baselines lack Product and Design Lead approval",
+    "Exact B/C/D/E/G2 physical contract proposals require attributable owner review and acceptance before PLAN_APPROVED"
+  ],
+  "limits": [
+    "No clinical or runtime test PASS",
+    "No new executable vectors, rule body or professional signatures",
+    "No new patient-release grant or medication source",
+    "No F011 protected consumer",
+    "No F014 fulfilment/dispense behavior",
+    "No historical or pointer mutation",
+    "Plan documents remain uncommitted drafts"
+  ],
+  "postPlanStaticValidation": {
+    "approvedSpecifyChecklist": "16/16 unchanged",
+    "operations": 12,
+    "mutations": 9,
+    "versionedMutations": 6,
+    "closureFRs": 7,
+    "prerequisiteOnlyFRs": 2,
+    "NFRs": 22,
+    "ACs": 16,
+    "schemas": 59,
+    "queryPositives": 5,
+    "queryNegatives": 11,
+    "markdownLinks": 73,
+    "headingAnchors": 7,
+    "lineReferences": 4,
+    "distinctWatchedHashes": 58,
+    "authorityBindings": 19,
+    "fixtures": 5,
+    "checkpointArtifacts": 6,
+    "fullOpenApiSpecificationValidator": "not available; no installation; structural/ref/Ajv checks only",
+    "runtime": "NOT_RUN",
+    "clinicalVectors": "NOT_EXECUTED",
+    "newPlanFiles": 7,
+    "staged": "empty",
+    "trackedDiff": "zero",
+    "postHook": "optional only, skipped"
+  },
+  "blockedJourneys": [
+    "G1: positive patient prescription/medication visibility not established; BLOCKED report supplies the approved D3 reporting condition, not positive acceptance. Retain in scope."
+  ],
+  "architectureReview": {
+    "recordKind": "F012_PRE_PLAN_ARCHITECTURE_REVIEW/2026-10-23",
+    "date": "2026-10-23",
+    "authority": "Explicit Product Owner and Architecture Lead bounded decision-resolution request in this conversation; no new product/design/clinical approval",
+    "checkpoint": "c571773d6432251d1f52bc94bb501c4e163f1571",
+    "status": "BLOCKED_BEFORE_PLAN_APPROVAL",
+    "decisionPackage": "architecture-decision-resolution-2026-10-23.md",
+    "preReviewDraftSha256": {
+      "specs/012-prescription-safety-governed-overrides/checklists/plan-consistency.md": "a617f66823f7fbdc2c67700e9c741e40b814d3b65bcb7520910297e14a28e459",
+      "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml": "ea0948919c6717b83de8f18b7ea58d86791778a78b78d4db44333e093c3ed819",
+      "specs/012-prescription-safety-governed-overrides/data-model.md": "93160fbc1794efb5c5ef0fec07eda92acb980495c42cd90ebc461bec2effe740",
+      "specs/012-prescription-safety-governed-overrides/plan.md": "84a32bc7606a2c7ddfe9652a5e96356803cd70117a656c92b69043c959772c50",
+      "specs/012-prescription-safety-governed-overrides/quickstart.md": "17f9ca6c53b8e1c7ed5fc781f0e5589603514e2eb35b031ff3f3583316b44a2d",
+      "specs/012-prescription-safety-governed-overrides/readiness/plan-preflight-2026-10-23.json": "fee63337eb84f3a33c4939e05e3422a96f04d3febd704e8022bccec1301da7de",
+      "specs/012-prescription-safety-governed-overrides/research.md": "8345bbaaf2d839117094b908c460c08d97f751557db5bdb55e4278d0652e086a"
+    },
+    "trackedPreservation": {
+      "count": 5707,
+      "sha256": "6e177043f92466da7129c2fbaec5f840f6f9100bcafc5a36c0c616d0d5d0cf6c",
+      "algorithm": "sha256 of LF-joined sorted nonempty git ls-files paths + ':' + sha256 of each actual working file byte sequence"
+    },
+    "findings": {
+      "F011": "Existing per-assertion CAS/publication writers and bounded native authorized reads exist; permitted F012 complete-set/native-currentness participating fence not established: BLOCKED",
+      "patientVisibility": "POSITIVE_PATH_NOT_ESTABLISHED — BLOCKED for PAT/GUA/DEL getPrescription and listPatientMedications. J-04/AC-13 retained, NOT ACCEPTED",
+      "pendingProductChoices": [
+        "P1 bounded nonrenewable assignment/request durations",
+        "P2 create-with-predecessor/finalize supersession at successful separate sign",
+        "P3 prescribed statement per successfully signed item/version"
+      ],
+      "otherOwners": "Exact API/Data/Security/Platform/source-owner contracts and Product + Design Lead OPEN-UX-001 evidence required",
+      "fullOpenApiValidation": "VALIDATION_NOT_AVAILABLE; no installed complete validator in inspected environments; no installation"
+    },
+    "corrections": [
+      "Unsigned draft/check mechanismScenarioRef optional when truthful required result actually produced; no producer-failure success/signing permission",
+      "Explicit requested X-Purpose transport proposal; source-dependent DTOs unfinalized; implicated-item detail only",
+      "Unproven existing roster importer claim removed",
+      "Blocked patient report is not accepted positive functionality or Plan approval",
+      "Draft prose encoding only"
+    ],
+    "validation": {
+      "result": "PASS_QUALIFIED_DOCUMENT_CHECKS; ARCHITECTURE_BLOCKED",
+      "specificationChecklist": "16/16; exact unchanged approved bytes; no new material Specification clarifications",
+      "scope": {
+        "operations": 12,
+        "closureFRs": 7,
+        "prerequisiteOnlyFRs": 2,
+        "nfrs": 22,
+        "acceptanceCriteria": 16,
+        "mutations": 9,
+        "ifMatchMutations": 6
+      },
+      "openApi": {
+        "completeSpecificationValidation": "VALIDATION_NOT_AVAILABLE",
+        "qualifiedStaticResult": "PASS_BOUNDED_STATIC_ONLY",
+        "uniqueReferencesResolved": 77,
+        "externalReference": "unchanged approved engineering fixture schema",
+        "schemasMetaValidatedAndCompiled": 59,
+        "tool": "Existing Ajv 8.20.0 draft2020-12 + ajv-formats 3.0.1",
+        "pathItems": 11,
+        "parameterOccurrences": 74,
+        "responseOccurrences": 108,
+        "duplicateYamlKeys": 0,
+        "bearerAndPurposeOperations": 12,
+        "closedRequestObjectLeaves": 11,
+        "structuralQueryActionPositives": 5,
+        "structuralQueryActionNegatives": 11,
+        "additionalDraftCheckPositives": 2,
+        "additionalDraftCheckNegatives": 3,
+        "r1CrossQueryUnion": "extension requires later generated runtime validation; not enforced by ordinary individual query parameters",
+        "architectureAcceptance": false
+      },
+      "documents": {
+        "localMarkdownLinks": 116,
+        "headingAnchors": 17,
+        "lineReferences": 22,
+        "tables": "consistent",
+        "encoding": "UTF-8; corrected draft-only mojibake",
+        "narrowCredentialPatternScan": "no match; not comprehensive PHI/secret scanning"
+      },
+      "preservation": {
+        "all5707TrackedFileBytesUnchanged": true,
+        "watchedExactHashes": 58,
+        "sourceBindings": 19,
+        "fixtureArtifacts": 5,
+        "specifyFileAndCheckpointBlobPairs": 6,
+        "bothFeaturePointersUnchanged": true,
+        "trackedDiff": "zero",
+        "staged": "empty",
+        "untrackedFiles": 8
+      },
+      "unvalidated": [
+        "full OpenAPI3.1.1 semantics",
+        "API/Data architecture acceptance",
+        "F011/native shared commit fence",
+        "positive patient visibility",
+        "actual RLS/identity/race/failure/restore/performance/native-accessibility evidence",
+        "Design Lead compositions/baselines",
+        "clinical/legal/facility approval"
+      ]
+    },
+    "notExecuted": [
+      "SpecKit lifecycle",
+      "runtime/API/DB/RLS/race/failure/restore/native-accessibility tests",
+      "clinical/executable vectors",
+      "install/download",
+      "staging/commit/push/PR/merge/issue mutation",
+      "historical restoration/cleanup"
+    ]
+  }
+}

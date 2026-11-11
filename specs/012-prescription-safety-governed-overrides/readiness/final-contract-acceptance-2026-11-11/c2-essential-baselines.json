@@ -1,0 +1,296 @@
+{
+  "id": "F012-C2-ESSENTIAL-VISUAL-REVIEW/2026-11-11",
+  "approval": "NOT_APPROVED",
+  "originalManifest": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/manifest.json",
+  "originalManifestSHA256": "599ab9427df0a674e07b1218901972dadbf9bc8ab2e2ae9dd1d0dd40c3312c50",
+  "entries": [
+    {
+      "state": "sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "sign_selection-ar-EG-1440x900-light.png",
+      "sha256": "c2510b922f256297b6040fa86b8e877873a764d162e2cc5cbc6277988da236d2",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "sign_selection-en-EG-1440x900-light.png",
+      "sha256": "50c1bdf14b37c991488b2a025bf43e29c49013ad503dd28da57d7c4a3274638c",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "post_sign_selection-ar-EG-1440x900-light.png",
+      "sha256": "7349ad22dbdf2489f418a16b1cbbf6905c581d52ee90de62668fe5374f2320bd",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "post_sign_selection-en-EG-1440x900-light.png",
+      "sha256": "813b324a6f371314a3f685bcf7744def4bc387ca755a0d7ee1ca285f7608caa7",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "confirm_release-ar-EG-1440x900-light.png",
+      "sha256": "ccd80be4940ddc4ef157d7c4fb0de90dfa75afc9f2a8d66947d1d3986572054e",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "confirm_release",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "confirm_release-en-EG-1440x900-light.png",
+      "sha256": "800b7e6bd18f3cc66df95f0f2d6c7d640230c2413e09244ddc952e610391a238",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "release_success-ar-EG-1440x900-light.png",
+      "sha256": "c6142ede6d9552b941ad289f393a26bd9588db05e012071c1981b0ebbdc8b20b",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "release_success",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "release_success-en-EG-1440x900-light.png",
+      "sha256": "46a3993236ba430fdc3dac66276b743034b3b222ebb48095910817be1e4451ba",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-ar-EG-1440x900-light.png",
+      "sha256": "1932c131b8d943011212d63e2ec341d93190c16fb215620b45e6e85e3678774a",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-en-EG-1440x900-light.png",
+      "sha256": "e40d7d41e4610758eb46e2758d6d7051039950ecb7a775a0db74cd74a55bd99a",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "withdrawn-ar-EG-1440x900-light.png",
+      "sha256": "08690e9facd9d28e32dc9456e70f489f20de1112640b94ae8b4039e504bfe5e9",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdrawn",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "image": "withdrawn-en-EG-1440x900-light.png",
+      "sha256": "da5b59db46afbf556e5cf3b3ca98eaa2591c770bbecfc62eaa643fd14a56f348",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "conflict-ar-EG-360x800-light.png",
+      "sha256": "705b26f634c82f446c9a86d4a1c4f2360993065844dc551739ae3b6556e86d96",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "conflict",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "conflict-en-EG-360x800-light.png",
+      "sha256": "04f7d8c5d1a0e715a7529291e469e691a0f89df8d699d17d8bc15480771a6e72",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "uncertain-ar-EG-360x800-light.png",
+      "sha256": "3715a1da992e9e099ca27f7ca5cf1f7efadd456a9b0835ca88e44eeec09f353c",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "uncertain",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "uncertain-en-EG-360x800-light.png",
+      "sha256": "93cd0c15f2a5539e89753579ffe69e8324be3915316a68d4b5b07d8780b7f3b5",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "historical-ar-EG-360x800-light.png",
+      "sha256": "d5c103350ed20fca4bfc4a42a45a7104cd0b8ba4b9434118758c926287c72b7e",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "historical",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "historical-en-EG-360x800-light.png",
+      "sha256": "fe1b41eff216a310caaea986c56ec541de70ee9591119bfbde659f6f731e4b85",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "post_sign_selection-ar-EG-360x800-light.png",
+      "sha256": "d0f9b626abd6fdc8e128467c65e89961fb571a3445500717a9d36351fc5c5787",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "post_sign_selection",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "theme": "light",
+      "image": "post_sign_selection-en-EG-360x800-light.png",
+      "sha256": "9d555d0e4e59c1823ed5b627bf5e90eb48aa645bcd6df83b695d8b3724ab3b11",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-ar-EG-412x915-light.png",
+      "sha256": "bcc68c1d815244feb2e127ee017f0ad7a751d1a222e68111d9986284b07f1074",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    },
+    {
+      "state": "withdraw_confirmation",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "theme": "light",
+      "image": "withdraw_confirmation-en-EG-412x915-light.png",
+      "sha256": "1819ff6d43bf1ea115eafc4391cef3df6860dca994410a7344a72dea79fe9efb",
+      "capture": "Full-page composition at labelled viewport width; not an initial-viewport occlusion claim",
+      "approval": "NOT_APPROVED"
+    }
+  ],
+  "count": 22,
+  "method": "Exact existing PNG bytes selected; no capture regenerated. Product C2 policy acceptance excludes these visuals. Full 124-reference coverage retained at original manifest."
+}

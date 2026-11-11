@@ -1,0 +1,241 @@
+{
+  "status": "PASS_STATIC_DESIGN_RENDER_ONLY",
+  "capturesRegenerated": 8,
+  "otherStatesRegenerated": 0,
+  "checks": [
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "copyExact": true,
+      "copyFits": {
+        "inside": true,
+        "noClip": true
+      },
+      "warningBeforeConfirmation": true,
+      "noHorizontalOverflow": true,
+      "keyboard": {
+        "domain": true,
+        "visible": true,
+        "outline": "solid",
+        "minWidth": true,
+        "minHeight": true
+      }
+    },
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "copyExact": true,
+      "copyFits": {
+        "inside": true,
+        "noClip": true
+      },
+      "warningBeforeConfirmation": true,
+      "noHorizontalOverflow": true,
+      "keyboard": {
+        "domain": true,
+        "visible": true,
+        "outline": "solid",
+        "minWidth": true,
+        "minHeight": true
+      }
+    },
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "copyExact": true,
+      "copyFits": {
+        "inside": true,
+        "noClip": true
+      },
+      "warningBeforeConfirmation": true,
+      "noHorizontalOverflow": true,
+      "keyboard": {
+        "domain": true,
+        "visible": true,
+        "outline": "solid",
+        "minWidth": true,
+        "minHeight": true
+      }
+    },
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "copyExact": true,
+      "copyFits": {
+        "inside": true,
+        "noClip": true
+      },
+      "warningBeforeConfirmation": true,
+      "noHorizontalOverflow": true,
+      "keyboard": {
+        "domain": true,
+        "visible": true,
+        "outline": "solid",
+        "minWidth": true,
+        "minHeight": true
+      }
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "copyExact": true,
+      "copyFits": {
+        "inside": true,
+        "noClip": true
+      },
+      "warningBeforeConfirmation": true,
+      "noHorizontalOverflow": true,
+      "keyboard": {
+        "domain": true,
+        "visible": true,
+        "outline": "solid",
+        "minWidth": true,
+        "minHeight": true
+      }
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "copyExact": true,
+      "copyFits": {
+        "inside": true,
+        "noClip": true
+      },
+      "warningBeforeConfirmation": true,
+      "noHorizontalOverflow": true,
+      "keyboard": {
+        "domain": true,
+        "visible": true,
+        "outline": "solid",
+        "minWidth": true,
+        "minHeight": true
+      }
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "copyExact": true,
+      "copyFits": {
+        "inside": true,
+        "noClip": true
+      },
+      "warningBeforeConfirmation": true,
+      "noHorizontalOverflow": true,
+      "keyboard": {
+        "domain": true,
+        "visible": true,
+        "outline": "solid",
+        "minWidth": true,
+        "minHeight": true
+      }
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "copyExact": true,
+      "copyFits": {
+        "inside": true,
+        "noClip": true
+      },
+      "warningBeforeConfirmation": true,
+      "noHorizontalOverflow": true,
+      "keyboard": {
+        "domain": true,
+        "visible": true,
+        "outline": "solid",
+        "minWidth": true,
+        "minHeight": true
+      }
+    }
+  ],
+  "scaling": [
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "textScale": 2,
+      "noHorizontalOverflow": true,
+      "noClipping": true,
+      "keyboardFocusVisible": true,
+      "image": "withdraw_confirmation-ar-EG-360x800-text200.png",
+      "repositoryPath": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/text-scale-evidence/withdraw_confirmation-ar-EG-360x800-text200.png",
+      "sha256": "fc30fa3030d2f519e752bfc8c019d04e3fbf0a4dddd9fd38147bf030c163dabe",
+      "kind": "STATIC_TEXT_SCALE_EVIDENCE_NOT_APPROVED_BASELINE"
+    },
+    {
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "textScale": 2,
+      "noHorizontalOverflow": true,
+      "noClipping": true,
+      "keyboardFocusVisible": true,
+      "image": "withdraw_confirmation-ar-EG-412x915-text200.png",
+      "repositoryPath": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/text-scale-evidence/withdraw_confirmation-ar-EG-412x915-text200.png",
+      "sha256": "f23b4e4b6625d4dffee8009e4d3ae20be5838b593b8b0aeaeef9442bc63efdbd",
+      "kind": "STATIC_TEXT_SCALE_EVIDENCE_NOT_APPROVED_BASELINE"
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "textScale": 2,
+      "noHorizontalOverflow": true,
+      "noClipping": true,
+      "keyboardFocusVisible": true,
+      "image": "withdraw_confirmation-en-EG-360x800-text200.png",
+      "repositoryPath": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/text-scale-evidence/withdraw_confirmation-en-EG-360x800-text200.png",
+      "sha256": "6f9587464a1b0d7e8322c589c6778c50e91dee731cfef02048130837a2dc7385",
+      "kind": "STATIC_TEXT_SCALE_EVIDENCE_NOT_APPROVED_BASELINE"
+    },
+    {
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "textScale": 2,
+      "noHorizontalOverflow": true,
+      "noClipping": true,
+      "keyboardFocusVisible": true,
+      "image": "withdraw_confirmation-en-EG-412x915-text200.png",
+      "repositoryPath": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/text-scale-evidence/withdraw_confirmation-en-EG-412x915-text200.png",
+      "sha256": "ce3ff069593ef1ca9435a01727362c0aca1c6d10b155df5595a69f4cd403b1c8",
+      "kind": "STATIC_TEXT_SCALE_EVIDENCE_NOT_APPROVED_BASELINE"
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "resourceFailures": [],
+  "limits": "No application/Auth/database tests, native Android emulator/ADB, screen reader, physical-device, human acceptance or runtime security verification. Candidate visual approval remains pending."
+}

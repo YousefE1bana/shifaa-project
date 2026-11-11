@@ -1,0 +1,139 @@
+{
+  "id": "F012-VERIFICATION-POLICY-RECONCILIATION/2026-11-12",
+  "sourceHead": "0ad13689a170f325681a260d925e149f669e485a",
+  "policyAuthorization": "Product Owner direct Simplify PR Verification Policy instruction, 2026-11-12",
+  "integration": "PENDING_REVIEWED_PR_AND_VERIFIED_MAIN",
+  "transition": "PROPOSED_NOT_APPROVED",
+  "publicationAuthorization": false,
+  "policyFiles": [
+    {
+      "path": "AGENTS.md",
+      "beforeSHA256": "613a143f20d76d93ae366040c47641cb7211ca3cb12c4be9d2ca9f59639ba841",
+      "afterSHA256": "28b2023c446396d80b92017e8394d1dbaa76535b14845752ca712a92ec35c36b"
+    },
+    {
+      "path": ".shifaa/skills/shifaa-project-guardrails/SKILL.md",
+      "beforeSHA256": "c9d2103c51cbbb91a3184c7938d8a768046ca5a0da05b68fbdf38ce71282a2f1",
+      "afterSHA256": "4bf10f048af6ce4e1a856eb07e623e82be0d252d6b828269e213320e9954e350"
+    },
+    {
+      "path": "docs/SHIFAA-Operational-Guide-v1.md",
+      "beforeSHA256": "959d50ee1617d0276e84cfd18178b8a3cdf71ea4121bf305a3e0c8da8b77c7b5",
+      "afterSHA256": "d323ad11bee6f562f11e28d0de57ec5d9cefde28fef941cea7aa8932d19b104e"
+    },
+    {
+      "path": "docs/SHIFAA-Documentation-Index.md",
+      "beforeSHA256": "6dd79e9f4df62fadd1c9d07de6ab4cf3509abdfb3015ab75dab598dba72b05d3",
+      "afterSHA256": "d263879cf1d52cf229d1c15cd6b15ba5668c23379d164587741058f75ed0edbb"
+    },
+    {
+      "path": "docs/TEAM-ONBOARDING-DRAFT.md",
+      "beforeSHA256": "cadd71156d9c9beadc0c6f69081940f8f4521c1e1130959bd1b2fd87382c8f05",
+      "afterSHA256": "b1e77443624cb8b3c7217749deb5dd918cbd6bb72345cb085b343c046ae0bdb1"
+    }
+  ],
+  "policyDiffSHA256": "5079e75fb182cdbdca44dc2e12e644557c5a7fa7dae3343a9ec43433ad475889",
+  "payloadContentSetSHA256": "c560e25ed6d9dc6a0b6901e08a8b38fb671fb2c0a5a9c7c58218065a9d1bc377",
+  "counts": {
+    "payload": 128,
+    "originalSelection": 113,
+    "loosePNG": 30,
+    "embeddedC3PNG": 40,
+    "preExistingFeatureFilesPreserved": 2361
+  },
+  "preservation": {
+    "allPreExistingFeatureFilesExact": true,
+    "allOriginal113Exact": true,
+    "original123PayloadExact": true,
+    "protectedFiles": {
+      ".gitattributes": "ba16114895cb71235fed852f4a687b60b8893467e501ca83e77084d4cec12933",
+      "shifaa-prd.md": "4a98237e916b88c2d92c60f2c5b5da25f9b919e6b04f42a73db2e0aa709a50ac",
+      "SHIFAA-Implementation-Plan-MASTER.md": "f144e6332cf8363dc127fb1e728e3e1387a51878838c16881d268b24eea2c838",
+      "docs/design/SHIFAA-UI-Contract.md": "8eb104b897bda573e04067e8e3036647349d9ce0c472fc00f1aaac3b1eab35e0",
+      "docs/architecture/SHIFAA-API-Catalog.md": "c1dc848f813c850ed851d06f673f059798d3120033ed1a5e50f60c29eeb2e407",
+      "docs/architecture/SHIFAA-Data-RLS.md": "9c088fa84c49e9d69285b7be4e96e0d141a77c7be89d8976fdff1989f3fc0f7f",
+      ".specify/feature.json": "1a7f6f97dcd6c235e144dfa2355a1edfe2911043e7874c1b4c134505c45e1b5f",
+      ".specify/memory/constitution.md": "4107a37ce43ae5c6efd6c8198771112b598eb167d3f0788c879d2b3fc747793c",
+      ".github/workflows/ci.yml": "b31dbe6aeacafddfb4da49ee65d70afd6ad974a6781bff9fca0e5de9b4fd7435",
+      ".github/workflows/metadata.yml": "d0490b190891f279139ad50d49cd27e453b38591c17d80ca336acc2292fe1161"
+    },
+    "rootFeaturePointerSHA256": "957ec882110889a1b9dd236f8566f1f286cde597764494127b4243de47a47870",
+    "canonicalPredecessorPrefixesExact": true,
+    "canonicalCandidatesExact": true,
+    "index": "EMPTY_UNCHANGED",
+    "CIWorkflows": "UNCHANGED",
+    "runtimeCode": "UNCHANGED",
+    "DBDockerAuthOperations": "NONE"
+  },
+  "checks": [
+    {
+      "name": "Configured repository format:check",
+      "status": "PASS",
+      "execution": "Exact configured format:check via pinned local Prettier"
+    },
+    {
+      "name": "verify-agent-skills",
+      "status": "PASS",
+      "skills": 4
+    },
+    {
+      "name": "verify-architecture",
+      "status": "PASS",
+      "boundaries": 18,
+      "manifests": 17
+    },
+    {
+      "name": "verify-secrets",
+      "status": "PASS"
+    },
+    {
+      "name": "git diff --check",
+      "status": "PASS"
+    },
+    {
+      "name": "All 128 payload hashes and clean-filter identities",
+      "status": "PASS_READ_ONLY"
+    },
+    {
+      "name": "Changed policy local link targets",
+      "status": "PASS",
+      "links": []
+    },
+    {
+      "name": "Supplemental documentation-authority checker",
+      "status": "FAIL_PREEXISTING_PENDING_CANONICAL_SUCCESSOR",
+      "publicCode": "verification_input_unavailable",
+      "diagnosis": "tooling_history.preserved_inputs rejects Master whole-file source drift at verify_root line 995; source unchanged by this policy delta",
+      "requiredCIOrAggregateWiring": "Not referenced by current .github workflows or package scripts",
+      "historicalBindingChanged": false
+    },
+    {
+      "name": "Full OpenAPI 3.1.1",
+      "status": "VALIDATION_NOT_AVAILABLE"
+    },
+    {
+      "name": "F012 focused 212 checks",
+      "status": "RETAINED_PRECEDING_GATE_NOT_RERUN",
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/pre-publication-gate-2026-11-12/f012-static-validation.json",
+      "sha256": "3a84ca8f46eeaa097c0f652fe3fa4990c85d6155a2897c3889f73f0da8258fc1"
+    }
+  ],
+  "notExecuted": [
+    "pnpm verify aggregate",
+    "Fresh human live Arabic/English acceptance",
+    "Runtime/native/device/RLS/race tests",
+    "Current-head GitHub CI",
+    "Publication or lifecycle commands"
+  ],
+  "remainingPublication": [
+    "One self-adoption transitional disposition",
+    "Separate publication authorization and fresh remote/base/index/hash preflight"
+  ],
+  "remainingMerge": [
+    "All six mandatory current-head CI contexts",
+    "Metadata validation, code review and resolved required threads",
+    "Yousef human squash merge"
+  ],
+  "featureApprovalChanges": "NONE",
+  "PLAN_APPROVED": false
+}

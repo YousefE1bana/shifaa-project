@@ -1,0 +1,134 @@
+{
+  "id": "F012-FINAL-EXACT-ACCEPTANCE-CANDIDATE/2026-11-11",
+  "status": "C3_PRODUCT_APPROVED_C2_DIRECTION_APPROVED_C1_C2_EXACT_U1_PENDING",
+  "files": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/plan.md",
+      "sha256": "77707040ff62a8f5769e4d8fa00d23ce529d84ff8feafeb415b0c2201a262bfc",
+      "bytes": 53571
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/research.md",
+      "sha256": "f2cd6983ccf627900cfaa1ff83a30cfb5d3ce21b2d5f21a819f1c302914e724b",
+      "bytes": 48455
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/data-model.md",
+      "sha256": "c701cc178447cc683f73dedef2f77591e476c40c7f4367822c1ac63098fc7b14",
+      "bytes": 70834
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml",
+      "sha256": "c135c26a4e897a86d6d37ea756e46904a83c5fcc55387003ceeb71c97635fb9d",
+      "bytes": 112966
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+      "sha256": "3504bf732e0bf2749bc4dd51f92bec45e85212430685cd34a26b9aeb0353270c",
+      "bytes": 23184
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/checklists/plan-consistency.md",
+      "sha256": "4febb106eeaceef83573be5afb2e057a873c96f85fe4d757245e4ded4d03644c",
+      "bytes": 42835
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/plan-closure-consolidated-v0.2.0.md",
+      "sha256": "85d2f5ba8c9c640b500a2aaded34f0fb895610eb6c5f4c73da53094ce766be3e",
+      "bytes": 37220
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "sha256": "7abd980b55ca7d675d64e971330385a7db2c968d4ae71bd7b7d57fdfe76951a8",
+      "bytes": 4838
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/ui-and-governance-resolution.md",
+      "sha256": "2555f13164e0371b172d029eb8781df8043dc07788581e0a33753e07e58b35af",
+      "bytes": 7399
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/c2-control-gallery.html",
+      "sha256": "eb6adc27337a208be195ea376b134591d1c3731ed739785c949692d5247d27b7",
+      "bytes": 57885
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/gallery-validation.json",
+      "sha256": "a3c9ee1c9005a6d4da87c54a64a2c469d4ce111526d8b28c77a5009a413af362",
+      "bytes": 535
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/static-validation-final.json",
+      "sha256": "3a84ca8f46eeaa097c0f652fe3fa4990c85d6155a2897c3889f73f0da8258fc1",
+      "bytes": 34829
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/validate-static.cjs",
+      "sha256": "d693dbf0655b0cf7e3a09ba47d95f5bfa4521df903e1acc61e1b3a306fb4dca7",
+      "bytes": 17404
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/prior-draft-shape-bindings.json",
+      "sha256": "5c5f865a6e72e826557fd438aa51edbd652694a2cb3fb63000a8741f00d890eb",
+      "bytes": 3179
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/preservation-validation.json",
+      "sha256": "a765bc69f21f3c836608a91b07dabb9a14e318924c04b1f2742bd9c197001f6e",
+      "bytes": 1199
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/index.html",
+      "sha256": "6970ce6ecf1e51d1c3c3087bd2c0a2d2e7574a11b26878bfac3c869e2bc652fd",
+      "bytes": 610
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.js",
+      "sha256": "cdfa01077f357b68dcaffa64fe2c4d02af5027dd9501684d54e039d8cba369a2",
+      "bytes": 9786
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.css",
+      "sha256": "76a295bcdf40dd6887fbfce93f326ccacffad47da9e8ab53ca02bc1959e4b275",
+      "bytes": 798
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/capture.cjs",
+      "sha256": "94ad62acff38f7b2e6e0cb1de9aec110ae9d38fa5459994ff89f359a0c2cc8e8",
+      "bytes": 6681
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/validation.json",
+      "sha256": "22eb0850a8a5dfdf86192db3fd6593a3653ddb2bbf193d6f15773f6e47b9b42b",
+      "bytes": 3363
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/manifest.json",
+      "sha256": "599ab9427df0a674e07b1218901972dadbf9bc8ab2e2ae9dd1d0dd40c3312c50",
+      "bytes": 56196
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/native-authority-nac1-successor-v0.1.0.md",
+      "sha256": "8ab9a757e6b4bd5b1055cff32cffa80777fd1ae6650041018fd2e8a13a547251",
+      "bytes": 29754
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/source-consumption-successor-v0.1.0.md",
+      "sha256": "39fa9ea820b9fe9d81e53d311e8484f2324f5dcef66278f059a703b23282b92d",
+      "bytes": 48114
+    }
+  ],
+  "c3ReviewedReferences": {
+    "manifest": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/manifest.json",
+    "sha256": "85708ffa055a0fda5ac582425a24706e1cafc1d7911f6abb6a003a0ceb07bde6",
+    "delta": 164,
+    "inherited": 884
+  },
+  "newC2VisualReferences": {
+    "manifest": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/manifest.json",
+    "sha256": "599ab9427df0a674e07b1218901972dadbf9bc8ab2e2ae9dd1d0dd40c3312c50",
+    "count": 124,
+    "approval": "NOT_APPROVED"
+  },
+  "exclusions": "Manifest/approval-package own bytes excluded to prevent self-hash cycles; all images are transitively bound by exact manifests. No private evidence, secrets, Auth fixtures, backups, raw logs, publication or live grant. Prior approval packages remain immutable historical snapshots."
+}

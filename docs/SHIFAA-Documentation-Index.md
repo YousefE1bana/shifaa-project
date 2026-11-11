@@ -26,6 +26,6 @@ Root maintains AGENTS and this navigator when current authority or execution gui
 
 After a feature merge, update the current lookup/map only from verified evidence. Preserve historical source bytes and original manifests. Use a versioned additive successor where an approved hash binds a document; do not repair old snapshots in place. Update implemented/tested/accepted/clinical dimensions independently. Record the exact observed revision rather than a floating assertion that a map is always current.
 
-The read-only [candidate checker](../tools/verify-documentation-authority.py) and its tests are proposed drift prevention. CI wiring and a change-class verification policy are separately reviewable proposals; no branch requirement is waived here.
+The read-only [candidate checker](../tools/verify-documentation-authority.py) and its tests are proposed drift prevention. The current change-aware PR verification rule is in [AGENTS](../AGENTS.md); the modernization package's earlier verification-policy proposal is historical, not a competing current instruction. CI wiring proposals do not waive any of the six required current-head contexts, review or human squash integration.
 
 For current tooling installation and upgrades, use the [tooling maintenance policy](governance/SHIFAA-Tooling-Maintenance-Policy.md). Older onboarding version observations are historical; do not copy their version literal.

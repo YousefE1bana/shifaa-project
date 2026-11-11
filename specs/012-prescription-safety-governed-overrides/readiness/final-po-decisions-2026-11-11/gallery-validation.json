@@ -1,0 +1,25 @@
+{
+  "status": "PASS_BROWSER_OFFLINE_GALLERY_ONLY",
+  "referencedImages": 124,
+  "viewportChecks": [
+    {
+      "width": 360,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 412,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 768,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 1440,
+      "noHorizontalOverflow": true
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "scope": "Local file gallery and static images only; no application, native accessibility or human acceptance."
+}
