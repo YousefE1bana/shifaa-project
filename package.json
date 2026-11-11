@@ -5,9 +5,9 @@
   "description": "SHIFAA Egyptian integrated digital health platform",
   "engines": {
     "node": "24.22.1",
-    "pnpm": "11.13.0"
+    "pnpm": "11.13.1"
   },
-  "packageManager": "pnpm@11.13.0",
+  "packageManager": "pnpm@11.13.1",
   "scripts": {
     "dev": "turbo run dev --parallel",
     "build": "turbo run build",
@@ -94,7 +94,7 @@
     "dev:admin:web": "pwsh -NoProfile -File tools/start-admin-web.ps1",
     "architecture:check": "node tools/verify-architecture.mjs",
     "contracts:check": "node tools/verify-contracts.mjs && pnpm --filter @shifaa/contracts test && pnpm --filter @shifaa/api-client test",
-    "dependencies:check": "pnpm peers check && pnpm audit --audit-level high --ignore-unfixable && node tools/verify-expo-dependencies.mjs",
+    "dependencies:check": "pnpm peers check && pnpm audit --audit-level high && node tools/verify-expo-dependencies.mjs",
     "secrets:check": "node tools/verify-secrets.mjs",
     "test:performance": "node tools/run-performance.mjs",
     "sbom:generate": "node -e \"require('node:fs').mkdirSync('artifacts',{recursive:true})\" && pnpm sbom --sbom-format cyclonedx --out artifacts/sbom.cdx.json",
@@ -108,7 +108,12 @@
     "test:encounters:baselines": "powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command \"Import-Module (Join-Path $PSHOME 'Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1') -ErrorAction Stop; & 'specs/010-encounters-referrals-contextual-chat/visual-baselines/validate-reference-baselines.ps1'\"",
     "test:encounters:verification": "pnpm exec vitest run tests/e2e/feature-010-client-context.test.ts && pnpm test:encounters:tooling && pnpm test:encounters:scope && pnpm test:encounters:privacy && pnpm test:encounters:ui:unit && node tools/run-feature-010-postgres-test.mjs c28 && pnpm test:encounters:realtime:db && pnpm test:encounters:restore && pnpm test:encounters:performance && pnpm test:encounters:baselines && pnpm test:encounters:ui && pnpm test:pre-011:integration",
     "test:pre-011:integration": "node tools/run-native-clinical-composition-test.mjs && node tools/run-feature-010-completion-authority-concurrency-test.mjs --expect-green --with-forward-fix",
-    "test:feature-011:composition": "node tools/run-feature-011-composition-test.mjs --all"
+    "test:feature-011:composition": "node tools/run-feature-011-composition-test.mjs --all",
+    "team:handoff": "node tools/team-work.mjs handoff",
+    "team:start": "node tools/team-work.mjs start",
+    "team:test": "node --test tools/team-work.test.mjs",
+    "security:review": "node tools/security-review.mjs",
+    "speckit": "node tools/speckit.mjs"
   },
   "devDependencies": {
     "@shifaa/api": "workspace:*",
@@ -124,7 +129,7 @@
     "tsx": "4.23.15",
     "turbo": "2.10.9",
     "typescript": "7.0.2",
-    "vitest": "4.1.11",
+    "vitest": "4.1.12",
     "yaml": "2.8.3"
   }
 }

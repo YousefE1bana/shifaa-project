@@ -1,4 +1,6 @@
-model = "gpt-6-luna"
+name = "worker"
+description = "Bounded routine implementation"
+model = "gpt-6.1-terra"
 model_reasoning_effort = "medium"
 model_verbosity = "low"
 

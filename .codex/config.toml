@@ -1,3 +1,6 @@
+model = "gpt-6-luna"
+model_reasoning_effort = "medium"
+
 [agents]
 enabled = true
 default_subagent_model = "gpt-6-luna"
@@ -24,6 +27,10 @@ config_file = "agents/tester.toml"
 [agents.ui-worker]
 description = "Bounded rendered visual/accessibility review and refinement under the SHIFAA UI Contract."
 config_file = "agents/ui-worker.toml"
+
+[agents.security-reviewer]
+description = "Independent read-only security review. Launch with pnpm security:review; do not spawn under a writable parent sandbox. Findings require root review."
+config_file = "agents/security-reviewer.toml"
 
 [features.multi_agent_v2]
 enabled = true

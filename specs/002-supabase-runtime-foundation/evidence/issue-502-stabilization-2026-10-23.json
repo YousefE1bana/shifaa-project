@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "issue": 502,
+  "date": "2026-10-23",
+  "custodian": "Yousef Osama",
+  "status": "LOCAL_CANDIDATE_NOT_FULL_ACCEPTANCE",
+  "baselineHead": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+  "verifiedRemoteMain": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "privateLocation": "D:\\ECU\\GP-STUFF\\SHIFAA-Stabilization-20261023",
+  "classification": "Essential private engineering evidence and upstream reproducibility inputs; no real signing keys or credentials",
+  "manifest": {
+    "path": "checkpoint-files.json",
+    "bytes": 19559,
+    "sha256": "2cd8d2fdda9dcbc766dae021de7bad1075c1aebdb8d5f98129a3b23084427172",
+    "files": 116,
+    "contentBytes": 1273552
+  },
+  "executions": [
+    {
+      "receipt": "authority-current.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": ["python", "-B", "tools/verify-documentation-authority.py", "--mode", "current"],
+      "startedUtc": "2026-10-22T23:13:20.739093+00:00",
+      "finishedUtc": "2026-10-22T23:13:29.063783+00:00",
+      "seconds": 8.324697500000184,
+      "exitCode": 0,
+      "log": "authority-current.log",
+      "sha256": "5fc470f721e9e94c7e5be1968ce63d887f241d6b6796c495de82c4568910cc3c"
+    },
+    {
+      "receipt": "authority-regressions-corrected.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": ["python", "-B", "tools/test_documentation_authority.py"],
+      "startedUtc": "2026-10-22T23:16:06.784723+00:00",
+      "finishedUtc": "2026-10-22T23:17:11.326075+00:00",
+      "seconds": 64.54135319999477,
+      "exitCode": 0,
+      "log": "authority-regressions-corrected.log",
+      "sha256": "6e0f5170d21a262e2a48c9cfff4f6311292edc42fcd15ba854145fab17cde4ce"
+    },
+    {
+      "receipt": "dependencies-gate.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "C:/Users/Yousef/AppData/Local/npm-cache/_npx/8aac37157c91cf7a/node_modules/pnpm/bin/pnpm.cjs",
+        "dependencies:check"
+      ],
+      "startedUtc": "2026-10-22T23:13:20.738656+00:00",
+      "finishedUtc": "2026-10-22T23:13:25.043992+00:00",
+      "seconds": 4.305342699997709,
+      "exitCode": 1,
+      "log": "dependencies-gate.log",
+      "sha256": "07cc5e188aa039f15ddb89bc579e6cfc0f142fc6009b031d70493637755fa438"
+    },
+    {
+      "receipt": "expo-consumers.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": ["node", "tools/verify-expo-dependencies.mjs"],
+      "startedUtc": "2026-10-22T23:12:08.316538+00:00",
+      "finishedUtc": "2026-10-22T23:12:10.043968+00:00",
+      "seconds": 1.7274502000000211,
+      "exitCode": 0,
+      "log": "expo-consumers.log",
+      "sha256": "ec9fa55b7895966d3532d749ddd7a878202e8a7b4aaa0ce6883fb3ef75a5352e"
+    },
+    {
+      "receipt": "f011-and-secret-regressions.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tools/verify-feature-011-scope.test.mjs",
+        "tools/feature-011-physical-preflight.test.mjs",
+        "tools/verify-secrets.test.mjs"
+      ],
+      "startedUtc": "2026-10-22T23:15:04.956703+00:00",
+      "finishedUtc": "2026-10-22T23:15:16.181839+00:00",
+      "seconds": 11.225138300003891,
+      "exitCode": 0,
+      "log": "f011-and-secret-regressions.log",
+      "sha256": "bc1dc8becdaac0b2374f32f269bc5352f5bda3eab2775e4e08b691b644f0a856"
+    },
+    {
+      "receipt": "forge-patch-install-corrected.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M patches/node-forge@1.4.0.patch\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "C:/Users/Yousef/AppData/Local/npm-cache/_npx/8aac37157c91cf7a/node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--offline",
+        "--ignore-scripts"
+      ],
+      "startedUtc": "2026-10-22T23:10:41.924224+00:00",
+      "finishedUtc": "2026-10-22T23:10:49.795572+00:00",
+      "seconds": 7.871364300001005,
+      "exitCode": 0,
+      "log": "forge-patch-install-corrected.log",
+      "sha256": "65cc043a9cc1617a2825396d8f5ed974b84a234bb37beafef76e35ac7fc70e29"
+    },
+    {
+      "receipt": "forge-patch-install.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M patches/node-forge@1.4.0.patch\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "C:/Users/Yousef/AppData/Local/npm-cache/_npx/8aac37157c91cf7a/node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--offline",
+        "--ignore-scripts"
+      ],
+      "startedUtc": "2026-10-22T23:10:23.172789+00:00",
+      "finishedUtc": "2026-10-22T23:10:30.473688+00:00",
+      "seconds": 7.300903299998026,
+      "exitCode": 1,
+      "log": "forge-patch-install.log",
+      "sha256": "bb9839ab831c7ee0ad661f08d3bba0ffa76b701d656e09ea132ff82982b6fd99"
+    },
+    {
+      "receipt": "frozen-lock.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "C:/Users/Yousef/AppData/Local/npm-cache/_npx/8aac37157c91cf7a/node_modules/pnpm/bin/pnpm.cjs",
+        "install",
+        "--frozen-lockfile",
+        "--offline",
+        "--ignore-scripts"
+      ],
+      "startedUtc": "2026-10-22T23:12:10.511662+00:00",
+      "finishedUtc": "2026-10-22T23:12:11.015548+00:00",
+      "seconds": 0.503889400002663,
+      "exitCode": 0,
+      "log": "frozen-lock.log",
+      "sha256": "e42b28a72ab55b4f14f3031f96fb7b5d33db009aeb8b5a1ae2f6629e46e8b166"
+    },
+    {
+      "receipt": "github-pr-state.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "gh",
+        "pr",
+        "view",
+        "506",
+        "--repo",
+        "YousefE1bana/shifaa-project",
+        "--json",
+        "number,state,isDraft,headRefOid,baseRefOid,reviewDecision,mergeStateStatus,statusCheckRollup,url"
+      ],
+      "startedUtc": "2026-10-22T23:17:05.736212+00:00",
+      "finishedUtc": "2026-10-22T23:17:06.610443+00:00",
+      "seconds": 0.8742378000024473,
+      "exitCode": 0,
+      "log": "github-pr-state.log",
+      "sha256": "271e834e4e4d2333ebded1e8ad63ad3fa0c04d00302c2e48e337a1eea83df0c7"
+    },
+    {
+      "receipt": "main-authority-current.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "python",
+        "-B",
+        "D:/ECU/Gradution-Project/tools/verify-documentation-authority.py",
+        "--root",
+        "D:/ECU/Gradution-Project",
+        "--mode",
+        "current"
+      ],
+      "startedUtc": "2026-10-22T23:14:33.837074+00:00",
+      "finishedUtc": "2026-10-22T23:14:40.714110+00:00",
+      "seconds": 6.8770378999979584,
+      "exitCode": 1,
+      "log": "main-authority-current.log",
+      "sha256": "aa8b834917e468ef6f7a0753d95305ba954d50dfe3ae94792803fa546edcf772"
+    },
+    {
+      "receipt": "preservation-readonly.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "python",
+        "-B",
+        "D:/ECU/GP-STUFF/SHIFAA-Stabilization-20261023/check_preservation.py"
+      ],
+      "startedUtc": "2026-10-22T23:12:54.959954+00:00",
+      "finishedUtc": "2026-10-22T23:13:09.508118+00:00",
+      "seconds": 14.548166300002777,
+      "exitCode": 0,
+      "log": "preservation-readonly.log",
+      "sha256": "4cf8590e153c0f8206c1c487797d05ca2499c749665b7457d37ab56bce776ff0"
+    },
+    {
+      "receipt": "rsa-null-green.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "--max-old-space-size=128",
+        "--test",
+        "--test-timeout=20000",
+        "tools/verify-forge-signatures.test.mjs"
+      ],
+      "startedUtc": "2026-10-22T23:10:58.226507+00:00",
+      "finishedUtc": "2026-10-22T23:10:59.589538+00:00",
+      "seconds": 1.3630330999949365,
+      "exitCode": 0,
+      "log": "rsa-null-green.log",
+      "sha256": "d58666f5c94f56ed9c6783240cd8065af06e95fd01f62350cbc5264251b9fc90"
+    },
+    {
+      "receipt": "rsa-null-independent.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "--max-old-space-size=128",
+        "D:/ECU/GP-STUFF/SHIFAA-Stabilization-20261023/rsa-parameter-confirmation.cjs"
+      ],
+      "startedUtc": "2026-10-22T23:12:05.110650+00:00",
+      "finishedUtc": "2026-10-22T23:12:05.552377+00:00",
+      "seconds": 0.44173050000244984,
+      "exitCode": 0,
+      "log": "rsa-null-independent.log",
+      "sha256": "944554b702031011d3f80ffc2290bc4ad550e34b6a3472c3305de6fe04a3b6fc"
+    },
+    {
+      "receipt": "rsa-null-red.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "--max-old-space-size=128",
+        "--test",
+        "--test-timeout=20000",
+        "tools/verify-forge-signatures.test.mjs"
+      ],
+      "startedUtc": "2026-10-22T23:07:49.792221+00:00",
+      "finishedUtc": "2026-10-22T23:07:51.099366+00:00",
+      "seconds": 1.307153300003847,
+      "exitCode": 1,
+      "log": "rsa-null-red.log",
+      "sha256": "17d6c3156cc3227c160837feb6b3af2396a440df4dee815a52e1e4fb7804942b"
+    },
+    {
+      "receipt": "rsa-parameter-review.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": "",
+      "command": [
+        "node",
+        "--max-old-space-size=128",
+        "D:/ECU/GP-STUFF/SHIFAA-Stabilization-20261023/rsa-parameter-probe.cjs"
+      ],
+      "startedUtc": "2026-10-22T23:07:17.121616+00:00",
+      "finishedUtc": "2026-10-22T23:07:17.599521+00:00",
+      "seconds": 0.47792479999770876,
+      "exitCode": 0,
+      "log": "rsa-parameter-review.log",
+      "sha256": "3b462a936d75a775cd27d94887a30d7c97022da6b94046f7b8b30dd23b47b373"
+    },
+    {
+      "receipt": "rsa-upstream-compatibility.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "node",
+        "--max-old-space-size=128",
+        "--test",
+        "--test-timeout=20000",
+        "D:/ECU/GP-STUFF/SHIFAA-Stabilization-20261023/upstream-rsa-adapter.cjs"
+      ],
+      "startedUtc": "2026-10-22T23:12:06.019306+00:00",
+      "finishedUtc": "2026-10-22T23:12:07.844997+00:00",
+      "seconds": 1.8257144000017433,
+      "exitCode": 0,
+      "log": "rsa-upstream-compatibility.log",
+      "sha256": "c49924f51b4849e515fde0a190f5222625738d1cf197ae3d4a0dcc8052b18cda"
+    },
+    {
+      "receipt": "security-refresh.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": "",
+      "command": [
+        "python",
+        "-B",
+        "D:/ECU/GP-STUFF/SHIFAA-Stabilization-20261023/security_review.py"
+      ],
+      "startedUtc": "2026-10-22T23:06:28.815609+00:00",
+      "finishedUtc": "2026-10-22T23:06:33.638111+00:00",
+      "seconds": 4.822507000004407,
+      "exitCode": 0,
+      "log": "security-refresh.log",
+      "sha256": "91eef8f6fa8e73889f30e9221e47d89f4135acbc88247e04c62fa3c1223df728"
+    },
+    {
+      "receipt": "speckit-main-runtime.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "python",
+        "-B",
+        "tools/speckit_tooling.py",
+        "--root",
+        "D:/ECU/Gradution-Project",
+        "--upstream",
+        "--require-runtime",
+        "--cli-python",
+        "C:/Users/Yousef/AppData/Roaming/uv/tools/specify-cli/Scripts/python.exe"
+      ],
+      "startedUtc": "2026-10-22T23:10:58.226986+00:00",
+      "finishedUtc": "2026-10-22T23:10:59.655112+00:00",
+      "seconds": 1.428159000002779,
+      "exitCode": 0,
+      "log": "speckit-main-runtime.log",
+      "sha256": "153d306ef7319b3e12aa73e409b6ea5d20e51faaaa471488d3a0dc3588d75a70"
+    },
+    {
+      "receipt": "speckit-origin.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": "",
+      "command": [
+        "python",
+        "-B",
+        "tools/speckit_tooling.py",
+        "--upstream",
+        "--cli-python",
+        "C:/Users/Yousef/AppData/Roaming/uv/tools/specify-cli/Scripts/python.exe"
+      ],
+      "startedUtc": "2026-10-22T23:06:28.815552+00:00",
+      "finishedUtc": "2026-10-22T23:06:30.146774+00:00",
+      "seconds": 1.331184700000449,
+      "exitCode": 0,
+      "log": "speckit-origin.log",
+      "sha256": "db987a21c96ddc0ca55099615569ef2fbe3765746ad6a46c2a82668f32de7f2a"
+    },
+    {
+      "receipt": "speckit-regressions-corrected.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": ["python", "-B", "tools/test_speckit_tooling.py"],
+      "startedUtc": "2026-10-22T23:15:30.855596+00:00",
+      "finishedUtc": "2026-10-22T23:15:33.647864+00:00",
+      "seconds": 2.7922721000068123,
+      "exitCode": 0,
+      "log": "speckit-regressions-corrected.log",
+      "sha256": "c19595973b58bbf8f41e36b9a47002df7c508fffef6569e6dd74386cd5f79c4c"
+    },
+    {
+      "receipt": "tooling-regressions.json",
+      "head": "d2d5dbd7954f7b1edad55c8a9d2dda9e3128fb18",
+      "initialStatus": " M docs/agent-skills/README.md\n M patches/node-forge@1.4.0.patch\n M pnpm-lock.yaml\n M tools/verify-forge-signatures.test.mjs\n",
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.test_speckit_tooling",
+        "tools.test_documentation_authority"
+      ],
+      "startedUtc": "2026-10-22T23:13:20.738254+00:00",
+      "finishedUtc": "2026-10-22T23:14:26.265074+00:00",
+      "seconds": 65.52682400000049,
+      "exitCode": 1,
+      "log": "tooling-regressions.log",
+      "sha256": "776d53feda172a16ef55b980013802c3896d008ca2db54ea24a3a861f3f5e07b"
+    }
+  ],
+  "coverage": {
+    "aggregateExecuted": false,
+    "newHumanAcceptance": false,
+    "newPhysicalAcceptance": false,
+    "externalIPv4ReachabilityTested": false,
+    "externalIPv6ReachabilityTested": false,
+    "advisoryResolution": false
+  },
+  "executionLimitations": [
+    "Development receipts identify starting HEAD and intentional working-tree deltas; post-commit binding is separate",
+    "Initial mixed unittest invocation failed to import SpecKit module; corrected direct invocation retained",
+    "Initial unified-patch hunk-count error corrected before successful installation",
+    "Network child completed read-only state capture; wrapper failed at receipt/output filename collision. network-readonly.log and network-readonly.json are retained, not an exit-zero receipt",
+    "Historical archive hashes checked, not a new restoration"
+  ],
+  "recovery": "Retain this directory and its original file bytes. Read manifest and per-command receipt, verify SHA-256, and use the exact source and installed toolchain recorded. Never rerun a destructive aggregate against the current development runtime. Original earlier evidence remains in its indexed retained locations unchanged."
+}

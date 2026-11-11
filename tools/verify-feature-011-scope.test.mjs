@@ -18,7 +18,7 @@ const approvedTasksHash = 'e7a8eac9f0fed21f16b1f632edb4efe5fad3beccae6b637bff957
 const approvedMapHash = '5a6037838bc644a5dbb61c17a5504a662822f8d5ee0925379b823737f17b738d';
 const approvedPlanManifestHash = '79b1eafe6dea7ab2a26edd805e2c83baf2d0f0d12b9b6c44d11164caa8ab4548';
 const fixtureParent = path.join(root, 'artifacts/feature-011/k01-fixtures');
-const tooling = { node: 'v24.22.1', pnpm: '11.13.0', supabase: '2.113.0' };
+const tooling = { node: 'v24.22.1', pnpm: '11.13.1', supabase: '2.113.0' };
 
 async function withFixture(mutator, observedTooling = tooling) {
   fs.mkdirSync(fixtureParent, { recursive: true });
@@ -384,6 +384,19 @@ test('Feature 012 remains an explicit exclusion even when counts remain unchange
 test('toolchain checks use pinned Node, pnpm, and local Supabase CLI without Docker startup', async () => {
   const report = await withFixture(undefined, { ...tooling, pnpm: '11.0.0' });
   expectFailure(report, /pnpm/i);
+});
+
+test('toolchain rejects the broken previous pnpm runtime and inconsistent declarations', async () => {
+  expectFailure(await withFixture(undefined, { ...tooling, pnpm: '11.13.0' }), /pnpm/i);
+  for (const field of ['engines', 'packageManager']) {
+    const report = await withFixture((fixtureRoot) => {
+      const manifest = readJson(fixtureRoot, 'package.json');
+      if (field === 'engines') manifest.engines.pnpm = '11.13.0';
+      else manifest.packageManager = 'pnpm@11.13.0';
+      writeJson(fixtureRoot, 'package.json', manifest);
+    });
+    expectFailure(report, /Node\/pnpm declared pin inconsistency/);
+  }
 });
 
 test('toolchain rejects the previous Node runtime and a mismatched engine declaration', async () => {

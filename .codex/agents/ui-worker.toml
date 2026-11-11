@@ -1,4 +1,6 @@
-model = "gpt-6.1-sol"
+name = "ui-worker"
+description = "Rendered UI review under the SHIFAA UI Contract"
+model = "gpt-6.1-terra"
 model_reasoning_effort = "low"
 model_verbosity = "low"
 

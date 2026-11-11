@@ -25,19 +25,24 @@ const physicalPreflightRepair = {
   historicalSha256: '23aebfab979d8fa4ca131b5a983d929463f95a9ac4bfa19fe39584e0fee9d54b',
   gitBlob: '8ba2568f4108ca5e09b2e6baa4f32efc54b8d649',
 };
-// Maintenance changes only runtime/security dependency pins in these two inputs.
+// Maintenance changes runtime/security pins and removes the audit ignore-writer
+// flag and updates the CI bootstrap action. The 2026-11-11 directive additionally
+// admits exactly five team/tooling bindings and their focused CI test command.
+// No unrelated script or workflow change is admitted by these exact digests.
 // Their sealed F011 acceptance view stays historical; current execution and CI
 // validate the new runtime separately. Any further byte change fails closed.
 const maintenancePins = [
   {
     path: 'package.json',
-    currentSha256: '9095297077dd41577f2348430fc6fcaf70cf6311fb6500e287bbe8a191c33447',
+    currentSha256: 'b922e33712a9b003cb5f46e7661d06db0e6a985d8178ada9c341b878d577c738',
+    acceptedMaintenanceSha256: ['4cdf91ba4ca331944fde2610a05d75158351b74e96cac2b41ca47894c56731b7'],
     historicalSha256: '2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200',
     gitBlob: 'f205a80ae41b5507afaa1a7868fbbc8e84deb217',
   },
   {
     path: '.github/workflows/ci.yml',
-    currentSha256: 'ce55e31c1f36499b5d7ddcbcf13a11620a07ebf68537b95d631a4de581a56952',
+    currentSha256: 'fd78bd9143813c864b990ba6789eb2ae4478b348a7c7c17ba2f9162897b44c05',
+    acceptedMaintenanceSha256: ['b31dbe6aeacafddfb4da49ee65d70afd6ad974a6781bff9fca0e5de9b4fd7435'],
     historicalSha256: 'd070253268ca8db1e28054b8a68e2b596b5c19a115a70900fbad456f24b407d2',
     gitBlob: '66199253e1d8c9d03034abc7f9eb6f4b1b596d64',
   },
@@ -99,9 +104,10 @@ export function toolingPolicyHistoricalInputs(root) {
     if (existsSync(repairedPath)) {
       const current = readFileSync(repairedPath);
       if (sha(current) !== binding.historicalSha256) {
-        assert.equal(
-          sha(current),
-          binding.currentSha256,
+        assert.ok(
+          [binding.currentSha256, ...(binding.acceptedMaintenanceSha256 ?? [])].includes(
+            sha(current),
+          ),
           `Physical preflight source drift: ${binding.path}`,
         );
         const key = `${resolve(root)}:${binding.gitBlob}`;

@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "startingHead": "f6769ff2d9b85cb77bb57fa479d24aa92a71409e",
+  "status": "DRAFT_FOR_HUMAN_REVIEW_NOT_MERGE_ACCEPTED",
+  "sourceSha256": {
+    "pnpm-lock.yaml": "06fc009b55109f11d764b41076d1943c0106428f6342c7e8d1cc05c2972aeb9b",
+    "pnpm-workspace.yaml": "420f98f68887f5c83cfca90fc62e83b1e499ab7eabf0b94ecb3542412bef2b4c",
+    "tools/verify-expo-dependencies.mjs": "14b701260539b537f5506b96a89e13a9055b798205d90709fdf7c455eb931c64",
+    "tools/verify-expo-fingerprint.test.mjs": "d79a68890c67dd61be13851f09620d871de0966bbe369e3328a1bea8693bfa2f",
+    "tools/team-work.mjs": "f96dffa0b18a5dcefe772614b883cbc4d0c2b6331e2541bd22b2cf5a10a6fb7b",
+    "tools/team-work.test.mjs": "91fe0a1bf3df3fb38bcb3a7f3fd542b13ab6d8d4e0e0b5d1881f7070a6812001",
+    "docs/TEAM-HANDOFF.md": "e71348770ce55fa717146f37c366cd037833c3e1136276817692374925198aff"
+  },
+  "audit": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "dependencies": 638,
+    "devDependencies": 129,
+    "optionalDependencies": 135,
+    "totalDependencies": 815
+  },
+  "localResults": {
+    "frozenInstall": "PASS",
+    "peers": "PASS",
+    "expoDependencyCheck": "PASS",
+    "rsaTests": 32,
+    "fingerprintTests": 2,
+    "patientTypecheck": "PASS",
+    "patientWebExport": "PASS",
+    "teamTests": 10,
+    "secretScan": "PASS",
+    "destructiveFullVerify": "NOT_RUN",
+    "specKitUpgradeSuites": "NOT_RUN",
+    "humanBilingualAcceptance": "NOT_SUPPLIED",
+    "currentHeadCI": "PENDING_PUBLICATION_READ_PR_506"
+  },
+  "liveHandoff": {
+    "issue": 507,
+    "savedCommit": "22c63fc035e67479343902a4dd2a6ebd9601552e",
+    "sourceWorktree": "D:\\ECU\\Gradution-Project\\.worktrees\\team-handoff-acceptance-20261111",
+    "sourcePreserved": true,
+    "indexPreserved": true,
+    "privatePreserved": true,
+    "injectedFailure": "one Git push boundary before remote mutation",
+    "draftPR": 508,
+    "resumedWorktree": "D:\\ECU\\Gradution-Project\\.worktrees\\team-issue-507-YousefE1bana-22c63fc035e6",
+    "exactPublishedResume": true,
+    "remotePrivateExcluded": true,
+    "staleCheckoutRejected": true,
+    "duplicateOwnershipPrevented": true,
+    "remoteHeadUnchangedAfterRejection": true,
+    "crossPersonTransfer": "NOT_EXECUTED: only one authenticated GitHub account",
+    "issueState": "open"
+  },
+  "rawLogSha256": {
+    ".tmp/final-closure-audit.json": "fc5964a08976109925eb901fb1e4334551291efc7f1cd9cc8cc03bdc5b6ecdcc",
+    ".tmp/final-closure-expo-check.log": "f4e2aa47c31f16b80a26846964d5010c930b87dab01f08daf6d3b025727beb60",
+    ".tmp/final-closure-dependencies.log": "751df70a94c46336d15742a8d2d58dea254f065e9a703b72e384825c25973a8b",
+    ".tmp/final-closure-team-tests.log": "3c3e12d80d2abab6f8cb290904919515d051c0302e2da8552435c68bf1c038e1",
+    ".tmp/final-closure-expo-build.log": "bb4da39acd0f9fb7753b2bb3a2cf8e593c723bbfecfc49fdff23be0593a69e14",
+    ".tmp/final-closure-live-handoff.log": "9cf0f747e64ca5d7acb85640d2d325243c933ad91be8bae0c19ba1a16a9f3038",
+    ".tmp/final-closure-live-resume.log": "7cb65ba4a6129e3b6f0aecd6d25281a3fb92ef40d3ac2718aa402dfd729842d5",
+    ".tmp/final-closure-live-assertions.log": "dd377205aada9e9f733b564b424c1d78105b34c7ca3abb0ece2537b12fa6bf3e",
+    ".tmp/final-closure-secrets.log": "f03f7eae8c4b6df5b2c1af52148a67bf72e896f0f22c228a848603e7b8255124"
+  },
+  "hostExposure": {
+    "status": "OPEN_UNRESOLVED",
+    "wildcardPublishedPorts": [54321, 54322, 54323, 54324, 54327, 54329],
+    "externalContainmentTest": "NOT_EXECUTED",
+    "runtimeMutated": false
+  },
+  "preservation": {
+    "f012Head": "c571773d6432251d1f52bc94bb501c4e163f1571",
+    "f012FeatureFilesUnchanged": 71,
+    "f012GitStatusUnchanged": true,
+    "featurePointerSha256": {
+      "D:\\ECU\\Gradution-Project\\.specify\\feature.json": "957ec882110889a1b9dd236f8566f1f286cde597764494127b4243de47a47870",
+      "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023\\.specify\\feature.json": "1a7f6f97dcd6c235e144dfa2355a1edfe2911043e7874c1b4c134505c45e1b5f"
+    },
+    "rootHead": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+    "specifyArtifactsUnchanged": true
+  },
+  "issuesClosed": false,
+  "merged": false
+}

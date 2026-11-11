@@ -1,3 +1,5 @@
+name = "deep-worker"
+description = "Bounded security, RLS and transaction implementation"
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 model_verbosity = "low"
