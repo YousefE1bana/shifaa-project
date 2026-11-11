@@ -1,5 +1,9 @@
 # SHIFAA agent skills
 
+See [team handoff and optional AI setup](../TEAM-HANDOFF.md) for the GitHub-based
+`team:handoff` / `team:start` commands, official Spec Kit 1.4.0 materialization,
+and the fresh read-only Security Reviewer launcher.
+
 SHIFAA separates repository-owned policy from machine-local skill runtimes.
 
 ## Repository-owned skills

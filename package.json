@@ -108,7 +108,12 @@
     "test:encounters:baselines": "powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command \"Import-Module (Join-Path $PSHOME 'Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1') -ErrorAction Stop; & 'specs/010-encounters-referrals-contextual-chat/visual-baselines/validate-reference-baselines.ps1'\"",
     "test:encounters:verification": "pnpm exec vitest run tests/e2e/feature-010-client-context.test.ts && pnpm test:encounters:tooling && pnpm test:encounters:scope && pnpm test:encounters:privacy && pnpm test:encounters:ui:unit && node tools/run-feature-010-postgres-test.mjs c28 && pnpm test:encounters:realtime:db && pnpm test:encounters:restore && pnpm test:encounters:performance && pnpm test:encounters:baselines && pnpm test:encounters:ui && pnpm test:pre-011:integration",
     "test:pre-011:integration": "node tools/run-native-clinical-composition-test.mjs && node tools/run-feature-010-completion-authority-concurrency-test.mjs --expect-green --with-forward-fix",
-    "test:feature-011:composition": "node tools/run-feature-011-composition-test.mjs --all"
+    "test:feature-011:composition": "node tools/run-feature-011-composition-test.mjs --all",
+    "team:handoff": "node tools/team-work.mjs handoff",
+    "team:start": "node tools/team-work.mjs start",
+    "team:test": "node --test tools/team-work.test.mjs",
+    "security:review": "node tools/security-review.mjs",
+    "speckit": "node tools/speckit.mjs"
   },
   "devDependencies": {
     "@shifaa/api": "workspace:*",

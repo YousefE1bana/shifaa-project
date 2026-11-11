@@ -1,5 +1,9 @@
 # SHIFAA team installation checklist
 
+For collaborative work after setup, use [the GitHub handoff guide](TEAM-HANDOFF.md).
+Its two terminal commands work without Codex. Existing dirty worktrees and local
+Supabase state must be preserved; onboarding is not authorization to reset them.
+
 > Baseline: `002-supabase-runtime-foundation` seeded-synthetic engineering only. Run these commands in Windows PowerShell. Do not add real patient, identity, document, vendor, or production credentials.
 
 ## 1. Install machine prerequisites

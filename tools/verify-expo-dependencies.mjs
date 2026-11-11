@@ -101,8 +101,8 @@ const malformedProbe = spawnSync(
 assert.ifError(malformedProbe.error);
 assert.equal(malformedProbe.status, 0, malformedProbe.stderr);
 
-// Exercise the real patched RSA consumer; the upstream advisory is still
-// reported by the unchanged audit gate until its release/disposition is resolved.
+// Exercise the installed upstream RSA fix through the real Expo consumer.
+// Historical local patch bytes remain preserved, but are no longer activated.
 const signatures = spawnSync(
   process.execPath,
   [
