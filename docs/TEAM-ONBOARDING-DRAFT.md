@@ -1101,7 +1101,7 @@ git status --short
 git diff --check
 ```
 
-After a successful fresh exit 0, mark this gate and all required steps. READY is a local self-attestation tied to this setup snapshot; rerun verification after changes. This full setup-readiness gate is distinct from routine PR verification. Follow AGENTS.md for later integration: classify the actual change → applicable resource-safe checks (focused checks plus required CI for documentation-only changes) → feature branch → Issue/spec-linked PR → code review and all six current-head CI contexts → STOP for Yousef’s squash merge. Never reset retained Supabase data; full verification requires proven disposable isolation. This setup task performs no commit/push/PR and does not implement parked SHIFAA Control feature 025.
+After a successful fresh exit 0, mark this gate and all required steps. READY is a local self-attestation tied to this setup snapshot; rerun verification after changes. This full setup-readiness gate is distinct from routine PR verification. Follow AGENTS.md for later integration: classify the actual change → applicable resource-safe checks (focused checks plus required CI for documentation-only changes) → feature branch → Issue/spec-linked PR → code review and all six current-head CI contexts → squash integration under effective AGENTS routine/Major Event authority → verify remote main. Never reset retained Supabase data; full verification requires proven disposable isolation. This setup task performs no commit/push/PR and does not implement parked SHIFAA Control feature 025.
 
 Source: `package.json scripts.verify`.
 
