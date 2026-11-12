@@ -80,4 +80,4 @@
 ## Feature artifact finalization — before closeout and cleanup
 
 - [ ] T0XX [Governance] Review tracked, untracked, and relevant ignored material; organize official outputs and a verified evidence index with retention/non-retention reasons — `specs/[feature]/evidence/artifact-finalization/`
-- [ ] T0XX [Governance] Pass `docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md` after required integration checks and Yousef's squash merge; verify required artifacts in current remote main before any authorized worktree/branch cleanup — `specs/[feature]/evidence/artifact-finalization/`
+- [ ] T0XX [Governance] Pass `docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md` after required integration checks and a squash merge under effective AGENTS.md authority; verify required artifacts in current remote main before any authorized worktree/branch cleanup — `specs/[feature]/evidence/artifact-finalization/`

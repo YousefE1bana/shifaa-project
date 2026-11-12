@@ -28,15 +28,53 @@ conversation and explicit starting instruction after approved integration.
 
 ## Integration and evidence
 
-PR integration is mandatory from spec 003 onward. Never push directly to `main`
-unless Yousef explicitly authorizes that exception in the conversation.
+PR integration is mandatory from spec 003 onward. Do not force-push or push
+directly to `main` to bypass PR integration.
 The required sequence is: record the change class and verification scope; run
 applicable resource-safe checks; push only the feature branch; open a PR linked
 to its Issue and spec directory; complete code review and required thread
 resolution; all six mandatory CI contexts and metadata checks pass on the current
-head; **Yousef Osama performs the human squash merge**; verify merged remote main.
-No other approver is required for Git integration. Professional domain approvals
-remain separate. Never bypass failed required CI or transfer a prior PR exception.
+head; squash merge through GitHub under the authority below; verify the resulting
+remote-main commit and integrated contents. Never bypass GitHub protection,
+failed required CI or review-thread resolution, or transfer a prior PR exception.
+
+**Agent-managed merging is the default for routine, authorized changes.** Agents
+may commit and push feature branches, create/manage PRs, perform applicable
+technical reviews, mark Draft PRs ready and squash merge eligible PRs without
+another per-PR Product Owner approval or manual GitHub action. Routine work
+includes documentation, Tasks baselines, ordinary tests, tooling maintenance,
+bug fixes, refactoring and feature implementation within already approved scope.
+
+Classify the actual semantic impact in the PR, not its filename. Explicit
+Product Owner authorization is required before merging a **Major Event**:
+
+1. Fundamental constitutional, governance-authority, project-scope or major
+   architecture decisions.
+2. Material changes to security trust boundaries, authorization models or
+   critical safety protections.
+3. Production deployment, real patient information, regulated clinical
+   capabilities or live infrastructure.
+4. Destructive or irreversible operations affecting retained data, protected
+   history or critical systems.
+
+Touching a security file, contract or governance document alone is not a Major
+Event. Once the applicable human decision is granted, an agent may perform the
+mechanical squash merge if repository rules and GitHub permissions allow it.
+Keep applicable clinical/legal/professional approvals separate; Product Owner
+merge authorization does not substitute for them.
+
+Every merge still requires all six mandatory CI contexts PASS on the current
+head, fresh metadata validation PASS, applicable security/regression/authorization
+and resource-safety checks, required code review and resolved blocking threads.
+Do not fabricate a review or self-approve where independent approval is required.
+Follow branch protection/rulesets; do not invent additional per-PR human gates.
+Git merge authority starts no SpecKit stage, task execution, out-of-scope
+implementation, clinical decision, production change or destructive operation.
+
+This policy amendment is itself a Major Event. Its [transition record](docs/governance/merge-policy-v1/decision-and-impact.md)
+requires integration under the predecessor's human squash-merge rule and verified
+remote main before this candidate becomes effective. Do not use the unmerged
+candidate to authorize its own merge.
 
 Human visual and bilingual acceptance belongs to applicable product/design
 milestones and feature-specific gates, not every push or PR. A Product Owner
