@@ -1,0 +1,31 @@
+name: Primary repository reconciliation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fixtures:
+    name: Primary checkout fixtures (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Test non-destructive reconciliation
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Get-Command git, pwsh, python -CommandType Application -ErrorAction Stop | Out-Null
+          python -m unittest tools/test_primary_repository_sync.py -v
+          exit $LASTEXITCODE

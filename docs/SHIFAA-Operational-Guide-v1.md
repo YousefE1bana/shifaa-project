@@ -25,3 +25,23 @@ Read-only preparation commands for this candidate are listed in [validation resu
 Do not treat development runbooks or Docker startup as production enablement. Preserve clinical/legal/vendor/privacy/facility/security release gates and their designated authorities. No deployment or real-PHI processing is authorized by this guide.
 
 For current tooling installation and upgrades, use the [tooling maintenance policy](governance/SHIFAA-Tooling-Maintenance-Policy.md). Older onboarding version observations are historical; do not copy their version literal.
+
+## Mandatory post-merge primary-checkout reconciliation
+
+After every human or agent squash merge, independently verify the PR's merged state, integrated contents and exact current remote `main` SHA. Inspect the primary repository at `D:\ECU\Gradution-Project` rather than substituting a feature worktree. Check its root, branch, HEAD, upstream, tracked/untracked changes, relevant ignored state and active Git hooks before any checkout change. Record preservation hashes for especially important local evidence. This requirement changes no merge authority or feature lifecycle.
+
+Use PowerShell 7 and Git; no dependency installation is required. From the checkout containing the reviewed helper, replace the SHA below with the independently verified full commit:
+
+```powershell
+& ./tools/reconcile-primary-repository.ps1 `
+  -PrimaryRepository 'D:\ECU\Gradution-Project' `
+  -VerifiedMainCommit '<verified-40-character-lowercase-main-SHA>'
+```
+
+The [helper](../tools/reconcile-primary-repository.ps1) fetches only `origin/main`, refuses linked-worktree substitutes, and requires clean `main` tracking `origin/main`. It checks ancestry and incoming local-only path collisions, then uses `git merge --ff-only --no-overwrite-ignore`. It never switches branches, stashes, resets, cleans, installs dependencies or operates Docker/databases. Existing hooks remain enabled: inspect their resource impact first. Pause other writers to the primary checkout during reconciliation; inspection and filesystem hashing are not an atomic filesystem transaction.
+
+JSON stdout records before/after branch, HEAD, upstream, fetched `origin/main`, status, preservation inventory/hash and diagnostics. Exit `0` means `SYNCED` or `ALREADY_SYNCED`; `2` means `LOCAL_ROOT_SYNC_BLOCKED`; `3` means `LOCAL_ROOT_SYNC_NOT_VERIFIED`. Dirty, wrong-branch, detached, locked, divergent, remote-SHA-drift or collision states are preserved for investigation. A hook failure can occur after HEAD advances: inspect `after` before any retry; the helper never rolls back. Without filesystem access, report `LOCAL_ROOT_SYNC_NOT_VERIFIED` directly.
+
+Ignored directories are inventoried without recursive traversal; ignored file leaves and the existing `.specify/feature.json` are hashed, and links are recorded without following them. Supply `-PreservePath @('relative/path/to/important-file')` for additional individual files inside the primary repository. Nested dependency/evidence directories are not claimed to be recursively byte-verified. Keep private inventories and hashes local; do not publish file contents or private paths unnecessarily.
+
+Record the verified PR/main SHA, primary path, before/after branch/HEAD/upstream, final status, preservation scope and outcome in the post-merge report. Exact local HEAD / `origin/main` / verified-main equality and preservation checks are required for completion. A valid remote merge with blocked local sync remains a valid merge with incomplete local reconciliation. Preserve the blocker and resume safely; never use destructive shortcuts. Run focused offline fixtures with `python -m unittest tools/test_primary_repository_sync.py -v` when changing this helper.

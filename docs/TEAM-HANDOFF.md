@@ -6,8 +6,11 @@ not Codex or an AI subscription. Run `gh auth login` once, with repository acces
 Project viewing additionally needs `read:project`; lack of that scope is reported
 and does not invent or replace Project data. Never paste credentials into a brief.
 
-After Yousef merges the maintenance PR, pull it into a clean checkout and run
-`pnpm install --frozen-lockfile`. Do not reset a dirty checkout to get the commands.
+After every squash merge, follow the mandatory
+[primary-checkout reconciliation procedure](SHIFAA-Operational-Guide-v1.md#mandatory-post-merge-primary-checkout-reconciliation).
+Do not substitute a synchronized feature worktree or reset a dirty checkout.
+For separately authorized dependency setup, run `pnpm install --frozen-lockfile`;
+post-merge reconciliation itself installs nothing.
 Choose one open Issue per independently owned task. Use its existing Project,
 labels, assignee and GitHub dependency relationships. The commands do not close
 Issues, mark Project items complete, approve lifecycle stages or merge PRs.

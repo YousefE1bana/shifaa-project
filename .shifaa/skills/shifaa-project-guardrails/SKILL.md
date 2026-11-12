@@ -48,6 +48,13 @@ For Feature 012, the effective CONTRACTUAL boundary is 12 operations; profile ac
 
 ## Verify before claiming completion
 
+After every successful squash merge, including human merges and work performed
+in separate worktrees, verify the PR/remote main and reconcile the explicit
+primary checkout using `tools/reconcile-primary-repository.ps1`. Follow the
+mandatory procedure in `AGENTS.md` and `docs/SHIFAA-Operational-Guide-v1.md`;
+report before/after revisions, preservation scope and the exact sync outcome.
+Never treat remote integration or feature-worktree equality as primary-local proof.
+
 1. Map the change to its FR/NFR, API/data/UI contract, feature acceptance criteria, and negative cases.
 2. Test at the appropriate layers, including authorization/RLS negatives, idempotency/concurrency, audit/outbox, localization/accessibility, and degraded states when relevant.
 3. Apply the change-aware verification policy in `AGENTS.md`: run applicable resource-safe checks and report their scope. `pnpm verify` remains comprehensive but its destructive paths require proven disposable isolation; never reset retained Supabase data/volumes. Documentation/governance/static-design-only changes may use relevant focused checks plus all required current-head CI without a routine PO exception.

@@ -24,6 +24,7 @@ Do not include PHI, credentials, tokens, private identifiers, or sensitive uploa
 - Required checks on this exact head:
 - Merge authority: follow effective AGENTS.md; agents may squash merge routine authorized changes after all checks/reviews, and Major Events require explicit Product Owner authorization. Do not self-apply an unintegrated policy amendment or claim a future merge completed.
 - Verified merged `main` SHA (complete only after merge):
+- Primary local repository reconciliation after merge: explicit root, before/after branch/HEAD/upstream, status, preservation scope and `SYNCED` / `ALREADY_SYNCED` / `LOCAL_ROOT_SYNC_BLOCKED` / `LOCAL_ROOT_SYNC_NOT_VERIFIED`; include exact blocker when incomplete. Follow the mandatory AGENTS post-merge helper procedure even when development used a separate worktree:
 
 ## Preservation and lifecycle boundaries
 
