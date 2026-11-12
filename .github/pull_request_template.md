@@ -3,6 +3,7 @@
 - Issue:
 - Owning spec directory and exact source record (if directly applicable):
 - Change kind: bug fix / feature delivery / task / epic / maintenance / documentation
+- Merge class: routine authorized change / Major Event; explain actual semantic impact and link the applicable authorization for a Major Event:
 - Bounded outcome and exclusions:
 - Any open gate IDs, owners, restrictions, and earliest blocked stage:
 
@@ -17,12 +18,11 @@
 
 Do not include PHI, credentials, tokens, private identifiers, or sensitive uploads. A test pass or engineering simulation does not establish clinical, legal, credential, facility, regulator, or production approval. Keep source authority, implementation, verification, acceptance, and professional approval as separate claims.
 
-## Live language acceptance and integration
+## Applicable product acceptance and integration
 
-- Arabic human live acceptance: receipt/reference, reviewer, and date; if pending, state pending and cite any exact attributable PR-specific disposition:
-- English human live acceptance: receipt/reference, reviewer, and date; if pending, state pending and cite any exact attributable PR-specific disposition:
+- Applicable product/design language or visual milestone evidence (if affected); human live Arabic/English acceptance is not a universal PR requirement. Preserve automated localization, RTL/LTR and accessibility checks where affected:
 - Required checks on this exact head:
-- Human squash merge: Yousef Osama only, after the required evidence and checks; do not claim completion in advance.
+- Merge authority: follow effective AGENTS.md; agents may squash merge routine authorized changes after all checks/reviews, and Major Events require explicit Product Owner authorization. Do not self-apply an unintegrated policy amendment or claim a future merge completed.
 - Verified merged `main` SHA (complete only after merge):
 
 ## Preservation and lifecycle boundaries

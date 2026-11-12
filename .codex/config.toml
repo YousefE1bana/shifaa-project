@@ -51,7 +51,9 @@ and ui-worker for rendered visual/accessibility judgment.
 Derive security negatives independently and inspect callers, policies and raw results.
 Tester PASS is not security acceptance. Screenshots are not native device/a11y acceptance.
 Never advance SpecKit without its applicable authorization.
-Never merge main on Yousef's behalf; he owns the human squash merge.
+Follow effective AGENTS.md merge authority: agents merge routine authorized PRs;
+Major Events need explicit Product Owner authorization. Preserve all GitHub gates.
+Do not apply an unintegrated merge-policy candidate or infer lifecycle authority.
 Preserve historical evidence, private files, OPEN gates and active-feature context.
 """
 subagent_developer_instructions = """

@@ -43,7 +43,8 @@ and location, rather than retaining every generated file indefinitely.
 6. Confirm the exact feature PR/head and squash merge on current remote `main`
    under the AGENTS integration sequence. Verify required official outputs and
    evidence index in that merged tree. An intended merge or local cached ref is
-   insufficient. Only Yousef may squash-merge.
+   insufficient. The merge actor follows the effective AGENTS.md routine/Major
+   Event policy; this preservation gate grants no independent merge authority.
 7. Record the finalization decision and remaining release/approval gates inside
    the feature folder. Pass only if required outputs are organized, evidence is
    verifiable, references are current, and no important material is unclassified

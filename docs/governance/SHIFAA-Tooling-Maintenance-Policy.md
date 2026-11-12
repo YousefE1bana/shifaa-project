@@ -48,7 +48,8 @@ per-release successor approval, or second activation receipt.
    PowerShell/Python compatibility, templates/overlays, cache/path boundaries,
    source integrity and historical negative tests. Preserve the feature pointer.
 5. Run safe project checks, inspect the full diff and use normal feature-branch PR
-   review, required CI and human squash merge. No direct-main push or auto-merge.
+   review, required CI and squash integration under effective AGENTS routine/Major
+   Event authority. No direct-main push or protection bypass.
 
 SHIFAA overrides remain authoritative. Optional integrations/extensions are never
 enabled implicitly. A breaking upgrade needs impact-specific compatibility work;
