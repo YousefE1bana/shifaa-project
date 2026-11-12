@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "bindingId": "SHIFAA-F012-PLAN-HISTORICAL-READER-SUCCESSOR/1.0.0",
+  "authority": "Yousef Osama, Product Owner: Fix PR #509 Historical Reader Compatibility, direct instruction 2026-11-12",
+  "sourceCommit": "6fb31447484e5d21c9f20f2734808bd6eabf6824",
+  "scope": "Exact five approved F012 canonical appendices only; historical verification projection, no contract activation or runtime authority",
+  "historicalRecord": {
+    "path": "docs/governance/tooling-maintenance-v1/historical-compatibility.json",
+    "sha256": "e38049b11787c49e01d0c6cfe0ef3cb3f825fc68f207be5bb224eebc4567fb07"
+  },
+  "inputs": [
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "predecessor": {
+        "bytes": 103596,
+        "sha256": "47552ae429fabf0606af98b07080a3db342e6f490fe20d27553a14ddcc9cc63d",
+        "gitBlob": "dbc0752f0cfa2f0d04dc3a3b4fbac3a461e35384"
+      },
+      "successor": {
+        "bytes": 106335,
+        "sha256": "f144e6332cf8363dc127fb1e728e3e1387a51878838c16881d268b24eea2c838"
+      },
+      "appendix": {
+        "offset": 103596,
+        "bytes": 2739,
+        "sha256": "887266a3f3607580758704fa4fedabc7adb2def7d682ad1baf5887fc0ed4139f"
+      }
+    },
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "predecessor": {
+        "bytes": 100106,
+        "sha256": "5e20548ace942acae611f4915dd3f1ab7130b5295a879113435b352e8a771fad",
+        "gitBlob": "2db9c79940ff60a12da891a25f8e918c6a8c51f9"
+      },
+      "successor": {
+        "bytes": 102837,
+        "sha256": "c1dc848f813c850ed851d06f673f059798d3120033ed1a5e50f60c29eeb2e407"
+      },
+      "appendix": {
+        "offset": 100106,
+        "bytes": 2731,
+        "sha256": "a467b0ff781d5fc0518cef9257a8fcd804c98c56932cc00d14d08959b03aec7b"
+      }
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "predecessor": {
+        "bytes": 86509,
+        "sha256": "a6de0ba094415d5a93315db5305c4c8fcf7f37797540a217ccc059f567a52ab5",
+        "gitBlob": "2a4cd60d0941127b3f0e19f8b99e9b67a2c2cadb"
+      },
+      "successor": {
+        "bytes": 89099,
+        "sha256": "9c088fa84c49e9d69285b7be4e96e0d141a77c7be89d8976fdff1989f3fc0f7f"
+      },
+      "appendix": {
+        "offset": 86509,
+        "bytes": 2590,
+        "sha256": "08f72d2b918745a8db45041a9a8fbd99ad1462bd3e0ae65b099c39c4f99f43c7"
+      }
+    },
+    {
+      "path": "shifaa-prd.md",
+      "predecessor": {
+        "bytes": 100550,
+        "sha256": "eca3a8dd2955da8b6d91bb6fc0d9722f57801c39fae59a4ca4c3475af6b4ab0f",
+        "gitBlob": "cd32af6ca3468d47d2882aabb03de8a2adfec4b7"
+      },
+      "successor": {
+        "bytes": 103029,
+        "sha256": "4a98237e916b88c2d92c60f2c5b5da25f9b919e6b04f42a73db2e0aa709a50ac"
+      },
+      "appendix": {
+        "offset": 100550,
+        "bytes": 2479,
+        "sha256": "5798f1638ada24f272beb44365f96fd71c3cfba77ee1b408f00c94ea081d96cf"
+      }
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "predecessor": {
+        "bytes": 28266,
+        "sha256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+        "gitBlob": "a0fb9a7101679840538499fe7de797694a7bca79"
+      },
+      "successor": {
+        "bytes": 30978,
+        "sha256": "8eb104b897bda573e04067e8e3036647349d9ce0c472fc00f1aaac3b1eab35e0"
+      },
+      "appendix": {
+        "offset": 28266,
+        "bytes": 2712,
+        "sha256": "0fc189d915a12d616bf53a8abbd3d8bec816487ab06a8393c19341543e25b7c1"
+      }
+    }
+  ]
+}

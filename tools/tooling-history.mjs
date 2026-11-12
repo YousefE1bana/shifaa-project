@@ -6,8 +6,16 @@ import { existsSync, lstatSync, readFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
 
 const recordPath = 'docs/governance/tooling-maintenance-v1/historical-compatibility.json';
+export const appendixSuccessorPath =
+  'specs/012-prescription-safety-governed-overrides/readiness/historical-reader-repair-2026-11-12/successor-binding-v1.json';
+const appendixSuccessorSha256 = '8b6500c6571bf2c0d75373483452e0942be0c1e1104ca66de05dc35689bfc8b1';
 export const toolingPolicyInputPaths = [
   recordPath,
+  appendixSuccessorPath,
+  'shifaa-prd.md',
+  'docs/architecture/SHIFAA-API-Catalog.md',
+  'docs/architecture/SHIFAA-Data-RLS.md',
+  'docs/design/SHIFAA-UI-Contract.md',
   '.specify/memory/constitution.md',
   'SHIFAA-Implementation-Plan-MASTER.md',
   'tools/feature-011-constitution-successor.mjs',
@@ -76,9 +84,10 @@ export function toolingPolicyHistoricalInputs(root) {
   const raw = readFileSync(file);
   assert.equal(sha(raw), recordSha256, 'Tooling policy history binding drift');
   const record = JSON.parse(raw);
-  const historical = new Map();
+  const predecessors = approvedAppendixPredecessors(root);
+  const historical = new Map(predecessors);
   for (const input of record.inputs) {
-    const current = readFileSync(safeFile(root, input.path));
+    const current = predecessors.get(input.path) ?? readFileSync(safeFile(root, input.path));
     assert.equal(current.length, input.current.bytes, `Tooling policy source drift: ${input.path}`);
     assert.equal(sha(current), input.current.sha256, `Tooling policy source drift: ${input.path}`);
     const old = input.historical;
@@ -127,6 +136,55 @@ export function toolingPolicyHistoricalInputs(root) {
     }
   }
   return historical;
+}
+
+// Validate live bytes on every call, including after an earlier successful read.
+// These prefixes feed the existing historical projection; they never activate policy.
+function approvedAppendixPredecessors(root) {
+  const bindingFile = safeFile(root, appendixSuccessorPath);
+  if (!existsSync(bindingFile)) return new Map();
+  const bindingBytes = readFileSync(bindingFile);
+  assert.equal(sha(bindingBytes), appendixSuccessorSha256, 'Appendix successor binding drift');
+  const binding = JSON.parse(bindingBytes);
+  assert.equal(binding.bindingId, 'SHIFAA-F012-PLAN-HISTORICAL-READER-SUCCESSOR/1.0.0');
+  assert.equal(binding.historicalRecord.path, recordPath);
+  assert.equal(binding.historicalRecord.sha256, recordSha256);
+  const predecessors = new Map();
+  for (const input of binding.inputs) {
+    const current = readFileSync(safeFile(root, input.path));
+    assert.equal(
+      current.length,
+      input.successor.bytes,
+      `Appendix successor length drift: ${input.path}`,
+    );
+    assert.equal(
+      sha(current),
+      input.successor.sha256,
+      `Appendix successor digest drift: ${input.path}`,
+    );
+    assert.equal(input.appendix.offset, input.predecessor.bytes);
+    const prefix = current.subarray(0, input.appendix.offset);
+    const appendix = current.subarray(input.appendix.offset);
+    assert.equal(prefix.length, input.predecessor.bytes);
+    assert.equal(sha(prefix), input.predecessor.sha256, 'Appendix predecessor drift');
+    assert.equal(appendix.length, input.appendix.bytes);
+    assert.equal(sha(appendix), input.appendix.sha256, 'Approved appendix drift');
+    assert.match(input.predecessor.gitBlob, /^[a-f0-9]{40}$/);
+    const key = `${resolve(root)}:${input.predecessor.gitBlob}`;
+    if (!immutableObjects.has(key))
+      immutableObjects.set(
+        key,
+        execFileSync('git', ['cat-file', 'blob', input.predecessor.gitBlob], {
+          cwd: root,
+          stdio: ['ignore', 'pipe', 'pipe'],
+          maxBuffer: 4 * 1024 * 1024,
+        }),
+      );
+    const original = immutableObjects.get(key);
+    assert.ok(prefix.equals(original), 'Appendix predecessor Git bytes drift');
+    predecessors.set(input.path, prefix);
+  }
+  return predecessors;
 }
 
 export function readToolingPolicyInput(root, file) {
