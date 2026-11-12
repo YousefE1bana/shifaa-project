@@ -76,6 +76,16 @@ describe('F011 historical Constitution and conditional successor compatibility',
       // A current policy record must never falsely approve substituted old bytes.
       const policy = 'docs/governance/tooling-maintenance-v1/historical-compatibility.json';
       const record = JSON.parse(fs.readFileSync(path.join(directory, policy), 'utf8'));
+      const appendixBinding = `${feature}/readiness/historical-reader-repair-2026-11-12/successor-binding-v1.json`;
+      const appendices = JSON.parse(fs.readFileSync(path.join(directory, appendixBinding), 'utf8'));
+      for (const input of appendices.inputs) {
+        if (!record.inputs.some((original: { path: string }) => original.path === input.path))
+          fs.writeFileSync(
+            path.join(directory, input.path),
+            execFileSync('git', ['cat-file', 'blob', input.predecessor.gitBlob], { cwd: root }),
+          );
+      }
+      fs.unlinkSync(path.join(directory, appendixBinding));
       for (const input of record.inputs) {
         fs.writeFileSync(
           path.join(directory, input.path),

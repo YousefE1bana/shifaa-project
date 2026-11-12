@@ -1,0 +1,118 @@
+{
+  "sourceSha256": "acfdf0bc37b483e398bced7ddad261b435a660a6d89ab76c0f87b8b587861912",
+  "components": {
+    "schemas": {
+      "UpdatePrescription": {
+        "description": "Draft input; absent mechanismScenarioRef may yield a genuinely produced incomplete result only. T2 mechanism_complete and simulated signing require the separately accepted coherent scenario and all G guards. Required producer failure never becomes partial success.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "substitutionAllowed",
+          "expiresAt"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FixtureInput"
+            },
+            "minItems": 1,
+            "maxItems": 100
+          },
+          "substitutionAllowed": {
+            "type": "boolean"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "mechanismScenarioRef": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "PrescriptionMutation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "prescription",
+          "safetyResult",
+          "receipt"
+        ],
+        "properties": {
+          "prescription": {
+            "$ref": "#/components/schemas/PrescriptionC"
+          },
+          "safetyResult": {
+            "$ref": "#/components/schemas/SafetyResult"
+          },
+          "receipt": {
+            "$ref": "#/components/schemas/Receipt"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/encounters/{encounterId}/prescriptions": {
+      "post": {
+        "operationId": "createPrescription"
+      }
+    },
+    "/prescriptions/{prescriptionId}": {
+      "patch": {
+        "operationId": "updatePrescription"
+      },
+      "get": {
+        "operationId": "getPrescription"
+      }
+    },
+    "/prescriptions/{prescriptionId}/safety-checks": {
+      "post": {
+        "operationId": "runPrescriptionSafety"
+      }
+    },
+    "/detected-issues/{issueId}/acknowledgements": {
+      "post": {
+        "operationId": "acknowledgeWarning"
+      }
+    },
+    "/detected-issues/{issueId}/override-requests": {
+      "post": {
+        "operationId": "requestContraindicatedOverride"
+      }
+    },
+    "/override-requests/{overrideId}/decisions": {
+      "post": {
+        "operationId": "decideOverride"
+      }
+    },
+    "/prescriptions/{prescriptionId}/sign": {
+      "post": {
+        "operationId": "signPrescription"
+      }
+    },
+    "/prescriptions/{prescriptionId}/cancel": {
+      "post": {
+        "operationId": "cancelPrescription"
+      }
+    },
+    "/patients/{managedPatientId}/medications": {
+      "get": {
+        "operationId": "listPatientMedications"
+      }
+    },
+    "/override-review-cases": {
+      "get": {
+        "operationId": "getOverrideReviewCases"
+      }
+    },
+    "/override-requests/{overrideId}/assignment-transitions": {
+      "post": {
+        "operationId": "transitionOverrideReviewAssignment"
+      }
+    }
+  }
+}

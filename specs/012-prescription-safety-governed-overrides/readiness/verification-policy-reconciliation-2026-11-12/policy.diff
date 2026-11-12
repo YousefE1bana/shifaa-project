@@ -1,0 +1,130 @@
+diff --git a/.shifaa/skills/shifaa-project-guardrails/SKILL.md b/.shifaa/skills/shifaa-project-guardrails/SKILL.md
+index 54a2bc3..379cf1a 100644
+--- a/.shifaa/skills/shifaa-project-guardrails/SKILL.md
++++ b/.shifaa/skills/shifaa-project-guardrails/SKILL.md
+@@ -50,7 +50,7 @@ For Feature 012, the effective CONTRACTUAL boundary is 12 operations; profile ac
+ 
+ 1. Map the change to its FR/NFR, API/data/UI contract, feature acceptance criteria, and negative cases.
+ 2. Test at the appropriate layers, including authorization/RLS negatives, idempotency/concurrency, audit/outbox, localization/accessibility, and degraded states when relevant.
+-3. Run the feature-specific checks and fresh repository `pnpm verify` before claiming completion.
+-4. Record live Arabic and English acceptance evidence when `AGENTS.md` requires it. Preparation grants no exception; only an attributable, exact PR-specific exception can change that prerequisite. Do not call static inspection or stale evidence a live pass.
++3. Apply the change-aware verification policy in `AGENTS.md`: run applicable resource-safe checks and report their scope. `pnpm verify` remains comprehensive but its destructive paths require proven disposable isolation; never reset retained Supabase data/volumes. Documentation/governance/static-design-only changes may use relevant focused checks plus all required current-head CI without a routine PO exception.
++4. Retain affected automated localization, RTL/LTR and accessibility checks. Human visual/bilingual acceptance belongs to applicable product/design milestones and feature gates, not every PR; do not require a universal PO language-review sign-off. Do not call automation, static inspection or stale evidence a human/native pass. Preserve F012 C1/C2/C3/U1, OPEN-UX-001 and all other canonical obligations.
+ 5. Review the diff for PHI, secrets, undocumented operations, dependency-direction violations, open-gate claims, and third-party instructions that conflict with SHIFAA.
+ 6. Follow the SpecKit lifecycle and PR-only integration sequence. External skills never add or replace a mandatory lifecycle.
+diff --git a/AGENTS.md b/AGENTS.md
+index 954a63f..be3e935 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -30,19 +30,49 @@ conversation and explicit starting instruction after approved integration.
+ 
+ PR integration is mandatory from spec 003 onward. Never push directly to `main`
+ unless Yousef explicitly authorizes that exception in the conversation.
+-The required sequence remains: successful local `pnpm verify`; recorded live
+-Arabic and English acceptance; push only the feature branch; open a PR linked
+-to its Issue and spec directory; all required checks pass on the current head;
+-**Yousef Osama performs the human squash merge**; verify merged remote main.
++The required sequence is: record the change class and verification scope; run
++applicable resource-safe checks; push only the feature branch; open a PR linked
++to its Issue and spec directory; complete code review and required thread
++resolution; all six mandatory CI contexts and metadata checks pass on the current
++head; **Yousef Osama performs the human squash merge**; verify merged remote main.
+ No other approver is required for Git integration. Professional domain approvals
+-remain separate. A prior PR-specific exception does not transfer to a new PR.
+-
+-`pnpm verify` resets databases and can write evidence. Inspect its scripts and
+-resource isolation first; do not run it blindly against existing project data.
+-If a required check is unsafe/unavailable, report the exact requirement and seek
+-an attributable bounded disposition before publication. Documentation-only work
+-has no automatic waiver. Proposed change-class guidance is in the modernization
+-package; it is not effective policy.
++remain separate. Never bypass failed required CI or transfer a prior PR exception.
++
++Human visual and bilingual acceptance belongs to applicable product/design
++milestones and feature-specific gates, not every push or PR. A Product Owner
++language-review sign-off is not a universal integration prerequisite. Affected UI
++changes retain relevant automated localization, Arabic RTL/English LTR and
++accessibility checks. Automated checks and static screenshots never substitute
++for human, native accessibility or device acceptance where a milestone requires it.
++
++`pnpm verify` remains the comprehensive verification command. Its current chain
++resets databases, removes volumes and can write evidence; it is not an automatic
++pre-push command. Inspect the full chain, target resources, ownership, persistence
++and evidence destinations before execution. Run destructive paths only against
++proven disposable isolated resources. Never reset or modify retained Supabase
++databases or volumes to satisfy verification. A worktree or backup alone does not
++prove isolation. Report unexecuted checks honestly; never weaken tests to pass.
++
++Select checks from the actual diff and affected contracts/callers:
++
++- Documentation, governance, contract and static-design evidence changes without
++  product runtime, generated-client, dependency, executable verification-tooling,
++  migration or CI changes may use relevant focused formatting, link, hash,
++  privacy, scope, contract/schema and static integrity checks plus required CI.
++  This is the normal policy, not a per-PR exception; a fresh local aggregate run
++  and fresh human live Arabic/English acceptance are not required for this class.
++- Runtime, database, UI and executable tooling changes require their affected
++  feature, regression, security/authorization, RLS, concurrency, recovery,
++  localization and accessibility checks as applicable. Use the comprehensive
++  command where required and resource-safe; focused checks do not erase a
++  contracted runtime or milestone obligation.
++- If an applicable mandatory check is unsafe or unavailable, record its precise
++  scope, reason and capability impact. Obtain one attributable bounded
++  disposition only if integration must proceed without that required evidence;
++  ordinary documentation-focused verification needs no repetitive PO exception.
++
++These integration rules do not change SpecKit approvals, F012 C1/C2/C3/U1,
++OPEN-UX-001, other canonical feature obligations, or clinical/legal/production gates.
+ 
+ Apply the [Feature Artifact Finalization Gate](docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md)
+ before closeout or any worktree/branch deletion. Official outputs belong in the
+diff --git a/docs/SHIFAA-Documentation-Index.md b/docs/SHIFAA-Documentation-Index.md
+index 1ab4723..030050b 100644
+--- a/docs/SHIFAA-Documentation-Index.md
++++ b/docs/SHIFAA-Documentation-Index.md
+@@ -26,6 +26,6 @@ Root maintains AGENTS and this navigator when current authority or execution gui
+ 
+ After a feature merge, update the current lookup/map only from verified evidence. Preserve historical source bytes and original manifests. Use a versioned additive successor where an approved hash binds a document; do not repair old snapshots in place. Update implemented/tested/accepted/clinical dimensions independently. Record the exact observed revision rather than a floating assertion that a map is always current.
+ 
+-The read-only [candidate checker](../tools/verify-documentation-authority.py) and its tests are proposed drift prevention. CI wiring and a change-class verification policy are separately reviewable proposals; no branch requirement is waived here.
++The read-only [candidate checker](../tools/verify-documentation-authority.py) and its tests are proposed drift prevention. The current change-aware PR verification rule is in [AGENTS](../AGENTS.md); the modernization package's earlier verification-policy proposal is historical, not a competing current instruction. CI wiring proposals do not waive any of the six required current-head contexts, review or human squash integration.
+ 
+ For current tooling installation and upgrades, use the [tooling maintenance policy](governance/SHIFAA-Tooling-Maintenance-Policy.md). Older onboarding version observations are historical; do not copy their version literal.
+diff --git a/docs/SHIFAA-Operational-Guide-v1.md b/docs/SHIFAA-Operational-Guide-v1.md
+index c855fd0..a38a167 100644
+--- a/docs/SHIFAA-Operational-Guide-v1.md
++++ b/docs/SHIFAA-Operational-Guide-v1.md
+@@ -18,9 +18,9 @@ For implemented API claims inspect [route composition](../services/api/src/app.t
+ 
+ ## Testing and deployment
+ 
+-`pnpm verify` includes `db:reset`; `db:reset` includes `docker compose down -v`, migrations and other evidence-producing harnesses. Read the complete script chain, intended environment and data ownership before executing. Never run it against shared or existing project data merely to satisfy a documentation check. Current integration rules still apply; an unsafe requirement needs an exact attributable disposition before publication, not an implicit bypass.
++`pnpm verify` includes `db:reset`; `db:reset` includes `docker compose down -v`, migrations and other evidence-producing harnesses. Read the complete script chain, intended environment and data ownership before executing. Never run it against shared or existing project data merely to satisfy a documentation check. Follow the change-aware verification policy in [AGENTS](../AGENTS.md): documentation/governance/contract/static-design-only changes use relevant focused checks plus all required current-head CI without routine PO exceptions. Run destructive aggregate paths only with proven disposable resource isolation; never reset or modify retained Supabase databases or volumes. Applicable mandatory evidence that remains unsafe/unavailable needs a bounded disposition only when integration must proceed without it.
+ 
+-Read-only preparation commands for this candidate are listed in [validation results](governance/repository-modernization-v1/validation-results.json). They establish documentary/configuration integrity only. Actual live Arabic/English, native NVDA/TalkBack/device, runtime RLS/race/rollback, and clinical acceptance remain distinct evidence.
++Read-only preparation commands for this candidate are listed in [validation results](governance/repository-modernization-v1/validation-results.json). They establish documentary/configuration integrity only. Human visual/live Arabic/English acceptance is required at applicable product/design milestones and feature gates, not universally before each PR. Affected automated locale/RTL/LTR/accessibility checks, all six current-head CI contexts, code review and human squash merge remain required. Native NVDA/TalkBack/device, runtime RLS/race/rollback, and clinical acceptance remain distinct evidence; F012 C1/C2/C3/U1 and OPEN-UX-001 are unchanged.
+ 
+ Do not treat development runbooks or Docker startup as production enablement. Preserve clinical/legal/vendor/privacy/facility/security release gates and their designated authorities. No deployment or real-PHI processing is authorized by this guide.
+ 
+diff --git a/docs/TEAM-ONBOARDING-DRAFT.md b/docs/TEAM-ONBOARDING-DRAFT.md
+index d1ad2e7..6c00db1 100644
+--- a/docs/TEAM-ONBOARDING-DRAFT.md
++++ b/docs/TEAM-ONBOARDING-DRAFT.md
+@@ -1077,7 +1077,7 @@ Source: the portable setup folder's `tools/test-shifaa-dev-environment.ps1`.
+ 
+ #### Live application smoke check (Required)
+ 
+-Start API/patient/admin, open the verified local URLs, confirm each app renders, and inspect its console/network errors. Use assigned synthetic fixtures. Confirm keyboard navigation and Arabic/English display; record the required live AR/EN acceptance evidence for later feature integration. This onboarding checkbox does not close native screen-reader, vendor, legal, clinical or production OPEN gates. Stop long-running apps/workers before final database verification.
++Start API/patient/admin, open the verified local URLs, confirm each app renders, and inspect its console/network errors. Use assigned synthetic fixtures. Confirm keyboard navigation and Arabic/English display for this onboarding smoke check. Human visual/bilingual acceptance remains required at applicable product/design milestones and feature gates; it is not a universal per-PR sign-off. This onboarding checkbox does not close native screen-reader, vendor, legal, clinical or production OPEN gates. Stop long-running apps/workers before final database verification.
+ 
+ Source: `AGENTS.md / docs/design/SHIFAA-UI-Contract.md`.
+ 
+@@ -1101,7 +1101,7 @@ git status --short
+ git diff --check
+ ```
+ 
+-After a successful fresh exit 0, mark this gate and all required steps. READY is a local self-attestation tied to this setup snapshot; rerun verification after changes. Follow AGENTS.md for later feature work: pnpm verify → live AR/EN evidence → feature branch → Issue/spec-linked PR → current checks → STOP for Yousef’s squash merge. This setup task performs no commit/push/PR and does not implement parked SHIFAA Control feature 025.
++After a successful fresh exit 0, mark this gate and all required steps. READY is a local self-attestation tied to this setup snapshot; rerun verification after changes. This full setup-readiness gate is distinct from routine PR verification. Follow AGENTS.md for later integration: classify the actual change → applicable resource-safe checks (focused checks plus required CI for documentation-only changes) → feature branch → Issue/spec-linked PR → code review and all six current-head CI contexts → STOP for Yousef’s squash merge. Never reset retained Supabase data; full verification requires proven disposable isolation. This setup task performs no commit/push/PR and does not implement parked SHIFAA Control feature 025.
+ 
+ Source: `package.json scripts.verify`.
+ 

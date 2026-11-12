@@ -1,0 +1,35 @@
+# F012 Draft PR and team handoff plan
+
+**PREPARED ONLY — NO STAGING, COMMIT, PUSH, PR OR ISSUE MUTATION.** WIP / DRAFT_FOR_REVIEW; no PLAN_APPROVED. [Exact review](approval-package.md); [inventory](publication-inventory.json); [candidate visual gallery](../../design/plan-closure-2026-11-11/gallery.html).
+
+## Exact current context
+
+Existing branch codex/f012-specify-20261023, local HEAD 0ad13689a170f325681a260d925e149f669e485a, integrated main 41696fae3bfaf3e54c947cd558b758c21864d894, Specify checkpoint c571773d6432251d1f52bc94bb501c4e163f1571. Main was independently read back unchanged this review. Do not create another maintenance/feature worktree, rebase dirty drafts, reset or repair either pointer. Current branch is not yet a published Plan checkpoint.
+
+Original inventory is 25 files plus the separately created post-merge receipt = 26 pre-existing untracked files. Each is classified with provenance, original/current SHA and automatic-handoff screen result in publication-inventory.json. Six current drafts changed; originals/approvals/history were preserved. New contract, reference source and PNGs are candidates. No file existence implies approval.
+
+All 26 contain engineering prose or sanitized metadata, not raw patient rows/credentials. The native-verification JSON needs explicit manual publication review because the conservative scanner matches a quoted PASSWORD policy boolean; the observed value is policy false, not a password. Its full contents are structured configuration flags/counts/hashes/local index, with data classification UNVERIFIED retained. Never publish the indexed raw evidence or assume the actual database is synthetic-only.
+
+Ignored local-only exclusions: .tmp backups/raw logs/test identity/old container configuration/auth-policy carrier/capture intermediates/snapshot copies; .agents/.kimi-code skills and dependency junctions; .specify/feature.json; other machine/private files. Fifteen indexed private local files were read back and match the existing receipt hashes. The private database archive is not included.
+
+## Smallest safe publication sequence (future authorization)
+
+1. Review the exact content manifest, 26-file inventory, all new asset provenance and current assignee/handoff conflicts. Link the existing [F012 continuity Issue #493](https://github.com/YousefE1bana/shifaa-project/issues/493), including its current additive comment, as **Refs**, never Fixes/Closes. It is governance continuity, not approval or an implementation task list. Do not rewrite its original body or claim new ownership from a stale title. Preserve Issues #502/#507 and PR #508.
+2. Obtain the new PR's own attributable verification/publication disposition if aggregate pnpm verify cannot be safely isolated or live app acceptance is unavailable. AGENTS.md requires both; pnpm verify is destructive and was not run here. PR #506's exception does not transfer. Current evidence is 183 static/schema checks, component/ref checks and informative design capture, not full OpenAPI/runtime/live-a11y acceptance. A permission to publish drafts is not contract/Plan acceptance.
+3. After publication authorization, generate an explicit NUL-delimited path list from the reviewed inventory, including only allowed public artifacts. Review the exact native-verification JSON and known-generated PNGs explicitly; do not change the automatic scanner to bypass its exclusions. Compare every file hash again. Stage via that exact path list, inspect cached diff/manifest, commit coherent **draft** docs/design content on the existing F012 branch. No blanket add, ignored skills/private files or unrelated maintenance.
+4. Push only this feature branch, no force/direct-main push, then open one Draft PR: **WIP: F012 Plan contract and design candidates — NOT APPROVED**; base main, refs #493, owning feature directory. Include exact commit/content/baseline hashes, C1/C2/C3 pending decisions, static evidence and all explicit limitations. Required current-head CI remains mandatory; no merge until Yousef's later human decision.
+5. Record a GitHub handoff with exact published commit, owner/Issue link, completed Specify approval and current Plan review, pending contract/patient/design acceptance, dependencies and unchanged gates. No Tasks/implementation units or automatic lifecycle acceptance. Fetch/read before assigning; do not duplicate an active claim.
+
+The normal pnpm team:handoff filter intentionally rejects binary PNGs and the manually held receipt. It cannot publish this entire design bundle automatically. Use its --dry-run for a future text snapshot only; report all 1,048 candidate PNGs and held receipt as UNSENT unless already present in the reviewed normal Git Draft PR commit. Do not rename files, allow unsafe ignored content or weaken MAX_FILE/SECRET/BINARY checks. Normal Git publication of these specifically reviewed generated assets is a separate explicit manifest path, not a bypass in the team command. The asset payload size is recorded in the inventory; no individual PNG approaches the GitHub single-file limit.
+
+## Resume and failure recovery
+
+Teammates use the existing [team workflow](../../../../docs/TEAM-HANDOFF.md) with normal Git/GitHub credentials. Read the Draft PR and exact manifest first. pnpm team:start lists relevant tasks/PRs; pnpm team:start --pr N --resume checks the actual published commit into a safe worktree and preserves dirty local work. N is the future real PR number, not PR #508. Cross-person acceptance remains NOT EXECUTED under #507; no identity or ownership transfer is fabricated.
+
+If auth/push fails, preserve the locally saved commit/branch, dirty/index/ignored state and exact manifest. Do not reset or create another task claim. Correct normal GitHub authentication; retry the saved handoff commit using the tool's documented --retry path, or retry the normal non-force branch push after comparing remote ownership/head. A safe text snapshot with omitted baselines is incomplete and must say so. Read-only failure diagnosis may continue; no implied successful publish.
+
+## Ready-to-copy future Draft PR description
+
+F012's Specification remains SPEC_APPROVED at the preserved checkpoint. This draft consolidates the exact NAC-1/source/API/Data/RLS technical candidate, a separately unapproved subject P/M release/withdrawal policy and reviewable bilingual design compositions. Existing P1–P3/S1–S8 approvals are preserved. No F012 runtime implementation, effective new grant, executable clinical vector or Plan approval is included.
+
+Validation: twelve operations; 7 closure + 2 prerequisite FRs; 22 NFRs; sixteen ACs; 62 component schemas; 314 resolved references; 183 bounded static/schema checks. Full OpenAPI 3.1.1 validation VALIDATION_NOT_AVAILABLE. Informative reference captures and exact hashes are linked; actual Product/Design acceptance and governed successor activation remain pending. Private evidence is excluded and indexed locally. No aggregate destructive verification/live native acceptance claim. Refs #493. Do not auto-close issues or merge.

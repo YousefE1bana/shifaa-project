@@ -1,0 +1,15 @@
+{
+  "status": "PASS_OFFLINE_PRESENTATION_ONLY",
+  "browser": "153.0.8010.12",
+  "initialImageReadbacks": 32,
+  "focusImageViews": 8,
+  "pngDownloadReadbacks": 2,
+  "outerReflowWidths": [
+    360,
+    412,
+    768,
+    1440
+  ],
+  "errors": [],
+  "externalRequests": []
+}

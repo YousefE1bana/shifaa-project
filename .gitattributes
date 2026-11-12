@@ -26,3 +26,23 @@ specs/011-allergies-clinical-content-governance/visual-baselines/source/fonts/ib
 .agents/skills/** -whitespace
 /specs/012-prescription-safety-governed-overrides/governance-remediation/integration-retention-manifest-v2.json -text whitespace=cr-at-eol
 /specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/demonstration-data-proposal.md whitespace=-blank-at-eol
+
+# F012 sealed review/approval bytes: exact paths only; preserve reviewed hashes.
+# No global normalization change and no override for Specify checkpoint artifacts.
+/specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/capture.cjs -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.css -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.js -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.css -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.js -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/capture.cjs -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/copy-change.json -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/REVIEW-INDEX.md -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/baseline-selection.json -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/index.html -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/acceptance-manifest.json -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-baselines.json -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-gallery.html -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/governance-amendment.md -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/content-manifest.json -text whitespace=cr-at-eol
+/specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/preservation-validation.json -text whitespace=cr-at-eol

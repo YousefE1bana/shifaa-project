@@ -1,0 +1,1947 @@
+{
+  "id": "F012-C3-MOBILE-VIEWPORT-REVIEW/0.3.0",
+  "approval": "NOT_APPROVED",
+  "beforeSource": "unchanged C3 v0.2.0, fresh actual viewport readback; no earlier PNG cropped/modified",
+  "pairs": [
+    {
+      "family": "prescription",
+      "state": "superseded",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "mode": "light",
+      "textScale": 1,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/prescription-superseded-ar-EG-360x800-text1.png",
+        "sha256": "ef7999ed0e055f9df133e6653f7ad42923234956a0b8ae8db4e71eb8cf92194d",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 131,
+            "bottom": 1734,
+            "width": 360,
+            "height": 1603
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 655,
+            "bottom": 800,
+            "width": 360,
+            "height": 145
+          },
+          "help": {
+            "left": 16,
+            "right": 100.609375,
+            "top": 655,
+            "bottom": 711,
+            "width": 84.609375,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 727,
+            "bottom": 800,
+            "width": 360,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1603,
+          "mainClientHeight": 1603,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 17,
+          "occludedTextLines": 4,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/prescription/superseded-ar-EG-360x800-light.png",
+        "sha256": "26bfbbc711d5788edb2eb603b750d288012e34ecbb8ad15e7059e70190bb4729",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 646,
+            "width": 360,
+            "height": 646
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 646,
+            "bottom": 800,
+            "width": 360,
+            "height": 154
+          },
+          "help": {
+            "left": 16,
+            "right": 100.609375,
+            "top": 655,
+            "bottom": 711,
+            "width": 84.609375,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 727,
+            "bottom": 800,
+            "width": 360,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1638,
+          "mainClientHeight": 646,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 20,
+          "occludedTextLines": 0,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "prescription",
+      "state": "superseded",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "mode": "light",
+      "textScale": 2,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/prescription-superseded-ar-EG-360x800-text2.png",
+        "sha256": "9d0c77a94fd2a985ff8a179984c33a6114a74ae1f1232d39ba2be3cf47668e25",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 429,
+            "bottom": 4348,
+            "width": 360,
+            "height": 3919
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 571,
+            "bottom": 800,
+            "width": 360,
+            "height": 229
+          },
+          "help": {
+            "left": 16,
+            "right": 149.21875,
+            "top": 571,
+            "bottom": 639,
+            "width": 133.21875,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 655,
+            "bottom": 800,
+            "width": 360,
+            "height": 145
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 3919,
+          "mainClientHeight": 3919,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 7,
+          "occludedTextLines": 4,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/after/prescription-superseded-ar-EG-360x800-text2.png",
+        "sha256": "79140363e0444595c2d56bf2b416c46404695a8ca6171a5f4161812221b602c9",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 562,
+            "width": 360,
+            "height": 562
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 562,
+            "bottom": 800,
+            "width": 360,
+            "height": 238
+          },
+          "help": {
+            "left": 16,
+            "right": 149.21875,
+            "top": 571,
+            "bottom": 639,
+            "width": 133.21875,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 655,
+            "bottom": 800,
+            "width": 360,
+            "height": 145
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 4535,
+          "mainClientHeight": 562,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 12,
+          "occludedTextLines": 0,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "prescription",
+      "state": "superseded",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mode": "light",
+      "textScale": 1,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/prescription-superseded-ar-EG-412x915-text1.png",
+        "sha256": "fc4cc15cc2cee455929be72632ba2e7d99e68dc19d4b190dd660ac44ef8cf72d",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 131,
+            "bottom": 1690,
+            "width": 412,
+            "height": 1559
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 770,
+            "bottom": 915,
+            "width": 412,
+            "height": 145
+          },
+          "help": {
+            "left": 16,
+            "right": 100.609375,
+            "top": 770,
+            "bottom": 826,
+            "width": 84.609375,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 842,
+            "bottom": 915,
+            "width": 412,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1559,
+          "mainClientHeight": 1559,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 21,
+          "occludedTextLines": 4,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/prescription/superseded-ar-EG-412x915-light.png",
+        "sha256": "fa9e4a9893e0c52bc2103d18d761ce5634e3396879c7e4cf71daa51aa38b9949",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 0,
+            "bottom": 761,
+            "width": 412,
+            "height": 761
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 761,
+            "bottom": 915,
+            "width": 412,
+            "height": 154
+          },
+          "help": {
+            "left": 16,
+            "right": 100.609375,
+            "top": 770,
+            "bottom": 826,
+            "width": 84.609375,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 842,
+            "bottom": 915,
+            "width": 412,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1545,
+          "mainClientHeight": 761,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 23,
+          "occludedTextLines": 0,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "prescription",
+      "state": "superseded",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mode": "light",
+      "textScale": 2,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/prescription-superseded-ar-EG-412x915-text2.png",
+        "sha256": "54bfd20d10b62d98ef4ecc389f0322535cbe41c8244606ea12f5f9185894cf41",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 325,
+            "bottom": 3620,
+            "width": 412,
+            "height": 3295
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 734,
+            "bottom": 915,
+            "width": 412,
+            "height": 181
+          },
+          "help": {
+            "left": 16,
+            "right": 149.21875,
+            "top": 734,
+            "bottom": 802,
+            "width": 133.21875,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 818,
+            "bottom": 915,
+            "width": 412,
+            "height": 97
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 3295,
+          "mainClientHeight": 3295,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 13,
+          "occludedTextLines": 3,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/after/prescription-superseded-ar-EG-412x915-text2.png",
+        "sha256": "815af0e08b4761eed7ed21ba7506422b34d4c30e2ea18f156655006c9d202ce3",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 0,
+            "bottom": 725,
+            "width": 412,
+            "height": 725
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 725,
+            "bottom": 915,
+            "width": 412,
+            "height": 190
+          },
+          "help": {
+            "left": 16,
+            "right": 149.21875,
+            "top": 734,
+            "bottom": 802,
+            "width": 133.21875,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 818,
+            "bottom": 915,
+            "width": 412,
+            "height": 97
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 3583,
+          "mainClientHeight": 725,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 17,
+          "occludedTextLines": 0,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "prescription",
+      "state": "superseded",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "mode": "light",
+      "textScale": 1,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/prescription-superseded-en-EG-360x800-text1.png",
+        "sha256": "118d7461423df8310146cdbcfa900eb0043944132673476c86fc648f1eb43075",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 175,
+            "bottom": 2090,
+            "width": 360,
+            "height": 1915
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 631,
+            "bottom": 800,
+            "width": 360,
+            "height": 169
+          },
+          "help": {
+            "left": 273.109375,
+            "right": 344,
+            "top": 631,
+            "bottom": 687,
+            "width": 70.890625,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 703,
+            "bottom": 800,
+            "width": 360,
+            "height": 97
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1915,
+          "mainClientHeight": 1915,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 18,
+          "occludedTextLines": 3,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/prescription/superseded-en-EG-360x800-light.png",
+        "sha256": "3e667842108d6396591b4f3d6226bc6136110c22a703f0875f92c3e48cc2c864",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 622,
+            "width": 360,
+            "height": 622
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 622,
+            "bottom": 800,
+            "width": 360,
+            "height": 178
+          },
+          "help": {
+            "left": 273.109375,
+            "right": 344,
+            "top": 631,
+            "bottom": 687,
+            "width": 70.890625,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 703,
+            "bottom": 800,
+            "width": 360,
+            "height": 97
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1989,
+          "mainClientHeight": 622,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 21,
+          "occludedTextLines": 0,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "prescription",
+      "state": "superseded",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "mode": "light",
+      "textScale": 2,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/prescription-superseded-en-EG-360x800-text2.png",
+        "sha256": "41c57423a83940815d8c699e5a19cb459ac8181fd7dce42d178986bf9bf3a971",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 451,
+            "bottom": 5498,
+            "width": 360,
+            "height": 5047
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 523,
+            "bottom": 800,
+            "width": 360,
+            "height": 277
+          },
+          "help": {
+            "left": 238.21875,
+            "right": 344,
+            "top": 523,
+            "bottom": 591,
+            "width": 105.78125,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 607,
+            "bottom": 800,
+            "width": 360,
+            "height": 193
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 5047,
+          "mainClientHeight": 5047,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 5,
+          "occludedTextLines": 3,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/after/prescription-superseded-en-EG-360x800-text2.png",
+        "sha256": "c0e63d3f95ed65cddf63f65e144b03eadfa3867b613bcae70c9d94d0b6d4dbf3",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 502,
+            "width": 360,
+            "height": 502
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 502,
+            "bottom": 800,
+            "width": 360,
+            "height": 298
+          },
+          "help": {
+            "left": 238.21875,
+            "right": 344,
+            "top": 517,
+            "bottom": 585,
+            "width": 105.78125,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 607,
+            "bottom": 800,
+            "width": 360,
+            "height": 193
+          },
+          "helpNavigationGap": 22,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 7717,
+          "mainClientHeight": 502,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 12,
+          "occludedTextLines": 0,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "prescription",
+      "state": "superseded",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mode": "light",
+      "textScale": 1,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/prescription-superseded-en-EG-412x915-text1.png",
+        "sha256": "9ea6c30a4f71282cfcbab482866c86b5b12f599a7e687c129c785dc5f7074ed8",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 150,
+            "bottom": 1837,
+            "width": 412,
+            "height": 1687
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 770,
+            "bottom": 915,
+            "width": 412,
+            "height": 145
+          },
+          "help": {
+            "left": 325.109375,
+            "right": 396,
+            "top": 770,
+            "bottom": 826,
+            "width": 70.890625,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 842,
+            "bottom": 915,
+            "width": 412,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1687,
+          "mainClientHeight": 1687,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 20,
+          "occludedTextLines": 2,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/prescription/superseded-en-EG-412x915-light.png",
+        "sha256": "81196f91912f8c77c04d6741789ed23e1489fc48597bd5366fd0eda5fdfc1767",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 0,
+            "bottom": 761,
+            "width": 412,
+            "height": 761
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 761,
+            "bottom": 915,
+            "width": 412,
+            "height": 154
+          },
+          "help": {
+            "left": 325.109375,
+            "right": 396,
+            "top": 770,
+            "bottom": 826,
+            "width": 70.890625,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 842,
+            "bottom": 915,
+            "width": 412,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1741,
+          "mainClientHeight": 761,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 24,
+          "occludedTextLines": 0,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "prescription",
+      "state": "superseded",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mode": "light",
+      "textScale": 2,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/prescription-superseded-en-EG-412x915-text2.png",
+        "sha256": "c5e6c23553ccdb2f270939cc961bfce3027f7161e9d3be444083cd62d5e9e361",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 363,
+            "bottom": 4850,
+            "width": 412,
+            "height": 4487
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 686,
+            "bottom": 915,
+            "width": 412,
+            "height": 229
+          },
+          "help": {
+            "left": 290.21875,
+            "right": 396,
+            "top": 686,
+            "bottom": 754,
+            "width": 105.78125,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 770,
+            "bottom": 915,
+            "width": 412,
+            "height": 145
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 4487,
+          "mainClientHeight": 4487,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 11,
+          "occludedTextLines": 5,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/after/prescription-superseded-en-EG-412x915-text2.png",
+        "sha256": "d3fcc125de6539e1e37d430c88367c20c189c8b56186515a021e74f086341473",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 0,
+            "bottom": 677,
+            "width": 412,
+            "height": 677
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 677,
+            "bottom": 915,
+            "width": 412,
+            "height": 238
+          },
+          "help": {
+            "left": 290.21875,
+            "right": 396,
+            "top": 686,
+            "bottom": 754,
+            "width": 105.78125,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 770,
+            "bottom": 915,
+            "width": 412,
+            "height": 145
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 5093,
+          "mainClientHeight": 677,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 15,
+          "occludedTextLines": 0,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "medications",
+      "state": "partial",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "mode": "light",
+      "textScale": 1,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/medications-partial-ar-EG-360x800-text1.png",
+        "sha256": "62f6110053d4a14238a080c190a745bc9e59bdbbdeaa9e94b692a62a7dba160b",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 131,
+            "bottom": 1792,
+            "width": 360,
+            "height": 1661
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 655,
+            "bottom": 800,
+            "width": 360,
+            "height": 145
+          },
+          "help": {
+            "left": 16,
+            "right": 100.609375,
+            "top": 655,
+            "bottom": 711,
+            "width": 84.609375,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 727,
+            "bottom": 800,
+            "width": 360,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1661,
+          "mainClientHeight": 1661,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 17,
+          "occludedTextLines": 2,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/medications/partial-ar-EG-360x800-light.png",
+        "sha256": "21c7a9da0eb76b48300ff7c5b0be09f8b1e216f6546c1d9f991bfe3cbb9e7a4a",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 646,
+            "width": 360,
+            "height": 646
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 646,
+            "bottom": 800,
+            "width": 360,
+            "height": 154
+          },
+          "help": {
+            "left": 16,
+            "right": 100.609375,
+            "top": 655,
+            "bottom": 711,
+            "width": 84.609375,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 727,
+            "bottom": 800,
+            "width": 360,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1696,
+          "mainClientHeight": 646,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 20,
+          "occludedTextLines": 0,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "medications",
+      "state": "partial",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "mode": "light",
+      "textScale": 2,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/medications-partial-ar-EG-360x800-text2.png",
+        "sha256": "fad45d4bb3ac686169bf94ac7a2857fb16a5909c81cf877192be44136da36980",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 388,
+            "bottom": 4304,
+            "width": 360,
+            "height": 3916
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 571,
+            "bottom": 800,
+            "width": 360,
+            "height": 229
+          },
+          "help": {
+            "left": 16,
+            "right": 149.21875,
+            "top": 571,
+            "bottom": 639,
+            "width": 133.21875,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 655,
+            "bottom": 800,
+            "width": 360,
+            "height": 145
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 3916,
+          "mainClientHeight": 3916,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 9,
+          "occludedTextLines": 5,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/after/medications-partial-ar-EG-360x800-text2.png",
+        "sha256": "89a8943d903fefb36f06c310747ff32734c61ff0534836dbdc58ddad684f78ae",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 562,
+            "width": 360,
+            "height": 562
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 562,
+            "bottom": 800,
+            "width": 360,
+            "height": 238
+          },
+          "help": {
+            "left": 16,
+            "right": 149.21875,
+            "top": 571,
+            "bottom": 639,
+            "width": 133.21875,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 655,
+            "bottom": 800,
+            "width": 360,
+            "height": 145
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 4491,
+          "mainClientHeight": 562,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 11,
+          "occludedTextLines": 0,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "medications",
+      "state": "partial",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mode": "light",
+      "textScale": 1,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/medications-partial-ar-EG-412x915-text1.png",
+        "sha256": "63edc02f4172f7fa86d8562eca6963c1f3885405a7d861dc7f2a90b4b95f0b0b",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 131,
+            "bottom": 1772,
+            "width": 412,
+            "height": 1641
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 770,
+            "bottom": 915,
+            "width": 412,
+            "height": 145
+          },
+          "help": {
+            "left": 16,
+            "right": 100.609375,
+            "top": 770,
+            "bottom": 826,
+            "width": 84.609375,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 842,
+            "bottom": 915,
+            "width": 412,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1641,
+          "mainClientHeight": 1641,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 20,
+          "occludedTextLines": 2,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/medications/partial-ar-EG-412x915-light.png",
+        "sha256": "8d8b0f188a3bbcf187cb438ab641aebce8c740bdd2bffa70b3c453e7304f1ab2",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 0,
+            "bottom": 761,
+            "width": 412,
+            "height": 761
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 761,
+            "bottom": 915,
+            "width": 412,
+            "height": 154
+          },
+          "help": {
+            "left": 16,
+            "right": 100.609375,
+            "top": 770,
+            "bottom": 826,
+            "width": 84.609375,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 842,
+            "bottom": 915,
+            "width": 412,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1627,
+          "mainClientHeight": 761,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 23,
+          "occludedTextLines": 0,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "medications",
+      "state": "partial",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mode": "light",
+      "textScale": 2,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/medications-partial-ar-EG-412x915-text2.png",
+        "sha256": "2d05a30bf3041dc269077c490fb14dd5bf30bc774fc8ef128579a0d47b9122e9",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 325,
+            "bottom": 3905,
+            "width": 412,
+            "height": 3580
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 734,
+            "bottom": 915,
+            "width": 412,
+            "height": 181
+          },
+          "help": {
+            "left": 16,
+            "right": 149.21875,
+            "top": 734,
+            "bottom": 802,
+            "width": 133.21875,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 818,
+            "bottom": 915,
+            "width": 412,
+            "height": 97
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 3580,
+          "mainClientHeight": 3580,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 13,
+          "occludedTextLines": 3,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/after/medications-partial-ar-EG-412x915-text2.png",
+        "sha256": "48d623ef7db670f13208e25c5cd49389d809c1891fa7290312a4df40b183ee6b",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 0,
+            "bottom": 725,
+            "width": 412,
+            "height": 725
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 725,
+            "bottom": 915,
+            "width": 412,
+            "height": 190
+          },
+          "help": {
+            "left": 16,
+            "right": 149.21875,
+            "top": 734,
+            "bottom": 802,
+            "width": 133.21875,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 818,
+            "bottom": 915,
+            "width": 412,
+            "height": 97
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 3828,
+          "mainClientHeight": 725,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 17,
+          "occludedTextLines": 0,
+          "lang": "ar-EG",
+          "dir": "rtl"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "medications",
+      "state": "partial",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "mode": "light",
+      "textScale": 1,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/medications-partial-en-EG-360x800-text1.png",
+        "sha256": "db6624e5d033b452b3215be257ceae5370341b84ce6764d11492238da4953394",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 175,
+            "bottom": 2160,
+            "width": 360,
+            "height": 1985
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 631,
+            "bottom": 800,
+            "width": 360,
+            "height": 169
+          },
+          "help": {
+            "left": 273.109375,
+            "right": 344,
+            "top": 631,
+            "bottom": 687,
+            "width": 70.890625,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 703,
+            "bottom": 800,
+            "width": 360,
+            "height": 97
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1985,
+          "mainClientHeight": 1985,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 18,
+          "occludedTextLines": 2,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/medications/partial-en-EG-360x800-light.png",
+        "sha256": "a3aa4c924a7ce403710627221c6fe94147566a2dc31a0485d6fd5906efe27fb9",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 622,
+            "width": 360,
+            "height": 622
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 622,
+            "bottom": 800,
+            "width": 360,
+            "height": 178
+          },
+          "help": {
+            "left": 273.109375,
+            "right": 344,
+            "top": 631,
+            "bottom": 687,
+            "width": 70.890625,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 703,
+            "bottom": 800,
+            "width": 360,
+            "height": 97
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 2067,
+          "mainClientHeight": 622,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 21,
+          "occludedTextLines": 0,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "medications",
+      "state": "partial",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "mode": "light",
+      "textScale": 2,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/medications-partial-en-EG-360x800-text2.png",
+        "sha256": "a404ad33510ba83e377024475ed274dcc6ee19e8963dc73be152a7a3528880c3",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 451,
+            "bottom": 5510,
+            "width": 360,
+            "height": 5059
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 523,
+            "bottom": 800,
+            "width": 360,
+            "height": 277
+          },
+          "help": {
+            "left": 238.21875,
+            "right": 344,
+            "top": 523,
+            "bottom": 591,
+            "width": 105.78125,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 607,
+            "bottom": 800,
+            "width": 360,
+            "height": 193
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 5059,
+          "mainClientHeight": 5059,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 5,
+          "occludedTextLines": 3,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/after/medications-partial-en-EG-360x800-text2.png",
+        "sha256": "8d971bd3df208020a02cb5708ed55d10a14c632c74cda974f9ed4527f6ce894b",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 502,
+            "width": 360,
+            "height": 502
+          },
+          "dock": {
+            "left": 0,
+            "right": 360,
+            "top": 502,
+            "bottom": 800,
+            "width": 360,
+            "height": 298
+          },
+          "help": {
+            "left": 238.21875,
+            "right": 344,
+            "top": 517,
+            "bottom": 585,
+            "width": 105.78125,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 360,
+            "top": 607,
+            "bottom": 800,
+            "width": 360,
+            "height": 193
+          },
+          "helpNavigationGap": 22,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 7809,
+          "mainClientHeight": 502,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 12,
+          "occludedTextLines": 0,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "medications",
+      "state": "partial",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mode": "light",
+      "textScale": 1,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/medications-partial-en-EG-412x915-text1.png",
+        "sha256": "249c9520edf78f1767fd52aff94ef2953277b644e72ee5434e2ec2b5cb68ee85",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 150,
+            "bottom": 1967,
+            "width": 412,
+            "height": 1817
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 770,
+            "bottom": 915,
+            "width": 412,
+            "height": 145
+          },
+          "help": {
+            "left": 325.109375,
+            "right": 396,
+            "top": 770,
+            "bottom": 826,
+            "width": 70.890625,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 842,
+            "bottom": 915,
+            "width": 412,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1817,
+          "mainClientHeight": 1817,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 20,
+          "occludedTextLines": 2,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/medications/partial-en-EG-412x915-light.png",
+        "sha256": "dcbf7b6c271c3cc0092804aeb3ff7b89c8e38bae733f8e503527fdd5ff5f65c1",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 0,
+            "bottom": 761,
+            "width": 412,
+            "height": 761
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 761,
+            "bottom": 915,
+            "width": 412,
+            "height": 154
+          },
+          "help": {
+            "left": 325.109375,
+            "right": 396,
+            "top": 770,
+            "bottom": 826,
+            "width": 70.890625,
+            "height": 56
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 842,
+            "bottom": 915,
+            "width": 412,
+            "height": 73
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 1847,
+          "mainClientHeight": 761,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 25,
+          "occludedTextLines": 0,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    },
+    {
+      "family": "medications",
+      "state": "partial",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mode": "light",
+      "textScale": 2,
+      "before": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/before/medications-partial-en-EG-412x915-text2.png",
+        "sha256": "07d0313bbe5fc654dac97750d0a50b747d78f1ea2c1fe4bf8f9cb5cc3e6c4f18",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 363,
+            "bottom": 4870,
+            "width": 412,
+            "height": 4507
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 686,
+            "bottom": 915,
+            "width": 412,
+            "height": 229
+          },
+          "help": {
+            "left": 290.21875,
+            "right": 396,
+            "top": 686,
+            "bottom": 754,
+            "width": 105.78125,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 770,
+            "bottom": 915,
+            "width": 412,
+            "height": 145
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "visible",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 4507,
+          "mainClientHeight": 4507,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 11,
+          "occludedTextLines": 5,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.2.0"
+      },
+      "after": {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/after/medications-partial-en-EG-412x915-text2.png",
+        "sha256": "552ed70b13ccbea158964dbcd59ef2d4ae57c4edbc5e3e3b7c8b824a67fae962",
+        "geometry": {
+          "main": {
+            "left": 0,
+            "right": 412,
+            "top": 0,
+            "bottom": 677,
+            "width": 412,
+            "height": 677
+          },
+          "dock": {
+            "left": 0,
+            "right": 412,
+            "top": 677,
+            "bottom": 915,
+            "width": 412,
+            "height": 238
+          },
+          "help": {
+            "left": 290.21875,
+            "right": 396,
+            "top": 686,
+            "bottom": 754,
+            "width": 105.78125,
+            "height": 68
+          },
+          "nav": {
+            "left": 0,
+            "right": 412,
+            "top": 770,
+            "bottom": 915,
+            "width": 412,
+            "height": 145
+          },
+          "helpNavigationGap": 16,
+          "mainOverflowY": "auto",
+          "mainScrollTop": 0,
+          "mainScrollHeight": 5025,
+          "mainClientHeight": 677,
+          "mainHorizontalOverflow": false,
+          "pageHorizontalOverflow": false,
+          "pageScrollY": 0,
+          "visibleTextLines": 15,
+          "occludedTextLines": 0,
+          "lang": "en-EG",
+          "dir": "ltr"
+        },
+        "capture": "initial viewport, scroll offset zero",
+        "sourceVersion": "0.3.0"
+      }
+    }
+  ],
+  "focusImages": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/focus/prescription-superseded-ar-EG-360x800-text2.png",
+      "sha256": "13698dc1382677b22efc1616b9a390a30d285ce26f622af043fa6f328b97bee4",
+      "family": "prescription",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "textScale": 2,
+      "capture": "actual viewport after keyboard focus scroll; focused recovery read fully inside content scrollport"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/focus/prescription-superseded-ar-EG-412x915-text2.png",
+      "sha256": "5ff664bf72ab043ef9e967db4801c5e5c312df3454a7f22d0c5a1bd413e75835",
+      "family": "prescription",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "textScale": 2,
+      "capture": "actual viewport after keyboard focus scroll; focused recovery read fully inside content scrollport"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/focus/prescription-superseded-en-EG-360x800-text2.png",
+      "sha256": "a1ce1aeea8c094e28186e679b57f3a1c2c25e7f9815fa570a5dd50458c82e1ea",
+      "family": "prescription",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "textScale": 2,
+      "capture": "actual viewport after keyboard focus scroll; focused recovery read fully inside content scrollport"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/focus/prescription-superseded-en-EG-412x915-text2.png",
+      "sha256": "e6d4437474e91ad0b3372fd59a0e97c1e0251d64cb85ac19bd7246a8a7db70d4",
+      "family": "prescription",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "textScale": 2,
+      "capture": "actual viewport after keyboard focus scroll; focused recovery read fully inside content scrollport"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/focus/medications-partial-ar-EG-360x800-text2.png",
+      "sha256": "46685be534854614db033e2c2c67385ae450d81c19437b2e2906adb5b387d3a2",
+      "family": "medications",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "textScale": 2,
+      "capture": "actual viewport after keyboard focus scroll; focused recovery read fully inside content scrollport"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/focus/medications-partial-ar-EG-412x915-text2.png",
+      "sha256": "92bcc1deb564ba2a17011047699b6f73302b1d5c86cc65d214547ae7af83ed82",
+      "family": "medications",
+      "locale": "ar-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "textScale": 2,
+      "capture": "actual viewport after keyboard focus scroll; focused recovery read fully inside content scrollport"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/focus/medications-partial-en-EG-360x800-text2.png",
+      "sha256": "eed9d6103af4f53e413a1dc75f2535ddea21968a9aa5215ac99a34feba5667d5",
+      "family": "medications",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "textScale": 2,
+      "capture": "actual viewport after keyboard focus scroll; focused recovery read fully inside content scrollport"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/viewport-evidence/focus/medications-partial-en-EG-412x915-text2.png",
+      "sha256": "b1a5675c44f48e75caed4a30476e2aaba46f044e0660aa17c359753d36351820",
+      "family": "medications",
+      "locale": "en-EG",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "textScale": 2,
+      "capture": "actual viewport after keyboard focus scroll; focused recovery read fully inside content scrollport"
+    }
+  ],
+  "imageCount": 40,
+  "deltaManifestSha256": "85708ffa055a0fda5ac582425a24706e1cafc1d7911f6abb6a003a0ceb07bde6"
+}

@@ -1,0 +1,773 @@
+{
+  "status": "PREPARED_EXACT_PATH_BYTE_PRESERVATION",
+  "beforeSHA256": "a6f349a58eba23d96ab13ac0d612b086a17c28ef0cc8d8c6ac012577e7accb55",
+  "afterSHA256": "ba16114895cb71235fed852f4a687b60b8893467e501ca83e77084d4cec12933",
+  "file": ".gitattributes",
+  "sealedPaths": [
+    "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/capture.cjs",
+    "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.css",
+    "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.js",
+    "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.css",
+    "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.js",
+    "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/capture.cjs",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/copy-change.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/REVIEW-INDEX.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/baseline-selection.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/index.html",
+    "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/acceptance-manifest.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-baselines.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-gallery.html",
+    "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/governance-amendment.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/content-manifest.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/preservation-validation.json"
+  ],
+  "scope": "17 untracked sealed C2/C3 source/approval/evidence files; no Specify checkpoint or canonical file override; all original bytes unchanged",
+  "reason": "Existing text=auto/eol=lf would normalize CRLF/mixed bytes and invalidate exact reviewed SHA-256 on publication",
+  "defaultPolicy": "Unchanged",
+  "installationOrRuntime": "None",
+  "cleanFilterIdentity": {
+    "status": "PASS_READ_ONLY_NO_INDEX_OR_OBJECT_WRITE",
+    "files": 123,
+    "results": [
+      {
+        "path": ".gitattributes",
+        "rawGitBlobOID": "c5154e0c1f98e855f28ae83a791ab71a331bc5f5",
+        "cleanFilterGitBlobOID": "c5154e0c1f98e855f28ae83a791ab71a331bc5f5",
+        "exact": true
+      },
+      {
+        "path": "SHIFAA-Implementation-Plan-MASTER.md",
+        "rawGitBlobOID": "ed7c9bf909ad270f1e2294e4bd5fe8609bfe2329",
+        "cleanFilterGitBlobOID": "ed7c9bf909ad270f1e2294e4bd5fe8609bfe2329",
+        "exact": true
+      },
+      {
+        "path": "docs/architecture/SHIFAA-API-Catalog.md",
+        "rawGitBlobOID": "4397c97d36b293fd7726a7970ab7c85503865593",
+        "cleanFilterGitBlobOID": "4397c97d36b293fd7726a7970ab7c85503865593",
+        "exact": true
+      },
+      {
+        "path": "docs/architecture/SHIFAA-Data-RLS.md",
+        "rawGitBlobOID": "5d02e6c91f02ae329d029dde259addf71193a894",
+        "cleanFilterGitBlobOID": "5d02e6c91f02ae329d029dde259addf71193a894",
+        "exact": true
+      },
+      {
+        "path": "docs/design/SHIFAA-UI-Contract.md",
+        "rawGitBlobOID": "499049437a739e067d237c33e22ceadda881af57",
+        "cleanFilterGitBlobOID": "499049437a739e067d237c33e22ceadda881af57",
+        "exact": true
+      },
+      {
+        "path": "shifaa-prd.md",
+        "rawGitBlobOID": "72c4302c03af7a9ed5db1fcfb1443feddf4a4112",
+        "cleanFilterGitBlobOID": "72c4302c03af7a9ed5db1fcfb1443feddf4a4112",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/checklists/plan-consistency.md",
+        "rawGitBlobOID": "05807dcafa089137554823332b2c381737cb1d81",
+        "cleanFilterGitBlobOID": "05807dcafa089137554823332b2c381737cb1d81",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/checklists/requirements.md",
+        "rawGitBlobOID": "dd3b13696b83ce36bfec1c982b51c2502ebbc52a",
+        "cleanFilterGitBlobOID": "dd3b13696b83ce36bfec1c982b51c2502ebbc52a",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/native-authority-nac1-successor-v0.1.0.md",
+        "rawGitBlobOID": "5952bbd01a0bfe454ead49768ccd2dd22920d915",
+        "cleanFilterGitBlobOID": "5952bbd01a0bfe454ead49768ccd2dd22920d915",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/plan-closure-consolidated-v0.1.0.md",
+        "rawGitBlobOID": "462cc7eab07bd5ff3d3b7e871c923175a4b0f1fe",
+        "cleanFilterGitBlobOID": "462cc7eab07bd5ff3d3b7e871c923175a4b0f1fe",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/plan-closure-consolidated-v0.2.0.md",
+        "rawGitBlobOID": "6c3637604d096119a100f513da20f8b55461265b",
+        "cleanFilterGitBlobOID": "6c3637604d096119a100f513da20f8b55461265b",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/source-consumption-successor-v0.1.0.md",
+        "rawGitBlobOID": "000edae047788eceb769c90b64a5952c837df79d",
+        "cleanFilterGitBlobOID": "000edae047788eceb769c90b64a5952c837df79d",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml",
+        "rawGitBlobOID": "8cccfba9f2f3b6be85b33a9e8a404fa676ca5474",
+        "cleanFilterGitBlobOID": "8cccfba9f2f3b6be85b33a9e8a404fa676ca5474",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/data-model.md",
+        "rawGitBlobOID": "5767cf16f486f33ec0e2a1b671be821ed8d070b6",
+        "cleanFilterGitBlobOID": "5767cf16f486f33ec0e2a1b671be821ed8d070b6",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/confirm_release-ar-EG-1440x900-light.png",
+        "rawGitBlobOID": "4e011f063186661dbff849224c6a0f94dea82e40",
+        "cleanFilterGitBlobOID": "4e011f063186661dbff849224c6a0f94dea82e40",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/confirm_release-en-EG-1440x900-light.png",
+        "rawGitBlobOID": "465c5e1d06f71d419ed1799013c73c57ed1c602a",
+        "cleanFilterGitBlobOID": "465c5e1d06f71d419ed1799013c73c57ed1c602a",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/conflict-ar-EG-360x800-light.png",
+        "rawGitBlobOID": "a7670c5254a103f1a6f66c691d7990d7d54b7631",
+        "cleanFilterGitBlobOID": "a7670c5254a103f1a6f66c691d7990d7d54b7631",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/conflict-en-EG-360x800-light.png",
+        "rawGitBlobOID": "5e998c26364ba948c350df3225e424d52b47a892",
+        "cleanFilterGitBlobOID": "5e998c26364ba948c350df3225e424d52b47a892",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/historical-ar-EG-360x800-light.png",
+        "rawGitBlobOID": "e53a176a89d8a4029db2d75ef0f6c26223633ecb",
+        "cleanFilterGitBlobOID": "e53a176a89d8a4029db2d75ef0f6c26223633ecb",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/historical-en-EG-360x800-light.png",
+        "rawGitBlobOID": "4a58df79a747d9763acc6951c4e38a3c34396994",
+        "cleanFilterGitBlobOID": "4a58df79a747d9763acc6951c4e38a3c34396994",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/manifest.json",
+        "rawGitBlobOID": "d03c11b732e84b9cf6e74ee752bfb8a9e57267ba",
+        "cleanFilterGitBlobOID": "d03c11b732e84b9cf6e74ee752bfb8a9e57267ba",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/post_sign_selection-ar-EG-1440x900-light.png",
+        "rawGitBlobOID": "4bd5fa4ab504732f277803515490450d24cbb15e",
+        "cleanFilterGitBlobOID": "4bd5fa4ab504732f277803515490450d24cbb15e",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/post_sign_selection-ar-EG-360x800-light.png",
+        "rawGitBlobOID": "b3128436430117913408dfc1a0b27a3d9fe4b0be",
+        "cleanFilterGitBlobOID": "b3128436430117913408dfc1a0b27a3d9fe4b0be",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/post_sign_selection-en-EG-1440x900-light.png",
+        "rawGitBlobOID": "94bf8bbaf0ff88926f9ce9dc59941e02c9b7fca5",
+        "cleanFilterGitBlobOID": "94bf8bbaf0ff88926f9ce9dc59941e02c9b7fca5",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/post_sign_selection-en-EG-360x800-light.png",
+        "rawGitBlobOID": "f367b2d94738d70c8949125f6d3fa84ebaf8b9e9",
+        "cleanFilterGitBlobOID": "f367b2d94738d70c8949125f6d3fa84ebaf8b9e9",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/release_success-ar-EG-1440x900-light.png",
+        "rawGitBlobOID": "4b27febc32587d31bd431b55c6ebf7e94ef3ac1e",
+        "cleanFilterGitBlobOID": "4b27febc32587d31bd431b55c6ebf7e94ef3ac1e",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/release_success-en-EG-1440x900-light.png",
+        "rawGitBlobOID": "6a4bc32187ae9a29e83c7aaa20856350dfd9a6dc",
+        "cleanFilterGitBlobOID": "6a4bc32187ae9a29e83c7aaa20856350dfd9a6dc",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/sign_selection-ar-EG-1440x900-light.png",
+        "rawGitBlobOID": "01821a9ff071c242b19ff13cca9b7af02f84b3f5",
+        "cleanFilterGitBlobOID": "01821a9ff071c242b19ff13cca9b7af02f84b3f5",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/sign_selection-en-EG-1440x900-light.png",
+        "rawGitBlobOID": "a0aec4e5586acb1abbc434b6fee0ad0ccc98dad1",
+        "cleanFilterGitBlobOID": "a0aec4e5586acb1abbc434b6fee0ad0ccc98dad1",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/uncertain-ar-EG-360x800-light.png",
+        "rawGitBlobOID": "828674c6e7a00c305060b812520581e5966ff9b9",
+        "cleanFilterGitBlobOID": "828674c6e7a00c305060b812520581e5966ff9b9",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/uncertain-en-EG-360x800-light.png",
+        "rawGitBlobOID": "bd17030c96ca40ee4486513933bf6ed1953db0ba",
+        "cleanFilterGitBlobOID": "bd17030c96ca40ee4486513933bf6ed1953db0ba",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdraw_confirmation-ar-EG-1440x900-light.png",
+        "rawGitBlobOID": "af1effc66b1cfb6746092e5c74f4f45a4fb2c908",
+        "cleanFilterGitBlobOID": "af1effc66b1cfb6746092e5c74f4f45a4fb2c908",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdraw_confirmation-ar-EG-412x915-light.png",
+        "rawGitBlobOID": "d199fd10bc88937a4a0a684231cf4d691de67dc7",
+        "cleanFilterGitBlobOID": "d199fd10bc88937a4a0a684231cf4d691de67dc7",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdraw_confirmation-en-EG-1440x900-light.png",
+        "rawGitBlobOID": "81b62bd594e4a75afda1db9f3f8a42333831cbdd",
+        "cleanFilterGitBlobOID": "81b62bd594e4a75afda1db9f3f8a42333831cbdd",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdraw_confirmation-en-EG-412x915-light.png",
+        "rawGitBlobOID": "ef2e29174122aac901bc265a2af69293857e7cd6",
+        "cleanFilterGitBlobOID": "ef2e29174122aac901bc265a2af69293857e7cd6",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdrawn-ar-EG-1440x900-light.png",
+        "rawGitBlobOID": "2008c5b5be2079059b03f2b2e317d92a3cedf0a3",
+        "cleanFilterGitBlobOID": "2008c5b5be2079059b03f2b2e317d92a3cedf0a3",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdrawn-en-EG-1440x900-light.png",
+        "rawGitBlobOID": "8489273b8b561f658ca2724ff36a80c4119bccac",
+        "cleanFilterGitBlobOID": "8489273b8b561f658ca2724ff36a80c4119bccac",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/capture.cjs",
+        "rawGitBlobOID": "0bb30508ab25325f5576d686d2aa5d7e1b1ca641",
+        "cleanFilterGitBlobOID": "0bb30508ab25325f5576d686d2aa5d7e1b1ca641",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/index.html",
+        "rawGitBlobOID": "e1c3b11640e62859755433908564b2809d035bb7",
+        "cleanFilterGitBlobOID": "e1c3b11640e62859755433908564b2809d035bb7",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.css",
+        "rawGitBlobOID": "8a2e1f0e50c760abd3ca52e9f6c77dcd72dc06da",
+        "cleanFilterGitBlobOID": "8a2e1f0e50c760abd3ca52e9f6c77dcd72dc06da",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.js",
+        "rawGitBlobOID": "cf5ce5135abdcb8165d11c6b5e5fc3937b856787",
+        "cleanFilterGitBlobOID": "cf5ce5135abdcb8165d11c6b5e5fc3937b856787",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/validation.json",
+        "rawGitBlobOID": "09e8b23888b445444a1cac84c5cb490c0706a2a6",
+        "cleanFilterGitBlobOID": "09e8b23888b445444a1cac84c5cb490c0706a2a6",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/manifest.json",
+        "rawGitBlobOID": "3a418fd54a9f4e37c50c62186c00379dc2cf442d",
+        "cleanFilterGitBlobOID": "3a418fd54a9f4e37c50c62186c00379dc2cf442d",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-ar-EG-1440x900-light.png",
+        "rawGitBlobOID": "042fcdf2a83bce8478aa8cbb602281060f1177ae",
+        "cleanFilterGitBlobOID": "042fcdf2a83bce8478aa8cbb602281060f1177ae",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-ar-EG-360x800-light.png",
+        "rawGitBlobOID": "b512d7210328d29a42ac58dd4ee9a3e226c1de86",
+        "cleanFilterGitBlobOID": "b512d7210328d29a42ac58dd4ee9a3e226c1de86",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-ar-EG-412x915-light.png",
+        "rawGitBlobOID": "127258c0a17b5cd6918e86417e00950052280454",
+        "cleanFilterGitBlobOID": "127258c0a17b5cd6918e86417e00950052280454",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-ar-EG-768x1024-light.png",
+        "rawGitBlobOID": "dbb1bc24aaeba39a6d59e113cb2f2b4f4efc3014",
+        "cleanFilterGitBlobOID": "dbb1bc24aaeba39a6d59e113cb2f2b4f4efc3014",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-en-EG-1440x900-light.png",
+        "rawGitBlobOID": "cbe4b02b2d41532a09f140582b68e26951d4dfbe",
+        "cleanFilterGitBlobOID": "cbe4b02b2d41532a09f140582b68e26951d4dfbe",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-en-EG-360x800-light.png",
+        "rawGitBlobOID": "9d4ec94803c3be192bee0dad3600d1f99acdee2e",
+        "cleanFilterGitBlobOID": "9d4ec94803c3be192bee0dad3600d1f99acdee2e",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-en-EG-412x915-light.png",
+        "rawGitBlobOID": "d6a80f11567d52994e6f7faff3b4fa2d0b7daf03",
+        "cleanFilterGitBlobOID": "d6a80f11567d52994e6f7faff3b4fa2d0b7daf03",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-en-EG-768x1024-light.png",
+        "rawGitBlobOID": "c6785e8f046601a35df35f1997290c5c2abf949a",
+        "cleanFilterGitBlobOID": "c6785e8f046601a35df35f1997290c5c2abf949a",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/capture.cjs",
+        "rawGitBlobOID": "432b9ce63ca8f4be88726788318d4ded781f9775",
+        "cleanFilterGitBlobOID": "432b9ce63ca8f4be88726788318d4ded781f9775",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/index.html",
+        "rawGitBlobOID": "e1c3b11640e62859755433908564b2809d035bb7",
+        "cleanFilterGitBlobOID": "e1c3b11640e62859755433908564b2809d035bb7",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.css",
+        "rawGitBlobOID": "8a2e1f0e50c760abd3ca52e9f6c77dcd72dc06da",
+        "cleanFilterGitBlobOID": "8a2e1f0e50c760abd3ca52e9f6c77dcd72dc06da",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.js",
+        "rawGitBlobOID": "c0dfdf4720434281ed53ece628f7a53e4ced075e",
+        "cleanFilterGitBlobOID": "c0dfdf4720434281ed53ece628f7a53e4ced075e",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/validation.json",
+        "rawGitBlobOID": "42783c2e5a89111fcfaed8c497a587d3196fdf22",
+        "cleanFilterGitBlobOID": "42783c2e5a89111fcfaed8c497a587d3196fdf22",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-corrections-2026-11-11-v0.2.0/baselines/manifest.json",
+        "rawGitBlobOID": "5fd8b562d96ae94af62d5e56b3d751fdcfd5a282",
+        "cleanFilterGitBlobOID": "5fd8b562d96ae94af62d5e56b3d751fdcfd5a282",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/manifest.json",
+        "rawGitBlobOID": "8109c54140a8c19e43c687ffdeb4487f0495ca15",
+        "cleanFilterGitBlobOID": "8109c54140a8c19e43c687ffdeb4487f0495ca15",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/capture.cjs",
+        "rawGitBlobOID": "220b14982b08b795877ba5c37a74608902095e39",
+        "cleanFilterGitBlobOID": "220b14982b08b795877ba5c37a74608902095e39",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/compositions.css",
+        "rawGitBlobOID": "dfb78541d7cdd6115f7b0805271c909c6e0bee19",
+        "cleanFilterGitBlobOID": "dfb78541d7cdd6115f7b0805271c909c6e0bee19",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/compositions.js",
+        "rawGitBlobOID": "cba1f534963a91faf4584180eceabf5bcecfbccf",
+        "cleanFilterGitBlobOID": "cba1f534963a91faf4584180eceabf5bcecfbccf",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/index.html",
+        "rawGitBlobOID": "1e5a85e875b42dd3d9bb6d852fed492184f75712",
+        "cleanFilterGitBlobOID": "1e5a85e875b42dd3d9bb6d852fed492184f75712",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/validation.json",
+        "rawGitBlobOID": "77efa0085dfafdd0a4097f4ef315b9d9dc4f7397",
+        "cleanFilterGitBlobOID": "77efa0085dfafdd0a4097f4ef315b9d9dc4f7397",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/baselines/manifest.json",
+        "rawGitBlobOID": "fa52f829f734f5b9d9de83627f175068540d3d4f",
+        "cleanFilterGitBlobOID": "fa52f829f734f5b9d9de83627f175068540d3d4f",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/plan.md",
+        "rawGitBlobOID": "5359cd744cf8de011162633de8a2da057ebc9037",
+        "cleanFilterGitBlobOID": "5359cd744cf8de011162633de8a2da057ebc9037",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+        "rawGitBlobOID": "aa6501eef24a837bd9b3403731c69d0eddcbcf45",
+        "cleanFilterGitBlobOID": "aa6501eef24a837bd9b3403731c69d0eddcbcf45",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/architecture-contract-finalization-2026-10-23.md",
+        "rawGitBlobOID": "b7df4e5832db22b230136003ccdda544dce3146a",
+        "cleanFilterGitBlobOID": "b7df4e5832db22b230136003ccdda544dce3146a",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/architecture-decision-resolution-2026-10-23.md",
+        "rawGitBlobOID": "9b6e6e617e9a5e5a6f1c397695f92e1b2a97ef16",
+        "cleanFilterGitBlobOID": "9b6e6e617e9a5e5a6f1c397695f92e1b2a97ef16",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+        "rawGitBlobOID": "c199322693d69122e15ac862c7318d72af5b3505",
+        "cleanFilterGitBlobOID": "c199322693d69122e15ac862c7318d72af5b3505",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/integration-status.md",
+        "rawGitBlobOID": "6f5657718ad4ad4fa6a7c1be6fb9698988f802a9",
+        "cleanFilterGitBlobOID": "6f5657718ad4ad4fa6a7c1be6fb9698988f802a9",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/pr-body.md",
+        "rawGitBlobOID": "18cd014969d274072dd910ef0a3ad7ae098a1ccb",
+        "cleanFilterGitBlobOID": "18cd014969d274072dd910ef0a3ad7ae098a1ccb",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/preflight.json",
+        "rawGitBlobOID": "63ce6923cd12957b66bbe707fa85e5eadf57b9ec",
+        "cleanFilterGitBlobOID": "63ce6923cd12957b66bbe707fa85e5eadf57b9ec",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/publication-manifest.json",
+        "rawGitBlobOID": "a19894da229ff73f339d62e057433eda572195d0",
+        "cleanFilterGitBlobOID": "a19894da229ff73f339d62e057433eda572195d0",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/static-validation.json",
+        "rawGitBlobOID": "6a1696da475a3203d3cff068c7ba61c2c191a613",
+        "cleanFilterGitBlobOID": "6a1696da475a3203d3cff068c7ba61c2c191a613",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/verification.json",
+        "rawGitBlobOID": "adbc33c6172e0a4eef51e3cca5b9fe73c7cbced5",
+        "cleanFilterGitBlobOID": "adbc33c6172e0a4eef51e3cca5b9fe73c7cbced5",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/c2-essential-baselines.json",
+        "rawGitBlobOID": "101680df36edbbfbf6ad668c13fbc9196d1659b1",
+        "cleanFilterGitBlobOID": "101680df36edbbfbf6ad668c13fbc9196d1659b1",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/c2-essential-gallery.html",
+        "rawGitBlobOID": "d36cf5b061564374ff0680a41bc2a99710540059",
+        "cleanFilterGitBlobOID": "d36cf5b061564374ff0680a41bc2a99710540059",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/canonical-reconciliation.json",
+        "rawGitBlobOID": "ec7c1c32535160613cd1fe9bed0b4b1988062eb1",
+        "cleanFilterGitBlobOID": "ec7c1c32535160613cd1fe9bed0b4b1988062eb1",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/copy-change.json",
+        "rawGitBlobOID": "8bc3912b8475872c8c77b0800540a795113491b5",
+        "cleanFilterGitBlobOID": "8bc3912b8475872c8c77b0800540a795113491b5",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/REVIEW-INDEX.md",
+        "rawGitBlobOID": "1dcf97d3e462407c4a7653b54d035913570797a3",
+        "cleanFilterGitBlobOID": "1dcf97d3e462407c4a7653b54d035913570797a3",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/baseline-selection.json",
+        "rawGitBlobOID": "496f7034f41718933cf395cbbe2c3a4a9d832ab2",
+        "cleanFilterGitBlobOID": "496f7034f41718933cf395cbbe2c3a4a9d832ab2",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/gallery-validation.json",
+        "rawGitBlobOID": "211c9e4e8a63f0532aca1d7ca759f1ed7e640dcb",
+        "cleanFilterGitBlobOID": "211c9e4e8a63f0532aca1d7ca759f1ed7e640dcb",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/index.html",
+        "rawGitBlobOID": "c79c5991c463f81a13c2336d168ae3d09bef66f6",
+        "cleanFilterGitBlobOID": "c79c5991c463f81a13c2336d168ae3d09bef66f6",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/validation.json",
+        "rawGitBlobOID": "77efa0085dfafdd0a4097f4ef315b9d9dc4f7397",
+        "cleanFilterGitBlobOID": "77efa0085dfafdd0a4097f4ef315b9d9dc4f7397",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/f011-f012-source-fence-contract-proposal-2026-10-23.md",
+        "rawGitBlobOID": "93498ba2e208a6ea81dfe0104cae83fbaf8b2ed5",
+        "cleanFilterGitBlobOID": "93498ba2e208a6ea81dfe0104cae83fbaf8b2ed5",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/acceptance-manifest.json",
+        "rawGitBlobOID": "83c1e01e8b767795372c98e4b53d23f870e01f92",
+        "cleanFilterGitBlobOID": "83c1e01e8b767795372c98e4b53d23f870e01f92",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-baselines.json",
+        "rawGitBlobOID": "e538c9b20d5eb3c09ff67ba120d8618dad32d879",
+        "cleanFilterGitBlobOID": "e538c9b20d5eb3c09ff67ba120d8618dad32d879",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-gallery.html",
+        "rawGitBlobOID": "b3c8a678153935c300812762805ef1c3801a4739",
+        "cleanFilterGitBlobOID": "b3c8a678153935c300812762805ef1c3801a4739",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+        "rawGitBlobOID": "df3fddb5ee3963392e7ba2ebab5beefc8d44520f",
+        "cleanFilterGitBlobOID": "df3fddb5ee3963392e7ba2ebab5beefc8d44520f",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/governance-amendment.md",
+        "rawGitBlobOID": "5d35c434bc38606611195c1cd4993c030472d86c",
+        "cleanFilterGitBlobOID": "5d35c434bc38606611195c1cd4993c030472d86c",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/content-manifest.json",
+        "rawGitBlobOID": "bf5eb918b8d2084c0239ec46acb152027fff105b",
+        "cleanFilterGitBlobOID": "bf5eb918b8d2084c0239ec46acb152027fff105b",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/gallery-validation.json",
+        "rawGitBlobOID": "0c78534e04974352b300452a81c2df9b56135bff",
+        "cleanFilterGitBlobOID": "0c78534e04974352b300452a81c2df9b56135bff",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/preservation-validation.json",
+        "rawGitBlobOID": "dc3e4023883bb1a1e5049e88de7bd5ee06be3838",
+        "cleanFilterGitBlobOID": "dc3e4023883bb1a1e5049e88de7bd5ee06be3838",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/prior-draft-shape-bindings.json",
+        "rawGitBlobOID": "ab9f8571d0b42ab8d70a5bd942f4cd639efd94b5",
+        "cleanFilterGitBlobOID": "ab9f8571d0b42ab8d70a5bd942f4cd639efd94b5",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+        "rawGitBlobOID": "03ceb2c0797351970510f8cad7e06383da20cea1",
+        "cleanFilterGitBlobOID": "03ceb2c0797351970510f8cad7e06383da20cea1",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/static-validation-final.json",
+        "rawGitBlobOID": "6a1696da475a3203d3cff068c7ba61c2c191a613",
+        "cleanFilterGitBlobOID": "6a1696da475a3203d3cff068c7ba61c2c191a613",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/ui-and-governance-resolution.md",
+        "rawGitBlobOID": "7336683cecd7cf989372ef8142c25c349fa8100e",
+        "cleanFilterGitBlobOID": "7336683cecd7cf989372ef8142c25c349fa8100e",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/validate-static.cjs",
+        "rawGitBlobOID": "be62c6c7546b83c0fb558ea8385830f7116a410a",
+        "cleanFilterGitBlobOID": "be62c6c7546b83c0fb558ea8385830f7116a410a",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-actual-auth-provenance-2026-10-24.md",
+        "rawGitBlobOID": "951e2c136268dc678517e500acc997a1d0bf4b0f",
+        "cleanFilterGitBlobOID": "951e2c136268dc678517e500acc997a1d0bf4b0f",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-maintenance-and-handoff-2026-11-11.md",
+        "rawGitBlobOID": "0a25b1840fd2be40b174613ba5d8dc835e982032",
+        "cleanFilterGitBlobOID": "0a25b1840fd2be40b174613ba5d8dc835e982032",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json",
+        "rawGitBlobOID": "f50d3de2cf272b8e5e17d08e26a1849802d8c0f4",
+        "cleanFilterGitBlobOID": "f50d3de2cf272b8e5e17d08e26a1849802d8c0f4",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-pinned-auth-provenance-gap-2026-10-23.md",
+        "rawGitBlobOID": "78e87339aec4d3171f1b8fd058eb5a318edd62d3",
+        "cleanFilterGitBlobOID": "78e87339aec4d3171f1b8fd058eb5a318edd62d3",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/native-authority-n1-technical-decision-2026-10-23.md",
+        "rawGitBlobOID": "c4ecc37659e99d67aaf2ab926a4334166494d5e2",
+        "cleanFilterGitBlobOID": "c4ecc37659e99d67aaf2ab926a4334166494d5e2",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/open-ux-001-product-design-review-brief-2026-10-23.md",
+        "rawGitBlobOID": "ee2427c17a1d01f860a45da401ef653f296cf813",
+        "cleanFilterGitBlobOID": "ee2427c17a1d01f860a45da401ef653f296cf813",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/patient-projection-visibility-successor-proposal-2026-10-23.md",
+        "rawGitBlobOID": "2b33e472f93beb57a914bebdc4130d162bbb8a96",
+        "cleanFilterGitBlobOID": "2b33e472f93beb57a914bebdc4130d162bbb8a96",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+        "rawGitBlobOID": "a7d543175d560c06b3604906f848022671ca4e0f",
+        "cleanFilterGitBlobOID": "a7d543175d560c06b3604906f848022671ca4e0f",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/content-manifest.json",
+        "rawGitBlobOID": "b6e8f34933544b8093e552f1d3a2b4b0a80d67e0",
+        "cleanFilterGitBlobOID": "b6e8f34933544b8093e552f1d3a2b4b0a80d67e0",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/preservation-validation.json",
+        "rawGitBlobOID": "d490f82418ac07710288b6e82649dd70890b5fd2",
+        "cleanFilterGitBlobOID": "d490f82418ac07710288b6e82649dd70890b5fd2",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-handoff.md",
+        "rawGitBlobOID": "65c8fc455e895ba6636af1140afcae987b65bce3",
+        "cleanFilterGitBlobOID": "65c8fc455e895ba6636af1140afcae987b65bce3",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-inventory.json",
+        "rawGitBlobOID": "2243c7e869f9a9290b285467321fcc07953b30a1",
+        "cleanFilterGitBlobOID": "2243c7e869f9a9290b285467321fcc07953b30a1",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/static-validation.json",
+        "rawGitBlobOID": "47d016e1978a199bb82bec78cc4438b484e35b6d",
+        "cleanFilterGitBlobOID": "47d016e1978a199bb82bec78cc4438b484e35b6d",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/validate-static.cjs",
+        "rawGitBlobOID": "3d097308e17860424b78ba68c979cca3b4ff6d4b",
+        "cleanFilterGitBlobOID": "3d097308e17860424b78ba68c979cca3b4ff6d4b",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-preflight-2026-10-23.json",
+        "rawGitBlobOID": "164bde791a4d43ae113bad9704ed20601d6be68f",
+        "cleanFilterGitBlobOID": "164bde791a4d43ae113bad9704ed20601d6be68f",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/po-decision-approval-2026-10-23.md",
+        "rawGitBlobOID": "45d9248b6c5dc012e11406ce54897a9e6499dd19",
+        "cleanFilterGitBlobOID": "45d9248b6c5dc012e11406ce54897a9e6499dd19",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/po-decision-resolution-proposal-2026-10-23.md",
+        "rawGitBlobOID": "4947b3a7b6e655f2ddb85e2d56cd9118cec18bbe",
+        "cleanFilterGitBlobOID": "4947b3a7b6e655f2ddb85e2d56cd9118cec18bbe",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/post-maintenance-plan-review-2026-11-11.md",
+        "rawGitBlobOID": "96004106c42960a490ddb418b494f89288937c2a",
+        "cleanFilterGitBlobOID": "96004106c42960a490ddb418b494f89288937c2a",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/product-architecture-p1-p2-p3-decision-sheet-2026-10-23.md",
+        "rawGitBlobOID": "b4a811c0caba2d8c345fe43d82205951b95aec80",
+        "cleanFilterGitBlobOID": "b4a811c0caba2d8c345fe43d82205951b95aec80",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/product-p1-p2-p3-approval-2026-10-23.md",
+        "rawGitBlobOID": "afced2352a884c6b5a4152ebb63fb7a477d6253d",
+        "cleanFilterGitBlobOID": "afced2352a884c6b5a4152ebb63fb7a477d6253d",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/source-fence-architecture-approval-2026-10-23.md",
+        "rawGitBlobOID": "a4f7e7ae6f6b664dde7703156e407b6bb8fbc01d",
+        "cleanFilterGitBlobOID": "a4f7e7ae6f6b664dde7703156e407b6bb8fbc01d",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+        "rawGitBlobOID": "7cfb154aea959d755e6e1dbe9f233e0036a21fe7",
+        "cleanFilterGitBlobOID": "7cfb154aea959d755e6e1dbe9f233e0036a21fe7",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/specify-preflight-2026-10-23.json",
+        "rawGitBlobOID": "9458ee9b5ac07cb615053128e1cb3a4b9fd83ffb",
+        "cleanFilterGitBlobOID": "9458ee9b5ac07cb615053128e1cb3a4b9fd83ffb",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/research.md",
+        "rawGitBlobOID": "af663a94cf8e0ef735384ca890702c490f2f558c",
+        "cleanFilterGitBlobOID": "af663a94cf8e0ef735384ca890702c490f2f558c",
+        "exact": true
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/spec.md",
+        "rawGitBlobOID": "8333061e75517e704e8c4b6eb3cc2cb87ab40b97",
+        "cleanFilterGitBlobOID": "8333061e75517e704e8c4b6eb3cc2cb87ab40b97",
+        "exact": true
+      }
+    ]
+  }
+}

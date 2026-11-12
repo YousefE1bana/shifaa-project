@@ -1,0 +1,28 @@
+{
+  "status": "PASS_BOUNDED_PRESERVATION_AND_STATIC_INTEGRITY",
+  "head": "0ad13689a170f325681a260d925e149f669e485a",
+  "branch": "codex/f012-specify-20261023",
+  "approvedSpecifyCheckpoint": "c571773d6432251d1f52bc94bb501c4e163f1571",
+  "preExistingFeatureFiles": 2163,
+  "unchangedPreExistingFeatureFiles": 2157,
+  "modifiedExistingFiles": [
+    "specs/012-prescription-safety-governed-overrides/data-model.md",
+    "specs/012-prescription-safety-governed-overrides/plan.md",
+    "specs/012-prescription-safety-governed-overrides/quickstart.md",
+    "specs/012-prescription-safety-governed-overrides/research.md",
+    "specs/012-prescription-safety-governed-overrides/checklists/plan-consistency.md",
+    "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml"
+  ],
+  "sixSpecifyGitBlobsExact": true,
+  "specChecklistCheckedItems": 16,
+  "bothFeaturePointersUnchanged": true,
+  "previousReviewZipsUnchanged": 3,
+  "c3ProductApprovalBindingsVerified": {
+    "delta": 164,
+    "inherited": 884
+  },
+  "newUiPngHashCrcDimensionChecks": 124,
+  "trackedAndStagedDiffEmpty": true,
+  "runtimeOrLifecycleCommands": "NONE",
+  "supabaseDbDocker": "UNTOUCHED"
+}

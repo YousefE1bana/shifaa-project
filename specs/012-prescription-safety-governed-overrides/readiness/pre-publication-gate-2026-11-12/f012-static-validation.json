@@ -1,0 +1,1122 @@
+{
+  "kind": "F012_FINAL_PRODUCT_RECONCILIATION_STATIC_EVIDENCE",
+  "status": "PASS_STATIC_ONLY",
+  "openapi": "3.1.1",
+  "operations": [
+    {
+      "method": "post",
+      "path": "/encounters/{encounterId}/prescriptions",
+      "id": "createPrescription",
+      "request": {
+        "$ref": "#/components/schemas/CreatePrescription"
+      },
+      "responses": {
+        "201": {
+          "$ref": "#/components/schemas/PrescriptionMutation"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "patch",
+      "path": "/prescriptions/{prescriptionId}",
+      "id": "updatePrescription",
+      "request": {
+        "$ref": "#/components/schemas/UpdatePrescription"
+      },
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/UpdatePrescriptionResult"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "get",
+      "path": "/prescriptions/{prescriptionId}",
+      "id": "getPrescription",
+      "request": null,
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/PrescriptionRead"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "post",
+      "path": "/prescriptions/{prescriptionId}/safety-checks",
+      "id": "runPrescriptionSafety",
+      "request": {
+        "$ref": "#/components/schemas/SafetyCheckRequest"
+      },
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/SafetyResult"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "post",
+      "path": "/detected-issues/{issueId}/acknowledgements",
+      "id": "acknowledgeWarning",
+      "request": {
+        "$ref": "#/components/schemas/AcknowledgeRequest"
+      },
+      "responses": {
+        "201": {
+          "$ref": "#/components/schemas/Acknowledgement"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "post",
+      "path": "/detected-issues/{issueId}/override-requests",
+      "id": "requestContraindicatedOverride",
+      "request": {
+        "$ref": "#/components/schemas/OverrideRequest"
+      },
+      "responses": {
+        "201": {
+          "$ref": "#/components/schemas/OverrideResult"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "post",
+      "path": "/override-requests/{overrideId}/decisions",
+      "id": "decideOverride",
+      "request": {
+        "$ref": "#/components/schemas/DecisionRequest"
+      },
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/DecisionResult"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "post",
+      "path": "/prescriptions/{prescriptionId}/sign",
+      "id": "signPrescription",
+      "request": {
+        "$ref": "#/components/schemas/SignRequest"
+      },
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/SignResult"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "post",
+      "path": "/prescriptions/{prescriptionId}/cancel",
+      "id": "cancelPrescription",
+      "request": {
+        "$ref": "#/components/schemas/CancelRequest"
+      },
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/CancelResult"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "get",
+      "path": "/patients/{managedPatientId}/medications",
+      "id": "listPatientMedications",
+      "request": null,
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/MedicationList"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "get",
+      "path": "/override-review-cases",
+      "id": "getOverrideReviewCases",
+      "request": null,
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/ReviewResult"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    },
+    {
+      "method": "post",
+      "path": "/override-requests/{overrideId}/assignment-transitions",
+      "id": "transitionOverrideReviewAssignment",
+      "request": {
+        "$ref": "#/components/schemas/AssignmentRequest"
+      },
+      "responses": {
+        "200": {
+          "$ref": "#/components/schemas/AssignmentResult"
+        },
+        "400": "#/components/responses/Problem400",
+        "401": "#/components/responses/Problem401",
+        "403": "#/components/responses/Problem403",
+        "404": "#/components/responses/Problem404",
+        "409": "#/components/responses/Problem409",
+        "422": "#/components/responses/Problem422",
+        "429": "#/components/responses/Problem429",
+        "503": "#/components/responses/Problem503"
+      }
+    }
+  ],
+  "scope": {
+    "closure": 7,
+    "prerequisites": 2,
+    "nfr": 22,
+    "ac": 16
+  },
+  "schemas": 70,
+  "resolvedReferences": 324,
+  "checks": [
+    {
+      "name": "R1 exactly discover or detail valid",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R1 denies mixed",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R1 denies extra actor",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R1 denies unknown view",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R2 accepts closed claim",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R2 accepts closed release_own",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R2 accepts closed takeover_invalid",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R2 denies renew",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R2 denies assign other",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R2 denies missing evidence",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 unique selection P",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 unique selection M",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 unique selection P+M",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 denies no selection",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 denies duplicate",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 denies guardian audience",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 denies implicit confirmation",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 denies unknown field",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "VP2 denies wrong policy",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Sign absence of release intent is valid but no release",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Sign explicit release intent shape valid",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Sign rejects release implicit flag",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Minimized source with unknown freshness valid",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Patient source denies private path category",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Patient source denies signer identity",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Patient source denies hidden count",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Patient source denies clinical completeness",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Absent optional clinical facts do not require fabricated values",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P retained-status schema signed",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P retained-status schema cancelled",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P retained-status schema superseded",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P retained-status schema expired",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P denies unsigned",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P denies cancellation reason",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P denies lineage",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P denies issues",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P denies private nested item",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "M current prescribed candidate shape valid",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "M denies non-admitted producer status dispensed",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "M denies non-admitted producer status active",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "M denies non-admitted producer status completed",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "M denies non-admitted producer status discontinued",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "M denies non-admitted producer status expired",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "M denies non-admitted producer status entered_in_error",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P2 exact predecessor and version shape valid",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P2 rejects missing version",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P2 rejects client authority",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Nine I mutations",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Six approved IfMatch carriers",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 201 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "createPrescription response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "updatePrescription response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getPrescription response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "runPrescriptionSafety response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 201 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "acknowledgeWarning response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 201 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "requestContraindicatedOverride response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "decideOverride response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "signPrescription response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "cancelPrescription response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "listPatientMedications response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "getOverrideReviewCases response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment no duplicate parameters",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment closed required security",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 200 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 400 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 401 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 403 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 404 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 409 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 422 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 429 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "transitionOverrideReviewAssignment response 503 described",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Bearer HTTP JWT scheme",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "R1 discovery field ceiling",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign P metadata shape accepted",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Independent explicit post-sign target {\"medicationStatementRefs\":[\"00000000-0000-4000-8000-000000000001\"]}",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Independent explicit post-sign target {\"prescription\":true,\"medicationStatementRefs\":[\"00000000-0000-4000-8000-000000000001\"]}",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies empty targets",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies false P",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies duplicate M",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies guardian",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies mixed clinical write",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies actor supplied",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies implicit confirm",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies missing control CAS",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Post-sign denies arbitrary action",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Closed post-sign withdrawal accepted",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Withdrawal denies mixed release",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Withdrawal denies empty refs",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Withdrawal denies unknown reason",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Existing draft input byte-semantics unchanged",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Existing draft result unchanged",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Methods paths IDs unchanged",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "P excludes projection-control metadata",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "M excludes projection-control metadata",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "New metadata branch permission explicitly unapproved",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Draft and control IfMatch shapes accepted",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Malformed control IfMatch denied",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Metadata result ETag header matches branch union",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Control denies released missing reference",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Control denies withdrawn missing reference",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Control denies unreleased reference leak",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    },
+    {
+      "name": "Released target control shape valid",
+      "status": "PASS_SCHEMA_OR_STATIC_ONLY"
+    }
+  ],
+  "completeOpenAPIValidation": "VALIDATION_NOT_AVAILABLE",
+  "validatorAvailabilityEvidence": "No installed swagger-parser, Redocly CLI, OpenAPI-spec-validator or equivalent complete 3.1 validator identified in existing lockfile/package inventory; no tool installed. Ajv validates component JSON Schemas, not full OpenAPI semantics.",
+  "manualSemanticReview": {
+    "security": "Bearer and contextual server authorization; no anonymous operation",
+    "unions": "R1 semantic closed query union plus closed R2 action enum; no extra selectors/actor/assignee",
+    "responses": "Success and RFC9457 error families; headers/path parameters/read/write contracts reviewed",
+    "disclosure": "D3 P/M/C/R ceiling and issue-necessary R1; new optional fields are candidates only",
+    "limits": "Cross-parameter query union enforcement requires future generated/server middleware; no runtime proof. Source/authorization relationships are not established by schema compilation."
+  },
+  "runtime": "F012_NOT_IMPLEMENTED_NOT_RUN",
+  "shapeExamples": "Nonclinical opaque shape sentinels only; not executable scenario vectors"
+}

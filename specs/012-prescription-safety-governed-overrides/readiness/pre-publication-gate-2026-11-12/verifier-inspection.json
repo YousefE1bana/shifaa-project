@@ -1,0 +1,3962 @@
+{
+  "status": "AGGREGATE_NOT_EXECUTED_NO_DISPOSABLE_ISOLATION_PROVEN",
+  "observedAt": "2026-11-12 Africa/Cairo",
+  "packageSHA256": "4cdf91ba4ca331944fde2610a05d75158351b74e96cac2b41ca47894c56731b7",
+  "topLevelSteps": [
+    {
+      "step": 1,
+      "command": "pnpm format:check",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 2,
+      "command": "pnpm agent-skills:check",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 3,
+      "command": "pnpm agent-skills:test",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 4,
+      "command": "pnpm lint",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 5,
+      "command": "pnpm typecheck",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 6,
+      "command": "pnpm build",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 7,
+      "command": "pnpm test",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 8,
+      "command": "pnpm test:a11y",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 9,
+      "command": "pnpm test:e2e",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 10,
+      "command": "pnpm contracts:check",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 11,
+      "command": "pnpm architecture:check",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 12,
+      "command": "pnpm secrets:check",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 13,
+      "command": "pnpm dependencies:check",
+      "classification": "READ_OR_LOCAL_BUILD_TEST_SIDE_EFFECTS_INSPECTED_SEPARATELY"
+    },
+    {
+      "step": 14,
+      "command": "docker compose config --quiet",
+      "classification": "READ_ONLY_COMPOSE_CONFIG"
+    },
+    {
+      "step": 15,
+      "command": "pnpm db:reset",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 16,
+      "command": "pnpm db:test",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 17,
+      "command": "pnpm db:rls-test",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 18,
+      "command": "pnpm test:idempotency:privacy",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 19,
+      "command": "pnpm test:discovery-sos:stack",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 20,
+      "command": "pnpm test:discovery-sos:e2e",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 21,
+      "command": "pnpm test:discovery-sos:performance",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 22,
+      "command": "pnpm test:discovery-sos:security",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 23,
+      "command": "pnpm test:identity-continuity:stack",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 24,
+      "command": "pnpm test:audit-admin:scope",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 25,
+      "command": "pnpm test:audit-admin:contract",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 26,
+      "command": "node tools/verify-feature-008-evidence.mjs --all",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 27,
+      "command": "pnpm test:audit-admin:stack",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 28,
+      "command": "pnpm test:audit-admin:e2e",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 29,
+      "command": "pnpm test:audit-admin:privacy",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 30,
+      "command": "pnpm test:audit-admin:security",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 31,
+      "command": "pnpm test:audit-admin:performance",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 32,
+      "command": "pnpm test:audit-admin:restore",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 33,
+      "command": "pnpm test:clinic-scheduling:scope",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 34,
+      "command": "pnpm test:clinic-scheduling:contract",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 35,
+      "command": "pnpm test:clinic-scheduling:stack",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 36,
+      "command": "pnpm test:clinic-scheduling:security",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 37,
+      "command": "pnpm test:clinic-scheduling:performance",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 38,
+      "command": "pnpm test:clinic-scheduling:restore",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 39,
+      "command": "pnpm test:clinic-scheduling:privacy",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 40,
+      "command": "pnpm test:clinic-scheduling:evidence",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 41,
+      "command": "pnpm test:encounters:verification",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    },
+    {
+      "step": 42,
+      "command": "pnpm test:feature-011:composition",
+      "classification": "DB_RUNTIME_OR_HISTORICAL_EVIDENCE_WRITES_NOT_RUN"
+    }
+  ],
+  "reachableRootScripts": {
+    "verify": "pnpm format:check && pnpm agent-skills:check && pnpm agent-skills:test && pnpm lint && pnpm typecheck && pnpm build && pnpm test && pnpm test:a11y && pnpm test:e2e && pnpm contracts:check && pnpm architecture:check && pnpm secrets:check && pnpm dependencies:check && docker compose config --quiet && pnpm db:reset && pnpm db:test && pnpm db:rls-test && pnpm test:idempotency:privacy && pnpm test:discovery-sos:stack && pnpm test:discovery-sos:e2e && pnpm test:discovery-sos:performance && pnpm test:discovery-sos:security && pnpm test:identity-continuity:stack && pnpm test:audit-admin:scope && pnpm test:audit-admin:contract && node tools/verify-feature-008-evidence.mjs --all && pnpm test:audit-admin:stack && pnpm test:audit-admin:e2e && pnpm test:audit-admin:privacy && pnpm test:audit-admin:security && pnpm test:audit-admin:performance && pnpm test:audit-admin:restore && pnpm test:clinic-scheduling:scope && pnpm test:clinic-scheduling:contract && pnpm test:clinic-scheduling:stack && pnpm test:clinic-scheduling:security && pnpm test:clinic-scheduling:performance && pnpm test:clinic-scheduling:restore && pnpm test:clinic-scheduling:privacy && pnpm test:clinic-scheduling:evidence && pnpm test:encounters:verification && pnpm test:feature-011:composition",
+    "test:feature-011:composition": "node tools/run-feature-011-composition-test.mjs --all",
+    "test:encounters:verification": "pnpm exec vitest run tests/e2e/feature-010-client-context.test.ts && pnpm test:encounters:tooling && pnpm test:encounters:scope && pnpm test:encounters:privacy && pnpm test:encounters:ui:unit && node tools/run-feature-010-postgres-test.mjs c28 && pnpm test:encounters:realtime:db && pnpm test:encounters:restore && pnpm test:encounters:performance && pnpm test:encounters:baselines && pnpm test:encounters:ui && pnpm test:pre-011:integration",
+    "test:pre-011:integration": "node tools/run-native-clinical-composition-test.mjs && node tools/run-feature-010-completion-authority-concurrency-test.mjs --expect-green --with-forward-fix",
+    "test:encounters:ui": "node tools/run-feature-010-ui-tests.mjs",
+    "test:encounters:baselines": "powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command \"Import-Module (Join-Path $PSHOME 'Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1') -ErrorAction Stop; & 'specs/010-encounters-referrals-contextual-chat/visual-baselines/validate-reference-baselines.ps1'\"",
+    "test:encounters:performance": "tsx tools/feature-010-performance.ts --require-both-runtimes",
+    "test:encounters:restore": "node tools/run-feature-010-restore-test.mjs --require-both-runtimes",
+    "test:encounters:realtime:db": "node tools/run-feature-010-realtime-postgres-test.mjs",
+    "test:encounters:ui:unit": "tsx --test apps/patient/test/feature-010-targets.test.ts apps/patient/test/feature-010-chat.test.tsx apps/patient/test/feature-010-encounter.test.tsx apps/patient/test/feature-010-records.test.tsx apps/clinic/test/feature-010-referrals.test.tsx apps/clinic/test/feature-010-messages.test.tsx",
+    "test:encounters:privacy": "tsx --test tests/e2e/feature-010-security-privacy.spec.ts",
+    "test:encounters:scope": "node --test tools/verify-feature-010-scope.test.mjs",
+    "test:encounters:tooling": "tsx --test tools/feature-010-performance.test.ts tools/feature-010-restore.test.ts",
+    "test:clinic-scheduling:evidence": "node tools/verify-feature-009-evidence.mjs --all",
+    "test:clinic-scheduling:privacy": "pnpm --filter @shifaa/observability exec node --test src/clinic-scheduling.test.ts && pnpm secrets:check && pnpm architecture:check && node tools/verify-feature-009-evidence.mjs --privacy",
+    "architecture:check": "node tools/verify-architecture.mjs",
+    "secrets:check": "node tools/verify-secrets.mjs",
+    "test:clinic-scheduling:restore": "node tools/run-clinic-scheduling-restore-test.mjs",
+    "test:clinic-scheduling:performance": "tsx tools/clinic-scheduling-performance.ts",
+    "test:clinic-scheduling:security": "pnpm test:clinic-scheduling:rls && pnpm secrets:check && pnpm architecture:check && node tools/verify-feature-009-evidence.mjs --security",
+    "test:clinic-scheduling:rls": "node tools/run-clinic-scheduling-postgres-test.mjs rls",
+    "test:clinic-scheduling:stack": "pnpm test:clinic-scheduling:db && pnpm test:clinic-scheduling:rls && pnpm test:clinic-scheduling:migration && pnpm test:clinic-scheduling:scope && pnpm test:clinic-scheduling:contract && pnpm test:clinic-scheduling:notifications && pnpm test:clinic-scheduling:e2e",
+    "test:clinic-scheduling:e2e": "node tools/run-clinic-scheduling-e2e.mjs",
+    "test:clinic-scheduling:notifications": "pnpm --filter @shifaa/worker test -- clinic-scheduling-notifications",
+    "test:clinic-scheduling:contract": "node tools/verify-feature-009-contract.mjs",
+    "test:clinic-scheduling:scope": "node tools/verify-feature-009-scope.mjs",
+    "test:clinic-scheduling:migration": "node tools/run-clinic-scheduling-migration-test.mjs",
+    "test:clinic-scheduling:db": "node tools/run-clinic-scheduling-postgres-test.mjs",
+    "test:audit-admin:restore": "node tools/run-audit-admin-restore-test.mjs",
+    "test:audit-admin:performance": "tsx tools/audit-admin-performance.ts",
+    "test:audit-admin:security": "pnpm secrets:check && pnpm architecture:check && node tools/verify-feature-008-evidence.mjs --security",
+    "test:audit-admin:privacy": "pnpm --filter @shifaa/core test -- aggregate-policy && pnpm --filter @shifaa/observability test -- audit-admin && node tools/verify-feature-008-evidence.mjs --privacy",
+    "test:audit-admin:e2e": "node tools/run-audit-admin-e2e.mjs",
+    "test:audit-admin:stack": "pnpm test:audit-admin:db && pnpm --filter @shifaa/api test:integration -- audit-admin-observability && pnpm --filter @shifaa/worker test -- audit-export",
+    "test:audit-admin:db": "node tools/run-audit-admin-postgres-test.mjs",
+    "test:audit-admin:contract": "node tools/verify-feature-008-contract.mjs",
+    "test:audit-admin:scope": "node tools/verify-feature-008-scope.mjs",
+    "test:identity-continuity:stack": "pnpm test:identity-continuity:auth && pnpm test:identity-continuity:mfa && pnpm test:identity-continuity:recovery && pnpm test:identity-continuity:worker && pnpm test:identity-continuity:transition && pnpm test:identity-continuity:performance && pnpm test:identity-continuity:security",
+    "test:identity-continuity:security": "node tools/verify-identity-continuity-evidence.mjs",
+    "test:identity-continuity:performance": "tsx tools/identity-continuity-performance.ts",
+    "test:identity-continuity:transition": "node tools/run-identity-continuity-transition-test.mjs",
+    "test:identity-continuity:worker": "pnpm db:reset && pnpm --filter @shifaa/worker test && tsx --test --test-concurrency=1 tests/e2e/identity-continuity-worker-security.spec.ts tests/e2e/identity-continuity-recovery-worker.spec.ts",
+    "db:reset": "docker compose down -v && docker compose up -d --wait postgres && pnpm db:migrate",
+    "db:migrate": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/migrations/001_identity_onboarding.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000300_facility_onboarding_rbac.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000500_family_care_relationships.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260811000600_family_care_storage.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260813000500_privacy_dsr_notifications.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260813000600_privacy_dsr_storage.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260820000600_discovery_sos_foundation.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260908000700_sec_007_function_execute_grants.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260929001001_f010_c10_encounter_api.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260929001003_f010_c12_note_signing.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260929001004_f010_c13_encounter_completion.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260929001005_f010_c17_referrals_api.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260929001007_f010_c19_referral_projections.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260929001008_f010_c22_context_messages.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260930001000_f010_c23_realtime_hint.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20260930001001_f010_c26_privacy_guards.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+    "test:identity-continuity:recovery": "node tools/run-identity-continuity-recovery-test.mjs",
+    "test:identity-continuity:mfa": "node tools/run-identity-continuity-mfa-test.mjs",
+    "test:identity-continuity:auth": "node tools/run-identity-continuity-supabase-test.mjs",
+    "test:discovery-sos:security": "pnpm secrets:check && pnpm architecture:check && node tools/verify-discovery-sos-evidence.mjs",
+    "test:discovery-sos:performance": "tsx tools/discovery-sos-performance.ts",
+    "test:discovery-sos:e2e": "tsx --test --test-concurrency=1 tests/e2e/discovery-sos-discovery.spec.ts tests/e2e/discovery-sos-subject.spec.ts tests/e2e/discovery-sos-prearrival.spec.ts tests/e2e/discovery-sos-share.spec.ts tests/e2e/discovery-sos-contact.spec.ts tests/e2e/discovery-sos-worker-security.spec.ts",
+    "test:discovery-sos:stack": "node tools/run-discovery-sos-postgres-test.mjs && pnpm --filter @shifaa/worker test",
+    "test:idempotency:privacy": "node tools/run-idempotency-privacy-test.mjs",
+    "db:rls-test": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-onboarding-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/facility-onboarding-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/admin-role-governance-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/family-care-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/privacy-dsr-notifications-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/discovery-sos-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-continuity-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/audit-admin-observability-rls.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/function-execute-privileges.sql",
+    "db:test": "docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-onboarding-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/facility-onboarding-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/family-care-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/privacy-dsr-notifications-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/discovery-sos-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/identity-continuity-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/audit-admin-observability-schema.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/idempotency-privacy.sql && docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U shifaa_owner -d shifaa -f /workspace/infra/db/tests/feature-010-schema.sql",
+    "dependencies:check": "pnpm peers check && pnpm audit --audit-level high && node tools/verify-expo-dependencies.mjs",
+    "contracts:check": "node tools/verify-contracts.mjs && pnpm --filter @shifaa/contracts test && pnpm --filter @shifaa/api-client test",
+    "test:e2e": "pnpm --filter @shifaa/api test:integration && pnpm --filter @shifaa/patient test:e2e",
+    "test:a11y": "pnpm --filter @shifaa/design-system test && pnpm --filter @shifaa/i18n test && pnpm --filter @shifaa/patient test && pnpm --filter @shifaa/admin test",
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "agent-skills:test": "powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools/update-shifaa-skills.ps1 -SelfTest",
+    "agent-skills:check": "node tools/verify-agent-skills.mjs",
+    "format:check": "prettier --check apps packages services tests tools .github .shifaa package.json pnpm-workspace.yaml turbo.json compose.yml .prettierrc.json AGENTS.md docs/TEAM-INSTALLATION-CHECKLIST.md docs/agent-skills infra/runbooks specs/001-identity-onboarding specs/003-facility-onboarding-rbac specs/004-family-care-relationships specs/005-privacy-dsr-notifications specs/006-discovery-sos-foundation specs/007-identity-continuity-sessions-mfa-recovery specs/008-audit-admin-aggregates-observability specs/009-clinic-scheduling-appointments-queue"
+  },
+  "localToolSourcesInspected": [
+    {
+      "path": "packages/contracts/src/feature-011.ts",
+      "sha256": "da8088c84192407df4742e6215d7d250b998297ac7b2810cbd26ddb7e0c35591"
+    },
+    {
+      "path": "packages/core/src/audit-admin/aggregate-policy.ts",
+      "sha256": "c8f36dedb74de1816d0aa1ac602b3557ac8a8b4f6986944ae91430b8ca1e1d83"
+    },
+    {
+      "path": "packages/test-kit/src/audit-admin-privacy-fixtures.ts",
+      "sha256": "69b215ad881b1be2a666bcc7dc8327cdcbdc08d85a1c98ffcdb60644f1f3b88d"
+    },
+    {
+      "path": "packages/test-kit/src/feature-011/fixtures.ts",
+      "sha256": "f294c5711fc60fc8247388cd3a089330f62aa60863d383a992336b44d627213e"
+    },
+    {
+      "path": "services/api/src/adapters/postgres/clinic-scheduling-service.ts",
+      "sha256": "2e79464286b3efe562f320a55501fc9c228eedc7e438b9405ae04169fba886c3"
+    },
+    {
+      "path": "services/api/src/adapters/postgres/identity-continuity-service.ts",
+      "sha256": "a63d114c6885ba15d6c838f4e4de64fa80cbf52779586da4efe2d0b73ab98f1d"
+    },
+    {
+      "path": "services/api/src/adapters/postgres/identity-repository.ts",
+      "sha256": "5ccdc43ab2192748722d3348984eafc44297f2277f31dcf90bfe963dc1196cda"
+    },
+    {
+      "path": "services/api/src/app.ts",
+      "sha256": "6a9cfcd521da370534902fbd9c79d4f472e1af9dba29aa4d30b1b346ae41434d"
+    },
+    {
+      "path": "services/api/src/config.ts",
+      "sha256": "6e75d8d66bac6e9b49921feb9a65d2055616d028bfe5bce20d84a2dd6ce71a77"
+    },
+    {
+      "path": "services/api/src/modules/clinic-scheduling/service.ts",
+      "sha256": "6a5580c22a9b462a362bf7a8fbe4c13ef26f77cb2c5bedd30b6361d6d4235341"
+    },
+    {
+      "path": "services/api/src/platform/idempotency.ts",
+      "sha256": "7883ae351e2aba6b8d46e2023e6ed470e0a0d9eace25d81656dd530ffd46f676"
+    },
+    {
+      "path": "services/worker/src/adapters/local-synthetic-messaging.ts",
+      "sha256": "d4f387be5b8211842d41963d96c9f91bff6a2f9176a44ed35c8cfe10de05e324"
+    },
+    {
+      "path": "services/worker/src/discovery-sos.ts",
+      "sha256": "dcb4f3ff7dcadc957b116327091dd1abe7db8784d4de96d4d135b06666e6a453"
+    },
+    {
+      "path": "services/worker/src/identity-continuity.ts",
+      "sha256": "84d7f556f481dee2ee943cc6cb2a20161738ffb176976b260caffa914154beb7"
+    },
+    {
+      "path": "services/worker/src/postgres-discovery-sos-processor.ts",
+      "sha256": "930da5797049e0de4673c44ce09d161a49344f5221a065fdc8b8ff2fd584216d"
+    },
+    {
+      "path": "services/worker/src/postgres-privacy-notification-processor.ts",
+      "sha256": "0a9b1af04684b10e991afcd5fdaec10f98e40372c3be4143414612a3a5542471"
+    },
+    {
+      "path": "services/worker/src/privacy-dsr-notifications.ts",
+      "sha256": "b8c44be8e3422e842bc1722ff2153daf37a91217219b12a5ad5ec226b5f454cd"
+    },
+    {
+      "path": "tools/audit-admin-performance.ts",
+      "sha256": "a81b6a33e8c27b51ebfd0c4fdf0e18462701591234b51df5be80a06a1ad2a5b9"
+    },
+    {
+      "path": "tools/clinic-scheduling-performance.ts",
+      "sha256": "8d55cce0faee813a9f2950f62faa10d4bbe16be18f8288d72232e980537bd167"
+    },
+    {
+      "path": "tools/discovery-sos-performance-privacy.ts",
+      "sha256": "c8161c15470b583d2fd4767741e7cb49463bee2f2e69dd7202bff50449392bd9"
+    },
+    {
+      "path": "tools/discovery-sos-performance.ts",
+      "sha256": "bd61234ff3ad2783fc032f12d22045c9448e11ca56a3f999b370293f7a82ff14"
+    },
+    {
+      "path": "tools/feature-010-performance.ts",
+      "sha256": "a3e4755a305c337e1d37f7ca0e6812bbc74d2f91a2b0f477e8764cf9ecfaa8d5"
+    },
+    {
+      "path": "tools/feature-011-composition-atomic.mjs",
+      "sha256": "dba6f6c30d35edcafd04e6e45fda704e7e021f110927ab07f300760014c7f501"
+    },
+    {
+      "path": "tools/feature-011-constitution-successor.mjs",
+      "sha256": "079fa1e7bbb994f56814c3a7daf2c1d68776f0e78c621fd3193adad97eb2037f"
+    },
+    {
+      "path": "tools/feature-011-consumer-fixtures.mjs",
+      "sha256": "4df750503dfcf33b1dbf10cef2e307a67485d988fb4742e67a15293b3dbe4d36"
+    },
+    {
+      "path": "tools/feature-011-documentation-successor.mjs",
+      "sha256": "a939a4f9c92ed18dc8c1d859e0eea027d6be159cb0e926d441b4038ae8510283"
+    },
+    {
+      "path": "tools/feature-011-evidence-head.mjs",
+      "sha256": "b9da9dea930a59a8063db915df00ce41a3bc63386f66b8a1a70ea95be593108f"
+    },
+    {
+      "path": "tools/feature-011-k08-preflight.mjs",
+      "sha256": "3a25f0da30b8ccd633b96e12e35e79bbc51b58ae11736dbd29f136a92bc0083f"
+    },
+    {
+      "path": "tools/feature-011-native-supabase-bootstrap.mjs",
+      "sha256": "6d235d24a7d9d3a9ffbcdd9364ce431ba8f6e2a1fe43663856963496e1d1e28c"
+    },
+    {
+      "path": "tools/feature-011-physical-green.mjs",
+      "sha256": "45e6dd7b34e7ebb398cfd3ea416bbdee7e01999cdb1fb2eaa1452f304e475567"
+    },
+    {
+      "path": "tools/feature-011-physical-races.mjs",
+      "sha256": "ec5a14e11d68330ee0c6cee0607ac28af23404bb2f659f3f3333c89b18b2e7fd"
+    },
+    {
+      "path": "tools/feature-011-predecessor-races.mjs",
+      "sha256": "99930b2f785b1502a33b9cbb92e3f3e10e47b127954ffcc82388e0deccc84f04"
+    },
+    {
+      "path": "tools/feature-011-support-lifecycle.mjs",
+      "sha256": "1e64b06ba9a441b4f1c4c40e995dc7b03fa9372ac3ee80899a0605117aa2cd83"
+    },
+    {
+      "path": "tools/feature-011-two-input-successor.mjs",
+      "sha256": "84b97bcb30d82f124e7308d34a4433b09b450a23fddda0ed295a69d6e7b2123c"
+    },
+    {
+      "path": "tools/generate-feature-011-client.mjs",
+      "sha256": "d12e7a6881d64050cb62ed4a2b9ee57c57e4f663a8bc5423a8c28808cea29fa2"
+    },
+    {
+      "path": "tools/generate-feature-011-contract.mjs",
+      "sha256": "fad4a83f3e9ac72f6db17c44687ed90b4ea914b68cb5d1199e1539133c5acc58"
+    },
+    {
+      "path": "tools/identity-continuity-performance.ts",
+      "sha256": "0535135a97249a9dc991ff3eeee4c32da2967987525a70a0344c8788712f7f72"
+    },
+    {
+      "path": "tools/run-audit-admin-e2e.mjs",
+      "sha256": "0b7e19627dbd0092e085ae1e3abeac74c08e70835bd9ac5c15a4feb2efaa0158"
+    },
+    {
+      "path": "tools/run-audit-admin-postgres-test.mjs",
+      "sha256": "88a5dae0f5fb6ee523336724942bc68c3028710a67339e1ecb6cfa4cda842a6f"
+    },
+    {
+      "path": "tools/run-audit-admin-restore-test.mjs",
+      "sha256": "f35a9b4a50c7f14a43868ba8e0713139e7a763dd5c00dc308a71127cdb2a562f"
+    },
+    {
+      "path": "tools/run-clinic-scheduling-e2e.mjs",
+      "sha256": "a357117f64d6fdcfbca630cf1d5fb5ad72ef600714023d511c53eb10bb2dd1ef"
+    },
+    {
+      "path": "tools/run-clinic-scheduling-migration-test.mjs",
+      "sha256": "0e07640e30664bdb19cd9e1735e80b1703b3561bb558f58097fac613a15bf734"
+    },
+    {
+      "path": "tools/run-clinic-scheduling-postgres-test.mjs",
+      "sha256": "cfa2cd5bd459b27be24448fa900cb40ca56b30d7655aaf1f86a6501d0a6672eb"
+    },
+    {
+      "path": "tools/run-clinic-scheduling-restore-test.mjs",
+      "sha256": "dc9f090b8f7eae8102f33a140d91c883420713e75d3a80bcb7828587c6fb6dc7"
+    },
+    {
+      "path": "tools/run-discovery-sos-postgres-test.mjs",
+      "sha256": "67339f564898b957b57b94fed8ce9537cedf1a00aa8db63f86ef8a627fd1562f"
+    },
+    {
+      "path": "tools/run-feature-010-completion-authority-concurrency-test.mjs",
+      "sha256": "0d7cab91c81302f66296da7b2c12c8283f3ef8eb2f823df109298b92754dfbe9"
+    },
+    {
+      "path": "tools/run-feature-010-postgres-test.mjs",
+      "sha256": "dcd484889f1f1fdd10ef20d18e60d1ced4e18d44567b837a825981ccdbcdff32"
+    },
+    {
+      "path": "tools/run-feature-010-realtime-postgres-test.mjs",
+      "sha256": "cf04213e1e06c54269e89086529327c8d9f9e171bb84c8241444890521985515"
+    },
+    {
+      "path": "tools/run-feature-010-restore-test.mjs",
+      "sha256": "4ece6982b81c9a5defaaefbefb6b4de3ada9a0f3e88979ae7b4db34b99f3df37"
+    },
+    {
+      "path": "tools/run-feature-010-ui-tests.mjs",
+      "sha256": "bd97fb6db7e903a775a5d35d0a03e41febe90d0d35f3fa98dbfe7853bc5b511f"
+    },
+    {
+      "path": "tools/run-feature-011-composition-test.mjs",
+      "sha256": "5564299b37822f611dfc172824e0ac158379827d8db969fd6e8019686954cc51"
+    },
+    {
+      "path": "tools/run-feature-011-concurrency-test.mjs",
+      "sha256": "5b441a5e30627e1a473ac4cc75fc55f97548a5f111c0ab5df0e5bd4b797ee207"
+    },
+    {
+      "path": "tools/run-feature-011-consumer-test.mjs",
+      "sha256": "2e2d34da0f220d1d666c6be41ed49494ddd52a58c468f3d7df3f413d1fd7a3c4"
+    },
+    {
+      "path": "tools/run-feature-011-physical-red.mjs",
+      "sha256": "c7fef4098344f377ba29f568e4aaed48116c28ab7235fc0736a63ad25b93fb78"
+    },
+    {
+      "path": "tools/run-feature-011-postgres-test.mjs",
+      "sha256": "f7fe95c1d5039b222f7bf08266173638109bba63c204956471aa5de05992f2b5"
+    },
+    {
+      "path": "tools/run-feature-011-storage-test.mjs",
+      "sha256": "62dc149fa7899de9a3e68dfb2600dba6ad47aa7a94d089c70022109710d71b6d"
+    },
+    {
+      "path": "tools/run-idempotency-privacy-test.mjs",
+      "sha256": "b90a47a54dc511000171552bf7317065ecb5f507f0b8f62afdb073cb1513729a"
+    },
+    {
+      "path": "tools/run-identity-continuity-mfa-test.mjs",
+      "sha256": "962e6d8612cc1f2944410d8cd6e3e30be6e1dbf375e83106903b45ba53938459"
+    },
+    {
+      "path": "tools/run-identity-continuity-recovery-test.mjs",
+      "sha256": "03cf10d35777e166383a330841d49440f8d973d2eacdff61f1f69c70e2d93fc1"
+    },
+    {
+      "path": "tools/run-identity-continuity-supabase-test.mjs",
+      "sha256": "4eb42836d27b0a17bb119b659da110d12fd962de387d97565b7d6c5ece322e00"
+    },
+    {
+      "path": "tools/run-identity-continuity-transition-test.mjs",
+      "sha256": "17be1100adc39a97fa391c925c6bf2d768c3b02a72dedbd022c851ae7547dbd8"
+    },
+    {
+      "path": "tools/run-native-clinical-composition-test.mjs",
+      "sha256": "f330b828d7650ff85f76d511a679e8018018d091ce9dd6d8c89998fc05cc8234"
+    },
+    {
+      "path": "tools/tooling-history.mjs",
+      "sha256": "2aa0af817bed71c793a77362807ea4797350435034fca9330aabf711f1841084"
+    },
+    {
+      "path": "tools/verify-agent-skills.mjs",
+      "sha256": "fd71f91b8b25e5df8cdb73ee0268ef6ede323eae1ea7728ea815c6ecf3f514cf"
+    },
+    {
+      "path": "tools/verify-architecture.mjs",
+      "sha256": "d617d87d8ca0a5f23fd3d506d018a4551619ca5a73b4356ba45aac2676e19395"
+    },
+    {
+      "path": "tools/verify-contracts.mjs",
+      "sha256": "98dfba479b8c4c170b267ee556872c6e7945eb305a780b597018e474be73d93e"
+    },
+    {
+      "path": "tools/verify-discovery-sos-evidence.mjs",
+      "sha256": "c54bbd3d99a5270cb821668c9b038e2d6a187020770c596d1be4871200318e3a"
+    },
+    {
+      "path": "tools/verify-expo-dependencies.mjs",
+      "sha256": "14b701260539b537f5506b96a89e13a9055b798205d90709fdf7c455eb931c64"
+    },
+    {
+      "path": "tools/verify-feature-008-contract.mjs",
+      "sha256": "4635c2d31d7e3b4453831c03368fb0ac4553efef2635edd4a3b610203a24aceb"
+    },
+    {
+      "path": "tools/verify-feature-008-evidence.mjs",
+      "sha256": "8949e2f4d4b720cc030673a672a0abce55981b34ad0771ddab110d93b77f4a84"
+    },
+    {
+      "path": "tools/verify-feature-008-scope.mjs",
+      "sha256": "a67da45f221f3470a15797d3b1cb7f12a2ab3ed22ef3bf6f1c30af9faed8ca25"
+    },
+    {
+      "path": "tools/verify-feature-009-contract.mjs",
+      "sha256": "fc9f7294d5bb2f26e1339537ad4454fd22242e16bff5d81678147c2ded8298e2"
+    },
+    {
+      "path": "tools/verify-feature-009-evidence.mjs",
+      "sha256": "e8a8b3b889c350897e53c773206686a0091c17b52af37760865e0711fe47cfde"
+    },
+    {
+      "path": "tools/verify-feature-009-scope.mjs",
+      "sha256": "c1e0ef8dd3b9992dab61cc65552f4e2a49a0cc6ec65544d84be15a89999fc08c"
+    },
+    {
+      "path": "tools/verify-feature-011-contracts.mjs",
+      "sha256": "0810e5b71b6ffb17cfc970f36685dc863256782d8bb54c7dd491cb2cb0c57573"
+    },
+    {
+      "path": "tools/verify-identity-continuity-evidence.mjs",
+      "sha256": "60edb48d36e7fbb76432a1f373618443799fa144d57d88402adcc7dc322e36e3"
+    },
+    {
+      "path": "tools/verify-secrets.mjs",
+      "sha256": "cbfbc75d07dfaf19a8104fc98dc9bc1b9fcb1eabac97bab7562d6276f6119ed7"
+    }
+  ],
+  "sideEffectLocators": [
+    {
+      "path": "tools/audit-admin-performance.ts",
+      "sha256": "a81b6a33e8c27b51ebfd0c4fdf0e18462701591234b51df5be80a06a1ad2a5b9",
+      "locators": [
+        {
+          "line": 4,
+          "source": "import { mkdir, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "line": 29,
+          "source": "const baselineMigrations = ["
+        },
+        {
+          "line": 30,
+          "source": "'infra/db/migrations/001_identity_onboarding.sql',"
+        },
+        {
+          "line": 31,
+          "source": "'supabase/migrations/20260811000300_facility_onboarding_rbac.sql',"
+        },
+        {
+          "line": 32,
+          "source": "'supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql',"
+        },
+        {
+          "line": 33,
+          "source": "'supabase/migrations/20260811000500_family_care_relationships.sql',"
+        },
+        {
+          "line": 34,
+          "source": "'supabase/migrations/20260811000600_family_care_storage.sql',"
+        },
+        {
+          "line": 35,
+          "source": "'supabase/migrations/20260813000500_privacy_dsr_notifications.sql',"
+        },
+        {
+          "line": 36,
+          "source": "'supabase/migrations/20260813000600_privacy_dsr_storage.sql',"
+        },
+        {
+          "line": 37,
+          "source": "'supabase/migrations/20260820000600_discovery_sos_foundation.sql',"
+        },
+        {
+          "line": 38,
+          "source": "'supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql',"
+        },
+        {
+          "line": 40,
+          "source": "const featureMigration ="
+        },
+        {
+          "line": 41,
+          "source": "'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql';"
+        },
+        {
+          "line": 42,
+          "source": "const securityMigration = 'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql';"
+        },
+        {
+          "line": 89,
+          "source": "runPsql('postgres', ['-c', `DROP DATABASE IF EXISTS ${database} WITH (FORCE)`]);"
+        },
+        {
+          "line": 90,
+          "source": "runPsql('postgres', ['-c', `CREATE DATABASE ${database}`]);"
+        },
+        {
+          "line": 94,
+          "source": "runPsql('postgres', ['-c', `DROP DATABASE IF EXISTS ${database} WITH (FORCE)`]);"
+        },
+        {
+          "line": 97,
+          "source": "function applyMigrations(): void {"
+        },
+        {
+          "line": 98,
+          "source": "for (const migration of [...baselineMigrations, featureMigration, securityMigration]) {"
+        },
+        {
+          "line": 99,
+          "source": "runPsql(database, ['-f', `/workspace/${migration}`]);"
+        },
+        {
+          "line": 411,
+          "source": "runDocker(['compose', 'up', '-d', '--wait', 'postgres']);"
+        },
+        {
+          "line": 417,
+          "source": "applyMigrations();"
+        },
+        {
+          "line": 508,
+          "source": "await mkdir("
+        },
+        {
+          "line": 517,
+          "source": "await writeFile("
+        }
+      ]
+    },
+    {
+      "path": "tools/clinic-scheduling-performance.ts",
+      "sha256": "8d55cce0faee813a9f2950f62faa10d4bbe16be18f8288d72232e980537bd167",
+      "locators": [
+        {
+          "line": 4,
+          "source": "import { mkdir, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "line": 62,
+          "source": "const migrationFiles = ["
+        },
+        {
+          "line": 63,
+          "source": "'infra/db/migrations/001_identity_onboarding.sql',"
+        },
+        {
+          "line": 64,
+          "source": "'supabase/migrations/20260811000300_facility_onboarding_rbac.sql',"
+        },
+        {
+          "line": 65,
+          "source": "'supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql',"
+        },
+        {
+          "line": 66,
+          "source": "'supabase/migrations/20260811000500_family_care_relationships.sql',"
+        },
+        {
+          "line": 67,
+          "source": "'supabase/migrations/20260811000600_family_care_storage.sql',"
+        },
+        {
+          "line": 68,
+          "source": "'supabase/migrations/20260813000500_privacy_dsr_notifications.sql',"
+        },
+        {
+          "line": 69,
+          "source": "'supabase/migrations/20260813000600_privacy_dsr_storage.sql',"
+        },
+        {
+          "line": 70,
+          "source": "'supabase/migrations/20260820000600_discovery_sos_foundation.sql',"
+        },
+        {
+          "line": 71,
+          "source": "'supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql',"
+        },
+        {
+          "line": 72,
+          "source": "'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql',"
+        },
+        {
+          "line": 73,
+          "source": "'supabase/migrations/20260908000700_sec_007_function_execute_grants.sql',"
+        },
+        {
+          "line": 74,
+          "source": "'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql',"
+        },
+        {
+          "line": 75,
+          "source": "'supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql',"
+        },
+        {
+          "line": 76,
+          "source": "'supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql',"
+        },
+        {
+          "line": 77,
+          "source": "'supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql',"
+        },
+        {
+          "line": 146,
+          "source": "database_migration_provenance: {"
+        },
+        {
+          "line": 147,
+          "source": "chain: 'tools/run-clinic-scheduling-restore-test.mjs migration order',"
+        },
+        {
+          "line": 148,
+          "source": "ordered_migrations: migrationFiles,"
+        },
+        {
+          "line": 1205,
+          "source": "await mkdir(path.dirname(reportPath), { recursive: true });"
+        },
+        {
+          "line": 1208,
+          "source": "`\\n- API rate-limit client identities: ${syntheticApiAddresses.size} distinct simulated RFC1918 remote addresses through app.inject; this is address metadata only, not real network traffic. Browser requests are separately measured as one loopback client.\\n- Da"
+        },
+        {
+          "line": 1210,
+          "source": "await writeFile(reportPath, report, 'utf8');"
+        },
+        {
+          "line": 1238,
+          "source": "await admin.unsafe(`create database ${db}`);"
+        },
+        {
+          "line": 1242,
+          "source": "const migrationDb = postgres(ownerUrl, {"
+        },
+        {
+          "line": 1249,
+          "source": "for (const migrationFile of migrationFiles) {"
+        },
+        {
+          "line": 1250,
+          "source": "runnerStage = 'migration-apply';"
+        },
+        {
+          "line": 1251,
+          "source": "runnerFile = migrationFile;"
+        },
+        {
+          "line": 1252,
+          "source": "applySqlFile(db, migrationFile);"
+        },
+        {
+          "line": 1258,
+          "source": "runnerStage = 'migration-readiness';"
+        },
+        {
+          "line": 1259,
+          "source": "const [readiness] = await migrationDb<"
+        },
+        {
+          "line": 1279,
+          "source": "'Fresh migration chain must expose and grant both scheduling RPCs.',"
+        },
+        {
+          "line": 1282,
+          "source": "await migrationDb.end({ timeout: 5 });"
+        },
+        {
+          "line": 1397,
+          "source": "if (status?.database_exists) await admin.unsafe(`drop database ${db}`);"
+        }
+      ]
+    },
+    {
+      "path": "tools/discovery-sos-performance.ts",
+      "sha256": "bd61234ff3ad2783fc032f12d22045c9448e11ca56a3f999b370293f7a82ff14",
+      "locators": [
+        {
+          "line": 3,
+          "source": "import { writeFile } from 'node:fs/promises';"
+        },
+        {
+          "line": 382,
+          "source": "await writeFile("
+        }
+      ]
+    },
+    {
+      "path": "tools/feature-010-performance.ts",
+      "sha256": "a3e4755a305c337e1d37f7ca0e6812bbc74d2f91a2b0f477e8764cf9ecfaa8d5",
+      "locators": [
+        {
+          "line": 3,
+          "source": "import { mkdir, rm, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "line": 315,
+          "source": "function runMigration(runtime: Runtime, database: string, migration: string): void {"
+        },
+        {
+          "line": 316,
+          "source": "const label = `${runtime.name} apply migration ${path.basename(migration)}`;"
+        },
+        {
+          "line": 318,
+          "source": "const sourcePath = path.resolve(root, migration);"
+        },
+        {
+          "line": 323,
+          "source": "assert.ok(!/^\\\\ir\\s/m.test(source), 'Nested migration includes are unsupported.');"
+        },
+        {
+          "line": 367,
+          "source": "function migrationList(): string[] {"
+        },
+        {
+          "line": 371,
+          "source": "const command = packageJson.scripts?.['db:migrate'];"
+        },
+        {
+          "line": 372,
+          "source": "assert.ok(command, 'package db:migrate chain is unavailable.');"
+        },
+        {
+          "line": 374,
+          "source": "assert.ok(paths.length > 0, 'package db:migrate contains no migration files.');"
+        },
+        {
+          "line": 429,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE template0;`,"
+        },
+        {
+          "line": 433,
+          "source": "for (const migration of migrationList()) {"
+        },
+        {
+          "line": 434,
+          "source": "runMigration(runtime, database, migration);"
+        },
+        {
+          "line": 733,
+          "source": "`DROP DATABASE \"${database}\" WITH (FORCE);`,"
+        },
+        {
+          "line": 887,
+          "source": "await mkdir(path.dirname(output), { recursive: true });"
+        },
+        {
+          "line": 888,
+          "source": "await writeFile(output, `${JSON.stringify(evidence, null, 2)}\\n`, 'utf8');"
+        }
+      ]
+    },
+    {
+      "path": "tools/feature-011-composition-atomic.mjs",
+      "sha256": "dba6f6c30d35edcafd04e6e45fda704e7e021f110927ab07f300760014c7f501",
+      "locators": [
+        {
+          "line": 4,
+          "source": "import { readFileSync, writeFileSync, mkdirSync, unlinkSync } from 'node:fs';"
+        },
+        {
+          "line": 95,
+          "source": "writeFileSync(temporary, suite, { flag: 'wx' });"
+        },
+        {
+          "line": 98,
+          "source": "mkdirSync(output, { recursive: true });"
+        },
+        {
+          "line": 107,
+          "source": "writeFileSync("
+        }
+      ]
+    },
+    {
+      "path": "tools/feature-011-native-supabase-bootstrap.mjs",
+      "sha256": "6d235d24a7d9d3a9ffbcdd9364ce431ba8f6e2a1fe43663856963496e1d1e28c",
+      "locators": [
+        {
+          "line": 6,
+          "source": "import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';"
+        },
+        {
+          "line": 50,
+          "source": "export async function resetFeature011NativeSupabase(runPnpm) {"
+        },
+        {
+          "line": 55,
+          "source": "const directory = join(root, 'supabase/migrations');"
+        },
+        {
+          "line": 60,
+          "source": "const migrations = tail.map((file) => {"
+        },
+        {
+          "line": 64,
+          "source": "'Unexpected successor migration',"
+        },
+        {
+          "line": 66,
+          "source": "const path = `supabase/migrations/${file}`;"
+        },
+        {
+          "line": 68,
+          "source": "assert.equal(hash(bytes), pins[path], 'Unbound migration');"
+        },
+        {
+          "line": 108,
+          "source": "runPnpm(['exec', 'supabase', 'db', 'reset', '--local', '--version', predecessorVersion]);"
+        },
+        {
+          "line": 124,
+          "source": "for (const migration of migrations) {"
+        },
+        {
+          "line": 126,
+          "source": "Buffer.concat([Buffer.from('BEGIN;\\n'), migration.bytes, Buffer.from('\\nCOMMIT;\\n')]),"
+        },
+        {
+          "line": 128,
+          "source": "assert(!result.includes('ERROR'), 'Migration setup failed');"
+        },
+        {
+          "line": 129,
+          "source": "console.log('PASS offline-admin migration ' + migration.path);"
+        },
+        {
+          "line": 135,
+          "source": "'migration',"
+        },
+        {
+          "line": 140,
+          "source": "...migrations.map((m) => m.version),"
+        },
+        {
+          "line": 143,
+          "source": "`SELECT version FROM supabase_migrations.schema_migrations WHERE version > '${predecessorVersion}' ORDER BY version;`,"
+        },
+        {
+          "line": 149,
+          "source": "migrations.map((m) => m.version),"
+        },
+        {
+          "line": 171,
+          "source": "mkdirSync(join(evidence, 'native-bootstrap'), { recursive: true });"
+        },
+        {
+          "line": 173,
+          "source": "writeFileSync("
+        },
+        {
+          "line": 184,
+          "source": "migrations: migrations.map(({ bytes, ...m }) => m),"
+        }
+      ]
+    },
+    {
+      "path": "tools/feature-011-physical-green.mjs",
+      "sha256": "45e6dd7b34e7ebb398cfd3ea416bbdee7e01999cdb1fb2eaa1452f304e475567",
+      "locators": [
+        {
+          "line": 2,
+          "source": "import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';"
+        },
+        {
+          "line": 13,
+          "source": "readMigration,"
+        },
+        {
+          "line": 18,
+          "source": "checkpointMigrations,"
+        },
+        {
+          "line": 46,
+          "source": "mkdirSync(resolve(root, evidenceRoot), { recursive: true });"
+        },
+        {
+          "line": 47,
+          "source": "writeFileSync("
+        },
+        {
+          "line": 59,
+          "source": "const migrations = ["
+        },
+        {
+          "line": 60,
+          "source": "...checkpointMigrations(storageSlugs),"
+        },
+        {
+          "line": 61,
+          "source": "...checkpointMigrations(consumerSlugs),"
+        },
+        {
+          "line": 63,
+          "source": "assert.equal(migrations.length, 10);"
+        },
+        {
+          "line": 86,
+          "source": "for (const path of migrations) {"
+        },
+        {
+          "line": 109,
+          "source": "for (const path of migrations) assert.equal(digest(path), components.sourceDigests[path]);"
+        },
+        {
+          "line": 131,
+          "source": "return migrations;"
+        },
+        {
+          "line": 210,
+          "source": "const migrations = acceptedChain();"
+        },
+        {
+          "line": 237,
+          "source": "const applied = migrations.map((path) => ({"
+        },
+        {
+          "line": 240,
+          "source": "...sql(runtime, database, readMigration(path)),"
+        }
+      ]
+    },
+    {
+      "path": "tools/feature-011-physical-races.mjs",
+      "sha256": "ec5a14e11d68330ee0c6cee0607ac28af23404bb2f659f3f3333c89b18b2e7fd",
+      "locators": [
+        {
+          "line": 4,
+          "source": "import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';"
+        },
+        {
+          "line": 15,
+          "source": "readMigration,"
+        },
+        {
+          "line": 20,
+          "source": "checkpointMigrations,"
+        },
+        {
+          "line": 57,
+          "source": "'supabase/migrations/20261006185236_f011_allergy_functions.sql',"
+        },
+        {
+          "line": 58,
+          "source": "'supabase/migrations/20261006185237_f011_release_functions.sql',"
+        },
+        {
+          "line": 59,
+          "source": "'supabase/migrations/20261006185239_f011_signing_functions.sql',"
+        },
+        {
+          "line": 60,
+          "source": "'supabase/migrations/20261006185240_f011_publication_functions.sql',"
+        },
+        {
+          "line": 61,
+          "source": "'supabase/migrations/20261006185242_f011_receipt_functions.sql',"
+        },
+        {
+          "line": 62,
+          "source": "'supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql',"
+        },
+        {
+          "line": 63,
+          "source": "'supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql',"
+        },
+        {
+          "line": 64,
+          "source": "'supabase/migrations/20260929001004_f010_c13_encounter_completion.sql',"
+        },
+        {
+          "line": 65,
+          "source": "'supabase/migrations/20260930001001_f010_c26_privacy_guards.sql',"
+        },
+        {
+          "line": 66,
+          "source": "'supabase/migrations/20261001001002_f010_f04_completion_authority.sql',"
+        },
+        {
+          "line": 479,
+          "source": "const migrationPaths = checkpointMigrations([...storageSlugs, ...consumerSlugs]);"
+        },
+        {
+          "line": 480,
+          "source": "const migrations = migrationPaths.map((path) => ({"
+        },
+        {
+          "line": 483,
+          "source": "exitCode: sql(runtime, database, readMigration(path)).exitCode,"
+        },
+        {
+          "line": 505,
+          "source": "{ baseline, health, migrations, featureFixtureSha256, before, executor },"
+        },
+        {
+          "line": 512,
+          "source": "migrations,"
+        },
+        {
+          "line": 2648,
+          "source": "const migrations = acceptedChain();"
+        },
+        {
+          "line": 2680,
+          "source": "mkdirSync(runtimeEvidenceDir, { recursive: true });"
+        },
+        {
+          "line": 2800,
+          "source": "migrations,"
+        },
+        {
+          "line": 2857,
+          "source": "writeFileSync(attemptPath, JSON.stringify(attempt, null, 2) + '\\n');"
+        },
+        {
+          "line": 2875,
+          "source": "writeFileSync(artifactPath, JSON.stringify(runtimeDetails, null, 2) + '\\n');"
+        },
+        {
+          "line": 2891,
+          "source": "migrations,"
+        }
+      ]
+    },
+    {
+      "path": "tools/generate-feature-011-client.mjs",
+      "sha256": "d12e7a6881d64050cb62ed4a2b9ee57c57e4f663a8bc5423a8c28808cea29fa2",
+      "locators": [
+        {
+          "line": 353,
+          "source": "} else fs.writeFileSync(target, source);"
+        }
+      ]
+    },
+    {
+      "path": "tools/generate-feature-011-contract.mjs",
+      "sha256": "fad4a83f3e9ac72f6db17c44687ed90b4ea914b68cb5d1199e1539133c5acc58",
+      "locators": [
+        {
+          "line": 756,
+          "source": "fs.writeFileSync(target, source);"
+        },
+        {
+          "line": 758,
+          "source": "fs.writeFileSync(index, currentIndex.trimEnd() + '\\n' + exportLine + '\\n');"
+        }
+      ]
+    },
+    {
+      "path": "tools/identity-continuity-performance.ts",
+      "sha256": "0535135a97249a9dc991ff3eeee4c32da2967987525a70a0344c8788712f7f72",
+      "locators": [
+        {
+          "line": 5,
+          "source": "import { writeFile } from 'node:fs/promises';"
+        },
+        {
+          "line": 429,
+          "source": "await writeFile("
+        }
+      ]
+    },
+    {
+      "path": "tools/run-audit-admin-postgres-test.mjs",
+      "sha256": "88a5dae0f5fb6ee523336724942bc68c3028710a67339e1ecb6cfa4cda842a6f",
+      "locators": [
+        {
+          "line": 15,
+          "source": "const baselineMigrations = ["
+        },
+        {
+          "line": 16,
+          "source": "'infra/db/migrations/001_identity_onboarding.sql',"
+        },
+        {
+          "line": 17,
+          "source": "'supabase/migrations/20260811000300_facility_onboarding_rbac.sql',"
+        },
+        {
+          "line": 18,
+          "source": "'supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql',"
+        },
+        {
+          "line": 19,
+          "source": "'supabase/migrations/20260811000500_family_care_relationships.sql',"
+        },
+        {
+          "line": 20,
+          "source": "'supabase/migrations/20260811000600_family_care_storage.sql',"
+        },
+        {
+          "line": 21,
+          "source": "'supabase/migrations/20260813000500_privacy_dsr_notifications.sql',"
+        },
+        {
+          "line": 22,
+          "source": "'supabase/migrations/20260813000600_privacy_dsr_storage.sql',"
+        },
+        {
+          "line": 23,
+          "source": "'supabase/migrations/20260820000600_discovery_sos_foundation.sql',"
+        },
+        {
+          "line": 24,
+          "source": "'supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql',"
+        },
+        {
+          "line": 26,
+          "source": "const featureMigration ="
+        },
+        {
+          "line": 27,
+          "source": "'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql';"
+        },
+        {
+          "line": 28,
+          "source": "const securityMigration = 'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql';"
+        },
+        {
+          "line": 95,
+          "source": "runPsql('postgres', ['-c', `DROP DATABASE IF EXISTS ${database} WITH (FORCE)`], {"
+        },
+        {
+          "line": 98,
+          "source": "runPsql('postgres', ['-c', `CREATE DATABASE ${database}`], { quiet: true });"
+        },
+        {
+          "line": 102,
+          "source": "runPsql('postgres', ['-c', `DROP DATABASE IF EXISTS ${database} WITH (FORCE)`], {"
+        },
+        {
+          "line": 107,
+          "source": "function applyMigration(database, migration, options) {"
+        },
+        {
+          "line": 108,
+          "source": "return runPsql(database, ['-f', `/workspace/${migration}`], options);"
+        },
+        {
+          "line": 112,
+          "source": "for (const migration of baselineMigrations) {"
+        },
+        {
+          "line": 113,
+          "source": "applyMigration(database, migration, { quiet: true });"
+        },
+        {
+          "line": 144,
+          "source": "applyMigration(cleanDatabase, featureMigration, { quiet: true });"
+        },
+        {
+          "line": 158,
+          "source": "applyMigration(cleanDatabase, securityMigration, { quiet: true });"
+        },
+        {
+          "line": 159,
+          "source": "applyMigration(cleanDatabase, schemaFixture, { quiet: true });"
+        },
+        {
+          "line": 170,
+          "source": "const [migratedIdempotency] = await sql`"
+        },
+        {
+          "line": 175,
+          "source": "assert.deepEqual(migratedIdempotency, {"
+        },
+        {
+          "line": 184,
+          "source": "JSON.stringify(migratedIdempotency),"
+        },
+        {
+          "line": 186,
+          "source": "'legacy raw idempotency scope must not survive the terminal migration',"
+        },
+        {
+          "line": 511,
+          "source": "const failure = applyMigration(legacyDatabase, featureMigration, {"
+        },
+        {
+          "line": 547,
+          "source": "applyMigration(database, featureMigration, { quiet: true });"
+        },
+        {
+          "line": 548,
+          "source": "applyMigration(database, securityMigration, { quiet: true });"
+        },
+        {
+          "line": 762,
+          "source": "applyMigration(database, featureMigration, { quiet: true });"
+        },
+        {
+          "line": 763,
+          "source": "applyMigration(database, securityMigration, { quiet: true });"
+        },
+        {
+          "line": 885,
+          "source": "applyMigration(database, featureMigration, { quiet: true });"
+        },
+        {
+          "line": 886,
+          "source": "applyMigration(database, securityMigration, { quiet: true });"
+        },
+        {
+          "line": 1209,
+          "source": "applyMigration(database, rlsFixture, { quiet: true });"
+        },
+        {
+          "line": 1222,
+          "source": "runDocker(['compose', 'up', '-d', '--wait', 'postgres']);"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-audit-admin-restore-test.mjs",
+      "sha256": "f35a9b4a50c7f14a43868ba8e0713139e7a763dd5c00dc308a71127cdb2a562f",
+      "locators": [
+        {
+          "line": 4,
+          "source": "import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "line": 18,
+          "source": "const baselineMigrations = ["
+        },
+        {
+          "line": 19,
+          "source": "'infra/db/migrations/001_identity_onboarding.sql',"
+        },
+        {
+          "line": 20,
+          "source": "'supabase/migrations/20260811000300_facility_onboarding_rbac.sql',"
+        },
+        {
+          "line": 21,
+          "source": "'supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql',"
+        },
+        {
+          "line": 22,
+          "source": "'supabase/migrations/20260811000500_family_care_relationships.sql',"
+        },
+        {
+          "line": 23,
+          "source": "'supabase/migrations/20260811000600_family_care_storage.sql',"
+        },
+        {
+          "line": 24,
+          "source": "'supabase/migrations/20260813000500_privacy_dsr_notifications.sql',"
+        },
+        {
+          "line": 25,
+          "source": "'supabase/migrations/20260813000600_privacy_dsr_storage.sql',"
+        },
+        {
+          "line": 26,
+          "source": "'supabase/migrations/20260820000600_discovery_sos_foundation.sql',"
+        },
+        {
+          "line": 27,
+          "source": "'supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql',"
+        },
+        {
+          "line": 29,
+          "source": "const featureMigration ="
+        },
+        {
+          "line": 30,
+          "source": "'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql';"
+        },
+        {
+          "line": 31,
+          "source": "const securityMigration = 'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql';"
+        },
+        {
+          "line": 94,
+          "source": "runPsql('postgres', ['-c', `DROP DATABASE IF EXISTS ${database} WITH (FORCE)`], {"
+        },
+        {
+          "line": 97,
+          "source": "runPsql('postgres', ['-c', `CREATE DATABASE ${database}`], { quiet: true });"
+        },
+        {
+          "line": 101,
+          "source": "runPsql('postgres', ['-c', `DROP DATABASE IF EXISTS ${database} WITH (FORCE)`], {"
+        },
+        {
+          "line": 233,
+          "source": "migration: await artifactSha256(featureMigration),"
+        },
+        {
+          "line": 234,
+          "source": "securityMigration: await artifactSha256(securityMigration),"
+        },
+        {
+          "line": 253,
+          "source": "- \\`${featureMigration}\\`: \\`${artifactDigests.migration}\\`"
+        },
+        {
+          "line": 254,
+          "source": "- \\`${securityMigration}\\`: \\`${artifactDigests.securityMigration}\\`"
+        },
+        {
+          "line": 258,
+          "source": "await mkdir(join(reportPath, '..'), { recursive: true });"
+        },
+        {
+          "line": 259,
+          "source": "await writeFile(reportPath, report, 'utf8');"
+        },
+        {
+          "line": 262,
+          "source": "runDocker(['compose', 'up', '-d', '--wait', 'postgres']);"
+        },
+        {
+          "line": 267,
+          "source": "for (const migration of baselineMigrations) applySql(sourceDatabase, migration);"
+        },
+        {
+          "line": 268,
+          "source": "applySql(sourceDatabase, featureMigration);"
+        },
+        {
+          "line": 269,
+          "source": "applySql(sourceDatabase, securityMigration);"
+        },
+        {
+          "line": 292,
+          "source": "'pg_dump',"
+        },
+        {
+          "line": 305,
+          "source": "await mkdir(join(sourceObjectPath, '..'), { recursive: true });"
+        },
+        {
+          "line": 306,
+          "source": "await writeFile(sourceObjectPath, objectBytes, { flag: 'wx' });"
+        },
+        {
+          "line": 321,
+          "source": "'pg_restore',"
+        },
+        {
+          "line": 332,
+          "source": "await mkdir(join(restoredObjectPath, '..'), { recursive: true });"
+        },
+        {
+          "line": 333,
+          "source": "await writeFile(restoredObjectPath, backedUpObjectBytes, { flag: 'wx' });"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-clinic-scheduling-migration-test.mjs",
+      "sha256": "0e07640e30664bdb19cd9e1735e80b1703b3561bb558f58097fac613a15bf734",
+      "locators": [
+        {
+          "line": 2,
+          "source": "const result = spawnSync('node', ['tools/run-clinic-scheduling-postgres-test.mjs', 'migration'], {"
+        },
+        {
+          "line": 10,
+          "source": "'clinic-scheduling migration: PASS clean=1 upgrade=1 pre_feature_absence=1 seed_survival=1 flags=asserted',"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-clinic-scheduling-postgres-test.mjs",
+      "sha256": "cfa2cd5bd459b27be24448fa900cb40ca56b30d7655aaf1f86a6501d0a6672eb",
+      "locators": [
+        {
+          "line": 27,
+          "source": "'migration',"
+        },
+        {
+          "line": 38,
+          "source": "'infra/db/migrations/001_identity_onboarding.sql',"
+        },
+        {
+          "line": 39,
+          "source": "'supabase/migrations/20260811000300_facility_onboarding_rbac.sql',"
+        },
+        {
+          "line": 40,
+          "source": "'supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql',"
+        },
+        {
+          "line": 41,
+          "source": "'supabase/migrations/20260811000500_family_care_relationships.sql',"
+        },
+        {
+          "line": 42,
+          "source": "'supabase/migrations/20260811000600_family_care_storage.sql',"
+        },
+        {
+          "line": 43,
+          "source": "'supabase/migrations/20260813000500_privacy_dsr_notifications.sql',"
+        },
+        {
+          "line": 44,
+          "source": "'supabase/migrations/20260813000600_privacy_dsr_storage.sql',"
+        },
+        {
+          "line": 45,
+          "source": "'supabase/migrations/20260820000600_discovery_sos_foundation.sql',"
+        },
+        {
+          "line": 46,
+          "source": "'supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql',"
+        },
+        {
+          "line": 47,
+          "source": "'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql',"
+        },
+        {
+          "line": 48,
+          "source": "'supabase/migrations/20260908000700_sec_007_function_execute_grants.sql',"
+        },
+        {
+          "line": 49,
+          "source": "'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql',"
+        },
+        {
+          "line": 51,
+          "source": "const featureMigration ="
+        },
+        {
+          "line": 52,
+          "source": "'supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql';"
+        },
+        {
+          "line": 57,
+          "source": "const databases = requestedMode === 'migration' ? [db, `${db}_upgrade`] : [db];"
+        },
+        {
+          "line": 90,
+          "source": "psql('postgres', ['-c', `DROP DATABASE IF EXISTS ${database} WITH (FORCE)`], { quiet: true });"
+        },
+        {
+          "line": 91,
+          "source": "psql('postgres', ['-c', `CREATE DATABASE ${database}`], { quiet: true });"
+        },
+        {
+          "line": 325,
+          "source": "const isUpgradePath = requestedMode === 'migration' && database === `${db}_upgrade`;"
+        },
+        {
+          "line": 326,
+          "source": "for (const migration of baseline) apply(database, migration);"
+        },
+        {
+          "line": 332,
+          "source": "apply(database, featureMigration);"
+        },
+        {
+          "line": 333,
+          "source": "apply(database, 'supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql');"
+        },
+        {
+          "line": 334,
+          "source": "apply(database, 'supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql');"
+        },
+        {
+          "line": 341,
+          "source": "else if (requestedMode === 'migration')"
+        },
+        {
+          "line": 342,
+          "source": "apply(database, 'infra/db/tests/clinic-scheduling-migration.sql');"
+        },
+        {
+          "line": 360,
+          "source": "psql('postgres', ['-c', `DROP DATABASE IF EXISTS ${database} WITH (FORCE)`], { quiet: true });"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-clinic-scheduling-restore-test.mjs",
+      "sha256": "dc9f090b8f7eae8102f33a140d91c883420713e75d3a80bcb7828587c6fb6dc7",
+      "locators": [
+        {
+          "line": 4,
+          "source": "import { mkdir, writeFile } from 'node:fs/promises';"
+        },
+        {
+          "line": 23,
+          "source": "const migrations = ["
+        },
+        {
+          "line": 24,
+          "source": "'infra/db/migrations/001_identity_onboarding.sql',"
+        },
+        {
+          "line": 25,
+          "source": "'supabase/migrations/20260811000300_facility_onboarding_rbac.sql',"
+        },
+        {
+          "line": 26,
+          "source": "'supabase/migrations/20260811000400_facility_onboarding_rbac_storage.sql',"
+        },
+        {
+          "line": 27,
+          "source": "'supabase/migrations/20260811000500_family_care_relationships.sql',"
+        },
+        {
+          "line": 28,
+          "source": "'supabase/migrations/20260811000600_family_care_storage.sql',"
+        },
+        {
+          "line": 29,
+          "source": "'supabase/migrations/20260813000500_privacy_dsr_notifications.sql',"
+        },
+        {
+          "line": 30,
+          "source": "'supabase/migrations/20260813000600_privacy_dsr_storage.sql',"
+        },
+        {
+          "line": 31,
+          "source": "'supabase/migrations/20260820000600_discovery_sos_foundation.sql',"
+        },
+        {
+          "line": 32,
+          "source": "'supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql',"
+        },
+        {
+          "line": 33,
+          "source": "'supabase/migrations/20260904000800_audit_admin_aggregates_observability.sql',"
+        },
+        {
+          "line": 34,
+          "source": "'supabase/migrations/20260908000700_sec_007_function_execute_grants.sql',"
+        },
+        {
+          "line": 35,
+          "source": "'supabase/migrations/20260908000800_sec_008_idempotency_privacy.sql',"
+        },
+        {
+          "line": 36,
+          "source": "'supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql',"
+        },
+        {
+          "line": 37,
+          "source": "'supabase/migrations/20260923000100_f009_added_exception_overlap_guard.sql',"
+        },
+        {
+          "line": 38,
+          "source": "'supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql',"
+        },
+        {
+          "line": 40,
+          "source": "const migrationNames = migrations.map((migration) => `\\`${migration}\\``).join(', ');"
+        },
+        {
+          "line": 83,
+          "source": "psql('postgres', ['-c', `CREATE DATABASE ${database}`], { quiet: true });"
+        },
+        {
+          "line": 88,
+          "source": "psql('postgres', ['-c', `DROP DATABASE ${database} WITH (FORCE)`], { quiet: true });"
+        },
+        {
+          "line": 482,
+          "source": "docker(['compose', 'up', '-d', '--wait', 'postgres']);"
+        },
+        {
+          "line": 484,
+          "source": "stage = 'synthetic source migration and seed';"
+        },
+        {
+          "line": 486,
+          "source": "for (const migration of migrations) apply(sourceDatabase, migration);"
+        },
+        {
+          "line": 501,
+          "source": "'pg_dump',"
+        },
+        {
+          "line": 522,
+          "source": "'pg_restore',"
+        },
+        {
+          "line": 535,
+          "source": "stage = 'forward-only migration after durable restore';"
+        },
+        {
+          "line": 538,
+          "source": "'supabase/migrations/20260924000100_f009_patient_queue_delay_projection.sql',"
+        },
+        {
+          "line": 542,
+          "source": "throw new Error('forward-only migration changed restored durable truth');"
+        },
+        {
+          "line": 593,
+          "source": "await mkdir(dirname(reportPath), { recursive: true });"
+        },
+        {
+          "line": 594,
+          "source": "await writeFile("
+        },
+        {
+          "line": 596,
+          "source": "`# Feature 009 synthetic restore report\\n\\n- Verdict: **PASS — synthetic profile only**\\n- Scope: local disposable PostgreSQL logical backup/restore and synthetic worker recovery. This is not a production disaster-recovery certification.\\n- Fixture: \\`infra/db"
+        },
+        {
+          "line": 605,
+          "source": "await mkdir(dirname(reportPath), { recursive: true });"
+        },
+        {
+          "line": 606,
+          "source": "await writeFile("
+        },
+        {
+          "line": 608,
+          "source": "`# Feature 009 synthetic restore report\\n\\n- Verdict: **FAIL / NO ACCEPTANCE CLAIM**\\n- Scope: local synthetic restore exercise did not complete all required checks.\\n- Last stage: ${stage}.\\n- Evidence: runner output contains the failing assertion or command "
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-010-completion-authority-concurrency-test.mjs",
+      "sha256": "0d7cab91c81302f66296da7b2c12c8283f3ef8eb2f823df109298b92754dfbe9",
+      "locators": [
+        {
+          "line": 7,
+          "source": "const featureMigration ="
+        },
+        {
+          "line": 8,
+          "source": "'supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql';"
+        },
+        {
+          "line": 9,
+          "source": "const f010Migrations = ["
+        },
+        {
+          "line": 10,
+          "source": "'supabase/migrations/20260929001001_f010_c10_encounter_api.sql',"
+        },
+        {
+          "line": 11,
+          "source": "'supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql',"
+        },
+        {
+          "line": 12,
+          "source": "'supabase/migrations/20260929001003_f010_c12_note_signing.sql',"
+        },
+        {
+          "line": 13,
+          "source": "'supabase/migrations/20260929001004_f010_c13_encounter_completion.sql',"
+        },
+        {
+          "line": 14,
+          "source": "'supabase/migrations/20260929001005_f010_c17_referrals_api.sql',"
+        },
+        {
+          "line": 15,
+          "source": "'supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql',"
+        },
+        {
+          "line": 16,
+          "source": "'supabase/migrations/20260929001007_f010_c19_referral_projections.sql',"
+        },
+        {
+          "line": 17,
+          "source": "'supabase/migrations/20260929001008_f010_c22_context_messages.sql',"
+        },
+        {
+          "line": 18,
+          "source": "'supabase/migrations/20260930001000_f010_c23_realtime_hint.sql',"
+        },
+        {
+          "line": 19,
+          "source": "'supabase/migrations/20260930001001_f010_c26_privacy_guards.sql',"
+        },
+        {
+          "line": 21,
+          "source": "const f04Migration = 'supabase/migrations/20261001001002_f010_f04_completion_authority.sql';"
+        },
+        {
+          "line": 30,
+          "source": "const migrateCommand = packageJson.scripts?.['db:migrate'];"
+        },
+        {
+          "line": 31,
+          "source": "if (typeof migrateCommand !== 'string') {"
+        },
+        {
+          "line": 32,
+          "source": "throw new Error('package.json is missing the db:migrate script.');"
+        },
+        {
+          "line": 34,
+          "source": "const migrations = [...migrateCommand.matchAll(/-f \\/workspace\\/([^\\s]+\\.sql)/g)].map((match) =>"
+        },
+        {
+          "line": 37,
+          "source": "const featureMigrationIndex = migrations.indexOf(featureMigration);"
+        },
+        {
+          "line": 38,
+          "source": "const c26MigrationIndex = migrations.indexOf(f010Migrations.at(-1));"
+        },
+        {
+          "line": 40,
+          "source": "featureMigrationIndex < 0 ||"
+        },
+        {
+          "line": 41,
+          "source": "migrations.lastIndexOf(featureMigration) !== featureMigrationIndex ||"
+        },
+        {
+          "line": 42,
+          "source": "c26MigrationIndex <= featureMigrationIndex ||"
+        },
+        {
+          "line": 43,
+          "source": "f010Migrations.some("
+        },
+        {
+          "line": 45,
+          "source": "migrations.indexOf(path) <= featureMigrationIndex ||"
+        },
+        {
+          "line": 46,
+          "source": "(index > 0 && migrations.indexOf(path) !== migrations.indexOf(f010Migrations[index - 1]) + 1),"
+        },
+        {
+          "line": 50,
+          "source": "'The standalone db:migrate chain must contain the canonical F010 migrations in order.',"
+        },
+        {
+          "line": 82,
+          "source": "if (includeForwardFix) readFileSync(resolve(root, f04Migration), 'utf8');"
+        },
+        {
+          "line": 252,
+          "source": "function runMigration(runtime, database, migrationPath, label) {"
+        },
+        {
+          "line": 253,
+          "source": "const sourcePath = resolve(root, migrationPath);"
+        },
+        {
+          "line": 260,
+          "source": "throw new Error(`${migrationPath} has an unsupported nested psql include.`);"
+        },
+        {
+          "line": 261,
+          "source": "runPsql(runtime, database, sql, `${runtime.name} ${label}: ${migrationPath}`);"
+        },
+        {
+          "line": 268,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE \"${template}\";`,"
+        },
+        {
+          "line": 277,
+          "source": "`DROP DATABASE IF EXISTS \"${database}\" WITH (FORCE);`,"
+        },
+        {
+          "line": 662,
+          "source": "for (const migrationPath of migrations.slice(0, featureMigrationIndex)) {"
+        },
+        {
+          "line": 663,
+          "source": "runMigration(runtime, templateDatabase, migrationPath, 'baseline migration');"
+        },
+        {
+          "line": 665,
+          "source": "runMigration(runtime, templateDatabase, featureMigration, 'F010 base migration');"
+        },
+        {
+          "line": 666,
+          "source": "for (const migrationPath of f010Migrations) {"
+        },
+        {
+          "line": 667,
+          "source": "runMigration(runtime, templateDatabase, migrationPath, 'F010 migration');"
+        },
+        {
+          "line": 669,
+          "source": "if (includeForwardFix) runMigration(runtime, templateDatabase, f04Migration, 'F04 forward fix');"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-010-postgres-test.mjs",
+      "sha256": "dcd484889f1f1fdd10ef20d18e60d1ced4e18d44567b837a825981ccdbcdff32",
+      "locators": [
+        {
+          "line": 7,
+          "source": "const featureMigration ="
+        },
+        {
+          "line": 8,
+          "source": "'supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql';"
+        },
+        {
+          "line": 9,
+          "source": "const c10ApiMigration = 'supabase/migrations/20260929001001_f010_c10_encounter_api.sql';"
+        },
+        {
+          "line": 10,
+          "source": "const c11UpdateMigration = 'supabase/migrations/20260929001002_f010_c11_encounter_update_api.sql';"
+        },
+        {
+          "line": 11,
+          "source": "const c12NoteMigration = 'supabase/migrations/20260929001003_f010_c12_note_signing.sql';"
+        },
+        {
+          "line": 12,
+          "source": "const c13CompletionMigration ="
+        },
+        {
+          "line": 13,
+          "source": "'supabase/migrations/20260929001004_f010_c13_encounter_completion.sql';"
+        },
+        {
+          "line": 14,
+          "source": "const c17ReferralsMigration = 'supabase/migrations/20260929001005_f010_c17_referrals_api.sql';"
+        },
+        {
+          "line": 15,
+          "source": "const c18ReferralAcceptanceMigration ="
+        },
+        {
+          "line": 16,
+          "source": "'supabase/migrations/20260929001006_f010_c18_referral_acceptance.sql';"
+        },
+        {
+          "line": 17,
+          "source": "const c19ReferralProjectionMigration ="
+        },
+        {
+          "line": 18,
+          "source": "'supabase/migrations/20260929001007_f010_c19_referral_projections.sql';"
+        },
+        {
+          "line": 19,
+          "source": "const c22ContextMessagesMigration ="
+        },
+        {
+          "line": 20,
+          "source": "'supabase/migrations/20260929001008_f010_c22_context_messages.sql';"
+        },
+        {
+          "line": 21,
+          "source": "const c23RealtimeHintMigration = 'supabase/migrations/20260930001000_f010_c23_realtime_hint.sql';"
+        },
+        {
+          "line": 22,
+          "source": "const c26PrivacyGuardsMigration = 'supabase/migrations/20260930001001_f010_c26_privacy_guards.sql';"
+        },
+        {
+          "line": 23,
+          "source": "const f04CompletionAuthorityMigration ="
+        },
+        {
+          "line": 24,
+          "source": "'supabase/migrations/20261001001002_f010_f04_completion_authority.sql';"
+        },
+        {
+          "line": 74,
+          "source": "const migrateCommand = packageJson.scripts?.['db:migrate'];"
+        },
+        {
+          "line": 76,
+          "source": "if (typeof migrateCommand !== 'string') {"
+        },
+        {
+          "line": 77,
+          "source": "throw new Error('package.json is missing the db:migrate script.');"
+        },
+        {
+          "line": 80,
+          "source": "const migrations = [...migrateCommand.matchAll(/-f \\/workspace\\/([^\\s]+\\.sql)/g)].map((match) =>"
+        },
+        {
+          "line": 83,
+          "source": "const featureMigrationIndex = migrations.indexOf(featureMigration);"
+        },
+        {
+          "line": 84,
+          "source": "const c10ApiMigrationIndex = migrations.indexOf(c10ApiMigration);"
+        },
+        {
+          "line": 85,
+          "source": "const c11UpdateMigrationIndex = migrations.indexOf(c11UpdateMigration);"
+        },
+        {
+          "line": 86,
+          "source": "const c12NoteMigrationIndex = migrations.indexOf(c12NoteMigration);"
+        },
+        {
+          "line": 87,
+          "source": "const c13CompletionMigrationIndex = migrations.indexOf(c13CompletionMigration);"
+        },
+        {
+          "line": 88,
+          "source": "const c17ReferralsMigrationIndex = migrations.indexOf(c17ReferralsMigration);"
+        },
+        {
+          "line": 89,
+          "source": "const c18ReferralAcceptanceMigrationIndex = migrations.indexOf(c18ReferralAcceptanceMigration);"
+        },
+        {
+          "line": 90,
+          "source": "const c19ReferralProjectionMigrationIndex = migrations.indexOf(c19ReferralProjectionMigration);"
+        },
+        {
+          "line": 91,
+          "source": "const c22ContextMessagesMigrationIndex = migrations.indexOf(c22ContextMessagesMigration);"
+        },
+        {
+          "line": 92,
+          "source": "const c23RealtimeHintMigrationIndex = migrations.indexOf(c23RealtimeHintMigration);"
+        },
+        {
+          "line": 93,
+          "source": "const c26PrivacyGuardsMigrationIndex = migrations.indexOf(c26PrivacyGuardsMigration);"
+        },
+        {
+          "line": 96,
+          "source": "featureMigrationIndex < 0 ||"
+        },
+        {
+          "line": 97,
+          "source": "migrations.lastIndexOf(featureMigration) !== featureMigrationIndex ||"
+        },
+        {
+          "line": 98,
+          "source": "c10ApiMigrationIndex <= featureMigrationIndex ||"
+        },
+        {
+          "line": 99,
+          "source": "migrations.lastIndexOf(c10ApiMigration) !== c10ApiMigrationIndex ||"
+        },
+        {
+          "line": 100,
+          "source": "c11UpdateMigrationIndex !== c10ApiMigrationIndex + 1 ||"
+        },
+        {
+          "line": 101,
+          "source": "migrations.lastIndexOf(c11UpdateMigration) !== c11UpdateMigrationIndex ||"
+        },
+        {
+          "line": 102,
+          "source": "c12NoteMigrationIndex !== c11UpdateMigrationIndex + 1 ||"
+        },
+        {
+          "line": 103,
+          "source": "migrations.lastIndexOf(c12NoteMigration) !== c12NoteMigrationIndex ||"
+        },
+        {
+          "line": 105,
+          "source": "(c13CompletionMigrationIndex !== c12NoteMigrationIndex + 1 ||"
+        },
+        {
+          "line": 106,
+          "source": "migrations.lastIndexOf(c13CompletionMigration) !== c13CompletionMigrationIndex)) ||"
+        },
+        {
+          "line": 107,
+          "source": "c17ReferralsMigrationIndex !== c13CompletionMigrationIndex + 1 ||"
+        },
+        {
+          "line": 108,
+          "source": "migrations.lastIndexOf(c17ReferralsMigration) !== c17ReferralsMigrationIndex ||"
+        },
+        {
+          "line": 109,
+          "source": "c18ReferralAcceptanceMigrationIndex !== c17ReferralsMigrationIndex + 1 ||"
+        },
+        {
+          "line": 110,
+          "source": "migrations.lastIndexOf(c18ReferralAcceptanceMigration) !== c18ReferralAcceptanceMigrationIndex ||"
+        },
+        {
+          "line": 111,
+          "source": "c19ReferralProjectionMigrationIndex !== c18ReferralAcceptanceMigrationIndex + 1 ||"
+        },
+        {
+          "line": 112,
+          "source": "migrations.lastIndexOf(c19ReferralProjectionMigration) !== c19ReferralProjectionMigrationIndex ||"
+        },
+        {
+          "line": 113,
+          "source": "c22ContextMessagesMigrationIndex !== c19ReferralProjectionMigrationIndex + 1 ||"
+        },
+        {
+          "line": 114,
+          "source": "migrations.lastIndexOf(c22ContextMessagesMigration) !== c22ContextMessagesMigrationIndex ||"
+        },
+        {
+          "line": 115,
+          "source": "c23RealtimeHintMigrationIndex !== c22ContextMessagesMigrationIndex + 1 ||"
+        },
+        {
+          "line": 116,
+          "source": "migrations.lastIndexOf(c23RealtimeHintMigration) !== c23RealtimeHintMigrationIndex ||"
+        },
+        {
+          "line": 117,
+          "source": "c26PrivacyGuardsMigrationIndex !== c23RealtimeHintMigrationIndex + 1 ||"
+        },
+        {
+          "line": 118,
+          "source": "migrations.lastIndexOf(c26PrivacyGuardsMigration) !== c26PrivacyGuardsMigrationIndex"
+        },
+        {
+          "line": 121,
+          "source": "`The standalone db:migrate chain must include ${featureMigration}, ${c10ApiMigration}, ${c11UpdateMigration}, ${c12NoteMigration}, ${c13CompletionMigration}, ${c17ReferralsMigration}, ${c18ReferralAcceptanceMigration}, ${c19ReferralProjectionMigration}, ${c22C"
+        },
+        {
+          "line": 535,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE \"${templateDatabase}\";`,"
+        },
+        {
+          "line": 639,
+          "source": "'pg_dump',"
+        },
+        {
+          "line": 652,
+          "source": "// pg_dump emits fresh random psql safety tokens on every invocation; they are not schema state."
+        },
+        {
+          "line": 678,
+          "source": "function runMigration(runtime, database, migrationPath, phase) {"
+        },
+        {
+          "line": 679,
+          "source": "const sourcePath = resolve(root, migrationPath);"
+        },
+        {
+          "line": 688,
+          "source": "throw new Error(`${migrationPath} contains an unsupported nested psql include.`);"
+        },
+        {
+          "line": 690,
+          "source": "runPsql(runtime, database, sql, `${runtime.name} ${phase}: ${migrationPath}`);"
+        },
+        {
+          "line": 849,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE \"${templateDatabase}\";`,"
+        },
+        {
+          "line": 925,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE \"${templateDatabase}\";`,"
+        },
+        {
+          "line": 1051,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE \"${templateDatabase}\";`,"
+        },
+        {
+          "line": 1296,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE \"${templateDatabase}\";`,"
+        },
+        {
+          "line": 1559,
+          "source": "`${runtime.name}: expected C08 RED before the F010 migration; exact psql output follows.\\n${detail}`,"
+        },
+        {
+          "line": 1583,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE template0;`,"
+        },
+        {
+          "line": 1588,
+          "source": "function applyBaselineMigrations(runtime, database) {"
+        },
+        {
+          "line": 1589,
+          "source": "for (const migrationPath of migrations.slice(0, featureMigrationIndex)) {"
+        },
+        {
+          "line": 1590,
+          "source": "runMigration(runtime, database, migrationPath, 'baseline migration');"
+        },
+        {
+          "line": 1600,
+          "source": "runMigration(runtime, database, featureMigration, 'fresh F010 migration');"
+        },
+        {
+          "line": 1601,
+          "source": "runMigration(runtime, database, c10ApiMigration, 'fresh C10 API migration');"
+        },
+        {
+          "line": 1602,
+          "source": "runMigration(runtime, database, c11UpdateMigration, 'fresh C11 update API migration');"
+        },
+        {
+          "line": 1603,
+          "source": "runMigration(runtime, database, c12NoteMigration, 'fresh C12 note signing API migration');"
+        },
+        {
+          "line": 1604,
+          "source": "runMigration("
+        },
+        {
+          "line": 1607,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 1608,
+          "source": "'fresh C13 encounter completion API migration',"
+        },
+        {
+          "line": 1610,
+          "source": "runMigration(runtime, database, c17ReferralsMigration, 'fresh C17 referral API migration');"
+        },
+        {
+          "line": 1611,
+          "source": "runMigration("
+        },
+        {
+          "line": 1614,
+          "source": "c18ReferralAcceptanceMigration,"
+        },
+        {
+          "line": 1615,
+          "source": "'fresh C18 referral acceptance API migration',"
+        },
+        {
+          "line": 1617,
+          "source": "runMigration("
+        },
+        {
+          "line": 1620,
+          "source": "c19ReferralProjectionMigration,"
+        },
+        {
+          "line": 1621,
+          "source": "'fresh C19 referral projection correction migration',"
+        },
+        {
+          "line": 1623,
+          "source": "runMigration("
+        },
+        {
+          "line": 1626,
+          "source": "c22ContextMessagesMigration,"
+        },
+        {
+          "line": 1627,
+          "source": "'fresh C22 context messages API migration',"
+        },
+        {
+          "line": 1629,
+          "source": "runMigration(runtime, database, c23RealtimeHintMigration, 'fresh C23 realtime hint migration');"
+        },
+        {
+          "line": 1630,
+          "source": "runMigration(runtime, database, c26PrivacyGuardsMigration, 'fresh C26 privacy guard migration');"
+        },
+        {
+          "line": 1631,
+          "source": "runMigration(runtime, database, f04CompletionAuthorityMigration, 'fresh F04 authority migration');"
+        },
+        {
+          "line": 1650,
+          "source": "runMigration(runtime, database, featureMigration, 'F010 migration replay');"
+        },
+        {
+          "line": 1651,
+          "source": "runMigration(runtime, database, c10ApiMigration, 'C10 API migration replay');"
+        },
+        {
+          "line": 1652,
+          "source": "runMigration(runtime, database, c11UpdateMigration, 'C11 update API migration replay');"
+        },
+        {
+          "line": 1653,
+          "source": "runMigration(runtime, database, c12NoteMigration, 'C12 note signing API migration replay');"
+        },
+        {
+          "line": 1654,
+          "source": "runMigration("
+        },
+        {
+          "line": 1657,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 1658,
+          "source": "'C13 encounter completion API migration replay',"
+        },
+        {
+          "line": 1660,
+          "source": "runMigration(runtime, database, c17ReferralsMigration, 'C17 referral API migration replay');"
+        },
+        {
+          "line": 1661,
+          "source": "runMigration("
+        },
+        {
+          "line": 1664,
+          "source": "c18ReferralAcceptanceMigration,"
+        },
+        {
+          "line": 1665,
+          "source": "'C18 referral acceptance API migration replay',"
+        },
+        {
+          "line": 1667,
+          "source": "runMigration("
+        },
+        {
+          "line": 1670,
+          "source": "c19ReferralProjectionMigration,"
+        },
+        {
+          "line": 1671,
+          "source": "'C19 referral projection correction migration replay',"
+        },
+        {
+          "line": 1673,
+          "source": "runMigration("
+        },
+        {
+          "line": 1676,
+          "source": "c22ContextMessagesMigration,"
+        },
+        {
+          "line": 1677,
+          "source": "'C22 context messages API migration replay',"
+        },
+        {
+          "line": 1679,
+          "source": "runMigration(runtime, database, c23RealtimeHintMigration, 'C23 realtime hint migration replay');"
+        },
+        {
+          "line": 1680,
+          "source": "runMigration("
+        },
+        {
+          "line": 1683,
+          "source": "c26PrivacyGuardsMigration,"
+        },
+        {
+          "line": 1684,
+          "source": "'C26 privacy guard migration replay',"
+        },
+        {
+          "line": 1686,
+          "source": "runMigration("
+        },
+        {
+          "line": 1689,
+          "source": "f04CompletionAuthorityMigration,"
+        },
+        {
+          "line": 1690,
+          "source": "'F04 completion authority migration replay',"
+        },
+        {
+          "line": 1715,
+          "source": "`${runtime.name}: fresh migration, ${replayHistorical ? 'same-database replay, ' : ''}schema assertions, and F009 schema parity passed.`,"
+        },
+        {
+          "line": 1723,
+          "source": "`DROP DATABASE IF EXISTS \"${database}\" WITH (FORCE);`,"
+        },
+        {
+          "line": 1764,
+          "source": "applyBaselineMigrations(runtime, redDatabase);"
+        },
+        {
+          "line": 1772,
+          "source": "applyBaselineMigrations(runtime, database);"
+        },
+        {
+          "line": 1774,
+          "source": "for (const migration of migrations.slice(featureMigrationIndex)) {"
+        },
+        {
+          "line": 1775,
+          "source": "runMigration(runtime, database, migration, 'C28 prerequisite projection chain');"
+        },
+        {
+          "line": 1783,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C22 RED base F010 migration');"
+        },
+        {
+          "line": 1784,
+          "source": "runMigration("
+        },
+        {
+          "line": 1787,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 1788,
+          "source": "'focused C22 RED prerequisite C10 API migration',"
+        },
+        {
+          "line": 1790,
+          "source": "runMigration("
+        },
+        {
+          "line": 1793,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 1794,
+          "source": "'focused C22 RED prerequisite C11 API migration',"
+        },
+        {
+          "line": 1796,
+          "source": "runMigration("
+        },
+        {
+          "line": 1799,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 1800,
+          "source": "'focused C22 RED prerequisite C12 API migration',"
+        },
+        {
+          "line": 1802,
+          "source": "runMigration("
+        },
+        {
+          "line": 1805,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 1806,
+          "source": "'focused C22 RED prerequisite C13 API migration',"
+        },
+        {
+          "line": 1808,
+          "source": "runMigration("
+        },
+        {
+          "line": 1811,
+          "source": "c17ReferralsMigration,"
+        },
+        {
+          "line": 1812,
+          "source": "'focused C22 RED prerequisite C17 API migration',"
+        },
+        {
+          "line": 1814,
+          "source": "runMigration("
+        },
+        {
+          "line": 1817,
+          "source": "c18ReferralAcceptanceMigration,"
+        },
+        {
+          "line": 1818,
+          "source": "'focused C22 RED prerequisite C18 API migration',"
+        },
+        {
+          "line": 1820,
+          "source": "runMigration("
+        },
+        {
+          "line": 1823,
+          "source": "c19ReferralProjectionMigration,"
+        },
+        {
+          "line": 1824,
+          "source": "'focused C22 RED prerequisite C19 API migration',"
+        },
+        {
+          "line": 1833,
+          "source": "runMigration("
+        },
+        {
+          "line": 1836,
+          "source": "featureMigration,"
+        },
+        {
+          "line": 1837,
+          "source": "'supplemental C22 race RED base F010 migration',"
+        },
+        {
+          "line": 1839,
+          "source": "runMigration("
+        },
+        {
+          "line": 1842,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 1843,
+          "source": "'supplemental C22 race RED prerequisite C10 API migration',"
+        },
+        {
+          "line": 1845,
+          "source": "runMigration("
+        },
+        {
+          "line": 1848,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 1849,
+          "source": "'supplemental C22 race RED prerequisite C11 API migration',"
+        },
+        {
+          "line": 1851,
+          "source": "runMigration("
+        },
+        {
+          "line": 1854,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 1855,
+          "source": "'supplemental C22 race RED prerequisite C12 API migration',"
+        },
+        {
+          "line": 1857,
+          "source": "runMigration("
+        },
+        {
+          "line": 1860,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 1863,
+          "source": "runMigration("
+        },
+        {
+          "line": 1866,
+          "source": "c17ReferralsMigration,"
+        },
+        {
+          "line": 1867,
+          "source": "'supplemental C22 race RED prerequisite C17 API migration',"
+        },
+        {
+          "line": 1869,
+          "source": "runMigration("
+        },
+        {
+          "line": 1872,
+          "source": "c18ReferralAcceptanceMigration,"
+        },
+        {
+          "line": 1873,
+          "source": "'supplemental C22 race RED prerequisite C18 API migration',"
+        },
+        {
+          "line": 1875,
+          "source": "runMigration("
+        },
+        {
+          "line": 1878,
+          "source": "c19ReferralProjectionMigration,"
+        },
+        {
+          "line": 1888,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C18 RED base F010 migration');"
+        },
+        {
+          "line": 1889,
+          "source": "runMigration("
+        },
+        {
+          "line": 1892,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 1893,
+          "source": "'focused C18 RED prerequisite C10 API migration',"
+        },
+        {
+          "line": 1895,
+          "source": "runMigration("
+        },
+        {
+          "line": 1898,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 1899,
+          "source": "'focused C18 RED prerequisite C11 API migration',"
+        },
+        {
+          "line": 1901,
+          "source": "runMigration("
+        },
+        {
+          "line": 1904,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 1905,
+          "source": "'focused C18 RED prerequisite C12 API migration',"
+        },
+        {
+          "line": 1907,
+          "source": "runMigration("
+        },
+        {
+          "line": 1910,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 1911,
+          "source": "'focused C18 RED prerequisite C13 API migration',"
+        },
+        {
+          "line": 1913,
+          "source": "runMigration("
+        },
+        {
+          "line": 1916,
+          "source": "c17ReferralsMigration,"
+        },
+        {
+          "line": 1917,
+          "source": "'focused C18 RED prerequisite C17 API migration',"
+        },
+        {
+          "line": 1924,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C22 base F010 migration');"
+        },
+        {
+          "line": 1925,
+          "source": "runMigration("
+        },
+        {
+          "line": 1928,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 1929,
+          "source": "'focused C22 prerequisite C10 API migration',"
+        },
+        {
+          "line": 1931,
+          "source": "runMigration("
+        },
+        {
+          "line": 1934,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 1935,
+          "source": "'focused C22 prerequisite C11 API migration',"
+        },
+        {
+          "line": 1937,
+          "source": "runMigration("
+        },
+        {
+          "line": 1940,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 1941,
+          "source": "'focused C22 prerequisite C12 API migration',"
+        },
+        {
+          "line": 1943,
+          "source": "runMigration("
+        },
+        {
+          "line": 1946,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 1947,
+          "source": "'focused C22 prerequisite C13 API migration',"
+        },
+        {
+          "line": 1949,
+          "source": "runMigration("
+        },
+        {
+          "line": 1952,
+          "source": "c17ReferralsMigration,"
+        },
+        {
+          "line": 1953,
+          "source": "'focused C22 prerequisite C17 API migration',"
+        },
+        {
+          "line": 1955,
+          "source": "runMigration("
+        },
+        {
+          "line": 1958,
+          "source": "c18ReferralAcceptanceMigration,"
+        },
+        {
+          "line": 1959,
+          "source": "'focused C22 prerequisite C18 API migration',"
+        },
+        {
+          "line": 1961,
+          "source": "runMigration("
+        },
+        {
+          "line": 1964,
+          "source": "c19ReferralProjectionMigration,"
+        },
+        {
+          "line": 1965,
+          "source": "'focused C22 prerequisite C19 API migration',"
+        },
+        {
+          "line": 1967,
+          "source": "runMigration("
+        },
+        {
+          "line": 1970,
+          "source": "c22ContextMessagesMigration,"
+        },
+        {
+          "line": 1971,
+          "source": "'focused C22 context messages API migration',"
+        },
+        {
+          "line": 1974,
+          "source": "runMigration("
+        },
+        {
+          "line": 1977,
+          "source": "'supabase/migrations/20260930001000_f010_c23_realtime_hint.sql',"
+        },
+        {
+          "line": 1978,
+          "source": "'C23 compatibility migration before C22 authorization regressions',"
+        },
+        {
+          "line": 1981,
+          "source": "runMigration("
+        },
+        {
+          "line": 1984,
+          "source": "c26PrivacyGuardsMigration,"
+        },
+        {
+          "line": 1992,
+          "source": "runMigration(runtime, database, c22ContextMessagesMigration, 'focused C22 migration replay');"
+        },
+        {
+          "line": 1994,
+          "source": "runMigration("
+        },
+        {
+          "line": 1997,
+          "source": "c23RealtimeHintMigration,"
+        },
+        {
+          "line": 1998,
+          "source": "'C23 compatibility migration before C22 replay authorization regressions',"
+        },
+        {
+          "line": 2001,
+          "source": "runMigration("
+        },
+        {
+          "line": 2004,
+          "source": "c26PrivacyGuardsMigration,"
+        },
+        {
+          "line": 2019,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C18 base F010 migration');"
+        },
+        {
+          "line": 2020,
+          "source": "runMigration("
+        },
+        {
+          "line": 2023,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 2024,
+          "source": "'focused C18 prerequisite C10 API migration',"
+        },
+        {
+          "line": 2026,
+          "source": "runMigration("
+        },
+        {
+          "line": 2029,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 2030,
+          "source": "'focused C18 prerequisite C11 API migration',"
+        },
+        {
+          "line": 2032,
+          "source": "runMigration("
+        },
+        {
+          "line": 2035,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 2036,
+          "source": "'focused C18 prerequisite C12 API migration',"
+        },
+        {
+          "line": 2038,
+          "source": "runMigration("
+        },
+        {
+          "line": 2041,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 2042,
+          "source": "'focused C18 prerequisite C13 API migration',"
+        },
+        {
+          "line": 2044,
+          "source": "runMigration("
+        },
+        {
+          "line": 2047,
+          "source": "c17ReferralsMigration,"
+        },
+        {
+          "line": 2048,
+          "source": "'focused C18 prerequisite C17 API migration',"
+        },
+        {
+          "line": 2050,
+          "source": "runMigration("
+        },
+        {
+          "line": 2053,
+          "source": "c18ReferralAcceptanceMigration,"
+        },
+        {
+          "line": 2054,
+          "source": "'focused C18 referral acceptance API migration',"
+        },
+        {
+          "line": 2056,
+          "source": "runMigration("
+        },
+        {
+          "line": 2059,
+          "source": "c19ReferralProjectionMigration,"
+        },
+        {
+          "line": 2060,
+          "source": "'focused C19 referral projection correction migration',"
+        },
+        {
+          "line": 2062,
+          "source": "runMigration("
+        },
+        {
+          "line": 2065,
+          "source": "c26PrivacyGuardsMigration,"
+        },
+        {
+          "line": 2066,
+          "source": "'focused C26 privacy guard migration',"
+        },
+        {
+          "line": 2072,
+          "source": "runMigration("
+        },
+        {
+          "line": 2075,
+          "source": "c18ReferralAcceptanceMigration,"
+        },
+        {
+          "line": 2076,
+          "source": "'focused C18 migration replay',"
+        },
+        {
+          "line": 2078,
+          "source": "runMigration("
+        },
+        {
+          "line": 2081,
+          "source": "c19ReferralProjectionMigration,"
+        },
+        {
+          "line": 2082,
+          "source": "'focused C19 migration replay',"
+        },
+        {
+          "line": 2084,
+          "source": "runMigration("
+        },
+        {
+          "line": 2087,
+          "source": "c26PrivacyGuardsMigration,"
+        },
+        {
+          "line": 2097,
+          "source": "`${runtime.name}: focused ${c19Only ? 'C19 projection plus C18 acceptance' : 'C18 acceptance'}, migration replay, F009 parity, and concurrency vectors passed.`,"
+        },
+        {
+          "line": 2102,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C13 RED base F010 migration');"
+        },
+        {
+          "line": 2103,
+          "source": "runMigration("
+        },
+        {
+          "line": 2106,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 2107,
+          "source": "'focused C13 RED prerequisite C10 API migration',"
+        },
+        {
+          "line": 2109,
+          "source": "runMigration("
+        },
+        {
+          "line": 2112,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 2113,
+          "source": "'focused C13 RED prerequisite C11 API migration',"
+        },
+        {
+          "line": 2115,
+          "source": "runMigration("
+        },
+        {
+          "line": 2118,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 2119,
+          "source": "'focused C13 RED prerequisite C12 API migration',"
+        },
+        {
+          "line": 2126,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C12 RED base F010 migration');"
+        },
+        {
+          "line": 2127,
+          "source": "runMigration("
+        },
+        {
+          "line": 2130,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 2131,
+          "source": "'focused C12 RED prerequisite C10 API migration',"
+        },
+        {
+          "line": 2133,
+          "source": "runMigration("
+        },
+        {
+          "line": 2136,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 2137,
+          "source": "'focused C12 RED prerequisite C11 API migration',"
+        },
+        {
+          "line": 2144,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C12 base F010 migration');"
+        },
+        {
+          "line": 2145,
+          "source": "runMigration("
+        },
+        {
+          "line": 2148,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 2149,
+          "source": "'focused C12 prerequisite C10 API migration',"
+        },
+        {
+          "line": 2151,
+          "source": "runMigration("
+        },
+        {
+          "line": 2154,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 2155,
+          "source": "'focused C12 prerequisite C11 API migration',"
+        },
+        {
+          "line": 2157,
+          "source": "runMigration(runtime, database, c12NoteMigration, 'focused C12 note signing API migration');"
+        },
+        {
+          "line": 2159,
+          "source": "runMigration("
+        },
+        {
+          "line": 2162,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 2163,
+          "source": "'focused C12 note signing API migration replay',"
+        },
+        {
+          "line": 2165,
+          "source": "checkNotes(runtime, database, 'focused C12 replayed migration signing/projection vectors');"
+        },
+        {
+          "line": 2172,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C13 base F010 migration');"
+        },
+        {
+          "line": 2173,
+          "source": "runMigration("
+        },
+        {
+          "line": 2176,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 2177,
+          "source": "'focused C13 prerequisite C10 API migration',"
+        },
+        {
+          "line": 2179,
+          "source": "runMigration("
+        },
+        {
+          "line": 2182,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 2183,
+          "source": "'focused C13 prerequisite C11 API migration',"
+        },
+        {
+          "line": 2185,
+          "source": "runMigration("
+        },
+        {
+          "line": 2188,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 2189,
+          "source": "'focused C13 prerequisite C12 API migration',"
+        },
+        {
+          "line": 2191,
+          "source": "runMigration("
+        },
+        {
+          "line": 2194,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 2195,
+          "source": "'focused C13 completion API migration',"
+        },
+        {
+          "line": 2206,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C17 base F010 migration');"
+        },
+        {
+          "line": 2207,
+          "source": "runMigration("
+        },
+        {
+          "line": 2210,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 2211,
+          "source": "'focused C17 prerequisite C10 API migration',"
+        },
+        {
+          "line": 2213,
+          "source": "runMigration("
+        },
+        {
+          "line": 2216,
+          "source": "c11UpdateMigration,"
+        },
+        {
+          "line": 2217,
+          "source": "'focused C17 prerequisite C11 API migration',"
+        },
+        {
+          "line": 2219,
+          "source": "runMigration("
+        },
+        {
+          "line": 2222,
+          "source": "c12NoteMigration,"
+        },
+        {
+          "line": 2223,
+          "source": "'focused C17 prerequisite C12 API migration',"
+        },
+        {
+          "line": 2225,
+          "source": "runMigration("
+        },
+        {
+          "line": 2228,
+          "source": "c13CompletionMigration,"
+        },
+        {
+          "line": 2229,
+          "source": "'focused C17 prerequisite C13 API migration',"
+        },
+        {
+          "line": 2231,
+          "source": "runMigration(runtime, database, c17ReferralsMigration, 'focused C17 referral API migration');"
+        },
+        {
+          "line": 2232,
+          "source": "runMigration("
+        },
+        {
+          "line": 2235,
+          "source": "c18ReferralAcceptanceMigration,"
+        },
+        {
+          "line": 2236,
+          "source": "'focused C17 prerequisite C18 referral acceptance migration',"
+        },
+        {
+          "line": 2238,
+          "source": "runMigration("
+        },
+        {
+          "line": 2241,
+          "source": "c19ReferralProjectionMigration,"
+        },
+        {
+          "line": 2242,
+          "source": "'focused C17 prerequisite C19 referral projection migration',"
+        },
+        {
+          "line": 2244,
+          "source": "runMigration("
+        },
+        {
+          "line": 2247,
+          "source": "c26PrivacyGuardsMigration,"
+        },
+        {
+          "line": 2248,
+          "source": "'focused C26 privacy guard migration',"
+        },
+        {
+          "line": 2253,
+          "source": "runMigration("
+        },
+        {
+          "line": 2256,
+          "source": "c17ReferralsMigration,"
+        },
+        {
+          "line": 2257,
+          "source": "'focused C17 referral API migration replay',"
+        },
+        {
+          "line": 2259,
+          "source": "runMigration("
+        },
+        {
+          "line": 2262,
+          "source": "c26PrivacyGuardsMigration,"
+        },
+        {
+          "line": 2272,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C10 base F010 migration');"
+        },
+        {
+          "line": 2273,
+          "source": "runMigration(runtime, database, c10ApiMigration, 'focused C10 API migration');"
+        },
+        {
+          "line": 2279,
+          "source": "runMigration(runtime, database, featureMigration, 'focused C11 base F010 migration');"
+        },
+        {
+          "line": 2280,
+          "source": "runMigration("
+        },
+        {
+          "line": 2283,
+          "source": "c10ApiMigration,"
+        },
+        {
+          "line": 2284,
+          "source": "'focused C11 prerequisite C10 API migration',"
+        },
+        {
+          "line": 2286,
+          "source": "runMigration(runtime, database, c11UpdateMigration, 'focused C11 update API migration');"
+        },
+        {
+          "line": 2293,
+          "source": "// previous-checkpoint database with only pending forward migrations."
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-010-realtime-postgres-test.mjs",
+      "sha256": "cf04213e1e06c54269e89086529327c8d9f9e171bb84c8241444890521985515",
+      "locators": [
+        {
+          "line": 7,
+          "source": "const c22Migration = 'supabase/migrations/20260929001008_f010_c22_context_messages.sql';"
+        },
+        {
+          "line": 8,
+          "source": "const c23Migration = 'supabase/migrations/20260930001000_f010_c23_realtime_hint.sql';"
+        },
+        {
+          "line": 9,
+          "source": "const c26Migration = 'supabase/migrations/20260930001001_f010_c26_privacy_guards.sql';"
+        },
+        {
+          "line": 12,
+          "source": "const migrateCommand = packageJson.scripts?.['db:migrate'];"
+        },
+        {
+          "line": 13,
+          "source": "if (typeof migrateCommand !== 'string') throw new Error('package.json is missing db:migrate.');"
+        },
+        {
+          "line": 15,
+          "source": "const migrations = [...migrateCommand.matchAll(/-f \\/workspace\\/([^\\s]+\\.sql)/g)].map((match) =>"
+        },
+        {
+          "line": 18,
+          "source": "const c22Index = migrations.indexOf(c22Migration);"
+        },
+        {
+          "line": 19,
+          "source": "const c23Index = migrations.indexOf(c23Migration);"
+        },
+        {
+          "line": 20,
+          "source": "const c26Index = migrations.indexOf(c26Migration);"
+        },
+        {
+          "line": 23,
+          "source": "migrations.lastIndexOf(c22Migration) !== c22Index ||"
+        },
+        {
+          "line": 25,
+          "source": "migrations.lastIndexOf(c23Migration) !== c23Index ||"
+        },
+        {
+          "line": 27,
+          "source": "migrations.lastIndexOf(c26Migration) !== c26Index"
+        },
+        {
+          "line": 30,
+          "source": "'db:migrate must include C23 exactly once immediately after C22 and C26 exactly once immediately after C23.',"
+        },
+        {
+          "line": 91,
+          "source": "function applyMigration(runtime, database, migrationPath, label) {"
+        },
+        {
+          "line": 92,
+          "source": "const sourcePath = resolve(root, migrationPath);"
+        },
+        {
+          "line": 100,
+          "source": "throw new Error(`${migrationPath} has an unresolved relative psql include.`);"
+        },
+        {
+          "line": 108,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE template0;`,"
+        },
+        {
+          "line": 119,
+          "source": "`DROP DATABASE IF EXISTS \"${database}\" WITH (FORCE);`,"
+        },
+        {
+          "line": 263,
+          "source": "for (const migration of migrations.slice(0, c23Index + 1))"
+        },
+        {
+          "line": 264,
+          "source": "applyMigration(runtime, database, migration, 'apply migration');"
+        },
+        {
+          "line": 265,
+          "source": "applyMigration(runtime, database, c23Migration, 'replay C23 migration');"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-010-restore-test.mjs",
+      "sha256": "4ece6982b81c9a5defaaefbefb6b4de3ada9a0f3e88979ae7b4db34b99f3df37",
+      "locators": [
+        {
+          "line": 4,
+          "source": "import { readFileSync, writeFileSync } from 'node:fs';"
+        },
+        {
+          "line": 9,
+          "source": "const migrationHead = '20261001001002_f010_f04_completion_authority.sql';"
+        },
+        {
+          "line": 49,
+          "source": "assert.equal(proof.migrationHead, migrationHead);"
+        },
+        {
+          "line": 110,
+          "source": "export function pendingForwardMigrations(manifest, receipts, through = manifest.length) {"
+        },
+        {
+          "line": 115,
+          "source": "assert.ok(entry && entry.digest === receipt.digest, 'applied migration changed or disappeared');"
+        },
+        {
+          "line": 121,
+          "source": "'migration receipts are not a forward prefix',"
+        },
+        {
+          "line": 123,
+          "source": "assert.ok(receipts.length <= through, 'migration checkpoint would move behind applied receipts');"
+        },
+        {
+          "line": 129,
+          "source": "// remain unchanged when the C26 forward migration is applied."
+        },
+        {
+          "line": 238,
+          "source": "function migration(runtime, database, path) {"
+        },
+        {
+          "line": 243,
+          "source": "if (/^\\\\ir\\s/m.test(input)) throw new Error('C28 nested migration include unsupported');"
+        },
+        {
+          "line": 386,
+          "source": "-- Reparse CHECK definitions using PostgreSQL itself: pg_dump/restore flattens"
+        },
+        {
+          "line": 598,
+          "source": "...JSON.parse(readFileSync('package.json', 'utf8')).scripts['db:migrate'].matchAll("
+        },
+        {
+          "line": 602,
+          "source": "assert.equal(paths.at(-1)?.split('/').at(-1), migrationHead);"
+        },
+        {
+          "line": 617,
+          "source": "sql(runtime, runtime.admin, `CREATE DATABASE \"${database}\" TEMPLATE template0;`);"
+        },
+        {
+          "line": 620,
+          "source": "let stage = 'fresh-migrations';"
+        },
+        {
+          "line": 642,
+          "source": "const pending = pendingForwardMigrations(manifest, receipts, through);"
+        },
+        {
+          "line": 644,
+          "source": "migration(runtime, source, entry.path);"
+        },
+        {
+          "line": 660,
+          "source": "stage = 'pre-C26-forward-migrations';"
+        },
+        {
+          "line": 669,
+          "source": "pendingForwardMigrations(manifest, checkpointReceipts, c26Index + 1),"
+        },
+        {
+          "line": 671,
+          "source": "'C26 must be the sole pending forward migration',"
+        },
+        {
+          "line": 706,
+          "source": "['pg_dump', '-Fc', '-U', runtime.user, '-d', source],"
+        },
+        {
+          "line": 715,
+          "source": "['pg_restore', '--exit-on-error', '--no-owner', '-U', runtime.user, '-d', target],"
+        },
+        {
+          "line": 725,
+          "source": "pendingForwardMigrations(manifest, restoredReceipts),"
+        },
+        {
+          "line": 727,
+          "source": "'restored migration expectations incompatible',"
+        },
+        {
+          "line": 766,
+          "source": "migration(runtime, target, paths[c26Index]);"
+        },
+        {
+          "line": 769,
+          "source": "migration(runtime, target, paths.at(-1));"
+        },
+        {
+          "line": 776,
+          "source": "'pg_dump custom (-Fc), pg_restore --exit-on-error --no-owner; same cluster isolated databases',"
+        },
+        {
+          "line": 782,
+          "source": "migrationHead,"
+        },
+        {
+          "line": 783,
+          "source": "forwardMigrations: paths.length,"
+        },
+        {
+          "line": 812,
+          "source": "sql(runtime, runtime.admin, `DROP DATABASE \"${database}\";`);"
+        },
+        {
+          "line": 817,
+          "source": "writeFileSync(process.env['SHIFAA_F010_RESTORE_REPORT'], JSON.stringify(reports, null, 2));"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-010-ui-tests.mjs",
+      "sha256": "bd97fb6db7e903a775a5d35d0a03e41febe90d0d35f3fa98dbfe7853bc5b511f",
+      "locators": [
+        {
+          "line": 3,
+          "source": "import { readFileSync, writeFileSync } from 'node:fs';"
+        },
+        {
+          "line": 46,
+          "source": "writeFileSync(generatedTypes, before);"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-011-composition-test.mjs",
+      "sha256": "5564299b37822f611dfc172824e0ac158379827d8db969fd6e8019686954cc51",
+      "locators": [
+        {
+          "line": 8,
+          "source": "mkdirSync,"
+        },
+        {
+          "line": 9,
+          "source": "writeFileSync,"
+        },
+        {
+          "line": 36,
+          "source": "mkdirSync(dirname(p), { recursive: true });"
+        },
+        {
+          "line": 37,
+          "source": "writeFileSync(p, JSON.stringify(v, null, 2) + '\\n');"
+        },
+        {
+          "line": 72,
+          "source": "mkdirSync(logs, { recursive: true });"
+        },
+        {
+          "line": 75,
+          "source": "writeFileSync(path, '');"
+        },
+        {
+          "line": 135,
+          "source": "writeFileSync(temporary, transformed, { flag: 'wx' });"
+        },
+        {
+          "line": 197,
+          "source": "if (!current.equals(before)) writeFileSync(generated, before);"
+        },
+        {
+          "line": 215,
+          "source": "'mkdirSync(resolve(root, evidenceRoot), { recursive: true });',"
+        },
+        {
+          "line": 216,
+          "source": "`mkdirSync(resolve(root, ${JSON.stringify(target)}), { recursive: true });`,"
+        },
+        {
+          "line": 250,
+          "source": "writeFileSync(helper, greenAdapted, { flag: 'wx' });"
+        },
+        {
+          "line": 256,
+          "source": "transformed += `\\nconst proof = await runPhysical${kind === 'green' ? 'Green' : 'Races'}();\\nwriteFileSync(${JSON.stringify(target + '/proof.json')}, JSON.stringify(proof,null,2)+'\\\\n');\\nconsole.log('Complete physical ${kind} both-runtime PASS');\\n`;"
+        },
+        {
+          "line": 258,
+          "source": "writeFileSync(temporary, transformed, { flag: 'wx' });"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-011-consumer-test.mjs",
+      "sha256": "2e2d34da0f220d1d666c6be41ed49494ddd52a58c468f3d7df3f413d1fd7a3c4",
+      "locators": [
+        {
+          "line": 2,
+          "source": "import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';"
+        },
+        {
+          "line": 12,
+          "source": "readMigration,"
+        },
+        {
+          "line": 18,
+          "source": "checkpointMigrations,"
+        },
+        {
+          "line": 74,
+          "source": "checkpointMigrations(storageSlugs).flatMap((path) =>"
+        },
+        {
+          "line": 75,
+          "source": "[...readMigration(path).matchAll(/CREATE (?:OR REPLACE )?FUNCTION clinical\\.(\\w+)/g)].map("
+        },
+        {
+          "line": 83,
+          "source": "checkpointMigrations(consumerSlugs).flatMap((path) =>"
+        },
+        {
+          "line": 84,
+          "source": "[...readMigration(path).matchAll(/CREATE (?:OR REPLACE )?FUNCTION clinical\\.(\\w+)/g)].map("
+        },
+        {
+          "line": 373,
+          "source": "for (const [path, sha] of Object.entries(unlock.migrations))"
+        },
+        {
+          "line": 376,
+          "source": "migrations = [...checkpointMigrations(storageSlugs), ...checkpointMigrations(consumerSlugs)];"
+        },
+        {
+          "line": 377,
+          "source": "const sourceDigests = Object.fromEntries(migrations.map((p) => [p, digest(p)]));"
+        },
+        {
+          "line": 393,
+          "source": "const applied = migrations.map((path) => ({"
+        },
+        {
+          "line": 396,
+          "source": "exitCode: sql(runtime, database, readMigration(path)).exitCode,"
+        },
+        {
+          "line": 460,
+          "source": "assert.equal(digest(path), sha, 'Migration changed during verification');"
+        },
+        {
+          "line": 461,
+          "source": "mkdirSync(resolve(root, local), { recursive: true });"
+        },
+        {
+          "line": 462,
+          "source": "writeFileSync("
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-011-physical-red.mjs",
+      "sha256": "c7fef4098344f377ba29f568e4aaed48116c28ab7235fc0736a63ad25b93fb78",
+      "locators": [
+        {
+          "line": 2,
+          "source": "import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';"
+        },
+        {
+          "line": 171,
+          "source": "mkdirSync(output, { recursive: true });"
+        },
+        {
+          "line": 268,
+          "source": "writeFileSync(resolve(output, `${kind}-red-run.json`), JSON.stringify(report, null, 2) + '\\n');"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-011-postgres-test.mjs",
+      "sha256": "f7fe95c1d5039b222f7bf08266173638109bba63c204956471aa5de05992f2b5",
+      "locators": [
+        {
+          "line": 2,
+          "source": "import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';"
+        },
+        {
+          "line": 102,
+          "source": "`CREATE DATABASE \"${database}\" TEMPLATE template0;`,"
+        },
+        {
+          "line": 113,
+          "source": "const drop = execSql(runtime, runtime.adminDatabase, `DROP DATABASE \"${database}\";`);"
+        },
+        {
+          "line": 127,
+          "source": "export function migrationChain(includeFeature = false) {"
+        },
+        {
+          "line": 132,
+          "source": "...manifest.scripts['db:migrate'].matchAll(/-f \\/workspace\\/([^\\s]+\\.sql)/g),"
+        },
+        {
+          "line": 142,
+          "source": "export function readMigration(path, seen = new Set()) {"
+        },
+        {
+          "line": 146,
+          "source": "throw new Error('Unsafe or cyclic migration include.');"
+        },
+        {
+          "line": 149,
+          "source": "readMigration(relative(root, resolve(dirname(absolute), include)), chain),"
+        },
+        {
+          "line": 176,
+          "source": "...migrationChain(),"
+        },
+        {
+          "line": 197,
+          "source": "feature011MigrationFiles: readdirSync(resolve(root, 'supabase/migrations')).filter((name) =>"
+        },
+        {
+          "line": 231,
+          "source": "for (const path of migrationChain(includeFeature)) {"
+        },
+        {
+          "line": 233,
+          "source": "const result = sql(runtime, database, readMigration(path));"
+        },
+        {
+          "line": 245,
+          "source": "const path = 'supabase/migrations/20261008013921_f010_patient_identifier_handoff.sql';"
+        },
+        {
+          "line": 246,
+          "source": "const result = sql(runtime, database, readMigration(path));"
+        },
+        {
+          "line": 326,
+          "source": "mkdirSync(directory, { recursive: true });"
+        },
+        {
+          "line": 327,
+          "source": "writeFileSync(resolve(directory, name), JSON.stringify(value, null, 2) + '\\n');"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-feature-011-storage-test.mjs",
+      "sha256": "62dc149fa7899de9a3e68dfb2600dba6ad47aa7a94d089c70022109710d71b6d",
+      "locators": [
+        {
+          "line": 2,
+          "source": "import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';"
+        },
+        {
+          "line": 12,
+          "source": "readMigration,"
+        },
+        {
+          "line": 35,
+          "source": "export function checkpointMigrations(slugs) {"
+        },
+        {
+          "line": 37,
+          "source": "const matches = readdirSync(resolve(root, 'supabase/migrations')).filter((f) =>"
+        },
+        {
+          "line": 40,
+          "source": "assert.equal(matches.length, 1, `Expected one CLI migration for ${slug}`);"
+        },
+        {
+          "line": 41,
+          "source": "return `supabase/migrations/${matches[0]}`;"
+        },
+        {
+          "line": 267,
+          "source": "migrations = checkpointMigrations(storageSlugs),"
+        },
+        {
+          "line": 268,
+          "source": "sourceDigests = Object.fromEntries(migrations.map((p) => [p, digest(p)]));"
+        },
+        {
+          "line": 285,
+          "source": "const applied = migrations.map((path) => ({"
+        },
+        {
+          "line": 288,
+          "source": "exitCode: sql(runtime, database, readMigration(path)).exitCode,"
+        },
+        {
+          "line": 348,
+          "source": "mkdirSync(resolve(root, output), { recursive: true });"
+        },
+        {
+          "line": 349,
+          "source": "writeFileSync("
+        }
+      ]
+    },
+    {
+      "path": "tools/run-identity-continuity-mfa-test.mjs",
+      "sha256": "962e6d8612cc1f2944410d8cd6e3e30be6e1dbf375e83106903b45ba53938459",
+      "locators": [
+        {
+          "line": 2,
+          "source": "import { resetFeature011NativeSupabase } from './feature-011-native-supabase-bootstrap.mjs';"
+        },
+        {
+          "line": 18,
+          "source": "await resetFeature011NativeSupabase((args, capture = false) => {"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-identity-continuity-recovery-test.mjs",
+      "sha256": "03cf10d35777e166383a330841d49440f8d973d2eacdff61f1f69c70e2d93fc1",
+      "locators": [
+        {
+          "line": 3,
+          "source": "import { resetFeature011NativeSupabase } from './feature-011-native-supabase-bootstrap.mjs';"
+        },
+        {
+          "line": 18,
+          "source": "await resetFeature011NativeSupabase((args, capture = false) => {"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-identity-continuity-supabase-test.mjs",
+      "sha256": "4eb42836d27b0a17bb119b659da110d12fd962de387d97565b7d6c5ece322e00",
+      "locators": [
+        {
+          "line": 5,
+          "source": "resetFeature011NativeSupabase,"
+        },
+        {
+          "line": 34,
+          "source": "runPnpm(['supabase:stop']);"
+        },
+        {
+          "line": 35,
+          "source": "runPnpm(['supabase:start'], true);"
+        },
+        {
+          "line": 36,
+          "source": "await resetFeature011NativeSupabase(runPnpm);"
+        }
+      ]
+    },
+    {
+      "path": "tools/run-identity-continuity-transition-test.mjs",
+      "sha256": "17be1100adc39a97fa391c925c6bf2d768c3b02a72dedbd022c851ae7547dbd8",
+      "locators": [
+        {
+          "line": 21,
+          "source": "run('docker', ['compose', 'up', '-d', '--wait', 'postgres']);"
+        }
+      ]
+    },
+    {
+      "path": "tools/tooling-history.mjs",
+      "sha256": "2aa0af817bed71c793a77362807ea4797350435034fca9330aabf711f1841084",
+      "locators": [
+        {
+          "line": 1,
+          "source": "// One-time policy migration for historical checks, independent of mutable versions."
+        }
+      ]
+    },
+    {
+      "path": "tools/verify-discovery-sos-evidence.mjs",
+      "sha256": "c54bbd3d99a5270cb821668c9b038e2d6a187020770c596d1be4871200318e3a",
+      "locators": [
+        {
+          "line": 228,
+          "source": "'docker compose down -v',"
+        }
+      ]
+    },
+    {
+      "path": "tools/verify-feature-009-scope.mjs",
+      "sha256": "c1e0ef8dd3b9992dab61cc65552f4e2a49a0cc6ec65544d84be15a89999fc08c",
+      "locators": [
+        {
+          "line": 85,
+          "source": "['test:clinic-scheduling:migration', 'node tools/run-clinic-scheduling-migration-test.mjs'],"
+        },
+        {
+          "line": 94,
+          "source": "'pnpm test:clinic-scheduling:db && pnpm test:clinic-scheduling:rls && pnpm test:clinic-scheduling:migration && pnpm test:clinic-scheduling:scope && pnpm test:clinic-scheduling:contract && pnpm test:clinic-scheduling:notifications && pnpm test:clinic-scheduling"
+        }
+      ]
+    },
+    {
+      "path": "tools/verify-feature-011-contracts.mjs",
+      "sha256": "0810e5b71b6ffb17cfc970f36685dc863256782d8bb54c7dd491cb2cb0c57573",
+      "locators": [
+        {
+          "line": 205,
+          "source": "'infra/db/migrations/001_identity_onboarding.sql',"
+        },
+        {
+          "line": 215,
+          "source": ".readdirSync(path.join(root, 'supabase/migrations'))"
+        },
+        {
+          "line": 218,
+          "source": ".map((name) => `supabase/migrations/${name}`),"
+        },
+        {
+          "line": 246,
+          "source": "const currentMigrationSuffixes = ["
+        },
+        {
+          "line": 560,
+          "source": "const migrations = fs"
+        },
+        {
+          "line": 561,
+          "source": ".readdirSync(path.join(root, 'supabase/migrations'))"
+        },
+        {
+          "line": 564,
+          "source": ".map((name) => `supabase/migrations/${name}`);"
+        },
+        {
+          "line": 566,
+          "source": "migrations.filter((file) => /_f011_/.test(file)).map((file) => file.split('_f011_')[1]),"
+        },
+        {
+          "line": 568,
+          "source": "? currentMigrationSuffixes"
+        },
+        {
+          "line": 579,
+          "source": "? 'complete current ten-migration chain missing'"
+        },
+        {
+          "line": 580,
+          "source": ": 'complete historical seven-migration chain missing');"
+        },
+        {
+          "line": 586,
+          "source": "'infra/db/migrations/001_identity_onboarding.sql',"
+        },
+        {
+          "line": 594,
+          "source": "...migrations,"
+        },
+        {
+          "line": 604,
+          "source": "), 'source/fixture/full migration chain digests stale or incomplete');"
+        }
+      ]
+    },
+    {
+      "path": "tools/verify-secrets.mjs",
+      "sha256": "cbfbc75d07dfaf19a8104fc98dc9bc1b9fcb1eabac97bab7562d6276f6119ed7",
+      "locators": [
+        {
+          "line": 44,
+          "source": "'infra/db/migrations/',"
+        }
+      ]
+    }
+  ],
+  "compose": {
+    "path": "compose.yml",
+    "sha256": "bfab38e14aeb8d3fa527637833b131df1b8a65ff627517cf84824cb911afcf5e",
+    "target": "shifaa-local-postgres",
+    "volume": "shifaa-postgres-data",
+    "reset": "docker compose down -v deletes project named volumes; followed by startup/migrations"
+  },
+  "native": {
+    "project": "shifaa-local-supabase",
+    "resetPaths": [
+      "tools/run-identity-continuity-supabase-test.mjs",
+      "tools/run-identity-continuity-mfa-test.mjs",
+      "tools/run-identity-continuity-recovery-test.mjs",
+      "tools/feature-011-native-supabase-bootstrap.mjs"
+    ],
+    "effects": "stop/start, native db reset, synthetic user/session writes; later migration/restore harnesses and evidence writers"
+  },
+  "isolation": "Existing named targets and persistent mounts are retained resources; no unique disposable target configuration/replacement is proven. No new stack created.",
+  "coverageLimit": "All 42 direct verify steps and transitively referenced root scripts enumerated; source imports/effect locators support manual safety classification, not a general-purpose complete dynamic program analysis. Filtered workspace scripts, dynamic wrappers and browser/backend tests are not assumed read-only.",
+  "decision": "Never run aggregate/reset/runtime paths on retained resources. Safe standalone checks only; local aggregate prerequisite needs exact PR-specific disposition."
+}

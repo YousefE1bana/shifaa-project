@@ -1,0 +1,215 @@
+{
+  "id": "F012-PR509-HISTORICAL-READER-REPAIR/2026-11-12",
+  "sourceHead": "6fb31447484e5d21c9f20f2734808bd6eabf6824",
+  "scope": "Exact historical reader compatibility only; no F012 approval, canonical contract, runtime, CI or database change",
+  "bindingSHA256": "8b6500c6571bf2c0d75373483452e0942be0c1e1104ca66de05dc35689bfc8b1",
+  "sourceManifest": [
+    {
+      "path": "packages/contracts/src/feature-011-history-reader.test.ts",
+      "bytes": 5624,
+      "sha256": "2bc7805ddc75e9c385cdc651cff9d26d0e0e72e894cfa01956d74199aecbcc81"
+    },
+    {
+      "path": "packages/contracts/src/feature-011-successor.test.ts",
+      "bytes": 7252,
+      "sha256": "bb759cf45f52294343f373c702aaf992fed904c712f1d1157359f82fb3db9ad2"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/historical-reader-repair-2026-11-12/README.md",
+      "bytes": 3124,
+      "sha256": "ac30423c80cd67a9cc4258763a2b46e8c7392b04dda6cb95a7aaac8a3c6f8f30"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/historical-reader-repair-2026-11-12/successor-binding-v1.json",
+      "bytes": 3477,
+      "sha256": "8b6500c6571bf2c0d75373483452e0942be0c1e1104ca66de05dc35689bfc8b1"
+    },
+    {
+      "path": "tools/test_speckit_tooling.py",
+      "bytes": 13947,
+      "sha256": "faec3a7b185d0b54d5558e75bc5480c83c57cf38e3f8fe5bf14e04b41ba92e7d"
+    },
+    {
+      "path": "tools/test_tooling_history_successor.py",
+      "bytes": 4731,
+      "sha256": "5434bac43b4b059f4bbe1f45b16bdc83efe02c23da82d002ece0e95344ae74c0"
+    },
+    {
+      "path": "tools/tooling-history.mjs",
+      "bytes": 8730,
+      "sha256": "c9c38fcaf4e06322069f02c6f665a703a484da1a2fc88bbcf6a4a14ded83dca5"
+    },
+    {
+      "path": "tools/tooling_history.py",
+      "bytes": 4278,
+      "sha256": "362c5bbd150bfc8de635b8573e912f2068b218a04428c9f3e6a5d745a2ce2ae6"
+    }
+  ],
+  "manifestSelf": "verification.json is the ninth explicit file; self hash is recorded in the Git/PR receipt, not recursively inside itself",
+  "checks": [
+    {
+      "command": [
+        "node",
+        "D:/ECU/Gradution-Project/node_modules/typescript/bin/tsc",
+        "-p",
+        "packages/contracts/tsconfig.json",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "seconds": 0.33,
+      "name": "contracts-types",
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "node",
+        "D:/ECU/Gradution-Project/node_modules/vitest/vitest.mjs",
+        "run",
+        "--root",
+        "packages/contracts",
+        "--exclude=dist/**"
+      ],
+      "exitCode": 0,
+      "seconds": 16.36,
+      "name": "contracts-tests-reviewed",
+      "status": "PASS"
+    },
+    {
+      "name": "physical-reader-regression-final",
+      "command": ["node", "--test", "tools/feature-011-physical-preflight.test.mjs"],
+      "exitCode": 0,
+      "seconds": 3.147,
+      "status": "PASS"
+    },
+    {
+      "name": "python-legacy-reader-final",
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "test_speckit_tooling.ToolingTests.test_one_time_policy_history_is_exact_and_has_no_metadata_version_gate",
+        "-v"
+      ],
+      "exitCode": 0,
+      "seconds": 1.566,
+      "status": "PASS"
+    },
+    {
+      "name": "f011-full-readonly-final",
+      "command": ["node", "tools/verify-feature-011-contracts.mjs"],
+      "exitCode": 0,
+      "seconds": 2.267,
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "node",
+        "D:/ECU/Gradution-Project/node_modules/prettier/bin/prettier.cjs",
+        "--check",
+        "apps",
+        "packages",
+        "services",
+        "tests",
+        "tools",
+        ".github",
+        ".shifaa",
+        "package.json",
+        "pnpm-workspace.yaml",
+        "turbo.json",
+        "compose.yml",
+        ".prettierrc.json",
+        "AGENTS.md",
+        "docs/TEAM-INSTALLATION-CHECKLIST.md",
+        "docs/agent-skills",
+        "infra/runbooks",
+        "specs/001-identity-onboarding",
+        "specs/003-facility-onboarding-rbac",
+        "specs/004-family-care-relationships",
+        "specs/005-privacy-dsr-notifications",
+        "specs/006-discovery-sos-foundation",
+        "specs/007-identity-continuity-sessions-mfa-recovery",
+        "specs/008-audit-admin-aggregates-observability",
+        "specs/009-clinic-scheduling-appointments-queue"
+      ],
+      "exitCode": 0,
+      "seconds": 13.078,
+      "name": "format-configured",
+      "status": "PASS"
+    },
+    {
+      "command": ["node", "tools/verify-contracts.mjs"],
+      "exitCode": 0,
+      "seconds": 0.247,
+      "name": "contracts-static",
+      "status": "PASS"
+    },
+    {
+      "command": ["node", "tools/verify-architecture.mjs"],
+      "exitCode": 0,
+      "seconds": 0.12,
+      "name": "architecture-static",
+      "status": "PASS"
+    },
+    {
+      "command": ["node", "tools/verify-secrets.mjs"],
+      "exitCode": 0,
+      "seconds": 0.667,
+      "name": "secrets-static",
+      "status": "PASS"
+    },
+    {
+      "command": ["node", "tools/verify-agent-skills.mjs"],
+      "exitCode": 0,
+      "seconds": 0.207,
+      "name": "owned-skills-static",
+      "status": "PASS"
+    },
+    {
+      "name": "supplemental-authority-final",
+      "command": ["python", "-B", "tools/verify-documentation-authority.py", "--mode", "current"],
+      "exitCode": 1,
+      "seconds": 9.024,
+      "errorCounts": {
+        "agent_role_set_mismatch": 2,
+        "agent_root_security_key_present": 1,
+        "markdown_heading_anchor_missing": 32,
+        "mutable_tooling_configuration_invalid": 1,
+        "protected_current_differs_from_history": 10,
+        "protected_current_hash_mismatch": 10,
+        "protected_current_size_mismatch": 8
+      },
+      "status": "FAIL_SEPARATE_EXISTING_FINDINGS_NOT_REPAIRED",
+      "diagnosticSHA256": "fa184323192a46bd60e854cd4eb587f11a48a16edfc033364995eab4d2e04184"
+    }
+  ],
+  "notExecuted": [
+    "Aggregate pnpm verify (database reset/volume destruction paths)",
+    "Local Supabase/database/Docker/runtime security verification",
+    "SpecKit upgrade suites; no tooling upgrade changes"
+  ],
+  "preservation": {
+    "trackedFilesCompared": 5856,
+    "existingTrackedChangesOnly": [
+      "packages/contracts/src/feature-011-successor.test.ts",
+      "tools/test_speckit_tooling.py",
+      "tools/tooling-history.mjs",
+      "tools/tooling_history.py"
+    ],
+    "preexistingF012FilesUnchanged": 2365,
+    "approvedBranchDiffPathsUnchanged": 139,
+    "approvedPayloadUnchanged": 128,
+    "canonicalPredecessorsMatchOriginMain": 5,
+    "originalLedgerSHA256": "e38049b11787c49e01d0c6cfe0ef3cb3f825fc68f207be5bb224eebc4567fb07",
+    "originalHistoricalGitProjections": "four unchanged; real-Git regression tests",
+    "rootPointerSHA256": "957ec882110889a1b9dd236f8566f1f286cde597764494127b4243de47a47870",
+    "worktreePointerSHA256": "1a7f6f97dcd6c235e144dfa2355a1edfe2911043e7874c1b4c134505c45e1b5f",
+    "retainedDataAndVolumes": "No database, Docker or Supabase operation executed"
+  },
+  "review": {
+    "cleanCode": "Bounded immutable-object caching; live input checks retained; no generic bypass",
+    "testGuard": "Real file/Git fixtures, legacy assertions preserved, drift negatives in both readers; Python suite included in existing contracts CI",
+    "docsGuard": "Exact approved successor identities; historical verification distinguished from runtime and activation"
+  },
+  "requiredBeforeMerge": "All six required CI contexts and metadata on the published repair head; human review and Yousef squash merge remain required"
+}

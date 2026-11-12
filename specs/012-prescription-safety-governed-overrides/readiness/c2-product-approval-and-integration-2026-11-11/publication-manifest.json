@@ -1,0 +1,963 @@
+{
+  "id": "F012-CURRENT-INTEGRATION-PUBLICATION-PREPARATION/2026-11-11",
+  "status": "LOCAL_PROPOSED_ALLOWLIST_NOT_STAGED_NOT_AUTHORIZED_TO_PUBLISH",
+  "baseObserved": "41696fae3bfaf3e54c947cd558b758c21864d894",
+  "head": "0ad13689a170f325681a260d925e149f669e485a",
+  "issue": "Refs #493",
+  "proposedLabels": [
+    "type:task",
+    "area:documentation",
+    "area:governance",
+    "spec:012",
+    "blocked:governance"
+  ],
+  "files": [
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "sha256": "c1dc848f813c850ed851d06f673f059798d3120033ed1a5e50f60c29eeb2e407",
+      "bytes": 102837,
+      "role": "canonical_appendix",
+      "gitState": "tracked"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "sha256": "9c088fa84c49e9d69285b7be4e96e0d141a77c7be89d8976fdff1989f3fc0f7f",
+      "bytes": 89099,
+      "role": "canonical_appendix",
+      "gitState": "tracked"
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "sha256": "8eb104b897bda573e04067e8e3036647349d9ce0c472fc00f1aaac3b1eab35e0",
+      "bytes": 30978,
+      "role": "canonical_appendix",
+      "gitState": "tracked"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "sha256": "f144e6332cf8363dc127fb1e728e3e1387a51878838c16881d268b24eea2c838",
+      "bytes": 106335,
+      "role": "canonical_appendix",
+      "gitState": "tracked"
+    },
+    {
+      "path": "shifaa-prd.md",
+      "sha256": "4a98237e916b88c2d92c60f2c5b5da25f9b919e6b04f42a73db2e0aa709a50ac",
+      "bytes": 103029,
+      "role": "canonical_appendix",
+      "gitState": "tracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/checklists/plan-consistency.md",
+      "sha256": "4febb106eeaceef83573be5afb2e057a873c96f85fe4d757245e4ded4d03644c",
+      "bytes": 42835,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/checklists/requirements.md",
+      "sha256": "afbf3788059845dbba8355d4fd23485689a69bc53c9ebd34b7d15f2e1e954499",
+      "bytes": 36003,
+      "role": "already_committed_specify",
+      "gitState": "tracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/native-authority-nac1-successor-v0.1.0.md",
+      "sha256": "8ab9a757e6b4bd5b1055cff32cffa80777fd1ae6650041018fd2e8a13a547251",
+      "bytes": 29754,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/plan-closure-consolidated-v0.1.0.md",
+      "sha256": "103b8eb113d9398f6dbe210fc2f506c023430bb876bcae8a8060e4fe7440693d",
+      "bytes": 31285,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/plan-closure-consolidated-v0.2.0.md",
+      "sha256": "85d2f5ba8c9c640b500a2aaded34f0fb895610eb6c5f4c73da53094ce766be3e",
+      "bytes": 37220,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/source-consumption-successor-v0.1.0.md",
+      "sha256": "39fa9ea820b9fe9d81e53d311e8484f2324f5dcef66278f059a703b23282b92d",
+      "bytes": 48114,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml",
+      "sha256": "c135c26a4e897a86d6d37ea756e46904a83c5fcc55387003ceeb71c97635fb9d",
+      "bytes": 112966,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/data-model.md",
+      "sha256": "c701cc178447cc683f73dedef2f77591e476c40c7f4367822c1ac63098fc7b14",
+      "bytes": 70834,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/confirm_release-ar-EG-1440x900-light.png",
+      "sha256": "ccd80be4940ddc4ef157d7c4fb0de90dfa75afc9f2a8d66947d1d3986572054e",
+      "bytes": 60073,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/confirm_release-en-EG-1440x900-light.png",
+      "sha256": "800b7e6bd18f3cc66df95f0f2d6c7d640230c2413e09244ddc952e610391a238",
+      "bytes": 95404,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/conflict-ar-EG-360x800-light.png",
+      "sha256": "705b26f634c82f446c9a86d4a1c4f2360993065844dc551739ae3b6556e86d96",
+      "bytes": 42630,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/conflict-en-EG-360x800-light.png",
+      "sha256": "04f7d8c5d1a0e715a7529291e469e691a0f89df8d699d17d8bc15480771a6e72",
+      "bytes": 76591,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/historical-ar-EG-360x800-light.png",
+      "sha256": "d5c103350ed20fca4bfc4a42a45a7104cd0b8ba4b9434118758c926287c72b7e",
+      "bytes": 45968,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/historical-en-EG-360x800-light.png",
+      "sha256": "fe1b41eff216a310caaea986c56ec541de70ee9591119bfbde659f6f731e4b85",
+      "bytes": 83903,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/manifest.json",
+      "sha256": "599ab9427df0a674e07b1218901972dadbf9bc8ab2e2ae9dd1d0dd40c3312c50",
+      "bytes": 56196,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/post_sign_selection-ar-EG-1440x900-light.png",
+      "sha256": "7349ad22dbdf2489f418a16b1cbbf6905c581d52ee90de62668fe5374f2320bd",
+      "bytes": 60706,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/post_sign_selection-ar-EG-360x800-light.png",
+      "sha256": "d0f9b626abd6fdc8e128467c65e89961fb571a3445500717a9d36351fc5c5787",
+      "bytes": 54345,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/post_sign_selection-en-EG-1440x900-light.png",
+      "sha256": "813b324a6f371314a3f685bcf7744def4bc387ca755a0d7ee1ca285f7608caa7",
+      "bytes": 102091,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/post_sign_selection-en-EG-360x800-light.png",
+      "sha256": "9d555d0e4e59c1823ed5b627bf5e90eb48aa645bcd6df83b695d8b3724ab3b11",
+      "bytes": 99196,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/release_success-ar-EG-1440x900-light.png",
+      "sha256": "c6142ede6d9552b941ad289f393a26bd9588db05e012071c1981b0ebbdc8b20b",
+      "bytes": 53553,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/release_success-en-EG-1440x900-light.png",
+      "sha256": "46a3993236ba430fdc3dac66276b743034b3b222ebb48095910817be1e4451ba",
+      "bytes": 87191,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/sign_selection-ar-EG-1440x900-light.png",
+      "sha256": "c2510b922f256297b6040fa86b8e877873a764d162e2cc5cbc6277988da236d2",
+      "bytes": 61239,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/sign_selection-en-EG-1440x900-light.png",
+      "sha256": "50c1bdf14b37c991488b2a025bf43e29c49013ad503dd28da57d7c4a3274638c",
+      "bytes": 103622,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/uncertain-ar-EG-360x800-light.png",
+      "sha256": "3715a1da992e9e099ca27f7ca5cf1f7efadd456a9b0835ca88e44eeec09f353c",
+      "bytes": 44705,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/uncertain-en-EG-360x800-light.png",
+      "sha256": "93cd0c15f2a5539e89753579ffe69e8324be3915316a68d4b5b07d8780b7f3b5",
+      "bytes": 77882,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdraw_confirmation-ar-EG-1440x900-light.png",
+      "sha256": "1932c131b8d943011212d63e2ec341d93190c16fb215620b45e6e85e3678774a",
+      "bytes": 51969,
+      "role": "historical_selected_C2_PNG_for_immutable_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdraw_confirmation-ar-EG-412x915-light.png",
+      "sha256": "bcc68c1d815244feb2e127ee017f0ad7a751d1a222e68111d9986284b07f1074",
+      "bytes": 46643,
+      "role": "historical_selected_C2_PNG_for_immutable_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdraw_confirmation-en-EG-1440x900-light.png",
+      "sha256": "e40d7d41e4610758eb46e2758d6d7051039950ecb7a775a0db74cd74a55bd99a",
+      "bytes": 89678,
+      "role": "historical_selected_C2_PNG_for_immutable_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdraw_confirmation-en-EG-412x915-light.png",
+      "sha256": "1819ff6d43bf1ea115eafc4391cef3df6860dca994410a7344a72dea79fe9efb",
+      "bytes": 84801,
+      "role": "historical_selected_C2_PNG_for_immutable_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdrawn-ar-EG-1440x900-light.png",
+      "sha256": "08690e9facd9d28e32dc9456e70f489f20de1112640b94ae8b4039e504bfe5e9",
+      "bytes": 53103,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/baselines/withdrawn-en-EG-1440x900-light.png",
+      "sha256": "da5b59db46afbf556e5cf3b3ca98eaa2591c770bbecfc62eaa643fd14a56f348",
+      "bytes": 87623,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/capture.cjs",
+      "sha256": "94ad62acff38f7b2e6e0cb1de9aec110ae9d38fa5459994ff89f359a0c2cc8e8",
+      "bytes": 6681,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/index.html",
+      "sha256": "6970ce6ecf1e51d1c3c3087bd2c0a2d2e7574a11b26878bfac3c869e2bc652fd",
+      "bytes": 610,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.css",
+      "sha256": "76a295bcdf40dd6887fbfce93f326ccacffad47da9e8ab53ca02bc1959e4b275",
+      "bytes": 798,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/release.js",
+      "sha256": "cdfa01077f357b68dcaffa64fe2c4d02af5027dd9501684d54e039d8cba369a2",
+      "bytes": 9786,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.1.0/validation.json",
+      "sha256": "22eb0850a8a5dfdf86192db3fd6593a3653ddb2bbf193d6f15773f6e47b9b42b",
+      "bytes": 3363,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/manifest.json",
+      "sha256": "432b98b9fe1daf0b0dd839eec58b92dd27b4529a3d860308786f5707f41119d4",
+      "bytes": 77409,
+      "role": "bound_visual_manifest",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-ar-EG-1440x900-light.png",
+      "sha256": "bfb75b642bc2306878f3f1cff7ec98e8cae25f01ff374b3289f64d203d5354eb",
+      "bytes": 54330,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-ar-EG-360x800-light.png",
+      "sha256": "73e6bab93e76017e60bd7c9d0eb2d03a6d035dcce98cf76f6104e27772afb10f",
+      "bytes": 49289,
+      "role": "approved_C2_corrected_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-ar-EG-412x915-light.png",
+      "sha256": "139f26df3db3800cedafdefc9d710a1a7fd67e93c9dba533ca310d3b920a68e4",
+      "bytes": 49566,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-ar-EG-768x1024-light.png",
+      "sha256": "16ad3d8ee65553d38f16ad4b39a68091a679889143c176c5b589a7ea444d5b2e",
+      "bytes": 49592,
+      "role": "approved_C2_corrected_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-en-EG-1440x900-light.png",
+      "sha256": "9543cee86dc8cbefddd6e82e33abbf0ad615efdf8f3f97fe4d29fd31528808e9",
+      "bytes": 95147,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-en-EG-360x800-light.png",
+      "sha256": "38770af7cf5af533d9257e2bf73e7c2ea9c0047ffe2e90a9d483464bd8c0d887",
+      "bytes": 93050,
+      "role": "approved_C2_corrected_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-en-EG-412x915-light.png",
+      "sha256": "c90d4bcd180a4e65e08047ffef479fd5916d298f9abe116d57cab9a69e86c816",
+      "bytes": 90408,
+      "role": "selected_C2_original_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/withdraw_confirmation-en-EG-768x1024-light.png",
+      "sha256": "a996c9369d0d231c3453e37164c4e4b0255c4f2b2a9437f7709364b7b3dc7937",
+      "bytes": 91642,
+      "role": "approved_C2_corrected_PNG",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/capture.cjs",
+      "sha256": "af7be6a6000e26ed64fd092dd6e069b8146417deb194a50ddc4b030c3de841c0",
+      "bytes": 8194,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/index.html",
+      "sha256": "6970ce6ecf1e51d1c3c3087bd2c0a2d2e7574a11b26878bfac3c869e2bc652fd",
+      "bytes": 610,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.css",
+      "sha256": "76a295bcdf40dd6887fbfce93f326ccacffad47da9e8ab53ca02bc1959e4b275",
+      "bytes": 798,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.js",
+      "sha256": "7cf57fac6ff004bbbb6dc8ca843af3154b42c4bedc9347da49d09fc8d470b115",
+      "bytes": 9988,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/validation.json",
+      "sha256": "fc7384be5c6174cedb5d8edcdb696ed2e9a2dbced58d1c89e4f0efde88f82bcb",
+      "bytes": 6531,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/manifest.json",
+      "sha256": "85708ffa055a0fda5ac582425a24706e1cafc1d7911f6abb6a003a0ceb07bde6",
+      "bytes": 398550,
+      "role": "bound_visual_manifest",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/capture.cjs",
+      "sha256": "2ae6b7553a623780d5e1b55b17fbf34882fe5671a9614bcca49d29437e3552ba",
+      "bytes": 19321,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/compositions.css",
+      "sha256": "dd58f8e1efe3ae230891e7f2f25c48d65b2aeef55da53463749210a01164fa41",
+      "bytes": 11455,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/compositions.js",
+      "sha256": "d1f52add9053cddfa79c98b7078f21986f42aba93a7ac870d633cc258adaad21",
+      "bytes": 46633,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/index.html",
+      "sha256": "52feb23168a3bd837c0f270d658799474205129d7d5895b41ba06486bffe06bd",
+      "bytes": 594,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/validation.json",
+      "sha256": "1306a21271db12046c95c3d26a688e1c65a4555de05cfd44a7315096e6905f90",
+      "bytes": 451545,
+      "role": "bound_visual_source_or_static_validation",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/plan.md",
+      "sha256": "77707040ff62a8f5769e4d8fa00d23ce529d84ff8feafeb415b0c2201a262bfc",
+      "bytes": 53571,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+      "sha256": "3504bf732e0bf2749bc4dd51f92bec45e85212430685cd34a26b9aeb0353270c",
+      "bytes": 23184,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/architecture-contract-finalization-2026-10-23.md",
+      "sha256": "54e1141e1389e56a8e8ea35d737fcb259647a7343745ba3a0093bdfe59d4cc05",
+      "bytes": 71740,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/architecture-decision-resolution-2026-10-23.md",
+      "sha256": "9c9d46e5d5e0e1147e962b69eba83a37cd38f595d9aa41f46bd42e69fdcfa7c2",
+      "bytes": 54194,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+      "sha256": "244465179975e70ff09e8b13661f5682a89c09991ab4b9b06be3b7c6f407b83a",
+      "bytes": 4614,
+      "role": "current_integration_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/integration-status.md",
+      "sha256": "dd9d4a11e67791f59449c595b95a64b88a4aa67bf273565e83c0cae10d718399",
+      "bytes": 10548,
+      "role": "current_integration_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/pr-body.md",
+      "sha256": "9e55f2b92bd77d7468b5be40feb52ae75303a3a60e8d00d6079d07bd311929c4",
+      "bytes": 3289,
+      "role": "current_integration_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/preflight.json",
+      "sha256": "b20c452c939b2681e92d3272d7738203325588d721b342047ce42ddd7a89740e",
+      "bytes": 3682,
+      "role": "current_integration_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/static-validation.json",
+      "sha256": "3a84ca8f46eeaa097c0f652fe3fa4990c85d6155a2897c3889f73f0da8258fc1",
+      "bytes": 34829,
+      "role": "current_integration_record",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/c2-essential-baselines.json",
+      "sha256": "c94d73cbfae9f6b07eb9995ae36228a3a29cc1d9a7c6d1f41ff9c8b40ed62186",
+      "bytes": 14649,
+      "role": "corrected_C2_selected_review",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/c2-essential-gallery.html",
+      "sha256": "99c774fe49a960f9db51d6ed0e85b2d6ef978ef5d1b95edfe2ebd7bceee1c954",
+      "bytes": 16796,
+      "role": "corrected_C2_selected_review",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/canonical-reconciliation.json",
+      "sha256": "8a87c1f416a14f010644747246850dda136d838fa533fd7c19f300f332096546",
+      "bytes": 2828,
+      "role": "corrected_C2_selected_review",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/copy-change.json",
+      "sha256": "3141adc7cdc80c7457f064e2a1a09a589795146a44146de0ad32e3b096a82389",
+      "bytes": 1078,
+      "role": "corrected_C2_selected_review",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/baseline-selection.json",
+      "sha256": "2d61fc9c88e8cd7f3c4281e99ff3630d56e4c2ef703e01955f9e968cc27dbb2a",
+      "bytes": 60051,
+      "role": "approved_C3_selected_review_embedded_gallery",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/gallery-validation.json",
+      "sha256": "3858a8edee93f0635e12c2940d4f7cf2a384d10404a73dbce2a6af51f8a56aac",
+      "bytes": 271,
+      "role": "approved_C3_selected_review_embedded_gallery",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/index.html",
+      "sha256": "7bf4e9236bc93f3bb0ffdab45b474337222e36d7724ff1a2cd5e6737e28d8e1c",
+      "bytes": 3293191,
+      "role": "approved_C3_selected_review_embedded_gallery",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/REVIEW-INDEX.md",
+      "sha256": "3ba107ee1b422b11a7657155b683cfe883a2785e865a87d6757c10bfe1908d43",
+      "bytes": 16550,
+      "role": "selected_gallery_resource",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/validation.json",
+      "sha256": "1306a21271db12046c95c3d26a688e1c65a4555de05cfd44a7315096e6905f90",
+      "bytes": 451545,
+      "role": "approved_C3_selected_review_embedded_gallery",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/f011-f012-source-fence-contract-proposal-2026-10-23.md",
+      "sha256": "b2a97219e4659008d3029bad315c04d02f092f0a622d1e293004ca41f90df0a3",
+      "bytes": 28130,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/acceptance-manifest.json",
+      "sha256": "13e3d746c6ff5b830679c25495fee64fc3e69cae14b684b64d74efc5803775c0",
+      "bytes": 3521,
+      "role": "attributable_acceptance",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-baselines.json",
+      "sha256": "1ac63f09fbc10a6116f24490f83ae23ee5bb08068e7ae9d1ab0f122c3b97c3f7",
+      "bytes": 10834,
+      "role": "historical_selection_manifest",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-gallery.html",
+      "sha256": "ba01de74e80f15601dd383f3c9df37427beec18c48faa2bb9f65fd4ca6e5fc68",
+      "bytes": 16778,
+      "role": "historical_acceptance_gallery_superseded_by_corrected_copy",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "sha256": "33d35da7492e43cbf9552e3f4bb1b677fe6ad136cb6adaf9ae3ae216fd7f0624",
+      "bytes": 7848,
+      "role": "attributable_acceptance",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/governance-amendment.md",
+      "sha256": "3d667b4b8dc7a80994783499f797fa29f55e731d321492865d1009820bd25d7d",
+      "bytes": 5922,
+      "role": "attributable_acceptance",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/content-manifest.json",
+      "sha256": "d4435642976d1cd3740b6b17012520af9db30817649bb042ef2661fa7b838fd6",
+      "bytes": 6573,
+      "role": "accepted_input_binding_manifest",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/gallery-validation.json",
+      "sha256": "a3c9ee1c9005a6d4da87c54a64a2c469d4ce111526d8b28c77a5009a413af362",
+      "bytes": 535,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/preservation-validation.json",
+      "sha256": "a765bc69f21f3c836608a91b07dabb9a14e318924c04b1f2742bd9c197001f6e",
+      "bytes": 1199,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/prior-draft-shape-bindings.json",
+      "sha256": "5c5f865a6e72e826557fd438aa51edbd652694a2cb3fb63000a8741f00d890eb",
+      "bytes": 3179,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "sha256": "7abd980b55ca7d675d64e971330385a7db2c968d4ae71bd7b7d57fdfe76951a8",
+      "bytes": 4838,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/static-validation-final.json",
+      "sha256": "3a84ca8f46eeaa097c0f652fe3fa4990c85d6155a2897c3889f73f0da8258fc1",
+      "bytes": 34829,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/ui-and-governance-resolution.md",
+      "sha256": "2555f13164e0371b172d029eb8781df8043dc07788581e0a33753e07e58b35af",
+      "bytes": 7399,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/validate-static.cjs",
+      "sha256": "d693dbf0655b0cf7e3a09ba47d95f5bfa4521df903e1acc61e1b3a306fb4dca7",
+      "bytes": 17404,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-actual-auth-provenance-2026-10-24.md",
+      "sha256": "9d4e5d896fb7817225c5f6949f501ce8c9d115e28cdbae2680cef67caf20c186",
+      "bytes": 29448,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-maintenance-and-handoff-2026-11-11.md",
+      "sha256": "bd432a90cf67118a23846feabca78df174c63425242554576c94799e21a606ec",
+      "bytes": 13467,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-pinned-auth-provenance-gap-2026-10-23.md",
+      "sha256": "ec60b8075fd5456a58df0087a5540567eaa32ce14844be75acd2925c9b9dbf0b",
+      "bytes": 18814,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/native-authority-n1-technical-decision-2026-10-23.md",
+      "sha256": "9f0151d76114cd7a55a60586dbf3c70cc52a13810956c52dce618bc1970845fc",
+      "bytes": 51682,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/open-ux-001-product-design-review-brief-2026-10-23.md",
+      "sha256": "0354ed3b9942f917b37a229f146bbfbf9551e7b40e907087f6d98173e19d82b4",
+      "bytes": 19637,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/patient-projection-visibility-successor-proposal-2026-10-23.md",
+      "sha256": "c0a89714f825f62a148cae6e0aabd8b25d5860a08b9adcab91b7c452909ae4bf",
+      "bytes": 25461,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "sha256": "cca5ab19964db20eca9db3e673c541617737b455805df91b7a00ff0ca76fbb9c",
+      "bytes": 11547,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-handoff.md",
+      "sha256": "c0e10a000cf84bb33eed66d17d0a92bb5223b8cc2883e4df585ded17dbbd3d9f",
+      "bytes": 7062,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/po-decision-approval-2026-10-23.md",
+      "sha256": "bf00eea22e8ffbdd4887e54716cdf7b691acbf0d3c91dd8b3323b3f1fbfb4b84",
+      "bytes": 11782,
+      "role": "already_committed_specify",
+      "gitState": "tracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/po-decision-resolution-proposal-2026-10-23.md",
+      "sha256": "bc268dc62e95833cb12f56e69b92a87b1ca80dc710676e8f805913c0123e2a98",
+      "bytes": 67527,
+      "role": "already_committed_specify",
+      "gitState": "tracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/post-maintenance-plan-review-2026-11-11.md",
+      "sha256": "7bc2ce6e2000c446b04213851ac64cb9b3ba0710b55f737334aa9c502ae3ec94",
+      "bytes": 15306,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/product-architecture-p1-p2-p3-decision-sheet-2026-10-23.md",
+      "sha256": "a0591ebcb3b26b3e35f9e32ec9074c4328b99ddc27115b1c9cef4fcd1d498cd8",
+      "bytes": 23744,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/product-p1-p2-p3-approval-2026-10-23.md",
+      "sha256": "f1ecb13e7d028b6fc824b5bbb4ff7bc556c06de6459749e3e411f9a222d95775",
+      "bytes": 13577,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/source-fence-architecture-approval-2026-10-23.md",
+      "sha256": "159937791db6ede6426834d1ecaa33a92f3784ce104192ad1f7a310ee16a17c0",
+      "bytes": 21530,
+      "role": "historical_supporting_context_not_current_status",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+      "sha256": "de55e0fc7edfc4d2bdfcb678068171cce50afdfbb07a5ec39934f565ae5c2abb",
+      "bytes": 14224,
+      "role": "already_committed_specify",
+      "gitState": "tracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/specify-preflight-2026-10-23.json",
+      "sha256": "4d2062840ccbd61b86eea83b661227a5526cbd063a541c4003846c7450a1fb3e",
+      "bytes": 23139,
+      "role": "already_committed_specify",
+      "gitState": "tracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/research.md",
+      "sha256": "f2cd6983ccf627900cfaa1ff83a30cfb5d3ce21b2d5f21a819f1c302914e724b",
+      "bytes": 48455,
+      "role": "accepted_input_or_bound_evidence",
+      "gitState": "untracked"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/spec.md",
+      "sha256": "f4d2e7f1113467f5997e27809394c7f03a191dba276bfc895e0398a1bb8fa15a",
+      "bytes": 219600,
+      "role": "already_committed_specify",
+      "gitState": "tracked"
+    }
+  ],
+  "counts": {
+    "files": 111,
+    "PNG": 30,
+    "bytes": 8987892
+  },
+  "selfAndFinalValidation": "This manifest and final verification.json are additive publication metadata; exclude their own hashes to avoid circularity. Verify both independently before staging.",
+  "retainedOnlyReferences": [
+    {
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/c2-control-gallery.html",
+      "sha256": "eb6adc27337a208be195ea376b134591d1c3731ed739785c949692d5247d27b7",
+      "reason": "Duplicate historical full C2 gallery retained locally; corrected essential gallery is published instead. Hash binding retained in original input manifest."
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-maintenance-and-handoff-2026-11-11.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json",
+      "sha256": "f50b97ad6ade6fba070b14bd07169503f6d064e200a9021cd0257b79c8a1333d",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/content-manifest.json",
+      "sha256": "2ceea7cd02700135f36310fa5f881112b97f09feb022c5066caf68d9af44f159",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/preservation-validation.json",
+      "sha256": "88b91af951da447ee1c890ad4e5c7ce9de2891fc2e6c8f71e04ec969abdd20c5",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-inventory.json",
+      "sha256": "896af0f89a438463820cf6a2214d9761bf4300ee94ebb33b285e89982f7ebdf6",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/gallery.html",
+      "sha256": "842012183a1b9790ff95121fa550213201060afda667b240af2caee9c98dc819",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/baselines/manifest.json",
+      "sha256": "045daeee9ff9970fb31406042f25161139b17902dd1a9a48de677596777a8195",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/static-validation.json",
+      "sha256": "078763b6b253aa56e96e26171bec2bf02c1c12c9b918a2bdee153671feb1ba7f",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/validate-static.cjs",
+      "sha256": "88b2e67d0367024b7cc32dd4624effa126343eac42b9c66253470118e4d398e1",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/approval-package.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-inventory.json",
+      "sha256": "896af0f89a438463820cf6a2214d9761bf4300ee94ebb33b285e89982f7ebdf6",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-handoff.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-inventory.json",
+      "sha256": "896af0f89a438463820cf6a2214d9761bf4300ee94ebb33b285e89982f7ebdf6",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/publication-handoff.md",
+      "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/gallery.html",
+      "sha256": "842012183a1b9790ff95121fa550213201060afda667b240af2caee9c98dc819",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/checklists/plan-consistency.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json",
+      "sha256": "f50b97ad6ade6fba070b14bd07169503f6d064e200a9021cd0257b79c8a1333d",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/post-maintenance-plan-review-2026-11-11.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json",
+      "sha256": "f50b97ad6ade6fba070b14bd07169503f6d064e200a9021cd0257b79c8a1333d",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/ui-and-governance-resolution.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/c2-control-gallery.html",
+      "sha256": "eb6adc27337a208be195ea376b134591d1c3731ed739785c949692d5247d27b7",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-gallery.html",
+      "sha256": "ba01de74e80f15601dd383f3c9df37427beec18c48faa2bb9f65fd4ca6e5fc68",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/contract-amendment/native-authority-nac1-successor-v0.1.0.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/nac-1-local-auth-verification-2026-11-11.json",
+      "sha256": "f50b97ad6ade6fba070b14bd07169503f6d064e200a9021cd0257b79c8a1333d",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+      "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/gallery.html",
+      "sha256": "842012183a1b9790ff95121fa550213201060afda667b240af2caee9c98dc819",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+      "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/baselines/manifest.json",
+      "sha256": "045daeee9ff9970fb31406042f25161139b17902dd1a9a48de677596777a8195",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-closure-2026-11-11/static-validation.json",
+      "sha256": "078763b6b253aa56e96e26171bec2bf02c1c12c9b918a2bdee153671feb1ba7f",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/plan.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-preflight-2026-10-23.json",
+      "sha256": "cecdfce3cab9ff688dfdfc40f1d55265db9e1ae1e410df1bc34b93f509c8ba0d",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/plan.md",
+      "target": "specs/012-prescription-safety-governed-overrides/readiness/plan-preflight-2026-10-23.json",
+      "sha256": "cecdfce3cab9ff688dfdfc40f1d55265db9e1ae1e410df1bc34b93f509c8ba0d",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "from": "specs/012-prescription-safety-governed-overrides/plan.md",
+      "target": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/gallery.html",
+      "sha256": "842012183a1b9790ff95121fa550213201060afda667b240af2caee9c98dc819",
+      "reason": "Retained local historical/supplemental dependency; not current review navigation or authority activation evidence"
+    },
+    {
+      "scope": "All unselected baseline PNGs",
+      "files": 2114,
+      "bindings": [
+        "design/plan-closure-2026-11-11/baselines/manifest.json",
+        "design/c3-corrections-2026-11-11-v0.2.0/baselines/manifest.json",
+        "design/c3-mobile-2026-11-11-v0.3.0/baselines/manifest.json",
+        "design/c2-release-controls-2026-11-11-v0.1.0/baselines/manifest.json",
+        "design/c2-release-controls-2026-11-11-v0.2.0/baselines/manifest.json"
+      ],
+      "reason": "Original baseline bytes retained locally under their immutable manifests; no cleanup or remote full-set availability claim"
+    }
+  ],
+  "exclusions": [
+    "All .tmp state, backups, raw logs, Auth fixtures/config/secrets and private evidence",
+    "nac-1-local-auth-verification-2026-11-11.json remains local/manual-review hold, not implicitly sanitized",
+    "Unselected original visual captures: retained, not deleted, not represented as remotely available",
+    "All unrelated tracked/untracked changes; no blanket git add"
+  ],
+  "publicationHolds": [
+    "Separate push/PR publication authorization absent",
+    "Required local full verify is unsafe for retained resources and not run; live-language acceptance not executed or explicitly disposed for this PR",
+    "Full OpenAPI semantic validation unavailable; keep limitation visible",
+    "Current-head required CI not run for unpublished F012 branch"
+  ],
+  "lifecycle": "No PLAN_APPROVED, Tasks or implementation"
+}

@@ -1,0 +1,75 @@
+{
+  "id": "F012-C1-C2-U1-RECORDED/2026-11-11",
+  "state": "ACCEPTED_DESIGN_POLICY_U1_SELECTED_INTEGRATION_PENDING_C2_VISUAL_PENDING",
+  "reviewedInputManifestSHA256": "d4435642976d1cd3740b6b17012520af9db30817649bb042ef2661fa7b838fd6",
+  "canonicalSuccessors": [
+    {
+      "path": "shifaa-prd.md",
+      "version": "PRD 2.2.1",
+      "predecessorSHA256": "eca3a8dd2955da8b6d91bb6fc0d9722f57801c39fae59a4ca4c3475af6b4ab0f",
+      "predecessorBytes": 100550,
+      "sha256": "4a98237e916b88c2d92c60f2c5b5da25f9b919e6b04f42a73db2e0aa709a50ac",
+      "effective": false
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "version": "Master 2.2.2",
+      "predecessorSHA256": "47552ae429fabf0606af98b07080a3db342e6f490fe20d27553a14ddcc9cc63d",
+      "predecessorBytes": 103596,
+      "sha256": "f144e6332cf8363dc127fb1e728e3e1387a51878838c16881d268b24eea2c838",
+      "effective": false
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "version": "UI Contract 0.10.0",
+      "predecessorSHA256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+      "predecessorBytes": 28266,
+      "sha256": "8eb104b897bda573e04067e8e3036647349d9ce0c472fc00f1aaac3b1eab35e0",
+      "effective": false
+    },
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "version": "API Catalog 1.3.0",
+      "predecessorSHA256": "5e20548ace942acae611f4915dd3f1ab7130b5295a879113435b352e8a771fad",
+      "predecessorBytes": 100106,
+      "sha256": "c1dc848f813c850ed851d06f673f059798d3120033ed1a5e50f60c29eeb2e407",
+      "effective": false
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "version": "Data/RLS 1.4.0",
+      "predecessorSHA256": "a6de0ba094415d5a93315db5305c4c8fcf7f37797540a217ccc059f567a52ab5",
+      "predecessorBytes": 86509,
+      "sha256": "9c088fa84c49e9d69285b7be4e96e0d141a77c7be89d8976fdff1989f3fc0f7f",
+      "effective": false
+    }
+  ],
+  "newRecords": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-baselines.json",
+      "sha256": "1ac63f09fbc10a6116f24490f83ae23ee5bb08068e7ae9d1ab0f122c3b97c3f7",
+      "bytes": 10834
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/c2-essential-gallery.html",
+      "sha256": "ba01de74e80f15601dd383f3c9df37427beec18c48faa2bb9f65fd4ca6e5fc68",
+      "bytes": 16778
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "sha256": "33d35da7492e43cbf9552e3f4bb1b677fe6ad136cb6adaf9ae3ae216fd7f0624",
+      "bytes": 7848
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/governance-amendment.md",
+      "sha256": "3d667b4b8dc7a80994783499f797fa29f55e731d321492865d1009820bd25d7d",
+      "bytes": 5922
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/plan-status.md",
+      "sha256": "e95f47ed3aaa36c741178efd695a72aac3c64cc9c26ad68bd3fa95d51a61cc15",
+      "bytes": 4452
+    }
+  ],
+  "exclusions": "This manifest and later validation receipt excluded to avoid hash cycles. No unknown future receipt is approved. Approval is limited to the user-selected exact reviewed scopes, not images or Plan."
+}

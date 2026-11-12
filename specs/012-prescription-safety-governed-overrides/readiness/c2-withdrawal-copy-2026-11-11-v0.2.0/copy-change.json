@@ -1,0 +1,13 @@
+{
+  "scope": "Withdrawal confirmation only; no Product policy change",
+  "before": {
+    "ar-EG": "يمنع السحب القراءات اللاحقة؛ لا يسترجع بيانات اطلع عليها الشخص سابقاً. لا إعادة فتح تلقائية.",
+    "en-EG": "Withdrawal denies later reads; it cannot recall information already disclosed. No automatic reopening."
+  },
+  "after": {
+    "ar-EG": "سحب الإتاحة نهائي لنفس السجل المحدد وإصداره؛ ولا يمكن إتاحته مرة أخرى، حتى يدوياً. يمنع السحب القراءات اللاحقة، لكنه لا يمكنه استرجاع معلومات سبق الكشف عنها.",
+    "en-EG": "Withdrawal is terminal for the same target and revision. It cannot be released again, including manually. Withdrawal denies later reads, but cannot recall information already disclosed."
+  },
+  "status": "CORRECTED_CANDIDATE_AWAITING_EXACT_VISUAL_ACCEPTANCE",
+  "historicalEvidence": "Original files, source and baseline hashes preserved"
+}

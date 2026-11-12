@@ -50,7 +50,7 @@ For Feature 012, the effective CONTRACTUAL boundary is 12 operations; profile ac
 
 1. Map the change to its FR/NFR, API/data/UI contract, feature acceptance criteria, and negative cases.
 2. Test at the appropriate layers, including authorization/RLS negatives, idempotency/concurrency, audit/outbox, localization/accessibility, and degraded states when relevant.
-3. Run the feature-specific checks and fresh repository `pnpm verify` before claiming completion.
-4. Record live Arabic and English acceptance evidence when `AGENTS.md` requires it. Preparation grants no exception; only an attributable, exact PR-specific exception can change that prerequisite. Do not call static inspection or stale evidence a live pass.
+3. Apply the change-aware verification policy in `AGENTS.md`: run applicable resource-safe checks and report their scope. `pnpm verify` remains comprehensive but its destructive paths require proven disposable isolation; never reset retained Supabase data/volumes. Documentation/governance/static-design-only changes may use relevant focused checks plus all required current-head CI without a routine PO exception.
+4. Retain affected automated localization, RTL/LTR and accessibility checks. Human visual/bilingual acceptance belongs to applicable product/design milestones and feature gates, not every PR; do not require a universal PO language-review sign-off. Do not call automation, static inspection or stale evidence a human/native pass. Preserve F012 C1/C2/C3/U1, OPEN-UX-001 and all other canonical obligations.
 5. Review the diff for PHI, secrets, undocumented operations, dependency-direction violations, open-gate claims, and third-party instructions that conflict with SHIFAA.
 6. Follow the SpecKit lifecycle and PR-only integration sequence. External skills never add or replace a mandatory lifecycle.

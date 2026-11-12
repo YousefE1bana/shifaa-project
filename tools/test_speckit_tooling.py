@@ -205,10 +205,17 @@ assert.throws(()=>bridge('fixture-root',()=>{throw Error('validation unavailable
         target = self.root / tooling_history.RECORD
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes((ROOT / tooling_history.RECORD).read_bytes())
+        # This case retains the original no-successor path; the new appendix
+        # regression exercises the separately bound successor independently.
+        successors = json.loads((ROOT / tooling_history.APPENDIX_SUCCESSOR).read_bytes())
         for item in record["inputs"]:
             output = self.root / item["path"]
             output.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(ROOT / item["path"], output)
+            previous = next((entry["predecessor"] for entry in successors["inputs"] if entry["path"] == item["path"]), None)
+            if previous:
+                output.write_bytes(subprocess.check_output(["git", "cat-file", "blob", previous["gitBlob"]], cwd=ROOT))
+            else:
+                shutil.copyfile(ROOT / item["path"], output)
         gitdir = subprocess.run(["git", "rev-parse", "--absolute-git-dir"], cwd=ROOT,
                                 capture_output=True, check=True).stdout.decode().strip()
         (self.root / ".git").write_text("gitdir: " + gitdir + "\n")

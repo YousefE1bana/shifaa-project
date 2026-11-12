@@ -1,0 +1,442 @@
+{
+  "recordKind": "F012_SPECIFY_ENTRY_PREFLIGHT",
+  "recordedUtc": "2026-10-23T07:42:37.160543+00:00",
+  "worktree": "D:\\ECU\\Gradution-Project\\.worktrees\\f012-specify-20261023",
+  "branch": "codex/f012-specify-20261023",
+  "head": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "remoteMain": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "mergeAncestors": {
+    "394": "da6d01761fb5c5b0e8ff430510b307f18c671ff2",
+    "490": "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+    "491": "bdcf22b848c18d63f93fb4bc0adac939c6db691d",
+    "494": "7c9a0b5f195b4f7fdf44a05f44abe2b0881dbc32",
+    "495": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+    "496": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+    "498": "00543fb434580fe587f251723d135631778405e1"
+  },
+  "historicalPrAReleaseEntries": 41,
+  "historicalPrADeltaHashedEntries": 43,
+  "prADeltaSelfHashExclusion": {
+    "path": "specs/012-prescription-safety-governed-overrides/readiness/real-medicine-research/pr-a-source-delta.json",
+    "bytes": 111351,
+    "sha256": "2f7e260089c39041eb403867c7d671ef7d921c85af77eb95e01b8cd174a063f7"
+  },
+  "historicalPrACompatibilityEntries": 7,
+  "historicalReviewerEntries": 16,
+  "reviewerCurrentGitDifferences": ["SHIFAA-Implementation-Plan-MASTER.md"],
+  "approvedFixtureArtifacts": {
+    "engineering-fixtures.schema.json": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65",
+    "engineering-fixtures.candidate.json": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+    "engineering-fixtures.manifest.json": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af",
+    "coded-input-proposal.md": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c",
+    "validate-readiness.ps1": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185"
+  },
+  "privateOriginalReadbacks": 23,
+  "existingBackupReadbacks": 46,
+  "existingRestoreCopyReadbacks": 46,
+  "researchOriginalsWithExistingBackupAndRestoreReadbacks": 8,
+  "scopeEligibility": {
+    "FR-SAFE-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "FR-SAFE-003": "ACTIVE_PRD_ROW_VERIFIED",
+    "FR-SAFE-004": "ACTIVE_PRD_ROW_VERIFIED",
+    "FR-SAFE-005": "ACTIVE_PRD_ROW_VERIFIED",
+    "FR-SAFE-006": "ACTIVE_PRD_ROW_VERIFIED",
+    "FR-SAFE-007": "ACTIVE_PRD_ROW_VERIFIED",
+    "FR-SAFE-011": "ACTIVE_PRD_ROW_VERIFIED",
+    "FR-SAFE-009": "ACTIVE_PRD_ROW_VERIFIED",
+    "FR-SAFE-010": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-SEC-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-SEC-002": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-SEC-003": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-SEC-004": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-SEC-005": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-SEC-006": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-SEC-007": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-PRIV-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-PRIV-002": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-PRIV-004": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-I18N-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-A11Y-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-PERF-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-PERF-002": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-AVAIL-002": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-DATA-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-DATA-002": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-API-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-API-002": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-OBS-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-QUALITY-001": "ACTIVE_PRD_ROW_VERIFIED",
+    "NFR-PORT-001": "ACTIVE_PRD_ROW_VERIFIED"
+  },
+  "sourceFiles": {
+    "AGENTS.md": {
+      "worktreeBytes": 7435,
+      "worktreeSha256": "613a143f20d76d93ae366040c47641cb7211ca3cb12c4be9d2ca9f59639ba841",
+      "gitBlobSha256": "613a143f20d76d93ae366040c47641cb7211ca3cb12c4be9d2ca9f59639ba841"
+    },
+    "docs/SHIFAA-Documentation-Index.md": {
+      "worktreeBytes": 7120,
+      "worktreeSha256": "6dd79e9f4df62fadd1c9d07de6ab4cf3509abdfb3015ab75dab598dba72b05d3",
+      "gitBlobSha256": "6dd79e9f4df62fadd1c9d07de6ab4cf3509abdfb3015ab75dab598dba72b05d3"
+    },
+    "docs/governance/SHIFAA-Current-Authority-Map-v1.md": {
+      "worktreeBytes": 10873,
+      "worktreeSha256": "811212edfe1cc63c8e2e481d44c41a91fe31b4d39ddc0261b821e125aa2fa5e2",
+      "gitBlobSha256": "811212edfe1cc63c8e2e481d44c41a91fe31b4d39ddc0261b821e125aa2fa5e2"
+    },
+    ".specify/memory/constitution.md": {
+      "worktreeBytes": 20642,
+      "worktreeSha256": "4107a37ce43ae5c6efd6c8198771112b598eb167d3f0788c879d2b3fc747793c",
+      "gitBlobSha256": "4107a37ce43ae5c6efd6c8198771112b598eb167d3f0788c879d2b3fc747793c"
+    },
+    "shifaa-prd.md": {
+      "worktreeBytes": 100550,
+      "worktreeSha256": "eca3a8dd2955da8b6d91bb6fc0d9722f57801c39fae59a4ca4c3475af6b4ab0f",
+      "gitBlobSha256": "eca3a8dd2955da8b6d91bb6fc0d9722f57801c39fae59a4ca4c3475af6b4ab0f"
+    },
+    "SHIFAA-Implementation-Plan-MASTER.md": {
+      "worktreeBytes": 103596,
+      "worktreeSha256": "47552ae429fabf0606af98b07080a3db342e6f490fe20d27553a14ddcc9cc63d",
+      "gitBlobSha256": "47552ae429fabf0606af98b07080a3db342e6f490fe20d27553a14ddcc9cc63d"
+    },
+    "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md": {
+      "worktreeBytes": 55686,
+      "worktreeSha256": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757",
+      "gitBlobSha256": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757"
+    },
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md": {
+      "worktreeBytes": 28577,
+      "worktreeSha256": "6436f1ea96c50cc422f8cab51fb692b2245e859500123cca18a8784f47b0af63",
+      "gitBlobSha256": "6436f1ea96c50cc422f8cab51fb692b2245e859500123cca18a8784f47b0af63"
+    },
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/ui-contract-successor-v0.1.0.md": {
+      "worktreeBytes": 4130,
+      "worktreeSha256": "078e845c70eec355ec32d4a4b7d42e6f770e8c521282895d456024989db9f7d2",
+      "gitBlobSha256": "078e845c70eec355ec32d4a4b7d42e6f770e8c521282895d456024989db9f7d2"
+    },
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/traceability-successor-v0.1.0.md": {
+      "worktreeBytes": 3548,
+      "worktreeSha256": "cf375e05ae4e3dcb0d341365ee52a349597ff21148923f83516d778eefc08a14",
+      "gitBlobSha256": "cf375e05ae4e3dcb0d341365ee52a349597ff21148923f83516d778eefc08a14"
+    },
+    "specs/012-prescription-safety-governed-overrides/contract-amendment/scope-successor.json": {
+      "worktreeBytes": 11412,
+      "worktreeSha256": "8493cabde6208dbe0221892c14307a6056df5a6c555e96348ed77f951ecac0fd",
+      "gitBlobSha256": "8493cabde6208dbe0221892c14307a6056df5a6c555e96348ed77f951ecac0fd"
+    },
+    "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-approval.md": {
+      "worktreeBytes": 30175,
+      "worktreeSha256": "a0ea338bd91b5b39fd3ca1427f301374051c4b3d50b8d6f6640844926733b3f8",
+      "gitBlobSha256": "a0ea338bd91b5b39fd3ca1427f301374051c4b3d50b8d6f6640844926733b3f8"
+    },
+    "specs/012-prescription-safety-governed-overrides/decisions/graduation-governance-activation-receipt.md": {
+      "worktreeBytes": 47609,
+      "worktreeSha256": "9e4c4c8fa2dac680c3b80c6c307ca342ade977a12166c23bd4d299aa7ea12b59",
+      "gitBlobSha256": "9e4c4c8fa2dac680c3b80c6c307ca342ade977a12166c23bd4d299aa7ea12b59"
+    },
+    "specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md": {
+      "worktreeBytes": 3943,
+      "worktreeSha256": "8f52882e71e1615d93a4f7461a32854537d5c48e9fc77b9964a47fdab9721d88",
+      "gitBlobSha256": "8f52882e71e1615d93a4f7461a32854537d5c48e9fc77b9964a47fdab9721d88"
+    },
+    "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixture-approval-2026-10-14.md": {
+      "worktreeBytes": 5953,
+      "worktreeSha256": "6f5255c2a994f58c983add1206c8f922aac078a8ef1f140d8f61c2273081fb93",
+      "gitBlobSha256": "6f5255c2a994f58c983add1206c8f922aac078a8ef1f140d8f61c2273081fb93"
+    },
+    ".specify/integration.json": {
+      "worktreeBytes": 354,
+      "worktreeSha256": "693d69b8bff4f2b6b571a14c44914ac33e70469321ee96ec10b02111b364946d",
+      "gitBlobSha256": "693d69b8bff4f2b6b571a14c44914ac33e70469321ee96ec10b02111b364946d"
+    },
+    ".specify/tooling-source.json": {
+      "worktreeBytes": 251,
+      "worktreeSha256": "09a50900a1df039d68e6af20ce1b3196d8e7ee67b172572d43a9ad64cc5b81e2",
+      "gitBlobSha256": "09a50900a1df039d68e6af20ce1b3196d8e7ee67b172572d43a9ad64cc5b81e2"
+    },
+    ".specify/extensions.yml": {
+      "worktreeBytes": 605,
+      "worktreeSha256": "411357796faff0ccab4e345d420d70e4c959ef4af4046e3db39e258359ea8e2c",
+      "gitBlobSha256": "411357796faff0ccab4e345d420d70e4c959ef4af4046e3db39e258359ea8e2c"
+    },
+    ".specify/templates/overrides/spec-template.md": {
+      "worktreeBytes": 13845,
+      "worktreeSha256": "818d4885656ef0e060290aa49c6b8b2af6b7d7dd14cbfaa87f103d1203d30b06",
+      "gitBlobSha256": "818d4885656ef0e060290aa49c6b8b2af6b7d7dd14cbfaa87f103d1203d30b06"
+    }
+  },
+  "predecessor_010-encounters-referrals-contextual-chat": {
+    "changedPathsSinceMerge": [
+      "specs/010-encounters-referrals-contextual-chat/contracts/openapi.yaml",
+      "specs/010-encounters-referrals-contextual-chat/evidence/maintenance-2026-10-21-regression.json",
+      "specs/010-encounters-referrals-contextual-chat/evidence/pre-011-integration-hardening.md",
+      "specs/010-encounters-referrals-contextual-chat/evidence/work-management-storage-2026-10-21.json",
+      "specs/010-encounters-referrals-contextual-chat/evidence/work-management-validation-2026-10-22.json"
+    ],
+    "claim": "Historical acceptance only; later F011 accepted preservation loss remains separate."
+  },
+  "predecessor_011-allergies-clinical-content-governance": {
+    "changedPathsSinceMerge": [
+      "specs/011-allergies-clinical-content-governance/decisions/artifact-finalization-policy-2026-10-13.md",
+      "specs/011-allergies-clinical-content-governance/decisions/maintenance-documentation-boundary-2026-10-13.md",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/README.md",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/evidence-index-closed.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/evidence-index.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/branch-cleanup-receipt.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/cleanup-blocked-report.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/final-verification.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/history-bundle.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/inventory-summary.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/issue-evidence-validation.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/lfs-history-validation.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/predelete-validation.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/preservation-build.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/validation.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-cleanup/worktree-removal-receipt.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-restoration/all-36-result.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-restoration/single-link-result.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/integration-2026-10-11/ci-result.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/integration-2026-10-11/review-handoff.md",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/k01/taskstoissues-review.md",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/k24/reference-verification-2026-10-10/visual/capture-stability-diagnostic.md",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/pr-remediation-round2/verification-completed.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/historical-runs/pr-remediation/verification-completed.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/maintenance-ci-correction-2026-10-13.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/maintenance-verification-2026-10-13.json",
+      "specs/011-allergies-clinical-content-governance/evidence/artifact-finalization/verification.json",
+      "specs/011-allergies-clinical-content-governance/evidence/maintenance-2026-10-21-acceptance.json",
+      "specs/011-allergies-clinical-content-governance/evidence/maintenance-2026-10-21-retention.json",
+      "specs/011-allergies-clinical-content-governance/evidence/work-management-storage-2026-10-21.json",
+      "specs/011-allergies-clinical-content-governance/evidence/work-management-validation-2026-10-22.json"
+    ],
+    "claim": "Historical acceptance only; later F011 accepted preservation loss remains separate."
+  },
+  "rootFeaturePointerSha256": "957ec882110889a1b9dd236f8566f1f286cde597764494127b4243de47a47870",
+  "limits": [
+    "Existing recovery copies rehashed only; no fresh restore or alternate-user denial probe.",
+    "No current F011 parity PASS, full pnpm verify, runtime or bilingual acceptance executed.",
+    "No professional, clinical, legal, credential, facility or production approval."
+  ],
+  "authorization": {
+    "source": "Direct Product Owner instruction in this new conversation on 2026-10-23",
+    "allowed": [
+      "authority/context preflight",
+      "speckit-specify and its built-in requirements quality checklist"
+    ],
+    "stop": "Draft specification and checklist for Product Owner review; SPEC_APPROVED not granted.",
+    "prohibited": [
+      "Clarify",
+      "Plan",
+      "Tasks",
+      "Analyze",
+      "implementation",
+      "Docker/database reset",
+      "live Supabase",
+      "runtime grants",
+      "PR 506 merge",
+      "GitHub publication",
+      "cleanup",
+      "professional approval"
+    ]
+  },
+  "wayfinder": {
+    "sourceWorktree": "f012-wayfinder-pre-specify-20261023",
+    "commit": "71fa59c355548b6dee0d73435da56d56315a77b1",
+    "report": "specs/012-prescription-safety-governed-overrides/readiness/wayfinder-pre-specify-2026-10-23.md",
+    "bytes": 42517,
+    "sha256": "0c981418afda62e7c5ddd04c4ffd3eec831d26814db238720612f8a5e644ed8a",
+    "status": "ADVISORY_NOT_NORMATIVE",
+    "verdict": "READY_WITH_CLARIFICATIONS_FOR_SPECIFY"
+  },
+  "effectiveAuthority": {
+    "constitution": "3.0.1",
+    "prd": "2.2.0",
+    "master": "2.2.1",
+    "reviewerContract": "F012-REVIEWER-CONTRACT/0.1.0",
+    "qualification": "Approval and verified human merge/remote ancestry establish effectiveness; preserved proposal headers are historical."
+  },
+  "tooling": {
+    "version": "1.2.1",
+    "upstream": "https://github.com/github/spec-kit.git",
+    "tag": "v1.2.1",
+    "commit": "9dca9bf42a031765ee5e5f2371137f2f26967e11",
+    "managedFilesVerified": 22,
+    "ignoredOfficialSkillsMaterialized": 10,
+    "installedAndDefaultIntegration": "codex",
+    "script": "ps",
+    "skills": true,
+    "invokeSeparator": "-",
+    "activeTemplate": ".specify/templates/overrides/spec-template.md",
+    "hooksYamlParsed": true,
+    "beforeSpecifyHooks": 0,
+    "afterSpecifyHook": {
+      "command": "speckit.agent-context.update",
+      "optional": true,
+      "condition": null,
+      "disposition": "SKIPPED_OPTIONAL_OUTSIDE_SPECIFY_ONLY_SCOPE"
+    }
+  },
+  "githubReadbacks": {
+    "394": {
+      "url": "https://github.com/YousefE1bana/shifaa-project/pull/394",
+      "merged": true,
+      "state": "closed",
+      "mergeCommit": "da6d01761fb5c5b0e8ff430510b307f18c671ff2",
+      "mergedBy": "YousefE1bana",
+      "head": "6d177b94bf6ddd471f5e03d476b0703ed95f504d"
+    },
+    "490": {
+      "url": "https://github.com/YousefE1bana/shifaa-project/pull/490",
+      "merged": true,
+      "state": "closed",
+      "mergeCommit": "e41abb4e008242f447dc7ba643ada0d3f712a5a7",
+      "mergedBy": "YousefE1bana",
+      "head": "e2d1116b44d600ed2108c15530f3c22ff3daa13f"
+    },
+    "491": {
+      "url": "https://github.com/YousefE1bana/shifaa-project/pull/491",
+      "merged": true,
+      "state": "closed",
+      "mergeCommit": "bdcf22b848c18d63f93fb4bc0adac939c6db691d",
+      "mergedBy": "YousefE1bana",
+      "head": "258f6506f5c037321ec996a3e2718f29fac2b682"
+    },
+    "494": {
+      "url": "https://github.com/YousefE1bana/shifaa-project/pull/494",
+      "merged": true,
+      "state": "closed",
+      "mergeCommit": "7c9a0b5f195b4f7fdf44a05f44abe2b0881dbc32",
+      "mergedBy": "YousefE1bana",
+      "head": "0ecdba0fe015e4c6f7608cbc4db1787b8a903eb9"
+    },
+    "495": {
+      "url": "https://github.com/YousefE1bana/shifaa-project/pull/495",
+      "merged": true,
+      "state": "closed",
+      "mergeCommit": "922d33b415814d4bcb935a0df592ef32205cb6ff",
+      "mergedBy": "YousefE1bana",
+      "head": "946b192f3e5bc977c9e6ba264e78db831eecb0c6"
+    },
+    "496": {
+      "url": "https://github.com/YousefE1bana/shifaa-project/pull/496",
+      "merged": true,
+      "state": "closed",
+      "mergeCommit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+      "mergedBy": "YousefE1bana",
+      "head": "b00c00b036f35106d369fa6c9a91dd236c6b8238"
+    },
+    "498": {
+      "url": "https://github.com/YousefE1bana/shifaa-project/pull/498",
+      "merged": true,
+      "state": "closed",
+      "mergeCommit": "00543fb434580fe587f251723d135631778405e1",
+      "mergedBy": "YousefE1bana",
+      "head": "fb6597cf9111d78ea68f1411b2fb9168deee5c22"
+    },
+    "506": {
+      "url": "https://github.com/YousefE1bana/shifaa-project/pull/506",
+      "merged": false,
+      "state": "open",
+      "mergeCommit": "7ae38948bf881e81bb499697363e8e872b97b732",
+      "head": "147c65bbaae9ecaaf282f6ce2ca0bd480544e376"
+    }
+  },
+  "openIssues": {
+    "493": {
+      "state": "open",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/493"
+    },
+    "502": {
+      "state": "open",
+      "url": "https://github.com/YousefE1bana/shifaa-project/issues/502"
+    }
+  },
+  "result": "PASS_FOR_SPECIFY_ENTRY_ONLY",
+  "reviewLimits": "Three material product questions remain for SPEC_APPROVED. Fourth Wayfinder clarification area is translated into required failure/recovery scenarios. Architecture and professional gates remain later-stage obligations.",
+  "documentValidation": {
+    "result": "PASS_DOCUMENT_CONSISTENCY_ONLY",
+    "mandatorySections": 15,
+    "exactApprovedOperationAssignments": 12,
+    "activeScopeCounts": {
+      "closureFR": 7,
+      "prerequisiteFR": 2,
+      "NFR": 22
+    },
+    "clarificationMarkers": 3,
+    "acceptanceObligations": 16,
+    "requirementsChecklist": {
+      "pass": 12,
+      "incomplete": 4
+    },
+    "localLinksVerified": 35,
+    "markdownTables": "CONSISTENT_COLUMN_COUNTS",
+    "newFiles": [
+      "specs/012-prescription-safety-governed-overrides/checklists/requirements.md",
+      "specs/012-prescription-safety-governed-overrides/readiness/specify-preflight-2026-10-23.json",
+      "specs/012-prescription-safety-governed-overrides/spec.md"
+    ],
+    "trackedFilesModified": 0,
+    "rootPointerUnchanged": true,
+    "ignoredOfficialSkillHashes": 10,
+    "whitespace": "PASS_NEW_FILES_NO_INDEX_CHECK",
+    "notRun": [
+      "full pnpm verify",
+      "runtime tests",
+      "Docker/DB lifecycle",
+      "native accessibility",
+      "live bilingual acceptance"
+    ],
+    "head": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+    "branch": "codex/f012-specify-20261023"
+  },
+  "localRuntimeFiles": [
+    ".agents/skills/speckit-analyze/SKILL.md",
+    ".agents/skills/speckit-clarify/SKILL.md",
+    ".agents/skills/speckit-constitution/SKILL.md",
+    ".agents/skills/speckit-implement/SKILL.md",
+    ".agents/skills/speckit-converge/SKILL.md",
+    ".agents/skills/speckit-plan/SKILL.md",
+    ".agents/skills/speckit-checklist/SKILL.md",
+    ".agents/skills/speckit-specify/SKILL.md",
+    ".agents/skills/speckit-tasks/SKILL.md",
+    ".agents/skills/speckit-taskstoissues/SKILL.md",
+    ".specify/feature.json"
+  ],
+  "featureSelection": {
+    "mechanism": ".specify/scripts/powershell/common.ps1 Get-FeaturePathsEnv with explicit SPECIFY_FEATURE_DIRECTORY",
+    "SPECIFY_FEATURE_DIRECTORY": "specs/012-prescription-safety-governed-overrides",
+    "pointerSha256": "1a7f6f97dcd6c235e144dfa2355a1edfe2911043e7874c1b4c134505c45e1b5f",
+    "actualGitBranch": "codex/f012-specify-20261023",
+    "note": "Official helper CURRENT_BRANCH reports the selected feature directory name; actual Git branch was independently verified before invocation. Copied resolved project template only after scope and context checks. No feature-number generation script executed."
+  },
+  "draftArtifactHashes": {
+    "spec.md": "b07f0a6ba6da5fbffa70ef71a3baa4d4c3430ba8873b904192b3fd0797f9968d",
+    "checklists/requirements.md": "333b717d9be191aad5dc7adc1d080c78c088ec13f77f3e03f66a6593cef5381f"
+  },
+  "checkCorrections": [
+    "Historical publication inventory self-hash is explicitly excluded; verified its externally bound SHA-256 instead of treating null as a digest.",
+    "Document validation matcher corrected to include I18N/A11Y requirement identifiers.",
+    "Optional-hook Markdown hard line-break spaces replaced with blank lines so both formatting and git whitespace checks pass."
+  ],
+  "preservationRestrictions": [
+    "No raw private original, recovery destination, principal SID or source snapshot copied into this package.",
+    "Historical F012 readiness and Wayfinder worktrees were read only; root feature pointer unchanged.",
+    "No current F011 operational parity acceptance inferred from historical verified bindings."
+  ],
+  "postSpecifyHooks": {
+    "yamlParsed": true,
+    "beforeSpecify": [],
+    "afterSpecify": [
+      {
+        "extension": "agent-context",
+        "command": "speckit.agent-context.update",
+        "enabled": true,
+        "optional": true,
+        "condition": null,
+        "executed": false,
+        "reason": "Optional and outside Specify-only scope; invocation information is in requirements.md."
+      }
+    ]
+  },
+  "finalStop": "Specify draft and built-in quality checklist complete for review. SPEC_APPROVED blocked by Q1-Q3. No Clarify/Plan/Tasks/Analyze/implementation, commit/push/publication/merge/cleanup or runtime action authorized or performed."
+}

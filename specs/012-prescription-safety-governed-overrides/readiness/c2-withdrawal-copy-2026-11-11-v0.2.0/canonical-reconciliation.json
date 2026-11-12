@@ -1,0 +1,61 @@
+{
+  "status": "EXACT_CANDIDATES_UNCHANGED_INTEGRATION_PENDING",
+  "changesRequired": "None. Manual re-release is excluded by accepted target/revision terminality; irrevocability of completed disclosure is already explicit in consolidated section 6.4. This is a UI copy clarification, not a policy amendment.",
+  "candidates": [
+    {
+      "path": "shifaa-prd.md",
+      "version": "PRD 2.2.1",
+      "predecessorSHA256": "eca3a8dd2955da8b6d91bb6fc0d9722f57801c39fae59a4ca4c3475af6b4ab0f",
+      "predecessorBytes": 100550,
+      "sha256": "4a98237e916b88c2d92c60f2c5b5da25f9b919e6b04f42a73db2e0aa709a50ac",
+      "effective": false,
+      "affectedClause": "PRD §10.2 / OPEN-UX-001",
+      "unchangedSinceAcceptedPackage": true,
+      "predecessorVerified": true
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "version": "Master 2.2.2",
+      "predecessorSHA256": "47552ae429fabf0606af98b07080a3db342e6f490fe20d27553a14ddcc9cc63d",
+      "predecessorBytes": 103596,
+      "sha256": "f144e6332cf8363dc127fb1e728e3e1387a51878838c16881d268b24eea2c838",
+      "effective": false,
+      "affectedClause": "Master §§11, 14.2 and line 511 / Architecture Completeness",
+      "unchangedSinceAcceptedPackage": true,
+      "predecessorVerified": true
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "version": "UI Contract 0.10.0",
+      "predecessorSHA256": "e020f25fd4f04163c298815d09c9994ca7d38768a1092696dce35901f289372e",
+      "predecessorBytes": 28266,
+      "sha256": "8eb104b897bda573e04067e8e3036647349d9ce0c472fc00f1aaac3b1eab35e0",
+      "effective": false,
+      "affectedClause": "UI §§6, 7, 11 / safety copy and immutable baseline co-acceptance",
+      "unchangedSinceAcceptedPackage": true,
+      "predecessorVerified": true
+    },
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "version": "API Catalog 1.3.0",
+      "predecessorSHA256": "5e20548ace942acae611f4915dd3f1ab7130b5295a879113435b352e8a771fad",
+      "predecessorBytes": 100106,
+      "sha256": "c1dc848f813c850ed851d06f673f059798d3120033ed1a5e50f60c29eeb2e407",
+      "effective": false,
+      "affectedClause": "API F012 updatePrescription / subject P/M projections",
+      "unchangedSinceAcceptedPackage": true,
+      "predecessorVerified": true
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "version": "Data/RLS 1.4.0",
+      "predecessorSHA256": "a6de0ba094415d5a93315db5305c4c8fcf7f37797540a217ccc059f567a52ab5",
+      "predecessorBytes": 86509,
+      "sha256": "9c088fa84c49e9d69285b7be4e96e0d141a77c7be89d8976fdff1989f3fc0f7f",
+      "effective": false,
+      "affectedClause": "Data/RLS F007/F011/F012 guards / projection-control CAS and immutable history",
+      "unchangedSinceAcceptedPackage": true,
+      "predecessorVerified": true
+    }
+  ]
+}
