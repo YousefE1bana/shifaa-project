@@ -1,0 +1,93 @@
+{
+  "record": "F012-TASK-BASELINE-PUBLICATION-MANIFEST/1.0.0",
+  "date": "2026-11-12",
+  "authority": "Direct Product Owner authorization: SHIFAA F012 — Approve Analyze Review and Publish Task Baseline Draft PR",
+  "integratedBase": "d62ec5d15d831552065da256ab7041e7f227964f",
+  "publicationBranch": "codex/f012-task-baseline-20261112",
+  "preservedPreviousBranch": "codex/f012-specify-20261023",
+  "acceptedTasksSha256": "189425f0981c5e40cbc2293d1969df1ba1202361798e3ed96f82af54719573c4",
+  "selectedPaths": [
+    "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/post-merge-plan-approval-2026-11-12.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/review-analysis-approval.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/verification.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/tasks-generation-2026-11-12.json",
+    "specs/012-prescription-safety-governed-overrides/tasks.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/publication-manifest.json"
+  ],
+  "payload": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "bytes": 7607,
+      "sha256": "d95797de61827aa474d5eb7bd52836c2e583f44d01d64f1b4a34f0d73a741ef1",
+      "gitBlob": "1f026a1e9947fa399eab63fb83033b7c113254ac",
+      "gitNormalizedSha256": "d95797de61827aa474d5eb7bd52836c2e583f44d01d64f1b4a34f0d73a741ef1",
+      "classification": "APPROVED_FEATURE_OWNED_TEXT_ONLY",
+      "mode": "100644"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/post-merge-plan-approval-2026-11-12.md",
+      "bytes": 26107,
+      "sha256": "d7b53e97de147a1e3cc1ee04f777d1b9a799f18b620cc1a7c6e73fcfb14c6825",
+      "gitBlob": "57d9b88c862d19aca8df3aa17084357a1c9c35d1",
+      "gitNormalizedSha256": "d7b53e97de147a1e3cc1ee04f777d1b9a799f18b620cc1a7c6e73fcfb14c6825",
+      "classification": "APPROVED_FEATURE_OWNED_TEXT_ONLY",
+      "mode": "100644"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/review-analysis-approval.md",
+      "bytes": 5799,
+      "sha256": "fcdeb47f592fdaeef99eb0b576aed75c107fb590497f6942c85bf4b9db335cf8",
+      "gitBlob": "4fbe0fec2041c914715ed6d58ecaed5ff1ded64f",
+      "gitNormalizedSha256": "fcdeb47f592fdaeef99eb0b576aed75c107fb590497f6942c85bf4b9db335cf8",
+      "classification": "APPROVED_FEATURE_OWNED_TEXT_ONLY",
+      "mode": "100644"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/verification.json",
+      "bytes": 5069,
+      "sha256": "4c98555338d8509d608044fd1b3189e6d7da821ce5831fd613cfd951dfbff60d",
+      "gitBlob": "e5cb14f5273c439dd9aede98069fd9961adcd79c",
+      "gitNormalizedSha256": "4c98555338d8509d608044fd1b3189e6d7da821ce5831fd613cfd951dfbff60d",
+      "classification": "APPROVED_FEATURE_OWNED_TEXT_ONLY",
+      "mode": "100644"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/tasks-generation-2026-11-12.json",
+      "bytes": 50355,
+      "sha256": "94f5fb0ee7c04d5758c9ac7b4ca6c22c05e9875a54f8027e811bb8e0f286ab1d",
+      "gitBlob": "0e4b4e5a8973f132d3af3c792a0553c979e2701a",
+      "gitNormalizedSha256": "94f5fb0ee7c04d5758c9ac7b4ca6c22c05e9875a54f8027e811bb8e0f286ab1d",
+      "classification": "APPROVED_FEATURE_OWNED_TEXT_ONLY",
+      "mode": "100644"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/tasks.md",
+      "bytes": 125064,
+      "sha256": "189425f0981c5e40cbc2293d1969df1ba1202361798e3ed96f82af54719573c4",
+      "gitBlob": "61a7ae788344e8e239f52e9dcbe484b3949c2850",
+      "gitNormalizedSha256": "189425f0981c5e40cbc2293d1969df1ba1202361798e3ed96f82af54719573c4",
+      "classification": "APPROVED_FEATURE_OWNED_TEXT_ONLY",
+      "mode": "100644"
+    }
+  ],
+  "payloadContentSetSha256": "29dad44b9a213f28803c7f5a2a265edb390854a5b26043a4e194c6ed0a9494e5",
+  "contentSetEncoding": "UTF-8 compact JSON of path-sorted [{path,bytes,sha256}], sorted keys, separators comma/colon, no terminal newline",
+  "selfBinding": "Manifest is selected but excluded from its own payload hash to avoid recursion. Its exact Git/index/commit bytes and SHA-256 are independently verified before publication and reported in the PR.",
+  "exclusions": [
+    "All other untracked/private historical design captures and evidence",
+    "Ignored original Tasks/skill backups and local full preservation inventories",
+    "Ignored partial node_modules and all local/global skill runtime installations",
+    "Auth fixtures, secrets, PHI, databases, raw logs and retained Supabase data",
+    "Unrelated files and already integrated unchanged contracts/Specification/Plan source bytes"
+  ],
+  "publicationLimits": {
+    "draftPR": true,
+    "issueReference": "Refs #493",
+    "merge": "HUMAN_YOUSEF_ONLY",
+    "taskIssuesCreated": 0,
+    "tasksExecuted": 0,
+    "implementationAuthorized": false,
+    "cleanWorktreeIssueHandoffGate": "NOT_WAIVED_PRIVATE_UNTRACKED_FILES_RETAINED"
+  }
+}

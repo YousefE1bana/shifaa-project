@@ -1,0 +1,130 @@
+{
+  "record": "F012-TASK-BASELINE-PUBLICATION-CHECKS/1.0.0",
+  "date": "2026-11-12",
+  "scope": "DOCUMENTS_ONLY_NO_IMPLEMENTATION_OR_RUNTIME_ACCEPTANCE",
+  "acceptedTasksSha256": "189425f0981c5e40cbc2293d1969df1ba1202361798e3ed96f82af54719573c4",
+  "integratedMain": "d62ec5d15d831552065da256ab7041e7f227964f",
+  "priorAnalyzeEvidence": {
+    "status": "PASS_DOCUMENT_REVIEW_ONLY",
+    "checks": 665,
+    "tasks": 86,
+    "dependencyEdges": 280,
+    "executedTasks": 0,
+    "criticalFindingsRemaining": 0,
+    "materialFindingsRemaining": 0,
+    "correctedFindings": ["D1", "D2", "D3", "D4", "C1"],
+    "coverage": {
+      "closureFR": 7,
+      "prerequisiteFR": 2,
+      "NFR": 22,
+      "SC": 7,
+      "AC": 16,
+      "operations": 12,
+      "requirementsTotalIncludingSC": 38,
+      "requirementsCoveredPercent": 100,
+      "unmappedTasks": 0
+    }
+  },
+  "publicationRecheck": {
+    "result": "PASS_STATIC_DOCUMENTS_ONLY",
+    "assertions": 3163,
+    "tasks": 86,
+    "dependencyEdges": 280,
+    "acyclic": true,
+    "phases": {
+      "## Phase 1 — Setup and approved-input gates": 7,
+      "## Phase 2 — Foundational authority, transactions and protection": 14,
+      "## Phase 3 — US1 / J-01: prepare, check and correct": 9,
+      "## Phase 4 — US2 / J-02: warning and normal independent review": 14,
+      "## Phase 5 — US3 / J-03: emergency independent lanes": 9,
+      "## Phase 6 — US4 / J-04: explicit subject-only visibility": 10,
+      "## Phase 7 — US5 / J-05: uncertain responses and recovery": 8,
+      "## Phase 8 — Cross-cutting verification and release evidence": 15
+    },
+    "originalFeatureFilesPreserved": 2374,
+    "specifyCheckpointFilesPreserved": 6,
+    "bothPointersPreserved": true,
+    "localPublishedLinkTargetsChecked": 55,
+    "inputsAndCanonicalBindings": "EXACT",
+    "rawAndGitNormalizedBytes": "IDENTICAL",
+    "privacyReview": "Selected text-only artifact content contains engineering requirements/metadata; no patient rows, fixtures, captures, logs, credentials or databases selected."
+  },
+  "verification": {
+    "directPythonDocumentAndPreservationChecks": "PASS",
+    "existingStaticContractChecker": {
+      "result": "PASS_STATIC_ONLY",
+      "checks": 212,
+      "schemas": 70,
+      "resolvedReferences": 324,
+      "operations": 12,
+      "completeOpenAPIValidation": "VALIDATION_NOT_AVAILABLE"
+    },
+    "directPrettierCheck": {
+      "result": "PASS",
+      "exitCode": 0,
+      "selectedPaths": 7
+    },
+    "existingSecretChecker": "PASS",
+    "gitCachedDiffReview": {
+      "result": "PASS_EXACT_MANIFEST_AND_GIT_BYTES",
+      "selectedPaths": 7,
+      "rawWhitespaceCheckExit": 2,
+      "explanation": "Only five intentional two-space Markdown hard breaks in approval metadata headers; exact locations inspected. No approved bytes edited to remove valid Markdown syntax.",
+      "expectedMarkdownHardBreaks": {
+        "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md": [
+          3, 4
+        ],
+        "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/review-analysis-approval.md": [
+          3, 4, 5
+        ]
+      }
+    },
+    "currentHeadCI": "PENDING_PUBLICATION"
+  },
+  "notExecuted": [
+    "pnpm/vite-plus launcher",
+    "package installation",
+    "local comprehensive pnpm verify",
+    "database/Docker/Supabase operations",
+    "F012 implementation or task execution",
+    "complete OpenAPI 3.1.1 semantic validation",
+    "runtime RLS/native/security/race/recovery/device tests"
+  ],
+  "retainedLimitations": {
+    "completeOpenAPIValidation": "VALIDATION_NOT_AVAILABLE",
+    "dependencies": "PARTIAL_IGNORED_WORKTREE_STORE_UNVERIFIED",
+    "supplementalDocumentationAuthority": "PREVIOUS_FAIL_RETAINED_NOT_RECLASSIFIED_PASS",
+    "cleanWorktreeForFutureIssueHandoff": "NOT_SATISFIED_PRIVATE_UNTRACKED_FILES_RETAINED"
+  },
+  "authority": {
+    "reviewAnalysis": "PRODUCT_OWNER_APPROVED_EXACT_TASKS_HASH",
+    "baselinePublication": "AUTHORIZED_DRAFT_PR_ONLY",
+    "implementation": "NOT_AUTHORIZED",
+    "issueHandoff": "NOT_AUTHORIZED",
+    "merge": "HUMAN_YOUSEF_ONLY_NOT_PERFORMED"
+  },
+  "commands": [
+    {
+      "command": "python -X utf8 -B <local publication document validator>",
+      "result": "PASS",
+      "assertions": 3163,
+      "scope": "Task inventory/DAG/coverage, source bindings, published local links, privacy patterns, normalization and byte preservation; local script and full private inventory excluded."
+    },
+    {
+      "command": "node specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/validate-static.cjs",
+      "result": "PASS_STATIC_ONLY",
+      "exitCode": 0
+    },
+    {
+      "command": "node tools/verify-secrets.mjs",
+      "result": "PASS",
+      "exitCode": 0
+    },
+    {
+      "command": "node <existing root dependency>/prettier/bin/prettier.cjs --check <seven explicit manifest paths>",
+      "result": "PASS",
+      "scope": "No pnpm/vite-plus resolution or implicit install.",
+      "exitCode": 0
+    }
+  ]
+}
