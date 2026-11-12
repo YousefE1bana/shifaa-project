@@ -76,6 +76,29 @@ requires integration under the predecessor's human squash-merge rule and verifie
 remote main before this candidate becomes effective. Do not use the unmerged
 candidate to authorize its own merge.
 
+**Every successful squash merge requires immediate primary-local reconciliation,**
+whether the merge was human- or agent-managed and even when development used a
+separate worktree. Independently verify the merged PR, integrated contents and
+exact remote `main` commit; then inspect the primary checkout at
+`D:\ECU\Gradution-Project`, including its actual root, branch, HEAD, upstream,
+tracked/untracked changes and relevant ignored state. Use
+[`tools/reconcile-primary-repository.ps1`](tools/reconcile-primary-repository.ps1)
+with that explicit path and independently verified SHA, following the
+[post-merge procedure](docs/SHIFAA-Operational-Guide-v1.md#mandatory-post-merge-primary-checkout-reconciliation).
+Fetch safely; fast-forward only a clean, eligible `main` tracking `origin/main`.
+Re-read HEAD, `origin/main`, status and preservation checks and record the result
+in the post-merge report. A synchronized feature worktree is not this proof.
+
+Record `ALREADY_SYNCED` without unnecessary checkout mutation when equality is
+already verified. If dirty, on another branch, detached, locked, divergent or
+otherwise unsafe, preserve everything and report `LOCAL_ROOT_SYNC_BLOCKED` with
+exact evidence. Without local filesystem access, report
+`LOCAL_ROOT_SYNC_NOT_VERIFIED`. Never reset, clean, force-pull/checkout/move a
+branch, switch the primary branch silently, implicitly stash, discard or overwrite
+local work, or delete ignored dependencies, private evidence, databases or retained
+worktrees. A blocked local sync does not invalidate the remote merge, but prevents
+claiming complete post-merge reconciliation.
+
 Human visual and bilingual acceptance belongs to applicable product/design
 milestones and feature-specific gates, not every push or PR. A Product Owner
 language-review sign-off is not a universal integration prerequisite. Affected UI
