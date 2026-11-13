@@ -76,6 +76,7 @@ export function excluded(file) {
 
 export function sourceFiles(root) {
   const tracked = git(root, ['ls-files', '-z']).toString().split('\0').filter(Boolean);
+  const deleted = git(root, ['ls-files', '--deleted', '-z']).toString().split('\0').filter(Boolean);
   const untracked = git(root, ['ls-files', '--others', '--exclude-standard', '-z'])
     .toString()
     .split('\0')
@@ -88,9 +89,13 @@ export function sourceFiles(root) {
       /\.(?:[cm]?[jt]sx?|json)$/.test(file) &&
       !/(?:evidence|fixtures|captures)\//i.test(file),
   );
-  const files = [...new Set([...tracked, ...admitted])].filter((file) => !excluded(file));
-  const omitted = [...tracked, ...untracked].filter((file) => !files.includes(file));
-  return { files, omitted };
+  const files = [...new Set([...tracked, ...admitted])].filter(
+    (file) => !excluded(file) && !deleted.includes(file),
+  );
+  const omitted = [...tracked, ...untracked].filter(
+    (file) => !files.includes(file) && !deleted.includes(file),
+  );
+  return { files, omitted, deleted };
 }
 
 export function dependencyInputs(root) {
@@ -110,14 +115,17 @@ export function dependencyInputs(root) {
         file.startsWith('patches/'),
     );
   if (!paths.includes('tools/verification/Dockerfile')) paths.push('tools/verification/Dockerfile');
-  paths.sort();
+  // A deleted workspace manifest is an input change, not an instruction to
+  // silently reuse its previous installed dependencies.
+  const present = paths.filter((file) => existsSync(join(root, file)));
+  present.sort();
   const digest = createHash('sha256').update(baseImage);
-  for (const file of paths)
+  for (const file of present)
     digest
       .update(file)
       .update('\0')
       .update(readFileSync(safeSource(root, file)));
-  return { paths, hash: digest.digest('hex') };
+  return { paths: present, hash: digest.digest('hex') };
 }
 
 export function dockerEnvironment(env = process.env) {
@@ -302,7 +310,7 @@ export function verify(root) {
     };
   }
   assert.equal(image.inputs, hash, 'Stale verification image');
-  const { files, omitted } = sourceFiles(root);
+  const { files, omitted, deleted } = sourceFiles(root);
   const directory = mkdtempSync(join(tmpdir(), 'shifaa-verify-source-'));
   const unchanged = copySources(root, join(directory, 'tree'), files);
   // HEAD ancestry only, not other local branches, config, hooks, credentials or
@@ -332,6 +340,7 @@ export function verify(root) {
     comprehensive: false,
     snapshot: directory,
     omitted,
+    deleted,
     image: image.Id,
     sourcePreserved: true,
   };

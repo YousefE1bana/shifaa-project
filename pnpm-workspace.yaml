@@ -6,6 +6,9 @@ packages:
 # Enter the reviewed verification boundary before executing any project code.
 # No implicit preverify/postverify (or other pre/post command) on the host.
 enablePrePostScripts: false
+# pnpm 11 otherwise defaults to implicit installation BEFORE a run command.
+# Explicit installation/preparation owns dependency repair, never verification.
+verifyDepsBeforeRun: false
 
 catalog:
   typescript: 7.0.2

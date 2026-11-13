@@ -60,6 +60,9 @@ developer remembering a disposable project name. Docker and its local kernel are
 trusted: this is not a defense against kernel escapes, a malicious Docker daemon,
 an operator changing the launcher/configuration, or overriding pnpm behavior.
 Implicit pre/post scripts are disabled in workspace policy and regression-checked.
+Pinned pnpm 11's implicit pre-run dependency installation is also disabled with
+`verifyDepsBeforeRun: false`; installation is explicit. The prepared dependency
+tree retains relative links when copied into the disposable workspace.
 
 Tracked working bytes and safe new source are copied; the original checkout is
 never mounted. Links/traversal and sensitive file types are rejected/excluded.
@@ -104,6 +107,7 @@ of the workflow is not a claim that the entire legacy aggregate has passed.
 | F010 restore/performance/realtime/completion harnesses   | Direct Docker SQL and `DROP DATABASE`, hard-coded runtime names    | No daemon/socket or host network       |
 | F011 composition/protection/restore suites               | Runtime writes plus evidence under historical feature paths        | Disposable copy only                   |
 | Turbo/package tests and E2E                              | Imports/children, environment/default URLs and fixture mutations   | Contained regardless of indirect chain |
+| pnpm 11 implicit pre-run install                         | Recreates out-of-sync `node_modules` before entering the script    | Disabled in workspace policy           |
 | Original CI database/Supabase jobs                       | Teardown/reset on fresh hosted runners                             | Six contexts and coverage unchanged    |
 
 Root causes were shared-resource identities, broad inherited environment, arbitrary

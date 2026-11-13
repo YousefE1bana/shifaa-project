@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, symlinkSync } from 'node:fs';
+import {
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  symlinkSync,
+  unlinkSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { delimiter, dirname, join, resolve } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -118,7 +125,9 @@ test('snapshot includes dirty tracked bytes and safe new code, excludes retained
   const f = fixture();
   f.write('.gitignore', '.tmp/\nnode_modules/\n');
   f.write('tools/tracked.mjs', 'original');
+  f.write('tools/deleted.mjs', 'obsolete');
   execFileSync('git', ['add', '.'], { cwd: f.directory });
+  unlinkSync(join(f.directory, 'tools/deleted.mjs'));
   f.write('tools/tracked.mjs', 'dirty bytes');
   f.write('tools/new.mjs', 'new code');
   f.write('tools/private/evidence.json', 'private');
@@ -127,6 +136,8 @@ test('snapshot includes dirty tracked bytes and safe new code, excludes retained
   f.write('.env', 'not exported');
   f.write('readiness/private-capture.png', 'not exported');
   const inventory = sourceFiles(f.directory);
+  assert.deepEqual(inventory.deleted, ['tools/deleted.mjs']);
+  assert.ok(!inventory.files.includes('tools/deleted.mjs'));
   assert.ok(inventory.files.includes('tools/new.mjs'));
   assert.ok(!inventory.files.some((file) => /private|fixtures|dump|\.env|png/.test(file)));
   assert.ok(inventory.omitted.includes('readiness/private-capture.png'));
@@ -220,6 +231,10 @@ test('image dependency identity changes on nested workspace manifest drift', () 
   const before = dependencyInputs(f.directory).hash;
   f.write('apps/patient/package.json', '{"scripts":{"test":"nested reset"}}');
   assert.notEqual(dependencyInputs(f.directory).hash, before);
+  unlinkSync(join(f.directory, 'apps/patient/package.json'));
+  const removed = dependencyInputs(f.directory);
+  assert.notEqual(removed.hash, before);
+  assert.ok(!removed.paths.includes('apps/patient/package.json'));
 });
 
 test('direct comprehensive invocation refuses local execution before resource commands', () => {
@@ -247,6 +262,10 @@ test('pnpm cannot run implicit pre/post hooks before the boundary', () => {
   assert.match(
     readFileSync(join(root, 'pnpm-workspace.yaml'), 'utf8'),
     /^enablePrePostScripts: false$/m,
+  );
+  assert.match(
+    readFileSync(join(root, 'pnpm-workspace.yaml'), 'utf8'),
+    /^verifyDepsBeforeRun: false$/m,
   );
   const pkg = JSON.parse(readFileSync(join(root, 'package.json')));
   assert.equal(pkg.scripts.preverify, undefined);

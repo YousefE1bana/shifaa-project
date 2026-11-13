@@ -25,7 +25,7 @@ function command(program, args) {
 }
 
 try {
-  cpSync('/opt/deps', '/work', { recursive: true });
+  cpSync('/opt/deps', '/work', { recursive: true, verbatimSymlinks: true });
   cpSync('/source/tree', '/work', { recursive: true });
   if (command('git', ['init', '-q']) !== 0) throw new Error('git-init');
   if (command('git', ['bundle', 'unbundle', '/source/history.bundle']) !== 0)
@@ -50,7 +50,10 @@ console.log(
     status: pass ? 'PASS' : 'FAIL',
     comprehensive: false,
     results,
-    notExecuted: isolatedCategories,
+    notExecuted: [
+      ...ordinary.filter((script) => !results.some((result) => result.script === script)),
+      ...isolatedCategories,
+    ],
   }),
 );
 process.exitCode = pass ? 0 : 1;

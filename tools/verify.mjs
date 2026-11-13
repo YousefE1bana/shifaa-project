@@ -28,7 +28,7 @@ try {
         error.code === 'ENOENT'
           ? 'Required local executable unavailable'
           : 'Local Linux Docker, safe source paths and image compatibility must be established; no checks executed on host',
-      notExecuted: isolatedCategories,
+      notExecuted: [...ordinary, ...isolatedCategories],
     }),
   );
   process.exitCode = 2;
