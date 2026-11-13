@@ -42,8 +42,11 @@ const physicalPreflightRepair = {
 const maintenancePins = [
   {
     path: 'package.json',
-    currentSha256: 'b922e33712a9b003cb5f46e7661d06db0e6a985d8178ada9c341b878d577c738',
-    acceptedMaintenanceSha256: ['4cdf91ba4ca331944fde2610a05d75158351b74e96cac2b41ca47894c56731b7'],
+    currentSha256: '3d79f5c6c5e5f5fde13ec98c63e202b75023c25884106549792edd5606ed1776',
+    acceptedMaintenanceSha256: [
+      'b922e33712a9b003cb5f46e7661d06db0e6a985d8178ada9c341b878d577c738',
+      '4cdf91ba4ca331944fde2610a05d75158351b74e96cac2b41ca47894c56731b7',
+    ],
     historicalSha256: '2b15d2515d1fed80b6ea30ed8a19a7aa51d488571fc7a64675cd04812ffe2200',
     gitBlob: 'f205a80ae41b5507afaa1a7868fbbc8e84deb217',
   },
