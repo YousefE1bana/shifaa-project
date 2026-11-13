@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
-import { git } from './sandbox.mjs';
+import { git, hostExecutable } from './sandbox.mjs';
 
 // The full profile is executed on a NEW GitHub-hosted VM, not a locally named
 // Docker project, worktree or "disposable=true" environment variable.
@@ -19,7 +19,7 @@ try {
     .split(/\s/)[0];
   assert.equal(actual, head, 'Remote branch differs');
   execFileSync(
-    'gh',
+    hostExecutable('gh'),
     [
       'workflow',
       'run',

@@ -1,18 +1,56 @@
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
-import { lstatSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  realpathSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, isAbsolute, join, resolve } from 'node:path';
+import { delimiter, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { baseImage } from './profiles.mjs';
 
+const checkout = resolve(import.meta.dirname, '../..');
+const primary = checkout.split(`${sep}.worktrees${sep}`)[0];
+function outsideCheckout(directory) {
+  const rel = relative(primary, resolve(directory));
+  return (
+    (rel === '..' || rel.startsWith('..' + sep) || isAbsolute(rel)) &&
+    !/(?:^|[\\/])node_modules(?:[\\/]|$)/i.test(directory)
+  );
+}
+
+export function hostExecutable(name, env = process.env) {
+  assert.ok(['git', 'docker', 'gh'].includes(name));
+  for (const directory of (env.PATH ?? env.Path ?? '').split(delimiter)) {
+    if (!isAbsolute(directory) || !outsideCheckout(directory)) continue;
+    const candidate = join(directory, name + (process.platform === 'win32' ? '.exe' : ''));
+    if (
+      existsSync(candidate) &&
+      outsideCheckout(realpathSync(candidate)) &&
+      lstatSync(realpathSync(candidate)).isFile()
+    )
+      return realpathSync(candidate);
+  }
+  throw Object.assign(new Error('Trusted host executable unavailable'), { code: 'ENOENT' });
+}
+
 export function git(root, args, options = {}) {
-  return execFileSync('git', ['-c', 'core.longpaths=true', '--no-optional-locks', ...args], {
-    cwd: root,
-    stdio: ['ignore', 'pipe', 'pipe'],
-    maxBuffer: 64 * 1024 * 1024,
-    ...options,
-  });
+  return execFileSync(
+    hostExecutable('git'),
+    ['-c', 'core.longpaths=true', '-c', 'core.fsmonitor=false', '--no-optional-locks', ...args],
+    {
+      cwd: root,
+      env: dockerEnvironment(),
+      stdio: ['ignore', 'pipe', 'pipe'],
+      maxBuffer: 64 * 1024 * 1024,
+      ...options,
+    },
+  );
 }
 
 export function safeSource(root, file) {
@@ -84,10 +122,8 @@ export function dependencyInputs(root) {
 
 export function dockerEnvironment(env = process.env) {
   // No DATABASE_URL, Supabase/Auth/JWT keys, NODE_OPTIONS or tool injection.
-  return Object.fromEntries(
+  const clean = Object.fromEntries(
     [
-      'PATH',
-      'Path',
       'SystemRoot',
       'SYSTEMROOT',
       'WINDIR',
@@ -95,15 +131,27 @@ export function dockerEnvironment(env = process.env) {
       'USERPROFILE',
       'LOCALAPPDATA',
       'APPDATA',
+      'ProgramFiles',
+      'ProgramFiles(x86)',
+      'ProgramData',
+      'CommonProgramFiles',
       'TEMP',
       'TMP',
     ]
       .filter((name) => env[name] !== undefined)
       .map((name) => [name, env[name]]),
   );
+  clean.PATH = (env.PATH ?? env.Path ?? '')
+    .split(delimiter)
+    .filter((directory) => isAbsolute(directory) && outsideCheckout(directory))
+    .join(delimiter);
+  return clean;
 }
 
-export function localDocker(run = execFileSync, env = process.env) {
+export function localDocker(
+  run = (name, args, options) => execFileSync(hostExecutable(name, options.env), args, options),
+  env = process.env,
+) {
   assert.ok(
     !env.DOCKER_HOST && !env.DOCKER_CONTEXT && !env.DOCKER_TLS_VERIFY && !env.DOCKER_CERT_PATH,
     'Docker overrides must be unset; select the intended local context explicitly with docker context use',
@@ -136,6 +184,9 @@ export function sandboxArgs(directory, image, name = `shifaa-verify-${randomUUID
   assert.ok(isAbsolute(directory) && !/[,\r\n]/.test(directory));
   assert.match(image, /^sha256:[a-f0-9]{64}$/);
   assert.match(name, /^shifaa-verify-[a-f0-9-]+$/);
+  const uid = process.getuid?.() ?? 1000;
+  const gid = process.getgid?.() ?? 1000;
+  assert.ok(uid > 0 && gid > 0, 'Run verification as a non-root user');
   return [
     'run',
     '--rm',
@@ -146,14 +197,14 @@ export function sandboxArgs(directory, image, name = `shifaa-verify-${randomUUID
     '--read-only',
     '--cap-drop=ALL',
     '--security-opt=no-new-privileges',
-    '--user=1000:1000',
+    `--user=${uid}:${gid}`,
     '--pids-limit=512',
     '--memory=6g',
     '--cpus=4',
     '--tmpfs',
-    '/tmp:rw,nosuid,nodev,size=1g,uid=1000,gid=1000',
+    `/tmp:rw,nosuid,nodev,size=1g,uid=${uid},gid=${gid}`,
     '--tmpfs',
-    '/work:rw,exec,nosuid,nodev,size=8g,uid=1000,gid=1000',
+    `/work:rw,exec,nosuid,nodev,size=8g,uid=${uid},gid=${gid}`,
     '--mount',
     `type=bind,source=${directory},target=/source,readonly`,
     '--workdir=/work',
@@ -192,7 +243,7 @@ export function prepare(root) {
   const unchanged = copySources(root, directory, paths);
   const tag = `shifaa/verify:${hash}`;
   const result = spawnSync(
-    'docker',
+    hostExecutable('docker', docker.options.env),
     [
       ...docker.prefix,
       'buildx',
@@ -229,7 +280,7 @@ export function verify(root) {
   try {
     image = JSON.parse(
       execFileSync(
-        'docker',
+        hostExecutable('docker', docker.options.env),
         [
           ...docker.prefix,
           'image',
@@ -264,11 +315,15 @@ export function verify(root) {
     }),
   );
   const args = sandboxArgs(directory, image.Id);
-  const result = spawnSync('docker', [...docker.prefix, ...args], {
-    env: docker.options.env,
-    stdio: 'inherit',
-    windowsHide: true,
-  });
+  const result = spawnSync(
+    hostExecutable('docker', docker.options.env),
+    [...docker.prefix, ...args],
+    {
+      env: docker.options.env,
+      stdio: 'inherit',
+      windowsHide: true,
+    },
+  );
   unchanged();
   return {
     status: result.status === 0 ? 'PASS' : 'FAIL',

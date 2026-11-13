@@ -46,7 +46,8 @@ The host launcher accepts no arbitrary command/profile override. It verifies a
 local Linux engine, prepares a new temporary snapshot, selects an immutable image
 ID matching all dependency inputs, then enters a fixed boundary:
 
-- non-root UID/GID 1000, all capabilities dropped, no-new-privileges;
+- non-root UID/GID matching the Linux source owner (1000 on Windows), all
+  capabilities dropped, no-new-privileges; do not run the launcher as Linux root;
 - network `none`; no published ports, host networking, devices or Docker socket;
 - read-only root filesystem and **only one read-only mount**, the new snapshot;
 - disposable `/work` and `/tmp` tmpfs; bounded memory/CPU/processes;

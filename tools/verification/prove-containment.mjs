@@ -5,17 +5,18 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { localDocker, sandboxArgs } from './sandbox.mjs';
+import { hostExecutable, localDocker, sandboxArgs } from './sandbox.mjs';
 import { baseImage } from './profiles.mjs';
 
 const docker = localDocker();
+const executable = hostExecutable('docker', docker.options.env);
 // Explicit verification fixture provisioning, never part of ordinary verify.
-execFileSync('docker', [...docker.prefix, 'pull', baseImage], {
+execFileSync(executable, [...docker.prefix, 'pull', baseImage], {
   ...docker.options,
   stdio: 'inherit',
 });
 const image = execFileSync(
-  'docker',
+  executable,
   [...docker.prefix, 'image', 'inspect', baseImage, '--format', '{{.Id}}'],
   docker.options,
 ).trim();
@@ -43,7 +44,7 @@ assert.equal(fs.readFileSync('/source/tree/retained-sentinel','utf8'),'unchanged
 console.log('PASS: nested writes, source deletion, root writes, host networking, Docker socket and inherited credentials denied');
 `;
 writeFileSync(join(directory, 'tree/tools/verification/inside.mjs'), attack);
-const result = spawnSync('docker', [...docker.prefix, ...sandboxArgs(directory, image)], {
+const result = spawnSync(executable, [...docker.prefix, ...sandboxArgs(directory, image)], {
   env: {
     ...docker.options.env,
     DATABASE_URL: 'must-not-forward',

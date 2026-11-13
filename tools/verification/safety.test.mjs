@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { delimiter, dirname, join, resolve } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
@@ -14,6 +14,7 @@ import {
   safeSource,
   localDocker,
   dependencyInputs,
+  hostExecutable,
 } from './sandbox.mjs';
 import { ordinary } from './profiles.mjs';
 
@@ -38,9 +39,9 @@ test('container has no host service, credentials, writable source or retained vo
     '--read-only',
     '--cap-drop=ALL',
     '--security-opt=no-new-privileges',
-    '--user=1000:1000',
   ])
     assert.ok(args.includes(required));
+  assert.ok(args.includes(`--user=${process.getuid?.() ?? 1000}:${process.getgid?.() ?? 1000}`));
   assert.equal(args.filter((arg) => arg === '--mount').length, 1);
   assert.ok(args.includes(`type=bind,source=${directory},target=/source,readonly`));
   assert.ok(
@@ -58,14 +59,28 @@ test('container has no host service, credentials, writable source or retained vo
 test('host environment sanitization excludes keys, injected tools and remote Docker', () => {
   assert.deepEqual(
     dockerEnvironment({
-      PATH: 'safe',
+      PATH: [dirname(process.execPath), join(root, 'node_modules/.bin'), root].join(delimiter),
       DATABASE_URL: 'retained',
       NODE_OPTIONS: '--import danger',
       DOCKER_HOST: 'tcp://remote',
       SUPABASE_SERVICE_ROLE_KEY: 'secret',
     }),
-    { PATH: 'safe' },
+    { PATH: dirname(process.execPath) },
   );
+});
+
+test('pnpm node_modules PATH entries cannot shadow the trusted host Docker executable', () => {
+  const f = fixture();
+  const bin = join(f.directory, 'node_modules/.bin');
+  const trusted = join(f.directory, 'trusted-tools');
+  const binary = process.platform === 'win32' ? 'docker.exe' : 'docker';
+  f.write(`node_modules/.bin/${binary}`, 'untrusted project launcher');
+  f.write(`trusted-tools/${binary}`, 'trusted fixture executable');
+  assert.equal(
+    hostExecutable('docker', { PATH: [bin, trusted].join(delimiter) }),
+    join(trusted, binary),
+  );
+  assert.throws(() => hostExecutable('docker', { PATH: bin }), /unavailable/);
 });
 
 test('remote/overridden Docker and non-Linux engines fail before any run', () => {
