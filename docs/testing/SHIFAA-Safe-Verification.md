@@ -63,6 +63,9 @@ Implicit pre/post scripts are disabled in workspace policy and regression-checke
 Pinned pnpm 11's implicit pre-run dependency installation is also disabled with
 `verifyDepsBeforeRun: false`; installation is explicit. The prepared dependency
 tree retains relative links when copied into the disposable workspace.
+The ordinary runner serializes Turbo packages and caps Vitest at two workers;
+CPU quota alone does not constrain worker-count discovery on large hosts. Every
+package and test remains selected; the process/memory boundary stays enforced.
 
 Tracked working bytes and safe new source are copied; the original checkout is
 never mounted. Links/traversal and sensitive file types are rejected/excluded.

@@ -18,6 +18,7 @@ function command(program, args) {
       EXPO_OFFLINE: '1',
       EXPO_NO_TELEMETRY: '1',
       TURBO_TELEMETRY_DISABLED: '1',
+      VITEST_MAX_WORKERS: '2',
       GIT_CONFIG_NOSYSTEM: '1',
     },
     stdio: 'inherit',
@@ -35,7 +36,11 @@ try {
     throw new Error('source-identity');
   if (command('git', ['add', '--all']) !== 0) throw new Error('snapshot-index');
   for (const script of ordinary) {
-    const exitCode = command('pnpm', ['run', script]);
+    // CPU quota alone does not reduce os.cpus() on large Docker Desktop hosts.
+    // Keep every package/test, but avoid multiplying Next/Vitest worker pools
+    // across the monorepo and exhausting the fixed process/memory boundary.
+    const turbo = ['lint', 'typecheck', 'build', 'test'].includes(script);
+    const exitCode = command('pnpm', ['run', script, ...(turbo ? ['--concurrency=1'] : [])]);
     results.push({ script, status: exitCode === 0 ? 'PASS' : 'FAIL', exitCode });
   }
 } catch {
