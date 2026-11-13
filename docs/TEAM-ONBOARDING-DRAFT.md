@@ -5,6 +5,14 @@ This maintained onboarding draft is separate from the historically approved
 remain bound to F011 evidence. The draft does not renew that approval or prove
 a fresh installation.
 
+**Verification successor — 2026-11-13:** use the current
+[safe verification workflow](testing/SHIFAA-Safe-Verification.md).
+`pnpm verify:prepare` explicitly prepares container dependencies; `pnpm verify`
+runs ordinary checks offline; `pnpm verify:isolated` dispatches comprehensive
+checks on a fresh hosted VM. The dated reset/setup examples below and in the
+immutable installation checklist are not instructions to reset retained data.
+Never use them merely to run ordinary verification.
+
 Audited **2026-10-03**, against local and remote main `670b1e0fe15c719b98179805f2628d1b478a55dd`.
 Draft correction **2026-10-13**: the Spec Kit pin and local setup-package location
 were checked against main `e41abb4e008242f447dc7ba643ada0d3f712a5a7`.
@@ -768,7 +776,7 @@ Source: `supabase/config.toml / package.json`.
 
 #### Destructive local resets & Supabase tests (Required)
 
-On a NEW disposable development stack apply the explicit Supabase reset and test commands below. Supabase reset/test erase its local database before applying migrations/seed. pnpm db:reset removes ONLY the named Compose project’s volume. pnpm verify also performs resets and may regenerate evidence reports. Stop apps/workers before running resets; back up any local data you need. Never run these against production or preserve-worthy shared stacks. This setup center and doctor do not execute them.
+The dated Supabase reset/test examples below erase the local database before applying migrations/seed; `pnpm db:reset` removes the named Compose project's volume. These are not ordinary verification commands and must never target retained data. Use `pnpm verify` for offline ordinary checks and `pnpm verify:isolated` for comprehensive disposable-hosted verification. This setup center and doctor do not execute resets. A backup, project name or separate worktree does not establish disposable isolation.
 
 Destructive Supabase gate:
 
@@ -1264,8 +1272,8 @@ confirmed the audited Codex/Kimi/OpenCode packages. The existing legacy
 The current Kimi binary is `@moonshot-ai/kimi-code`, not legacy Python
 `kimi-cli`. Native Android setup and clean-machine GUI installers still need
 role-specific/manual vendor validation. No destructive reset is needed solely
-for documentation QA. `pnpm verify` performs resets and must only run against
-disposable local synthetic stacks with explicit intent and backups.
+for documentation QA. `pnpm verify` now runs ordinary offline container checks;
+the comprehensive profile requires the fresh hosted workflow described above.
 
 For future feature work follow AGENTS.md and the assigned roadmap row.
 PR-only integration remains mandatory. This setup implementation makes no
