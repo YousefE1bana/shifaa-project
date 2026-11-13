@@ -3,6 +3,10 @@ packages:
   - 'packages/*'
   - 'services/*'
 
+# Enter the reviewed verification boundary before executing any project code.
+# No implicit preverify/postverify (or other pre/post command) on the host.
+enablePrePostScripts: false
+
 catalog:
   typescript: 7.0.2
   vitest: 4.1.12

@@ -106,13 +106,19 @@ changes retain relevant automated localization, Arabic RTL/English LTR and
 accessibility checks. Automated checks and static screenshots never substitute
 for human, native accessibility or device acceptance where a milestone requires it.
 
-`pnpm verify` remains the comprehensive verification command. Its current chain
-resets databases, removes volumes and can write evidence; it is not an automatic
-pre-push command. Inspect the full chain, target resources, ownership, persistence
-and evidence destinations before execution. Run destructive paths only against
-proven disposable isolated resources. Never reset or modify retained Supabase
-databases or volumes to satisfy verification. A worktree or backup alone does not
-prove isolation. Report unexecuted checks honestly; never weaken tests to pass.
+`pnpm verify` runs ordinary checks in a disposable offline container, with a
+read-only sanitized source snapshot, no Docker socket, no host credentials and
+no retained volumes. It never falls back to host execution or installs dependencies.
+Explicit `pnpm verify:prepare` prepares its lock-bound container dependencies;
+`pnpm verify:isolated` dispatches comprehensive verification on a fresh
+GitHub-hosted VM. Follow the [verification guide](docs/testing/SHIFAA-Safe-Verification.md).
+Keep implicit pre/post scripts disabled. Future nested scripts remain inside the
+container boundary. Never describe an ordinary PASS as comprehensive verification.
+Inspect the full chain, resources and evidence destinations before invoking any
+individual legacy database/restore command: those commands remain dangerous on
+the host. Never reset retained Supabase databases or volumes. A worktree, project
+name, environment flag or backup alone does not prove isolation. Report omitted,
+failed and unexecuted checks honestly; never weaken tests to pass.
 
 Select checks from the actual diff and affected contracts/callers:
 

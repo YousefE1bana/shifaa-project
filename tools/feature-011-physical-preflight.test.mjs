@@ -121,6 +121,19 @@ test('maintenance pins preserve sealed F011 inputs without admitting unrelated s
       assert.equal(oldPackage.scripts[key], undefined);
       delete normalized.scripts[key];
     }
+    // New safe entrypoints are exact tooling successors, not a change to the
+    // historical verification obligations or accepted F011 source projection.
+    assert.equal(currentPackage.scripts.verify, 'node tools/verify.mjs');
+    normalized.scripts.verify = oldPackage.scripts.verify;
+    for (const [key, value] of Object.entries({
+      'verify:prepare': 'node tools/verify.mjs prepare',
+      'verify:isolated': 'node tools/verification/dispatch.mjs',
+      'verify:safety': 'node --test tools/verification/*.test.mjs',
+    })) {
+      assert.equal(currentPackage.scripts[key], value);
+      assert.equal(oldPackage.scripts[key], undefined);
+      delete normalized.scripts[key];
+    }
     assert.deepEqual(normalized, oldPackage, 'Only enumerated pins and commands may differ');
     assert.equal(
       readFileSync(join(root, pins[1]), 'utf8')
