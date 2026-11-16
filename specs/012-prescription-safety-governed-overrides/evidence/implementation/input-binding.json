@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "record": "F012-T001-INPUT-BINDING",
+  "task": "T001",
+  "issue": "https://github.com/YousefE1bana/shifaa-project/issues/512",
+  "scope": "Isolated synthetic Graduation MVP engineering",
+  "sourceMain": "b842058993014ad5f136c40123fcf5b5010027ee",
+  "approvedTaskBaseline": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+  "approvedSpecificationCheckpoint": "c571773d6432251d1f52bc94bb501c4e163f1571",
+  "integratedRevisions": {
+    "reviewerContractPr496": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+    "acceptedContractsPr509": "d62ec5d15d831552065da256ab7041e7f227964f",
+    "taskBaselinePr510": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465"
+  },
+  "specificationReviewedBeforeApprovalRecordingSha256": "1a89eb66291754b584a39f3f64efe2590d9e7ef10054f6337aeb3227a82f6225",
+  "approvalAndTaskRecords": {
+    "specification": {
+      "path": "specs/012-prescription-safety-governed-overrides/spec.md",
+      "sha256": "f4d2e7f1113467f5997e27809394c7f03a191dba276bfc895e0398a1bb8fa15a",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    "specificationApproval": {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+      "sha256": "de55e0fc7edfc4d2bdfcb678068171cce50afdfbb07a5ec39934f565ae5c2abb",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    "planApproval": {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "sha256": "d95797de61827aa474d5eb7bd52836c2e583f44d01d64f1b4a34f0d73a741ef1",
+      "integratedCommit": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    "postMergePlanReview": {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/post-merge-plan-approval-2026-11-12.md",
+      "sha256": "d7b53e97de147a1e3cc1ee04f777d1b9a799f18b620cc1a7c6e73fcfb14c6825",
+      "integratedCommit": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    "taskBaseline": {
+      "path": "specs/012-prescription-safety-governed-overrides/tasks.md",
+      "sha256": "189425f0981c5e40cbc2293d1969df1ba1202361798e3ed96f82af54719573c4",
+      "integratedCommit": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/review-analysis-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    "taskBaselineApproval": {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/review-analysis-approval.md",
+      "sha256": "fcdeb47f592fdaeef99eb0b576aed75c107fb590497f6942c85bf4b9db335cf8",
+      "integratedCommit": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/review-analysis-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    "taskBaselinePublication": {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/publication-manifest.json",
+      "sha256": "b076cf40f280891271f3ff2f9a87869d6dcde2c56c2ae08e762b1dc185caebed",
+      "integratedCommit": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/task-baseline-publication-2026-11-12/review-analysis-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    }
+  },
+  "approvedPlan": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/plan.md",
+      "sha256": "77707040ff62a8f5769e4d8fa00d23ce529d84ff8feafeb415b0c2201a262bfc",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/research.md",
+      "sha256": "f2cd6983ccf627900cfaa1ff83a30cfb5d3ce21b2d5f21a819f1c302914e724b",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/data-model.md",
+      "sha256": "c701cc178447cc683f73dedef2f77591e476c40c7f4367822c1ac63098fc7b14",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml",
+      "sha256": "c135c26a4e897a86d6d37ea756e46904a83c5fcc55387003ceeb71c97635fb9d",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/quickstart.md",
+      "sha256": "3504bf732e0bf2749bc4dd51f92bec45e85212430685cd34a26b9aeb0353270c",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/checklists/plan-consistency.md",
+      "sha256": "4febb106eeaceef83573be5afb2e057a873c96f85fe4d757245e4ded4d03644c",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/plan-approval-2026-11-12.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    }
+  ],
+  "canonicalAuthority": [
+    {
+      "path": ".specify/memory/constitution.md",
+      "sha256": "4107a37ce43ae5c6efd6c8198771112b598eb167d3f0788c879d2b3fc747793c",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Remaining-Specs-Roadmap.md",
+      "sha256": "3e01011f8f916535bef267845266bc5c3a3a7b1652b39afa3501dda6c9452757",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/specification-approval-2026-10-23.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "shifaa-prd.md",
+      "sha256": "4a98237e916b88c2d92c60f2c5b5da25f9b919e6b04f42a73db2e0aa709a50ac",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "sha256": "f144e6332cf8363dc127fb1e728e3e1387a51878838c16881d268b24eea2c838",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "docs/design/SHIFAA-UI-Contract.md",
+      "sha256": "8eb104b897bda573e04067e8e3036647349d9ce0c472fc00f1aaac3b1eab35e0",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-API-Catalog.md",
+      "sha256": "c1dc848f813c850ed851d06f673f059798d3120033ed1a5e50f60c29eeb2e407",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "docs/architecture/SHIFAA-Data-RLS.md",
+      "sha256": "9c088fa84c49e9d69285b7be4e96e0d141a77c7be89d8976fdff1989f3fc0f7f",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md",
+      "sha256": "6436f1ea96c50cc422f8cab51fb692b2245e859500123cca18a8784f47b0af63",
+      "integratedCommit": "e7e606532c97568fa17d1e98c4160b84390db9d5",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/decisions/reviewer-boundary-approval-2026-10-16.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    }
+  ],
+  "acceptedSupportingInputs": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "sha256": "33d35da7492e43cbf9552e3f4bb1b677fe6ad136cb6adaf9ae3ae216fd7f0624",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/plan-closure-consolidated-v0.2.0.md",
+      "sha256": "85d2f5ba8c9c640b500a2aaded34f0fb895610eb6c5f4c73da53094ce766be3e",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/native-authority-nac1-successor-v0.1.0.md",
+      "sha256": "8ab9a757e6b4bd5b1055cff32cffa80777fd1ae6650041018fd2e8a13a547251",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/source-consumption-successor-v0.1.0.md",
+      "sha256": "39fa9ea820b9fe9d81e53d311e8484f2324f5dcef66278f059a703b23282b92d",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-contract-acceptance-2026-11-11/decision-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+      "sha256": "244465179975e70ff09e8b13661f5682a89c09991ab4b9b06be3b7c6f407b83a",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.js",
+      "sha256": "7cf57fac6ff004bbbb6dc8ca843af3154b42c4bedc9347da49d09fc8d470b115",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/baselines/manifest.json",
+      "sha256": "432b98b9fe1daf0b0dd839eec58b92dd27b4529a3d860308786f5707f41119d4",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/c2-essential-baselines.json",
+      "sha256": "c94d73cbfae9f6b07eb9995ae36228a3a29cc1d9a7c6d1f41ff9c8b40ed62186",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "sha256": "7abd980b55ca7d675d64e971330385a7db2c968d4ae71bd7b7d57fdfe76951a8",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/index.html",
+      "sha256": "52feb23168a3bd837c0f270d658799474205129d7d5895b41ba06486bffe06bd",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/compositions.css",
+      "sha256": "dd58f8e1efe3ae230891e7f2f25c48d65b2aeef55da53463749210a01164fa41",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/compositions.js",
+      "sha256": "d1f52add9053cddfa79c98b7078f21986f42aba93a7ac870d633cc258adaad21",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/capture.cjs",
+      "sha256": "2ae6b7553a623780d5e1b55b17fbf34882fe5671a9614bcca49d29437e3552ba",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/baselines/manifest.json",
+      "sha256": "85708ffa055a0fda5ac582425a24706e1cafc1d7911f6abb6a003a0ceb07bde6",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/baseline-selection.json",
+      "sha256": "2d61fc9c88e8cd7f3c4281e99ff3630d56e4c2ef703e01955f9e968cc27dbb2a",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/validation.json",
+      "sha256": "1306a21271db12046c95c3d26a688e1c65a4555de05cfd44a7315096e6905f90",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/c3-mobile-2026-11-11-v0.3.0/index.html",
+      "sha256": "7bf4e9236bc93f3bb0ffdab45b474337222e36d7724ff1a2cd5e6737e28d8e1c",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/c3-corrections-2026-11-11-v0.2.0/baselines/manifest.json",
+      "sha256": "3c317abcf529bc97c873cdd0821aa5e561afa966af3bc30d4659e3c41f459a32",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/design/plan-closure-2026-11-11/baselines/manifest.json",
+      "sha256": "045daeee9ff9970fb31406042f25161139b17902dd1a9a48de677596777a8195",
+      "integratedCommit": "d62ec5d15d831552065da256ab7041e7f227964f",
+      "approvalRecord": "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md",
+      "approvalOwner": "Yousef Osama, SHIFAA Product Owner"
+    }
+  ],
+  "decisionScope": {
+    "C1": "Accepted technical design in consolidated sections 1–5 and 8, including NAC-1 and allowed source-consumption boundaries.",
+    "C2": "Accepted consolidated sections 6–7 and corresponding API/Data successors. Corrected C2 v0.2.0 source, manifest and selection are Product-approved.",
+    "C3": "Product-approved v0.3.0 mobile compositions at the four bound viewports and both locales. Runtime and device evidence remain separate.",
+    "U1": "F012-only Product Owner visual co-attribution exception for exact integrated scope. No fabricated Design Lead or professional signature.",
+    "preserved": ["D1", "D2", "qualified D3", "P1–P3", "S1–S8"]
+  },
+  "applicableGates": [
+    {
+      "id": "OPEN-LEGAL-001",
+      "decisionOrEvidence": "PDPC controller/processor/sensitive-data licenses or permits; DPO appointment/category; cross-border basis and approved destinations/processors",
+      "owner": "Legal counsel + registered DPO",
+      "closureEvidence": "Submit processing inventory and architecture to PDPC/counsel; archive written approvals and processor terms",
+      "blocks": "Any production PHI",
+      "earliestBlockedStage": "RELEASE_APPROVED",
+      "f012CapabilityRestriction": "No production PHI, processing expansion, live integration or unapproved cross-border destination.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-LEGAL-002",
+      "decisionOrEvidence": "Egyptian retention periods for each medical, prescription, lab, identity, consent, audit, and finance class",
+      "owner": "Legal counsel + DPO + Medical Director",
+      "closureEvidence": "Produce signed retention schedule citing controlling instruments",
+      "blocks": "Production retention/deletion automation",
+      "earliestBlockedStage": "RELEASE_APPROVED",
+      "f012CapabilityRestriction": "No production retention or deletion automation based on an inferred schedule.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-LEGAL-003",
+      "decisionOrEvidence": "Controlled-drug/e-prescription workflow and whether any digital record substitutes for original statutory books/forms",
+      "owner": "EDA/MoHP liaison + Legal + Chief Pharmacist",
+      "closureEvidence": "Obtain written authority interpretation and current schedules/process rules",
+      "blocks": "Controlled-drug production flow",
+      "earliestBlockedStage": "RELEASE_APPROVED for controlled paths",
+      "f012CapabilityRestriction": "No controlled production prescribing or substitution for statutory originals.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-LEGAL-007",
+      "decisionOrEvidence": "Official/certified Arabic Gazette copies and counsel-verified article mapping for Law 151/2020 and Executive Regulations Decision 816/2025",
+      "owner": "Legal counsel + registered DPO",
+      "closureEvidence": "Archive controlling Arabic texts; map each compliance proposition to exact article; sign legal-validation memo",
+      "blocks": "Treating article-level PDPL interpretations as production evidence",
+      "earliestBlockedStage": "RELEASE_APPROVED for production PHI",
+      "f012CapabilityRestriction": "No production legal-evidence claim from unverified article mapping.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-CLIN-001",
+      "decisionOrEvidence": "Joint approval of interaction/allergy rules and break-glass policy",
+      "owner": "Medical Director + Chief Pharmacist",
+      "closureEvidence": "Sign versioned clinical-content bundle and deterministic test set",
+      "blocks": "Prescription safety release",
+      "earliestBlockedStage": "RELEASE_APPROVED for prescribing",
+      "f012CapabilityRestriction": "No executable clinical rule release, professional signing, clinical clearance or prescribing release. Article VI and FR-SAFE-012 require actual joint professional authority and responses to P01–P30 before actual clinical code, content, vectors or use.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-CLIN-002",
+      "decisionOrEvidence": "Current controlled/NTI product lists and facility emergency exception window",
+      "owner": "Medical Director + Chief Pharmacist + Legal",
+      "closureEvidence": "Publish signed, effective-dated lists/policy",
+      "blocks": "Controlled/NTI paths",
+      "earliestBlockedStage": "RELEASE_APPROVED for controlled/NTI paths",
+      "f012CapabilityRestriction": "No effective controlled/NTI list or actual facility emergency window. The accepted synthetic timer is an engineering fixture.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-UX-001",
+      "decisionOrEvidence": "Approved Figma/source-of-truth screen compositions and visual-regression baselines for every P0 state",
+      "owner": "Product Owner + Design Lead",
+      "closureEvidence": "Approve linked designs at required viewports; export immutable baseline IDs",
+      "blocks": "Claim of pixel-identical builds",
+      "earliestBlockedStage": "PLAN_APPROVED for affected UI",
+      "f012CapabilityRestriction": "The integrated C2/C3 source compositions satisfy the named F012 pre-Plan visual scope under U1. The general Product Owner + Design Lead rule remains for other scope. Pixel-identical runtime and native accessibility acceptance require their own evidence.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "PRE_PLAN_COMPOSITION_SCOPE_ACCEPTED_UNDER_U1_GENERAL_GATE_RETAINED"
+    },
+    {
+      "id": "OPEN-UX-002",
+      "decisionOrEvidence": "Visual-regression tolerance, renderer/browser/font matrix, and diff-review rule",
+      "owner": "Product Owner + Design Lead + QA Lead",
+      "closureEvidence": "Approve deterministic render environment, numeric thresholds, masks, and review evidence",
+      "blocks": "Automated visual acceptance",
+      "earliestBlockedStage": "VERIFYING for affected UI",
+      "f012CapabilityRestriction": "No deterministic visual acceptance until the approved renderer, browser, font, tolerance and evidence requirements pass.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-PRODUCT-001",
+      "decisionOrEvidence": "Persona and workflow validation with 5–8 target users",
+      "owner": "Product Owner + UX Research Owner",
+      "closureEvidence": "Complete interviews; archive script, anonymized evidence, and accepted changes",
+      "blocks": "UAT baseline, not Foundation engineering",
+      "earliestBlockedStage": "RELEASE_APPROVED/UAT",
+      "f012CapabilityRestriction": "No UAT or release claim from onboarding or synthetic tests.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-TECH-001",
+      "decisionOrEvidence": "Exact dependency versions, runtime/toolchain files, OCI base-image digests, lockfiles, and SBOM baseline",
+      "owner": "Architecture Lead + Platform Lead",
+      "closureEvidence": "Create the Phase-0 repository scaffold; pin and sign/checksum all versions/digests; archive a clean reproducible-build log",
+      "blocks": "Claim of byte/reproducible builds",
+      "earliestBlockedStage": "IMPLEMENTING",
+      "f012CapabilityRestriction": "No F012 byte-reproducibility claim before the actual build and dependency evidence.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-TECH-002",
+      "decisionOrEvidence": "Generated full OpenAPI payload schemas, physical PostgreSQL DDL/RLS migrations, and generated API clients for the active graduation operation inventory",
+      "owner": "API Lead + Data Lead + QA Lead",
+      "closureEvidence": "Complete feature specs in dependency order, merge generated contracts/migrations/clients, and pass active-catalog/OpenAPI/DDL/trace consistency CI; reserved post-MVP operations must be absent",
+      "blocks": "Code-generation-identical implementation beyond each approved feature contract",
+      "earliestBlockedStage": "IMPLEMENTING for the affected feature",
+      "f012CapabilityRestriction": "Contract assignment leaves generated active OpenAPI, DDL/forced RLS and client parity for implementation. Full OpenAPI 3.1.1 semantic validation retains VALIDATION_NOT_AVAILABLE until its assigned obligation is executed.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-TECH-003",
+      "decisionOrEvidence": "Reference Android device/OS/build, web browser versions, network profile harness, dataset size, and performance/accessibility test environment",
+      "owner": "QA Lead + Platform Lead + Product Owner",
+      "closureEvidence": "Approve reproducible test profiles; check in configs; archive baseline run",
+      "blocks": "Deterministic NFR-PERF-001/002 and device accessibility evidence",
+      "earliestBlockedStage": "VERIFYING",
+      "f012CapabilityRestriction": "Reference environment and device performance and native accessibility remain future verification evidence.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "OPEN"
+    },
+    {
+      "id": "OPEN-VENDOR-002",
+      "decisionOrEvidence": "SMS/OTP provider selection, sender registration, Arabic delivery, DPA, SLA, receipts, and failover",
+      "owner": "Procurement + Platform Lead + DPO",
+      "closureEvidence": "Score candidates and sign primary/secondary contracts",
+      "blocks": "Production SMS/OTP",
+      "earliestBlockedStage": "RELEASE_APPROVED for SMS/OTP",
+      "f012CapabilityRestriction": "Conditional only if a production SMS/OTP channel is proposed. The F012 queue and delivery simulation grant no provider or live channel.",
+      "registers": [
+        "shifaa-prd.md#102-remaining-open-items",
+        "SHIFAA-Implementation-Plan-MASTER.md#142-remaining-open-items"
+      ],
+      "f012Status": "CONDITIONAL_ON_CAPABILITY"
+    }
+  ],
+  "retainedOutsideCapabilityOwnership": {
+    "open": [
+      "OPEN-LEGAL-005",
+      "OPEN-VENDOR-001",
+      "OPEN-VENDOR-003",
+      "OPEN-CLIN-003",
+      "OPEN-PHARM-001",
+      "OPEN-AI-001"
+    ],
+    "team": "OPEN-TEAM-001 is a closed designation record. It confers no runtime permission, professional signature or deployment approval."
+  },
+  "operationIds": [
+    "acknowledgeWarning",
+    "cancelPrescription",
+    "createPrescription",
+    "decideOverride",
+    "getOverrideReviewCases",
+    "getPrescription",
+    "listPatientMedications",
+    "requestContraindicatedOverride",
+    "runPrescriptionSafety",
+    "signPrescription",
+    "transitionOverrideReviewAssignment",
+    "updatePrescription"
+  ],
+  "clinicalAndRelease": {
+    "assessment": "not_fully_checked",
+    "engineering": "Approved synthetic mechanism work and permitted source-backed research matching within F012. F011 protected bodies stay outside the consumer boundary.",
+    "professionalInputs": "P01–P30 remain AWAITING_PROFESSIONAL_INPUT. The actual clinical, policy, credential, facility and Legal/DPO requirements remain attributable to their designated owners.",
+    "restricted": [
+      "real patient information",
+      "clinical clearance",
+      "professional sign or override",
+      "dispensing or administration",
+      "production deployment"
+    ],
+    "harnessAdmission": "T002 and its separate non-owner authority, session isolation, failpoint and restore requirements remain unexecuted."
+  }
+}

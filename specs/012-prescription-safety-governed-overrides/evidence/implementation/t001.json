@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "task": "T001",
+  "issue": "https://github.com/YousefE1bana/shifaa-project/issues/512",
+  "date": "2026-11-17",
+  "result": "PASS_SOURCE_BINDING",
+  "sourceMain": "b842058993014ad5f136c40123fcf5b5010027ee",
+  "taskBaseline": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+  "assignedGithubLogin": "AmiraSaad747",
+  "implementationScope": ["T001"],
+  "dependencies": [],
+  "requirements": ["NFR-QUALITY-001", "NFR-API-001"],
+  "relatedAcceptanceCriteria": ["AC-14", "AC-15", "AC-16"],
+  "inputBinding": {
+    "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/input-binding.json",
+    "sha256": "30e15f5654dcddad8a2814f699856ff0c8f41f8da0f1d2083d52aa9d5127fec0"
+  },
+  "verification": {
+    "specificationCheckpointMatchesPublishedBytes": true,
+    "exactPlanHashesMatched": 6,
+    "exactCanonicalAndSupportingSourcesMatched": 27,
+    "canonicalGateRowsAgree": 13,
+    "uniqueOpenApiOperationIds": 12,
+    "modifiedPlanBytesRejected": true,
+    "specKitIssueMappingAndPrerequisites": "PASS",
+    "implementExtensionHooks": "none registered"
+  },
+  "scopeLimits": {
+    "openApiFullSemantics": "VALIDATION_NOT_AVAILABLE",
+    "f012RuntimeOrDeviceAcceptance": "NOT_EXECUTED",
+    "professionalClinicalLegalFacilityOrReleaseApproval": "NONE_GRANTED",
+    "parentFeatureIssue": 493
+  }
+}
