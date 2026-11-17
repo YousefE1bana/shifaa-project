@@ -16,6 +16,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const project = 'shifaa-local-supabase';
 const container = `supabase_db_${project}`;
 const predecessorVersion = '20261001001002';
+const lastF011TestVersion = '20261008013921';
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 export function assertNativeBootstrapScope(labels, cliVersion, workdir = root) {
@@ -54,7 +55,14 @@ export async function resetFeature011NativeSupabase(runPnpm) {
   const pins = currentPhysicalSourceDigests(root);
   const directory = join(root, 'supabase/migrations');
   const tail = readdirSync(directory)
-    .filter((file) => /^\d+_.*\.sql$/.test(file) && file.split('_')[0] > predecessorVersion)
+    .filter((file) => {
+      const version = file.split('_')[0];
+      return (
+        /^\d{14}_.*\.sql$/.test(file) &&
+        version > predecessorVersion &&
+        version <= lastF011TestVersion
+      );
+    })
     .sort();
   assert.equal(tail.length, 11, 'Exact F011 chain and approved F010 handoff required');
   const migrations = tail.map((file) => {

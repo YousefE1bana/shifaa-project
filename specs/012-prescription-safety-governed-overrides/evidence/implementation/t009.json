@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "task": "T009",
+  "issue": 520,
+  "status": "BLOCKED",
+  "integrated": false,
+  "predecessor": "861e92db1fa3886f7866f0a330eb65ff9972d046",
+  "migrationSha256": "99cdb0ce951c81d569b3799528b97fc2b0241acccebd672dd93fdec13ba39fd9",
+  "fixtureSha256": "5187b10a8e5101c9e5ddb189aa017e096e2f2158c662283b89ae959a4a8dde0f",
+  "candidateMechanism": "PostgreSQL pgrowlocks 1.2 tied to actual backend transaction-ID locks, enabled only in the isolated candidate",
+  "actualPredecessorsApplied": 38,
+  "rawRecords": {
+    "exactCandidate": {
+      "sha256": "c4d722d849cceb643f998dd1ddc50632b883e8e6a292f65b3c63f22c2291b0ba",
+      "path": ".tmp/f012-foundation/t008-canonical-upgrade.json"
+    },
+    "earlierTempMarkerBypass": {
+      "sha256": "0a6224933b73e1e9a9993e1cb3f79f7ca8b414654ad9c7c9e4f83bb9b41792b6",
+      "path": ".tmp/f012-foundation/t009-discard-upgrade.json"
+    },
+    "predecessorSealFailure": {
+      "sha256": "f4a2f0c396301f1e1d8ca4db160d536e396915fd396bc0d7785baed0995fe177",
+      "path": ".tmp/f012-foundation/t009-f011-seal.json"
+    }
+  },
+  "observations": {
+    "migrationExit": 0,
+    "matrixExit": 0,
+    "directWithoutLock": {
+      "exit": 3,
+      "stdout": "BEGIN\nINSERT 0 1\nSET\n",
+      "stderr": "ERROR:  42501: F012 source admission was not retained in the required mode\nCONTEXT:  PL/pgSQL function platform.f012_require_retained_admission_v1(uuid,uuid,boolean) line 4 at RAISE\nSQL statement \"SELECT platform.f012_require_retained_admission_v1(p_deployment, p_epoch, true)\"\nPL/pgSQL function clinical.f012_advance_generation_v1(uuid,uuid,text,text,text,bigint) line 8 at PERFORM\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+    },
+    "discardTempUpgrade": {
+      "exit": 3,
+      "stdout": "BEGIN\nSET\n\nDISCARD TEMP\n",
+      "stderr": "ERROR:  42501: F012 source admission denied\nCONTEXT:  PL/pgSQL function platform.f012_lock_admission_v1(uuid,uuid,boolean) line 5 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+    },
+    "independentBackendTrials": [
+      {
+        "write": false,
+        "holder": "BEGIN\nSET\nSET\nholder_pid|584\n\nFENCE_LOCK_READY\n",
+        "borrow": {
+          "exit": 3,
+          "stdout": "BEGIN\nSET\nborrower_pid|591\n",
+          "stderr": "ERROR:  42501: F012 source admission was not retained in the required mode\nCONTEXT:  PL/pgSQL function platform.f012_require_retained_admission_v1(uuid,uuid,boolean) line 4 at RAISE\nSQL statement \"SELECT platform.f012_require_retained_admission_v1(p_deployment, p_epoch, p_write)\"\nPL/pgSQL function clinical.f012_read_generation_v1(uuid,uuid,text,text,text,boolean) line 8 at PERFORM\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+        },
+        "shared": {
+          "exit": 0,
+          "stdout": "BEGIN\nSET\nSET\nreader_pid|605\n\nCOMMIT\n",
+          "stderr": ""
+        },
+        "contender": {
+          "exit": 3,
+          "stdout": "BEGIN\nSET\nSET\ncontender_pid|612\n",
+          "stderr": "ERROR:  55P03: canceling statement due to lock timeout\nCONTEXT:  while locking tuple (0,3) in relation \"f012_source_admission\"\nSQL statement \"SELECT 1 FROM platform.f012_source_admission\n      WHERE deployment_id = p_deployment AND admission_epoch = p_epoch FOR UPDATE\"\nPL/pgSQL function platform.f012_lock_admission_v1(uuid,uuid,boolean) line 8 at PERFORM\nLOCATION:  ProcessInterrupts, postgres.c:3398\n"
+        },
+        "released": {
+          "exit": 0,
+          "stdout": "BEGIN\nSET\n\nCOMMIT\n",
+          "stderr": ""
+        }
+      },
+      {
+        "write": true,
+        "holder": "BEGIN\nSET\nSET\nholder_pid|626\n\nFENCE_LOCK_READY\n",
+        "borrow": {
+          "exit": 3,
+          "stdout": "BEGIN\nSET\nborrower_pid|633\n",
+          "stderr": "ERROR:  42501: F012 source admission was not retained in the required mode\nCONTEXT:  PL/pgSQL function platform.f012_require_retained_admission_v1(uuid,uuid,boolean) line 4 at RAISE\nSQL statement \"SELECT platform.f012_require_retained_admission_v1(p_deployment, p_epoch, p_write)\"\nPL/pgSQL function clinical.f012_read_generation_v1(uuid,uuid,text,text,text,boolean) line 8 at PERFORM\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+        },
+        "shared": null,
+        "contender": {
+          "exit": 3,
+          "stdout": "BEGIN\nSET\nSET\ncontender_pid|647\n",
+          "stderr": "ERROR:  55P03: canceling statement due to lock timeout\nCONTEXT:  while locking tuple (0,3) in relation \"f012_source_admission\"\nSQL statement \"SELECT 1 FROM platform.f012_source_admission\n      WHERE deployment_id = p_deployment AND admission_epoch = p_epoch FOR SHARE\"\nPL/pgSQL function platform.f012_lock_admission_v1(uuid,uuid,boolean) line 11 at PERFORM\nLOCATION:  ProcessInterrupts, postgres.c:3398\n"
+        },
+        "released": {
+          "exit": 0,
+          "stdout": "BEGIN\nSET\n\nCOMMIT\n",
+          "stderr": ""
+        }
+      }
+    ],
+    "sameTransactionDoubleAdvance": {
+      "exit": 0,
+      "stdout": "BEGIN\nINSERT 0 1\nSET\n\nfirst-advance|2\nsecond-advance|3\nROLLBACK\n",
+      "stderr": ""
+    },
+    "sealedF011Failures": [
+      "Physical parity: source/fixture/full migration chain digests stale or incomplete",
+      "Physical parity: P4 current race result/source binding stale",
+      "Physical parity: shifaa-local-postgres execution/source/database bindings stale",
+      "Physical parity: shifaa-local-supabase execution/source/database bindings stale",
+      "Physical parity: shifaa-local-postgres execution/source/database bindings stale",
+      "Physical parity: shifaa-local-supabase execution/source/database bindings stale",
+      "P5 stage disposition: current source/generated/physical hashes stale or incomplete"
+    ]
+  },
+  "blockers": [
+    "The application principal advanced the same initialized generation twice within one transaction after exclusive admission. The adapter guard did not constrain direct SQL callers.",
+    "The additive F012 migration invalidates the live F011 P4/P5 full-chain verification input binding. The current approved F011 successor covers only the exact Catalog and Data/RLS appendices.",
+    "The final candidate requires native admission review and explicit Major Event merge authority before eligible integration."
+  ],
+  "limitations": [
+    "Only synthetic PostgreSQL sources and actual database backend conflicts were executed. The native Auth runtime and changed predecessor writer behavior were not exercised.",
+    "No source exposure, live provisioning, or protected F011 reads were enabled. The migration has not been applied to retained databases.",
+    "T010, T012 and T014 depend on T009. They were not started."
+  ],
+  "preservation": {
+    "containers": 12,
+    "volumes": 4,
+    "matches": true
+  }
+}
