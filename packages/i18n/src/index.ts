@@ -1,4 +1,5 @@
 import { catalogs, type Locale, type MessageKey } from './catalogs.ts';
+import { feature012Copy, type Feature012Action, type Feature012Result } from './feature-012.ts';
 export { allergyCopy, allergyDate, verificationCopy, contentCopy } from './feature-011.ts';
 
 export { auditAdminArEG, auditAdminEnEG } from './audit-admin.ts';
@@ -37,3 +38,30 @@ export const privilegedStepUpMessages = (locale: Locale) => ({
 export const isolateLtr = (value: string) => `\u2066${value}\u2069`;
 
 export { clinicalStatusCopy } from './feature-011-status.ts';
+
+export {
+  feature012ActionName,
+  feature012Copy,
+  type Feature012Action,
+  type Feature012Result,
+} from './feature-012.ts';
+
+export function feature012Receipt(
+  locale: Locale,
+  result: Feature012Result,
+  reference: string,
+  time: string,
+  nextAction: Feature012Action,
+) {
+  const copy = feature012Copy[locale];
+  const labels = copy.receiptFields;
+  return {
+    accessibleName: copy.accessibleNames.receipt,
+    fields: [
+      { label: labels.status, value: copy.results[result] },
+      { label: labels.reference, value: isolateLtr(reference) },
+      { label: labels.time, value: isolateLtr(time) },
+      { label: labels.next, value: copy.actions[nextAction] },
+    ],
+  };
+}

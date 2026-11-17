@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "sourceMain": "5c339ae47bde79ea971f3d260a8d5c7c13e0a7e1",
+  "approvedTaskBaseline": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+  "authority": [
+    "specs/012-prescription-safety-governed-overrides/evidence/implementation/input-binding.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-product-approval-and-integration-2026-11-11/c2-visual-approval.md",
+    "specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/product-owner-decision-record.md"
+  ],
+  "inputSha256": {
+    "specs/012-prescription-safety-governed-overrides/design/c2-release-controls-2026-11-11-v0.2.0/release.js": "7cf57fac6ff004bbbb6dc8ca843af3154b42c4bedc9347da49d09fc8d470b115",
+    "specs/012-prescription-safety-governed-overrides/design/c3-mobile-2026-11-11-v0.3.0/compositions.js": "d1f52add9053cddfa79c98b7078f21986f42aba93a7ac870d633cc258adaad21",
+    "specs/012-prescription-safety-governed-overrides/readiness/c2-withdrawal-copy-2026-11-11-v0.2.0/copy-change.json": "3141adc7cdc80c7457f064e2a1a09a589795146a44146de0ad32e3b096a82389",
+    "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml": "c135c26a4e897a86d6d37ea756e46904a83c5fcc55387003ceeb71c97635fb9d"
+  },
+  "execution": {
+    "node": "v24.22.1",
+    "os": "Windows",
+    "runtime": "Pure catalog and formatting tests using synthetic identifiers",
+    "database": null,
+    "browser": null,
+    "nativeSession": null
+  },
+  "acceptanceCriteria": ["AC-03", "AC-13", "AC-15"],
+  "task": "T006",
+  "issue": 517,
+  "status": "TEST_AUTHORING_ACCEPTED",
+  "acceptance": "Reviewed tests against the bound C2/C3 and T006 handoff. Before catalog implementation, the public export failed as expected. T007 then passed the authored suite.",
+  "cases": [
+    "Both locales in Arabic-first order, exact key parity, nonempty locale-specific text and excluded terminology",
+    "Six potentially degraded source meanings, separate unknown freshness and exact scoped-empty limits",
+    "Blocked and recovery action names, historical non-use, terminal same-target and same-revision withdrawal including manual release prohibition, post-disclosure limits and denied data",
+    "Distinct projection and mutation messages, durable localized receipt, screen-reader name inputs, RTL/LTR direction and bidi isolation of opaque reference and time"
+  ],
+  "runs": [
+    {
+      "command": "node --test packages/i18n/src/feature-012.test.ts",
+      "stage": "Before T007",
+      "exit": 1,
+      "status": "EXPECTED_RED",
+      "observed": "ESM load failed because the public feature012ActionName export was absent; zero behavioral assertions executed."
+    },
+    {
+      "command": "node --test packages/i18n/src/feature-012.test.ts",
+      "stage": "T007",
+      "exit": 0,
+      "status": "PASS",
+      "observed": "11 locale tests passed."
+    },
+    {
+      "command": "node --test <scratch>/src/feature-012.test.ts",
+      "status": "NEGATIVES_CONFIRMED",
+      "observed": "Each independent scratch mutation exited 1 on the intended assertion: collapsed source label, weakened withdrawal sentence, absent accessible name, removed reference isolation."
+    }
+  ],
+  "artifactSha256": {
+    "packages/i18n/src/feature-012.test.ts": "265f60cf3a5efb2d581266fa9cc923e6f4cea73fe668b5fa2554f9c7caccad28"
+  },
+  "deferred": [
+    "Rendered role/name, focus, announcement, reading order and other browser or native accessibility behavior at owning UI checkpoints.",
+    "Human Arabic/English live acceptance at the applicable feature milestone."
+  ]
+}
