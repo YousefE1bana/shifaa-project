@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "task": "T008",
+  "issue": 519,
+  "status": "ACCEPTED",
+  "integrated": false,
+  "predecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+  "admittedDependency": "T002 / Issue #513 / PR #601",
+  "scope": "Schema and synthetic producer-observation matrix. T009 is a separate acceptance boundary.",
+  "fixtureSha256": "f6bfe85eb41f87e6ccc7bc19459e1d4bfa7314a6ca2b782bd22af62aa9de537b",
+  "red": {
+    "evidence": {
+      "path": ".tmp/f012-foundation/t008-final-red.json",
+      "sha256": "e49e6296608fe7dc99a6038084bb71c528c771a51f8a8279d8baf6cd2b17285a"
+    },
+    "exactFixture": {
+      "exit": 3,
+      "stdout": "BEGIN\nCREATE TABLE\nDO\nT008 raw member evidence|[{\"revision\": 1, \"scope_key\": \"patient-A\", \"member_key\": \"head-1\", \"effective_from\": \"2030-01-01T00:00:00+00:00\"}, {\"revision\": 1, \"scope_key\": \"patient-A\", \"member_key\": \"head-2\", \"effective_from\": \"2030-01-01T00:00:00+00:00\"}]\nINSERT 0 1\nDO\nT008 raw clock evidence|series-1|1|2030-01-01 00:01:00+00\n",
+      "stderr": "ERROR:  42P01: relation \"platform.f012_source_admission\" does not exist\nLINE 1: ...CT 'T008 admission schema present', count(*) FROM platform.f...\n                                                             ^\nLOCATION:  parserOpenTable, parse_relation.c:1428\n"
+    }
+  },
+  "candidateMatrix": {
+    "evidence": {
+      "path": ".tmp/f012-foundation/t008-final-upgrade.json",
+      "sha256": "779462494687d303db424193e39cb5d5620642bc5a5f521bd306184f6282a77d"
+    },
+    "migrationsApplied": 38,
+    "candidateMigrationSha256": "3050de55081e7d8e5d23d14fe182931bc9f5d0ec0f0959321c23d019fb1f2add",
+    "exactFixture": {
+      "exit": 0,
+      "stdout": "BEGIN\nCREATE TABLE\nDO\nT008 raw member evidence|[{\"revision\": 1, \"scope_key\": \"patient-A\", \"member_key\": \"head-1\", \"effective_from\": \"2030-01-01T00:00:00+00:00\"}, {\"revision\": 1, \"scope_key\": \"patient-A\", \"member_key\": \"head-2\", \"effective_from\": \"2030-01-01T00:00:00+00:00\"}]\nINSERT 0 1\nDO\nT008 raw clock evidence|series-1|1|2030-01-01 00:01:00+00\nT008 admission schema present|0\nT008 generation schema present|0\nINSERT 0 1\nDO\nINSERT 0 1\nDO\nT008 raw rollback evidence|1|9223372036854775807\nGRANT\nSET\nDO\nDO\nRESET\nINSERT 0 1\nSET\nDO\nRESET\nUPDATE 1\nSET\nDO\nRESET\nSET\nDO\nRESET\nROLLBACK\n",
+      "stderr": "NOTICE:  00000: T008 duplicate deployment denied: 23505\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T008 wrong epoch denied: 23503\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T008 missing admission denied: 23503\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T008 unknown scope denied: 23514\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T008 nonpositive generation denied: 23514\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T008 overflow denied: 22003\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 forged marker denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 lock upgrade denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 advancement under shared admission denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 missing admission denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 missing epoch denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 missing generation denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 direct access denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 non-owner overflow rolled back source: 22003\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 stale generation denied: 40001\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 zero-to-first generation 1->2, count=1, role=shifaa_api\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T008 head revision 1->2, generation 7->8; clock-only eligible count 1->2 at generation 8\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 authenticated lock denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\nNOTICE:  00000: T009 executor substitution denied: 42501\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+    }
+  },
+  "findings": [
+    "Equal per-member revisions do not establish completeness across pages. Same generation 8 admits a different clock-selected set at equality.",
+    "Initialized empty set to first insertion advances 1 to 2. Synthetic catalog head revision advances 1 to 2 while its generation advances 7 to 8.",
+    "Duplicate deployment, wrong epoch, missing admission, unknown scope and nonpositive generation are rejected by actual constraints.",
+    "Bigint overflow rolls back the corresponding synthetic source mutation; stale expected generation does not change the counter."
+  ],
+  "limitations": [
+    "The matrix installs no product fixture and grants no product access. Real participating writers and complete capture remain in their owning tasks.",
+    "The same raw upgrade run found T009 generation advancement twice in one transaction. T009 remains blocked even though this matrix passed.",
+    "Database evidence is isolated PostgreSQL, with no native Auth or clinical assessment."
+  ],
+  "preservation": {
+    "containers": 12,
+    "volumes": 4,
+    "matches": true
+  }
+}
