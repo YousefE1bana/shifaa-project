@@ -11,7 +11,7 @@
   "rawLocalEvidence": {
     "file": ".tmp/f012-foundation/t016-final-sql.json",
     "sha256": "b3a5ba8c4859373ef5fd32aeb529dafcddee556895b63ee42f51ee1bbfc3c4f1",
-    "runnerLog": ".tmp/f012-foundation/t016-final-vitest.log"
+    "runnerLog": ".tmp/f012-foundation/t016-resealed-vitest.log"
   },
   "runtimeSql": {
     "exit": 0,
@@ -19,10 +19,10 @@
     "stderr": "ERROR:  22012: division by zero\nLOCATION:  int4div, int.c:841\nERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function clinical.f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
   },
   "tests": {
-    "passed": 22,
+    "passed": 21,
     "failed": 0,
     "command": "SHIFAA_RUN_F012_ATOMICITY=true vitest run services/api/test/feature-012-atomicity.integration.test.ts services/api/src/routes/feature-011-allergies.contract.test.ts",
-    "http409": "Existing F011 route exercised with the observed SQLSTATE and error family; separate from the real database commit test"
+    "predecessorIntegrity": "The integrated F011 route test is byte-for-byte original. The focused changed-body proof is the observed SQLSTATE and idempotency error from PostgreSQL."
   },
   "preservation": {
     "containers": 12,
