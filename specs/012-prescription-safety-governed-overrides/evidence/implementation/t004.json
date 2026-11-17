@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "sourceMain": "81fa4ae42167f9df7b347b8eed5ed5e3ca3e10c8",
+  "approvedTaskBaseline": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+  "authority": [
+    "specs/012-prescription-safety-governed-overrides/evidence/implementation/input-binding.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/post-merge-plan-approval-2026-11-12.md"
+  ],
+  "execution": {
+    "node": "v24.22.1",
+    "vitest": "4.1.12",
+    "operatingSystem": "Windows",
+    "runtime": "Synthetic JSON/browser-independent fetch doubles",
+    "database": null,
+    "nativeSession": null
+  },
+  "inputSha256": {
+    "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml": "c135c26a4e897a86d6d37ea756e46904a83c5fcc55387003ceeb71c97635fb9d",
+    "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65"
+  },
+  "task": "T004",
+  "issue": 515,
+  "status": "TEST_AUTHORING_ACCEPTED",
+  "acceptance": "Reviewed authored cases against the exact approved schema, consolidated C1/C2 clauses and T004 handoff. The expected pre-generation failure is retained as execution evidence. Runtime acceptance belongs to the owning stories.",
+  "cases": [
+    "All 12 exact method/path/operation/request/result mappings, 9 mutation and 6 version carriers, common purpose and 8 status-specific problems",
+    "Closed R1 discover/detail, R2 claim/release_own/takeover_invalid, three update branches, positive and malformed ETag forms, omitted vs explicit null",
+    "Selector/patient/facility/assignee/context injection, draft/control mix, pinned fixture shape, conditional disclosure and nested problem/evidence fields"
+  ],
+  "runs": [
+    {
+      "command": "node specs/012-prescription-safety-governed-overrides/readiness/final-po-decisions-2026-11-11/validate-static.cjs",
+      "exit": 0,
+      "status": "PASS_STATIC_ONLY",
+      "checks": 212,
+      "schemas": 70,
+      "references": 324,
+      "fullOpenApi": "VALIDATION_NOT_AVAILABLE"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run src/feature-012.test.ts --root packages/contracts --maxWorkers 2",
+      "exit": 1,
+      "status": "EXPECTED_RED",
+      "observed": "52 cases failed while the generated feature-012 module was absent"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run src/feature-012.test.ts --root packages/contracts --maxWorkers 2",
+      "exit": 0,
+      "status": "PASS",
+      "observed": "52 passed after generation",
+      "stage": "T005"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run src/routes/feature-012.contract.test.ts --root services/api --maxWorkers 2",
+      "exit": 0,
+      "status": "NOT_EXECUTED",
+      "observed": "43 skipped, zero route assertions executed. Owning stories provide registered route fixtures and authority sessions."
+    }
+  ],
+  "evidenceFiles": {
+    "packages/contracts/src/feature-012.test.ts": "09396b83f683e13cbbce17173530f20e239ef3ce0fe27fd7b0249f329a203d5d",
+    "services/api/src/routes/feature-012.contract.test.ts": "c34e8baf0040716603a29ac7e72e42b15c7cb13fdd69708b5aec686b31d33d48"
+  },
+  "omitted": [
+    "Route success, cursor scope and expiry, authorization, replay/current authority and effects, independent RLS, final T080 parity"
+  ]
+}

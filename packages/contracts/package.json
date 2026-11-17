@@ -12,7 +12,8 @@
     "./discovery-sos": "./src/discovery-sos.ts",
     "./identity-continuity": "./src/identity-continuity.ts",
     "./audit-admin": "./src/audit-admin.ts",
-    "./feature-011": "./src/feature-011.ts"
+    "./feature-011": "./src/feature-011.ts",
+    "./feature-012": "./src/feature-012.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -20,7 +21,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --exclude='dist/**'",
     "generate:feature-011": "node ../../tools/generate-feature-011-contract.mjs",
-    "generate:feature-011:check": "node ../../tools/generate-feature-011-contract.mjs --check"
+    "generate:feature-011:check": "node ../../tools/generate-feature-011-contract.mjs --check",
+    "generate:feature-012": "node ../../tools/generate-feature-012-contract.mjs",
+    "generate:feature-012:check": "node ../../tools/generate-feature-012-contract.mjs --check"
   },
   "dependencies": {
     "@sinclair/typebox": "0.34.52"
