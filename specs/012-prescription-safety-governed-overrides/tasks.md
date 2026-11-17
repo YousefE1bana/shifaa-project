@@ -49,11 +49,11 @@ The Specification supplies J-01…J-05 without P1/P2 priority labels; US1…US5 
   - Depends on: `T004`
   - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t005.json` — New node tools/generate-feature-012-contract.mjs and node tools/generate-feature-012-client.mjs commands generate exact twelve tuples; their --check modes return zero diff; approved YAML hash unchanged; schema/client-only contract negatives pass without requiring not-yet-implemented routes. No route authorization/RLS PASS is inferred; AC-06, AC-13, AC-16.
 
-- [ ] T006 [P] [NFR-I18N-001, NFR-A11Y-001] Author Arabic-first/English parity, semantic safety/source states and accessible-name tests including terminal manual re-release prohibition and inability to recall disclosed information — `packages/i18n/src/feature-012.test.ts`
+- [X] T006 [P] [NFR-I18N-001, NFR-A11Y-001] Author Arabic-first/English parity, semantic safety/source states and accessible-name tests including terminal manual re-release prohibition and inability to recall disclosed information — `packages/i18n/src/feature-012.test.ts`
   - Depends on: `T001`
   - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t006.json` — Tests enumerate both locales, six distinct source meanings, blocked actions, historical non-use, withdrawal irreversibility and no unexplained F014 terminology; missing strings or collapsed meanings fail; AC-03, AC-13, AC-15.
 
-- [ ] T007 [NFR-I18N-001, NFR-A11Y-001] Implement shared ar-EG/en-EG catalogs using approved C2/C3 copy, isolated bidi identifiers and plain source-state wording; export through existing i18n boundary; register the new parity suite in the existing explicit test script — `packages/i18n/src/feature-012.ts`, `packages/i18n/src/index.ts`, `packages/i18n/package.json`
+- [X] T007 [NFR-I18N-001, NFR-A11Y-001] Implement shared ar-EG/en-EG catalogs using approved C2/C3 copy, isolated bidi identifiers and plain source-state wording; export through existing i18n boundary; register the new parity suite in the existing explicit test script — `packages/i18n/src/feature-012.ts`, `packages/i18n/src/index.ts`, `packages/i18n/package.json`
   - Depends on: `T006`
   - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t007.json` — Parity and accessible-name tests pass; no clinical assurance/dispensing wording; all action/result/error/reference/time/next-step copy available in both languages; AC-03, AC-13, AC-15.
 
