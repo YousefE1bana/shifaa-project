@@ -74,20 +74,13 @@
     "requiredF011SuccessorActivation": "PENDING_OWNER_DECISION"
   },
   "database": {
-    "oldDuplicate": [
-      "first-advance|2",
-      "second-advance|3"
-    ],
+    "oldDuplicate": ["first-advance|2", "second-advance|3"],
     "duplicateAfterReleasedSavepoint": "40001",
     "nestedAdmissionAcquisition": "42501",
     "unauthorizedLockUpgrade": "42501",
     "sharedAdvance": "42501",
     "repeatableRead": "42501",
-    "persistence": [
-      "state|1|1|f",
-      "state|2|2|t",
-      "state|3|3|t"
-    ],
+    "persistence": ["state|1|1|f", "state|2|2|t", "state|3|3|t"],
     "nextTransactionOtherScope": 2,
     "concurrencyConflict": "55P03",
     "preservedRetainedContainers": 12,
