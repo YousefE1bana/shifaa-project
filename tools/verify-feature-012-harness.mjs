@@ -501,6 +501,37 @@ function sourceFenceRawBypass(db) {
   assert.equal(upgrade.exit, 3, 'Discarding temp state allowed a lock upgrade');
   assert.match(upgrade.stderr, /42501: F012 source admission denied/);
   assert.doesNotMatch(upgrade.stdout, /unlawful-upgrade/);
+  const sharedAdvance = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+      BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SELECT platform.f012_lock_admission_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001', false
+      );
+      SELECT 'shared-advance', clinical.f012_advance_generation_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
+        'f011_content_status', 'deployment', '1', 1
+      );
+      ROLLBACK;`,
+  );
+  receipt.rawSharedAdvance = sharedAdvance;
+  assert.equal(sharedAdvance.exit, 3);
+  assert.match(sharedAdvance.stderr, /42501: F012 source admission was not retained/);
+  assert.doesNotMatch(sharedAdvance.stdout, /shared-advance/);
+  const snapshot = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+    BEGIN ISOLATION LEVEL REPEATABLE READ;
+    SET SESSION AUTHORIZATION shifaa_api;
+    SELECT platform.f012_lock_admission_v1(
+      '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001', false
+    );
+    ROLLBACK;`,
+  );
+  receipt.repeatableReadDenied = snapshot;
+  assert.equal(snapshot.exit, 3);
+  assert.match(snapshot.stderr, /42501: F012 source admission denied/);
   const duplicate = observedSql(
     db,
     `\\set VERBOSITY verbose
@@ -513,10 +544,12 @@ function sourceFenceRawBypass(db) {
       SELECT platform.f012_lock_admission_v1(
         '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001', true
       );
+      SAVEPOINT first_mutation;
       SELECT 'first-advance', clinical.f012_advance_generation_v1(
         '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
         'f011_content_status', 'deployment', '1', 1
       );
+      RELEASE SAVEPOINT first_mutation;
       SELECT 'second-advance', clinical.f012_advance_generation_v1(
         '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
         'f011_content_status', 'deployment', '1', 2
@@ -525,7 +558,107 @@ function sourceFenceRawBypass(db) {
   );
   receipt.rawDuplicateAdvance = duplicate;
   assert.equal(duplicate.exit, 3, 'Same transaction advanced the same generation twice');
+  assert.match(duplicate.stdout, /first-advance\|2/);
+  assert.match(duplicate.stderr, /40001:.*already advanced in this transaction/);
   assert.doesNotMatch(duplicate.stdout, /second-advance/);
+}
+
+function sourceFenceDurability(db) {
+  const deployment = '01000000-0000-4000-8000-000000000001';
+  const epoch = '02000000-0000-4000-8000-000000000001';
+  const scope = `'${deployment}', '${epoch}', 'f011_content_status', 'deployment', '1'`;
+  const other = `'${deployment}', '${epoch}', 'f012_projection_policy', 'deployment', '1'`;
+  const lock = `SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', true);`;
+  const advance = (revision) =>
+    `SELECT 'advance', clinical.f012_advance_generation_v1(${scope}, ${revision});`;
+  sql(
+    db,
+    `CREATE TABLE platform.f012_probe_head (revision integer NOT NULL);
+    INSERT INTO platform.f012_probe_head VALUES (1);
+    GRANT SELECT, UPDATE ON platform.f012_probe_head TO shifaa_api;
+    INSERT INTO clinical.safety_source_generations
+      (deployment_id, admission_epoch, producer_key, scope_key, contract_version, generation)
+      VALUES (${scope}, 1), (${other}, 1);`,
+  );
+  const write = (revision, finish, before = '', after = '') =>
+    observedSql(
+      db,
+      `\\set VERBOSITY verbose
+    BEGIN;
+    SET SESSION AUTHORIZATION shifaa_api;
+    SELECT 'pid', pg_backend_pid();
+    ${lock}
+    ${before}
+    UPDATE platform.f012_probe_head SET revision = revision + 1;
+    ${advance(revision)}
+    ${after}
+    ${finish};`,
+    );
+  const state = () =>
+    observedSql(
+      db,
+      `SELECT 'state', revision, generation,
+    last_advance_xid IS NOT NULL FROM platform.f012_probe_head
+    CROSS JOIN clinical.safety_source_generations
+    WHERE producer_key = 'f011_content_status';`,
+    );
+  const rolledBack = write(1, 'ROLLBACK');
+  const afterRollback = state();
+  const retry = write(
+    1,
+    'COMMIT',
+    `SAVEPOINT abandoned;
+    UPDATE platform.f012_probe_head SET revision = revision + 1;
+    ${advance(1)}
+    ROLLBACK TO SAVEPOINT abandoned;
+    RELEASE SAVEPOINT abandoned;`,
+  );
+  const afterFirst = state();
+  const distinct = write(
+    2,
+    'COMMIT',
+    '',
+    `SELECT 'other-scope-advance',
+    clinical.f012_advance_generation_v1(${other}, 1);`,
+  );
+  const afterDistinct = state();
+  const nestedUpgrade = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+    BEGIN;
+    SET SESSION AUTHORIZATION shifaa_api;
+    SAVEPOINT choose_read;
+    SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', false);
+    RELEASE SAVEPOINT choose_read;
+    SELECT 'forbidden-after-release', platform.f012_lock_admission_v1('${deployment}', '${epoch}', true);
+    ROLLBACK;`,
+  );
+  receipt.durability = {
+    rolledBack,
+    afterRollback,
+    retry,
+    afterFirst,
+    distinct,
+    afterDistinct,
+    nestedUpgrade,
+  };
+  assert.equal(rolledBack.exit, 0, rolledBack.stderr);
+  assert.match(rolledBack.stdout, /advance\|2/);
+  assert.deepEqual(afterRollback, { exit: 0, stdout: 'state|1|1|f\n', stderr: '' });
+  assert.equal(retry.exit, 0, retry.stderr);
+  assert.equal((retry.stdout.match(/advance\|2/g) ?? []).length, 2);
+  assert.deepEqual(afterFirst, { exit: 0, stdout: 'state|2|2|t\n', stderr: '' });
+  assert.equal(distinct.exit, 0, distinct.stderr);
+  assert.match(distinct.stdout, /advance\|3/);
+  assert.match(distinct.stdout, /other-scope-advance\|2/);
+  assert.notEqual(retry.stdout.match(/pid\|(\d+)/)?.[1], distinct.stdout.match(/pid\|(\d+)/)?.[1]);
+  assert.deepEqual(afterDistinct, { exit: 0, stdout: 'state|3|3|t\n', stderr: '' });
+  assert.equal(nestedUpgrade.exit, 3, 'Releasing a savepoint allowed rank-zero upgrade');
+  assert.match(
+    nestedUpgrade.stderr,
+    /42501: F012 source admission denied: top-level acquisition required/,
+  );
+  assert.doesNotMatch(nestedUpgrade.stdout, /forbidden-after-release/);
 }
 
 function sourceFence(db, red, upgrade) {
@@ -619,6 +752,7 @@ async function admit() {
       if (!redOnly) {
         await sourceFenceLockConflict(source);
         sourceFenceRawBypass(source);
+        sourceFenceDurability(source);
       }
     } finally {
       teardown();

@@ -2,8 +2,8 @@
 -- deployment, scope, source row or online operation. T013 wires actual writers.
 BEGIN;
 
--- Inspect only the singleton admission tuple and the calling backend's actual
--- heavyweight transaction IDs. The application receives no extension grant.
+-- Inspect only the singleton admission tuple and the caller's top-level
+-- transaction ID. The application receives no extension grant.
 CREATE EXTENSION pgrowlocks WITH SCHEMA platform VERSION '1.2';
 REVOKE ALL ON FUNCTION platform.pgrowlocks(text) FROM PUBLIC, shifaa_api;
 
@@ -24,6 +24,7 @@ CREATE TABLE clinical.safety_source_generations (
   scope_key text NOT NULL,
   contract_version text NOT NULL CHECK (contract_version = '1'),
   generation bigint NOT NULL CHECK (generation > 0),
+  last_advance_xid xid8,
   PRIMARY KEY (deployment_id, admission_epoch, producer_key, scope_key, contract_version),
   FOREIGN KEY (deployment_id, admission_epoch)
     REFERENCES platform.f012_source_admission (deployment_id, admission_epoch),
@@ -85,7 +86,8 @@ GRANT SELECT ON platform.f012_source_admission, clinical.safety_source_generatio
 -- Postgres requires UPDATE privilege for row locking. The policy prevents
 -- changing the admission identity through the runtime principal.
 GRANT UPDATE (admission_epoch) ON platform.f012_source_admission TO shifaa_f012_fence_executor;
-GRANT UPDATE (generation) ON clinical.safety_source_generations TO shifaa_f012_fence_executor;
+GRANT UPDATE (generation, last_advance_xid) ON clinical.safety_source_generations
+  TO shifaa_f012_fence_executor;
 
 CREATE POLICY f012_admission_executor_read ON platform.f012_source_admission
   FOR SELECT TO shifaa_f012_fence_executor USING (true);
@@ -94,7 +96,8 @@ CREATE POLICY f012_admission_executor_lock_only ON platform.f012_source_admissio
 CREATE POLICY f012_generation_executor_read ON clinical.safety_source_generations
   FOR SELECT TO shifaa_f012_fence_executor USING (true);
 CREATE POLICY f012_generation_executor_increment ON clinical.safety_source_generations
-  FOR UPDATE TO shifaa_f012_fence_executor USING (true) WITH CHECK (true);
+  FOR UPDATE TO shifaa_f012_fence_executor USING (true)
+  WITH CHECK (last_advance_xid = pg_catalog.pg_current_xact_id());
 
 -- The owner provisions exact deployment/epoch and approved initialized scopes
 -- while exposure is disabled. Owner INSERT is independent of runtime grants.
@@ -121,11 +124,8 @@ AS $$
     JOIN platform.pgrowlocks('platform.f012_source_admission') locks
       ON locks.locked_row = admission.ctid
     CROSS JOIN LATERAL unnest(locks.xids, locks.modes) holder(xid, mode)
-    JOIN pg_catalog.pg_locks backend
-      ON backend.locktype = 'transactionid' AND backend.transactionid = holder.xid
-      AND backend.pid = pg_catalog.pg_backend_pid()
-      AND backend.granted AND backend.mode = 'ExclusiveLock'
     WHERE admission.deployment_id = p_deployment AND admission.admission_epoch = p_epoch
+      AND holder.xid = pg_catalog.pg_current_xact_id_if_assigned()::xid
       AND (holder.mode = 'For Update' OR (NOT p_write AND holder.mode = 'For Share'))
   );
 $$;
@@ -135,6 +135,7 @@ RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog
 AS $$
 BEGIN
   IF session_user <> 'shifaa_api' OR p_write IS NULL
+    OR pg_catalog.current_setting('transaction_isolation') <> 'read committed'
     OR platform.f012_holds_admission_v1(p_deployment, p_epoch, false) THEN
     RAISE EXCEPTION 'F012 source admission denied' USING ERRCODE = '42501';
   END IF;
@@ -147,6 +148,12 @@ BEGIN
   END IF;
   IF NOT FOUND THEN
     RAISE EXCEPTION 'F012 source admission denied' USING ERRCODE = '42501';
+  END IF;
+  -- pgrowlocks cannot identify a released subtransaction as this backend's
+  -- lock owner. Reject acquisition in savepoints before it can leave one.
+  IF NOT platform.f012_holds_admission_v1(p_deployment, p_epoch, p_write) THEN
+    RAISE EXCEPTION 'F012 source admission denied: top-level acquisition required'
+      USING ERRCODE = '42501';
   END IF;
 END
 $$;
@@ -192,25 +199,31 @@ BEGIN
 END
 $$;
 
--- Only the already-captured generation can advance. SQL bigint overflow
--- aborts the owning transaction, including the caller's source changes.
+-- Coalesce each producer/scope to one advance per effective transaction. Use
+-- the top-level xid so releasing a savepoint cannot make a second advance
+-- eligible. Rollback undoes both the marker and the counter with the source.
 CREATE FUNCTION clinical.f012_advance_generation_v1(
   p_deployment uuid, p_epoch uuid, p_producer text, p_scope text, p_version text, p_expected bigint
 ) RETURNS bigint LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog
 AS $$
 DECLARE
+  advance_xid xid8;
   next_generation bigint;
 BEGIN
   IF session_user <> 'shifaa_api' THEN
     RAISE EXCEPTION 'F012 generation scope denied' USING ERRCODE = '42501';
   END IF;
   PERFORM platform.f012_require_retained_admission_v1(p_deployment, p_epoch, true);
-  UPDATE clinical.safety_source_generations SET generation = generation + 1
+  advance_xid := pg_catalog.pg_current_xact_id();
+  UPDATE clinical.safety_source_generations
+    SET generation = generation + 1, last_advance_xid = advance_xid
     WHERE (deployment_id, admission_epoch, producer_key, scope_key, contract_version, generation)
       = (p_deployment, p_epoch, p_producer, p_scope, p_version, p_expected)
+      AND last_advance_xid IS DISTINCT FROM advance_xid
     RETURNING generation INTO next_generation;
   IF next_generation IS NULL THEN
-    RAISE EXCEPTION 'F012 generation scope is missing or no longer current' USING ERRCODE = '40001';
+    RAISE EXCEPTION 'F012 generation is missing, stale or already advanced in this transaction'
+      USING ERRCODE = '40001';
   END IF;
   RETURN next_generation;
 END
