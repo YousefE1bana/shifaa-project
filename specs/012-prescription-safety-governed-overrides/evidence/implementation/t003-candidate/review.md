@@ -3,7 +3,7 @@
 **PENDING APPROVAL** · [Issue #514](https://github.com/YousefE1bana/shifaa-project/issues/514)
 
 Review [manifest.json](manifest.json), SHA-256
-`dc730742dd7cd84165b5a6ec49f6ee8b89a5340798819d84531ec24e4f3098be`.
+`829e607e1134dcec03027c15ce9e1776444f4c196e2c1d8b571f313300f54914`.
 The manifest binds four candidate files and the five immutable 2026-10-14
 artifact hashes at source `fbd2b5312a5038aad21db0001a17dac22bdcbf7e`.
 
@@ -25,7 +25,7 @@ Yousef Osama is the designated engineering acceptance authority. Suggested
 wording for an attributable, separately recorded exact-byte approval
 
 > I approve the exact T003 engineering mechanism candidate files bound to
-> manifest SHA-256 dc730742dd7cd84165b5a6ec49f6ee8b89a5340798819d84531ec24e4f3098be
+> manifest SHA-256 829e607e1134dcec03027c15ce9e1776444f4c196e2c1d8b571f313300f54914
 > for the isolated synthetic SHIFAA F012 harness, with the five original
 > artifact hashes intact. Clinical, professional, facility, legal and
 > production gates remain in effect.

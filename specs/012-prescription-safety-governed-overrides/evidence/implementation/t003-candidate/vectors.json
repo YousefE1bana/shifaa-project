@@ -510,6 +510,19 @@
         "state.pharmacistObligationPersisted": false
       },
       "simulatedSignEligible": false
+    },
+    {
+      "id": "approved-pharmacist-missing-durable-obligation",
+      "simulatedSignEligible": false,
+      "changes": {
+        "authority.pharmacist": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_PHARMACIST_PERSON"
+        },
+        "state.pharmacistObligationPersisted": false
+      },
+      "control": "E"
     }
   ],
   "positiveExtensions": [

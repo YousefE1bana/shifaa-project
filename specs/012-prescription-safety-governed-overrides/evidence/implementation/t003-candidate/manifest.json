@@ -37,18 +37,18 @@
   "candidateFiles": [
     {
       "path": "packages/test-kit/src/feature-012.ts",
-      "bytes": 5652,
-      "sha256": "b465469f1d2f3d517a43145b5999382ed2192bd2a5e488527cffd466e281aa19"
+      "bytes": 5645,
+      "sha256": "7210fd4d4c14228e90fadbcabb055097baf01c5185d7aaf79d4e261230bad12c"
     },
     {
       "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/vectors.json",
-      "bytes": 13823,
-      "sha256": "310b4e005604c8b0040a0f118adc3f3f63c9c784b70541606451be48e5df4195"
+      "bytes": 14194,
+      "sha256": "de42388ef171f2b771d8e7e195fc4990698402df1f33ed07393e7b1fe1d089b8"
     },
     {
       "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/mapping.md",
-      "bytes": 4438,
-      "sha256": "789769239ca67be67c50ca9400fb488d6fccc124386b61f4c0d8ae78deed48fd"
+      "bytes": 4498,
+      "sha256": "2f89284ebacdead347581ecdac77c8080dea59cf3b457b4bb40fb2a6558af73e"
     },
     {
       "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/verify-disabled.test.mjs",

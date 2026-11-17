@@ -117,13 +117,13 @@ function simulate(probe: MechanismProbe): boolean {
       (field) => Object.hasOwn(probe.fields, field) && presentField(field, probe.fields[field]),
     ) ||
     ('monitoringPlan' in probe.fields &&
-      !presentField('monitoringPlan', probe.fields.monitoringPlan))
+      !presentField('monitoringPlan', probe.fields['monitoringPlan']))
   ) {
     return false;
   }
   if (lane === 'warning') return state.acknowledged;
 
-  const expiryMs = Date.parse(String(probe.fields.expiresAt));
+  const expiryMs = Date.parse(String(probe.fields['expiresAt']));
   if (
     !state.requestLive ||
     !Number.isSafeInteger(state.nowSeconds) ||
@@ -137,6 +137,7 @@ function simulate(probe: MechanismProbe): boolean {
   const activatedAt = state.secondApprovalSeconds;
   if (
     !independentReview(secondPhysician, [prescriberPerson]) ||
+    !state.pharmacistObligationPersisted ||
     activatedAt === null ||
     !Number.isSafeInteger(activatedAt) ||
     activatedAt > state.nowSeconds
@@ -146,11 +147,7 @@ function simulate(probe: MechanismProbe): boolean {
   if (pharmacist.decision === 'approved') {
     return independentReview(pharmacist, [prescriberPerson, secondPhysician.person]);
   }
-  return (
-    pharmacist.decision === 'pending' &&
-    state.pharmacistObligationPersisted &&
-    state.nowSeconds - activatedAt < 60
-  );
+  return pharmacist.decision === 'pending' && state.nowSeconds - activatedAt < 60;
 }
 
 // A later approved binding needs verified deployment and exact file bytes. There
