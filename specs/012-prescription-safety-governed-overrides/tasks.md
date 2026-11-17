@@ -29,7 +29,7 @@ The Specification supplies J-01…J-05 without P1/P2 priority labels; US1…US5 
 
 **Independent outcome:** Establish reproducible inputs and a safe future execution harness. No stage or runtime work is authorized by generating this inventory.
 
-- [ ] T001 [NFR-QUALITY-001, NFR-API-001] Bind the approved Specification, exact six Plan hashes, C1/C2/U1, C2/C3 baselines and current OPEN-gate restrictions; classify synthetic versus professional/release gates without reopening accepted decisions — `specs/012-prescription-safety-governed-overrides/evidence/implementation/input-binding.json`
+- [X] T001 [NFR-QUALITY-001, NFR-API-001] Bind the approved Specification, exact six Plan hashes, C1/C2/U1, C2/C3 baselines and current OPEN-gate restrictions; classify synthetic versus professional/release gates without reopening accepted decisions — `specs/012-prescription-safety-governed-overrides/evidence/implementation/input-binding.json`
   - Depends on: `none`
   - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t001.json` — Record every source SHA, approval owner, integrated commit and gate capability/earliest stage; mismatch stops execution; no fabricated Design or professional signature; AC-14, AC-15, AC-16.
 
