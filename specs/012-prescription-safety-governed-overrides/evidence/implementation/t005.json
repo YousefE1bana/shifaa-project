@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "sourceMain": "81fa4ae42167f9df7b347b8eed5ed5e3ca3e10c8",
+  "approvedTaskBaseline": "fa5c571fc5988be0a7e8cc42b3e5e785f0b44465",
+  "authority": [
+    "specs/012-prescription-safety-governed-overrides/evidence/implementation/input-binding.json",
+    "specs/012-prescription-safety-governed-overrides/readiness/post-merge-plan-approval-2026-11-12.md"
+  ],
+  "execution": {
+    "node": "v24.22.1",
+    "vitest": "4.1.12",
+    "operatingSystem": "Windows",
+    "runtime": "Synthetic JSON/browser-independent fetch doubles",
+    "database": null,
+    "nativeSession": null
+  },
+  "inputSha256": {
+    "specs/012-prescription-safety-governed-overrides/contracts/openapi.yaml": "c135c26a4e897a86d6d37ea756e46904a83c5fcc55387003ceeb71c97635fb9d",
+    "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65"
+  },
+  "task": "T005",
+  "issue": 516,
+  "status": "GENERATED_CONTRACT_AND_CLIENT_ACCEPTED",
+  "acceptance": "Deterministically emitted typed wire schemas and methods for exactly 12 approved tuples. Tests cover closure and conditions, client request construction, preconditions and error handling.",
+  "evidenceFiles": {
+    "tools/generate-feature-012-contract.mjs": "19319ade413b2541a3f17732d5dbbe039d3e2efe128389de24dca82115f1188f",
+    "tools/generate-feature-012-client.mjs": "db78dcbc3769baf770203d18d9b8a95de1e5426b971d7d4c55018f5c94112b94",
+    "packages/contracts/src/feature-012.ts": "b01519afbfa28b4964df27260acb76e17be0f6957da39c0ba82e7bb61f77c018",
+    "packages/api-client/src/feature-012.ts": "6f9b03941ae06be920d8b3d0f921869c8f0f35ea6165a9113a5842fecdcaa5cc",
+    "packages/api-client/src/feature-012.test.ts": "7282bc40379e00dedbc59a24c2ab800a09422bb51a285d14d7cb417e31ad3482",
+    "packages/contracts/package.json": "ed0328f2b97d7ba5746be9dfee1d1bc36f112954bd60d809d967a54bb3536a5d",
+    "packages/api-client/package.json": "c7a6d22ea476a8d7f99c1f018414eb8de51b7a64a7b494035bbca01e56aee67d",
+    "tools/tooling-history.mjs": "ce33f11c39955b3341fa9e5a99b943f9c5cd8a061f9833d9cd8e5569a43716bf"
+  },
+  "runs": [
+    {
+      "command": "node tools/generate-feature-012-contract.mjs",
+      "exit": 0,
+      "observed": "Repeated generation preserved both output hashes; check mode reported current"
+    },
+    {
+      "command": "node tools/generate-feature-012-contract.mjs --check",
+      "exit": 0,
+      "observed": "Repeated generation preserved both output hashes; check mode reported current"
+    },
+    {
+      "command": "node tools/generate-feature-012-client.mjs",
+      "exit": 0,
+      "observed": "Repeated generation preserved both output hashes; check mode reported current"
+    },
+    {
+      "command": "node tools/generate-feature-012-client.mjs --check",
+      "exit": 0,
+      "observed": "Repeated generation preserved both output hashes; check mode reported current"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run src/feature-012.test.ts --root packages/contracts --maxWorkers 2",
+      "exit": 0,
+      "passed": 52
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run src/feature-012.test.ts --root packages/api-client --maxWorkers 2",
+      "exit": 0,
+      "passed": 5
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p packages/contracts/tsconfig.json",
+      "exit": 0
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p packages/api-client/tsconfig.json",
+      "exit": 0
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p services/api/tsconfig.json",
+      "exit": 0
+    },
+    {
+      "command": "node tools/verify-contracts.mjs",
+      "exit": 0,
+      "observed": "97 predecessor OpenAPI bindings matched"
+    },
+    {
+      "command": "node tools/verify-feature-011-contracts.mjs",
+      "exit": 0,
+      "observed": "Historical F011 evidence verified after exact additive manifest compatibility. Independent temporary-fixture cases rejected unrelated export changes in both manifests."
+    },
+    {
+      "command": "node tools/verify-architecture.mjs",
+      "exit": 0
+    },
+    {
+      "command": "node tools/verify-secrets.mjs",
+      "exit": 0
+    },
+    {
+      "command": "node tools/verify.mjs",
+      "exit": 2,
+      "observed": "IMAGE_NOT_PREPARED for changed workspace manifests; local offline aggregate did not execute"
+    }
+  ],
+  "omitted": [
+    "Full OpenAPI semantic validation",
+    "Runtime endpoint parity and authorization/RLS",
+    "Human, native accessibility, clinical and production authorization"
+  ]
+}

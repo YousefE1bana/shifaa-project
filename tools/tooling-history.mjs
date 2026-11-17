@@ -40,6 +40,20 @@ const physicalPreflightRepair = {
 // Their sealed F011 acceptance view stays historical; current execution and CI
 // validate the new runtime separately. Any further byte change fails closed.
 const maintenancePins = [
+  // F012 T005 adds a subpath and two generator commands to each package.
+  // Verify the exact live manifests before returning the sealed F011 bytes.
+  {
+    path: 'packages/contracts/package.json',
+    currentSha256: 'ed0328f2b97d7ba5746be9dfee1d1bc36f112954bd60d809d967a54bb3536a5d',
+    historicalSha256: 'de33203c197aa6e5ce0479b2243b8cc0c94ae2e47007fbaeaf842a1ab4cefc10',
+    gitBlob: '57cf758857f9dcd98aa9011e40c06f219c6ec68e',
+  },
+  {
+    path: 'packages/api-client/package.json',
+    currentSha256: 'c7a6d22ea476a8d7f99c1f018414eb8de51b7a64a7b494035bbca01e56aee67d',
+    historicalSha256: 'dff296db30d4afc4067b2b3cead136679c21da3fcbb866707994f6f7405b4ca8',
+    gitBlob: '38d0250f4a6a0b7e938bc9371c0e3a1fe224cccf',
+  },
   {
     path: 'package.json',
     currentSha256: '3d79f5c6c5e5f5fde13ec98c63e202b75023c25884106549792edd5606ed1776',
