@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "record": "F012-T003-SYNTHETIC-MECHANISM-CANDIDATE/1",
+  "sourceCommit": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+  "issue": 514,
+  "stage": "PENDING_APPROVAL",
+  "execution": "disabled",
+  "approval": null,
+  "approvalOwner": "Yousef Osama, SHIFAA Product Owner",
+  "originalInputs": [
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+      "bytes": 8983,
+      "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+      "bytes": 5728,
+      "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+      "bytes": 3643,
+      "sha256": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+      "bytes": 8480,
+      "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+      "bytes": 13585,
+      "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185"
+    }
+  ],
+  "candidateFiles": [
+    {
+      "path": "packages/test-kit/src/feature-012.ts",
+      "bytes": 5652,
+      "sha256": "b465469f1d2f3d517a43145b5999382ed2192bd2a5e488527cffd466e281aa19"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/vectors.json",
+      "bytes": 13823,
+      "sha256": "310b4e005604c8b0040a0f118adc3f3f63c9c784b70541606451be48e5df4195"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/mapping.md",
+      "bytes": 4438,
+      "sha256": "789769239ca67be67c50ca9400fb488d6fccc124386b61f4c0d8ae78deed48fd"
+    },
+    {
+      "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/verify-disabled.test.mjs",
+      "bytes": 3425,
+      "sha256": "f8b2e9a1ce16e7fa067287339c4445a3bd4c2660c7398c20e499bea5d0aa6c0f"
+    }
+  ]
+}
