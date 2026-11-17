@@ -1,0 +1,1739 @@
+{
+  "schemaVersion": 1,
+  "task": "T002",
+  "issue": 513,
+  "authorizedOwner": "AmiraSaad747",
+  "sourceMain": "a19c07047acf154dda9b02862196a1af829e9d91",
+  "command": "node tools/verify-feature-012-harness.mjs",
+  "exit": 0,
+  "toolSha256": "72d0c10501bf4ea4220558c74704638e737b20d0309efb9dfd2014f3dfee1110",
+  "probeSha256": "3a548bbe949c5a8ba9693c7f8edeef9d5d3c217376b70daebb461b8f8183e184",
+  "provenance": "Native Auth accounts created during this run with generated addresses under example.invalid, random synthetic person IDs and isolated PostgreSQL fixtures. No clinical inputs or existing records were imported.",
+  "scope": "This execution admits the harness-local API and forced-RLS probe for synthetic engineering. It grants no persistent-resource access or authority for later tasks.",
+  "runtime": {
+    "database": "PostgreSQL 17.6.1.158 Supabase image; two independently initialized instances",
+    "auth": "Supabase GoTrue 2.195.0; native email signup auto-confirmed for isolated fixtures; AAL1",
+    "api": "Fastify loopback probe; PostgreSQL login f012_probe",
+    "storage": "Disposable tmpfs database mounts; no persistent volume, socket or host source bind",
+    "network": "Fresh internal bridge for API, Auth and source DB; no published ports; restore uses network none",
+    "failpoints": "Server-local controls return HTTP 503 around the commit boundary. Write state is queried separately."
+  },
+  "execution": {
+    "run": "b5725e96-22a9-4e03-b551-a2fafd96cad2",
+    "containers": [
+      {
+        "id": "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+        "name": "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2-db",
+        "image": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+        "network": "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267",
+        "tmpfs": {
+          "/var/lib/postgresql/data": "rw,nosuid,nodev,size=768m"
+        },
+        "role": "db"
+      },
+      {
+        "id": "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60",
+        "name": "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2-restore",
+        "image": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+        "network": "none",
+        "tmpfs": {
+          "/var/lib/postgresql/data": "rw,nosuid,nodev,size=768m"
+        },
+        "role": "restore"
+      },
+      {
+        "id": "b732b301250da23f485a880c0cde4ca5a3dbae2525585a280fe90a121b21150a",
+        "name": "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2-auth",
+        "image": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
+        "network": "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267",
+        "tmpfs": {},
+        "role": "auth"
+      },
+      {
+        "id": "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa",
+        "name": "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2-probe",
+        "image": "sha256:b40c1650a3c15541b2990a254c748b8d18bd472770e05c81f935ae07d36bb726",
+        "network": "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267",
+        "tmpfs": {
+          "/tmp": "rw,nosuid,nodev,size=48m"
+        },
+        "role": "probe"
+      }
+    ],
+    "commands": [
+      {
+        "args": ["--context", "desktop-linux", "info", "--format", "{{.ID}}"],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "image",
+          "inspect",
+          "public.ecr.aws/supabase/postgres@sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "image",
+          "inspect",
+          "public.ecr.aws/supabase/gotrue@sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "image",
+          "inspect",
+          "shifaa/verify:31bc2803ebf01d4084bc3af2c25bba3ef996590b7021e42678e2ba94a0bcad74"
+        ],
+        "exit": 0
+      },
+      {
+        "args": ["--context", "desktop-linux", "network", "inspect", "none"],
+        "exit": 0
+      },
+      {
+        "args": ["--context", "desktop-linux", "ps", "-aq", "--no-trunc"],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "24a654233ba487ac64eea02c455022cdf7e8b2670393c2bc6b5955a098ceaa07"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "634c66115b1500e5f5db6c1b4f2aaacbde5ac8105637c3e2c75d1d55b3e72b7a"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "8772ce5d4a78f3e66fc292c1733f0f495e234c1e8a33ca816f8d78770c05545c"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "8f27e9017843aa85a887534d3419ffaa7f4c1390728d76c716eb7d2257f72d8b"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "924c28e6ba9b5e937a037a0d46d1abb99300496bc3d1a209fe6f8bb067209af7"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "a85040697c07e5c0cdc87a649ea13371d944231ec8869c6ab00265f848b5b1e4"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "b3c5b30bbc249c6e3519cfcbc1c970f3e5f02c9775414d5e022423bcff3081e4"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "cf5454bbcbd74f5459aea7f5e5bd89021ca9ad4ba584dcd21c348a738c672683"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "d6e78c38022693477c252e2cf35441d80b334339cf339e00ffd04b6bb7572b4b"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "dab3a483f3448253dd1d6ae0491f8e599e2f2e3b5073e2cb0a462cf38ae2027e"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "f3a3323a4e50faac6b556eb0e757851ed2cea5a30cdf29c1e59adbef0c3e819d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "fe3f4c8205fbf28768b2780c625c9c501e5d64e1641d47595c24e236938d5325"
+        ],
+        "exit": 0
+      },
+      {
+        "args": ["--context", "desktop-linux", "volume", "ls", "-q"],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "shifaa-local-postgres_shifaa-postgres-data"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "supabase_db_shifaa-local-supabase"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "supabase_edge_runtime_shifaa-local-supabase"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "supabase_storage_shifaa-local-supabase"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "create",
+          "--internal",
+          "--driver",
+          "bridge",
+          "--label",
+          "shifaa.f012.admission=b5725e96-22a9-4e03-b551-a2fafd96cad2",
+          "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "create",
+          "--pull=never",
+          "--name",
+          "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2-db",
+          "--network",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267",
+          "--label",
+          "shifaa.f012.admission=b5725e96-22a9-4e03-b551-a2fafd96cad2",
+          "--pids-limit=128",
+          "--memory=768m",
+          "--cpus=1",
+          "--security-opt=no-new-privileges",
+          "--tmpfs",
+          "/var/lib/postgresql/data:rw,nosuid,nodev,size=768m",
+          "--network-alias",
+          "db",
+          "--env",
+          "POSTGRES_PASSWORD=<generated>",
+          "--env",
+          "JWT_SECRET=<generated>",
+          "--env",
+          "JWT_EXP=<generated>",
+          "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "start",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "pg_isready",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 2
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "pg_isready",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "create",
+          "--pull=never",
+          "--name",
+          "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2-restore",
+          "--network",
+          "none",
+          "--label",
+          "shifaa.f012.admission=b5725e96-22a9-4e03-b551-a2fafd96cad2",
+          "--pids-limit=128",
+          "--memory=768m",
+          "--cpus=1",
+          "--security-opt=no-new-privileges",
+          "--tmpfs",
+          "/var/lib/postgresql/data:rw,nosuid,nodev,size=768m",
+          "--env",
+          "POSTGRES_PASSWORD=<generated>",
+          "--env",
+          "JWT_SECRET=<generated>",
+          "--env",
+          "JWT_EXP=<generated>",
+          "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "start",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60",
+          "pg_isready",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 2
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60",
+          "pg_isready",
+          "-h",
+          "127.0.0.1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "create",
+          "--pull=never",
+          "--name",
+          "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2-auth",
+          "--network",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267",
+          "--label",
+          "shifaa.f012.admission=b5725e96-22a9-4e03-b551-a2fafd96cad2",
+          "--pids-limit=128",
+          "--memory=768m",
+          "--cpus=1",
+          "--security-opt=no-new-privileges",
+          "--network-alias",
+          "auth",
+          "--env",
+          "API_EXTERNAL_URL=<generated>",
+          "--env",
+          "GOTRUE_SITE_URL=<generated>",
+          "--env",
+          "GOTRUE_API_HOST=<generated>",
+          "--env",
+          "GOTRUE_API_PORT=<generated>",
+          "--env",
+          "GOTRUE_DB_DRIVER=<generated>",
+          "--env",
+          "GOTRUE_DB_DATABASE_URL=<generated>",
+          "--env",
+          "GOTRUE_DB_MIGRATIONS_PATH=<generated>",
+          "--env",
+          "GOTRUE_JWT_SECRET=<generated>",
+          "--env",
+          "GOTRUE_JWT_ISSUER=<generated>",
+          "--env",
+          "GOTRUE_JWT_EXP=<generated>",
+          "--env",
+          "GOTRUE_JWT_AUD=<generated>",
+          "--env",
+          "GOTRUE_JWT_DEFAULT_GROUP_NAME=<generated>",
+          "--env",
+          "GOTRUE_EXTERNAL_EMAIL_ENABLED=<generated>",
+          "--env",
+          "GOTRUE_MAILER_AUTOCONFIRM=<generated>",
+          "--env",
+          "GOTRUE_DISABLE_SIGNUP=<generated>",
+          "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
+          "auth"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "b732b301250da23f485a880c0cde4ca5a3dbae2525585a280fe90a121b21150a"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "start",
+          "b732b301250da23f485a880c0cde4ca5a3dbae2525585a280fe90a121b21150a"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "b732b301250da23f485a880c0cde4ca5a3dbae2525585a280fe90a121b21150a"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "create",
+          "--pull=never",
+          "--name",
+          "shifaa-f012-b5725e96-22a9-4e03-b551-a2fafd96cad2-probe",
+          "--network",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267",
+          "--label",
+          "shifaa.f012.admission=b5725e96-22a9-4e03-b551-a2fafd96cad2",
+          "--pids-limit=128",
+          "--memory=768m",
+          "--cpus=1",
+          "--security-opt=no-new-privileges",
+          "--tmpfs",
+          "/tmp:rw,nosuid,nodev,size=48m",
+          "--read-only",
+          "--cap-drop=ALL",
+          "--user=1000:1000",
+          "--entrypoint=node",
+          "--env",
+          "F012_PROBE_PASSWORD=<generated>",
+          "sha256:b40c1650a3c15541b2990a254c748b8d18bd472770e05c81f935ae07d36bb726",
+          "-e",
+          "setTimeout(() => {}, 180000)"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "start",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa",
+          "node",
+          "-",
+          "fixtures"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa",
+          "node",
+          "-",
+          "probe"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "pg_dump",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres",
+          "--schema=f012_admission",
+          "--no-owner",
+          "--no-privileges"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "exec",
+          "-i",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60",
+          "psql",
+          "-XAt",
+          "--set=ON_ERROR_STOP=1",
+          "-U",
+          "supabase_admin",
+          "-d",
+          "postgres"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "rm",
+          "-f",
+          "4b2cf349a94f983962290abdcd1875dfb4fc1d6c0badb5b070588aab365340aa"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "b732b301250da23f485a880c0cde4ca5a3dbae2525585a280fe90a121b21150a"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "rm",
+          "-f",
+          "b732b301250da23f485a880c0cde4ca5a3dbae2525585a280fe90a121b21150a"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "rm",
+          "-f",
+          "217235a9e90c509dabcb007b61030c822702b60f642a7600fae8516dae537b60"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "rm",
+          "-f",
+          "81471fda70147997a1dd66ded329ef69c972ffec33d2ad2abad726e6dc36b88d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "inspect",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "network",
+          "rm",
+          "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267"
+        ],
+        "exit": 0
+      },
+      {
+        "args": ["--context", "desktop-linux", "ps", "-aq", "--no-trunc"],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "24a654233ba487ac64eea02c455022cdf7e8b2670393c2bc6b5955a098ceaa07"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "634c66115b1500e5f5db6c1b4f2aaacbde5ac8105637c3e2c75d1d55b3e72b7a"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "8772ce5d4a78f3e66fc292c1733f0f495e234c1e8a33ca816f8d78770c05545c"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "8f27e9017843aa85a887534d3419ffaa7f4c1390728d76c716eb7d2257f72d8b"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "924c28e6ba9b5e937a037a0d46d1abb99300496bc3d1a209fe6f8bb067209af7"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "a85040697c07e5c0cdc87a649ea13371d944231ec8869c6ab00265f848b5b1e4"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "b3c5b30bbc249c6e3519cfcbc1c970f3e5f02c9775414d5e022423bcff3081e4"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "cf5454bbcbd74f5459aea7f5e5bd89021ca9ad4ba584dcd21c348a738c672683"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "d6e78c38022693477c252e2cf35441d80b334339cf339e00ffd04b6bb7572b4b"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "dab3a483f3448253dd1d6ae0491f8e599e2f2e3b5073e2cb0a462cf38ae2027e"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "f3a3323a4e50faac6b556eb0e757851ed2cea5a30cdf29c1e59adbef0c3e819d"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "container",
+          "inspect",
+          "fe3f4c8205fbf28768b2780c625c9c501e5d64e1641d47595c24e236938d5325"
+        ],
+        "exit": 0
+      },
+      {
+        "args": ["--context", "desktop-linux", "volume", "ls", "-q"],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "shifaa-local-postgres_shifaa-postgres-data"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "supabase_db_shifaa-local-supabase"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "supabase_edge_runtime_shifaa-local-supabase"
+        ],
+        "exit": 0
+      },
+      {
+        "args": [
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "supabase_storage_shifaa-local-supabase"
+        ],
+        "exit": 0
+      }
+    ],
+    "negatives": [
+      "mismatched container binding denied",
+      "unknown resource ID denied",
+      "actual retained container denied"
+    ],
+    "base": "a19c07047acf154dda9b02862196a1af829e9d91",
+    "context": "desktop-linux",
+    "engineId": "5add88ab-d724-4248-9498-c37cbe9b63f0",
+    "images": {
+      "postgres": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+      "auth": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
+      "probe": "sha256:b40c1650a3c15541b2990a254c748b8d18bd472770e05c81f935ae07d36bb726"
+    },
+    "dependencyInputs": "31bc2803ebf01d4084bc3af2c25bba3ef996590b7021e42678e2ba94a0bcad74",
+    "noneNetworkId": "473502621d866238db308619a58c1f791444cf054eb255b001a7e2f79ba6e72a",
+    "networkId": "2fbd49007f2ce540f9bdd21509f720e9d0827877ec77ac2deb0b8f6096d31267",
+    "databaseSystems": {
+      "source": "7709138522107064355",
+      "restore": "7709138533682438179"
+    },
+    "probeSha256": "3a548bbe949c5a8ba9693c7f8edeef9d5d3c217376b70daebb461b8f8183e184",
+    "syntheticSessions": [
+      {
+        "subject": "c254ceb4-76f8-4c95-bcb9-52920abfec80",
+        "session": "c8eab3c0-60f9-47d4-927a-1aa5d6283a6f",
+        "person": "8221b8b3-dfad-4d16-8817-33d436f4ff59"
+      },
+      {
+        "subject": "961a2a8d-9a94-4927-9a40-53839aca3eaf",
+        "session": "0b0f510e-1a48-4323-8c1a-fdef2677f999",
+        "person": "38f3cb97-a9ad-4c4d-8066-a529d845e072"
+      }
+    ],
+    "probe": {
+      "checks": {
+        "no bearer": 401,
+        "forged bearer": 401,
+        "forged subject body": 400,
+        "different subject target": 404,
+        "failure before commit": 503,
+        "first native person": 200,
+        "second native person": 200,
+        "response loss after commit": 503,
+        "unboundSqlRows": 0,
+        "nativeSessionTableSqlState": "42501",
+        "ownerRoleSqlState": "42501"
+      },
+      "roleMetadata": {
+        "pid": 326,
+        "login": "f012_probe",
+        "session_login": "f012_probe",
+        "rolbypassrls": false,
+        "rolsuper": false,
+        "rolcreaterole": false,
+        "rolcreatedb": false,
+        "relforcerowsecurity": true,
+        "relrowsecurity": true,
+        "owner": "supabase_admin"
+      },
+      "apiBackend": 305,
+      "committedRows": [
+        {
+          "person": "38f3cb97-a9ad-4c4d-8066-a529d845e072",
+          "hits": 2
+        }
+      ]
+    },
+    "restore": {
+      "rows": 2,
+      "exactMatch": true,
+      "dumpSha256": "82fc9b4dcbabb0818cd986d2d025d9aae1044e968e78c4cdd8c081703f4cbfee"
+    },
+    "preservation": {
+      "containers": 12,
+      "volumes": 4,
+      "matches": true
+    },
+    "status": "PASS_HARNESS_PROBE"
+  },
+  "failClosed": [
+    {
+      "invocation": "node tools/verify-feature-012-harness.mjs --database retained",
+      "exit": 2,
+      "containerCommands": 0,
+      "reason": "Unsupported external resource arguments"
+    },
+    {
+      "invocation": "DOCKER_HOST=tcp://127.0.0.1:1 node tools/verify-feature-012-harness.mjs",
+      "exit": 2,
+      "containerCommands": 0,
+      "reason": "Docker override denied"
+    }
+  ],
+  "priorExecutions": [
+    {
+      "attempt": 1,
+      "exit": 2,
+      "stage": "DB readiness",
+      "observation": "Image uses a wrapped PID 1 process name. Changed to local TCP readiness and rechecked the run-owned resource before disposal."
+    },
+    {
+      "attempt": 2,
+      "exit": 2,
+      "stage": "Native fixture setup",
+      "observation": "auth serve omitted schema migrations. Changed to image default auth command after readback of the pinned image; disposed only identity-checked run resources."
+    }
+  ],
+  "retainedRecheck": {
+    "standalone": {
+      "database": "shifaa",
+      "systemIdentifier": "7708903169505275933",
+      "sameBeforeAndAfter": true
+    },
+    "supabase": {
+      "database": "postgres",
+      "systemIdentifier": "7708914823416913958",
+      "migrationCount": 38,
+      "sameBeforeAndAfter": true
+    },
+    "containerAndVolumeInventory": "All 12 pre-existing container IDs, start times, image IDs, network attachments and mounts matched. All four pre-existing volume names, drivers and creation times matched.",
+    "postRunSupabaseAuthHttp": 200,
+    "remainingHarnessContainers": 0
+  },
+  "deferred": [
+    "F012 production Core API routes and policies",
+    "NAC-1 AAL2 issuer configuration and current-authority lock tests",
+    "F012 mutation races, recovery and application restore",
+    "Professional, clinical, legal, facility and release approval"
+  ]
+}
