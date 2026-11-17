@@ -73,6 +73,56 @@ test('every named positive extension and adversarial vector is refused before ev
   }
 });
 
+test('timestamp, clock and field-type catalogs cover malformed inputs and expiry edges', () => {
+  const timestampIds = new Set(vectors.timestampVectors.map((entry) => entry.id));
+  for (const id of [
+    'timestamp-utc-seconds',
+    'timestamp-offset',
+    'timestamp-date-only',
+    'timestamp-ambiguous-slash-date',
+    'timestamp-invalid-month',
+    'timestamp-invalid-day',
+    'timestamp-invalid-leap-day',
+    'timestamp-leap-day',
+    'timestamp-number',
+    'timestamp-object',
+  ])
+    assert(timestampIds.has(id), `missing timestamp vector ${id}`);
+
+  const clockIds = new Set(vectors.clockVectors.map((entry) => entry.id));
+  for (const id of [
+    'request-expiry-one-second-before',
+    'request-expiry-equality',
+    'request-expiry-one-second-after',
+    'clock-nan',
+    'clock-infinity',
+    'clock-fraction',
+    'clock-string',
+  ])
+    assert(clockIds.has(id), `missing virtual-clock vector ${id}`);
+  assert.equal(
+    vectors.clockVectors.find((entry) => entry.id === 'request-expiry-equality').expected,
+    'expired',
+  );
+  const windowIds = new Set([
+    ...vectors.denials.map((entry) => entry.id),
+    ...vectors.positiveExtensions.map((entry) => entry.id),
+  ]);
+  assert(windowIds.has('emergency-window-one-second-before-expiry-pending-pharmacist'));
+  assert(windowIds.has('emergency-expiry-equality-pending-pharmacist'));
+  assert(windowIds.has('emergency-window-one-second-after-expiry-pending-pharmacist'));
+  const fieldTypeIds = new Set(vectors.fieldTypeVectors.map((entry) => entry.id));
+  for (const id of [
+    'field-rationale-number',
+    'field-alternatives-string',
+    'field-alternatives-number-item',
+    'field-monitoring-array',
+    'field-reviewer-person-number',
+    'field-container-array',
+  ])
+    assert(fieldTypeIds.has(id), `missing field type vector ${id}`);
+});
+
 test('activation denial occurs before any probe property is read', () => {
   const poison = new Proxy({}, { get: () => assert.fail('an unaccepted probe was read') });
   assert.throws(() => runF012MechanismCandidate(poison), {

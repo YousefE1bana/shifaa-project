@@ -76,9 +76,23 @@ function independentReview(
   return (
     review.decision === 'approved' &&
     review.current &&
-    review.person.length > 0 &&
+    typeof review.person === 'string' &&
+    review.person.trim().length > 0 &&
     !otherPeople.includes(review.person)
   );
+}
+
+function isRecord<T>(value: T): value is T & Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function strictUtcTimestamp(value: unknown): number | null {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(value))
+    return null;
+  const milliseconds = Date.parse(value);
+  if (!Number.isSafeInteger(milliseconds)) return null;
+  const canonical = new Date(milliseconds).toISOString().replace('.000Z', 'Z');
+  return canonical === value ? milliseconds : null;
 }
 
 function presentField(field: string, value: string | readonly string[] | undefined): boolean {
@@ -100,12 +114,23 @@ function presentField(field: string, value: string | readonly string[] | undefin
 }
 
 function simulate(probe: MechanismProbe): boolean {
+  if (
+    !isRecord(probe) ||
+    !isRecord(probe.fields) ||
+    !isRecord(probe.evidence) ||
+    !isRecord(probe.authority) ||
+    !isRecord(probe.authority.pharmacist) ||
+    !isRecord(probe.authority.secondPhysician) ||
+    !isRecord(probe.state)
+  )
+    return false;
   if (!currentScenario(probe) || !Object.hasOwn(contexts, probe.context)) return false;
   const { authority, state } = probe;
   const { fields, lane } = contexts[probe.context];
   if (
     !authority.currentAal2CareAndFacility ||
-    !authority.prescriberPerson ||
+    typeof authority.prescriberPerson !== 'string' ||
+    authority.prescriberPerson.trim().length === 0 ||
     !state.separateSign ||
     state.alreadySigned ||
     Object.keys(probe.fields).some(
@@ -123,10 +148,12 @@ function simulate(probe: MechanismProbe): boolean {
   }
   if (lane === 'warning') return state.acknowledged;
 
-  const expiryMs = Date.parse(String(probe.fields['expiresAt']));
+  const expiryMs = strictUtcTimestamp(probe.fields['expiresAt']);
   if (
     !state.requestLive ||
     !Number.isSafeInteger(state.nowSeconds) ||
+    !Number.isSafeInteger(state.nowSeconds * 1000) ||
+    expiryMs === null ||
     !(state.nowSeconds * 1000 < expiryMs)
   ) {
     return false;
@@ -140,6 +167,7 @@ function simulate(probe: MechanismProbe): boolean {
     !state.pharmacistObligationPersisted ||
     activatedAt === null ||
     !Number.isSafeInteger(activatedAt) ||
+    !Number.isSafeInteger(activatedAt * 1000) ||
     activatedAt > state.nowSeconds
   ) {
     return false;

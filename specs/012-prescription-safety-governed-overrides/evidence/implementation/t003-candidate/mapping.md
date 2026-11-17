@@ -28,9 +28,15 @@ Named variants replace or remove their declared nested field on a fresh
 control. A null patch value means field omission. The expected decisions
 cover incomplete, stale, unavailable and substituted evidence, untrusted
 origins, wrong context, missing fields, repeated effects, independent persons,
-current authority, request expiry and virtual-window expiry. Numeric clock
-values are deterministic synthetic probe inputs. They set no new release,
-session, request or clinical timing policy. The 60-second window follows D2.
+current authority, request expiry and virtual-window expiry. Expiry accepts only
+the UTC seconds form `YYYY-MM-DDTHH:mm:ssZ`; offsets, date-only and ambiguous
+forms, non-string values and normalized invalid calendar dates are rejected.
+The canonical UTC round trip rejects dates such as February 30 and non-leap
+February 29. Virtual time is integer Unix seconds; the strict inequality makes
+equality expired, and non-finite, fractional, string and null values are denied.
+The request deadline and 60-second emergency window use that same clock. These
+deterministic synthetic inputs set no new release, session, request or clinical
+timing policy. The 60-second window follows D2.
 The probe consumes exact confirmed state for the simulated decision. Actual
 same-person alias resolution, trusted capture, commit-time reauthorization,
 idempotency, atomic effects and production namespace rejection belong to

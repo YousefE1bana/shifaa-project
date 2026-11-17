@@ -3,9 +3,28 @@
 **PENDING APPROVAL** · [Issue #514](https://github.com/YousefE1bana/shifaa-project/issues/514)
 
 Review [manifest.json](manifest.json), SHA-256
-`829e607e1134dcec03027c15ce9e1776444f4c196e2c1d8b571f313300f54914`.
-The manifest binds four candidate files and the five immutable 2026-10-14
-artifact hashes at source `fbd2b5312a5038aad21db0001a17dac22bdcbf7e`.
+`44e8bf27be9093729e9b1f799c30de581a546c3ef6f08e87ca26ff8ecc68586f`.
+It supersedes prior candidate manifest
+`829e607e1134dcec03027c15ce9e1776444f4c196e2c1d8b571f313300f54914` and binds
+four candidate files plus the five unchanged immutable 2026-10-14 artifact
+hashes at source `fbd2b5312a5038aad21db0001a17dac22bdcbf7e`.
+
+## Revision from the prior candidate
+
+- Expiry parsing accepts only UTC timestamps in `YYYY-MM-DDTHH:mm:ssZ` form.
+  UTC offsets, date-only and ambiguous forms are rejected; an ISO round trip
+  rejects invalid month/day combinations and non-leap February 29.
+- Non-string expiry values and malformed field containers are rejected.
+- Virtual time is integer Unix seconds. Unsafe conversion, non-finite values,
+  fractions, strings and null are denied. Expiry equality remains expired;
+  the emergency window uses the same virtual clock.
+- `vectors.json` records timestamp representation, invalid-calendar,
+  non-string, unexpected field-type, and one-second-before/equality/after
+  request expiry cases. The D2 emergency window has vectors at 59, 60 and 61
+  seconds. JSON cannot encode `NaN` or infinities; descriptors identify those
+  runtime inputs for any separately accepted evaluation.
+- The five immutable source fixtures retain their prior hashes. The candidate
+  remains hard-disabled, unregistered and unexported.
 
 | File                                                 | Intended use                                                       |
 | ---------------------------------------------------- | ------------------------------------------------------------------ |
@@ -46,6 +65,7 @@ Get-FileHash 'specs/012-prescription-safety-governed-overrides/evidence/implemen
 node --test 'specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/verify-disabled.test.mjs'
 ```
 
-Four checks passed. They verified the manifest, the twelve fixture/context
-controls, variant admission denial, and denial before input access. Candidate
-evaluation was not executed. T003 and Issue #514 remain open.
+Five disabled-gate checks passed. They verified the manifest, the twelve
+fixture/context controls, variant admission denial, timestamp/clock vector
+catalog coverage, and denial before input access. Candidate evaluation was not
+executed. T003 and Issue #514 remain open.
