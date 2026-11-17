@@ -7,11 +7,11 @@
   "predecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
   "admittedDependency": "T002 / Issue #513 / PR #601",
   "scope": "Schema and synthetic producer-observation matrix. T009 is a separate acceptance boundary.",
-  "fixtureSha256": "f6bfe85eb41f87e6ccc7bc19459e1d4bfa7314a6ca2b782bd22af62aa9de537b",
+  "fixtureSha256": "5187b10a8e5101c9e5ddb189aa017e096e2f2158c662283b89ae959a4a8dde0f",
   "red": {
     "evidence": {
-      "path": ".tmp/f012-foundation/t008-final-red.json",
-      "sha256": "e49e6296608fe7dc99a6038084bb71c528c771a51f8a8279d8baf6cd2b17285a"
+      "sha256": "4c730ce9ffd97f536c8c10f757f1aacd91fd7556be204716cd9f9fa321c9a2a4",
+      "path": ".tmp/f012-foundation/t008-canonical-red.json"
     },
     "exactFixture": {
       "exit": 3,
@@ -21,11 +21,11 @@
   },
   "candidateMatrix": {
     "evidence": {
-      "path": ".tmp/f012-foundation/t008-final-upgrade.json",
-      "sha256": "779462494687d303db424193e39cb5d5620642bc5a5f521bd306184f6282a77d"
+      "sha256": "c4d722d849cceb643f998dd1ddc50632b883e8e6a292f65b3c63f22c2291b0ba",
+      "path": ".tmp/f012-foundation/t008-canonical-upgrade.json"
     },
     "migrationsApplied": 38,
-    "candidateMigrationSha256": "3050de55081e7d8e5d23d14fe182931bc9f5d0ec0f0959321c23d019fb1f2add",
+    "candidateMigrationSha256": "99cdb0ce951c81d569b3799528b97fc2b0241acccebd672dd93fdec13ba39fd9",
     "exactFixture": {
       "exit": 0,
       "stdout": "BEGIN\nCREATE TABLE\nDO\nT008 raw member evidence|[{\"revision\": 1, \"scope_key\": \"patient-A\", \"member_key\": \"head-1\", \"effective_from\": \"2030-01-01T00:00:00+00:00\"}, {\"revision\": 1, \"scope_key\": \"patient-A\", \"member_key\": \"head-2\", \"effective_from\": \"2030-01-01T00:00:00+00:00\"}]\nINSERT 0 1\nDO\nT008 raw clock evidence|series-1|1|2030-01-01 00:01:00+00\nT008 admission schema present|0\nT008 generation schema present|0\nINSERT 0 1\nDO\nINSERT 0 1\nDO\nT008 raw rollback evidence|1|9223372036854775807\nGRANT\nSET\nDO\nDO\nRESET\nINSERT 0 1\nSET\nDO\nRESET\nUPDATE 1\nSET\nDO\nRESET\nSET\nDO\nRESET\nROLLBACK\n",
