@@ -185,7 +185,7 @@ function startDatabase(role, network) {
     network,
     tmpfs: { [dataDir]: 'rw,nosuid,nodev,size=768m' },
     env: { POSTGRES_PASSWORD: dbPassword, JWT_SECRET: jwtSecret, JWT_EXP: '900' },
-    flags: role === 'restore' ? [] : ['--network-alias', 'db'],
+    flags: network === 'none' ? [] : ['--network-alias', 'db'],
   });
   const started = Date.now();
   while (Date.now() - started < 45_000) {
@@ -313,9 +313,61 @@ function teardown() {
   docker(['network', 'rm', networkId]);
 }
 
+function runAtomicity(db) {
+  const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
+  const files = git(root, ['ls-tree', '--name-only', predecessor, 'supabase/migrations/'])
+    .toString()
+    .trim()
+    .split(/\r?\n/);
+  assert.equal(files.length, 38);
+  assert.equal(db.network, 'none');
+  receipt.predecessor = { commit: predecessor, files: [] };
+  for (const path of files) {
+    assert.match(path, /^supabase\/migrations\/\d{14}_[a-z0-9_]+\.sql$/);
+    const bytes = git(root, ['show', predecessor + ':' + path]);
+    sql(db, bytes);
+    receipt.predecessor.files.push({
+      path,
+      sha256: createHash('sha256').update(bytes).digest('hex'),
+    });
+  }
+  const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-atomicity.sql'));
+  assert.equal(checkContainer(db).State.Running, true);
+  const args = [
+    ...settings.prefix,
+    'exec',
+    '-i',
+    db.id,
+    'psql',
+    '-XAt',
+    '--set=ON_ERROR_STOP=1',
+    '-U',
+    'supabase_admin',
+    '-d',
+    'postgres',
+  ];
+  const result = spawnSync(hostExecutable('docker', settings.options.env), args, {
+    ...settings.options,
+    input: fixture,
+    stdio: ['pipe', 'pipe', 'pipe'],
+    timeout: 120_000,
+    maxBuffer: 1024 * 1024,
+  });
+  receipt.commands.push({ args, exit: result.status });
+  receipt.atomicity = {
+    fixtureSha256: createHash('sha256').update(fixture).digest('hex'),
+    exit: result.status,
+    stdout: result.stdout,
+    stderr: result.stderr,
+  };
+  assert.equal(result.status, 0, 'T016 SQL fixture');
+}
+
 function admit() {
+  const args = process.argv.slice(2);
+  const atomicity = args.length === 1 && args[0] === '--atomicity';
   assert.deepEqual(
-    process.argv.slice(2),
+    atomicity ? [] : args,
     [],
     'This command accepts no external resource arguments',
   );
@@ -327,8 +379,8 @@ function admit() {
   receipt.engineId = docker(['info', '--format', '{{.ID}}']).trim();
   receipt.images = {
     postgres: pinnedImage(dbImage),
-    auth: pinnedImage(authImage),
-    probe: pinnedImage('shifaa/verify:' + inputs, inputs),
+    ...(atomicity ? {} : { auth: pinnedImage(authImage) }),
+    ...(atomicity ? {} : { probe: pinnedImage('shifaa/verify:' + inputs, inputs) }),
   };
   receipt.dependencyInputs = inputs;
   receipt.noneNetworkId = inspect('network', 'none').Id;
@@ -349,6 +401,31 @@ function admit() {
   assert.ok(before.containers.every((c) => !c.networks.includes(networkId)));
   receipt.networkId = networkId;
   checkNetwork();
+  if (atomicity) {
+    stage = 'isolated structural atomicity SQL';
+    try {
+      const db = startDatabase('atomicity', 'none');
+      receipt.databaseSystems = { source: db.system };
+      if (before.containers.length) {
+        trial(
+          'actual retained container denied',
+          () => checkContainer({ ...db, id: before.containers[0].id }),
+          /Retained container denied/,
+        );
+      }
+      runAtomicity(db);
+    } finally {
+      teardown();
+      assert.deepEqual(inventory(), before);
+      receipt.preservation = {
+        containers: before.containers.length,
+        volumes: before.volumes.length,
+        matches: true,
+      };
+    }
+    receipt.status = 'EXECUTED_ATOMICITY_SQL';
+    return;
+  }
   const db = startDatabase('db', networkId);
   const restore = startDatabase('restore', 'none');
   receipt.databaseSystems = { source: db.system, restore: restore.system };

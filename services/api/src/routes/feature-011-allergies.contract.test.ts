@@ -108,6 +108,21 @@ describe('Feature011 generated/native/default-off route boundary', () => {
       await f.a.close();
     }
   });
+  it('maps a PostgreSQL idempotency hash mismatch to HTTP 409', async () => {
+    const f = await app();
+    try {
+      f.service.createAllergy.mockRejectedValueOnce(
+        Object.assign(new Error('idempotency key reused with different request'), {
+          code: '23505',
+        }),
+      );
+      const r = await f.a.inject({ method: 'POST', url: path, headers, payload: input });
+      expect(r.statusCode).toBe(409);
+      expect(r.json().type).toMatch(/idempotency-key-reused$/);
+    } finally {
+      await f.a.close();
+    }
+  });
   it('accepts the PostgreSQL integer maximum as a quoted verification version', async () => {
     const f = await app(),
       allergyId = randomUUID();
