@@ -75,15 +75,49 @@ function independentReview(
 ): boolean {
   return (
     review.decision === 'approved' &&
-    review.current &&
-    typeof review.person === 'string' &&
-    review.person.trim().length > 0 &&
+    review.current === true &&
+    isSyntheticPerson(review.person) &&
     !otherPeople.includes(review.person)
   );
 }
 
 function isRecord<T>(value: T): value is T & Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;
+  const prototype: unknown = Object.getPrototypeOf(value);
+  return (
+    (prototype === Object.prototype || prototype === null) &&
+    Reflect.ownKeys(value).every((key) => {
+      const descriptor = Object.getOwnPropertyDescriptor(value, key);
+      return (
+        typeof key === 'string' && descriptor !== undefined && Object.hasOwn(descriptor, 'value')
+      );
+    })
+  );
+}
+
+function isSyntheticPerson(value: unknown): value is string {
+  return (
+    typeof value === 'string' && value === value.trim() && /^SYNTHETIC_[A-Z0-9_]+$/.test(value)
+  );
+}
+
+function validReview(review: MechanismProbe['authority']['pharmacist']): boolean {
+  return (
+    typeof review.current === 'boolean' &&
+    (review.person === '' || isSyntheticPerson(review.person)) &&
+    (review.decision === 'pending' ||
+      review.decision === 'approved' ||
+      review.decision === 'rejected')
+  );
+}
+
+function validClock(seconds: unknown): seconds is number {
+  return (
+    typeof seconds === 'number' &&
+    Number.isSafeInteger(seconds * 1000) &&
+    Number.isSafeInteger(seconds) &&
+    Math.abs(seconds) <= 8_640_000_000_000
+  );
 }
 
 function strictUtcTimestamp(value: unknown): number | null {
@@ -101,9 +135,10 @@ function presentField(field: string, value: string | readonly string[] | undefin
       Array.isArray(value) &&
       value.length > 0 &&
       value.length <= 20 &&
-      value.every(
-        (entry) => typeof entry === 'string' && entry.trim().length > 0 && entry.length <= 4000,
-      )
+      Array.from({ length: value.length }, (_, index) => {
+        const entry: unknown = Object.getOwnPropertyDescriptor(value, index)?.value;
+        return typeof entry === 'string' && entry.trim().length > 0 && entry.length <= 4000;
+      }).every(Boolean)
     );
   }
   return (
@@ -124,15 +159,26 @@ function simulate(probe: MechanismProbe): boolean {
     !isRecord(probe.state)
   )
     return false;
-  if (!currentScenario(probe) || !Object.hasOwn(contexts, probe.context)) return false;
+  if (
+    typeof probe.context !== 'string' ||
+    !Object.hasOwn(contexts, probe.context) ||
+    !currentScenario(probe)
+  )
+    return false;
   const { authority, state } = probe;
   const { fields, lane } = contexts[probe.context];
   if (
-    !authority.currentAal2CareAndFacility ||
-    typeof authority.prescriberPerson !== 'string' ||
-    authority.prescriberPerson.trim().length === 0 ||
-    !state.separateSign ||
-    state.alreadySigned ||
+    authority.currentAal2CareAndFacility !== true ||
+    !isSyntheticPerson(authority.prescriberPerson) ||
+    !validReview(authority.pharmacist) ||
+    !validReview(authority.secondPhysician) ||
+    state.separateSign !== true ||
+    state.alreadySigned !== false ||
+    typeof state.acknowledged !== 'boolean' ||
+    typeof state.requestLive !== 'boolean' ||
+    typeof state.pharmacistObligationPersisted !== 'boolean' ||
+    !validClock(state.nowSeconds) ||
+    (lane !== 'emergency' && state.secondApprovalSeconds !== null) ||
     Object.keys(probe.fields).some(
       (field) =>
         !fields.some((required) => required === field) &&
@@ -141,21 +187,15 @@ function simulate(probe: MechanismProbe): boolean {
     !fields.every(
       (field) => Object.hasOwn(probe.fields, field) && presentField(field, probe.fields[field]),
     ) ||
-    ('monitoringPlan' in probe.fields &&
+    (Object.hasOwn(probe.fields, 'monitoringPlan') &&
       !presentField('monitoringPlan', probe.fields['monitoringPlan']))
   ) {
     return false;
   }
-  if (lane === 'warning') return state.acknowledged;
+  if (lane === 'warning') return state.acknowledged === true;
 
   const expiryMs = strictUtcTimestamp(probe.fields['expiresAt']);
-  if (
-    !state.requestLive ||
-    !Number.isSafeInteger(state.nowSeconds) ||
-    !Number.isSafeInteger(state.nowSeconds * 1000) ||
-    expiryMs === null ||
-    !(state.nowSeconds * 1000 < expiryMs)
-  ) {
+  if (state.requestLive !== true || expiryMs === null || !(state.nowSeconds * 1000 < expiryMs)) {
     return false;
   }
   const { pharmacist, secondPhysician, prescriberPerson } = authority;
@@ -164,10 +204,8 @@ function simulate(probe: MechanismProbe): boolean {
   const activatedAt = state.secondApprovalSeconds;
   if (
     !independentReview(secondPhysician, [prescriberPerson]) ||
-    !state.pharmacistObligationPersisted ||
-    activatedAt === null ||
-    !Number.isSafeInteger(activatedAt) ||
-    !Number.isSafeInteger(activatedAt * 1000) ||
+    state.pharmacistObligationPersisted !== true ||
+    !validClock(activatedAt) ||
     activatedAt > state.nowSeconds
   ) {
     return false;

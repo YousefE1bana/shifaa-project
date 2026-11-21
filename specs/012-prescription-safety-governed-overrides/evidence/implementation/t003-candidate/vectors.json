@@ -496,6 +496,43 @@
       "simulatedSignEligible": false
     },
     {
+      "id": "unstarted-emergency",
+      "control": "E",
+      "changes": { "state.secondApprovalSeconds": null },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "rejected-second-physician",
+      "control": "E",
+      "changes": { "authority.secondPhysician.decision": "rejected" },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "noncanonical-reviewer-token",
+      "control": "N",
+      "changes": { "authority.pharmacist.person": " SYNTHETIC_PRESCRIBER_PERSON " },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "second-approval-unexpected-outside-emergency",
+      "control": "N",
+      "changes": { "state.secondApprovalSeconds": 1893456000 },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "expired-request-with-current-pharmacist",
+      "control": "E",
+      "changes": {
+        "state.nowSeconds": 1893456180,
+        "authority.pharmacist": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_PHARMACIST_PERSON"
+        }
+      },
+      "simulatedSignEligible": false
+    },
+    {
       "id": "emergency-window-one-second-after-expiry-pending-pharmacist",
       "control": "E",
       "changes": {
@@ -534,6 +571,12 @@
     }
   ],
   "positiveExtensions": [
+    {
+      "id": "emergency-at-window-start",
+      "control": "E",
+      "changes": { "state.nowSeconds": 1893456000 },
+      "simulatedSignEligible": true
+    },
     {
       "id": "emergency-window-one-second-before-expiry-pending-pharmacist",
       "control": "E",

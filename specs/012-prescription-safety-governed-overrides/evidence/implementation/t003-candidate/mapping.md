@@ -37,11 +37,16 @@ equality expired, and non-finite, fractional, string and null values are denied.
 The request deadline and 60-second emergency window use that same clock. These
 deterministic synthetic inputs set no new release, session, request or clinical
 timing policy. The 60-second window follows D2.
-The probe consumes exact confirmed state for the simulated decision. Actual
-same-person alias resolution, trusted capture, commit-time reauthorization,
-idempotency, atomic effects and production namespace rejection belong to
-their designated runtime tests.
+The probe compares canonical synthetic person tokens. Equality tests cover
+identical tokens and reject malformed representations. Resolving multiple
+authenticated accounts to the same person requires separate native identity
+evidence. Trusted capture, commit-time reauthorization, idempotency, atomic
+effects and production namespace rejection belong to their designated runtime
+tests. Request creation, assignment expiry, and server authority are resolved
+facts supplied to this structural simulation through its declared inputs.
 
 The test runs the disabled gate and verifies that input access stops before
-evaluation. Candidate behavior remains unexecuted. There is no switch,
-loader, approved digest entry, package export or product runtime import.
+evaluation. The separate behavior suite supplies decision assertions for a
+future admitted entry point and records each observed outcome. It does not
+import the evaluator or run on module load. Candidate behavior remains
+unexecuted. The entry point is hard-disabled and unregistered.

@@ -4,24 +4,10 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import { runF012MechanismCandidate } from '../../../../../packages/test-kit/src/feature-012.ts';
+import { probeFor, vectors } from './verify-behavior.mjs';
 
 const root = new URL('../../../../../', import.meta.url);
 const manifest = JSON.parse(readFileSync(new URL('manifest.json', import.meta.url), 'utf8'));
-const vectors = JSON.parse(readFileSync(new URL('vectors.json', import.meta.url), 'utf8'));
-
-function probeFor(context, caseId, changes = {}) {
-  const probe = structuredClone(vectors.controls[context]);
-  probe.caseId = caseId;
-  probe.evidence.caseId = caseId;
-  for (const [path, value] of Object.entries(changes)) {
-    const segments = path.split('.');
-    const field = segments.pop();
-    const parent = segments.reduce((current, key) => current[key], probe);
-    if (value === null) delete parent[field];
-    else parent[field] = value;
-  }
-  return probe;
-}
 
 test('manifest binds the original and candidate artifacts by raw byte length and SHA-256', () => {
   for (const entry of [...manifest.originalInputs, ...manifest.candidateFiles]) {
