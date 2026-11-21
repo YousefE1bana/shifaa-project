@@ -65,9 +65,9 @@ The Specification supplies J-01…J-05 without P1/P2 priority labels; US1…US5 
   - Depends on: `T002`
   - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t008.json` — Raw SQL demonstrates constraints and no complete-set claim from public pagination or per-assertion CAS; generation alone never passes commit-currentness checks; AC-01, AC-02, AC-10, AC-14.
 
-- [ ] T009 [FR-SAFE-001, FR-SAFE-003, NFR-SEC-001, NFR-DATA-001, NFR-DATA-002] Add expand-only source-admission and producer-generation schema/functions; initialize approved scopes through restricted provisioning, never caller upsert; enforce rank-zero SHARE reads/exclusive mutations before original writer locks — `supabase/migrations/20261112001200_f012_source_admission.sql`, `services/api/src/adapters/postgres/feature-012-source-fence.ts`
+- [X] T009 [FR-SAFE-001, FR-SAFE-003, NFR-SEC-001, NFR-DATA-001, NFR-DATA-002] Add expand-only source-admission and producer-generation schema/functions; initialize approved scopes through restricted provisioning, never caller upsert; enforce rank-zero SHARE reads/exclusive mutations before original writer locks — `supabase/migrations/20261112001200_f012_source_admission.sql`, `services/api/src/adapters/postgres/feature-012-source-fence.ts`
   - Depends on: `T008`
-  - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t009.json` — Migration up/upgrade tests on admitted disposable harness pass; missing row/generation/epoch denies; same-transaction source write increments generation; constraints quoted below are enforced; AC-01, AC-02, AC-10, AC-14.
+  - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t009-finalization.md` and historical `specs/012-prescription-safety-governed-overrides/evidence/implementation/t009.json` — Migration up/upgrade tests on admitted disposable harness pass; missing row/generation/epoch denies; same-transaction source write increments generation; constraints quoted below are enforced; AC-01, AC-02, AC-10, AC-14.
 
   Verbatim model constraints for this task (accepted resolutions above prevail):
 
