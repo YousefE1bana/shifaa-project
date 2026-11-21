@@ -150,3 +150,32 @@ Breaking workflow, security, architectural or domain changes retain their ordina
 approval requirements. No tooling result supplies clinical, legal, production or
 F012 lifecycle authority. Impact and unchanged-propagation dispositions are in
 [the decision record](../../docs/governance/tooling-maintenance-v1/decision-and-impact.md).
+
+## Autonomous engineering delivery amendment — 4.0.0
+
+This governance amendment governs prospective delivery after the
+[activation predicate](../../docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md#ratification-and-activation)
+is satisfied. The predecessor governs until that point. Articles I–XV and the
+historical F012 publication and activation procedure retain their original
+authority, records, and scope.
+
+The Product Owner delegates reversible engineering decisions, technical SpecKit
+checkpoints, implementation and PR integration within approved requirements to
+the root engineering agent. The agent is accountable for review, exact-revision
+evidence, branch protection, verified integration, and artifact finalization.
+Routine technical checkpoints advance when their applicable prerequisites pass
+under this standing delegation. Decisions reserved by higher authority remain
+with their designated owners. Approval of an engineering checkpoint conveys
+only its recorded engineering scope.
+
+This clause supersedes earlier procedural requirements for a new conversation,
+a repeated routine stage instruction, or a per-PR Product Owner decision for
+delegated work. It does not supersede architecture completeness, exact technical
+acceptance of a Plan, protected acceptance predicates, or any applicable
+non-delegable requirement. Product scope, fundamental governance or architecture,
+material security trust-boundary or critical safety changes, and irreversible
+retained-system actions require the applicable named authority. Egyptian law,
+all professional and clinical signatures, protected data processing, and
+production release limits continue to govern. The
+[delivery policy](../../docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md)
+defines the operational limits and verification obligations.

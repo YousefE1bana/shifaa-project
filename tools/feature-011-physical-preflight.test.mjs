@@ -65,7 +65,10 @@ test('physical preflight compatibility rejects live drift after a successful cac
     writeFileSync(join(root, repaired), original);
     assert.equal(toolingPolicyHistoricalInputs(root).has(repaired), false);
     writeFileSync(join(root, '.specify/memory/constitution.md'), 'UNAPPROVED CONSTITUTION');
-    assert.throws(() => toolingPolicyHistoricalInputs(root), /Tooling policy source drift/);
+    assert.throws(
+      () => toolingPolicyHistoricalInputs(root),
+      /Appendix successor length drift: \.specify\/memory\/constitution\.md/,
+    );
   } finally {
     assert.ok(resolve(root).startsWith(resolve(parent) + sep));
     rmSync(root, { recursive: true });

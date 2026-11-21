@@ -15,22 +15,28 @@ RECORD = "docs/governance/tooling-maintenance-v1/historical-compatibility.json"
 RECORD_SHA256 = "e38049b11787c49e01d0c6cfe0ef3cb3f825fc68f207be5bb224eebc4567fb07"
 APPENDIX_SUCCESSOR = "specs/012-prescription-safety-governed-overrides/readiness/historical-reader-repair-2026-11-12/successor-binding-v1.json"
 APPENDIX_SUCCESSOR_SHA256 = "8b6500c6571bf2c0d75373483452e0942be0c1e1104ca66de05dc35689bfc8b1"
+DELIVERY_SUCCESSOR = "docs/governance/autonomous-delivery/historical-reader-binding.json"
+DELIVERY_SUCCESSOR_SHA256 = "7df114bc8d4cf8c400ea91c9375372bd454f063fe88fc51dd09355df0f3f595f"
 
 
-def approved_appendix_predecessors(root: Path) -> dict[str, bytes]:
-    target = safe_path(root, APPENDIX_SUCCESSOR)
+def approved_appendix_predecessors(
+    root: Path, path: str, digest: str, binding_id: str, successors: dict[str, bytes]
+) -> dict[str, bytes]:
+    target = safe_path(root, path)
     if not target.exists():
         return {}
     raw = target.read_bytes()
-    if hashlib.sha256(raw).hexdigest() != APPENDIX_SUCCESSOR_SHA256:
+    if hashlib.sha256(raw).hexdigest() != digest:
         raise ValueError("appendix successor binding drift")
     binding = json.loads(raw)
-    if (binding["bindingId"] != "SHIFAA-F012-PLAN-HISTORICAL-READER-SUCCESSOR/1.0.0"
+    if (binding["bindingId"] != binding_id
             or binding["historicalRecord"] != {"path": RECORD, "sha256": RECORD_SHA256}):
         raise ValueError("appendix successor identity drift")
     predecessors = {}
     for item in binding["inputs"]:
-        current = safe_path(root, item["path"]).read_bytes()
+        current = successors.get(item["path"])
+        if current is None:
+            current = safe_path(root, item["path"]).read_bytes()
         previous, successor, appendix = item["predecessor"], item["successor"], item["appendix"]
         prefix, added = current[:appendix["offset"]], current[appendix["offset"]:]
         if (len(current) != successor["bytes"] or hashlib.sha256(current).hexdigest() != successor["sha256"]
@@ -57,7 +63,15 @@ def preserved_inputs(root: Path) -> dict[str, bytes]:
     if hashlib.sha256(raw).hexdigest() != RECORD_SHA256:
         raise ValueError("tooling history record changed")
     record = json.loads(raw)
-    predecessors = approved_appendix_predecessors(root)
+    delivery_predecessors = approved_appendix_predecessors(
+        root, DELIVERY_SUCCESSOR, DELIVERY_SUCCESSOR_SHA256,
+        "SHIFAA-AUTONOMOUS-DELIVERY-HISTORICAL-READER/1.0.0", {},
+    )
+    appendix_predecessors = approved_appendix_predecessors(
+        root, APPENDIX_SUCCESSOR, APPENDIX_SUCCESSOR_SHA256,
+        "SHIFAA-F012-PLAN-HISTORICAL-READER-SUCCESSOR/1.0.0", delivery_predecessors,
+    )
+    predecessors = {**delivery_predecessors, **appendix_predecessors}
     result = dict(predecessors)
     for item in record["inputs"]:
         current = predecessors.get(item["path"])

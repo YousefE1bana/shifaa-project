@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "task": "T016",
+  "issue": 527,
+  "status": "ACCEPTED",
+  "scope": "Harness-local structural atomicity probe using the exact F011 PostgreSQL domain, audit, outbox, deferred obligation, protected receipt and idempotency functions under shifaa_api",
+  "predecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+  "migrationsApplied": 38,
+  "image": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+  "fixtureSha256": "4fac878688d455e182b3e16d2f4e999684d41811bee6c4fdc4d61c327fe84ebf",
+  "rawLocalEvidence": {
+    "file": ".tmp/f012-foundation/t016-final-sql.json",
+    "sha256": "b3a5ba8c4859373ef5fd32aeb529dafcddee556895b63ee42f51ee1bbfc3c4f1",
+    "runnerLog": ".tmp/f012-foundation/t016-resealed-vitest.log"
+  },
+  "runtimeSql": {
+    "exit": 0,
+    "stdout": "INSERT 0 1\nINSERT 0 1\nCREATE FUNCTION\nCREATE FUNCTION\nBEGIN\nSET\nDO\nROLLBACK\nRESET\nprecommit|22012|{\"audit\": 0, \"heads\": 0, \"probe\": 0, \"digest\": null, \"outbox\": 0, \"receipt\": 0, \"obligation\": 0, \"processing\": 0, \"idempotency\": 0}\nBEGIN\nSET\nDO\nRESET\nmissing-receipt|23514|{\"audit\": 0, \"heads\": 0, \"probe\": 0, \"digest\": null, \"outbox\": 0, \"receipt\": 0, \"obligation\": 0, \"processing\": 0, \"idempotency\": 0}\nBEGIN\nSET\nDO\nCOMMIT\nRESET\ncommitted-without-response|00000|{\"audit\": 1, \"heads\": 1, \"probe\": 1, \"digest\": \"860a512c24f5ff313fef190ecf48b43714ede730415d228637c59f3cd7173465\", \"outbox\": 1, \"receipt\": 1, \"obligation\": 1, \"processing\": 0, \"idempotency\": 1}\nBEGIN\nSET\noriginal-key|true|860a512c24f5ff313fef190ecf48b43714ede730415d228637c59f3cd7173465\nCOMMIT\nRESET\nCREATE FUNCTION\nBEGIN\nSET\nchanged-body|23505\nchanged-action|42501\nCOMMIT\nRESET\nUPDATE 1\nBEGIN\nSET\nrevoked|42501\nCOMMIT\nRESET\nafter-replays|00000|{\"audit\": 1, \"heads\": 1, \"probe\": 1, \"digest\": \"860a512c24f5ff313fef190ecf48b43714ede730415d228637c59f3cd7173465\", \"outbox\": 1, \"receipt\": 1, \"obligation\": 1, \"processing\": 0, \"idempotency\": 1}\n",
+    "stderr": "ERROR:  22012: division by zero\nLOCATION:  int4div, int.c:841\nERROR:  23514: Feature 011 domain, audit, outbox, receipt, and idempotency tuple is incomplete or mismatched\nCONTEXT:  PL/pgSQL function clinical.f011_require_mutation_commit_v1() line 219 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3911\n"
+  },
+  "tests": {
+    "passed": 21,
+    "failed": 0,
+    "command": "SHIFAA_RUN_F012_ATOMICITY=true vitest run services/api/test/feature-012-atomicity.integration.test.ts services/api/src/routes/feature-011-allergies.contract.test.ts",
+    "predecessorIntegrity": "The integrated F011 route test is byte-for-byte original. The focused changed-body proof is the observed SQLSTATE and idempotency error from PostgreSQL."
+  },
+  "preservation": {
+    "containers": 12,
+    "volumes": 4,
+    "matches": true
+  },
+  "limitations": [
+    "The SQL fixture suppresses delivery of the first committed response and then replays the original key; it does not inject TCP packet loss.",
+    "The encrypted envelope is a neutral structural fixture. Decryption, KMS and payload interpretation are outside this probe.",
+    "T002 full GoTrue and restore probe was not re-executed for T016; the SQL-only mode used its pinned disposable PostgreSQL ownership boundary.",
+    "No public F012 route, coordinator, clinical operation, story-level atomicity, or production capability is accepted here."
+  ]
+}

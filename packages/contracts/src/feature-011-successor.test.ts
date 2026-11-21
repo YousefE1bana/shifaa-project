@@ -106,7 +106,7 @@ describe('F011 historical Constitution and conditional successor compatibility',
   });
 
   it.each([
-    ['corrupted Constitution', constitution, 'append', /Tooling policy source drift/],
+    ['corrupted Constitution', constitution, 'append', /Appendix successor length drift/],
     ['missing approval', approval, 'remove', /ENOENT/],
     ['unapproved decision', approval, 'append', /owner approval drift/],
     ['missing binding', binding, 'remove', /ENOENT/],

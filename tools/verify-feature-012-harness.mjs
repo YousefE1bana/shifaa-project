@@ -346,7 +346,8 @@ function observedSql(db, input) {
   return { exit: result.status, stdout, stderr };
 }
 
-function sourceFenceUpgrade(db) {
+function applySealedF011(db) {
+  assert.equal(db.network, 'none');
   const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
   const files = git(root, ['ls-tree', '--name-only', predecessor, 'supabase/migrations/'])
     .toString()
@@ -366,6 +367,17 @@ function sourceFenceUpgrade(db) {
     });
     assert.equal(result.exit, 0, path);
   }
+}
+
+function runAtomicity(db) {
+  applySealedF011(db);
+  const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-atomicity.sql'));
+  const observed = observedSql(db, fixture);
+  receipt.atomicity = {
+    fixtureSha256: createHash('sha256').update(fixture).digest('hex'),
+    ...observed,
+  };
+  assert.equal(observed.exit, 0, 'T016 SQL fixture');
 }
 
 async function sourceFenceLockConflict(db) {
@@ -834,7 +846,7 @@ function sourceFenceRlsNegatives(db) {
 
 function sourceFence(db, red, upgrade) {
   assert.equal(db.network, 'none');
-  if (upgrade) sourceFenceUpgrade(db);
+  if (upgrade) applySealedF011(db);
   else
     sql(
       db,
@@ -869,10 +881,14 @@ function sourceFence(db, red, upgrade) {
 
 async function admit() {
   const argumentsList = process.argv.slice(2);
+  const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
   const sqlOnly =
-    redOnly || upgrade || (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
+    atomicity ||
+    redOnly ||
+    upgrade ||
+    (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
   assert.deepEqual(
     sqlOnly ? [] : argumentsList,
     [],
@@ -909,10 +925,10 @@ async function admit() {
   receipt.networkId = networkId;
   checkNetwork();
   if (sqlOnly) {
-    stage = 'isolated PostgreSQL source fence';
+    stage = atomicity ? 'isolated structural atomicity SQL' : 'isolated PostgreSQL source fence';
     try {
-      const source = startDatabase('source-fence', 'none');
-      receipt.databaseSystems = { source: source.system };
+      const source = startDatabase(atomicity ? 'atomicity' : 'source-fence', 'none');
+      receipt.databaseSystems = atomicity ? { atomicity: source.system } : { source: source.system };
       if (before.containers.length) {
         trial(
           'actual retained container denied',
@@ -920,14 +936,18 @@ async function admit() {
           /Retained container denied/,
         );
       }
-      sourceFence(source, redOnly, upgrade);
-      if (!redOnly) {
-        await sourceFenceLockConflict(source);
-        sourceFenceRawBypass(source);
-        sourceFenceDurability(source);
-        sourceFencePrivilegeNegatives(source);
-        sourceFenceScopeNegatives(source);
-        sourceFenceRlsNegatives(source);
+      if (atomicity) {
+        runAtomicity(source);
+      } else {
+        sourceFence(source, redOnly, upgrade);
+        if (!redOnly) {
+          await sourceFenceLockConflict(source);
+          sourceFenceRawBypass(source);
+          sourceFenceDurability(source);
+          sourceFencePrivilegeNegatives(source);
+          sourceFenceScopeNegatives(source);
+          sourceFenceRlsNegatives(source);
+        }
       }
     } finally {
       teardown();
@@ -938,7 +958,11 @@ async function admit() {
         matches: true,
       };
     }
-    receipt.status = redOnly ? 'EXPECTED_RED_SOURCE_FENCE' : 'PASS_SOURCE_FENCE_SQL';
+    receipt.status = atomicity
+      ? 'EXECUTED_ATOMICITY_SQL'
+      : redOnly
+        ? 'EXPECTED_RED_SOURCE_FENCE'
+        : 'PASS_SOURCE_FENCE_SQL';
     return;
   }
   const db = startDatabase('db', networkId);

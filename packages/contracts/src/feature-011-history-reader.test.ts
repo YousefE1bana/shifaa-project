@@ -5,8 +5,12 @@ import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const source = resolve(import.meta.dirname, '../../..');
-const { appendixSuccessorPath, toolingPolicyHistoricalInputs, toolingPolicyInputPaths } =
-  await import(pathToFileURL(join(source, 'tools/tooling-history.mjs')).href);
+const {
+  appendixSuccessorPath,
+  deliverySuccessorPath,
+  toolingPolicyHistoricalInputs,
+  toolingPolicyInputPaths,
+} = await import(pathToFileURL(join(source, 'tools/tooling-history.mjs')).href);
 
 const master = 'SHIFAA-Implementation-Plan-MASTER.md';
 const recordPath = 'docs/governance/tooling-maintenance-v1/historical-compatibility.json';
@@ -17,6 +21,9 @@ type BindingInput = {
 };
 const binding: { inputs: BindingInput[] } = JSON.parse(
   readFileSync(join(source, appendixSuccessorPath), 'utf8'),
+);
+const deliveryBinding: { inputs: BindingInput[] } = JSON.parse(
+  readFileSync(join(source, deliverySuccessorPath), 'utf8'),
 );
 const record: { inputs: { path: string; historical: { gitBlob: string } }[] } = JSON.parse(
   readFileSync(join(source, recordPath), 'utf8'),
@@ -108,6 +115,12 @@ describe('PR #509 exact append-only historical compatibility', () => {
 
   it('keeps the original exact-input path working without the optional successor', () => {
     fixture((root) => {
+      rmSync(join(root, deliverySuccessorPath));
+      for (const input of deliveryBinding.inputs)
+        writeFileSync(
+          join(root, input.path),
+          execFileSync('git', ['cat-file', 'blob', input.predecessor.gitBlob], { cwd: source }),
+        );
       rmSync(join(root, appendixSuccessorPath));
       for (const input of binding.inputs)
         writeFileSync(
