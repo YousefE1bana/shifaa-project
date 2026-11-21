@@ -1,0 +1,719 @@
+{
+  "schemaVersion": 1,
+  "executeBeforeExactByteAcceptance": false,
+  "caseIds": ["SYNTHETIC_CASE_0001", "SYNTHETIC_CASE_0002", "SYNTHETIC_CASE_0003"],
+  "controlExpected": {
+    "simulatedSignEligible": true,
+    "clinicalAssessment": "not_fully_checked"
+  },
+  "controls": {
+    "W-M": {
+      "origin": "trusted-synthetic-fixture",
+      "caseId": "SYNTHETIC_CASE_0001",
+      "context": "W-M",
+      "evidence": {
+        "caseId": "SYNTHETIC_CASE_0001",
+        "context": "W-M",
+        "fixtureSha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+        "scenarioVersion": 1,
+        "completeness": "T2",
+        "state": "current",
+        "allergyHistory": "declared-synthetic-zero",
+        "medicationHistory": "declared-synthetic-zero"
+      },
+      "fields": {
+        "structuredReason": "SYNTHETIC_REASON_PLACEHOLDER",
+        "justification": "SYNTHETIC_JUSTIFICATION",
+        "monitoringPlan": "SYNTHETIC_MONITORING_PLACEHOLDER"
+      },
+      "authority": {
+        "prescriberPerson": "SYNTHETIC_PRESCRIBER_PERSON",
+        "currentAal2CareAndFacility": true,
+        "pharmacist": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_PHARMACIST_PERSON"
+        },
+        "secondPhysician": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_SECOND_PHYSICIAN_PERSON"
+        }
+      },
+      "state": {
+        "separateSign": true,
+        "acknowledged": true,
+        "requestLive": true,
+        "pharmacistObligationPersisted": false,
+        "alreadySigned": false,
+        "nowSeconds": 1893456059,
+        "secondApprovalSeconds": null
+      }
+    },
+    "W-NA": {
+      "origin": "trusted-synthetic-fixture",
+      "caseId": "SYNTHETIC_CASE_0001",
+      "context": "W-NA",
+      "evidence": {
+        "caseId": "SYNTHETIC_CASE_0001",
+        "context": "W-NA",
+        "fixtureSha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+        "scenarioVersion": 1,
+        "completeness": "T2",
+        "state": "current",
+        "allergyHistory": "declared-synthetic-zero",
+        "medicationHistory": "declared-synthetic-zero"
+      },
+      "fields": {
+        "structuredReason": "SYNTHETIC_REASON_PLACEHOLDER",
+        "justification": "SYNTHETIC_JUSTIFICATION"
+      },
+      "authority": {
+        "prescriberPerson": "SYNTHETIC_PRESCRIBER_PERSON",
+        "currentAal2CareAndFacility": true,
+        "pharmacist": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_PHARMACIST_PERSON"
+        },
+        "secondPhysician": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_SECOND_PHYSICIAN_PERSON"
+        }
+      },
+      "state": {
+        "separateSign": true,
+        "acknowledged": true,
+        "requestLive": true,
+        "pharmacistObligationPersisted": false,
+        "alreadySigned": false,
+        "nowSeconds": 1893456059,
+        "secondApprovalSeconds": null
+      }
+    },
+    "N": {
+      "origin": "trusted-synthetic-fixture",
+      "caseId": "SYNTHETIC_CASE_0001",
+      "context": "N",
+      "evidence": {
+        "caseId": "SYNTHETIC_CASE_0001",
+        "context": "N",
+        "fixtureSha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+        "scenarioVersion": 1,
+        "completeness": "T2",
+        "state": "current",
+        "allergyHistory": "declared-synthetic-zero",
+        "medicationHistory": "declared-synthetic-zero"
+      },
+      "fields": {
+        "rationale": "SYNTHETIC_RATIONALE",
+        "alternativesConsidered": ["SYNTHETIC_ALTERNATIVES"],
+        "monitoringPlan": "SYNTHETIC_MONITORING_PLACEHOLDER",
+        "expiresAt": "2030-01-01T00:03:00Z"
+      },
+      "authority": {
+        "prescriberPerson": "SYNTHETIC_PRESCRIBER_PERSON",
+        "currentAal2CareAndFacility": true,
+        "pharmacist": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_PHARMACIST_PERSON"
+        },
+        "secondPhysician": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_SECOND_PHYSICIAN_PERSON"
+        }
+      },
+      "state": {
+        "separateSign": true,
+        "acknowledged": false,
+        "requestLive": true,
+        "pharmacistObligationPersisted": false,
+        "alreadySigned": false,
+        "nowSeconds": 1893456059,
+        "secondApprovalSeconds": null
+      }
+    },
+    "E": {
+      "origin": "trusted-synthetic-fixture",
+      "caseId": "SYNTHETIC_CASE_0001",
+      "context": "E",
+      "evidence": {
+        "caseId": "SYNTHETIC_CASE_0001",
+        "context": "E",
+        "fixtureSha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae",
+        "scenarioVersion": 1,
+        "completeness": "T2",
+        "state": "current",
+        "allergyHistory": "declared-synthetic-zero",
+        "medicationHistory": "declared-synthetic-zero"
+      },
+      "fields": {
+        "rationale": "SYNTHETIC_RATIONALE",
+        "alternativesConsidered": ["SYNTHETIC_ALTERNATIVES"],
+        "monitoringPlan": "SYNTHETIC_MONITORING_PLACEHOLDER",
+        "expiresAt": "2030-01-01T00:03:00Z"
+      },
+      "authority": {
+        "prescriberPerson": "SYNTHETIC_PRESCRIBER_PERSON",
+        "currentAal2CareAndFacility": true,
+        "pharmacist": {
+          "decision": "pending",
+          "person": "",
+          "current": false
+        },
+        "secondPhysician": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_SECOND_PHYSICIAN_PERSON"
+        }
+      },
+      "state": {
+        "separateSign": true,
+        "acknowledged": false,
+        "requestLive": true,
+        "pharmacistObligationPersisted": true,
+        "alreadySigned": false,
+        "nowSeconds": 1893456059,
+        "secondApprovalSeconds": 1893456000
+      }
+    }
+  },
+  "denials": [
+    {
+      "id": "missing-source",
+      "control": "W-M",
+      "changes": {
+        "evidence.state": "missing"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "stale-source",
+      "control": "W-M",
+      "changes": {
+        "evidence.state": "stale"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "partial-source",
+      "control": "W-M",
+      "changes": {
+        "evidence.state": "partial"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "unavailable-source",
+      "control": "W-M",
+      "changes": {
+        "evidence.state": "unavailable"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "freshness-unknown-source",
+      "control": "W-M",
+      "changes": {
+        "evidence.state": "freshness-unknown"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "origin-client",
+      "control": "E",
+      "changes": {
+        "origin": "client"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "origin-research-match",
+      "control": "E",
+      "changes": {
+        "origin": "research-match"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "origin-production",
+      "control": "E",
+      "changes": {
+        "origin": "production"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "unknown-case",
+      "control": "W-M",
+      "changes": {
+        "caseId": "OTHER"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "unknown-context",
+      "control": "N",
+      "changes": {
+        "context": "OTHER",
+        "evidence.context": "OTHER"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "pagination-only",
+      "control": "W-M",
+      "changes": {
+        "evidence.completeness": "T1"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "query-empty-allergy-is-not-declared-zero",
+      "control": "N",
+      "changes": {
+        "evidence.allergyHistory": "query-empty"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "query-empty-medication-is-not-declared-zero",
+      "control": "N",
+      "changes": {
+        "evidence.medicationHistory": "query-empty"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "fixture-digest-substitution",
+      "control": "W-M",
+      "changes": {
+        "evidence.fixtureSha256": "wrong"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "case-substitution",
+      "control": "W-M",
+      "substituteEvidenceCase": true,
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "scenario-version-substitution",
+      "control": "N",
+      "changes": {
+        "evidence.scenarioVersion": 2
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "monitoring-designation-substitution",
+      "control": "W-M",
+      "changes": {
+        "context": "W-NA"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "w-m-monitoring-missing",
+      "control": "W-M",
+      "changes": {
+        "fields.monitoringPlan": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "w-na-blank-optional-monitoring",
+      "control": "W-NA",
+      "changes": {
+        "fields.monitoringPlan": " "
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "warning-needs-acknowledgement",
+      "control": "W-M",
+      "changes": {
+        "state.acknowledged": false
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "N-missing-rationale",
+      "control": "N",
+      "changes": {
+        "fields.rationale": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "N-missing-alternativesConsidered",
+      "control": "N",
+      "changes": {
+        "fields.alternativesConsidered": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "N-missing-monitoringPlan",
+      "control": "N",
+      "changes": {
+        "fields.monitoringPlan": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "N-missing-expiresAt",
+      "control": "N",
+      "changes": {
+        "fields.expiresAt": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "E-missing-rationale",
+      "control": "E",
+      "changes": {
+        "fields.rationale": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "E-missing-alternativesConsidered",
+      "control": "E",
+      "changes": {
+        "fields.alternativesConsidered": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "E-missing-monitoringPlan",
+      "control": "E",
+      "changes": {
+        "fields.monitoringPlan": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "E-missing-expiresAt",
+      "control": "E",
+      "changes": {
+        "fields.expiresAt": null
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "same-person-alternate-account-pharmacist",
+      "control": "N",
+      "changes": {
+        "authority.pharmacist.person": "SYNTHETIC_PRESCRIBER_PERSON"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "same-person-alternate-account-second",
+      "control": "E",
+      "changes": {
+        "authority.secondPhysician.person": "SYNTHETIC_PRESCRIBER_PERSON"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "lost-current-pharmacist",
+      "control": "N",
+      "changes": {
+        "authority.pharmacist.current": false
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "lost-current-aal2-care-facility",
+      "control": "E",
+      "changes": {
+        "authority.currentAal2CareAndFacility": false
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "no-separate-sign",
+      "control": "E",
+      "changes": {
+        "state.separateSign": false
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "no-second-sign-effect",
+      "control": "E",
+      "changes": {
+        "state.alreadySigned": true
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "terminal-request",
+      "control": "E",
+      "changes": {
+        "state.requestLive": false
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "request-expiry-equality",
+      "control": "N",
+      "changes": {
+        "state.nowSeconds": 1893456180
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "emergency-expiry-equality-pending-pharmacist",
+      "control": "E",
+      "changes": {
+        "state.nowSeconds": 1893456060
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "pending-second-cannot-start-window",
+      "control": "E",
+      "changes": {
+        "authority.secondPhysician.decision": "pending"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "future-activation",
+      "control": "E",
+      "changes": {
+        "state.secondApprovalSeconds": 1893456060
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "unstarted-emergency",
+      "control": "E",
+      "changes": { "state.secondApprovalSeconds": null },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "rejected-second-physician",
+      "control": "E",
+      "changes": { "authority.secondPhysician.decision": "rejected" },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "noncanonical-reviewer-token",
+      "control": "N",
+      "changes": { "authority.pharmacist.person": " SYNTHETIC_PRESCRIBER_PERSON " },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "second-approval-unexpected-outside-emergency",
+      "control": "N",
+      "changes": { "state.secondApprovalSeconds": 1893456000 },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "expired-request-with-current-pharmacist",
+      "control": "E",
+      "changes": {
+        "state.nowSeconds": 1893456180,
+        "authority.pharmacist": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_PHARMACIST_PERSON"
+        }
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "emergency-window-one-second-after-expiry-pending-pharmacist",
+      "control": "E",
+      "changes": {
+        "state.nowSeconds": 1893456061
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "rejected-pharmacist",
+      "control": "E",
+      "changes": {
+        "authority.pharmacist.decision": "rejected"
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "delivery-is-not-persisted-obligation",
+      "control": "E",
+      "changes": {
+        "state.pharmacistObligationPersisted": false
+      },
+      "simulatedSignEligible": false
+    },
+    {
+      "id": "approved-pharmacist-missing-durable-obligation",
+      "simulatedSignEligible": false,
+      "changes": {
+        "authority.pharmacist": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_PHARMACIST_PERSON"
+        },
+        "state.pharmacistObligationPersisted": false
+      },
+      "control": "E"
+    }
+  ],
+  "positiveExtensions": [
+    {
+      "id": "emergency-at-window-start",
+      "control": "E",
+      "changes": { "state.nowSeconds": 1893456000 },
+      "simulatedSignEligible": true
+    },
+    {
+      "id": "emergency-window-one-second-before-expiry-pending-pharmacist",
+      "control": "E",
+      "changes": {
+        "state.nowSeconds": 1893456059
+      },
+      "simulatedSignEligible": true
+    },
+    {
+      "id": "expired-window-current-independent-pharmacist",
+      "control": "E",
+      "changes": {
+        "state.nowSeconds": 1893456060,
+        "authority.pharmacist": {
+          "decision": "approved",
+          "current": true,
+          "person": "SYNTHETIC_PHARMACIST_PERSON"
+        }
+      },
+      "simulatedSignEligible": true
+    }
+  ],
+  "timestampVectors": [
+    {
+      "id": "timestamp-utc-seconds",
+      "value": "2030-01-01T00:03:00Z",
+      "expected": "accepted-format"
+    },
+    {
+      "id": "timestamp-utc-milliseconds",
+      "value": "2030-01-01T00:03:00.000Z",
+      "expected": "rejected-format"
+    },
+    {
+      "id": "timestamp-offset",
+      "value": "2030-01-01T03:03:00+03:00",
+      "expected": "rejected-format"
+    },
+    { "id": "timestamp-date-only", "value": "2030-01-01", "expected": "rejected-format" },
+    {
+      "id": "timestamp-ambiguous-slash-date",
+      "value": "01/02/2030 00:03:00",
+      "expected": "rejected-format"
+    },
+    {
+      "id": "timestamp-invalid-month",
+      "value": "2030-13-01T00:03:00Z",
+      "expected": "rejected-calendar"
+    },
+    {
+      "id": "timestamp-invalid-day",
+      "value": "2030-02-30T00:03:00Z",
+      "expected": "rejected-calendar"
+    },
+    {
+      "id": "timestamp-invalid-leap-day",
+      "value": "2030-02-29T00:03:00Z",
+      "expected": "rejected-calendar"
+    },
+    {
+      "id": "timestamp-leap-day",
+      "value": "2032-02-29T00:03:00Z",
+      "expected": "accepted-format"
+    },
+    { "id": "timestamp-empty", "value": "", "expected": "rejected-format" },
+    { "id": "timestamp-null", "value": null, "expected": "rejected-type" },
+    { "id": "timestamp-number", "value": 1893456180, "expected": "rejected-type" },
+    { "id": "timestamp-array", "value": [], "expected": "rejected-type" },
+    { "id": "timestamp-object", "value": {}, "expected": "rejected-type" }
+  ],
+  "clockVectors": [
+    {
+      "id": "request-expiry-one-second-before",
+      "nowSeconds": 1893456179,
+      "expected": "before-expiry"
+    },
+    { "id": "request-expiry-equality", "nowSeconds": 1893456180, "expected": "expired" },
+    {
+      "id": "request-expiry-one-second-after",
+      "nowSeconds": 1893456181,
+      "expected": "expired"
+    },
+    { "id": "clock-nan", "runtimeValue": "Number.NaN", "expected": "rejected-non-finite" },
+    {
+      "id": "clock-infinity",
+      "runtimeValue": "Number.POSITIVE_INFINITY",
+      "expected": "rejected-non-finite"
+    },
+    {
+      "id": "clock-negative-infinity",
+      "runtimeValue": "Number.NEGATIVE_INFINITY",
+      "expected": "rejected-non-finite"
+    },
+    { "id": "clock-fraction", "nowSeconds": 1893456179.5, "expected": "rejected-type" },
+    { "id": "clock-string", "nowSeconds": "1893456179", "expected": "rejected-type" },
+    { "id": "clock-null", "nowSeconds": null, "expected": "rejected-type" }
+  ],
+  "fieldTypeVectors": [
+    {
+      "id": "field-rationale-number",
+      "control": "N",
+      "path": "fields.rationale",
+      "value": 12,
+      "expected": "rejected-type"
+    },
+    {
+      "id": "field-alternatives-string",
+      "control": "N",
+      "path": "fields.alternativesConsidered",
+      "value": "one option",
+      "expected": "rejected-type"
+    },
+    {
+      "id": "field-alternatives-number-item",
+      "control": "N",
+      "path": "fields.alternativesConsidered",
+      "value": ["valid", 12],
+      "expected": "rejected-type"
+    },
+    {
+      "id": "field-monitoring-array",
+      "control": "N",
+      "path": "fields.monitoringPlan",
+      "value": [],
+      "expected": "rejected-type"
+    },
+    {
+      "id": "field-reviewer-person-number",
+      "control": "N",
+      "path": "authority.pharmacist.person",
+      "value": 12,
+      "expected": "rejected-type"
+    },
+    {
+      "id": "field-container-array",
+      "control": "N",
+      "path": "fields",
+      "value": [],
+      "expected": "rejected-type"
+    }
+  ]
+}
