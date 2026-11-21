@@ -17,6 +17,16 @@ export function probeFor(context, caseId, changes = {}) {
   return probe;
 }
 
+export function probeForVector(entry, caseId) {
+  const probe = probeFor(entry.control, caseId, entry.changes);
+  if (entry.substituteEvidenceCase === true) {
+    const otherCase = vectors.caseIds.find((candidate) => candidate !== caseId);
+    assert.ok(otherCase, 'case substitution requires a different known fixture');
+    probe.evidence.caseId = otherCase;
+  }
+  return probe;
+}
+
 // Called only by the later, separately accepted harness with its admitted entry point.
 // This file neither imports the candidate nor supplies any way to activate it.
 export function verifyT003Behavior(evaluate) {
@@ -41,11 +51,7 @@ export function verifyT003Behavior(evaluate) {
       );
     }
     for (const entry of [...vectors.denials, ...vectors.positiveExtensions]) {
-      check(
-        `${caseId}/${entry.id}`,
-        control(entry.control, entry.changes),
-        entry.simulatedSignEligible,
-      );
+      check(`${caseId}/${entry.id}`, probeForVector(entry, caseId), entry.simulatedSignEligible);
     }
     for (const entry of vectors.timestampVectors) {
       const probe = control('N');

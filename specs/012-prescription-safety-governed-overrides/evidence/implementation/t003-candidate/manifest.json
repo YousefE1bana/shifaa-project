@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "record": "F012-T003-SYNTHETIC-MECHANISM-CANDIDATE/2",
+  "record": "F012-T003-SYNTHETIC-MECHANISM-CANDIDATE/3",
   "sourceCommit": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
   "issue": 514,
   "stage": "PENDING_APPROVAL",
@@ -42,8 +42,8 @@
     },
     {
       "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/vectors.json",
-      "bytes": 19454,
-      "sha256": "72a85856b76cab79407e4cf842d998c0661bb0ef03717a3a7580c847aadd8a4e"
+      "bytes": 19415,
+      "sha256": "9df5225f65b67747e32d86b1ab2f6df186a7c21f0d80c063ddaa08244ae6671b"
     },
     {
       "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/mapping.md",
@@ -52,14 +52,14 @@
     },
     {
       "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/verify-disabled.test.mjs",
-      "bytes": 4739,
-      "sha256": "9175fdb5933663d5fc3de00ccf774687d89017c72717d02ddc9a53860454a6e2"
+      "bytes": 5424,
+      "sha256": "a566a073ced1aa7c1415338516fe0d846b4e490d675f89413ba47a1b28d5c6ae"
     },
     {
       "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/verify-behavior.mjs",
-      "bytes": 3697,
-      "sha256": "57edf12eefd0fa17e59394126de2bd5fd1080542dc39b650abebb01c5c6f5cad"
+      "bytes": 4040,
+      "sha256": "47153ab27c530e9ae6aa549b62908d97d65f1b08733dbdc9554a542798ee4f9d"
     }
   ],
-  "supersedesManifestSha256": "44e8bf27be9093729e9b1f799c30de581a546c3ef6f08e87ca26ff8ecc68586f"
+  "supersedesManifestSha256": "0b8809fde28c47900f068d22a7ed4d3d107175f7e747b297c10f56716fd3d5aa"
 }

@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import { runF012MechanismCandidate } from '../../../../../packages/test-kit/src/feature-012.ts';
-import { probeFor, vectors } from './verify-behavior.mjs';
+import { probeFor, probeForVector, vectors } from './verify-behavior.mjs';
 
 const root = new URL('../../../../../', import.meta.url);
 const manifest = JSON.parse(readFileSync(new URL('manifest.json', import.meta.url), 'utf8'));
@@ -48,7 +48,7 @@ test('every named positive extension and adversarial vector is refused before ev
   const extensions = [...vectors.denials, ...vectors.positiveExtensions];
   assert.equal(new Set(extensions.map((entry) => entry.id)).size, extensions.length);
   for (const vector of extensions) {
-    const probe = probeFor(vector.control, vectors.caseIds[0], vector.changes);
+    const probe = probeForVector(vector, vectors.caseIds[0]);
     assert.throws(
       () => runF012MechanismCandidate(probe),
       {
@@ -56,6 +56,24 @@ test('every named positive extension and adversarial vector is refused before ev
       },
       vector.id,
     );
+  }
+});
+
+test('every named denial differs from its eligible control on each carrier', () => {
+  const substitution = vectors.denials.find((entry) => entry.id === 'case-substitution');
+  assert.ok(substitution);
+  for (const caseId of vectors.caseIds) {
+    for (const entry of vectors.denials) {
+      assert.notDeepEqual(
+        probeForVector(entry, caseId),
+        probeFor(entry.control, caseId),
+        `${caseId}/${entry.id}`,
+      );
+    }
+    const substituted = probeForVector(substitution, caseId);
+    assert.equal(substituted.caseId, caseId);
+    assert.notEqual(substituted.evidence.caseId, caseId);
+    assert.ok(vectors.caseIds.includes(substituted.evidence.caseId));
   }
 });
 

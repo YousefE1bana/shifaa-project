@@ -298,9 +298,7 @@
     {
       "id": "case-substitution",
       "control": "W-M",
-      "changes": {
-        "evidence.caseId": "SYNTHETIC_CASE_0002"
-      },
+      "substituteEvidenceCase": true,
       "simulatedSignEligible": false
     },
     {
