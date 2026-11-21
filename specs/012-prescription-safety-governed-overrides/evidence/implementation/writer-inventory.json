@@ -5,7 +5,7 @@
   "state": "SOURCE_INVENTORY_WITH_DISPOSABLE_CATALOG_BASELINE",
   "method": "Located candidate writer paths in the pinned Git tree. Effective ownership, grant coverage, participation and runtime behavior require separate verification.",
   "admission": "BLOCKED_PENDING_EFFECTIVE_WRITER_INVENTORY_AND_RETAINED_LOCK_PROOF",
-  "runtime": "WRITER_INVALIDATION_RACES_NOT_EXECUTED",
+  "runtime": "PARTIAL_BASELINE_ONBOARDING_LOCK_ORDER_RED",
   "writers": [
     {
       "scope": "F011 allergy insertion and head correction",
@@ -195,7 +195,27 @@
           "anchor": "insert into consent.records"
         }
       ],
-      "requiredProof": "Identify binding and status writers. Cover onboarding that creates an initially absent patient and self-care relationship, status changes and superseding consent appends. Lose current authority after capture and show the guarded effect is denied."
+      "requiredProof": "Identify binding and status writers. Cover onboarding that creates an initially absent patient and self-care relationship, status changes and superseding consent appends. Lose current authority after capture and show the guarded effect is denied.",
+      "observedBaseline": {
+        "status": "RED_ONBOARDING_DOES_NOT_SERIALIZE_ON_EXISTING_CHAIN",
+        "runnerHead": "d0f36668b98440035aa06d6bc2e63eb035b73b5c",
+        "appliedMigrations": 39,
+        "postgresImage": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+        "actionFirst": "With the rank-zero exclusive lock held, a second fence request timed out with SQLSTATE 55P03. The onboarding writer in a different shifaa_api session committed one new person, patient and self-care relationship.",
+        "writerFirst": "With onboarding uncommitted, a different shifaa_api session acquired the rank-zero exclusive lock. Rolling back the writer left all three rows absent.",
+        "negative": "The authenticated database role was denied access to the onboarding routine with SQLSTATE 42501.",
+        "limits": "The rank-zero lock was the guarded-action control. No product guarded effect was executed. Status changes, consent and the other writer families still need their own approved cases.",
+        "rawEvidence": {
+          "workspacePath": ".tmp/engineering-decisions-2026-11-21/523-onboarding-order-execution.json",
+          "sha256": "74a7daa8d07c17223c999b2a257d933d76d3df62a799d75823be9471456e0aa2"
+        },
+        "runner": {
+          "workspacePath": ".tmp/engineering-decisions-2026-11-21/523-onboarding-order-runner.mjs",
+          "sha256": "948236034e94656dcc60c9345fe384d7d03a56444b0dbed17ed24f115cc2d01e",
+          "arguments": ["--source-fence-upgrade"],
+          "nodeVersion": "24.22.1"
+        }
+      }
     },
     {
       "scope": "Family care relationship and purpose permission",
