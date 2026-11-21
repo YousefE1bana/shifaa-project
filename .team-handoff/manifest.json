@@ -3,8 +3,8 @@
   "status": "WIP / NOT VERIFIED",
   "repository": "YousefE1bana/shifaa-project",
   "issue": 507,
-  "owner": "AmiraSaad747",
-  "branch": "wip/amirasaad747/issue-507/ac70b908-0c5c-44d3-abd1-ad7051b836a5",
+  "owner": "YousefE1bana",
+  "branch": "wip/yousefe1bana/issue-507/9d261873-f6e9-471a-8012-b361fa41224a",
   "sourceBranch": "codex/issue-507-handoff-acceptance-20261111",
   "sourceCommit": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
   "baseCommit": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
@@ -24,6 +24,5 @@
   "ignoredUnsentCount": 1,
   "stagedVariantCount": 1,
   "staging": "Working files published; original index retained locally, not reproduced remotely",
-  "verification": "NOT VERIFIED; no lifecycle or task acceptance implied",
-  "previousHandoff": "22c63fc035e67479343902a4dd2a6ebd9601552e"
+  "verification": "NOT VERIFIED; no lifecycle or task acceptance implied"
 }

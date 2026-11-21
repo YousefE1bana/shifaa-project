@@ -1,1 +1,2 @@
 Synthetic working version; pending harmless teammate edit.
+Synthetic handoff resumed and edited by the recipient workspace.
