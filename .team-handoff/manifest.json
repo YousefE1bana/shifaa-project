@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "status": "WIP / NOT VERIFIED",
+  "repository": "YousefE1bana/shifaa-project",
+  "issue": 507,
+  "owner": "AmiraSaad747",
+  "branch": "wip/amirasaad747/issue-507/ac70b908-0c5c-44d3-abd1-ad7051b836a5",
+  "sourceBranch": "resume/AmiraSaad747/issue-507/22c63fc035e6",
+  "sourceCommit": "22c63fc035e67479343902a4dd2a6ebd9601552e",
+  "baseCommit": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "payloadCommit": "90279276376fdf4fcb00b42212b776ca184e1df1",
+  "payloadTree": "a350d817c952cc3a04cfbfa94a5a1b7137602de7",
+  "createdAt": "2026-11-21T18:56:58.392Z",
+  "task": "Synthetic handoff exercise",
+  "progress": "Authenticated recipient resumed the exact commit.",
+  "completed": "Synthetic text edit",
+  "pending": "Artifact and sender-local preservation review",
+  "blockers": "none",
+  "dependencies": [],
+  "changedFiles": [
+    ".team-handoff/manifest.json",
+    "tools/team-handoff-exercise.txt"
+  ],
+  "unsentCount": 0,
+  "ignoredUnsentCount": 1,
+  "stagedVariantCount": 1,
+  "staging": "Working files published; original index retained locally, not reproduced remotely",
+  "verification": "NOT VERIFIED; no lifecycle or task acceptance implied"
+}
