@@ -17,14 +17,17 @@ and clinical/production approval are separate claims. Do not infer one from anot
 If authority or scope conflicts, report the exact clause and smallest decision;
 do not silently select a lower-authority interpretation.
 
-Before any separately authorized SpecKit command, independently verify repository,
+Before any SpecKit command, independently verify repository,
 worktree, branch/HEAD, target feature, prerequisites and `.specify/feature.json`.
 An absent or stale pointer is not authority; never repair it incidentally.
 SpecKit is the only lifecycle. Read the applicable local skill and SHIFAA overlay.
-No stage, checkpoint or task range advances without its applicable authorization.
-No Tasks before required architecture decisions, exact Plan approval and separate
-authorization. This modernization starts no F012 lifecycle; that requires a new
-conversation and explicit starting instruction after approved integration.
+Follow the [Autonomous Engineering Delivery Policy](docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md)
+only after its exact ratification and verified activation. Until then, use the
+integrated predecessor instructions. After activation the root advances eligible
+technical checkpoints under standing delegation inside approved scope. Verify
+architecture completeness and accept the exact engineering Plan before Tasks.
+Preserve dependencies, task boundaries, evidence and all reserved decisions,
+including those assigned to an external owner.
 
 ## Integration and evidence
 
@@ -71,10 +74,10 @@ Follow branch protection/rulesets; do not invent additional per-PR human gates.
 Git merge authority starts no SpecKit stage, task execution, out-of-scope
 implementation, clinical decision, production change or destructive operation.
 
-This policy amendment is itself a Major Event. Its [transition record](docs/governance/merge-policy-v1/decision-and-impact.md)
-requires integration under the predecessor's human squash-merge rule and verified
-remote main before this candidate becomes effective. Do not use the unmerged
-candidate to authorize its own merge.
+The [prior merge-policy transition](docs/governance/merge-policy-v1/decision-and-impact.md)
+is historical. Treat each new authority amendment as a Major Event and follow
+its stated predecessor path. Pending amendments confer no integration or
+lifecycle authority.
 
 **Every successful squash merge requires immediate primary-local reconciliation,**
 whether the merge was human- or agent-managed and even when development used a
@@ -120,7 +123,8 @@ the host. Never reset retained Supabase databases or volumes. A worktree, projec
 name, environment flag or backup alone does not prove isolation. Report omitted,
 failed and unexecuted checks honestly; never weaken tests to pass.
 
-Select checks from the actual diff and affected contracts/callers:
+Select checks from the actual diff and affected contracts/callers. After
+activation use the [verification matrix](docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md#verification-by-impact):
 
 - Documentation, governance, contract and static-design evidence changes without
   product runtime, generated-client, dependency, executable verification-tooling,
@@ -138,8 +142,10 @@ Select checks from the actual diff and affected contracts/callers:
   disposition only if integration must proceed without that required evidence;
   ordinary documentation-focused verification needs no repetitive PO exception.
 
-These integration rules do not change SpecKit approvals, F012 C1/C2/C3/U1,
-OPEN-UX-001, other canonical feature obligations, or clinical/legal/production gates.
+Preserve protected F012 C1/C2/C3/U1 and OPEN-UX-001 evidence, canonical feature
+obligations, and clinical/legal/production gates. Ask the designated teammate
+for applicable human evidence with a revision, steps, expected results, capture
+requirements and failure-reporting instructions. Record the actual result.
 
 Apply the [Feature Artifact Finalization Gate](docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md)
 before closeout or any worktree/branch deletion. Official outputs belong in the
@@ -189,7 +195,7 @@ integration. Default ceiling: Root plus two subagents, subject to a lower actual
 runtime limit. Use explorer for bounded read-only evidence, worker for routine
 coding, deep-worker for security/RLS/transactions/state machines, tester for
 focused execution, and ui-worker for rendered visual/accessibility judgment.
-Delegation requires user or applicable project authorization. Read each role's
+Delegation follows applicable project authority and actual runtime limits. Read each role's
 instructions; give exact worktree/revision, checkpoint, allowed files, sources,
 invariants, commands, expected outcomes and evidence destination. Use disjoint
 ownership; delegates do not spawn or integrate Git. A brief with no inherited

@@ -9,9 +9,12 @@ const recordPath = 'docs/governance/tooling-maintenance-v1/historical-compatibil
 export const appendixSuccessorPath =
   'specs/012-prescription-safety-governed-overrides/readiness/historical-reader-repair-2026-11-12/successor-binding-v1.json';
 const appendixSuccessorSha256 = '8b6500c6571bf2c0d75373483452e0942be0c1e1104ca66de05dc35689bfc8b1';
+const deliverySuccessorPath = 'docs/governance/autonomous-delivery/historical-reader-binding.json';
+const deliverySuccessorSha256 = '7df114bc8d4cf8c400ea91c9375372bd454f063fe88fc51dd09355df0f3f595f';
 export const toolingPolicyInputPaths = [
   recordPath,
   appendixSuccessorPath,
+  deliverySuccessorPath,
   'shifaa-prd.md',
   'docs/architecture/SHIFAA-API-Catalog.md',
   'docs/architecture/SHIFAA-Data-RLS.md',
@@ -101,10 +104,22 @@ export function toolingPolicyHistoricalInputs(root) {
   const raw = readFileSync(file);
   assert.equal(sha(raw), recordSha256, 'Tooling policy history binding drift');
   const record = JSON.parse(raw);
-  const predecessors = approvedAppendixPredecessors(root);
-  const historical = new Map(predecessors);
+  const deliveryPredecessors = approvedAppendixPredecessors(
+    root,
+    deliverySuccessorPath,
+    deliverySuccessorSha256,
+    'SHIFAA-AUTONOMOUS-DELIVERY-HISTORICAL-READER/1.0.0',
+  );
+  const appendixPredecessors = approvedAppendixPredecessors(
+    root,
+    appendixSuccessorPath,
+    appendixSuccessorSha256,
+    'SHIFAA-F012-PLAN-HISTORICAL-READER-SUCCESSOR/1.0.0',
+    deliveryPredecessors,
+  );
+  const historical = new Map([...deliveryPredecessors, ...appendixPredecessors]);
   for (const input of record.inputs) {
-    const current = predecessors.get(input.path) ?? readFileSync(safeFile(root, input.path));
+    const current = historical.get(input.path) ?? readFileSync(safeFile(root, input.path));
     assert.equal(current.length, input.current.bytes, `Tooling policy source drift: ${input.path}`);
     assert.equal(sha(current), input.current.sha256, `Tooling policy source drift: ${input.path}`);
     const old = input.historical;
@@ -157,18 +172,18 @@ export function toolingPolicyHistoricalInputs(root) {
 
 // Validate live bytes on every call, including after an earlier successful read.
 // These prefixes feed the existing historical projection; they never activate policy.
-function approvedAppendixPredecessors(root) {
-  const bindingFile = safeFile(root, appendixSuccessorPath);
+function approvedAppendixPredecessors(root, path, digest, bindingId, successors = new Map()) {
+  const bindingFile = safeFile(root, path);
   if (!existsSync(bindingFile)) return new Map();
   const bindingBytes = readFileSync(bindingFile);
-  assert.equal(sha(bindingBytes), appendixSuccessorSha256, 'Appendix successor binding drift');
+  assert.equal(sha(bindingBytes), digest, 'Appendix successor binding drift');
   const binding = JSON.parse(bindingBytes);
-  assert.equal(binding.bindingId, 'SHIFAA-F012-PLAN-HISTORICAL-READER-SUCCESSOR/1.0.0');
+  assert.equal(binding.bindingId, bindingId);
   assert.equal(binding.historicalRecord.path, recordPath);
   assert.equal(binding.historicalRecord.sha256, recordSha256);
   const predecessors = new Map();
   for (const input of binding.inputs) {
-    const current = readFileSync(safeFile(root, input.path));
+    const current = successors.get(input.path) ?? readFileSync(safeFile(root, input.path));
     assert.equal(
       current.length,
       input.successor.bytes,

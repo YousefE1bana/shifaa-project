@@ -1,0 +1,60 @@
+{
+  "bindingId": "SHIFAA-AUTONOMOUS-DELIVERY-HISTORICAL-READER/1.0.0",
+  "historicalRecord": {
+    "path": "docs/governance/tooling-maintenance-v1/historical-compatibility.json",
+    "sha256": "e38049b11787c49e01d0c6cfe0ef3cb3f825fc68f207be5bb224eebc4567fb07"
+  },
+  "inputs": [
+    {
+      "path": ".specify/memory/constitution.md",
+      "predecessor": {
+        "bytes": 20642,
+        "sha256": "4107a37ce43ae5c6efd6c8198771112b598eb167d3f0788c879d2b3fc747793c",
+        "gitBlob": "a0b086c8ee41e57d5eec5642a387f63cd96f9f6d"
+      },
+      "appendix": {
+        "offset": 20642,
+        "bytes": 1842,
+        "sha256": "5febe099fed2556726fadce5055188a852f7ae26c8baa7a7eac1ddc0d67efc44"
+      },
+      "successor": {
+        "bytes": 22484,
+        "sha256": "2f25ba519a4589966ee4863c1c085d37c6958b67e6271f98e93aee518aafbba6"
+      }
+    },
+    {
+      "path": "shifaa-prd.md",
+      "predecessor": {
+        "bytes": 103029,
+        "sha256": "4a98237e916b88c2d92c60f2c5b5da25f9b919e6b04f42a73db2e0aa709a50ac",
+        "gitBlob": "72c4302c03af7a9ed5db1fcfb1443feddf4a4112"
+      },
+      "appendix": {
+        "offset": 103029,
+        "bytes": 769,
+        "sha256": "4769814816bc66639899ab43d79a619dd5a15c2913f014ada3470d19eb3789db"
+      },
+      "successor": {
+        "bytes": 103798,
+        "sha256": "9cefc539f678892757f5e23dd69dd3c8dd9563c6e5305471404ccbfa586c361a"
+      }
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "predecessor": {
+        "bytes": 106335,
+        "sha256": "f144e6332cf8363dc127fb1e728e3e1387a51878838c16881d268b24eea2c838",
+        "gitBlob": "ed7c9bf909ad270f1e2294e4bd5fe8609bfe2329"
+      },
+      "appendix": {
+        "offset": 106335,
+        "bytes": 863,
+        "sha256": "675fac5ea18877c8981967fb16de4a4c9baf579e97aefacb7c2993d4bde01132"
+      },
+      "successor": {
+        "bytes": 107198,
+        "sha256": "fbfb8e0bc316e84011ad73e8146d48f9d9adeaf8f1aacf04fb25d716e989ddc8"
+      }
+    }
+  ]
+}
