@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "status": "WIP / NOT VERIFIED",
+  "repository": "YousefE1bana/shifaa-project",
+  "issue": 507,
+  "owner": "YousefE1bana",
+  "branch": "wip/yousefe1bana/issue-507/9d261873-f6e9-471a-8012-b361fa41224a",
+  "sourceBranch": "codex/issue-507-handoff-acceptance-20261111",
+  "sourceCommit": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "baseCommit": "baa44d5590760eaca73f4ca1ddcea01c113c8ebe",
+  "payloadCommit": "2c3bcb751802486f1fece02e77807f84404e9ebf",
+  "payloadTree": "daabeb069e3e0d4d85aab4799e09179b15d5ae30",
+  "createdAt": "2026-11-11T13:48:03.743Z",
+  "task": "Synthetic maintenance handoff exercise",
+  "progress": "Unfinished synthetic text edit",
+  "completed": "Local fixture only",
+  "pending": "Recipient edit and transfer acceptance",
+  "blockers": "Second authenticated recipient not yet available",
+  "dependencies": [],
+  "changedFiles": [
+    "tools/team-handoff-exercise.txt"
+  ],
+  "unsentCount": 0,
+  "ignoredUnsentCount": 1,
+  "stagedVariantCount": 1,
+  "staging": "Working files published; original index retained locally, not reproduced remotely",
+  "verification": "NOT VERIFIED; no lifecycle or task acceptance implied"
+}
