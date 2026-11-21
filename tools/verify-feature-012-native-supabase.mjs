@@ -78,6 +78,8 @@ async function resetAndExtend(runPnpm) {
   runPnpm([
     'exec',
     'supabase',
+    '--workdir',
+    root,
     'migration',
     'repair',
     '--local',

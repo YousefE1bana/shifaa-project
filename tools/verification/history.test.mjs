@@ -43,4 +43,18 @@ test('exact new tooling bytes preserve immutable F011 projections and reject sub
   }
   writeFileSync(file, current);
   assert.deepEqual(toolingPolicyHistoricalInputs(fixture).get('package.json'), original);
+
+  const workflow = '.github/workflows/ci.yml';
+  const workflowPath = join(fixture, workflow);
+  const workflowBytes = readFileSync(workflowPath);
+  const historicalWorkflow = execFileSync(
+    'git',
+    ['cat-file', 'blob', '66199253e1d8c9d03034abc7f9eb6f4b1b596d64'],
+    { cwd: root },
+  );
+  assert.deepEqual(view.get(workflow), historicalWorkflow);
+  writeFileSync(workflowPath, Buffer.concat([workflowBytes, Buffer.from('\n# drift\n')]));
+  assert.throws(() => toolingPolicyHistoricalInputs(fixture), /Physical preflight source drift/);
+  writeFileSync(workflowPath, workflowBytes);
+  assert.deepEqual(toolingPolicyHistoricalInputs(fixture).get(workflow), historicalWorkflow);
 });

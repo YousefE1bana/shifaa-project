@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, realpathSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { f012CiWorkflowSha256 } from './tooling-history.mjs';
 import { safeSource } from './verification/sandbox.mjs';
 
 const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
@@ -104,8 +105,15 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
     verifier,
     'tools/feature-011-native-supabase-bootstrap.mjs',
   ]);
-  assert(sealedInputs.has(ciWorkflow), 'Missing historical workflow binding');
+  // The pinned F011 verifier sees the original workflow. The candidate workflow
+  // is bound separately because it orchestrates both the 38- and 39-file views.
+  assert(sealedInputs.delete(ciWorkflow), 'Missing historical workflow binding');
   assertSealedBytes(historical, ciWorkflow, blobs.get(ciWorkflow), gitFormat);
+  assert.equal(
+    sha256(bytes(candidate, ciWorkflow)),
+    f012CiWorkflowSha256,
+    'The exact additive CI workflow has changed',
+  );
   for (const file of sealedInputs) {
     assertSealedBytes(candidate, file, blobs.get(file), gitFormat);
   }
@@ -124,7 +132,7 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
     extended: {
       result: 'SOURCE_INVENTORY_PASS',
       migrations: extended,
-      ciWorkflowSha256: sha256(bytes(candidate, ciWorkflow)),
+      ciWorkflowSha256: f012CiWorkflowSha256,
     },
   };
 }

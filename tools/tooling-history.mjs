@@ -8,6 +8,10 @@ import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
 const recordPath = 'docs/governance/tooling-maintenance-v1/historical-compatibility.json';
 export const appendixSuccessorPath =
   'specs/012-prescription-safety-governed-overrides/readiness/historical-reader-repair-2026-11-12/successor-binding-v1.json';
+// Product Owner authorized this exact F012 CI successor for PR #607 review.
+// The F011 projection still returns the original immutable workflow bytes.
+export const f012CiWorkflowSha256 =
+  '6f93c00fe98d500b6ae9daa9d86b791cc78847d9f89280240bc531aad5c2498b';
 const appendixSuccessorSha256 = '8b6500c6571bf2c0d75373483452e0942be0c1e1104ca66de05dc35689bfc8b1';
 export const toolingPolicyInputPaths = [
   recordPath,
@@ -67,7 +71,10 @@ const maintenancePins = [
   {
     path: '.github/workflows/ci.yml',
     currentSha256: 'fd78bd9143813c864b990ba6789eb2ae4478b348a7c7c17ba2f9162897b44c05',
-    acceptedMaintenanceSha256: ['b31dbe6aeacafddfb4da49ee65d70afd6ad974a6781bff9fca0e5de9b4fd7435'],
+    acceptedMaintenanceSha256: [
+      'b31dbe6aeacafddfb4da49ee65d70afd6ad974a6781bff9fca0e5de9b4fd7435',
+      f012CiWorkflowSha256,
+    ],
     historicalSha256: 'd070253268ca8db1e28054b8a68e2b596b5c19a115a70900fbad456f24b407d2',
     gitBlob: '66199253e1d8c9d03034abc7f9eb6f4b1b596d64',
   },
