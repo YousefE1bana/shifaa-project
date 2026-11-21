@@ -928,7 +928,9 @@ async function admit() {
     stage = atomicity ? 'isolated structural atomicity SQL' : 'isolated PostgreSQL source fence';
     try {
       const source = startDatabase(atomicity ? 'atomicity' : 'source-fence', 'none');
-      receipt.databaseSystems = atomicity ? { atomicity: source.system } : { source: source.system };
+      receipt.databaseSystems = atomicity
+        ? { atomicity: source.system }
+        : { source: source.system };
       if (before.containers.length) {
         trial(
           'actual retained container denied',

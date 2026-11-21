@@ -9,6 +9,12 @@ import { f012CiWorkflowSha256 } from './tooling-history.mjs';
 import { safeSource } from './verification/sandbox.mjs';
 
 const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
+const governanceSuccessor = '9ab593e010672f3482c31d6cf002b82bdba5f28d';
+const governanceInputs = new Set([
+  '.specify/memory/constitution.md',
+  'shifaa-prd.md',
+  'SHIFAA-Implementation-Plan-MASTER.md',
+]);
 const directory = 'supabase/migrations';
 export const addition = `${directory}/20261112001200_f012_source_admission.sql`;
 const additionSha256 = '96719e8101fc247df4e2b75b7bb46c1f0709f82985208f50286a5176253d89da';
@@ -81,6 +87,7 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
   assert.equal(git(historical, 'rev-parse', 'HEAD').toString().trim(), predecessor);
   assert.equal(git(historical, 'status', '--porcelain=v1').toString(), '', 'Dirty predecessor');
   git(candidate, 'merge-base', '--is-ancestor', predecessor, 'HEAD');
+  git(candidate, 'merge-base', '--is-ancestor', governanceSuccessor, 'HEAD');
   const blobs = predecessorBlobs(candidate);
   const gitFormat = git(candidate, 'rev-parse', '--show-object-format').toString().trim();
   const sealedPaths = (dir) =>
@@ -115,7 +122,12 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
     'The exact additive CI workflow has changed',
   );
   for (const file of sealedInputs) {
-    assertSealedBytes(candidate, file, blobs.get(file), gitFormat);
+    assertSealedBytes(historical, file, blobs.get(file), gitFormat);
+    // PR #609 ratified exact appendices on these three documents.
+    const candidateBlob = governanceInputs.has(file)
+      ? git(candidate, 'rev-parse', `${governanceSuccessor}:${file}`).toString().trim()
+      : blobs.get(file);
+    assertSealedBytes(candidate, file, candidateBlob, gitFormat);
   }
   const extended = sealed.map((file) => ({
     path: file,
@@ -133,6 +145,7 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
       result: 'SOURCE_INVENTORY_PASS',
       migrations: extended,
       ciWorkflowSha256: f012CiWorkflowSha256,
+      governanceSuccessor,
     },
   };
 }
