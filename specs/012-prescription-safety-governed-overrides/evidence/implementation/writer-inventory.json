@@ -1,0 +1,419 @@
+{
+  "task": "T012",
+  "issue": 523,
+  "revision": "043e86b9d26100e4a101e3aa979fbde60e677961",
+  "state": "SOURCE_INVENTORY_WITH_DISPOSABLE_CATALOG_BASELINE",
+  "method": "Located candidate writer paths in the pinned Git tree. Effective ownership, grant coverage, participation and runtime behavior require separate verification.",
+  "admission": "BLOCKED_PENDING_EFFECTIVE_WRITER_INVENTORY_AND_RETAINED_LOCK_PROOF",
+  "runtime": "WRITER_INVALIDATION_RACES_NOT_EXECUTED",
+  "writers": [
+    {
+      "scope": "F011 allergy insertion and head correction",
+      "channel": "online",
+      "state": "writer_located",
+      "anchors": [
+        {
+          "path": "supabase/migrations/20261006185236_f011_allergy_functions.sql",
+          "gitBlob": "0f31b74d2e67e56e802d19f8e243569aa78181c3",
+          "line": 622,
+          "anchor": "CREATE FUNCTION clinical.create_allergy_api_v1"
+        },
+        {
+          "path": "supabase/migrations/20261006185236_f011_allergy_functions.sql",
+          "gitBlob": "0f31b74d2e67e56e802d19f8e243569aa78181c3",
+          "line": 781,
+          "anchor": "CREATE FUNCTION clinical.verify_allergy_api_v1"
+        },
+        {
+          "path": "supabase/migrations/20261006185241_f011_rls_grants.sql",
+          "gitBlob": "1c9e8d8d7e174c4c1e1a5b94a2d5ab46937d3427",
+          "line": 190,
+          "anchor": "clinical.create_allergy_api_v1"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/feature-011-receipts.ts",
+          "gitBlob": "8a7f48908ecff4891eddec154467d425c2d33b9d",
+          "line": 16,
+          "anchor": "clinical.verify_allergy_api_v1"
+        }
+      ],
+      "requiredProof": "Insert or correction takes exclusive admission before locking the allergy head. The source and per-patient generation commit or roll back together, including a previously empty collection."
+    },
+    {
+      "scope": "F011 content candidacy, signature, publication and supersession",
+      "channel": "online",
+      "state": "writer_located",
+      "anchors": [
+        {
+          "path": "supabase/migrations/20261006185237_f011_release_functions.sql",
+          "gitBlob": "7d208c1a7ebaae3417a3935fbf9f0bcc20e8e3ca",
+          "line": 180,
+          "anchor": "CREATE FUNCTION clinical.create_clinical_content_release_api_v1"
+        },
+        {
+          "path": "supabase/migrations/20261006185239_f011_signing_functions.sql",
+          "gitBlob": "4ee33cd0183c80292592945db8b3c0af65eda47e",
+          "line": 3,
+          "anchor": "CREATE FUNCTION clinical.sign_clinical_content_release_api_v1"
+        },
+        {
+          "path": "supabase/migrations/20261006185240_f011_publication_functions.sql",
+          "gitBlob": "277a0d9affbb702172e8bfde0e54253d92f92c7e",
+          "line": 584,
+          "anchor": "CREATE FUNCTION clinical.publish_clinical_content_release_api_v1"
+        },
+        {
+          "path": "supabase/migrations/20261006185240_f011_publication_functions.sql",
+          "gitBlob": "277a0d9affbb702172e8bfde0e54253d92f92c7e",
+          "line": 3,
+          "anchor": "CREATE FUNCTION clinical.f011_release_current_eligibility_v1"
+        },
+        {
+          "path": "supabase/migrations/20261006185241_f011_rls_grants.sql",
+          "gitBlob": "1c9e8d8d7e174c4c1e1a5b94a2d5ab46937d3427",
+          "line": 201,
+          "anchor": "clinical.publish_clinical_content_release_api_v1"
+        }
+      ],
+      "requiredProof": "A new applicable series, publication, supersession or change to effective eligibility invalidates the covered catalog under the same transaction. Prove deadline rechecks independently of writer serialization."
+    },
+    {
+      "scope": "F011 governing authority, reviewer designation and admissibility",
+      "channel": "restricted_offline_provisioning",
+      "state": "coverage_incomplete",
+      "anchors": [
+        {
+          "path": "tools/provision-feature-011-evidence.mjs",
+          "gitBlob": "41d48ccc65a8020d65efd55d4ee180afd0782d6d",
+          "line": 35,
+          "anchor": "async function boundary"
+        },
+        {
+          "path": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+          "gitBlob": "7ce2362cf6e1fd64d244bd1ec2f17f15a80948bb",
+          "line": 213,
+          "anchor": "CREATE FUNCTION clinical.f011_guard_governance_version_v1"
+        },
+        {
+          "path": "supabase/migrations/20261006175937_f011_governance_evidence.sql",
+          "gitBlob": "7ce2362cf6e1fd64d244bd1ec2f17f15a80948bb",
+          "line": 231,
+          "anchor": "CREATE FUNCTION clinical.f011_guard_admissibility_update_v1"
+        }
+      ],
+      "requiredProof": "Compare the loader, revocation path, external approval source and granted roles. A relevant current basis change must wait for retained admission and invalidate the applicable catalog. External writers without verified participation block reliance."
+    },
+    {
+      "scope": "F010 encounter, participant and appointment lifecycle",
+      "channel": "online",
+      "state": "writer_located",
+      "anchors": [
+        {
+          "path": "supabase/migrations/20260926001000_encounters_referrals_contextual_chat.sql",
+          "gitBlob": "04152ae61cd97eeb0f19818e1b6ccbc5eee966e1",
+          "line": 453,
+          "anchor": "INSERT INTO clinical.encounter_participants"
+        },
+        {
+          "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+          "gitBlob": "097ba5ae28cbe3f25f0b4c0a78f3dd11de977765",
+          "line": 180,
+          "anchor": "UPDATE clinical.encounter_participants participant"
+        },
+        {
+          "path": "supabase/migrations/20261001001002_f010_f04_completion_authority.sql",
+          "gitBlob": "f59db28dd490a94dbfca7186f077d0c6072db7e5",
+          "line": 136,
+          "anchor": "UPDATE clinical.encounters SET status='completed'"
+        },
+        {
+          "path": "supabase/migrations/20260912000900_clinic_scheduling_appointments_queue.sql",
+          "gitBlob": "101dac749c9c67f3d41a3d8def10b4672a1f76e1",
+          "line": 704,
+          "anchor": "SET status='reschedule_required'"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/feature-010-encounters.ts",
+          "gitBlob": "3fd663f58617fadb44457f40d5b07efa256f1fe4",
+          "line": 94,
+          "anchor": "select clinical.create_encounter_api_v1"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/feature-010-encounters.ts",
+          "gitBlob": "3fd663f58617fadb44457f40d5b07efa256f1fe4",
+          "line": 167,
+          "anchor": "select clinical.complete_encounter_api_v1"
+        },
+        {
+          "path": "supabase/migrations/20260929001001_f010_c10_encounter_api.sql",
+          "gitBlob": "3ab9d4f6f359327028fa000e42a4d355dc70080f",
+          "line": 80,
+          "anchor": "CREATE OR REPLACE FUNCTION clinical.create_encounter_api_v1"
+        },
+        {
+          "path": "supabase/migrations/20260930001001_f010_c26_privacy_guards.sql",
+          "gitBlob": "097ba5ae28cbe3f25f0b4c0a78f3dd11de977765",
+          "line": 384,
+          "anchor": "CREATE OR REPLACE FUNCTION clinical.complete_encounter_api_v1"
+        }
+      ],
+      "requiredProof": "Encounter creation, completion, participant end and applicable appointment/queue transitions serialize with guarded current care. Exercise both an existing participant and a previously absent participant."
+    },
+    {
+      "scope": "Person/account binding and applicable consent",
+      "channel": "online_and_provisioning",
+      "state": "coverage_incomplete",
+      "anchors": [
+        {
+          "path": "services/api/src/adapters/postgres/identity-repository.ts",
+          "gitBlob": "b35c65349ac98eb6a8f8c1f80b3e7fdcb2a35b64",
+          "line": 140,
+          "anchor": "update identity.people set"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/identity-repository.ts",
+          "gitBlob": "b35c65349ac98eb6a8f8c1f80b3e7fdcb2a35b64",
+          "line": 269,
+          "anchor": "insert into consent.records"
+        }
+      ],
+      "requiredProof": "Identify binding and status writers, including provisioning and superseding consent appends. Lose current authority after capture and show the guarded effect is denied. A located profile update does not enumerate all binding or status writers."
+    },
+    {
+      "scope": "Family care relationship and purpose permission",
+      "channel": "online",
+      "state": "writer_located",
+      "anchors": [
+        {
+          "path": "services/api/src/adapters/postgres/family-service.ts",
+          "gitBlob": "6942bb7c88f6581c85fe24929a20fb7a708fbf27",
+          "line": 268,
+          "anchor": "update identity.care_relationships set status="
+        },
+        {
+          "path": "services/api/src/adapters/postgres/family-service.ts",
+          "gitBlob": "6942bb7c88f6581c85fe24929a20fb7a708fbf27",
+          "line": 275,
+          "anchor": "update identity.care_relationship_permissions"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/family-service.ts",
+          "gitBlob": "6942bb7c88f6581c85fe24929a20fb7a708fbf27",
+          "line": 278,
+          "anchor": "insert into identity.care_relationship_permissions"
+        }
+      ],
+      "requiredProof": "Test relationship activation, revocation and permission loss against both lock orders. The relationship predicate does not confer prescription or medication release authority."
+    },
+    {
+      "scope": "Facility, workforce, professional and facility licence, role and evidence eligibility",
+      "channel": "online_and_maintenance",
+      "state": "coverage_incomplete",
+      "anchors": [
+        {
+          "path": "services/api/src/adapters/postgres/facility-service.ts",
+          "gitBlob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+          "line": 329,
+          "anchor": "update identity.facilities set"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/facility-service.ts",
+          "gitBlob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+          "line": 339,
+          "anchor": "insert into identity.private_evidence_objects"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/facility-service.ts",
+          "gitBlob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+          "line": 345,
+          "anchor": "insert into identity.professional_licenses"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/facility-service.ts",
+          "gitBlob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+          "line": 351,
+          "anchor": "insert into identity.facility_memberships"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/facility-service.ts",
+          "gitBlob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+          "line": 360,
+          "anchor": "update identity.admin_role_grants"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/facility-service.ts",
+          "gitBlob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+          "line": 369,
+          "anchor": "update identity.facility_licenses set"
+        },
+        {
+          "path": "supabase/migrations/20260811000300_facility_onboarding_rbac.sql",
+          "gitBlob": "58a96bb1bcd4129445fe71bc9c61ba4c93f7d6a7",
+          "line": 39,
+          "anchor": "identity.facility_memberships"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/facility-service.ts",
+          "gitBlob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+          "line": 355,
+          "anchor": "update identity.admin_role_revocation_requests"
+        }
+      ],
+      "requiredProof": "Compare effective writers and scan/maintenance grants. Prove invalidation on membership or licence loss, evidence eligibility change and withdrawal of a relied-upon role. Separately recheck effective dates after lock waits."
+    },
+    {
+      "scope": "F007 local continuity and recovery",
+      "channel": "online",
+      "state": "writer_located",
+      "anchors": [
+        {
+          "path": "services/api/src/adapters/postgres/identity-continuity-service.ts",
+          "gitBlob": "cb4be109ac99fa406d68716415aa53fcbcf842cf",
+          "line": 389,
+          "anchor": "update identity.continuity_cases"
+        },
+        {
+          "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+          "gitBlob": "d5927c1e90e7182bc9e2123f666e330300d41eb5",
+          "line": 350,
+          "anchor": "CREATE OR REPLACE FUNCTION platform.submit_dependent_transition"
+        },
+        {
+          "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+          "gitBlob": "d5927c1e90e7182bc9e2123f666e330300d41eb5",
+          "line": 405,
+          "anchor": "CREATE OR REPLACE FUNCTION platform.decide_dependent_transition"
+        }
+      ],
+      "requiredProof": "Local case/transition changes conflict before previously existing locks. Test locally lost authority after a wait. Separate GoTrue effects follow NAC-1."
+    },
+    {
+      "scope": "Native Auth user/session/factor/recovery",
+      "channel": "native_auth",
+      "state": "separate_native_proof_required",
+      "anchors": [
+        {
+          "path": "supabase/migrations/20260825000700_identity_continuity_sessions_mfa_recovery.sql",
+          "gitBlob": "d5927c1e90e7182bc9e2123f666e330300d41eb5",
+          "line": 241,
+          "anchor": "CREATE OR REPLACE FUNCTION platform.auth_session_is_current"
+        },
+        {
+          "path": "services/api/src/adapters/supabase-auth.ts",
+          "gitBlob": "002ad3cc151cdec99825151375bc9dc6608bf8db",
+          "line": 162,
+          "anchor": "logout"
+        },
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/native-authority-nac1-successor-v0.1.0.md",
+          "gitBlob": "5952bbd01a0bfe454ead49768ccd2dd22920d915",
+          "line": 1,
+          "anchor": "NAC-1"
+        }
+      ],
+      "requiredProof": "T010/T011 prove real native row conflicts. A local admission lock or the predecessor boolean lookup supplies no native writer coverage."
+    },
+    {
+      "scope": "F012 reviewer roster and designation",
+      "channel": "restricted_offline_provisioning",
+      "state": "implementation_pending",
+      "anchors": [
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/reviewer-contract-v0.1.0.md",
+          "gitBlob": "d762b0fb4a1808384e054e6f83cb677db35e5fb6",
+          "line": 23,
+          "anchor": "roster"
+        }
+      ],
+      "implementationTask": "T015",
+      "absentAtRevision": [
+        "supabase/migrations/20261112001203_f012_roster.sql",
+        "tools/provision-feature-012-roster.mjs"
+      ],
+      "requiredProof": "The future exact roster import or revocation takes admission before existing scope locks and rejects stale revisions and cross-deployment bindings."
+    },
+    {
+      "scope": "F012 projection release policy, grant and withdrawal",
+      "channel": "online_and_restricted_offline",
+      "state": "implementation_pending",
+      "anchors": [
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/tasks.md",
+          "gitBlob": "a6ba047d36a7d27faf6620d092f0245f412bb38d",
+          "line": 344,
+          "anchor": "offline owner policy/grant withdrawal"
+        }
+      ],
+      "implementationTask": "T055–T059",
+      "absentAtRevision": ["services/api/src/adapters/postgres/feature-012-projections.ts"],
+      "requiredProof": "Prove both applicable projection controls, current grant/policy loss and withdrawal order. No replay or restore can reopen a withdrawn target."
+    },
+    {
+      "scope": "F012 P3 prescribed item statement",
+      "channel": "online",
+      "state": "implementation_pending",
+      "anchors": [
+        {
+          "path": "specs/012-prescription-safety-governed-overrides/contract-amendment/source-consumption-successor-v0.1.0.md",
+          "gitBlob": "000edae047788eceb769c90b64a5952c837df79d",
+          "line": 103,
+          "anchor": "### P3 prescribed producer"
+        }
+      ],
+      "implementationTask": "T038/T039",
+      "absentAtRevision": ["supabase/migrations/20261112001206_f012_signing.sql"],
+      "requiredProof": "A successful sign is the single prescribed writer. Exact-one statement, relevant generation, receipt and sign commit together. Active/dispensed states rely on their own producers."
+    },
+    {
+      "scope": "Restore, fixture loaders and other owner maintenance",
+      "channel": "offline_maintenance",
+      "state": "coverage_incomplete",
+      "anchors": [
+        {
+          "path": "tools/run-feature-011-restore.mjs",
+          "gitBlob": "648eb67fc375e7b4c3144180b496222fe308bf7c",
+          "line": 88,
+          "anchor": "'pg_restore'"
+        },
+        {
+          "path": "tools/feature-011-physical-races.mjs",
+          "gitBlob": "325545ef6574295b2533ff82123099b7bb5af358",
+          "line": 1927,
+          "anchor": "UPDATE clinical.content_governance_authorities"
+        },
+        {
+          "path": "tools/provision-feature-011-evidence.mjs",
+          "gitBlob": "41d48ccc65a8020d65efd55d4ee180afd0782d6d",
+          "line": 61,
+          "anchor": "async function insert"
+        }
+      ],
+      "requiredProof": "Classify entry points and role/migration/hook changes. An unadmitted or unclassified writer keeps exposure quiesced. A restore cannot reuse prior admission and requires distinct disposable proof and re-admission."
+    }
+  ],
+  "caseRequirements": [
+    "Writer first. The writer commits source or current-authority changes before the guarded transaction can rely on the old observation. A stale guarded effect must fail closed.",
+    "Action first. Hold the existing action open in an independent session. The writer waits at exclusive admission. Release the action and verify only the committed historical result survives.",
+    "Rollback and replay. Roll back source changes and generations together. A replay with the original key must not create a second change.",
+    "Authority and configuration loss. Exercise the affected authorized operation as a non-owner. Unclassified writers, unavailable source or stale native authority cannot yield a successful guarded effect."
+  ],
+  "catalogBaseline": {
+    "status": "PASS",
+    "script": "infra/db/tests/feature-012-participating-writers.sql",
+    "scriptSha256": "8023f883d5d12e7be95ba52b65e30d8f90ea542311e023e1287d4de27d63f156",
+    "postgresImage": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+    "predecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+    "appliedMigrations": 39,
+    "records": {
+      "relation": 27,
+      "role-dml": 90,
+      "routine": 35,
+      "trigger": 30
+    },
+    "observations": [
+      "Both T009 tables report enabled and forced RLS.",
+      "The F011 writer entry points execute under their specialized owner. F010 API entry points and their inner routines are reported separately.",
+      "Relevant direct Core API DML privileges remain visible in the predecessor identity and consent paths. ACLs alone establish neither effective row authorization nor writer admission."
+    ]
+  }
+}
