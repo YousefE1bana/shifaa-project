@@ -111,3 +111,12 @@ Keep the exact existing Article VI paragraph and identify the additional F012 ap
 Distinguish Product Owner amendment approval, affected-discipline participation/impact review, and Article VI dual clinical sign-off. The inclusion checklist does not itself require affirmative clinical-professional acceptance of a non-clinical amendment. Use the narrow F012 procedural disposition above only after exact amendment approval and activation; record unavailable participation honestly and never represent engineering assessment as professional approval. Preserve the checklist above and record each affected API/data/UI/traceability/spec/template change or accepted unchanged disposition before activation.
 
 Use the canonical Constitution's fixed publication states and two-phase procedure: review candidate; exact approved conditional release and hash-bound decision; authorized PR A/human merge; remote verification; separately reviewed receipt in PR B/human merge; verified activation; separate lifecycle authorization. Before activation the predecessor templates and baseline remain effective. Final status text is reviewed before approval, not rewritten after merge. The manifest excludes the approval record and receipt; neither record binds its own future bytes. The receipt binds only known PR A content and evidence. No automatic loading or applicability follows a merged NOT_EFFECTIVE file.
+
+### Autonomous delivery amendments
+
+For prospective delivery governance, record the exact amendment version,
+reason, propagation and preserved contracts. Use the active Constitution's
+general amendment rule and the candidate's stated predecessor integration path.
+The two-phase F012 publication procedure above governs that historical F012
+release. Any successor requires attributable Product Owner ratification and
+verification of its integrated bytes before its new authority is used.
