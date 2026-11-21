@@ -9,7 +9,8 @@ const recordPath = 'docs/governance/tooling-maintenance-v1/historical-compatibil
 export const appendixSuccessorPath =
   'specs/012-prescription-safety-governed-overrides/readiness/historical-reader-repair-2026-11-12/successor-binding-v1.json';
 const appendixSuccessorSha256 = '8b6500c6571bf2c0d75373483452e0942be0c1e1104ca66de05dc35689bfc8b1';
-const deliverySuccessorPath = 'docs/governance/autonomous-delivery/historical-reader-binding.json';
+export const deliverySuccessorPath =
+  'docs/governance/autonomous-delivery/historical-reader-binding.json';
 const deliverySuccessorSha256 = '7df114bc8d4cf8c400ea91c9375372bd454f063fe88fc51dd09355df0f3f595f';
 export const toolingPolicyInputPaths = [
   recordPath,

@@ -21,8 +21,10 @@ class HistoricalReaderSuccessorTests(unittest.TestCase):
         self.root = Path(temporary.name)
         self.record = json.loads((ROOT / history.RECORD).read_bytes())
         self.binding = json.loads((ROOT / history.APPENDIX_SUCCESSOR).read_bytes())
-        paths = {history.RECORD, history.APPENDIX_SUCCESSOR}
-        paths.update(item["path"] for item in self.record["inputs"] + self.binding["inputs"])
+        self.delivery_binding = json.loads((ROOT / history.DELIVERY_SUCCESSOR).read_bytes())
+        paths = {history.RECORD, history.APPENDIX_SUCCESSOR, history.DELIVERY_SUCCESSOR}
+        paths.update(item["path"] for item in
+                     self.record["inputs"] + self.binding["inputs"] + self.delivery_binding["inputs"])
         for name in paths:
             target = self.root / name
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -47,7 +49,8 @@ class HistoricalReaderSuccessorTests(unittest.TestCase):
 
     def test_edits_truncations_and_arbitrary_appendices_fail_after_a_successful_read(self):
         history.preserved_inputs(self.root)
-        for item in self.binding["inputs"]:
+        latest_inputs = {item["path"]: item for item in self.binding["inputs"] + self.delivery_binding["inputs"]}
+        for item in latest_inputs.values():
             path = self.root / item["path"]
             current = path.read_bytes()
             boundary = item["appendix"]["offset"]
@@ -62,21 +65,28 @@ class HistoricalReaderSuccessorTests(unittest.TestCase):
 
     def test_successor_binding_cannot_redefine_its_boundary_hash_or_scope(self):
         history.preserved_inputs(self.root)
-        path = self.root / history.APPENDIX_SUCCESSOR
-        raw = path.read_bytes()
-        changed = json.loads(raw)
-        changed["inputs"][0]["appendix"]["offset"] -= 1
-        changed["inputs"][0]["successor"]["sha256"] = "0" * 64
-        changed["inputs"].append({"path": "unauthorized.md"})
-        for mutation in (raw + b" ", json.dumps(changed).encode()):
-            path.write_bytes(mutation)
-            with self.assertRaisesRegex(ValueError, "binding drift"):
+        for record in (history.APPENDIX_SUCCESSOR, history.DELIVERY_SUCCESSOR):
+            with self.subTest(record=record):
+                path = self.root / record
+                raw = path.read_bytes()
+                changed = json.loads(raw)
+                changed["inputs"][0]["appendix"]["offset"] -= 1
+                changed["inputs"][0]["successor"]["sha256"] = "0" * 64
+                changed["inputs"].append({"path": "unauthorized.md"})
+                for mutation in (raw + b" ", json.dumps(changed).encode()):
+                    path.write_bytes(mutation)
+                    with self.assertRaisesRegex(ValueError, "binding drift"):
+                        history.preserved_inputs(self.root)
+                path.unlink()
+                with self.assertRaisesRegex(ValueError, "source drift"):
+                    history.preserved_inputs(self.root)
+                path.write_bytes(raw)
                 history.preserved_inputs(self.root)
-        path.unlink()
-        with self.assertRaisesRegex(ValueError, "source drift"):
-            history.preserved_inputs(self.root)
 
     def test_legacy_inputs_need_no_successor_and_old_record_stays_immutable(self):
+        (self.root / history.DELIVERY_SUCCESSOR).unlink()
+        for item in self.delivery_binding["inputs"]:
+            (self.root / item["path"]).write_bytes(self.blob(item["predecessor"]))
         (self.root / history.APPENDIX_SUCCESSOR).unlink()
         for item in self.binding["inputs"]:
             (self.root / item["path"]).write_bytes(self.blob(item["predecessor"]))

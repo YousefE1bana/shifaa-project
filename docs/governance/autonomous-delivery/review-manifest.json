@@ -85,6 +85,16 @@
       "sha256": "e018f2c8696dad0338a84d1714679eef32851c234501fa402d89dec3b8fbb56b"
     },
     {
+      "path": "packages/contracts/src/feature-011-history-reader.test.ts",
+      "bytes": 6046,
+      "sha256": "b020dfef54059f0e80cdaaceb53d7459e4c64c1f350821820100a8f8675d2fd9"
+    },
+    {
+      "path": "packages/contracts/src/feature-011-successor.test.ts",
+      "bytes": 7256,
+      "sha256": "02cf703cdb55a49e1f14f79b9daced756488376ef7bec798b0ce27d3fbb66027"
+    },
+    {
       "path": "shifaa-prd.md",
       "bytes": 103798,
       "sha256": "9cefc539f678892757f5e23dd69dd3c8dd9563c6e5305471404ccbfa586c361a"
@@ -95,9 +105,19 @@
       "sha256": "6a2f6d62ac097046722c2ef86c59dc1a84ef715bf6d9088af71138dc723cbc76"
     },
     {
+      "path": "tools/test_tooling_history_successor.py",
+      "bytes": 5515,
+      "sha256": "71294fdad15844856f76c4f01cdb10cea1bbba5cab55c66e56e977836a875198"
+    },
+    {
       "path": "tools/tooling-history.mjs",
-      "bytes": 10155,
-      "sha256": "b73c5da5ce84e34c5b59631160c8f30be66698e7fa471a27cb77034f82eec4ea"
+      "bytes": 10164,
+      "sha256": "7fe1b6721d778309dca216c2d9f5e47598a88bc0738d0749ac12ea31bac3fee1"
+    },
+    {
+      "path": "tools/tooling_history.py",
+      "bytes": 4963,
+      "sha256": "46046e208105730a407d925c37aecf45759b96116dba84d90217e093af411566"
     },
     {
       "path": "tools/verification/history.test.mjs",
