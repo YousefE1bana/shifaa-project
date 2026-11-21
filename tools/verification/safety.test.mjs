@@ -12,6 +12,7 @@ import { tmpdir } from 'node:os';
 import { delimiter, dirname, join, resolve } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { f012CiWorkflowSha256 } from '../tooling-history.mjs';
 import {
   sandboxArgs,
   dockerEnvironment,
@@ -207,13 +208,25 @@ test('all 42 legacy obligations and exact nested chains stay available', () => {
   );
 });
 
-test('required six-context workflow stays byte-identical', () => {
+test('preserves the required workflow in the sealed F011 baseline and binds the exact F012 successor', () => {
+  const workflow = '.github/workflows/ci.yml';
   const original = execFileSync(
     'git',
-    ['show', '97d20c290abeebdbf223703bd19d3103ac65bd3b:.github/workflows/ci.yml'],
+    ['show', `97d20c290abeebdbf223703bd19d3103ac65bd3b:${workflow}`],
     { cwd: root },
   );
-  assert.deepEqual(readFileSync(join(root, '.github/workflows/ci.yml')), original);
+  const predecessor = execFileSync(
+    'git',
+    ['show', `fbd2b5312a5038aad21db0001a17dac22bdcbf7e:${workflow}`],
+    { cwd: root },
+  );
+  assert.deepEqual(predecessor, original);
+  assert.equal(
+    createHash('sha256')
+      .update(readFileSync(join(root, workflow)))
+      .digest('hex'),
+    f012CiWorkflowSha256,
+  );
 });
 
 test('image dependency identity changes on nested workspace manifest drift', () => {

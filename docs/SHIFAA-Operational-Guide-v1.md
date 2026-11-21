@@ -10,7 +10,7 @@ Keep existing worktrees, private originals and archives in place. An isolated ch
 
 ## Setup, development and contracts
 
-[Package scripts](../package.json) and tracked version files define runtime commands; [SpecKit integration](../.specify/integration.json) declares the current operational version, [workflow registry](../.specify/workflows/workflow-registry.json) pins custom 2.3.0. The [maintained onboarding draft](TEAM-ONBOARDING-DRAFT.md) remains useful for procedures but its machine observations and pending-PR narrative are dated. Do not infer current installed Docker, Android, Supabase or agent readiness from that snapshot. Recheck only tools required for the authorized task.
+[Package scripts](../package.json) and tracked version files define runtime commands. The [SpecKit integration](../.specify/integration.json) declares the operational version and the [workflow registry](../.specify/workflows/workflow-registry.json) pins the custom workflow. Resolve lifecycle and integration authority through the [current authority map](governance/SHIFAA-Current-Authority-Map-v1.md). The [maintained onboarding draft](TEAM-ONBOARDING-DRAFT.md) has procedures and dated machine observations. Check installed tooling as required for the task.
 
 The [owned skills guide](agent-skills/README.md) distinguishes repository sources from ignored local runtimes. An authorized sync copies only four policy skills, not official SpecKit or third-party packages. Read each applicable skill; no automatic supplementary-document loading is claimed.
 

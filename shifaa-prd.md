@@ -413,3 +413,15 @@ Preserve seven assigned closure FRs (SAFE-001/003/004/005/006/007/011), prerequi
 Affected clause: **PRD §10.2 / OPEN-UX-001**. For isolated synthetic F012 only, the attributable Product Owner approval of exact source compositions and immutable screenshot hashes is sufficient visual-composition acceptance authority; a separate Design Lead co-signature is not required for those named F012 references. This is the selected U1 exception to the co-attribution element only. It neither assigns/renames a role nor fabricates another signature. C3 v0.3.0 retains its exact recorded Product approval. New C2 release/withdrawal controls require a separate exact Product Owner visual decision and are not covered by C3. All required P0 states, Arabic/English, contracted viewports, immutable source/baseline hashes and applicable shared-dark references remain mandatory. OPEN-UX-001 is not closed merely by selecting U1; OPEN-UX-002, native accessibility/live-language, clinical/legal/credential/facility and production gates remain unchanged. No exception applies to another feature.
 
 The accepted reviewed inputs retain their original hashes; the preparation-status wording in those originals is resolved by the attributable decision, not rewritten. This versioned appendix becomes operative only with the exact accepted supporting contracts, this decision and matching canonical reconciliation integrated through the separately authorized governed PR process and verified on remote main. No publication or integration is authorized in this preparation. Any substantive content deviation needs an attributable discrepancy resolution; no unknown bytes or missing visual approval are ratified. Rejection/non-integration leaves predecessor authority controlling; no runtime rollback or destructive restoration is implied.
+
+## Engineering delivery governance successor — 2.3.0
+
+Upon verified activation of the [Autonomous Engineering Delivery Policy](docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md),
+the root engineering agent may advance technical checkpoints for approved
+requirements under standing delegation. Each decision is bound to the reviewed
+revision and applicable evidence. The Product Owner retains material scope and
+product acceptance decisions where the approved requirements assign them. All
+FR/NFR IDs, requirement ownership, product/clinical acceptance criteria,
+`OPEN-*` gates, statutory obligations, and admission limits retain their
+existing meaning. Human evidence is requested from its designated owner where
+the change or milestone calls for it.

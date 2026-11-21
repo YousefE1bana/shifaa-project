@@ -65,7 +65,10 @@ test('physical preflight compatibility rejects live drift after a successful cac
     writeFileSync(join(root, repaired), original);
     assert.equal(toolingPolicyHistoricalInputs(root).has(repaired), false);
     writeFileSync(join(root, '.specify/memory/constitution.md'), 'UNAPPROVED CONSTITUTION');
-    assert.throws(() => toolingPolicyHistoricalInputs(root), /Tooling policy source drift/);
+    assert.throws(
+      () => toolingPolicyHistoricalInputs(root),
+      /Appendix successor length drift: \.specify\/memory\/constitution\.md/,
+    );
   } finally {
     assert.ok(resolve(root).startsWith(resolve(parent) + sep));
     rmSync(root, { recursive: true });
@@ -135,6 +138,14 @@ test('maintenance pins preserve sealed F011 inputs without admitting unrelated s
       delete normalized.scripts[key];
     }
     assert.deepEqual(normalized, oldPackage, 'Only enumerated pins and commands may differ');
+    // Check the integrated maintenance workflow separately from the F012 workflow successor.
+    const maintenanceWorkflow = execFileSync(
+      'git',
+      ['cat-file', 'blob', 'e47436ba93ef53cdbaae91d5593c869d28427406'],
+      { cwd: source },
+    );
+    writeFileSync(join(root, pins[1]), maintenanceWorkflow);
+    assert.deepEqual(toolingPolicyHistoricalInputs(root).get(pins[1]), historical.get(pins[1]));
     assert.equal(
       readFileSync(join(root, pins[1]), 'utf8')
         .replaceAll('24.22.1', '24.18.0')

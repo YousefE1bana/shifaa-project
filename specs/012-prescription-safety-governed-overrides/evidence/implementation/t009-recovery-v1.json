@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "task": "T009",
+  "issue": 520,
+  "pr": 607,
+  "status": "PENDING_OWNER_DECISION",
+  "acceptance": "NOT_ACCEPTED",
+  "predecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+  "previousPrHead": "5af69457000e6ef246d0554c996425b49ccde225",
+  "changeClass": "MAJOR_EVENT",
+  "technicalFiles": [
+    {
+      "path": ".github/workflows/f012-migration-chain-candidate.yml",
+      "sha256": "dff42ed5c34c9294497d8a4cbfddc1c9fb63866fb5424d0fd7fa0ca52a61afd1"
+    },
+    {
+      "path": "infra/db/tests/feature-012-source-fence.sql",
+      "sha256": "9a958de8437acbfd196dd18b9022107a14f93bd4a9b166789be6024136be0389"
+    },
+    {
+      "path": "services/api/src/adapters/postgres/feature-012-source-fence.ts",
+      "sha256": "9429020c38a593d4ed81d150f98134db8f57da813731a7fb71944ca7831bb079"
+    },
+    {
+      "path": "supabase/migrations/20261112001200_f012_source_admission.sql",
+      "sha256": "96719e8101fc247df4e2b75b7bb46c1f0709f82985208f50286a5176253d89da"
+    },
+    {
+      "path": "tools/verify-feature-012-harness.mjs",
+      "sha256": "a9a0a1730c47cff947725c044d3f05c95020248a044d58b6419260689e6cf6ac"
+    },
+    {
+      "path": "tools/verify-feature-012-migration-chain.mjs",
+      "sha256": "55ec7959a32234cd9fbbecce95ee87471c256b7c061d78d71085690c03b84c03"
+    },
+    {
+      "path": "tools/verify-feature-012-migration-chain.test.mjs",
+      "sha256": "f1d8a72a0f4b784d272981063fa1ba355c1884a6bd3e263809de968ad7e0a19d"
+    }
+  ],
+  "localRawEvidence": [
+    {
+      "name": "t009-reproduced.json",
+      "sha256": "acfd974f4d0ed9439d591094cfba8ffb74f5058b9b40cbce7efa10baeacdcc89"
+    },
+    {
+      "name": "t009-savepoint-reproduced.json",
+      "sha256": "233b95e09dd1e7fe21b4e3ddf64af9f041e7fd6fe5fcd7e576aab2c440ce7fa2"
+    },
+    {
+      "name": "t009-final-source-fence.json",
+      "sha256": "5dc8c38dd29149b03999242b3cbf6f4f7890e7a21116b2058d8d34bb727dbdbf"
+    },
+    {
+      "name": "t009-final-source-fence-upgrade.json",
+      "sha256": "fdb76935fb8f738fd511cb89ba6664fe0a575ae496d97c2aeb6be4dec5a8ecb6"
+    },
+    {
+      "name": "t009-chain-proposal.json",
+      "sha256": "6e4f6332253018ad573f7874aa7dc46e5c974eeeb38125aa06a49490315996f8"
+    }
+  ],
+  "historical": {
+    "status": "PASS",
+    "preservedInputs": 2897,
+    "migrations": 38,
+    "nativeF011ExtendedRuntime": "NOT_EXECUTED"
+  },
+  "extended": {
+    "inventoryStatus": "PASS",
+    "migrations": 39,
+    "freshExecution": "PASS_SOURCE_FENCE_SQL",
+    "upgradeExecution": "PASS_SOURCE_FENCE_SQL",
+    "requiredF011SuccessorActivation": "PENDING_OWNER_DECISION"
+  },
+  "database": {
+    "oldDuplicate": ["first-advance|2", "second-advance|3"],
+    "duplicateAfterReleasedSavepoint": "40001",
+    "nestedAdmissionAcquisition": "42501",
+    "unauthorizedLockUpgrade": "42501",
+    "sharedAdvance": "42501",
+    "repeatableRead": "42501",
+    "persistence": ["state|1|1|f", "state|2|2|t", "state|3|3|t"],
+    "nextTransactionOtherScope": 2,
+    "concurrencyConflict": "55P03",
+    "preservedRetainedContainers": 12,
+    "preservedRetainedVolumes": 4
+  },
+  "pending": [
+    "Resolve mandatory dependency audit",
+    "Agree the required F011 verification successor with the owner",
+    "Obtain all required current-head checks, metadata and independent review",
+    "Obtain explicit Product Owner merge authorization for the final exact Major Event candidate"
+  ]
+}

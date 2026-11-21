@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { toolingPolicyHistoricalInputs, toolingPolicyInputPaths } from '../tooling-history.mjs';
@@ -43,4 +43,36 @@ test('exact new tooling bytes preserve immutable F011 projections and reject sub
   }
   writeFileSync(file, current);
   assert.deepEqual(toolingPolicyHistoricalInputs(fixture).get('package.json'), original);
+
+  const workflow = '.github/workflows/ci.yml';
+  const workflowPath = join(fixture, workflow);
+  const workflowBytes = readFileSync(workflowPath);
+  const historicalWorkflow = execFileSync(
+    'git',
+    ['cat-file', 'blob', '66199253e1d8c9d03034abc7f9eb6f4b1b596d64'],
+    { cwd: root },
+  );
+  assert.deepEqual(view.get(workflow), historicalWorkflow);
+  writeFileSync(workflowPath, Buffer.concat([workflowBytes, Buffer.from('\n# drift\n')]));
+  assert.throws(() => toolingPolicyHistoricalInputs(fixture), /Physical preflight source drift/);
+  writeFileSync(workflowPath, workflowBytes);
+  assert.deepEqual(toolingPolicyHistoricalInputs(fixture).get(workflow), historicalWorkflow);
+
+  const deliveryRecordPath = join(
+    fixture,
+    'docs/governance/autonomous-delivery/historical-reader-binding.json',
+  );
+  const deliveryRecord = JSON.parse(readFileSync(deliveryRecordPath));
+  for (const input of deliveryRecord.inputs) {
+    const source = join(fixture, input.path);
+    const current = readFileSync(source);
+    const altered = Buffer.from(current);
+    altered[input.appendix.offset] ^= 1;
+    writeFileSync(source, altered);
+    assert.throws(() => toolingPolicyHistoricalInputs(fixture), /Appendix successor digest drift/);
+    writeFileSync(source, current);
+    assert.deepEqual(toolingPolicyHistoricalInputs(fixture).get(input.path), view.get(input.path));
+  }
+  rmSync(deliveryRecordPath);
+  assert.throws(() => toolingPolicyHistoricalInputs(fixture), /Appendix successor length drift/);
 });

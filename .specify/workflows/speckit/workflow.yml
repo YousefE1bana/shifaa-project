@@ -2,17 +2,16 @@ schema_version: "1.0"
 workflow:
   id: "speckit"
   name: "Full SDD Cycle"
-  version: "2.3.0"
+  version: "3.0.0"
   author: "SHIFAA (based on GitHub Spec Kit)"
-  description: "Runs SHIFAA scope eligibility → specify → clarify → approve → plan → approve → tasks → analyze → approve → baseline publication → taskstoissues → implement → post-implementation analysis → artifact finalization gate"
+  description: "Runs SHIFAA SpecKit stages with evidence-based checkpoints under effective delivery authority."
 
 requires:
-  # The official built-in workflow documents this schema with a >=0.7.2
-  # minimum. OPEN-TECH-001 still requires the implementation team to record
-  # the exact installed tag/hash in the toolchain lock before release use.
-  speckit_version: ">=0.7.2"
+  # The installed SpecKit must support the checked-in verdict_input fields.
+  # OPEN-TECH-001 retains its toolchain evidence requirement before release use.
+  speckit_version: ">=1.4.0"
   integrations:
-    # The integration must provide the six commands referenced in steps.
+    # The integration must provide the commands referenced in steps.
     # The list is advisory and not a closed set.
     any:
       - "claude"
@@ -40,10 +39,37 @@ inputs:
     default: "full"
     enum: ["full", "backend-only", "frontend-only"]
 
+  # Supply only the reached gate after checking evidence and applicable authority.
+  scope_verdict:
+    type: string
+    default: ""
+    enum: ["", approve, reject]
+  spec_verdict:
+    type: string
+    default: ""
+    enum: ["", approve, reject]
+  plan_verdict:
+    type: string
+    default: ""
+    enum: ["", approve, reject]
+  analysis_verdict:
+    type: string
+    default: ""
+    enum: ["", approve, reject]
+  baseline_verdict:
+    type: string
+    default: ""
+    enum: ["", approve, reject]
+  finalization_verdict:
+    type: string
+    default: ""
+    enum: ["", approve, reject]
+
 steps:
   - id: scope-eligibility
     type: gate
-    message: "SHIFAA scope gate: verify every ID in target_requirements exists in the current PRD and is ACTIVE graduation-MVP scope. Reject DEFERRED_POST_MVP, RETIRED, reserved, or unknown IDs. A deferred ID requires an already-approved dated re-entry ADR and synchronized PRD/Master/trace/API/data/UI updates before a new run. On rejection, generate no feature artifacts."
+    verdict_input: scope_verdict
+    message: "SHIFAA scope gate: verify every ID in target_requirements exists in the current PRD and is ACTIVE graduation-MVP scope. Reject DEFERRED_POST_MVP, RETIRED, reserved, or unknown IDs. A deferred ID requires an already-approved dated re-entry ADR and synchronized PRD/Master/trace/API/data/UI updates before a new run. On rejection, generate no feature artifacts. The root records the technical decision under effective delivery authority."
     options: [approve, reject]
     on_reject: abort
 
@@ -61,7 +87,8 @@ steps:
 
   - id: review-spec
     type: gate
-    message: "SHIFAA specification gate: confirm immutable FR/NFR coverage, primary-source research, Egyptian legal checklist, edge/degraded states, deterministic acceptance vectors, and explicit blockers before planning. On rejection, set the feature status to DRAFT and record named findings before this run aborts."
+    verdict_input: spec_verdict
+    message: "SHIFAA specification gate: confirm immutable FR/NFR coverage, primary-source research, Egyptian legal checklist, edge/degraded states, deterministic acceptance vectors, and explicit blockers before planning. On rejection, set the feature status to DRAFT and record named findings before this run aborts. The root checks the exact spec and obtains any reserved decision from its owner."
     options: [approve, reject]
     on_reject: abort
 
@@ -73,7 +100,8 @@ steps:
 
   - id: review-plan
     type: gate
-    message: "SHIFAA plan gate: confirm Constitution I–XV, exact data/RLS/API/UI/events, migration, threat model, tests, rollout/rollback, and either applicable approvals or an explicit OPEN-* blocker mapped to a disabled capability/release gate. No plan-, safety-test-, or synthetic-implementation blocker may pass to tasks. On rejection, return status to the earliest affected pre-approval state and record named findings before this run aborts."
+    verdict_input: plan_verdict
+    message: "SHIFAA plan gate: confirm Constitution I–XV, exact data/RLS/API/UI/events, migration, threat model, tests, rollout/rollback, and either applicable approvals or an explicit OPEN-* blocker mapped to a disabled capability/release gate. No plan-, safety-test-, or synthetic-implementation blocker may pass to tasks. On rejection, return status to the earliest affected pre-approval state and record named findings before this run aborts. The root accepts the exact engineering Plan under standing delegation after all prerequisites pass."
     options: [approve, reject]
     on_reject: abort
 
@@ -91,13 +119,15 @@ steps:
 
   - id: review-analysis
     type: gate
-    message: "SHIFAA implementation gate: analysis reports zero CRITICAL inconsistencies and tasks contain requirement IDs, exact paths, test/evidence work, and no hidden legal/clinical/design decisions. On rejection, return status to the earliest affected state and record named findings before this run aborts."
+    verdict_input: analysis_verdict
+    message: "SHIFAA implementation gate: analysis reports zero CRITICAL inconsistencies and tasks contain requirement IDs, exact paths, test/evidence work, and no hidden legal/clinical/design decisions. On rejection, return status to the earliest affected state and record named findings before this run aborts. The root records the result and verifies any applicable reserved decision."
     options: [approve, reject]
     on_reject: abort
 
   - id: publish-task-baseline
     type: gate
-    message: "Commit and push the immutable spec/plan/tasks baseline. Confirm the worktree is clean and local HEAD equals its upstream before GitHub Issue publication."
+    verdict_input: baseline_verdict
+    message: "Commit and push the immutable spec/plan/tasks baseline. Confirm the worktree is clean and local HEAD equals its upstream before GitHub Issue publication. Verify required integration and canonical feature-qualified Issue mapping before publication."
     options: [approve, reject]
     on_reject: abort
 
@@ -121,6 +151,7 @@ steps:
 
   - id: feature-artifact-finalization
     type: gate
-    message: "Apply docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md before declaring closeout complete or deleting worktree/branch state. Require reviewed classification of tracked/untracked/relevant ignored material, official outputs in specs/<feature>/, a verified evidence index with retention reasons and current paths/hashes, preserved historical failures and approval limits, no unresolved essential preservation gaps, and verified required artifacts in this feature's merged remote main. Prepare the outputs before PR integration; final approval waits for verified squash integration under effective AGENTS merge authority and the required integration checks. This gate does not execute or authorize merge, cleanup, or successor work. On rejection, record BLOCKED finalization without rewriting historical acceptance."
+    verdict_input: finalization_verdict
+    message: "Apply docs/governance/SHIFAA-Feature-Artifact-Finalization-Gate.md before declaring closeout complete or deleting worktree/branch state. Require reviewed classification of tracked/untracked/relevant ignored material, official outputs in specs/<feature>/, a verified evidence index with retention reasons and current paths/hashes, preserved historical failures and approval limits, no unresolved essential preservation gaps, and verified required artifacts in this feature's merged remote main. Prepare the outputs before PR integration; final approval waits for verified squash integration under effective AGENTS merge authority and the required integration checks. This gate does not execute or authorize merge, cleanup, or successor work. On rejection, record BLOCKED finalization without rewriting historical acceptance. The root closes completed Issues after their closure conditions pass."
     options: [approve, reject]
     on_reject: abort

@@ -32,3 +32,14 @@ preserve historical failures and approval limits, and verify required artifacts
 in merged remote main. An archive alone cannot pass the gate. Unclassified
 important material or unresolved preservation gaps block cleanup. This gate
 does not authorize Git integration, close retained OPEN gates, or start a successor.
+
+## Decide each technical checkpoint from its evidence
+
+After verified activation of the
+[Autonomous Engineering Delivery Policy](../../../docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md),
+standing delegation covers routine stage advancement in approved scope. For each
+checkpoint verify the actual worktree, feature pointer, artifact revision,
+requirements, dependencies, and applicable gates. Record the evidence and
+outcome before advancing. Supply only the current technical verdict to the
+workflow. Preserve reserved signatures and exact-content decisions where the
+owning authority requires them. Issue-scoped execution retains its scope cap.

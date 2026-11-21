@@ -532,3 +532,16 @@ unchanged. All F012 lifecycle, clinical and production gates remain in force.
 Affected clause: **Master §14.2 / OPEN-UX-001 and §11 Architecture Completeness**. For isolated synthetic F012 only, the attributable Product Owner approval of exact source compositions and immutable screenshot hashes is sufficient visual-composition acceptance authority; a separate Design Lead co-signature is not required for those named F012 references. This is the selected U1 exception to the co-attribution element only. It neither assigns/renames a role nor fabricates another signature. C3 v0.3.0 retains its exact recorded Product approval. New C2 release/withdrawal controls require a separate exact Product Owner visual decision and are not covered by C3. All required P0 states, Arabic/English, contracted viewports, immutable source/baseline hashes and applicable shared-dark references remain mandatory. OPEN-UX-001 is not closed merely by selecting U1; OPEN-UX-002, native accessibility/live-language, clinical/legal/credential/facility and production gates remain unchanged. No exception applies to another feature. Architecture design acceptance is recorded separately as C1/C2. Exact Plan approval and separately authorized Tasks remain required; future implementation tests do not substitute for missing design/effective authority.
 
 The accepted reviewed inputs retain their original hashes; the preparation-status wording in those originals is resolved by the attributable decision, not rewritten. This versioned appendix becomes operative only with the exact accepted supporting contracts, this decision and matching canonical reconciliation integrated through the separately authorized governed PR process and verified on remote main. No publication or integration is authorized in this preparation. Any substantive content deviation needs an attributable discrepancy resolution; no unknown bytes or missing visual approval are ratified. Rejection/non-integration leaves predecessor authority controlling; no runtime rollback or destructive restoration is implied.
+
+## Autonomous engineering delivery reconciliation — 2.3.0
+
+After the [delivery policy's verified activation](docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md#ratification-and-activation),
+Constitution 4.0.0 governs the authority for the Section 11 lifecycle. Standing
+delegation replaces routine separate stage requests, including routine F012
+progress inside its approved engineering lane. The root verifies active scope,
+prerequisites, exact artifacts, architecture completeness, dependencies and
+applicable technical, specialist and release evidence before each stage. The
+current workflow version is declared in the
+[checked-in registry](.specify/workflows/workflow-registry.json). The approved
+roadmap order, contract boundaries, historical approvals, artifact finalization,
+and all capability restrictions retain their governing records.
