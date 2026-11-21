@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { once } from 'node:events';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
@@ -313,27 +314,9 @@ function teardown() {
   docker(['network', 'rm', networkId]);
 }
 
-function runAtomicity(db) {
-  const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
-  const files = git(root, ['ls-tree', '--name-only', predecessor, 'supabase/migrations/'])
-    .toString()
-    .trim()
-    .split(/\r?\n/);
-  assert.equal(files.length, 38);
-  assert.equal(db.network, 'none');
-  receipt.predecessor = { commit: predecessor, files: [] };
-  for (const path of files) {
-    assert.match(path, /^supabase\/migrations\/\d{14}_[a-z0-9_]+\.sql$/);
-    const bytes = git(root, ['show', predecessor + ':' + path]);
-    sql(db, bytes);
-    receipt.predecessor.files.push({
-      path,
-      sha256: createHash('sha256').update(bytes).digest('hex'),
-    });
-  }
-  const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-atomicity.sql'));
+function observeSqlCommand(db) {
   assert.equal(checkContainer(db).State.Running, true);
-  const args = [
+  return [
     ...settings.prefix,
     'exec',
     '-i',
@@ -346,28 +329,568 @@ function runAtomicity(db) {
     '-d',
     'postgres',
   ];
+}
+
+function observedSql(db, input) {
+  const args = observeSqlCommand(db);
   const result = spawnSync(hostExecutable('docker', settings.options.env), args, {
     ...settings.options,
-    input: fixture,
+    input,
     stdio: ['pipe', 'pipe', 'pipe'],
     timeout: 120_000,
     maxBuffer: 1024 * 1024,
   });
+  const stdout = result.stdout?.toString() ?? '';
+  const stderr = result.stderr?.toString() ?? '';
   receipt.commands.push({ args, exit: result.status });
-  receipt.atomicity = {
-    fixtureSha256: createHash('sha256').update(fixture).digest('hex'),
-    exit: result.status,
-    stdout: result.stdout,
-    stderr: result.stderr,
-  };
-  assert.equal(result.status, 0, 'T016 SQL fixture');
+  return { exit: result.status, stdout, stderr };
 }
 
-function admit() {
-  const args = process.argv.slice(2);
-  const atomicity = args.length === 1 && args[0] === '--atomicity';
+function applySealedF011(db) {
+  assert.equal(db.network, 'none');
+  const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
+  const files = git(root, ['ls-tree', '--name-only', predecessor, 'supabase/migrations/'])
+    .toString()
+    .trim()
+    .split(/\r?\n/);
+  assert.equal(files.length, 38);
+  receipt.predecessor = { commit: predecessor, migrations: [] };
+  for (const path of files) {
+    assert.match(path, /^supabase\/migrations\/\d{14}_[a-z0-9_]+\.sql$/);
+    const bytes = git(root, ['show', predecessor + ':' + path]);
+    const result = observedSql(db, bytes);
+    receipt.predecessor.migrations.push({
+      path,
+      sha256: createHash('sha256').update(bytes).digest('hex'),
+      exit: result.exit,
+      stderr: result.stderr,
+    });
+    assert.equal(result.exit, 0, path);
+  }
+}
+
+function runAtomicity(db) {
+  applySealedF011(db);
+  const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-atomicity.sql'));
+  const observed = observedSql(db, fixture);
+  receipt.atomicity = {
+    fixtureSha256: createHash('sha256').update(fixture).digest('hex'),
+    ...observed,
+  };
+  assert.equal(observed.exit, 0, 'T016 SQL fixture');
+}
+
+async function sourceFenceLockConflict(db) {
+  const deployment = '01000000-0000-4000-8000-000000000001';
+  const epoch = '02000000-0000-4000-8000-000000000001';
+  sql(db, `INSERT INTO platform.f012_source_admission VALUES ('${deployment}', '${epoch}');`);
+  receipt.lockTrials = [];
+  for (const write of [false, true]) {
+    const args = observeSqlCommand(db);
+    const holder = spawn(hostExecutable('docker', settings.options.env), args, {
+      ...settings.options,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    const closed = once(holder, 'close');
+    let stdout = '';
+    let stderr = '';
+    holder.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+    const hold = (exclusive) =>
+      `SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', ${exclusive});`;
+    try {
+      const ready = new Promise((resolve) => {
+        holder.stdout.setEncoding('utf8').on('data', (chunk) => {
+          stdout += chunk;
+          if (stdout.includes('FENCE_LOCK_READY')) resolve();
+        });
+      });
+      holder.stdin.write(`
+        BEGIN;
+        SET LOCAL idle_in_transaction_session_timeout = '10s';
+        SET SESSION AUTHORIZATION shifaa_api;
+        SELECT 'holder_pid', pg_backend_pid();
+        ${hold(write)}
+        \\echo FENCE_LOCK_READY
+      `);
+      const result = await Promise.race([ready, closed]);
+      assert.equal(result, undefined, 'Source fence holder exited before taking the lock');
+      const borrow = observedSql(
+        db,
+        `\\set VERBOSITY verbose
+          BEGIN;
+          SET SESSION AUTHORIZATION shifaa_api;
+          SELECT 'borrower_pid', pg_backend_pid();
+          SELECT clinical.f012_read_generation_v1('${deployment}', '${epoch}',
+            'f011_content_status', 'deployment', '1', false);
+          ROLLBACK;`,
+      );
+      const shared = write
+        ? null
+        : observedSql(
+            db,
+            `BEGIN; SET LOCAL lock_timeout = '250ms';
+          SET SESSION AUTHORIZATION shifaa_api;
+          SELECT 'reader_pid', pg_backend_pid(); ${hold(false)} COMMIT;`,
+          );
+      const contender = observedSql(
+        db,
+        `\\set VERBOSITY verbose
+          BEGIN;
+          SET LOCAL lock_timeout = '250ms';
+          SET SESSION AUTHORIZATION shifaa_api;
+          SELECT 'contender_pid', pg_backend_pid();
+          ${hold(!write)}
+          COMMIT;`,
+      );
+      receipt.lockTrials.push({ write, holder: stdout, borrow, shared, contender });
+      assert.notEqual(
+        stdout.match(/holder_pid\|(\d+)/)?.[1],
+        borrow.stdout.match(/borrower_pid\|(\d+)/)?.[1],
+      );
+      assert.equal(borrow.exit, 3);
+      assert.match(borrow.stderr, /42501: F012 source admission was not retained/);
+      if (shared) {
+        assert.equal(shared.exit, 0, shared.stderr);
+        assert.match(shared.stdout, /reader_pid\|\d+/);
+      }
+      assert.notEqual(
+        stdout.match(/holder_pid\|(\d+)/)?.[1],
+        contender.stdout.match(/contender_pid\|(\d+)/)?.[1],
+      );
+      assert.equal(contender.exit, 3);
+      assert.match(contender.stderr, /55P03:.*lock timeout/);
+    } finally {
+      holder.stdin.end('ROLLBACK;\n');
+      const [exit] = await closed;
+      receipt.commands.push({ args, exit });
+      assert.equal(exit, 0, stderr);
+    }
+    const released = observedSql(
+      db,
+      `BEGIN; SET SESSION AUTHORIZATION shifaa_api; ${hold(!write)} COMMIT;`,
+    );
+    receipt.lockTrials.at(-1).released = released;
+    assert.equal(released.exit, 0);
+  }
+}
+
+function sourceFenceRawBypass(db) {
+  // Golden negative. The mutator must fail before the generation UPDATE when
+  // an API connection skips rank zero. A rollback keeps the probe disposable.
+  const result = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+      BEGIN;
+      INSERT INTO clinical.safety_source_generations VALUES (
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
+        'f011_content_status', 'deployment', '1', 1
+      );
+      SET SESSION AUTHORIZATION shifaa_api;
+      SELECT 'unretained-generation', clinical.f012_advance_generation_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
+        'f011_content_status', 'deployment', '1', 1
+      );
+      ROLLBACK;`,
+  );
+  receipt.rawBypass = result;
+  assert.equal(result.exit, 3, 'Direct generation call skipped rank zero');
+  assert.match(result.stderr, /42501:/);
+  const upgrade = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+      BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SELECT platform.f012_lock_admission_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001', false
+      );
+      DISCARD TEMP;
+      SELECT 'unlawful-upgrade', platform.f012_lock_admission_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001', true
+      );
+      ROLLBACK;`,
+  );
+  receipt.rawUpgrade = upgrade;
+  assert.equal(upgrade.exit, 3, 'Discarding temp state allowed a lock upgrade');
+  assert.match(upgrade.stderr, /42501: F012 source admission denied/);
+  assert.doesNotMatch(upgrade.stdout, /unlawful-upgrade/);
+  const sharedAdvance = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+      BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SELECT platform.f012_lock_admission_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001', false
+      );
+      SELECT 'shared-advance', clinical.f012_advance_generation_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
+        'f011_content_status', 'deployment', '1', 1
+      );
+      ROLLBACK;`,
+  );
+  receipt.rawSharedAdvance = sharedAdvance;
+  assert.equal(sharedAdvance.exit, 3);
+  assert.match(sharedAdvance.stderr, /42501: F012 source admission was not retained/);
+  assert.doesNotMatch(sharedAdvance.stdout, /shared-advance/);
+  const snapshot = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+    BEGIN ISOLATION LEVEL REPEATABLE READ;
+    SET SESSION AUTHORIZATION shifaa_api;
+    SELECT platform.f012_lock_admission_v1(
+      '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001', false
+    );
+    ROLLBACK;`,
+  );
+  receipt.repeatableReadDenied = snapshot;
+  assert.equal(snapshot.exit, 3);
+  assert.match(snapshot.stderr, /42501: F012 source admission denied/);
+  const duplicate = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+      BEGIN;
+      INSERT INTO clinical.safety_source_generations VALUES (
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
+        'f011_content_status', 'deployment', '1', 1
+      );
+      SET SESSION AUTHORIZATION shifaa_api;
+      SELECT platform.f012_lock_admission_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001', true
+      );
+      SAVEPOINT first_mutation;
+      SELECT 'first-advance', clinical.f012_advance_generation_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
+        'f011_content_status', 'deployment', '1', 1
+      );
+      RELEASE SAVEPOINT first_mutation;
+      SELECT 'second-advance', clinical.f012_advance_generation_v1(
+        '01000000-0000-4000-8000-000000000001', '02000000-0000-4000-8000-000000000001',
+        'f011_content_status', 'deployment', '1', 2
+      );
+      ROLLBACK;`,
+  );
+  receipt.rawDuplicateAdvance = duplicate;
+  assert.equal(duplicate.exit, 3, 'Same transaction advanced the same generation twice');
+  assert.match(duplicate.stdout, /first-advance\|2/);
+  assert.match(duplicate.stderr, /40001:.*already advanced in this transaction/);
+  assert.doesNotMatch(duplicate.stdout, /second-advance/);
+}
+
+function sourceFenceDurability(db) {
+  const deployment = '01000000-0000-4000-8000-000000000001';
+  const epoch = '02000000-0000-4000-8000-000000000001';
+  const scope = `'${deployment}', '${epoch}', 'f011_content_status', 'deployment', '1'`;
+  const other = `'${deployment}', '${epoch}', 'f012_projection_policy', 'deployment', '1'`;
+  const lock = `SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', true);`;
+  const advance = (revision) =>
+    `SELECT 'advance', clinical.f012_advance_generation_v1(${scope}, ${revision});`;
+  sql(
+    db,
+    `CREATE TABLE platform.f012_probe_head (revision integer NOT NULL);
+    INSERT INTO platform.f012_probe_head VALUES (1);
+    GRANT SELECT, UPDATE ON platform.f012_probe_head TO shifaa_api;
+    INSERT INTO clinical.safety_source_generations
+      (deployment_id, admission_epoch, producer_key, scope_key, contract_version, generation)
+      VALUES (${scope}, 1), (${other}, 1);`,
+  );
+  const write = (revision, finish, before = '', after = '') =>
+    observedSql(
+      db,
+      `\\set VERBOSITY verbose
+    BEGIN;
+    SET SESSION AUTHORIZATION shifaa_api;
+    SELECT 'pid', pg_backend_pid();
+    ${lock}
+    ${before}
+    UPDATE platform.f012_probe_head SET revision = revision + 1;
+    ${advance(revision)}
+    ${after}
+    ${finish};`,
+    );
+  const state = () =>
+    observedSql(
+      db,
+      `SELECT 'state', revision, generation,
+    last_advance_xid IS NOT NULL FROM platform.f012_probe_head
+    CROSS JOIN clinical.safety_source_generations
+    WHERE producer_key = 'f011_content_status';`,
+    );
+  const rolledBack = write(1, 'ROLLBACK');
+  const afterRollback = state();
+  const retry = write(
+    1,
+    'COMMIT',
+    `SAVEPOINT abandoned;
+    UPDATE platform.f012_probe_head SET revision = revision + 1;
+    ${advance(1)}
+    ROLLBACK TO SAVEPOINT abandoned;
+    RELEASE SAVEPOINT abandoned;`,
+  );
+  const afterFirst = state();
+  const distinct = write(
+    2,
+    'COMMIT',
+    '',
+    `SELECT 'other-scope-advance',
+    clinical.f012_advance_generation_v1(${other}, 1);`,
+  );
+  const afterDistinct = state();
+  const stale = write(2, 'COMMIT');
+  const afterStale = state();
+  const nestedUpgrade = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+    BEGIN;
+    SET SESSION AUTHORIZATION shifaa_api;
+    SAVEPOINT choose_read;
+    SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', false);
+    RELEASE SAVEPOINT choose_read;
+    SELECT 'forbidden-after-release', platform.f012_lock_admission_v1('${deployment}', '${epoch}', true);
+    ROLLBACK;`,
+  );
+  receipt.durability = {
+    rolledBack,
+    afterRollback,
+    retry,
+    afterFirst,
+    distinct,
+    afterDistinct,
+    stale,
+    afterStale,
+    nestedUpgrade,
+  };
+  assert.equal(rolledBack.exit, 0, rolledBack.stderr);
+  assert.match(rolledBack.stdout, /advance\|2/);
+  assert.deepEqual(afterRollback, { exit: 0, stdout: 'state|1|1|f\n', stderr: '' });
+  assert.equal(retry.exit, 0, retry.stderr);
+  assert.equal((retry.stdout.match(/advance\|2/g) ?? []).length, 2);
+  assert.deepEqual(afterFirst, { exit: 0, stdout: 'state|2|2|t\n', stderr: '' });
+  assert.equal(distinct.exit, 0, distinct.stderr);
+  assert.match(distinct.stdout, /advance\|3/);
+  assert.match(distinct.stdout, /other-scope-advance\|2/);
+  assert.notEqual(retry.stdout.match(/pid\|(\d+)/)?.[1], distinct.stdout.match(/pid\|(\d+)/)?.[1]);
+  assert.deepEqual(afterDistinct, { exit: 0, stdout: 'state|3|3|t\n', stderr: '' });
+  assert.equal(stale.exit, 3, 'A stale generation committed its preceding source write');
+  assert.match(stale.stderr, /40001: F012 generation is missing, stale or already advanced/);
+  assert.deepEqual(afterStale, afterDistinct, 'Stale CAS left a partial source mutation');
+  assert.equal(nestedUpgrade.exit, 3, 'Releasing a savepoint allowed rank-zero upgrade');
+  assert.match(
+    nestedUpgrade.stderr,
+    /42501: F012 source admission denied: top-level acquisition required/,
+  );
+  assert.doesNotMatch(nestedUpgrade.stdout, /forbidden-after-release/);
+}
+
+function sourceFenceMigrationRecovery(db, migration) {
+  const stateSql = `SELECT 'migration-state',
+    to_regclass('platform.f012_source_admission') IS NOT NULL,
+    to_regclass('clinical.safety_source_generations') IS NOT NULL,
+    EXISTS (SELECT FROM pg_roles WHERE rolname = 'shifaa_f012_fence_executor'),
+    EXISTS (SELECT FROM pg_extension WHERE extname = 'pgrowlocks');`;
+  const beforeFailure = observedSql(db, stateSql);
+  assert.equal(beforeFailure.exit, 0, beforeFailure.stderr);
+  assert.equal(beforeFailure.stdout, 'migration-state|f|f|f|f\n');
+  const source = migration.toString('utf8');
+  assert.match(source, /COMMIT;\s*$/);
+  const failed = observedSql(
+    db,
+    '\\set VERBOSITY verbose\n' + source.replace(/COMMIT;\s*$/, 'SELECT 1 / 0;\nCOMMIT;\n'),
+  );
+  const afterFailure = observedSql(db, stateSql);
+  receipt.migrationRecovery = { beforeFailure, failed, afterFailure };
+  assert.equal(failed.exit, 3, 'Injected migration failure was not observed');
+  assert.match(failed.stderr, /22012: division by zero/);
+  assert.deepEqual(afterFailure, beforeFailure, 'Failed migration left partial F012 objects');
+}
+
+function sourceFencePrivilegeNegatives(db) {
+  const deployment = "'01000000-0000-4000-8000-000000000001'";
+  const epoch = "'02000000-0000-4000-8000-000000000001'";
+  const deniedStatements = [
+    'SELECT * FROM platform.f012_source_admission',
+    'SELECT * FROM clinical.safety_source_generations',
+    `INSERT INTO platform.f012_source_admission VALUES (${deployment}, ${epoch})`,
+    `INSERT INTO clinical.safety_source_generations VALUES (${deployment}, ${epoch},
+      'f012_reviewer_roster', 'deployment', '1', 1)`,
+    'UPDATE platform.f012_source_admission SET admission_epoch = admission_epoch',
+    'UPDATE clinical.safety_source_generations SET generation = generation + 1',
+    'DELETE FROM platform.f012_source_admission',
+    'DELETE FROM clinical.safety_source_generations',
+    'SET ROLE shifaa_f012_fence_executor',
+    "SELECT * FROM platform.pgrowlocks('platform.f012_source_admission')",
+  ];
+  receipt.privilegeNegatives = [];
+  for (const role of ['shifaa_api', 'anon', 'authenticated', 'service_role']) {
+    const statements = [...deniedStatements];
+    if (role !== 'shifaa_api') {
+      statements.push(
+        `SELECT platform.f012_lock_admission_v1(${deployment}, ${epoch}, false)`,
+        `SELECT clinical.f012_read_generation_v1(${deployment}, ${epoch},
+          'f011_content_status', 'deployment', '1', false)`,
+        `SELECT clinical.f012_advance_generation_v1(${deployment}, ${epoch},
+          'f011_content_status', 'deployment', '1', 3)`,
+      );
+    }
+    const quoted = statements.map((statement) => "'" + statement.replaceAll("'", "''") + "'");
+    const result = observedSql(
+      db,
+      `BEGIN;
+      SET SESSION AUTHORIZATION ${role};
+      DO $$
+      DECLARE command text; denied integer := 0;
+      BEGIN
+        FOREACH command IN ARRAY ARRAY[${quoted.join(',')}]
+        LOOP
+          BEGIN
+            EXECUTE command;
+            RAISE EXCEPTION 'Unexpected success for role %: %', session_user, command;
+          EXCEPTION WHEN insufficient_privilege THEN
+            denied := denied + 1;
+            RAISE NOTICE 'T009 denied role=%, command=%, sqlstate=%', session_user, command, SQLSTATE;
+          END;
+        END LOOP;
+        RAISE NOTICE 'T009 role=% denials=%', session_user, denied;
+      END
+      $$;
+      ROLLBACK;`,
+    );
+    receipt.privilegeNegatives.push({ role, expectedDenials: statements.length, ...result });
+    assert.equal(result.exit, 0, result.stderr);
+    assert.match(result.stderr, new RegExp(`T009 role=${role} denials=${statements.length}`));
+  }
+}
+
+function sourceFenceScopeNegatives(db) {
+  const deployment = "'01000000-0000-4000-8000-000000000001'";
+  const epoch = "'02000000-0000-4000-8000-000000000001'";
+  const scope = `${deployment}, ${epoch}, 'f011_content_status', 'deployment', '1'`;
+  const invalidReads = [
+    `${deployment}, ${epoch}, NULL, 'deployment', '1', false`,
+    `${deployment}, ${epoch}, 'unknown', 'deployment', '1', false`,
+    `${deployment}, ${epoch}, 'f011_content_status', NULL, '1', false`,
+    `${deployment}, ${epoch}, 'f011_content_status', 'deployment', '2', false`,
+    `${scope}, NULL`,
+  ];
+  receipt.scopeNegatives = [];
+  for (const args of invalidReads) {
+    const result = observedSql(
+      db,
+      `\\set VERBOSITY verbose
+      BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SELECT platform.f012_lock_admission_v1(${deployment}, ${epoch}, true);
+      SELECT clinical.f012_read_generation_v1(${args});
+      COMMIT;`,
+    );
+    receipt.scopeNegatives.push({ args, ...result });
+    assert.equal(result.exit, 3, 'Invalid generation scope was accepted');
+    assert.match(result.stderr, /42501: F012 generation scope denied/);
+  }
+  const nullExpected = observedSql(
+    db,
+    `\\set VERBOSITY verbose
+    BEGIN;
+    SET SESSION AUTHORIZATION shifaa_api;
+    SELECT platform.f012_lock_admission_v1(${deployment}, ${epoch}, true);
+    SELECT clinical.f012_advance_generation_v1(${scope}, NULL);
+    COMMIT;`,
+  );
+  receipt.scopeNegatives.push({ args: 'null expected generation', ...nullExpected });
+  assert.equal(nullExpected.exit, 3);
+  assert.match(nullExpected.stderr, /40001: F012 generation is missing, stale or already advanced/);
+}
+
+function sourceFenceRlsNegatives(db) {
+  const result = observedSql(
+    db,
+    `BEGIN;
+    CREATE ROLE f012_rls_probe NOLOGIN NOSUPERUSER NOBYPASSRLS NOINHERIT;
+    GRANT USAGE ON SCHEMA platform, clinical TO f012_rls_probe;
+    GRANT SELECT, INSERT, UPDATE ON platform.f012_source_admission,
+      clinical.safety_source_generations TO f012_rls_probe;
+    SELECT 'forced-rls', count(*) FROM pg_class
+      WHERE oid IN ('platform.f012_source_admission'::regclass,
+        'clinical.safety_source_generations'::regclass)
+      AND relrowsecurity AND relforcerowsecurity;
+    SET SESSION AUTHORIZATION f012_rls_probe;
+    SELECT set_config('request.jwt.claims', '{"role":"shifaa_f012_fence_executor"}', true);
+    SELECT 'rls-visible-admission', count(*) FROM platform.f012_source_admission;
+    SELECT 'rls-visible-generations', count(*) FROM clinical.safety_source_generations;
+    WITH changed AS (
+      UPDATE clinical.safety_source_generations SET generation = generation + 1 RETURNING 1
+    ) SELECT 'rls-updated-generations', count(*) FROM changed;
+    DO $$
+    BEGIN
+      BEGIN
+        INSERT INTO platform.f012_source_admission VALUES (
+          '01000000-0000-4000-8000-000000000002', '02000000-0000-4000-8000-000000000002'
+        );
+        RAISE EXCEPTION 'Default-deny RLS admitted a forged deployment';
+      EXCEPTION WHEN insufficient_privilege THEN
+        RAISE NOTICE 'T009 RLS admission insert denied: %', SQLSTATE;
+      END;
+    END
+    $$;
+    ROLLBACK;`,
+  );
+  receipt.rlsNegatives = result;
+  assert.equal(result.exit, 0, result.stderr);
+  for (const expected of [
+    'forced-rls|2',
+    'rls-visible-admission|0',
+    'rls-visible-generations|0',
+    'rls-updated-generations|0',
+  ])
+    assert.ok(result.stdout.includes(expected), 'Missing RLS observation: ' + expected);
+  assert.match(result.stderr, /T009 RLS admission insert denied: 42501/);
+}
+
+function sourceFence(db, red, upgrade) {
+  assert.equal(db.network, 'none');
+  if (upgrade) applySealedF011(db);
+  else
+    sql(
+      db,
+      `CREATE SCHEMA platform;
+        CREATE SCHEMA clinical;
+        CREATE ROLE shifaa_api LOGIN NOSUPERUSER NOBYPASSRLS NOCREATEROLE NOCREATEDB NOINHERIT;
+        GRANT USAGE ON SCHEMA platform, clinical TO shifaa_api;`,
+    );
+  if (!red) {
+    const migration = readFileSync(
+      safeSource(root, 'supabase/migrations/20261112001200_f012_source_admission.sql'),
+    );
+    receipt.migrationSha256 = createHash('sha256').update(migration).digest('hex');
+    sourceFenceMigrationRecovery(db, migration);
+    receipt.migration = observedSql(db, migration);
+    assert.equal(receipt.migration.exit, 0, 'F012 source fence migration');
+  }
+  const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-source-fence.sql'));
+  receipt.fixtureSha256 = createHash('sha256').update(fixture).digest('hex');
+  const result = observedSql(db, fixture);
+  receipt.sourceFence = result;
+  assert.match(result.stdout, /T008 raw member evidence/);
+  assert.match(result.stdout, /T008 raw clock evidence/);
+  if (red) {
+    assert.equal(result.exit, 3, 'Expected test-first SQL failure');
+    assert.match(result.stderr, /42P01:.*platform\.f012_source_admission/);
+  } else {
+    assert.equal(result.exit, 0, 'Source fence assertions');
+    assert.match(result.stdout, /ROLLBACK/);
+  }
+}
+
+async function admit() {
+  const argumentsList = process.argv.slice(2);
+  const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
+  const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
+  const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
+  const sqlOnly =
+    atomicity ||
+    redOnly ||
+    upgrade ||
+    (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
   assert.deepEqual(
-    atomicity ? [] : args,
+    sqlOnly ? [] : argumentsList,
     [],
     'This command accepts no external resource arguments',
   );
@@ -379,8 +902,8 @@ function admit() {
   receipt.engineId = docker(['info', '--format', '{{.ID}}']).trim();
   receipt.images = {
     postgres: pinnedImage(dbImage),
-    ...(atomicity ? {} : { auth: pinnedImage(authImage) }),
-    ...(atomicity ? {} : { probe: pinnedImage('shifaa/verify:' + inputs, inputs) }),
+    ...(sqlOnly ? {} : { auth: pinnedImage(authImage) }),
+    ...(sqlOnly ? {} : { probe: pinnedImage('shifaa/verify:' + inputs, inputs) }),
   };
   receipt.dependencyInputs = inputs;
   receipt.noneNetworkId = inspect('network', 'none').Id;
@@ -401,19 +924,33 @@ function admit() {
   assert.ok(before.containers.every((c) => !c.networks.includes(networkId)));
   receipt.networkId = networkId;
   checkNetwork();
-  if (atomicity) {
-    stage = 'isolated structural atomicity SQL';
+  if (sqlOnly) {
+    stage = atomicity ? 'isolated structural atomicity SQL' : 'isolated PostgreSQL source fence';
     try {
-      const db = startDatabase('atomicity', 'none');
-      receipt.databaseSystems = { source: db.system };
+      const source = startDatabase(atomicity ? 'atomicity' : 'source-fence', 'none');
+      receipt.databaseSystems = atomicity
+        ? { atomicity: source.system }
+        : { source: source.system };
       if (before.containers.length) {
         trial(
           'actual retained container denied',
-          () => checkContainer({ ...db, id: before.containers[0].id }),
+          () => checkContainer({ ...source, id: before.containers[0].id }),
           /Retained container denied/,
         );
       }
-      runAtomicity(db);
+      if (atomicity) {
+        runAtomicity(source);
+      } else {
+        sourceFence(source, redOnly, upgrade);
+        if (!redOnly) {
+          await sourceFenceLockConflict(source);
+          sourceFenceRawBypass(source);
+          sourceFenceDurability(source);
+          sourceFencePrivilegeNegatives(source);
+          sourceFenceScopeNegatives(source);
+          sourceFenceRlsNegatives(source);
+        }
+      }
     } finally {
       teardown();
       assert.deepEqual(inventory(), before);
@@ -423,7 +960,11 @@ function admit() {
         matches: true,
       };
     }
-    receipt.status = 'EXECUTED_ATOMICITY_SQL';
+    receipt.status = atomicity
+      ? 'EXECUTED_ATOMICITY_SQL'
+      : redOnly
+        ? 'EXPECTED_RED_SOURCE_FENCE'
+        : 'PASS_SOURCE_FENCE_SQL';
     return;
   }
   const db = startDatabase('db', networkId);
@@ -500,7 +1041,7 @@ function bindFixtures(db, fixtures) {
 }
 
 try {
-  admit();
+  await admit();
 } catch (error) {
   receipt.status = 'BLOCKED';
   receipt.stage = stage;
