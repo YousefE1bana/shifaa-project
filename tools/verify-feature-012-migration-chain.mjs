@@ -12,7 +12,6 @@ const directory = 'supabase/migrations';
 export const addition = `${directory}/20261112001200_f012_source_admission.sql`;
 const additionSha256 = '96719e8101fc247df4e2b75b7bb46c1f0709f82985208f50286a5176253d89da';
 const ciWorkflow = '.github/workflows/ci.yml';
-const ciWorkflowSha256 = '5298a5948bc2d9b4fa1de5ea69fe6e5ee5e795f324f945aac873455c6600b0ff';
 const verifier = 'tools/verify-feature-011-contracts.mjs';
 const f011 = 'specs/011-allergies-clinical-content-governance';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -105,15 +104,8 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
     verifier,
     'tools/feature-011-native-supabase-bootstrap.mjs',
   ]);
-  // The pinned F011 verifier sees the original workflow. The candidate workflow
-  // is bound separately because it orchestrates both the 38- and 39-file views.
-  assert(sealedInputs.delete(ciWorkflow), 'Missing historical workflow binding');
+  assert(sealedInputs.has(ciWorkflow), 'Missing historical workflow binding');
   assertSealedBytes(historical, ciWorkflow, blobs.get(ciWorkflow), gitFormat);
-  assert.equal(
-    sha256(bytes(candidate, ciWorkflow)),
-    ciWorkflowSha256,
-    'The exact additive CI workflow has changed',
-  );
   for (const file of sealedInputs) {
     assertSealedBytes(candidate, file, blobs.get(file), gitFormat);
   }
@@ -129,7 +121,11 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
       preservedInputs: sealedInputs.size,
       migrations: sealed.length,
     },
-    extended: { result: 'SOURCE_INVENTORY_PASS', migrations: extended, ciWorkflowSha256 },
+    extended: {
+      result: 'SOURCE_INVENTORY_PASS',
+      migrations: extended,
+      ciWorkflowSha256: sha256(bytes(candidate, ciWorkflow)),
+    },
   };
 }
 

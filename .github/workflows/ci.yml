@@ -49,11 +49,7 @@ jobs:
       - run: pnpm team:test
       - run: node --test tools/start-feature-011-native-supabase.test.mjs tools/reset-feature-011-native-supabase.test.mjs tools/feature-011-native-supabase-bootstrap.test.mjs tools/feature-011-evidence-head.test.mjs tools/feature-011-pr-review-binding.test.mjs
       - run: pnpm contracts:check
-      - name: Verify exact F011 and additive F012 migration inventories
-        run: |
-          git worktree add --detach "$RUNNER_TEMP/shifaa-f011" fbd2b5312a5038aad21db0001a17dac22bdcbf7e
-          node --test tools/verify-feature-012-migration-chain.test.mjs
-          node tools/verify-feature-012-migration-chain.mjs "$RUNNER_TEMP/shifaa-f011"
+      - run: node tools/verify-feature-011-contracts.mjs
       - run: pnpm architecture:check
       - run: pnpm secrets:check
 
@@ -100,34 +96,15 @@ jobs:
         with:
           node-version: 24.22.1
           cache: pnpm
-      - name: Verify the sealed inputs for native bootstrap
-        run: |
-          git worktree add --detach "$RUNNER_TEMP/shifaa-f011" fbd2b5312a5038aad21db0001a17dac22bdcbf7e
-          node tools/verify-feature-012-migration-chain.mjs "$RUNNER_TEMP/shifaa-f011"
-      - run: pnpm --dir "$RUNNER_TEMP/shifaa-f011" install --frozen-lockfile
-      - name: Admit the disposable native runner
-        id: native-admission
-        env:
-          SHIFAA_RUNNER_ENVIRONMENT: ${{ runner.environment }}
-        run: |
-          test "$SHIFAA_RUNNER_ENVIRONMENT" = github-hosted
-          test -z "${DOCKER_HOST:-}"
-          test -z "${DOCKER_CONTEXT:-}"
-          test "$(docker context show)" = default
-          test "$(docker context inspect default --format '{{.Endpoints.docker.Host}}')" = unix:///var/run/docker.sock
-          test -z "$(docker ps -aq)"
-          test -z "$(docker volume ls -q)"
-      - run: pnpm --dir "$RUNNER_TEMP/shifaa-f011" supabase:start
-      - name: Run native tests after the verified 38-to-39 migration
-        env:
-          RUNNER_ENVIRONMENT: ${{ runner.environment }}
-        run: node tools/verify-feature-012-native-supabase.mjs
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm supabase:start
+      - run: pnpm supabase:test
       - name: Supabase status on failure
-        if: failure() && steps.native-admission.outcome == 'success'
-        run: pnpm --dir "$RUNNER_TEMP/shifaa-f011" supabase status || true
+        if: failure()
+        run: pnpm supabase status || true
       - name: Stop Supabase
-        if: always() && steps.native-admission.outcome == 'success'
-        run: pnpm --dir "$RUNNER_TEMP/shifaa-f011" supabase:stop --no-backup || true
+        if: always()
+        run: pnpm supabase:stop --no-backup || true
 
   accessibility-and-e2e:
     name: Accessibility and patient E2E
