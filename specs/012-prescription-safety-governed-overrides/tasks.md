@@ -61,7 +61,7 @@ The Specification supplies J-01…J-05 without P1/P2 priority labels; US1…US5 
 
 **Independent outcome:** Every dependent sensitive effect remains disabled until the complete writer/native/configuration fence is admitted and its independent tests pass.
 
-- [ ] T008 [NFR-SEC-001, NFR-DATA-001, NFR-DATA-002] Author admission/generation schema and zero-row/current-set tests, including unknown scope, empty-to-first insert, content series head changes, clock-driven eligibility and failed generation writes — `infra/db/tests/feature-012-source-fence.sql`
+- [X] T008 [NFR-SEC-001, NFR-DATA-001, NFR-DATA-002] Author admission/generation schema and zero-row/current-set tests, including unknown scope, empty-to-first insert, content series head changes, clock-driven eligibility and failed generation writes — `infra/db/tests/feature-012-source-fence.sql`
   - Depends on: `T002`
   - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t008.json` — Raw SQL demonstrates constraints and no complete-set claim from public pagination or per-assertion CAS; generation alone never passes commit-currentness checks; AC-01, AC-02, AC-10, AC-14.
 

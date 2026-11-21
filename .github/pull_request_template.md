@@ -20,7 +20,7 @@ Do not include PHI, credentials, tokens, private identifiers, or sensitive uploa
 
 ## Applicable product acceptance and integration
 
-- Applicable product/design language or visual milestone evidence (if affected); human live Arabic/English acceptance is not a universal PR requirement. Preserve automated localization, RTL/LTR and accessibility checks where affected:
+- Applicable product/design, bilingual, native or specialist evidence and responsible reviewer (if affected). Preserve automated localization, RTL/LTR and accessibility checks where affected:
 - Required checks on this exact head:
 - Merge authority: follow effective AGENTS.md; agents may squash merge routine authorized changes after all checks/reviews, and Major Events require explicit Product Owner authorization. Do not self-apply an unintegrated policy amendment or claim a future merge completed.
 - Verified merged `main` SHA (complete only after merge):
@@ -30,5 +30,5 @@ Do not include PHI, credentials, tokens, private identifiers, or sensitive uploa
 
 - Preservation/cleanup impact and retained evidence locations:
 - Are any worktree, branch, archive, or evidence files proposed for deletion? If yes, cite completed Feature Artifact Finalization Gate review and actual recovery verification; otherwise write `none`.
-- F012 lifecycle: `no action in this PR` unless a new conversation and explicit starting authorization exist. Do not initiate or claim a SpecKit stage from this PR.
+- SpecKit scope, exact technical checkpoint evidence, standing delegation or applicable reserved decision (if lifecycle work is included):
 - No GitHub Issue/PR metadata is evidence of approval, gate closure, or acceptance.

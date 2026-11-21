@@ -147,3 +147,14 @@ Identify parallel-safe items and exact blockers; undefined dependencies cannot b
 | Clinical (if applicable) | [physician + pharmacist] | [decision] | [link/OPEN] |
 | Design/accessibility | [name] | [decision] | [link/OPEN] |
 | QA/Product | [names] | [decision] | [link] |
+
+### Standing engineering delegation after verified activation
+
+Once the [Autonomous Engineering Delivery Policy](../../../docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md)
+is effective, record the applicable standing delegation in place of a separate
+routine stage instruction. Bind the root's Plan acceptance to the exact Plan
+and its technical evidence before Tasks. Close each design prerequisite for
+the target stage or preserve its explicit capability restriction. Record the
+owner, decision, evidence and affected stage for each reserved gate. This
+paragraph supersedes the routine authorization wording above within delegated
+scope and preserves the original F012 applicability and safety checks.
