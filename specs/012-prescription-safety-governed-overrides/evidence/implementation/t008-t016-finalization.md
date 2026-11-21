@@ -11,7 +11,7 @@ GitHub merge identities and their ancestry on verified remote main `043e86b9d261
 
 ## Retention and recovery
 
-The original worktrees `.worktrees/f012-t008` and `.worktrees/f012-milestone-e` were checked at their exact PR heads. The task squash inventories cover 8 Git paths. There were no untracked paths or ignored files in the task artifact directories. Retained local development state and historical files stay at their original locations.
+The original worktrees `.worktrees/f012-t008` and `.worktrees/f012-milestone-e` were checked at their exact PR heads. The task squash inventories cover eight Git path versions. There were no untracked paths or ignored files in the task artifact directories. Retained local development state and historical files stay at their original locations.
 
 Paths in the table are both the original and current locations, relative to `D:/ECU/Gradution-Project`. The files were reopened as regular files and hashed on 2026-11-21. Their indexed scope is synthetic engineering evidence. Preserve workspace access restrictions on the raw records. Git blobs and saved files were checked in place. The recovery review used those preserved copies.
 
