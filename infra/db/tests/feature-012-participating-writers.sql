@@ -23,6 +23,7 @@ WITH relations(oid) AS (
     ('clinical.appointments'::regclass),
     ('clinical.queue_entries'::regclass),
     ('identity.people'::regclass),
+    ('identity.patients'::regclass),
     ('identity.care_relationships'::regclass),
     ('identity.care_relationship_permissions'::regclass),
     ('identity.facilities'::regclass),
@@ -68,6 +69,7 @@ known_routines(oid) AS (
     ('clinical.update_encounter_api_v1(uuid,integer,jsonb)'::regprocedure),
     ('clinical.complete_encounter_v1(uuid,integer,jsonb)'::regprocedure),
     ('clinical.complete_encounter_api_v1(uuid,integer,jsonb)'::regprocedure),
+    ('platform.register_identity_onboarding(uuid,text,text)'::regprocedure),
     ('platform.submit_dependent_transition(uuid,uuid,integer)'::regprocedure),
     ('platform.decide_dependent_transition(uuid,integer,text,text,text)'::regprocedure)
 ),

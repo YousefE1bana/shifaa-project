@@ -167,6 +167,24 @@
         {
           "path": "services/api/src/adapters/postgres/identity-repository.ts",
           "gitBlob": "b35c65349ac98eb6a8f8c1f80b3e7fdcb2a35b64",
+          "line": 90,
+          "anchor": "select * from platform.register_identity_onboarding"
+        },
+        {
+          "path": "supabase/migrations/20260811000100_identity_onboarding_baseline.sql",
+          "gitBlob": "3c8da9d2fae3ddaeaca26de95fbc510ceb70125e",
+          "line": 247,
+          "anchor": "CREATE OR REPLACE FUNCTION platform.register_identity_onboarding("
+        },
+        {
+          "path": "supabase/migrations/20260908000700_sec_007_function_execute_grants.sql",
+          "gitBlob": "7fc25e856ef5d43377250c572fd808b21d228b9d",
+          "line": 72,
+          "anchor": "platform.register_identity_onboarding(uuid,text,text),"
+        },
+        {
+          "path": "services/api/src/adapters/postgres/identity-repository.ts",
+          "gitBlob": "b35c65349ac98eb6a8f8c1f80b3e7fdcb2a35b64",
           "line": 140,
           "anchor": "update identity.people set"
         },
@@ -177,7 +195,7 @@
           "anchor": "insert into consent.records"
         }
       ],
-      "requiredProof": "Identify binding and status writers, including provisioning and superseding consent appends. Lose current authority after capture and show the guarded effect is denied. A located profile update does not enumerate all binding or status writers."
+      "requiredProof": "Identify binding and status writers. Cover onboarding that creates an initially absent patient and self-care relationship, status changes and superseding consent appends. Lose current authority after capture and show the guarded effect is denied."
     },
     {
       "scope": "Family care relationship and purpose permission",
@@ -400,19 +418,20 @@
   "catalogBaseline": {
     "status": "PASS",
     "script": "infra/db/tests/feature-012-participating-writers.sql",
-    "scriptSha256": "8023f883d5d12e7be95ba52b65e30d8f90ea542311e023e1287d4de27d63f156",
+    "scriptSha256": "4d6be9904b6b268b9d7d9d101d3bc49591c24063b99845fdaf88479bfda04274",
     "postgresImage": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
     "predecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
     "appliedMigrations": 39,
     "records": {
-      "relation": 27,
-      "role-dml": 90,
-      "routine": 35,
+      "relation": 28,
+      "role-dml": 94,
+      "routine": 36,
       "trigger": 30
     },
     "observations": [
       "Both T009 tables report enabled and forced RLS.",
       "The F011 writer entry points execute under their specialized owner. F010 API entry points and their inner routines are reported separately.",
+      "The patients table reports enabled and forced RLS. The onboarding routine is owned by supabase_admin, runs as SECURITY DEFINER with search_path=pg_catalog, and is executable with schema usage by shifaa_api and supabase_admin.",
       "Relevant direct Core API DML privileges remain visible in the predecessor identity and consent paths. ACLs alone establish neither effective row authorization nor writer admission."
     ]
   }
