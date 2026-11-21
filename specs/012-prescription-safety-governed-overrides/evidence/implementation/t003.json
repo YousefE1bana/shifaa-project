@@ -1,0 +1,210 @@
+{
+  "record": "F012-T003-ISOLATED-SYNTHETIC-EXECUTION/1",
+  "task": "T003",
+  "issue": 514,
+  "pullRequest": 604,
+  "disposition": "PASS_SYNTHETIC_BEHAVIOR_ONLY",
+  "verifiedBy": "Codex using the authenticated AmiraSaad747 repository account",
+  "verifiedAtUtc": "2026-11-21T20:59:17.474Z",
+  "authorization": {
+    "approver": "Yousef Osama, SHIFAA Product Owner",
+    "source": "SHIFAA — Consolidated Product Owner Directive, 2026-11-21, Part A",
+    "scope": "One exact isolated synthetic behavioral execution. Consumed by this run."
+  },
+  "inputs": {
+    "testedCommit": "4712109dbe8fadc78cb497a20cc33ab92de9efdf",
+    "manifestPath": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/manifest.json",
+    "manifestSha256": "794d2e272d6455ff048441389730a111233134301aa44583b463e135c019e13f",
+    "vectorSha256": "9df5225f65b67747e32d86b1ab2f6df186a7c21f0d80c063ddaa08244ae6671b",
+    "evaluatorSha256": "52dd389af1c6baa827baf341a22a455194c4aec44e8ae56adc08c6a4923e5a3d",
+    "harnessSha256": "b148e0c834653b8464729d4ddaddf9d30699ddc070f720a16d282e4f2145cbf8",
+    "nodeImage": "node:24.22.1-bookworm@sha256:d862bb5d082c5ae0210ac07e8c0344cb8cf7bef6d78e9b8c50c179da923108ea",
+    "immutableInputCommit": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+    "bindings": [
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.schema.json",
+        "bytes": 8983,
+        "sha256": "3a4fb8a9ad99221592ff9f368785d662c6f8bdd0565feeaf28a8e042be4d7a65"
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.candidate.json",
+        "bytes": 5728,
+        "sha256": "cff3d02db260e5b4d187ba16cf9f52af0afe60ee8d3129b09a538297032be1ae"
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/engineering-fixtures.manifest.json",
+        "bytes": 3643,
+        "sha256": "def377b2dd59668a5b7e5bde1c23e18f99bef0f664106ace1a04848d5044e8af"
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/coded-input-proposal.md",
+        "bytes": 8480,
+        "sha256": "b607eef404c176ba72a91ddc8bde3e3216da5644557f3c70c068496c03ed703c"
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/readiness/validate-readiness.ps1",
+        "bytes": 13585,
+        "sha256": "3b8a9779e843cf01563950ba91fc1f4b4f6edb1649ab2e7d1deef601da293185"
+      },
+      {
+        "path": "packages/test-kit/src/feature-012.ts",
+        "bytes": 8174,
+        "sha256": "52dd389af1c6baa827baf341a22a455194c4aec44e8ae56adc08c6a4923e5a3d"
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/vectors.json",
+        "bytes": 19415,
+        "sha256": "9df5225f65b67747e32d86b1ab2f6df186a7c21f0d80c063ddaa08244ae6671b"
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/mapping.md",
+        "bytes": 5365,
+        "sha256": "f7352479190c10b5c054183f45787944b8bdb2d3f83db090c26761a05492bce5"
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/verify-disabled.test.mjs",
+        "bytes": 5424,
+        "sha256": "a566a073ced1aa7c1415338516fe0d846b4e490d675f89413ba47a1b28d5c6ae"
+      },
+      {
+        "path": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-candidate/verify-behavior.mjs",
+        "bytes": 4040,
+        "sha256": "47153ab27c530e9ae6aa549b62908d97d65f1b08733dbdc9554a542798ee4f9d"
+      }
+    ]
+  },
+  "context": {
+    "cases": ["W-M", "W-NA", "N", "E"],
+    "clinicalAssessment": "not_fully_checked",
+    "identityBoundary": "Synthetic person tokens. Cross-account identity resolution remains a separate native obligation.",
+    "flagBoundary": "Controlled and NTI fixture flags do not select severity, monitoring applicability or emergency eligibility."
+  },
+  "execution": {
+    "startedAtUtc": "2026-11-21T20:35:39.1088689Z",
+    "command": [
+      "docker",
+      "--context",
+      "desktop-linux",
+      "start",
+      "-a",
+      "91be857c67395e68c5fb8f516ecb46a32c3185599adee640d15ac406df758290"
+    ],
+    "isolation": "Network disabled. Read-only root and synthetic snapshot. UID/GID 1000. No host socket or retained resources accessible.",
+    "attempts": 1,
+    "assertions": {
+      "passed": 313,
+      "failed": 0,
+      "unexecuted": 0
+    },
+    "staticChecksPassed": 6,
+    "hardDisabledEntry": "PASS",
+    "receipt": {
+      "exit": 0,
+      "dockerExit": 0,
+      "timedOut": false,
+      "container": "91be857c67395e68c5fb8f516ecb46a32c3185599adee640d15ac406df758290",
+      "dockerStatus": "exited",
+      "retainedContainers": 12,
+      "retainedVolumes": 4,
+      "retainedResourcesPreserved": true,
+      "snapshotPreserved": true,
+      "historicalEvidencePreserved": true,
+      "stdoutSha256": "37c761dfa8468d38b82be21f60decc08870031d6bae15a9b1ef194e5a3f72056",
+      "stderrSha256": "857c8381e4b9f6ce5b2608115691c8c151927479713a6687d1d4bffd70d4d8aa"
+    }
+  },
+  "historicalExecution": {
+    "trackedRecord": "specs/012-prescription-safety-governed-overrides/evidence/implementation/t003-isolated-behavior-run.md",
+    "assertions": {
+      "passed": 102,
+      "failed": 1,
+      "unexecuted": 210
+    },
+    "failure": "Assertion 103 substituted the same evidence case ID. The repaired fixture substitutes a distinct known case on every carrier.",
+    "retained": [
+      {
+        "path": ".tmp/engineering-decisions-2026-11-21/t003-launch.json",
+        "bytes": 530,
+        "sha256": "fcd99a80e8ffffe06081770b7bb66b9bfbd4b2d134cf201c456ecbde4a508198"
+      },
+      {
+        "path": ".tmp/engineering-decisions-2026-11-21/t003-stderr.log",
+        "bytes": 1231,
+        "sha256": "ff1ddbad1d5b763262eb78d6febe2a23dc57393f5824cda22ed4690d0be11ab1"
+      },
+      {
+        "path": ".tmp/engineering-decisions-2026-11-21/t003-stdout.json",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": ".tmp/engineering-decisions-2026-11-21/t003-snapshot-bindings.json",
+        "bytes": 3092,
+        "sha256": "37f9fd1f8fb1027cc682c6cc3800f146d43299c5e9284db518a468c5ed5b3b78"
+      }
+    ]
+  },
+  "retainedEvidence": [
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/input-admission.json",
+      "bytes": 3760,
+      "sha256": "335f3e5db97bb3df3e0a65e1a8740bb790a59cc19d07a72783d4b39399ee98c9"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/launch.json",
+      "bytes": 765,
+      "sha256": "c5c5cc90ceba59aeb7c312e7346baeb967b6087fec970d6db423f64cee0422ef"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/container-admitted.json",
+      "bytes": 4525,
+      "sha256": "62a02b993baee88adfd162b710cebaf78f8cbf46a6029e8568198167de20b86f"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/execution-receipt.json",
+      "bytes": 511,
+      "sha256": "051f332a07c976cfddfff5bf39a0a01b4b8f84bb46defa07e17a274c7cf95cf2"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/result.json",
+      "bytes": 1995,
+      "sha256": "0a97e912ec2d97ba8f35d3879289f4f547fb806073fa84cc2f39e95bf6af2cd5"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/stdout.json",
+      "bytes": 38794,
+      "sha256": "37c761dfa8468d38b82be21f60decc08870031d6bae15a9b1ef194e5a3f72056"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/stderr.log",
+      "bytes": 179,
+      "sha256": "857c8381e4b9f6ce5b2608115691c8c151927479713a6687d1d4bffd70d4d8aa"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/static-stdout.log",
+      "bytes": 1191,
+      "sha256": "d9478ad90862604ce0e4a35ce3e91ca3f9821db2a05b015d5d0d39d4761e1c69"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/static-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/snapshot/t003-synthetic-harness.mjs",
+      "bytes": 3444,
+      "sha256": "b148e0c834653b8464729d4ddaddf9d30699ddc070f720a16d282e4f2145cbf8"
+    },
+    {
+      "path": ".tmp/engineering-decisions-2026-11-21/t003-repaired-run-1/snapshot/harness-admission.json",
+      "bytes": 651,
+      "sha256": "c9085f674755bd6d90e9124d8da5ab082d5f3f43a8b078f4c0a358d7684173da"
+    }
+  ],
+  "retainedEvidenceAccess": "Original SHIFAA engineering workstation. SHA-256 and byte counts verified by the recorder. GitHub publishes the index and receipt.",
+  "limits": [
+    "The hard-disabled package entry remains disabled.",
+    "This receipt records one synthetic execution. Additional execution, reusable mechanism acceptance, and activation retain their applicable exact-byte gate.",
+    "Clinical, professional, facility, legal and production gates remain in effect."
+  ]
+}
