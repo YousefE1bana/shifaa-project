@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "candidate": "SHIFAA-AUTONOMOUS-DELIVERY/1.0.0",
+  "constitutionVersion": "4.0.0",
+  "baselineCommit": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+  "files": [
+    {
+      "path": ".github/pull_request_template.md",
+      "bytes": 2628,
+      "sha256": "05519fa2887cddc4ca371ddd69e2559d510e06139fc2d55e7913ffb6beeca9d2"
+    },
+    {
+      "path": ".shifaa/skills/shifaa-speckit-overlay/SKILL.md",
+      "bytes": 3015,
+      "sha256": "7c3de0c1ae15e571267a3d98763f49e65796c806139cf59606636e50fbb8ac96"
+    },
+    {
+      "path": ".specify/memory/constitution.md",
+      "bytes": 22484,
+      "sha256": "2f25ba519a4589966ee4863c1c085d37c6958b67e6271f98e93aee518aafbba6"
+    },
+    {
+      "path": ".specify/templates/overrides/constitution-template.md",
+      "bytes": 12888,
+      "sha256": "c40fbe901633699f5b93faf02f5481ac52ab78c8f8d41441df219222fbdf87d5"
+    },
+    {
+      "path": ".specify/templates/overrides/plan-template.md",
+      "bytes": 9258,
+      "sha256": "48545c09102d002428aad26989f38c3c7918efed4dae749c7fd9b444e0a4bad6"
+    },
+    {
+      "path": ".specify/workflows/speckit/workflow.yml",
+      "bytes": 7167,
+      "sha256": "e55153bbc9c639d6249fd7646237c7ae45d2c76c55e4df5544684a7dab77395c"
+    },
+    {
+      "path": ".specify/workflows/workflow-registry.json",
+      "bytes": 395,
+      "sha256": "a970ca156d3cb4fbcc5cd82558dd8df9771b1fe206746263cb848811780b1988"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 14308,
+      "sha256": "ee90315757fe8582f355f127e6c55c959afe8b5b7ad13f958095dfffd2750315"
+    },
+    {
+      "path": "SHIFAA-Implementation-Plan-MASTER.md",
+      "bytes": 107198,
+      "sha256": "fbfb8e0bc316e84011ad73e8146d48f9d9adeaf8f1aacf04fb25d716e989ddc8"
+    },
+    {
+      "path": "docs/SHIFAA-Documentation-Index.md",
+      "bytes": 7604,
+      "sha256": "d93684c6e934e2aa2bca530d9f1bafc2d0f6a99db08e7c034b7633f420bdad3b"
+    },
+    {
+      "path": "docs/SHIFAA-Operational-Guide-v1.md",
+      "bytes": 7629,
+      "sha256": "06a5576a0d32eae89f9a539581be23b91e225f5ecdb692f461c8efbc665d6f51"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md",
+      "bytes": 9295,
+      "sha256": "dad151332ef1366fdf103eff651201c14c6cfb3ada987ace52c6f9045948824d"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Current-Authority-Map-v1.md",
+      "bytes": 11176,
+      "sha256": "beffa7d3ea9d7650ee43e21ffa5ad322c46e1c9f8bd5fb0848e7e0d7bf86d286"
+    },
+    {
+      "path": "docs/governance/SHIFAA-Engineering-Delivery-Dashboard.md",
+      "bytes": 2797,
+      "sha256": "5661d130c9e6c738edccbb9107c56259a1d79e265cc93b4e1d9e8b212da1fb72"
+    },
+    {
+      "path": "docs/governance/autonomous-delivery/historical-reader-binding.json",
+      "bytes": 1973,
+      "sha256": "7df114bc8d4cf8c400ea91c9375372bd454f063fe88fc51dd09355df0f3f595f"
+    },
+    {
+      "path": "docs/governance/autonomous-delivery/transition.md",
+      "bytes": 3542,
+      "sha256": "e018f2c8696dad0338a84d1714679eef32851c234501fa402d89dec3b8fbb56b"
+    },
+    {
+      "path": "packages/contracts/src/feature-011-history-reader.test.ts",
+      "bytes": 6046,
+      "sha256": "b020dfef54059f0e80cdaaceb53d7459e4c64c1f350821820100a8f8675d2fd9"
+    },
+    {
+      "path": "packages/contracts/src/feature-011-successor.test.ts",
+      "bytes": 7256,
+      "sha256": "02cf703cdb55a49e1f14f79b9daced756488376ef7bec798b0ce27d3fbb66027"
+    },
+    {
+      "path": "shifaa-prd.md",
+      "bytes": 103798,
+      "sha256": "9cefc539f678892757f5e23dd69dd3c8dd9563c6e5305471404ccbfa586c361a"
+    },
+    {
+      "path": "tools/feature-011-physical-preflight.test.mjs",
+      "bytes": 7706,
+      "sha256": "6a2f6d62ac097046722c2ef86c59dc1a84ef715bf6d9088af71138dc723cbc76"
+    },
+    {
+      "path": "tools/test_tooling_history_successor.py",
+      "bytes": 5515,
+      "sha256": "71294fdad15844856f76c4f01cdb10cea1bbba5cab55c66e56e977836a875198"
+    },
+    {
+      "path": "tools/tooling-history.mjs",
+      "bytes": 10164,
+      "sha256": "7fe1b6721d778309dca216c2d9f5e47598a88bc0738d0749ac12ea31bac3fee1"
+    },
+    {
+      "path": "tools/tooling_history.py",
+      "bytes": 4963,
+      "sha256": "46046e208105730a407d925c37aecf45759b96116dba84d90217e093af411566"
+    },
+    {
+      "path": "tools/verification/history.test.mjs",
+      "bytes": 2948,
+      "sha256": "7b244e3ba00af68428bd44a76929a67cb88a76f9b18b7ed357cf5a9f28dc577c"
+    }
+  ]
+}

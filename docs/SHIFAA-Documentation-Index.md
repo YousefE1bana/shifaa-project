@@ -4,6 +4,11 @@ Navigation successor v1, prepared against `e7e606532c97568fa17d1e98c4160b84390db
 
 Start with [AGENTS](../AGENTS.md), the [current authority map](governance/SHIFAA-Current-Authority-Map-v1.md), then the assigned feature's approved records. A filename, a preserved proposal label and a Git merge each answer different questions; resolve authority from the approval and its integration conditions.
 
+For the standing engineering delegation, verification matrix, activation
+requirements and current progress, use the
+[delivery policy](governance/SHIFAA-Autonomous-Engineering-Delivery-Policy.md)
+and [dashboard](governance/SHIFAA-Engineering-Delivery-Dashboard.md).
+
 | Question                              | Source to read                                                                                                                                      | Interpretation                                                                                                                                               |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Effective requirements and precedence | [Constitution](../.specify/memory/constitution.md), [PRD](../shifaa-prd.md), [Master](../SHIFAA-Implementation-Plan-MASTER.md), authority map       | Read activated versions and their bounded successors; preserve original clauses outside each amendment.                                                      |

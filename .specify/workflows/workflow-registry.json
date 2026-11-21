@@ -3,11 +3,11 @@
   "workflows": {
     "speckit": {
       "name": "Full SDD Cycle",
-      "version": "2.3.0",
-      "description": "Runs SHIFAA scope eligibility \u2192 specify \u2192 clarify \u2192 approve \u2192 plan \u2192 approve \u2192 tasks \u2192 analyze \u2192 approve \u2192 baseline publication \u2192 taskstoissues \u2192 implement \u2192 post-implementation analysis \u2192 artifact finalization gate",
+      "version": "3.0.0",
+      "description": "Runs SHIFAA SpecKit stages with evidence-based checkpoints under effective delivery authority.",
       "source": "project-custom",
       "installed_at": "2026-08-09T12:11:31.094958+00:00",
-      "updated_at": "2026-10-13T14:49:57.062019+00:00"
+      "updated_at": "2026-11-21T13:09:51.2097740Z"
     }
   }
 }
