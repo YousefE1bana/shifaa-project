@@ -10,7 +10,13 @@
     "testedHead": "92586700284f3769f6f3c3a006ea6e4fda853d02",
     "run": "ed8754e8-6587-4f48-b2c5-a7390c5d8283",
     "guardFirst": "PostgreSQL observed a separate supabase_auth_admin backend waiting on the fixture holder. After that holder rolled back, real GoTrue local logout returned HTTP 204. The bound session was absent and the user row remained.",
-    "scope": "One guard-first native HTTP logout trial against a retained user and session SHARE lock on disposable rows. The four SQL primitive trials and isolation checks also passed on this run."
+    "scope": "The guard-first trial used retained user and session SHARE locks on disposable rows. The four SQL primitive trials and isolation checks also passed on that run.",
+    "writerFirst": {
+      "testedHead": "cd97111fd540e1b63e2aa3d627dec4adbd04f1c7",
+      "run": "02122bad-e37e-4884-a82e-a32ea89c50ed",
+      "observation": "The actual GoTrue local logout reached the disposable AFTER DELETE barrier on the bound session. The independent reader locked the user and received 55P03 on auth.sessions. Once the barrier was released, logout returned 204 and a fresh transaction found only the user row.",
+      "previousFailure": "The first trial's 2.5-second HTTP probe deadline expired before the independent SQL check. Retrying with a 10-second bound kept the request alive while preserving the SQL lock timeout and error assertion."
+    }
   },
   "nativeRefresh": {
     "testedHead": "dc09a6db9f36e4685d47086246c46650b489e3ff",
@@ -99,6 +105,19 @@
         "bytes": 36025,
         "sha256": "0535fbe28caddd3ac340651f8ef63575fcc288fcf993ff9b718f5c49e7229afe",
         "run": "69884adf-7a54-4860-a4c7-699b43d25cc6"
+      },
+      {
+        "path": "t010-native-logout-first.json",
+        "bytes": 35986,
+        "sha256": "8f6a0e8b5245acab3c8abcbc4684e6953665e30cefbc0de40bcc1c7ab0c5dce4",
+        "run": "02fee61f-70d9-40b6-9748-82a1e8f462b4",
+        "result": "BLOCKED after the HTTP client deadline expired"
+      },
+      {
+        "path": "t010-native-logout-first-retry.json",
+        "bytes": 36176,
+        "sha256": "8debebe3b72778fc4f96670c9396b24fdde5caa32418862d311f5011c1d80d18",
+        "run": "02122bad-e37e-4884-a82e-a32ea89c50ed"
       }
     ]
   },
@@ -108,7 +127,7 @@
     "matches": true
   },
   "remaining": [
-    "Current-head native HTTP coverage for writer-first logout, downgrade and recovery, and user-ban interleavings beyond the native-owner SQL results",
+    "Current-head native HTTP coverage for downgrade and recovery, and user-ban interleavings beyond the native-owner SQL results",
     "Accepted native configuration and integration evidence for the deployed guard's post-wait JWT, session deadline and login-strength decisions",
     "Current-authority replay, trusted context substitution, multiple-account binding semantics and installed executor/privilege negatives"
   ],
