@@ -485,7 +485,7 @@ async function sourceFenceLockConflict(db) {
   }
 }
 
-async function runOnboardingWriterOrder(db, familyWriters) {
+async function runOnboardingWriterOrder(db, focusedWriters) {
   const deployment = writerFixtureDeployment;
   const epoch = writerFixtureEpoch;
   const firstSubject = '74120000-0000-4000-8000-000000000001';
@@ -602,10 +602,10 @@ async function runOnboardingWriterOrder(db, familyWriters) {
     }
   }
 
-  if (familyWriters) {
+  if (focusedWriters) {
     seedWriterAdmission(db);
-    results.familyAndConsent = [];
-    await runFamilyAndConsentWriterOrder(db, results.familyAndConsent, {
+    results[focusedWriters] = [];
+    await runContextWriterOrder(db, results[focusedWriters], focusedWriters, {
       admission,
       onboard,
       contend,
@@ -614,9 +614,9 @@ async function runOnboardingWriterOrder(db, familyWriters) {
       expectTimeout,
     });
     assert.deepEqual(
-      results.familyAndConsent.flatMap(({ failedOrderings }) => failedOrderings),
+      results[focusedWriters].flatMap(({ failedOrderings }) => failedOrderings),
       [],
-      'T012 family and consent writers must serialize with rank-zero admission',
+      'T012 tested writers must serialize with rank-zero admission',
     );
     return;
   }
@@ -694,9 +694,10 @@ async function runOnboardingWriterOrder(db, familyWriters) {
   expectIdentity(results.committed, '1|1|1');
 }
 
-async function runFamilyAndConsentWriterOrder(
+async function runContextWriterOrder(
   db,
   results,
+  focusedWriters,
   { admission, onboard, contend, hold, backendPid, expectTimeout },
 ) {
   const prefix = '74120000-0000-4000-8000-0000000000';
@@ -723,60 +724,10 @@ async function runFamilyAndConsentWriterOrder(
   const context = (person) => `SET LOCAL shifaa.person_id = '${person}';
     SET LOCAL shifaa.actor_role = 'PAT'; SET LOCAL shifaa.aal = '1';
     SET LOCAL shifaa.purposes = 'family_support';`;
-  const relationship = prefix + '14';
-  const granted = prefix + '15';
-  const withdrawn = prefix + '16';
-  const seed = contend(`${context(patientPerson)}
-    INSERT INTO identity.care_relationships
-      (id,subject_patient_id,actor_person_id,relationship_type,status,purpose_code,
-       valid_from,valid_until,created_by_person_id,invite_token_digest,invite_key_version,invite_expires_at)
-    VALUES ('${relationship}','${patient}','${delegate}','delegation','pending','family_support',
-            now(),now()+interval '1 year','${patientPerson}',decode(repeat('aa',32),'hex'),
-            1,now()+interval '1 day');
-    INSERT INTO identity.care_relationship_permissions
-      (relationship_id,permission_code,created_by_person_id)
-    VALUES ('${relationship}','record.view','${patientPerson}');
-    ${context(delegate)}
-    UPDATE identity.care_relationships
-      SET status = 'active', invite_token_digest = NULL, invite_expires_at = NULL, invite_consumed_at = now()
-      WHERE id = '${relationship}' AND version = 1;`);
-  assert.equal(seed.exit, 0, seed.stderr);
-  assert.match(seed.stdout, /^UPDATE 1$/m);
-
-  const seedConsent = contend(`${context(patientPerson)}
-    INSERT INTO consent.records
-      (id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,occurred_at)
-    VALUES ('${granted}','${patientPerson}','care_updates','1.0.0','granted','patient_app','1.0.0',now());`);
-  assert.equal(seedConsent.exit, 0, seedConsent.stderr);
-  const cases = [
-    {
-      name: 'family delegation revocation',
-      write: `UPDATE identity.care_relationships SET status = 'revoked',
-        revoked_by_person_id = '${patientPerson}', revoked_at = now()
-        WHERE id = '${relationship}' AND version = 2;`,
-      written: /^UPDATE 1$/m,
-      deniedExit: 0,
-      denied: /^UPDATE 0$/m,
-      state: `SELECT status, version FROM identity.care_relationships WHERE id = '${relationship}';`,
-      before: 'active|2\n',
-      after: 'revoked|3\n',
-    },
-    {
-      name: 'consent withdrawal append',
-      write: `INSERT INTO consent.records
-        (id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,
-         occurred_at,supersedes_id,version)
-        VALUES ('${withdrawn}','${patientPerson}','care_updates','1.0.0','withdrawn','patient_app',
-                '1.0.0',now(),'${granted}',2);`,
-      written: /^INSERT 0 1$/m,
-      deniedExit: 3,
-      denied: /42501:.*row-level security/,
-      state: `SELECT decision, version FROM consent.records
-        WHERE id IN ('${granted}', '${withdrawn}') ORDER BY version;`,
-      before: 'granted|1\n',
-      after: 'granted|1\nwithdrawn|2\n',
-    },
-  ];
+  const cases =
+    focusedWriters === 'allergy'
+      ? [allergyInsertWriter(patient)]
+      : familyAndConsentWriters(contend, context, { patientPerson, patient, delegate, prefix });
   const admissionControl = await hold(admission, (holder) => ({
     holder,
     contender: contend(admission),
@@ -786,7 +737,7 @@ async function runFamilyAndConsentWriterOrder(
     backendPid(admissionControl.holder, 'holder'),
     backendPid(admissionControl.contender.stdout, 'contender'),
   );
-  receipt.participatingWriters.familyAndConsentAdmissionControl = admissionControl;
+  receipt.participatingWriters.focusedAdmissionControl = admissionControl;
   for (const test of cases) {
     const state = () => observedSql(db, test.state);
     const write = context(patientPerson) + test.write;
@@ -794,7 +745,7 @@ async function runFamilyAndConsentWriterOrder(
     assert.equal(initial.exit, 0, initial.stderr);
     assert.equal(initial.stdout, test.before);
     const unrelatedWriter = contend(context(unrelated) + test.write);
-    assert.equal(unrelatedWriter.exit, test.deniedExit);
+    assert.equal(unrelatedWriter.exit, test.deniedExit, unrelatedWriter.stderr);
     assert.match(unrelatedWriter.stdout + unrelatedWriter.stderr, test.denied);
     assert.deepEqual(state(), initial);
 
@@ -848,6 +799,123 @@ async function runFamilyAndConsentWriterOrder(
       failedOrderings,
     });
   }
+}
+
+function familyAndConsentWriters(contend, context, { patientPerson, patient, delegate, prefix }) {
+  const relationship = prefix + '14';
+  const granted = prefix + '15';
+  const withdrawn = prefix + '16';
+  const seed = contend(`${context(patientPerson)}
+    INSERT INTO identity.care_relationships
+      (id,subject_patient_id,actor_person_id,relationship_type,status,purpose_code,
+       valid_from,valid_until,created_by_person_id,invite_token_digest,invite_key_version,invite_expires_at)
+    VALUES ('${relationship}','${patient}','${delegate}','delegation','pending','family_support',
+            now(),now()+interval '1 year','${patientPerson}',decode(repeat('aa',32),'hex'),
+            1,now()+interval '1 day');
+    INSERT INTO identity.care_relationship_permissions
+      (relationship_id,permission_code,created_by_person_id)
+    VALUES ('${relationship}','record.view','${patientPerson}');
+    ${context(delegate)}
+    UPDATE identity.care_relationships
+      SET status = 'active', invite_token_digest = NULL, invite_expires_at = NULL, invite_consumed_at = now()
+      WHERE id = '${relationship}' AND version = 1;`);
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^UPDATE 1$/m);
+
+  const seedConsent = contend(`${context(patientPerson)}
+    INSERT INTO consent.records
+      (id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,occurred_at)
+    VALUES ('${granted}','${patientPerson}','care_updates','1.0.0','granted','patient_app','1.0.0',now());`);
+  assert.equal(seedConsent.exit, 0, seedConsent.stderr);
+  return [
+    {
+      name: 'family delegation revocation',
+      write: `UPDATE identity.care_relationships SET status = 'revoked',
+        revoked_by_person_id = '${patientPerson}', revoked_at = now()
+        WHERE id = '${relationship}' AND version = 2;`,
+      written: /^UPDATE 1$/m,
+      deniedExit: 0,
+      denied: /^UPDATE 0$/m,
+      state: `SELECT status, version FROM identity.care_relationships WHERE id = '${relationship}';`,
+      before: 'active|2\n',
+      after: 'revoked|3\n',
+    },
+    {
+      name: 'consent withdrawal append',
+      write: `INSERT INTO consent.records
+        (id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,
+         occurred_at,supersedes_id,version)
+        VALUES ('${withdrawn}','${patientPerson}','care_updates','1.0.0','withdrawn','patient_app',
+                '1.0.0',now(),'${granted}',2);`,
+      written: /^INSERT 0 1$/m,
+      deniedExit: 3,
+      denied: /42501:.*row-level security/,
+      state: `SELECT decision, version FROM consent.records
+        WHERE id IN ('${granted}', '${withdrawn}') ORDER BY version;`,
+      before: 'granted|1\n',
+      after: 'granted|1\nwithdrawn|2\n',
+    },
+  ];
+}
+
+function allergyInsertWriter(patient) {
+  const allergy = randomUUID();
+  const request = randomUUID();
+  const key = randomUUID();
+  // Structural envelopes use the same synthetic shape as the F011 component fixture.
+  const envelope = (contractId, suffix) => ({
+    contractId,
+    keyRef: 'synthetic-kms/' + suffix + '/versions/1',
+    nonce: '0102030405060708090a0b0c',
+    ciphertext: 'aabb',
+    authTag: '0102030405060708090a0b0c0d0e0f10',
+  });
+  const payload = {
+    responseLanguage: 'en-EG',
+    responseRequestId: request,
+    preparation: {
+      allergyId: allergy,
+      revisionId: randomUUID(),
+      revisionVersion: 1,
+      previousRevisionId: null,
+      protectedFacts: envelope('SHIFAA-F011-ALLERGY-PROTECTED/1', 'facts'),
+      protectedReason: null,
+      correctsAllergyId: null,
+    },
+  };
+  const finalizer = envelope('SHIFAA-F011-RECEIPT-PROTECTED/1', 'receipt');
+  return {
+    name: 'F011 allergy empty-to-first insertion',
+    write: `SET LOCAL shifaa.environment = 'local';
+      SET LOCAL shifaa.action = 'createAllergy';
+      SET LOCAL shifaa.aal = '2';
+      SET LOCAL shifaa.purposes = 'synthetic.feature011';
+      SET LOCAL shifaa.request_id = '${request}';
+      SET LOCAL shifaa.idempotency_key = '${key}';
+      SET LOCAL shifaa.request_hash = '${'a'.repeat(64)}';
+      DO $fixture$
+        DECLARE result jsonb;
+        BEGIN
+          result := clinical.create_allergy_api_v1('${patient}', '${JSON.stringify(payload)}'::jsonb);
+          PERFORM clinical.f011_finalize_receipt_v1(
+            (result->>'receiptId')::uuid, '${JSON.stringify(finalizer)}'::jsonb
+          );
+          IF result->>'resourceVersion' IS DISTINCT FROM '1' THEN
+            RAISE EXCEPTION 'expected first allergy revision';
+          END IF;
+        END
+      $fixture$;`,
+    written: /^DO$/m,
+    deniedExit: 3,
+    denied: /42501:.*(allergy authority|patient)/i,
+    state: `SELECT
+      (SELECT count(*) FROM clinical.allergy_heads WHERE patient_id = '${patient}'),
+      (SELECT count(*) FROM clinical.allergies WHERE patient_id = '${patient}'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = '${allergy}' AND aggregate_type = 'clinical.allergy_revision');`,
+    before: '0|0|0\n',
+    after: '1|1|1\n',
+  };
 }
 
 async function runRecoveryWorkerOrder(db, { admission, onboard, contend, hold, backendPid }) {
@@ -1350,10 +1418,13 @@ function sourceFence(db, red, upgrade) {
 async function admit() {
   const argumentsList = process.argv.slice(2);
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
-  const familyWriters =
-    argumentsList.length === 1 && argumentsList[0] === '--participating-family-writers';
+  const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
+  const focusedWriters = new Map([
+    ['--participating-family-writers', 'familyAndConsent'],
+    ['--participating-allergy-writer', 'allergy'],
+  ]).get(onlyArgument);
   const participatingWriters =
-    familyWriters || (argumentsList.length === 1 && argumentsList[0] === '--participating-writers');
+    Boolean(focusedWriters) || onlyArgument === '--participating-writers';
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
   const sqlOnly =
@@ -1415,7 +1486,7 @@ async function admit() {
         runAtomicity(source);
       } else {
         sourceFence(source, redOnly, upgrade || participatingWriters);
-        if (!redOnly && !familyWriters) {
+        if (!redOnly && !focusedWriters) {
           await sourceFenceLockConflict(source);
           sourceFenceRawBypass(source);
           sourceFenceDurability(source);
@@ -1425,7 +1496,7 @@ async function admit() {
         }
         if (participatingWriters) {
           stage = 'T012 participating writers against the disposable migrated database';
-          await runOnboardingWriterOrder(source, familyWriters);
+          await runOnboardingWriterOrder(source, focusedWriters);
         }
       }
     } finally {
@@ -1439,8 +1510,8 @@ async function admit() {
     }
     receipt.status = atomicity
       ? 'EXECUTED_ATOMICITY_SQL'
-      : familyWriters
-        ? 'PASS_T012_FAMILY_AND_CONSENT_WRITER_SQL'
+      : focusedWriters
+        ? 'PASS_T012_FOCUSED_WRITER_SQL'
         : participatingWriters
           ? 'PASS_T012_ONBOARDING_WRITER_SQL'
           : redOnly
