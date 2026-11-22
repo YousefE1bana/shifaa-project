@@ -794,8 +794,7 @@ async function nativeDeadlineTrials(db, { subject, session }) {
           const wait = observedSql(
             db,
             `SELECT pid, wait_event_type FROM pg_stat_activity
-              WHERE usename = 'supabase_auth_admin'
-                AND ${holderPid} = ANY(pg_blocking_pids(pid));`,
+              WHERE ${holderPid} = ANY(pg_blocking_pids(pid));`,
           );
           assert.equal(wait.exit, 0, wait.stderr);
           if (wait.stdout) {
