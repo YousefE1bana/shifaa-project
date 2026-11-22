@@ -6,6 +6,7 @@ import type {
 import { ApiPolicyError } from '../identity-onboarding/errors.js';
 
 const verified = Symbol('server-verified native authority');
+const verifiedContexts = new WeakSet<ServerVerifiedNativeContext>();
 
 export interface ServerVerifiedNativeContext extends NativeAuthorityBinding {
   readonly [verified]: true;
@@ -30,23 +31,32 @@ export async function verifyNativeAuthorityContext(
     throw new ApiPolicyError('authentication-required', 401, 'Sign in to continue.');
   }
 
-  return Object.freeze({
-    ...binding,
+  const context = Object.freeze({
     [verified]: true as const,
     profile,
+    personId: binding.personId,
+    deploymentId: binding.deploymentId,
+    admissionEpoch: binding.admissionEpoch,
+    instanceId: binding.instanceId,
+    facilityId: binding.facilityId,
+    caseId: binding.caseId,
+    action: binding.action,
+    purpose: binding.purpose,
     subjectId: claims.subjectId,
     sessionId: claims.sessionId,
     aal: claims.aal,
     expiresAt: claims.expiresAt,
     totpAt: latestQualifyingFactorAt(claims.amr) ?? null,
   });
+  verifiedContexts.add(context);
+  return context;
 }
 
 export function assertNativeAuthorityProfile(
   context: ServerVerifiedNativeContext,
   profile: NativeAuthorityProfile,
 ): void {
-  if (context[verified] !== true || context.profile !== profile) {
+  if (!verifiedContexts.has(context) || context.profile !== profile) {
     throw new ApiPolicyError('access-denied', 403, 'Current authority is required.');
   }
 }

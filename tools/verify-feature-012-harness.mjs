@@ -1188,6 +1188,19 @@ async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
   execute('missing retained admission', context(person) + guard(), denied);
   execute('missing trusted context', admission + guard(), denied);
   execute(
+    'substituted case context',
+    admission + context(person) + `SET LOCAL shifaa.case_id = '${randomUUID()}';` + guard(),
+    denied,
+  );
+  const absentSession = randomUUID();
+  execute(
+    'bound session row is absent',
+    admission +
+      context(person).replace(fixture.session, absentSession) +
+      guard({ nativeSession: absentSession }),
+    denied,
+  );
+  execute(
     'signed subject and mapped person mismatch',
     admission + context(otherPerson) + guard({ actorPerson: otherPerson }),
     denied,
@@ -1221,7 +1234,7 @@ async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
       guard({ expiresAt: 'floor(extract(epoch from clock_timestamp()))::bigint' }),
     denied,
   );
-  for (const role of ['anon', 'authenticated', 'shifaa_worker']) {
+  for (const role of ['anon', 'authenticated', 'service_role', 'shifaa_worker']) {
     execute(
       `${role} cannot execute with matching settings`,
       context(person) + guard(),
@@ -1232,6 +1245,29 @@ async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
   execute('Core API cannot assume executor role', 'SET ROLE shifaa_f012_native_executor;', denied);
   execute('Core API cannot read Auth users', 'SELECT id FROM auth.users;', denied);
   execute('Core API cannot read Auth sessions', 'SELECT id FROM auth.sessions;', denied);
+  execute('Core API cannot update Auth users', 'UPDATE auth.users SET id = id;', denied);
+  execute('Core API cannot update Auth sessions', 'UPDATE auth.sessions SET id = id;', denied);
+  const boundRows = `SET LOCAL shifaa.f012_bound_subject = '${fixture.subject}';
+    SET LOCAL shifaa.f012_bound_session = '${fixture.session}';`;
+  const executor = 'shifaa_f012_native_executor';
+  for (const [relation, id] of [
+    ['users', fixture.subject],
+    ['sessions', fixture.session],
+  ]) {
+    const visible = execute(
+      `executor sees only the bound ${relation} row`,
+      boundRows + `SELECT id FROM auth.${relation};`,
+      null,
+      executor,
+    );
+    assert.deepEqual(visible.stdout.match(/^[\da-f-]{36}$/gm), [id]);
+    execute(
+      `executor RLS rejects an actual ${relation} update`,
+      boundRows + `UPDATE auth.${relation} SET id = id WHERE id = '${id}';`,
+      /42501:.*row-level security/,
+      executor,
+    );
+  }
   const patientRead = admission + context(person) + guard();
   const timeout = /55P03:.*lock timeout/;
   result.locks = {};
@@ -1275,6 +1311,11 @@ async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
     guard({ aal: 2, profile: 'workforce_sensitive', totpAt });
   const seconds = 'floor(extract(epoch from statement_timestamp()))::bigint';
   execute('native AAL2 with recent TOTP', workforce(seconds + ' - 120'));
+  execute(
+    'native AAL2 at inclusive five-minute TOTP boundary',
+    "SELECT pg_sleep_until(date_trunc('second', clock_timestamp()) + interval '1 second');" +
+      workforce(seconds + ' - 300'),
+  );
   execute('workforce without qualifying TOTP', workforce('NULL'), denied);
   execute('workforce with stale TOTP', workforce(seconds + ' - 301'), denied);
   execute('workforce with future TOTP', workforce(seconds + ' + 5'), denied);
@@ -1346,6 +1387,14 @@ async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
     (deadline) => admission + context(person) + guard({ expiresAt: deadline }),
     (result.expiryAfterWait = {}),
   );
+  const endSession = execute(
+    'fixture stores elapsed native NotAfter',
+    `UPDATE auth.sessions SET not_after = clock_timestamp() WHERE id = '${fixture.session}';`,
+    null,
+    'supabase_auth_admin',
+  );
+  assert.match(endSession.stdout, /^UPDATE 1$/m);
+  execute('current JWT cannot outlive native NotAfter', patientRead, denied);
 }
 
 async function nativeGuardExpiryAfterWait(db, session, guard, trial) {

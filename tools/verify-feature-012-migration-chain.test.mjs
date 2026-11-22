@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import {
-  addition,
+  additivePaths,
   assertExactMigrationInventory,
   readCandidateMigration,
 } from './verify-feature-012-migration-chain.mjs';
@@ -13,9 +13,9 @@ const sealed = Array.from(
   { length: 38 },
   (_, i) => `supabase/migrations/2026100100${String(i).padStart(4, '0')}_sealed.sql`,
 );
-const expected = [...sealed, addition];
+const expected = [...sealed, ...additivePaths];
 
-test('permits the exact ordered predecessor chain and one candidate migration', () => {
+test('permits the exact ordered predecessor chain and additive migrations', () => {
   assert.doesNotThrow(() => assertExactMigrationInventory(expected, sealed));
 });
 
@@ -36,6 +36,12 @@ test('denies an unexpected addition beyond the candidate', () => {
   );
 });
 
+test('denies missing or reordered additive migrations', () => {
+  for (const changes of [expected.slice(0, -1), [...sealed, ...additivePaths.toReversed()]]) {
+    assert.throws(() => assertExactMigrationInventory(changes, sealed), /unexpected changes/);
+  }
+});
+
 test('denies an invalid sealed filename or a repeated or unordered version', () => {
   for (const badSeals of [
     ['supabase/migrations/20261001000000_INVALID.sql', ...sealed.slice(1)],
@@ -43,7 +49,7 @@ test('denies an invalid sealed filename or a repeated or unordered version', () 
     [sealed[1], sealed[0], ...sealed.slice(2)],
   ]) {
     assert.throws(
-      () => assertExactMigrationInventory([...badSeals, addition], badSeals),
+      () => assertExactMigrationInventory([...badSeals, ...additivePaths], badSeals),
       /Invalid migration path|unique and increasing/,
     );
   }
@@ -51,15 +57,17 @@ test('denies an invalid sealed filename or a repeated or unordered version', () 
 
 test('denies a missing or altered candidate SQL file even with the canonical filename', (t) => {
   const workspace = mkdtempSync(join(tmpdir(), 'shifaa-f012-chain-test-'));
-  const sql = join(workspace, addition);
-  mkdirSync(dirname(sql), { recursive: true });
+  const files = additivePaths.map((path) => join(workspace, path));
+  mkdirSync(dirname(files[0]), { recursive: true });
   t.after(() => {
-    unlinkSync(sql);
-    rmdirSync(dirname(sql));
+    for (const file of files) unlinkSync(file);
+    rmdirSync(dirname(files[0]));
     rmdirSync(join(workspace, 'supabase'));
     rmdirSync(workspace);
   });
-  assert.throws(() => readCandidateMigration(workspace), { code: 'ENOENT' });
-  writeFileSync(sql, 'SELECT 1;\n', { flag: 'wx' });
-  assert.throws(() => readCandidateMigration(workspace), /F012 migration bytes differ/);
+  for (const [index, path] of additivePaths.entries()) {
+    assert.throws(() => readCandidateMigration(workspace, path), { code: 'ENOENT' });
+    writeFileSync(files[index], 'SELECT 1;\n', { flag: 'wx' });
+    assert.throws(() => readCandidateMigration(workspace, path), /F012 migration bytes differ/);
+  }
 });

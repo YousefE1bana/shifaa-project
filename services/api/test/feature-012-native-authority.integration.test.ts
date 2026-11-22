@@ -4,6 +4,10 @@ import { createServer } from 'node:http';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { SupabaseAuthIssuer } from '../src/adapters/supabase-auth.js';
+import {
+  assertNativeAuthorityProfile,
+  verifyNativeAuthorityContext,
+} from '../src/modules/feature-012/native-authority.js';
 
 const issuer = 'http://auth.fixture.test/auth/v1';
 const subjectId = '74120000-0000-4000-8000-000000000010';
@@ -88,5 +92,57 @@ describe('F012 signed native context input through the existing Auth adapter', (
       ...(scenario === 'access deadline at equality' ? { exp: now } : {}),
     });
     expect(await auth.verifyAccessToken(input)).toBeUndefined();
+  });
+});
+
+describe('F012 trusted guard context', () => {
+  const binding = {
+    personId: '74120000-0000-4000-8000-000000000021',
+    deploymentId: '74120000-0000-4000-8000-000000000022',
+    admissionEpoch: '74120000-0000-4000-8000-000000000023',
+    instanceId: '74120000-0000-4000-8000-000000000024',
+    facilityId: '74120000-0000-4000-8000-000000000025',
+    caseId: '74120000-0000-4000-8000-000000000026',
+    action: 'getPrescription',
+    purpose: 'synthetic.feature012',
+  };
+
+  it('binds the server-selected scope to the qualifying signed TOTP event', async () => {
+    const now = Math.floor(Date.now() / 1000);
+    const input = fixtureToken({
+      exp: now + 60,
+      iat: now,
+      aal: 'aal2',
+      amr: [
+        { method: 'password', timestamp: now },
+        { method: 'totp', timestamp: now - 120 },
+      ],
+      user_metadata: { facilityId: 'untrusted', caseId: 'untrusted' },
+    });
+    const context = await verifyNativeAuthorityContext(auth, input, binding, 'workforce_sensitive');
+    expect(context).toMatchObject({ ...binding, subjectId, sessionId, totpAt: now - 120 });
+    expect(() => assertNativeAuthorityProfile(context, 'workforce_sensitive')).not.toThrow();
+    expect(() => assertNativeAuthorityProfile(context, 'subject_projection_read')).toThrow();
+    expect(() =>
+      assertNativeAuthorityProfile({ ...context, caseId: null }, 'workforce_sensitive'),
+    ).toThrow();
+  });
+
+  it('keeps signed subject AAL1 without a synthetic factor event', async () => {
+    const now = Math.floor(Date.now() / 1000);
+    const input = fixtureToken({
+      exp: now + 60,
+      aal: 'aal1',
+      amr: [{ method: 'password', timestamp: now }],
+    });
+    const context = await verifyNativeAuthorityContext(
+      auth,
+      input,
+      { ...binding, facilityId: null, caseId: null },
+      'subject_projection_read',
+    );
+    expect(context).toMatchObject({ subjectId, sessionId, aal: 1, totpAt: null });
+    expect(() => assertNativeAuthorityProfile(context, 'subject_projection_read')).not.toThrow();
+    expect(() => assertNativeAuthorityProfile(context, 'workforce_sensitive')).toThrow();
   });
 });

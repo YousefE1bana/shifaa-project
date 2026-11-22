@@ -4,7 +4,7 @@ import { readFileSync, realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
-  addition,
+  additivePaths,
   readCandidateMigration,
   verifyExtendedChain,
 } from './verify-feature-012-migration-chain.mjs';
@@ -22,7 +22,6 @@ const root = resolve(import.meta.dirname, '..');
 assert.equal(root, realpathSync(process.env.GITHUB_WORKSPACE));
 const historical = realpathSync(join(process.env.RUNNER_TEMP, 'shifaa-f011'));
 const chain = await verifyExtendedChain(historical, root);
-const migration = readCandidateMigration(root);
 const versionOf = (path) => path.split('/').at(-1).split('_')[0];
 const versions = chain.extended.migrations.map(({ path }) => versionOf(path));
 
@@ -73,8 +72,14 @@ async function resetAndExtend(runPnpm) {
     sql('SELECT version FROM supabase_migrations.schema_migrations ORDER BY version;')
       .trim()
       .split('\n');
-  assert.deepEqual(applied(), versions.slice(0, -1), 'Unexpected native predecessor chain');
-  console.log(sql(migration).trim());
+  assert.deepEqual(
+    applied(),
+    versions.slice(0, -additivePaths.length),
+    'Unexpected native predecessor chain',
+  );
+  for (const path of additivePaths) {
+    console.log(sql(readCandidateMigration(root, path)).trim());
+  }
   runPnpm([
     'exec',
     'supabase',
@@ -85,7 +90,7 @@ async function resetAndExtend(runPnpm) {
     '--local',
     '--status',
     'applied',
-    versionOf(addition),
+    ...additivePaths.map(versionOf),
   ]);
   assert.deepEqual(applied(), versions, 'Unexpected native extended chain');
 
@@ -97,5 +102,5 @@ async function resetAndExtend(runPnpm) {
 }
 
 // Run the original F011 suite against the same native Auth/Storage/DB stack
-// after its sealed reset and the F012 addition have both executed.
+// after its sealed reset and all bound F012 additions have executed.
 await runFeature011NativeSupabaseTests({ reset: resetAndExtend });
