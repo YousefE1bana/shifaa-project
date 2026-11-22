@@ -745,6 +745,9 @@ async function runContextWriterOrder(
   } else if (focusedWriters === 'appointmentCancellation') {
     const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
     cases = [appointmentCancellationWriter(db, fixture)];
+  } else if (focusedWriters === 'queueCall') {
+    const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
+    cases = [queueCallWriter(db, fixture)];
   } else if (focusedWriters === 'recoveryRestriction') {
     cases = [recoveryRestrictionWriter(db, patientPerson)];
   } else if (focusedWriters === 'allergyVerification') {
@@ -1264,31 +1267,42 @@ function seedEncounterWriter(db, { patientPerson, clinician, unrelated }) {
   };
 }
 
-function encounterWriterContext(action) {
+function encounterWriterContext(action, purpose = 'appointment.scheduling') {
   const request = randomUUID();
   return `SET LOCAL shifaa.environment = 'local';
     SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
     SET LOCAL shifaa.actor_role = 'CLN';
     SET LOCAL shifaa.action = '${action}';
     SET LOCAL shifaa.aal = '2';
-    SET LOCAL shifaa.purposes = 'appointment.scheduling';
+    SET LOCAL shifaa.purposes = '${purpose}';
     SET LOCAL shifaa.request_id = '${request}';
     SET LOCAL shifaa.trace_id = '${request}';
     SET LOCAL shifaa.idempotency_key = '${randomUUID()}';
     SET LOCAL shifaa.request_hash = '${'b'.repeat(64)}';`;
 }
 
-function appointmentCancellationWriter(db, { facility, schedule, patientPerson, clinician }) {
+function standaloneAppointment(db, { facility, schedule, patientPerson, clinician }) {
   const appointment = randomUUID();
   const seed = observedSql(
     db,
-    `BEGIN;
-    INSERT INTO clinical.appointments
+    `INSERT INTO clinical.appointments
       (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
        civil_date,local_start,fee_minor_units,currency_code,payment_method,status,created_by_person_id,updated_by_person_id)
     VALUES ('${appointment}','${patientPerson}','${facility}','${clinician}','${schedule}',
       '2030-04-06T07:00:00Z','2030-04-06T07:30:00Z','Africa/Cairo','2030-04-06','09:00',100,'EGP',
-      'cash_on_arrival','confirmed','${clinician}','${clinician}');
+      'cash_on_arrival','confirmed','${clinician}','${clinician}');`,
+  );
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^INSERT 0 1$/m);
+  return appointment;
+}
+
+function appointmentCancellationWriter(db, fixture) {
+  const { clinician } = fixture;
+  const appointment = standaloneAppointment(db, fixture);
+  const seed = observedSql(
+    db,
+    `BEGIN;
     SET LOCAL shifaa.environment = 'local';
     SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
     -- Initialize the synthetic audit partition before racing the installed writer.
@@ -1319,6 +1333,53 @@ function appointmentCancellationWriter(db, { facility, schedule, patientPerson, 
       FROM clinical.appointments a WHERE a.id = '${appointment}';`,
     before: 'confirmed|1|f|0|0|0\n',
     after: 'cancelled|2|t|1|1|1\n',
+  };
+}
+
+function queueCallWriter(db, fixture) {
+  const { facility, clinician } = fixture;
+  const appointment = standaloneAppointment(db, fixture);
+  const scope = randomUUID();
+  const queue = randomUUID();
+  const seed = observedSql(
+    db,
+    `BEGIN;
+    UPDATE clinical.appointments SET status = 'checked_in' WHERE id = '${appointment}';
+    INSERT INTO clinical.queue_scopes(id,facility_id,doctor_person_id,civil_date,timezone_name)
+      VALUES ('${scope}','${facility}','${clinician}','2030-04-06','Africa/Cairo');
+    INSERT INTO clinical.queue_entries
+      (id,queue_scope_id,appointment_id,facility_id,doctor_person_id,civil_date,queue_number,state,waiting_order)
+      VALUES ('${queue}','${scope}','${appointment}','${facility}','${clinician}',
+        '2030-04-06',1,'waiting',1);
+    SET LOCAL shifaa.environment = 'local';
+    SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+    SELECT event_id FROM audit.append_event_v1(
+      '${randomUUID()}', '${randomUUID()}', 'queue.entry.called', 'queue_entry', 'success',
+      p_actor_person_id => '${clinician}', p_resource_id => '${randomUUID()}');
+    COMMIT;`,
+  );
+  receipt.participatingWriters.queueCallFixture = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  return {
+    name: 'F010 independent queue entry call',
+    actor: clinician,
+    write: `${encounterWriterContext('queue.manage', 'queue.operation')}
+      SELECT 'called', result->>'state', result->>'version'
+        FROM clinical.call_queue_entry_v1('${queue}',1) AS result;`,
+    written: /^called\|called\|2$/m,
+    deniedExit: 3,
+    denied: /42501:.*clinic facility, membership, or licence scope denied/,
+    state: `SELECT q.state, q.version, q.called_at IS NOT NULL, q.waiting_order IS NOT NULL,
+      (SELECT count(*) FROM platform.idempotency_records
+        WHERE resource_id = q.id AND route_template = '/v1/queue-entries/{queueEntryId}/call'
+          AND state = 'completed'),
+      (SELECT count(*) FROM audit.events
+        WHERE resource_id = q.id AND action_code = 'queue.entry.called'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = q.id AND event_type = 'clinical.queue.changed.v1')
+      FROM clinical.queue_entries q WHERE q.id = '${queue}';`,
+    before: 'waiting|1|f|t|0|0|0\n',
+    after: 'called|2|t|f|1|1|1\n',
   };
 }
 
@@ -1911,6 +1972,7 @@ async function admit() {
     ['--participating-encounter-participant', 'encounterParticipant'],
     ['--participating-encounter-completion', 'encounterCompletion'],
     ['--participating-appointment-cancellation', 'appointmentCancellation'],
+    ['--participating-queue-call', 'queueCall'],
     ['--participating-workforce-termination', 'workforceTermination'],
     ['--participating-recovery-restriction', 'recoveryRestriction'],
   ]).get(onlyArgument);
