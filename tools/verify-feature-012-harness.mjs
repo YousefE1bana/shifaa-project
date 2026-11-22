@@ -721,6 +721,17 @@ async function runContextWriterOrder(
   assert.equal(rows.length, 3);
   for (const row of rows) assert.match(row, /^[\da-f-]{36}\|[\da-f-]{36}$/);
   const [[patientPerson, patient], [delegate], [unrelated]] = rows.map((row) => row.split('|'));
+  if (focusedWriters === 'allergy') {
+    // Onboarding creates a pending profile. F011 self-reporting needs an active person.
+    const activated = observedSql(
+      db,
+      `UPDATE identity.people SET profile_status = 'active'
+       WHERE id = '${patientPerson}' AND profile_status = 'pending';`,
+    );
+    receipt.participatingWriters.allergyFixtureActivation = activated;
+    assert.equal(activated.exit, 0, activated.stderr);
+    assert.match(activated.stdout, /^UPDATE 1$/m);
+  }
   const context = (person) => `SET LOCAL shifaa.person_id = '${person}';
     SET LOCAL shifaa.actor_role = 'PAT'; SET LOCAL shifaa.aal = '1';
     SET LOCAL shifaa.purposes = 'family_support';`;
