@@ -380,10 +380,21 @@ function runAtomicity(db) {
   assert.equal(observed.exit, 0, 'T016 SQL fixture');
 }
 
+const writerFixtureDeployment = '01000000-0000-4000-8000-000000000001';
+const writerFixtureEpoch = '02000000-0000-4000-8000-000000000001';
+
+function seedWriterAdmission(db) {
+  sql(
+    db,
+    `INSERT INTO platform.f012_source_admission
+    VALUES ('${writerFixtureDeployment}', '${writerFixtureEpoch}');`,
+  );
+}
+
 async function sourceFenceLockConflict(db) {
-  const deployment = '01000000-0000-4000-8000-000000000001';
-  const epoch = '02000000-0000-4000-8000-000000000001';
-  sql(db, `INSERT INTO platform.f012_source_admission VALUES ('${deployment}', '${epoch}');`);
+  const deployment = writerFixtureDeployment;
+  const epoch = writerFixtureEpoch;
+  seedWriterAdmission(db);
   receipt.lockTrials = [];
   for (const write of [false, true]) {
     const args = observeSqlCommand(db);
@@ -474,9 +485,9 @@ async function sourceFenceLockConflict(db) {
   }
 }
 
-async function runOnboardingWriterOrder(db) {
-  const deployment = '01000000-0000-4000-8000-000000000001';
-  const epoch = '02000000-0000-4000-8000-000000000001';
+async function runOnboardingWriterOrder(db, familyWriters) {
+  const deployment = writerFixtureDeployment;
+  const epoch = writerFixtureEpoch;
   const firstSubject = '74120000-0000-4000-8000-000000000001';
   const secondSubject = '74120000-0000-4000-8000-000000000002';
   const deniedSubject = '74120000-0000-4000-8000-000000000003';
@@ -591,6 +602,25 @@ async function runOnboardingWriterOrder(db) {
     }
   }
 
+  if (familyWriters) {
+    seedWriterAdmission(db);
+    results.familyAndConsent = [];
+    await runFamilyAndConsentWriterOrder(db, results.familyAndConsent, {
+      admission,
+      onboard,
+      contend,
+      hold,
+      backendPid,
+      expectTimeout,
+    });
+    assert.deepEqual(
+      results.familyAndConsent.flatMap(({ failedOrderings }) => failedOrderings),
+      [],
+      'T012 family and consent writers must serialize with rank-zero admission',
+    );
+    return;
+  }
+
   results.initial = [firstSubject, secondSubject, deniedSubject].map(identity);
   for (const observation of results.initial) expectIdentity(observation, '0|0|0');
   results.nonCoreApi = contend(onboard(deniedSubject), 'authenticated');
@@ -662,6 +692,162 @@ async function runOnboardingWriterOrder(db) {
   assert.match(results.successAfterRelease.stdout, /^onboarded\|1$/m);
   results.committed = identity(firstSubject);
   expectIdentity(results.committed, '1|1|1');
+}
+
+async function runFamilyAndConsentWriterOrder(
+  db,
+  results,
+  { admission, onboard, contend, hold, backendPid, expectTimeout },
+) {
+  const prefix = '74120000-0000-4000-8000-0000000000';
+  const ownerSubject = prefix + '11';
+  const delegateSubject = prefix + '12';
+  const unrelatedSubject = prefix + '13';
+  for (const subject of [ownerSubject, delegateSubject, unrelatedSubject]) {
+    const result = contend(onboard(subject));
+    assert.equal(result.exit, 0, result.stderr);
+    assert.match(result.stdout, /^onboarded\|1$/m);
+  }
+  const identities = observedSql(
+    db,
+    `SELECT person.id, patient.id
+    FROM identity.people person JOIN identity.patients patient ON patient.person_id = person.id
+    WHERE person.user_id IN ('${ownerSubject}', '${delegateSubject}', '${unrelatedSubject}')
+    ORDER BY person.user_id;`,
+  );
+  assert.equal(identities.exit, 0, identities.stderr);
+  const rows = identities.stdout.trim().split('\n');
+  assert.equal(rows.length, 3);
+  for (const row of rows) assert.match(row, /^[\da-f-]{36}\|[\da-f-]{36}$/);
+  const [[patientPerson, patient], [delegate], [unrelated]] = rows.map((row) => row.split('|'));
+  const context = (person) => `SET LOCAL shifaa.person_id = '${person}';
+    SET LOCAL shifaa.actor_role = 'PAT'; SET LOCAL shifaa.aal = '1';
+    SET LOCAL shifaa.purposes = 'family_support';`;
+  const relationship = prefix + '14';
+  const granted = prefix + '15';
+  const withdrawn = prefix + '16';
+  const seed = contend(`${context(patientPerson)}
+    INSERT INTO identity.care_relationships
+      (id,subject_patient_id,actor_person_id,relationship_type,status,purpose_code,
+       valid_from,valid_until,created_by_person_id,invite_token_digest,invite_key_version,invite_expires_at)
+    VALUES ('${relationship}','${patient}','${delegate}','delegation','pending','family_support',
+            now(),now()+interval '1 year','${patientPerson}',decode(repeat('aa',32),'hex'),
+            1,now()+interval '1 day');
+    INSERT INTO identity.care_relationship_permissions
+      (relationship_id,permission_code,created_by_person_id)
+    VALUES ('${relationship}','record.view','${patientPerson}');
+    ${context(delegate)}
+    UPDATE identity.care_relationships
+      SET status = 'active', invite_token_digest = NULL, invite_expires_at = NULL, invite_consumed_at = now()
+      WHERE id = '${relationship}' AND version = 1;`);
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^UPDATE 1$/m);
+
+  const seedConsent = contend(`${context(patientPerson)}
+    INSERT INTO consent.records
+      (id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,occurred_at)
+    VALUES ('${granted}','${patientPerson}','care_updates','1.0.0','granted','patient_app','1.0.0',now());`);
+  assert.equal(seedConsent.exit, 0, seedConsent.stderr);
+  const cases = [
+    {
+      name: 'family delegation revocation',
+      write: `UPDATE identity.care_relationships SET status = 'revoked',
+        revoked_by_person_id = '${patientPerson}', revoked_at = now()
+        WHERE id = '${relationship}' AND version = 2;`,
+      written: /^UPDATE 1$/m,
+      deniedExit: 0,
+      denied: /^UPDATE 0$/m,
+      state: `SELECT status, version FROM identity.care_relationships WHERE id = '${relationship}';`,
+      before: 'active|2\n',
+      after: 'revoked|3\n',
+    },
+    {
+      name: 'consent withdrawal append',
+      write: `INSERT INTO consent.records
+        (id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,
+         occurred_at,supersedes_id,version)
+        VALUES ('${withdrawn}','${patientPerson}','care_updates','1.0.0','withdrawn','patient_app',
+                '1.0.0',now(),'${granted}',2);`,
+      written: /^INSERT 0 1$/m,
+      deniedExit: 3,
+      denied: /42501:.*row-level security/,
+      state: `SELECT decision, version FROM consent.records
+        WHERE id IN ('${granted}', '${withdrawn}') ORDER BY version;`,
+      before: 'granted|1\n',
+      after: 'granted|1\nwithdrawn|2\n',
+    },
+  ];
+  const admissionControl = await hold(admission, (holder) => ({
+    holder,
+    contender: contend(admission),
+  }));
+  expectTimeout(admissionControl.contender);
+  assert.notEqual(
+    backendPid(admissionControl.holder, 'holder'),
+    backendPid(admissionControl.contender.stdout, 'contender'),
+  );
+  receipt.participatingWriters.familyAndConsentAdmissionControl = admissionControl;
+  for (const test of cases) {
+    const state = () => observedSql(db, test.state);
+    const write = context(patientPerson) + test.write;
+    const initial = state();
+    assert.equal(initial.exit, 0, initial.stderr);
+    assert.equal(initial.stdout, test.before);
+    const unrelatedWriter = contend(context(unrelated) + test.write);
+    assert.equal(unrelatedWriter.exit, test.deniedExit);
+    assert.match(unrelatedWriter.stdout + unrelatedWriter.stderr, test.denied);
+    assert.deepEqual(state(), initial);
+
+    const writerFirst = await hold(write, (holder) => ({
+      holder,
+      contender: contend(admission),
+      visible: state(),
+    }));
+    assert.match(writerFirst.holder, test.written);
+    assert.deepEqual(writerFirst.visible, initial);
+    assert.deepEqual(state(), initial);
+    const admissionFirst = await hold(admission, (holder) => ({
+      holder,
+      contender: contend(write),
+      visible: state(),
+    }));
+
+    const failedOrderings = [];
+    for (const [order, trial] of Object.entries({ writerFirst, admissionFirst })) {
+      assert.notEqual(
+        backendPid(trial.holder, 'holder'),
+        backendPid(trial.contender.stdout, 'contender'),
+      );
+      if (trial.contender.exit === 3) {
+        expectTimeout(trial.contender);
+      } else {
+        assert.equal(trial.contender.exit, 0, trial.contender.stderr);
+        failedOrderings.push(order);
+      }
+    }
+    const wasBlocked = admissionFirst.contender.exit === 3;
+    if (!wasBlocked) assert.match(admissionFirst.contender.stdout, test.written);
+    assert.equal(admissionFirst.visible.exit, 0, admissionFirst.visible.stderr);
+    assert.equal(admissionFirst.visible.stdout, wasBlocked ? test.before : test.after);
+    const retry = wasBlocked ? contend(write) : null;
+    if (retry) {
+      assert.equal(retry.exit, 0, retry.stderr);
+      assert.match(retry.stdout, test.written);
+    }
+    const committed = state();
+    assert.equal(committed.exit, 0, committed.stderr);
+    assert.equal(committed.stdout, test.after);
+    results.push({
+      name: test.name,
+      unrelatedWriter,
+      initial,
+      writerFirst,
+      admissionFirst,
+      retry,
+      committed,
+      failedOrderings,
+    });
+  }
 }
 
 async function runRecoveryWorkerOrder(db, { admission, onboard, contend, hold, backendPid }) {
@@ -1164,8 +1350,10 @@ function sourceFence(db, red, upgrade) {
 async function admit() {
   const argumentsList = process.argv.slice(2);
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
+  const familyWriters =
+    argumentsList.length === 1 && argumentsList[0] === '--participating-family-writers';
   const participatingWriters =
-    argumentsList.length === 1 && argumentsList[0] === '--participating-writers';
+    familyWriters || (argumentsList.length === 1 && argumentsList[0] === '--participating-writers');
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
   const sqlOnly =
@@ -1227,17 +1415,17 @@ async function admit() {
         runAtomicity(source);
       } else {
         sourceFence(source, redOnly, upgrade || participatingWriters);
-        if (!redOnly) {
+        if (!redOnly && !familyWriters) {
           await sourceFenceLockConflict(source);
           sourceFenceRawBypass(source);
           sourceFenceDurability(source);
           sourceFencePrivilegeNegatives(source);
           sourceFenceScopeNegatives(source);
           sourceFenceRlsNegatives(source);
-          if (participatingWriters) {
-            stage = 'T012 participating writers against the disposable migrated database';
-            await runOnboardingWriterOrder(source);
-          }
+        }
+        if (participatingWriters) {
+          stage = 'T012 participating writers against the disposable migrated database';
+          await runOnboardingWriterOrder(source, familyWriters);
         }
       }
     } finally {
@@ -1251,11 +1439,13 @@ async function admit() {
     }
     receipt.status = atomicity
       ? 'EXECUTED_ATOMICITY_SQL'
-      : participatingWriters
-        ? 'PASS_T012_ONBOARDING_WRITER_SQL'
-        : redOnly
-          ? 'EXPECTED_RED_SOURCE_FENCE'
-          : 'PASS_SOURCE_FENCE_SQL';
+      : familyWriters
+        ? 'PASS_T012_FAMILY_AND_CONSENT_WRITER_SQL'
+        : participatingWriters
+          ? 'PASS_T012_ONBOARDING_WRITER_SQL'
+          : redOnly
+            ? 'EXPECTED_RED_SOURCE_FENCE'
+            : 'PASS_SOURCE_FENCE_SQL';
     return;
   }
   const db = startDatabase('db', networkId);
