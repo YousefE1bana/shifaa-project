@@ -738,8 +738,16 @@ async function runContextWriterOrder(
   let cases;
   if (focusedWriters === 'allergy') {
     cases = [allergyInsertWriter(patient)];
-  } else if (focusedWriters === 'encounterParticipant') {
-    cases = [encounterParticipantWriter(db, { patientPerson, clinician: delegate, unrelated })];
+  } else if (
+    focusedWriters === 'encounterParticipant' ||
+    focusedWriters === 'encounterCompletion'
+  ) {
+    const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
+    cases = [
+      focusedWriters === 'encounterCompletion'
+        ? encounterCompletionWriter(db, fixture)
+        : encounterParticipantWriter(fixture),
+    ];
   } else {
     cases = familyAndConsentWriters(contend, context, { patientPerson, patient, delegate, prefix });
   }
@@ -933,7 +941,7 @@ function allergyInsertWriter(patient) {
   };
 }
 
-function encounterParticipantWriter(db, { patientPerson, clinician, unrelated }) {
+function seedEncounterWriter(db, { patientPerson, clinician, unrelated }) {
   const facility = randomUUID();
   const licence = randomUUID();
   const schedule = randomUUID();
@@ -980,7 +988,24 @@ function encounterParticipantWriter(db, { patientPerson, clinician, unrelated })
   receipt.participatingWriters.encounterFixture = seed;
   assert.equal(seed.exit, 0, seed.stderr);
   assert.match(seed.stdout, /^INSERT 0 2\nCOMMIT\n$/m);
+  return { appointment, encounter, facility, clinician, unrelated, starts };
+}
+
+function encounterWriterContext(action) {
   const request = randomUUID();
+  return `SET LOCAL shifaa.environment = 'local';
+    SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+    SET LOCAL shifaa.actor_role = 'CLN';
+    SET LOCAL shifaa.action = '${action}';
+    SET LOCAL shifaa.aal = '2';
+    SET LOCAL shifaa.purposes = 'appointment.scheduling';
+    SET LOCAL shifaa.request_id = '${request}';
+    SET LOCAL shifaa.trace_id = '${request}';
+    SET LOCAL shifaa.idempotency_key = '${randomUUID()}';
+    SET LOCAL shifaa.request_hash = '${'b'.repeat(64)}';`;
+}
+
+function encounterParticipantWriter({ encounter, clinician, unrelated, starts }) {
   const payload = JSON.stringify({
     participantIntervalsEnd: [
       { personId: unrelated, roleCode: 'consulting_clinician', startedAt: starts },
@@ -989,16 +1014,7 @@ function encounterParticipantWriter(db, { patientPerson, clinician, unrelated })
   return {
     name: 'F010 encounter participant interval closure',
     actor: clinician,
-    write: `SET LOCAL shifaa.environment = 'local';
-      SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
-      SET LOCAL shifaa.actor_role = 'CLN';
-      SET LOCAL shifaa.action = 'updateEncounter';
-      SET LOCAL shifaa.aal = '2';
-      SET LOCAL shifaa.purposes = 'appointment.scheduling';
-      SET LOCAL shifaa.request_id = '${request}';
-      SET LOCAL shifaa.trace_id = '${request}';
-      SET LOCAL shifaa.idempotency_key = '${randomUUID()}';
-      SET LOCAL shifaa.request_hash = '${'b'.repeat(64)}';
+    write: `${encounterWriterContext('updateEncounter')}
       SELECT 'updated', clinical.update_encounter_api_v1('${encounter}',1,'${payload}'::jsonb)->>'version';`,
     written: /^updated\|2$/m,
     deniedExit: 3,
@@ -1010,6 +1026,50 @@ function encounterParticipantWriter(db, { patientPerson, clinician, unrelated })
       WHERE encounter.id = '${encounter}' AND participant.person_id = '${unrelated}';`,
     before: '1|1|f|0\n',
     after: '2|2|t|1\n',
+  };
+}
+
+function encounterCompletionWriter(db, { appointment, encounter, facility, clinician, starts }) {
+  const scope = randomUUID();
+  const queue = randomUUID();
+  const seed = observedSql(
+    db,
+    `BEGIN;
+      INSERT INTO clinical.queue_scopes(id,facility_id,doctor_person_id,civil_date,timezone_name)
+        VALUES ('${scope}','${facility}','${clinician}','2030-04-05','Africa/Cairo');
+      INSERT INTO clinical.queue_entries
+        (id,queue_scope_id,appointment_id,facility_id,doctor_person_id,civil_date,queue_number,state,called_at)
+        VALUES ('${queue}','${scope}','${appointment}','${facility}','${clinician}',
+          '2030-04-05',1,'in_service','${starts}');
+      COMMIT;`,
+  );
+  receipt.participatingWriters.queueFixture = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  return {
+    name: 'F010 encounter, appointment and queue completion',
+    actor: clinician,
+    write: `${encounterWriterContext('completeEncounter')}
+      SELECT 'completed', result->'encounter'->>'status', result->>'appointmentStatus',
+        result->>'queueStatus'
+      FROM clinical.complete_encounter_api_v1('${encounter}',1,
+        '{"summary":"Synthetic completion","structuralConfirmation":true}'::jsonb) AS result;`,
+    written: /^completed\|completed\|completed\|completed$/m,
+    deniedExit: 3,
+    denied: /P0002:.*encounter was not found/,
+    state: `SELECT encounter.status, encounter.version, appointment.status, queue.state,
+      (SELECT count(*) FROM platform.idempotency_records
+        WHERE resource_id = encounter.id AND route_template = '/v1/encounters/{encounterId}/complete'
+          AND state = 'completed'),
+      (SELECT count(*) FROM audit.events
+        WHERE resource_id = encounter.id AND action_code = 'encounter.completed'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = encounter.id AND event_type = 'clinical.encounter.completed.v1')
+      FROM clinical.encounters encounter
+      JOIN clinical.appointments appointment ON appointment.id = encounter.appointment_id
+      JOIN clinical.queue_entries queue ON queue.appointment_id = appointment.id
+      WHERE encounter.id = '${encounter}';`,
+    before: 'open|1|in_consultation|in_service|0|0|0\n',
+    after: 'completed|2|completed|completed|1|1|1\n',
   };
 }
 
@@ -1518,6 +1578,7 @@ async function admit() {
     ['--participating-family-writers', 'familyAndConsent'],
     ['--participating-allergy-writer', 'allergy'],
     ['--participating-encounter-participant', 'encounterParticipant'],
+    ['--participating-encounter-completion', 'encounterCompletion'],
   ]).get(onlyArgument);
   const participatingWriters =
     Boolean(focusedWriters) || onlyArgument === '--participating-writers';
