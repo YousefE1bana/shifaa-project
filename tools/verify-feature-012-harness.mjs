@@ -584,7 +584,7 @@ async function observeNativeLockConflict(db, relation, reader, mutation, trial) 
   assert.match(released.stdout, /^ROLLBACK$/m);
 }
 
-async function withNativeFixtureLock(db, statement, trial, exercise) {
+async function withNativeFixtureLock(db, statement, trial, exercise, role = 'supabase_auth_admin') {
   const args = observeSqlCommand(db);
   const holder = spawn(hostExecutable('docker', settings.options.env), args, {
     ...settings.options,
@@ -607,7 +607,7 @@ async function withNativeFixtureLock(db, statement, trial, exercise) {
     holder.stdin.write(`BEGIN;
       SET LOCAL idle_in_transaction_session_timeout = '20s';
       SET LOCAL statement_timeout = '3s';
-      SET SESSION AUTHORIZATION supabase_auth_admin;
+      SET SESSION AUTHORIZATION ${role};
       SELECT 'holder', pg_backend_pid();
       ${statement}
       \\echo T010_NATIVE_FIXTURE_READY
@@ -1098,7 +1098,7 @@ function applySealedF011(db) {
   }
 }
 
-function nativeRetainedGuardTrials(db, fixtures) {
+async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
   applySealedF011(db);
   const result = (receipt.nativeRetainedGuard = { migrations: [], cases: {} });
   for (const path of [
@@ -1139,23 +1139,29 @@ function nativeRetainedGuardTrials(db, fixtures) {
   assert.ok(person && otherPerson && instance, 'Expected exact native instance and both mappings');
 
   const admission = `SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', false);`;
-  const context = (actorPerson, profile = 'PAT') => `
+  const facility = randomUUID();
+  const context = (actorPerson, role = 'PAT', aal = 1) => `
     SET LOCAL shifaa.person_id = '${actorPerson}';
     SET LOCAL shifaa.principal = '${fixture.subject}';
     SET LOCAL shifaa.session_id = '${fixture.session}';
-    SET LOCAL shifaa.aal = '1';
-    SET LOCAL shifaa.actor_role = '${profile}';
+    SET LOCAL shifaa.aal = '${aal}';
+    SET LOCAL shifaa.actor_role = '${role}';
     SET LOCAL shifaa.action = 'getPrescription';
+    SET LOCAL shifaa.facility_id = '${role === 'PAT' ? '' : facility}';
     SET LOCAL shifaa.purposes = 'synthetic.feature012';`;
   const guard = ({
     actorPerson = person,
     nativeInstance = instance,
     nativeSession = fixture.session,
     expiresAt = 'floor(extract(epoch from clock_timestamp()))::bigint + 60',
+    aal = 1,
+    totpAt = 'NULL',
+    profile = 'subject_projection_read',
   } = {}) => `SELECT platform.f012_retain_native_authority_v1(
       '${deployment}', '${epoch}', '${nativeInstance}', '${fixture.subject}',
-      '${nativeSession}', '${actorPerson}', 1, ${expiresAt}, NULL,
-      'subject_projection_read', 'getPrescription', NULL, 'synthetic.feature012', NULL
+      '${nativeSession}', '${actorPerson}', ${aal}, ${expiresAt}, ${totpAt},
+      '${profile}', 'getPrescription',
+      ${profile === 'workforce_sensitive' ? "'" + facility + "'" : 'NULL'}, 'synthetic.feature012', NULL
     );`;
   function execute(name, statement, expected = null, role = 'shifaa_api') {
     const observed = observedSql(
@@ -1163,6 +1169,7 @@ function nativeRetainedGuardTrials(db, fixtures) {
       `\\set VERBOSITY verbose
         BEGIN; SET SESSION AUTHORIZATION ${role};
         SET LOCAL lock_timeout = '500ms'; SET LOCAL statement_timeout = '3s';
+        SELECT 'contender', pg_backend_pid();
         ${statement}
         COMMIT;`,
     );
@@ -1174,6 +1181,7 @@ function nativeRetainedGuardTrials(db, fixtures) {
       assert.equal(observed.exit, 0, observed.stderr);
       assert.match(observed.stdout, /^COMMIT$/m);
     }
+    return observed;
   }
   const denied = /42501:/;
   execute('current subject at AAL1', admission + context(person) + guard());
@@ -1224,6 +1232,62 @@ function nativeRetainedGuardTrials(db, fixtures) {
   execute('Core API cannot assume executor role', 'SET ROLE shifaa_f012_native_executor;', denied);
   execute('Core API cannot read Auth users', 'SELECT id FROM auth.users;', denied);
   execute('Core API cannot read Auth sessions', 'SELECT id FROM auth.sessions;', denied);
+  const patientRead = admission + context(person) + guard();
+  const timeout = /55P03:.*lock timeout/;
+  result.locks = {};
+  for (const [relation, write] of [
+    [
+      'users',
+      `UPDATE auth.users SET banned_until = clock_timestamp() + interval '1 minute' WHERE id = '${fixture.subject}';`,
+    ],
+    [
+      'sessions',
+      `UPDATE auth.sessions SET not_after = clock_timestamp() WHERE id = '${fixture.session}';`,
+    ],
+  ]) {
+    const evidence = (result.locks[relation] = { guardFirst: {}, writerFirst: {} });
+    const proveConflict = (name, statement, role, pid) => {
+      const contender = execute(name, statement, timeout, role);
+      assert.match(contender.stderr, new RegExp('relation "' + relation + '"'));
+      assert.notEqual(contender.stdout.match(/^contender\|(\d+)$/m)?.[1], pid);
+    };
+    await withNativeFixtureLock(
+      db,
+      patientRead,
+      evidence.guardFirst,
+      (pid) =>
+        proveConflict(`guard-first ${relation} writer waits`, write, 'supabase_auth_admin', pid),
+      'shifaa_api',
+    );
+    await withNativeFixtureLock(db, write, evidence.writerFirst, (pid) =>
+      proveConflict(`writer-first ${relation} guard waits`, patientRead, 'shifaa_api', pid),
+    );
+    execute(`fresh retry after ${relation} rollback`, patientRead);
+  }
+
+  result.mfa = JSON.parse(
+    exec(probe, ['node', '-', 'prepare-native-mutation', 'downgrade'], { input: source }),
+  );
+  assert.equal(result.mfa[0].verifiedAal, 'aal2');
+  const workforce = (totpAt) =>
+    admission +
+    context(person, 'CLN', 2) +
+    guard({ aal: 2, profile: 'workforce_sensitive', totpAt });
+  const seconds = 'floor(extract(epoch from statement_timestamp()))::bigint';
+  execute('native AAL2 with recent TOTP', workforce(seconds + ' - 120'));
+  execute('workforce without qualifying TOTP', workforce('NULL'), denied);
+  execute('workforce with stale TOTP', workforce(seconds + ' - 301'), denied);
+  execute('workforce with future TOTP', workforce(seconds + ' + 5'), denied);
+  execute('AAL1 claim no longer matches current native session', patientRead, denied);
+  result.downgrade = await startNativeMutation(probe, source, 'downgrade', 0);
+  assert.equal(result.downgrade.exit, 0, result.downgrade.stderr);
+  assert.equal(JSON.parse(result.downgrade.stdout).status, 200);
+  execute(
+    'stale workforce claim after committed native downgrade',
+    workforce(seconds + ' - 120'),
+    denied,
+  );
+  execute('current subject after committed native downgrade', patientRead);
 }
 
 function runAtomicity(db) {
@@ -1932,7 +1996,7 @@ async function runNativeAdmission({
   receipt.syntheticSessions = fixtures;
   if (nativeRetainedGuard) {
     stage = 'T011 installed NAC-1 context and privileges';
-    nativeRetainedGuardTrials(db, fixtures);
+    await nativeRetainedGuardTrials(db, probe, source, fixtures);
     return;
   }
   if (nativeMutation) {
