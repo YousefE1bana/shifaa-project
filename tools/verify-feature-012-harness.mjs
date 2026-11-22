@@ -738,6 +738,8 @@ async function runContextWriterOrder(
   let cases;
   if (focusedWriters === 'allergy') {
     cases = [allergyInsertWriter(patient)];
+  } else if (focusedWriters === 'familyGrant') {
+    cases = [familyGrantWriter(db, contend, context, { patientPerson, patient, delegate })];
   } else if (focusedWriters === 'workforceTermination') {
     cases = [workforceTerminationWriter(db, { owner: patientPerson, clinician: delegate })];
   } else if (focusedWriters === 'appointmentCancellation') {
@@ -837,6 +839,61 @@ async function runContextWriterOrder(
       failedOrderings,
     });
   }
+}
+
+function familyGrantWriter(db, contend, context, { patientPerson, patient, delegate }) {
+  const relationship = randomUUID();
+  const effect = 'relationship.delegation.accepted';
+  const seed = contend(`${context(patientPerson)}
+    INSERT INTO identity.care_relationships
+      (id,subject_patient_id,actor_person_id,relationship_type,status,purpose_code,
+       valid_from,valid_until,created_by_person_id,invite_token_digest,invite_key_version,invite_expires_at)
+    VALUES ('${relationship}','${patient}','${delegate}','delegation','pending','family_support',
+            now(),now()+interval '1 year','${patientPerson}',decode(repeat('aa',32),'hex'),
+            1,now()+interval '1 day');
+    INSERT INTO identity.care_relationship_permissions
+      (relationship_id,permission_code,created_by_person_id)
+    VALUES ('${relationship}','record.view','${patientPerson}');`);
+  receipt.participatingWriters.familyGrantInvitation = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  const audit = observedSql(
+    db,
+    `SELECT event_id FROM audit.append_event_v1(
+      '${randomUUID()}', '${randomUUID()}', '${effect}', 'family-care', 'success',
+      p_actor_person_id => '${delegate}', p_resource_id => '${randomUUID()}');`,
+  );
+  assert.equal(audit.exit, 0, audit.stderr);
+  return {
+    name: 'F004 invitee activates a pending delegation',
+    actor: delegate,
+    write: `DO $accept$
+    DECLARE accepted_version integer;
+    BEGIN
+      UPDATE identity.care_relationships
+        SET status = 'active', invite_token_digest = NULL, invite_expires_at = NULL, invite_consumed_at = now()
+        WHERE id = '${relationship}' AND version = 1
+        RETURNING version INTO accepted_version;
+      IF NOT FOUND THEN RAISE EXCEPTION 'invitation unavailable' USING ERRCODE = '42501'; END IF;
+      PERFORM platform.append_family_mutation_audit_v1(
+        '${randomUUID()}', '${effect}', '${delegate}', '${patient}', '${relationship}', accepted_version);
+      INSERT INTO platform.outbox_events(aggregate_type,aggregate_id,event_type,payload)
+        VALUES ('family-care','${relationship}','${effect}',
+          jsonb_build_object('version', accepted_version, 'status', 'active', 'permissions', jsonb_build_array('record.view')));
+      RAISE NOTICE 'delegation accepted %', accepted_version;
+    END
+    $accept$;`,
+    written: /^DO$/m,
+    deniedExit: 3,
+    denied: /42501:.*invitation unavailable/,
+    state: `SET shifaa.purposes = 'family_support';
+      SELECT r.status, r.version, r.invite_consumed_at IS NOT NULL,
+        platform.person_has_family_relationship('${patient}', '${delegate}', 'record.view'),
+        (SELECT count(*) FROM audit.events WHERE resource_id = r.id AND action_code = '${effect}'),
+        (SELECT count(*) FROM platform.outbox_events WHERE aggregate_id = r.id AND event_type = '${effect}')
+      FROM identity.care_relationships r WHERE r.id = '${relationship}';`,
+    before: 'SET\npending|1|f|f|0|0\n',
+    after: 'SET\nactive|2|t|t|1|1\n',
+  };
 }
 
 function familyAndConsentWriters(contend, context, { patientPerson, patient, delegate, prefix }) {
@@ -1848,6 +1905,7 @@ async function admit() {
   const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
   const focusedWriters = new Map([
     ['--participating-family-writers', 'familyAndConsent'],
+    ['--participating-family-grant', 'familyGrant'],
     ['--participating-allergy-writer', 'allergy'],
     ['--participating-allergy-verification', 'allergyVerification'],
     ['--participating-encounter-participant', 'encounterParticipant'],
