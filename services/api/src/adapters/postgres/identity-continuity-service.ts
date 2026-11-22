@@ -79,9 +79,12 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     context: ServerVerifiedNativeContext,
     profile: NativeAuthorityProfile,
   ): Promise<void> {
-    this.repository.requireActiveTransaction(tx);
     assertNativeAuthorityProfile(context, profile);
-    await tx`
+    await this.repository.withRawTransaction(async (active) => {
+      if (active !== tx) {
+        throw new Error('Native authority requires the active repository transaction.');
+      }
+      await active`
       select platform.f012_retain_native_authority_v1(
         ${context.deploymentId}::uuid, ${context.admissionEpoch}::uuid, ${context.instanceId}::uuid,
         ${context.subjectId}::uuid, ${context.sessionId}::uuid, ${context.personId}::uuid,
@@ -89,9 +92,10 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
         ${profile}::text, ${context.action}::text, ${context.facilityId}::uuid,
         ${context.purpose}::text, ${context.caseId}::uuid
       )`;
-    if (await this.readRestriction(tx, context.personId, context.sessionId)) {
-      throw new ApiPolicyError('access-denied', 403, 'Current authority is required.');
-    }
+      if (await this.readRestriction(active, context.personId, context.sessionId)) {
+        throw new ApiPolicyError('access-denied', 403, 'Current authority is required.');
+      }
+    });
   }
 
   public async restrictionForSession(
