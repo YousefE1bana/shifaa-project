@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "task": "T010",
+  "issue": 521,
+  "status": "OPEN_PARTIAL_NATIVE_BASELINE",
+  "verifiedAt": "2026-11-22",
+  "testedHead": "e7d7b7e6907e1622597df13656817f00cb6d6414",
+  "run": "e7017b4b-60f6-49c0-9d8b-df4b0e4203d8",
+  "method": "T002 disposable internal topology with tmpfs, no published ports or retained mounts. Pinned native GoTrue created two distinct synthetic email accounts and matching sessions. Native-owner sessions exercised raw PostgreSQL conflict behavior on those fixtures.",
+  "images": {
+    "auth": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
+    "postgres": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+  },
+  "sqlFixtureSha256": "2e345cd63a9412c2311e85d39a2c71e6285ceabac3cbcdcb94c5dbc073f5d0d2",
+  "observations": {
+    "rowLockOrder": "FOR SHARE on native user, followed by FOR SHARE on its bound session in one transaction.",
+    "conflicts": [
+      {
+        "mutation": "Native-owner user ban UPDATE",
+        "readerFirst": "55P03 on auth.users",
+        "writerFirst": "55P03 on auth.users"
+      },
+      {
+        "mutation": "Native-owner session DELETE",
+        "readerFirst": "55P03 on auth.sessions",
+        "writerFirst": "55P03 on auth.sessions"
+      }
+    ],
+    "afterRelease": "All four independent contenders succeeded with a new transaction after rollback released the holder. Both native fixture rows survived.",
+    "authTableRole": "GoTrue owns both tables as supabase_auth_admin. RLS was enabled with no FORCE and no policies on this disposable Auth baseline.",
+    "probe": "Real bound identities passed separately. Unbound forced-RLS fixture read returned zero rows. Cross-subject request was denied. The non-owner probe role has no native table access. Direct session SELECT and owner SET ROLE were denied with 42501."
+  },
+  "retainedEvidence": {
+    "relativeDirectory": "SHIFAA-Recovery/2026-11-22 under the SHIFAA engineering workstation's LOCALAPPDATA",
+    "files": [
+      {
+        "path": "t010-native-lock-primitives.json",
+        "bytes": 37557,
+        "sha256": "35d668a80da93ab9b017a7f0a1e57d08d74df87d77d28a1add223dc96d48b4d7"
+      },
+      {
+        "path": "t010-native-lock-both-orderings.json",
+        "bytes": 45939,
+        "sha256": "13401981b22f4aba121caef1d85b42982d2db828cbc964f6f42b6e160b2e8fdc"
+      },
+      {
+        "path": "t010-t002-harness-regression.json",
+        "bytes": 39872,
+        "sha256": "71f21670d9c175df766fac89b81e7dd889e4b23ba0dc512541255959435d15ea",
+        "result": "PASS_HARNESS_PROBE with separate disposable restore",
+        "run": "4d3628e6-8de7-47d9-85c8-a28a3d292617"
+      }
+    ]
+  },
+  "preservation": {
+    "containers": 12,
+    "volumes": 4,
+    "matches": true
+  },
+  "remaining": [
+    "Full pinned configuration and actual native HTTP writer concurrency for the T010 matrix",
+    "Native downgrade and recovery, expiry equality and expiry after a wait, refresh inverse order and SKIP LOCKED exhaustion",
+    "Guard-specific privilege, same-transaction context, current-authority replay and Core API integration evidence"
+  ],
+  "limits": "Native-owner SQL exercised lock primitives on real GoTrue rows. The probe role and API are isolated fixtures. Product NAC-1 guard, forced-RLS executor and bounded retry acceptance remain pending. No T011 or T013 runtime changes are included."
+}
