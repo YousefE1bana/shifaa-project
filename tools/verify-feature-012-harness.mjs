@@ -735,10 +735,14 @@ async function runContextWriterOrder(
   const context = (person) => `SET LOCAL shifaa.person_id = '${person}';
     SET LOCAL shifaa.actor_role = 'PAT'; SET LOCAL shifaa.aal = '1';
     SET LOCAL shifaa.purposes = 'family_support';`;
-  const cases =
-    focusedWriters === 'allergy'
-      ? [allergyInsertWriter(patient)]
-      : familyAndConsentWriters(contend, context, { patientPerson, patient, delegate, prefix });
+  let cases;
+  if (focusedWriters === 'allergy') {
+    cases = [allergyInsertWriter(patient)];
+  } else if (focusedWriters === 'encounterParticipant') {
+    cases = [encounterParticipantWriter(db, { patientPerson, clinician: delegate, unrelated })];
+  } else {
+    cases = familyAndConsentWriters(contend, context, { patientPerson, patient, delegate, prefix });
+  }
   const admissionControl = await hold(admission, (holder) => ({
     holder,
     contender: contend(admission),
@@ -751,7 +755,7 @@ async function runContextWriterOrder(
   receipt.participatingWriters.focusedAdmissionControl = admissionControl;
   for (const test of cases) {
     const state = () => observedSql(db, test.state);
-    const write = context(patientPerson) + test.write;
+    const write = context(test.actor ?? patientPerson) + test.write;
     const initial = state();
     assert.equal(initial.exit, 0, initial.stderr);
     assert.equal(initial.stdout, test.before);
@@ -926,6 +930,83 @@ function allergyInsertWriter(patient) {
         WHERE aggregate_id = '${allergy}' AND aggregate_type = 'clinical.allergy_revision');`,
     before: '0|0|0\n',
     after: '1|1|1\n',
+  };
+}
+
+function encounterParticipantWriter(db, { patientPerson, clinician, unrelated }) {
+  const facility = randomUUID();
+  const licence = randomUUID();
+  const schedule = randomUUID();
+  const appointment = randomUUID();
+  const encounter = randomUUID();
+  const starts = '2030-04-05T07:00:00Z';
+  const seed = observedSql(
+    db,
+    `BEGIN;
+    UPDATE identity.people SET profile_status = 'active'
+      WHERE id IN ('${patientPerson}', '${clinician}', '${unrelated}');
+    INSERT INTO identity.facilities
+      (id,facility_type,name_ar,name_en,facility_status,governorate_code,city,district,address_line,created_by_person_id)
+    VALUES ('${facility}','clinic','عيادة اختبار','Synthetic clinic','active','C','Cairo','Test','Synthetic address','${clinician}');
+    INSERT INTO identity.professional_licenses
+      (id,person_id,profession,number_ciphertext,number_hash,issuer,expires_on,status)
+    VALUES ('${licence}','${clinician}','doctor',decode(repeat('12',16),'hex'),decode(repeat('53',32),'hex'),
+      'Synthetic issuer','2035-12-31','verified');
+    INSERT INTO identity.facility_memberships
+      (facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id)
+    VALUES ('${facility}','${clinician}','doctor','${licence}','2020-01-01','active','${clinician}');
+    INSERT INTO clinical.schedules
+      (id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,
+       fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+    VALUES ('${schedule}','${facility}','${clinician}','Africa/Cairo','2030-04-01','2030-04-30',30,
+      100,'EGP','${clinician}','${clinician}');
+    INSERT INTO clinical.appointments
+      (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+       civil_date,local_start,fee_minor_units,currency_code,payment_method,status,created_by_person_id,updated_by_person_id)
+    VALUES ('${appointment}','${patientPerson}','${facility}','${clinician}','${schedule}',
+      '${starts}','2030-04-05T07:30:00Z','Africa/Cairo','2030-04-05','09:00',100,'EGP',
+      'cash_on_arrival','confirmed','${clinician}','${clinician}');
+    INSERT INTO clinical.encounters
+      (id,patient_person_id,facility_id,appointment_id,responsible_clinician_id,encounter_type,status,started_at)
+    VALUES ('${encounter}','${patientPerson}','${facility}','${appointment}','${clinician}','consultation','open','${starts}');
+    INSERT INTO clinical.encounter_participants (encounter_id,person_id,role_code,started_at) VALUES
+      ('${encounter}','${clinician}','responsible_clinician','${starts}'),
+      ('${encounter}','${unrelated}','consulting_clinician','${starts}');
+    COMMIT;`,
+  );
+  receipt.participatingWriters.encounterFixture = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^INSERT 0 2\nCOMMIT\n$/m);
+  const request = randomUUID();
+  const payload = JSON.stringify({
+    participantIntervalsEnd: [
+      { personId: unrelated, roleCode: 'consulting_clinician', startedAt: starts },
+    ],
+  });
+  return {
+    name: 'F010 encounter participant interval closure',
+    actor: clinician,
+    write: `SET LOCAL shifaa.environment = 'local';
+      SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+      SET LOCAL shifaa.actor_role = 'CLN';
+      SET LOCAL shifaa.action = 'updateEncounter';
+      SET LOCAL shifaa.aal = '2';
+      SET LOCAL shifaa.purposes = 'appointment.scheduling';
+      SET LOCAL shifaa.request_id = '${request}';
+      SET LOCAL shifaa.trace_id = '${request}';
+      SET LOCAL shifaa.idempotency_key = '${randomUUID()}';
+      SET LOCAL shifaa.request_hash = '${'b'.repeat(64)}';
+      SELECT 'updated', clinical.update_encounter_api_v1('${encounter}',1,'${payload}'::jsonb)->>'version';`,
+    written: /^updated\|2$/m,
+    deniedExit: 3,
+    denied: /P0002:.*encounter was not found/,
+    state: `SELECT encounter.version, participant.version, participant.ended_at IS NOT NULL,
+      (SELECT count(*) FROM platform.outbox_events WHERE aggregate_id = encounter.id)
+      FROM clinical.encounters encounter JOIN clinical.encounter_participants participant
+        ON participant.encounter_id = encounter.id
+      WHERE encounter.id = '${encounter}' AND participant.person_id = '${unrelated}';`,
+    before: '1|1|f|0\n',
+    after: '2|2|t|1\n',
   };
 }
 
@@ -1433,6 +1514,7 @@ async function admit() {
   const focusedWriters = new Map([
     ['--participating-family-writers', 'familyAndConsent'],
     ['--participating-allergy-writer', 'allergy'],
+    ['--participating-encounter-participant', 'encounterParticipant'],
   ]).get(onlyArgument);
   const participatingWriters =
     Boolean(focusedWriters) || onlyArgument === '--participating-writers';
