@@ -346,6 +346,118 @@ function observedSql(db, input) {
   return { exit: result.status, stdout, stderr };
 }
 
+async function nativeAuthorityBaseline(db, fixtures) {
+  const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-native-guard.sql'));
+  const catalog = observedSql(db, fixture);
+  const receiptEntry = (receipt.nativeAuthorityBaseline = {
+    fixtureSha256: createHash('sha256').update(fixture).digest('hex'),
+    catalog,
+    trials: [],
+  });
+  assert.equal(catalog.exit, 0, catalog.stderr);
+  assert.match(catalog.stdout, /^probe_nobypass_nonowner\|t$/m);
+  assert.match(catalog.stdout, /^probe_has_native_table_access\|f$/m);
+
+  // bindFixtures validated both IDs and checked the relationship in Auth.
+  const { subject, session } = fixtures[0];
+  const userRow = `SELECT 'user', count(*) FROM (
+    SELECT id FROM auth.users WHERE id = '${subject}' FOR SHARE
+  ) locked;`;
+  const sessionRow = `SELECT 'session', count(*) FROM (
+    SELECT id FROM auth.sessions WHERE id = '${session}' AND user_id = '${subject}' FOR SHARE
+  ) locked;`;
+  const reader = userRow + '\n' + sessionRow;
+  const mutations = [
+    [
+      'user ban',
+      `UPDATE auth.users SET banned_until = clock_timestamp() + interval '1 minute'
+       WHERE id = '${subject}';`,
+    ],
+    [
+      'session removal',
+      `DELETE FROM auth.sessions WHERE id = '${session}' AND user_id = '${subject}';`,
+    ],
+  ];
+  for (const [name, mutation] of mutations) {
+    const relation = name === 'user ban' ? 'users' : 'sessions';
+    for (const writerFirst of [false, true]) {
+      const trial = { name, writerFirst };
+      receiptEntry.trials.push(trial);
+      await observeNativeLockConflict(db, relation, reader, mutation, trial);
+    }
+  }
+  const intact = observedSql(db, reader);
+  receiptEntry.afterRollback = intact;
+  assert.equal(intact.exit, 0, intact.stderr);
+  assert.equal(intact.stdout, 'user|1\nsession|1\n');
+}
+
+async function observeNativeLockConflict(db, relation, reader, mutation, trial) {
+  const { writerFirst } = trial;
+  const args = observeSqlCommand(db);
+  const holder = spawn(hostExecutable('docker', settings.options.env), args, {
+    ...settings.options,
+    stdio: ['pipe', 'pipe', 'pipe'],
+  });
+  const closed = once(holder, 'close');
+  let stdout = '';
+  let stderr = '';
+  let timeout;
+  holder.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+  const contend = () =>
+    observedSql(
+      db,
+      `\\set VERBOSITY verbose
+        BEGIN;
+        SET LOCAL lock_timeout = '500ms';
+        SET LOCAL statement_timeout = '3s';
+        SET SESSION AUTHORIZATION supabase_auth_admin;
+        SELECT 'contender', pg_backend_pid(), session_user;
+        ${writerFirst ? reader : mutation}
+        ROLLBACK;`,
+    );
+  try {
+    const ready = new Promise((resolve, reject) => {
+      holder.stdout.setEncoding('utf8').on('data', (chunk) => {
+        stdout += chunk;
+        if (/^T010_HOLDER_READY$/m.test(stdout)) resolve(true);
+      });
+      holder.stdin.on('error', reject);
+      timeout = setTimeout(() => reject(new Error('Native holder did not become ready')), 10_000);
+    });
+    holder.stdin.write(`
+        BEGIN;
+        SET LOCAL idle_in_transaction_session_timeout = '15s';
+        SET LOCAL statement_timeout = '3s';
+        SET SESSION AUTHORIZATION supabase_auth_admin;
+        SELECT 'holder', pg_backend_pid(), session_user;
+        ${writerFirst ? mutation : reader}
+        \\echo T010_HOLDER_READY
+      `);
+    assert.equal(await Promise.race([ready, closed]), true, stderr);
+    trial.holder = stdout;
+    const blocked = (trial.blocked = contend());
+    assert.match(stdout, writerFirst ? /^(?:UPDATE|DELETE) 1$/m : /^user\|1\nsession\|1$/m);
+    const holderPid = stdout.match(/^holder\|(\d+)\|supabase_auth_admin$/m)?.[1];
+    const contenderPid = blocked.stdout.match(/^contender\|(\d+)\|supabase_auth_admin$/m)?.[1];
+    assert.ok(holderPid && contenderPid, 'Missing independent native backend evidence');
+    assert.notEqual(holderPid, contenderPid);
+    assert.equal(blocked.exit, 3, blocked.stdout);
+    assert.match(blocked.stderr, /55P03:.*lock timeout/);
+    assert.ok(blocked.stderr.includes('relation "' + relation + '"'), blocked.stderr);
+  } finally {
+    clearTimeout(timeout);
+    holder.stdin.end('ROLLBACK;\n');
+    const [exit] = await closed;
+    receipt.commands.push({ args, exit });
+    assert.equal(exit, 0, stderr);
+  }
+  const released = (trial.released = contend());
+  assert.equal(released.exit, 0, released.stderr);
+  assert.match(released.stdout, writerFirst ? /^user\|1\nsession\|1$/m : /^(?:UPDATE|DELETE) 1$/m);
+  assert.match(released.stdout, /^ROLLBACK$/m);
+}
+
 function applySealedF011(db) {
   assert.equal(db.network, 'none');
   const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
@@ -881,6 +993,8 @@ function sourceFence(db, red, upgrade) {
 
 async function admit() {
   const argumentsList = process.argv.slice(2);
+  const nativeBaseline =
+    argumentsList.length === 1 && argumentsList[0] === '--native-authority-baseline';
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
@@ -890,7 +1004,7 @@ async function admit() {
     upgrade ||
     (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
   assert.deepEqual(
-    sqlOnly ? [] : argumentsList,
+    sqlOnly || nativeBaseline ? [] : argumentsList,
     [],
     'This command accepts no external resource arguments',
   );
@@ -967,15 +1081,33 @@ async function admit() {
         : 'PASS_SOURCE_FENCE_SQL';
     return;
   }
+  try {
+    await runNativeAdmission(nativeBaseline);
+  } finally {
+    teardown();
+    assert.deepEqual(inventory(), before);
+    receipt.preservation = {
+      containers: before.containers.length,
+      volumes: before.volumes.length,
+      matches: true,
+    };
+  }
+  receipt.status = nativeBaseline ? 'PASS_NATIVE_LOCK_PRIMITIVES' : 'PASS_HARNESS_PROBE';
+}
+
+async function runNativeAdmission(nativeBaseline) {
   const db = startDatabase('db', networkId);
-  const restore = startDatabase('restore', 'none');
-  receipt.databaseSystems = { source: db.system, restore: restore.system };
-  trial('mismatched container binding denied', () => checkContainer({ ...db, id: restore.id }), {
-    name: 'AssertionError',
-  });
-  trial('unknown resource ID denied', () => checkContainer({ ...db, id: db.name }), {
-    name: 'AssertionError',
-  });
+  receipt.databaseSystems = { source: db.system };
+  const restore = nativeBaseline ? null : startDatabase('restore', 'none');
+  if (restore) {
+    receipt.databaseSystems.restore = restore.system;
+    trial('mismatched container binding denied', () => checkContainer({ ...db, id: restore.id }), {
+      name: 'AssertionError',
+    });
+    trial('unknown resource ID denied', () => checkContainer({ ...db, id: db.name }), {
+      name: 'AssertionError',
+    });
+  }
   if (before.containers.length) {
     trial(
       'actual retained container denied',
@@ -998,18 +1130,13 @@ async function admit() {
   bindFixtures(db, fixtures);
   receipt.syntheticSessions = fixtures;
   receipt.probe = JSON.parse(exec(probe, ['node', '-', 'probe'], { input: source }));
-  stage = 'separate restore';
-  verifyRestore(db, restore);
-  stage = 'identity-checked cleanup';
-  teardown();
-  stage = 'retained resource preservation';
-  assert.deepEqual(inventory(), before);
-  receipt.preservation = {
-    containers: before.containers.length,
-    volumes: before.volumes.length,
-    matches: true,
-  };
-  receipt.status = 'PASS_HARNESS_PROBE';
+  if (nativeBaseline) {
+    stage = 'T010 native row lock primitives';
+    await nativeAuthorityBaseline(db, fixtures);
+  } else {
+    stage = 'separate restore';
+    verifyRestore(db, restore);
+  }
 }
 
 function bindFixtures(db, fixtures) {
