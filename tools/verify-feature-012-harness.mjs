@@ -4,6 +4,7 @@ import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { once } from 'node:events';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
 import {
   dependencyInputs,
   git,
@@ -346,7 +347,7 @@ function observedSql(db, input) {
   return { exit: result.status, stdout, stderr };
 }
 
-async function nativeAuthorityBaseline(db, fixtures) {
+async function nativeAuthorityBaseline(db, probe, source, fixtures) {
   const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-native-guard.sql'));
   const catalog = observedSql(db, fixture);
   const receiptEntry = (receipt.nativeAuthorityBaseline = {
@@ -390,6 +391,85 @@ async function nativeAuthorityBaseline(db, fixtures) {
   receiptEntry.afterRollback = intact;
   assert.equal(intact.exit, 0, intact.stderr);
   assert.equal(intact.stdout, 'user|1\nsession|1\n');
+  receiptEntry.localLogout = {};
+  await observeNativeLogout(db, probe, source, reader, receiptEntry.localLogout);
+}
+
+async function observeNativeLogout(db, probe, source, reader, observation) {
+  const holderArgs = observeSqlCommand(db);
+  assert.equal(checkContainer(probe).State.Running, true);
+  const cli = hostExecutable('docker', settings.options.env);
+  const holder = spawn(cli, holderArgs, { ...settings.options, stdio: ['pipe', 'pipe', 'pipe'] });
+  const holderClosed = once(holder, 'close');
+  let holderOutput = '';
+  let holderError = '';
+  let readyTimeout;
+  let logout;
+  holder.stderr.setEncoding('utf8').on('data', (chunk) => (holderError += chunk));
+  try {
+    const ready = new Promise((resolve, reject) => {
+      holder.stdout.setEncoding('utf8').on('data', (chunk) => {
+        holderOutput += chunk;
+        if (/^T010_LOGOUT_READY$/m.test(holderOutput)) resolve(true);
+      });
+      holder.stdin.on('error', reject);
+      readyTimeout = setTimeout(() => reject(new Error('Logout holder did not start')), 10_000);
+    });
+    holder.stdin.write(`BEGIN;
+      SET LOCAL idle_in_transaction_session_timeout = '15s';
+      SET SESSION AUTHORIZATION supabase_auth_admin;
+      SELECT 'holder', pg_backend_pid();
+      ${reader}
+      \\echo T010_LOGOUT_READY
+    `);
+    assert.equal(await Promise.race([ready, holderClosed]), true, holderError);
+    assert.match(holderOutput, /^user\|1\nsession\|1$/m);
+    const holderPid = holderOutput.match(/^holder\|(\d+)$/m)?.[1];
+    assert.ok(holderPid);
+    observation.holder = holderOutput;
+
+    const args = [...settings.prefix, 'exec', '-i', probe.id, 'node', '-', 'local-logout'];
+    const request = spawn(cli, args, { ...settings.options, stdio: ['pipe', 'pipe', 'pipe'] });
+    let stdout = '';
+    let stderr = '';
+    request.stdout.setEncoding('utf8').on('data', (chunk) => (stdout += chunk));
+    request.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+    logout = once(request, 'close').then(([exit]) => {
+      receipt.commands.push({ args, exit });
+      return { exit, stdout, stderr };
+    });
+    request.stdin.on('error', () => request.kill());
+    request.stdin.end(source);
+
+    const deadline = Date.now() + 2_000;
+    while (Date.now() < deadline) {
+      const wait = observedSql(
+        db,
+        `SELECT pid, usename, wait_event_type FROM pg_stat_activity
+        WHERE usename = 'supabase_auth_admin' AND ${holderPid} = ANY(pg_blocking_pids(pid));`,
+      );
+      assert.equal(wait.exit, 0, wait.stderr);
+      if (wait.stdout) {
+        assert.match(wait.stdout, /^\d+\|supabase_auth_admin\|Lock\n$/);
+        observation.nativeWait = wait.stdout;
+        break;
+      }
+      await delay(80);
+    }
+  } finally {
+    clearTimeout(readyTimeout);
+    holder.stdin.end('ROLLBACK;\n');
+    const [exit] = await holderClosed;
+    receipt.commands.push({ args: holderArgs, exit });
+    if (logout) observation.http = await logout;
+    assert.equal(exit, 0, holderError);
+  }
+  assert.ok(observation.nativeWait, 'Did not observe GoTrue waiting on the native session holder');
+  assert.equal(observation.http.exit, 0, observation.http.stderr);
+  assert.deepEqual(JSON.parse(observation.http.stdout), { status: 204 });
+  observation.afterLogout = observedSql(db, reader);
+  assert.equal(observation.afterLogout.exit, 0, observation.afterLogout.stderr);
+  assert.equal(observation.afterLogout.stdout, 'user|1\nsession|0\n');
 }
 
 async function observeNativeLockConflict(db, relation, reader, mutation, trial) {
@@ -1132,7 +1212,7 @@ async function runNativeAdmission(nativeBaseline) {
   receipt.probe = JSON.parse(exec(probe, ['node', '-', 'probe'], { input: source }));
   if (nativeBaseline) {
     stage = 'T010 native row lock primitives';
-    await nativeAuthorityBaseline(db, fixtures);
+    await nativeAuthorityBaseline(db, probe, source, fixtures);
   } else {
     stage = 'separate restore';
     verifyRestore(db, restore);

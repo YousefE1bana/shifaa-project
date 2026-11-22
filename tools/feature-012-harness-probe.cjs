@@ -187,6 +187,14 @@ async function main() {
     await fixtures();
   } else if (process.argv[2] === 'probe') {
     await exercise(JSON.parse(readFileSync(fixturePath, 'utf8')));
+  } else if (process.argv[2] === 'local-logout') {
+    const [person] = JSON.parse(readFileSync(fixturePath, 'utf8'));
+    const response = await auth('/logout?scope=local', {
+      method: 'POST',
+      headers: { authorization: 'Bearer ' + person.token },
+    });
+    await response.body?.cancel();
+    console.log(JSON.stringify({ status: response.status }));
   } else {
     throw new Error('unknown admission phase');
   }
