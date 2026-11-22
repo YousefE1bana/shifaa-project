@@ -6,6 +6,12 @@
   "verifiedAt": "2026-11-22",
   "testedHead": "e7d7b7e6907e1622597df13656817f00cb6d6414",
   "run": "e7017b4b-60f6-49c0-9d8b-df4b0e4203d8",
+  "nativeHttpLogout": {
+    "testedHead": "92586700284f3769f6f3c3a006ea6e4fda853d02",
+    "run": "ed8754e8-6587-4f48-b2c5-a7390c5d8283",
+    "guardFirst": "PostgreSQL observed a separate supabase_auth_admin backend waiting on the fixture holder. After that holder rolled back, real GoTrue local logout returned HTTP 204. The bound session was absent and the user row remained.",
+    "scope": "One guard-first native HTTP logout trial against a retained user and session SHARE lock on disposable rows. The four SQL primitive trials and isolation checks also passed on this run."
+  },
   "method": "T002 disposable internal topology with tmpfs, no published ports or retained mounts. Pinned native GoTrue created two distinct synthetic email accounts and matching sessions. Native-owner sessions exercised raw PostgreSQL conflict behavior on those fixtures.",
   "images": {
     "auth": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
@@ -49,6 +55,11 @@
         "sha256": "71f21670d9c175df766fac89b81e7dd889e4b23ba0dc512541255959435d15ea",
         "result": "PASS_HARNESS_PROBE with separate disposable restore",
         "run": "4d3628e6-8de7-47d9-85c8-a28a3d292617"
+      },
+      {
+        "path": "t010-native-http-logout.json",
+        "bytes": 50099,
+        "sha256": "d79a39d2787581979f5741d74c5a915ab058ad1ca74c692500ce71cc068e284d"
       }
     ]
   },
@@ -58,7 +69,7 @@
     "matches": true
   },
   "remaining": [
-    "Full pinned configuration and actual native HTTP writer concurrency for the T010 matrix",
+    "Full pinned configuration and remaining actual native HTTP races, including writer-first logout",
     "Native downgrade and recovery, expiry equality and expiry after a wait, refresh inverse order and SKIP LOCKED exhaustion",
     "Guard-specific privilege, same-transaction context, current-authority replay and Core API integration evidence"
   ],
