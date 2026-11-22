@@ -55,6 +55,17 @@
       "scope": "Effective PostgreSQL paths under the Core API role. The consent append used one installed purpose and leaves exact F012 purpose predicates and other relationship or consent mutation variants open.",
       "correctionOwner": "T013"
     },
+    "familyGrant": {
+      "testedHead": "ca78bf4c05a1d865f1f4b7cc81824870fb19e58d",
+      "run": "5fc4625f-d23e-4744-8668-9b6724cd3d3f",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "Core API acceptDelegation persistence and existing family mutation audit/outbox under installed RLS",
+      "admissionFirst": "The invitee activated the pending delegation at version 2. The installed record.view predicate became true and one audit and outbox event each committed while admission remained held.",
+      "writerFirst": "Admission committed while the grant remained open. Writer rollback left the invitation pending, the authorization predicate false, and zero accepted events.",
+      "negative": "An unrelated person matched no invitation under installed RLS. The fixture mapped the zero-row update to 42501, with no effects.",
+      "scope": "Installed SQL persistence, authority predicate and audit/outbox. The predecessor application still verifies the invite token before entering this persistence path.",
+      "correctionOwner": "T013"
+    },
     "allergyInsert": {
       "testedHead": "46b5db897022b3eda66e4fe07677bf8f0f0fec39",
       "run": "4e5e633e-bab8-4e56-9da3-80475a7a4dc8",
@@ -286,6 +297,14 @@
         "run": "95e62634-08cd-4294-9885-edb7377c2938",
         "testedHead": "898582140562e7a979bcb77c6623897c895eeb14",
         "result": "F010 independent appointment cancellation RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      },
+      {
+        "path": "t012-family-grant-ca78bf4.json",
+        "bytes": 178907,
+        "sha256": "d219737b92aaf3108c3b802a47c3c38885cea1e0a120785e8288323a430a0409",
+        "run": "5fc4625f-d23e-4744-8668-9b6724cd3d3f",
+        "testedHead": "ca78bf4c05a1d865f1f4b7cc81824870fb19e58d",
+        "result": "F004 delegation grant RED in both orders. Admission control, unrelated invitee denial, authorization predicate and atomic rollback passed."
       }
     ]
   },
