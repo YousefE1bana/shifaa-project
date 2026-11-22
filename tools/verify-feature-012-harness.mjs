@@ -1038,9 +1038,13 @@ function encounterCompletionWriter(db, { appointment, encounter, facility, clini
       INSERT INTO clinical.queue_scopes(id,facility_id,doctor_person_id,civil_date,timezone_name)
         VALUES ('${scope}','${facility}','${clinician}','2030-04-05','Africa/Cairo');
       INSERT INTO clinical.queue_entries
-        (id,queue_scope_id,appointment_id,facility_id,doctor_person_id,civil_date,queue_number,state,called_at)
+        (id,queue_scope_id,appointment_id,facility_id,doctor_person_id,civil_date,queue_number,state,waiting_order)
         VALUES ('${queue}','${scope}','${appointment}','${facility}','${clinician}',
-          '2030-04-05',1,'in_service','${starts}');
+          '2030-04-05',1,'waiting',1);
+      UPDATE clinical.queue_entries SET state = 'called', waiting_order = NULL, called_at = '${starts}'
+        WHERE id = '${queue}';
+      SET LOCAL shifaa.clinic_internal_transition = 'f010_create_encounter';
+      UPDATE clinical.queue_entries SET state = 'in_service' WHERE id = '${queue}';
       COMMIT;`,
   );
   receipt.participatingWriters.queueFixture = seed;
@@ -1056,7 +1060,8 @@ function encounterCompletionWriter(db, { appointment, encounter, facility, clini
     written: /^completed\|completed\|completed\|completed$/m,
     deniedExit: 3,
     denied: /P0002:.*encounter was not found/,
-    state: `SELECT encounter.status, encounter.version, appointment.status, queue.state,
+    state: `SELECT encounter.status, encounter.version, appointment.status, appointment.version,
+      queue.state, queue.version,
       (SELECT count(*) FROM platform.idempotency_records
         WHERE resource_id = encounter.id AND route_template = '/v1/encounters/{encounterId}/complete'
           AND state = 'completed'),
@@ -1068,8 +1073,8 @@ function encounterCompletionWriter(db, { appointment, encounter, facility, clini
       JOIN clinical.appointments appointment ON appointment.id = encounter.appointment_id
       JOIN clinical.queue_entries queue ON queue.appointment_id = appointment.id
       WHERE encounter.id = '${encounter}';`,
-    before: 'open|1|in_consultation|in_service|0|0|0\n',
-    after: 'completed|2|completed|completed|1|1|1\n',
+    before: 'open|1|in_consultation|3|in_service|3|0|0|0\n',
+    after: 'completed|2|completed|4|completed|4|1|1|1\n',
   };
 }
 
