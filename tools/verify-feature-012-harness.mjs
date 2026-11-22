@@ -584,7 +584,7 @@ async function runOnboardingWriterOrder(db, focusedWriters) {
       });
       holder.stdin.write(`
         BEGIN;
-        SET LOCAL idle_in_transaction_session_timeout = '15s';
+        SET LOCAL idle_in_transaction_session_timeout = '30s';
         SET LOCAL statement_timeout = '3s';
         SET SESSION AUTHORIZATION ${role};
         SELECT 'holder', pg_backend_pid(), session_user;
