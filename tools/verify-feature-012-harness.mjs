@@ -738,6 +738,14 @@ async function runContextWriterOrder(
   let cases;
   if (focusedWriters === 'allergy') {
     cases = [allergyInsertWriter(patient)];
+  } else if (focusedWriters === 'allergyVerification') {
+    const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
+    const first = allergyInsertWriter(patient);
+    const seeded = contend(context(patientPerson) + first.write);
+    results.allergyVerificationSeed = seeded;
+    assert.equal(seeded.exit, 0, seeded.stderr);
+    assert.match(seeded.stdout, first.written);
+    cases = [allergyVerificationWriter(db, { ...fixture, patient, first })];
   } else if (
     focusedWriters === 'encounterParticipant' ||
     focusedWriters === 'encounterCompletion'
@@ -881,34 +889,40 @@ function familyAndConsentWriters(contend, context, { patientPerson, patient, del
   ];
 }
 
-function allergyInsertWriter(patient) {
-  const allergy = randomUUID();
-  const request = randomUUID();
-  const key = randomUUID();
-  // Structural envelopes use the same synthetic shape as the F011 component fixture.
-  const envelope = (contractId, suffix) => ({
+// Structural envelopes use the same synthetic shape as the F011 component fixture.
+function syntheticF011Envelope(contractId, suffix) {
+  return {
     contractId,
     keyRef: 'synthetic-kms/' + suffix + '/versions/1',
-    nonce: '0102030405060708090a0b0c',
+    nonce: randomBytes(12).toString('hex'),
     ciphertext: 'aabb',
     authTag: '0102030405060708090a0b0c0d0e0f10',
-  });
+  };
+}
+
+function allergyInsertWriter(patient) {
+  const allergy = randomUUID();
+  const revision = randomUUID();
+  const request = randomUUID();
+  const key = randomUUID();
   const payload = {
     responseLanguage: 'en-EG',
     responseRequestId: request,
     preparation: {
       allergyId: allergy,
-      revisionId: randomUUID(),
+      revisionId: revision,
       revisionVersion: 1,
       previousRevisionId: null,
-      protectedFacts: envelope('SHIFAA-F011-ALLERGY-PROTECTED/1', 'facts'),
+      protectedFacts: syntheticF011Envelope('SHIFAA-F011-ALLERGY-PROTECTED/1', 'facts'),
       protectedReason: null,
       correctsAllergyId: null,
     },
   };
-  const finalizer = envelope('SHIFAA-F011-RECEIPT-PROTECTED/1', 'receipt');
+  const finalizer = syntheticF011Envelope('SHIFAA-F011-RECEIPT-PROTECTED/1', 'receipt');
   return {
     name: 'F011 allergy empty-to-first insertion',
+    allergy,
+    revision,
     write: `SET LOCAL shifaa.environment = 'local';
       SET LOCAL shifaa.action = 'createAllergy';
       SET LOCAL shifaa.aal = '2';
@@ -938,6 +952,100 @@ function allergyInsertWriter(patient) {
         WHERE aggregate_id = '${allergy}' AND aggregate_type = 'clinical.allergy_revision');`,
     before: '0|0|0\n',
     after: '1|1|1\n',
+  };
+}
+
+function allergyVerificationWriter(db, { patient, clinician, facility, encounter, first }) {
+  const allergyId = first.allergy;
+  const previousRevisionId = first.revision;
+  const revisionId = randomUUID();
+  const evidenceRef = randomUUID();
+  const responseRequestId = randomUUID();
+  const source = 'synthetic.internal_clinician_provenance';
+  const producer = 'f011.allergy_evidence_boundary';
+  const verifiedAt = '2030-04-05T07:15:00Z';
+  const seed = observedSql(
+    db,
+    `INSERT INTO clinical.allergy_verification_support
+    (id,patient_id,allergy_id,previous_revision_id,previous_version,target_status,
+      attestor_person_id,source_identity,source_evidence_identity,producer_id,recorded_at,synthetic)
+    VALUES ('${evidenceRef}','${patient}','${allergyId}','${previousRevisionId}',1,
+      'clinician_confirmed','${clinician}','${source}','${evidenceRef}','${producer}',
+      '${verifiedAt}',true);`,
+  );
+  receipt.participatingWriters.allergyVerificationSupport = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  const payload = {
+    responseLanguage: 'en-EG',
+    responseRequestId,
+    preparation: {
+      protectedRevision: {
+        allergyId,
+        revisionId,
+        revisionVersion: 2,
+        previousRevisionId,
+        protectedFacts: syntheticF011Envelope(
+          'SHIFAA-F011-ALLERGY-PROTECTED/1',
+          'verification-facts',
+        ),
+        protectedReason: syntheticF011Envelope(
+          'SHIFAA-F011-ALLERGY-PROTECTED/1',
+          'verification-reason',
+        ),
+      },
+      verifiedEvidence: {
+        contractId: 'SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1',
+        profile: 'allergy_verification',
+        bindingId: randomUUID(),
+        producerId: producer,
+        verifiedAt,
+        evidenceRef,
+        patientId: patient,
+        allergyId,
+        previousRevisionId,
+        previousVersion: 1,
+        revisionId,
+        revisionVersion: 2,
+        targetStatus: 'clinician_confirmed',
+        attestorPersonId: clinician,
+        sourceIdentity: source,
+        sourceEvidenceIdentity: evidenceRef,
+        synthetic: true,
+      },
+    },
+  };
+  const finalizer = syntheticF011Envelope('SHIFAA-F011-RECEIPT-PROTECTED/1', 'verify-receipt');
+  return {
+    name: 'F011 clinician allergy verification and head replacement',
+    actor: clinician,
+    write: `${encounterWriterContext('verifyAllergy')}
+      SET LOCAL shifaa.request_id = '${responseRequestId}';
+      SET LOCAL shifaa.purposes = 'synthetic.feature011';
+      SET LOCAL shifaa.facility_id = '${facility}';
+      SET LOCAL shifaa.encounter_id = '${encounter}';
+      DO $fixture$
+        DECLARE result jsonb;
+        BEGIN
+          result := clinical.verify_allergy_api_v1('${allergyId}',1,'${JSON.stringify(payload)}'::jsonb);
+          PERFORM clinical.f011_finalize_receipt_v1(
+            (result->>'receiptId')::uuid, '${JSON.stringify(finalizer)}'::jsonb
+          );
+          IF result->>'resourceVersion' IS DISTINCT FROM '2' THEN
+            RAISE EXCEPTION 'expected second allergy revision';
+          END IF;
+        END
+      $fixture$;`,
+    written: /^DO$/m,
+    deniedExit: 3,
+    denied: /42501:.*allergy authority denied/i,
+    state: `SELECT head.current_version, revision.verification_status,
+      (SELECT count(*) FROM clinical.allergies WHERE allergy_id = head.id),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = head.id AND aggregate_type = 'clinical.allergy_revision')
+      FROM clinical.allergy_heads head JOIN clinical.allergies revision ON head.current_revision_id = revision.id
+      WHERE head.id = '${allergyId}';`,
+    before: '1|self_reported|1|1\n',
+    after: '2|clinician_confirmed|2|2\n',
   };
 }
 
@@ -1589,6 +1697,7 @@ async function admit() {
   const focusedWriters = new Map([
     ['--participating-family-writers', 'familyAndConsent'],
     ['--participating-allergy-writer', 'allergy'],
+    ['--participating-allergy-verification', 'allergyVerification'],
     ['--participating-encounter-participant', 'encounterParticipant'],
     ['--participating-encounter-completion', 'encounterCompletion'],
   ]).get(onlyArgument);
