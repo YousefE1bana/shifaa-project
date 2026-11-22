@@ -1050,7 +1050,7 @@ function encounterCompletionWriter(db, { appointment, encounter, facility, clini
       SET LOCAL shifaa.environment = 'local';
       SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
       SELECT event_id FROM audit.append_event_v1(
-        '${randomUUID()}', '${randomUUID()}', 'encounter.updated', 'encounter', 'succeeded',
+        '${randomUUID()}', '${randomUUID()}', 'encounter.updated', 'encounter', 'success',
         p_actor_person_id => '${clinician}', p_resource_id => '${randomUUID()}');
       COMMIT;`,
   );
