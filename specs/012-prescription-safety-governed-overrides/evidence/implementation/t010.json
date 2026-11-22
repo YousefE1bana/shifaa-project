@@ -32,6 +32,22 @@
     "postWait": "The independent reader PID was observed waiting on the holder. The clock crossed the seeded native deadline before release. The reader measured transaction start before the deadline and post-lock clock after it in the same transaction.",
     "previousFailure": "The first observer filtered pg_stat_activity by the assumed role. It missed the reader login PID after SET SESSION AUTHORIZATION. The corrected observer matched the actual blocked reader PID."
   },
+  "nativeMutationOrdering": {
+    "testedHead": "30b1208597fd27dc4a773ab62366368b80e911a5",
+    "method": "Each mode used two distinct GoTrue fixtures on disposable resources. Reader-first SQL retained both native SHARE locks and observed the GoTrue writer blocked. Writer-first held the native writer after its update using a disposable barrier, then observed an independent reader receive 55P03 on the expected relation. The uncommitted post-state was invisible in both directions, and a fresh reader ran after the HTTP response.",
+    "ban": {
+      "run": "fffd2909-9588-4f19-932b-4810dbdadab0",
+      "result": "Both orderings passed on auth.users. The fixture-only GoTrue admin request returned 200, the committed ban deadline was active, and password login returned 400. The original session row remained present."
+    },
+    "downgrade": {
+      "run": "5848fb1a-cfe8-4b97-afc1-f45ce4b013d5",
+      "result": "Both orderings passed on auth.sessions. GoTrue TOTP verification emitted AAL2 and timestamped TOTP for the original AAL1 password session. Native factor removal returned 200, deleted the factor and changed the retained session to AAL1."
+    },
+    "recovery": {
+      "run": "ff3fd239-d4fc-4469-a533-3c7c291ccbd2",
+      "result": "Both orderings passed on auth.users. Redeeming a native synthetic recovery link created a separate AAL1 OTP session. Password update through that session returned 200, removed the original session and retained the recovery session. The old password returned 400."
+    }
+  },
   "method": "T002 disposable internal topology with tmpfs, no published ports or retained mounts. Pinned native GoTrue created two distinct synthetic email accounts and matching sessions. Native-owner sessions exercised raw PostgreSQL conflict behavior on those fixtures.",
   "images": {
     "auth": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
@@ -118,6 +134,27 @@
         "bytes": 36176,
         "sha256": "8debebe3b72778fc4f96670c9396b24fdde5caa32418862d311f5011c1d80d18",
         "run": "02122bad-e37e-4884-a82e-a32ea89c50ed"
+      },
+      {
+        "path": "t010-native-ban-30b1208.json",
+        "bytes": 45832,
+        "sha256": "382f4de0d6ba71bcc2a548d11c2c5a002cbb026f4fb3f5d7729f83a69f5ab8fc",
+        "run": "fffd2909-9588-4f19-932b-4810dbdadab0",
+        "result": "PASS_NATIVE_MUTATION_ORDERING"
+      },
+      {
+        "path": "t010-native-downgrade-30b1208.json",
+        "bytes": 46791,
+        "sha256": "ea564919d19e26226d0c9830e2f68dda2063fde18e4576fa1de72abfc3de6c39",
+        "run": "5848fb1a-cfe8-4b97-afc1-f45ce4b013d5",
+        "result": "PASS_NATIVE_MUTATION_ORDERING"
+      },
+      {
+        "path": "t010-native-recovery-30b1208.json",
+        "bytes": 46699,
+        "sha256": "32bb81c99cb956b83327beee5aaa8a3ce0ef04f2dbcaaaea5a9c2c45f4381a13",
+        "run": "ff3fd239-d4fc-4469-a533-3c7c291ccbd2",
+        "result": "PASS_NATIVE_MUTATION_ORDERING"
       }
     ]
   },
@@ -127,9 +164,9 @@
     "matches": true
   },
   "remaining": [
-    "Current-head native HTTP coverage for downgrade and recovery, and user-ban interleavings beyond the native-owner SQL results",
-    "Accepted native configuration and integration evidence for the deployed guard's post-wait JWT, session deadline and login-strength decisions",
-    "Current-authority replay, trusted context substitution, multiple-account binding semantics and installed executor/privilege negatives"
+    "Run the TypeScript signed-context integration test at the API issuer boundary.",
+    "Deployed guard post-wait JWT expiry, session deadline and login-strength checks. The observed native row and clock primitives exercise the underlying contract.",
+    "Guard-facing current-authority replay, trusted context substitution and profile separation, multiple-account binding, and installed executor privilege negatives. The T011 helper and retained transaction are absent from this baseline."
   ],
   "limits": "Native-owner SQL exercised row and clock primitives on real GoTrue rows. The probe role, audit hold and API are isolated fixtures. Product NAC-1 guard, forced-RLS executor and bounded retry acceptance remain pending."
 }
