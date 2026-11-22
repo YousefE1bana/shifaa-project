@@ -740,6 +740,8 @@ async function runContextWriterOrder(
     cases = [allergyInsertWriter(patient)];
   } else if (focusedWriters === 'workforceTermination') {
     cases = [workforceTerminationWriter(db, { owner: patientPerson, clinician: delegate })];
+  } else if (focusedWriters === 'recoveryRestriction') {
+    cases = [recoveryRestrictionWriter(db, patientPerson)];
   } else if (focusedWriters === 'allergyVerification') {
     const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
     const first = allergyInsertWriter(patient);
@@ -1059,6 +1061,41 @@ function allergyVerificationWriter(db, { patient, clinician, facility, encounter
       WHERE head.id = '${allergyId}';`,
     before: '1|self_reported|1|1\n',
     after: '2|clinician_confirmed|2|2\n',
+  };
+}
+
+function recoveryRestrictionWriter(db, person) {
+  const caseId = randomUUID();
+  const seeded = observedSql(
+    db,
+    `INSERT INTO identity.continuity_cases
+      (id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
+       token_key_version,expires_at)
+    VALUES ('${caseId}','account_recovery','${person}','proof_required',
+      decode(repeat('c1',32),'hex'),decode(repeat('d2',32),'hex'),1,now() + interval '1 hour');`,
+  );
+  receipt.participatingWriters.recoveryRestrictionFixture = seeded;
+  assert.equal(seeded.exit, 0, seeded.stderr);
+  return {
+    name: 'F007 Core API recovery restriction staging',
+    actor: person,
+    write: `SET LOCAL shifaa.actor_role = 'PAT';
+      SET LOCAL shifaa.aal = '1';
+      SET LOCAL shifaa.purposes = '';
+      SET LOCAL shifaa.action = 'completeRecovery';
+      SET LOCAL shifaa.case_id = '${caseId}';
+      UPDATE identity.continuity_cases
+      SET restriction_scope = 'mfa_enrollment_only', version = version + 1, updated_at = now()
+      WHERE id = '${caseId}' AND subject_person_id = platform.context_person_id()
+        AND status = 'proof_required'
+      RETURNING id;`,
+    written: /^UPDATE 1$/m,
+    deniedExit: 0,
+    denied: /^UPDATE 0$/m,
+    state: `SELECT status, version, coalesce(restriction_scope, '')
+      FROM identity.continuity_cases WHERE id = '${caseId}';`,
+    before: 'proof_required|1|\n',
+    after: 'proof_required|2|mfa_enrollment_only\n',
   };
 }
 
@@ -1760,6 +1797,7 @@ async function admit() {
     ['--participating-encounter-participant', 'encounterParticipant'],
     ['--participating-encounter-completion', 'encounterCompletion'],
     ['--participating-workforce-termination', 'workforceTermination'],
+    ['--participating-recovery-restriction', 'recoveryRestriction'],
   ]).get(onlyArgument);
   const participatingWriters =
     Boolean(focusedWriters) || onlyArgument === '--participating-writers';
