@@ -1279,6 +1279,47 @@ async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
   execute('workforce with stale TOTP', workforce(seconds + ' - 301'), denied);
   execute('workforce with future TOTP', workforce(seconds + ' + 5'), denied);
   execute('AAL1 claim no longer matches current native session', patientRead, denied);
+
+  // The existing idempotency row is claimed before native locks, then its
+  // synthetic response can be read only after the same transaction retains them.
+  const responseMarker = randomUUID();
+  const principalHash = randomBytes(32).toString('hex');
+  const requestHash = randomBytes(32).toString('hex');
+  const keyHash = randomBytes(32).toString('hex');
+  const responseId = randomUUID();
+  const scope = `SET LOCAL shifaa.principal_hash = '${principalHash}';`;
+  const retainedWorkforce =
+    context(person, 'CLN', 2) +
+    guard({ aal: 2, profile: 'workforce_sensitive', totpAt: seconds + ' - 120' });
+  execute(
+    'guarded synthetic idempotent result',
+    admission +
+      scope +
+      `
+    INSERT INTO platform.idempotency_records
+      (id, principal_type, principal_hash, method, route_template, key_hash,
+       request_hash, state, expires_at)
+    VALUES ('${responseId}', 'sha256-v1', '${principalHash}', 'POST', '/synthetic-f012-guard',
+      '${keyHash}', '${requestHash}', 'processing', clock_timestamp() + interval '1 minute');` +
+      retainedWorkforce +
+      `
+    UPDATE platform.idempotency_records
+    SET state = 'completed', response_status = 200,
+        response_body = jsonb_build_object('marker', '${responseMarker}')
+    WHERE id = '${responseId}' AND state = 'processing';`,
+  );
+  const replay =
+    admission +
+    scope +
+    `
+    SELECT id FROM platform.idempotency_records
+    WHERE id = '${responseId}' AND request_hash = '${requestHash}' FOR UPDATE;` +
+    retainedWorkforce +
+    `
+    SELECT response_body->>'marker' FROM platform.idempotency_records
+    WHERE id = '${responseId}' AND state = 'completed';`;
+  const currentReplay = execute('fresh authority can replay original synthetic result', replay);
+  assert.ok(currentReplay.stdout.split('\n').includes(responseMarker));
   result.downgrade = await startNativeMutation(probe, source, 'downgrade', 0);
   assert.equal(result.downgrade.exit, 0, result.downgrade.stderr);
   assert.equal(JSON.parse(result.downgrade.stdout).status, 200);
@@ -1288,6 +1329,86 @@ async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
     denied,
   );
   execute('current subject after committed native downgrade', patientRead);
+  const revokedReplay = execute(
+    'downgraded authority cannot replay original result',
+    replay,
+    denied,
+  );
+  assert.ok(!revokedReplay.stdout.includes(responseMarker));
+  result.replayReceipt = observedSql(
+    db,
+    `SELECT count(*), min(state) FROM platform.idempotency_records WHERE id = '${responseId}';`,
+  );
+  assert.equal(result.replayReceipt.stdout, '1|completed\n', result.replayReceipt.stderr);
+  await nativeGuardExpiryAfterWait(
+    db,
+    fixture.session,
+    (deadline) => admission + context(person) + guard({ expiresAt: deadline }),
+    (result.expiryAfterWait = {}),
+  );
+}
+
+async function nativeGuardExpiryAfterWait(db, session, guard, trial) {
+  const expiry = sql(db, 'select floor(extract(epoch from clock_timestamp()))::bigint + 7;').trim();
+  assert.match(expiry, /^\d+$/);
+  let pending;
+  try {
+    await withNativeFixtureLock(
+      db,
+      `SELECT id FROM auth.sessions WHERE id = '${session}' FOR UPDATE;`,
+      trial,
+      async (holderPid) => {
+        const args = observeSqlCommand(db);
+        const reader = spawn(hostExecutable('docker', settings.options.env), args, {
+          ...settings.options,
+          stdio: ['pipe', 'pipe', 'pipe'],
+        });
+        let stdout = '';
+        let stderr = '';
+        reader.stdout.setEncoding('utf8').on('data', (chunk) => (stdout += chunk));
+        reader.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+        pending = once(reader, 'close').then(([exit]) => {
+          receipt.commands.push({ args, exit });
+          return { exit, stdout, stderr };
+        });
+        reader.stdin.on('error', () => reader.kill());
+        reader.stdin.end(`\\set VERBOSITY verbose
+          BEGIN; SET LOCAL statement_timeout = '12s';
+          SET SESSION AUTHORIZATION shifaa_api;
+          SELECT 'reader', pg_backend_pid(), floor(extract(epoch from clock_timestamp()))::bigint < ${expiry};
+          ${guard(expiry)}
+          SELECT 'effect admitted';
+          COMMIT;`);
+        const waitDeadline = Date.now() + 4_000;
+        while (Date.now() < waitDeadline) {
+          const wait = observedSql(
+            db,
+            `SELECT pid, wait_event_type FROM pg_stat_activity
+            WHERE ${holderPid} = ANY(pg_blocking_pids(pid));`,
+          );
+          assert.equal(wait.exit, 0, wait.stderr);
+          if (wait.stdout) {
+            trial.wait = wait;
+            break;
+          }
+          await delay(80);
+        }
+        assert.match(trial.wait?.stdout ?? '', /^\d+\|Lock\n$/);
+        trial.clock = observedSql(
+          db,
+          `SET statement_timeout = '10s';
+          SELECT pg_sleep_until(to_timestamp(${expiry}));`,
+        );
+        assert.equal(trial.clock.exit, 0, trial.clock.stderr);
+      },
+    );
+  } finally {
+    if (pending) trial.reader = await pending;
+  }
+  assert.equal(trial.reader.exit, 3, trial.reader.stdout);
+  assert.match(trial.reader.stderr, /42501: NAC-1 current authority denied/);
+  assert.ok(trial.reader.stdout.includes(`reader|${trial.wait.stdout.split('|')[0]}|t\n`));
+  assert.ok(!trial.reader.stdout.includes('effect admitted'));
 }
 
 function runAtomicity(db) {
