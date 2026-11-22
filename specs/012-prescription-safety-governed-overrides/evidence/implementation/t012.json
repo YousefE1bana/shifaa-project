@@ -44,6 +44,28 @@
       "roleCheck": "The same entry point returned 42501 to shifaa_api and left the seeded case unchanged.",
       "correctionOwner": "T013"
     },
+    "familyAndConsent": {
+      "testedHead": "73152692ff1ad00cd2c0fdf33a8ea6ceb5a62b79",
+      "run": "42754f4c-00ca-40bf-9377-a6756cb55b7e",
+      "status": "RED_BOTH_ORDERS",
+      "admissionControl": "Independent Core API backends contending for the seeded admission row returned 55P03 on f012_source_admission.",
+      "admissionFirst": "The Core API role committed family delegation revocation and, in a separate trial, appended a care_updates consent withdrawal while the admission holder remained open.",
+      "writerFirst": "Admission committed while each writer was open. In each trial the independent observer saw the original state until the held writer rolled back.",
+      "negatives": "An unrelated person matched zero revocation rows and received 42501 for the consent append. Neither denial changed committed state.",
+      "scope": "Effective PostgreSQL paths under the Core API role. The consent append used one installed purpose and leaves exact F012 purpose predicates and other relationship or consent mutation variants open.",
+      "correctionOwner": "T013"
+    },
+    "allergyInsert": {
+      "testedHead": "46b5db897022b3eda66e4fe07677bf8f0f0fec39",
+      "run": "4e5e633e-bab8-4e56-9da3-80475a7a4dc8",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.create_allergy_api_v1(uuid,jsonb) with same-transaction receipt finalization",
+      "admissionFirst": "The F011 function committed the first head, revision and outbox event together as shifaa_api while an independent backend held admission.",
+      "writerFirst": "Admission committed while the F011 transaction remained open. The independent observer saw none of the three effects before or after the writer rolled back.",
+      "negative": "An unrelated person received 42501 and committed none of the three effects.",
+      "scope": "Installed patient self-report empty-to-first path with synthetic protected envelopes. Clinician create, correction, and content paths remain unexecuted.",
+      "correctionOwner": "T013"
+    },
     "preservation": {
       "containers": 12,
       "volumes": 4,
@@ -76,14 +98,44 @@
         "bytes": 231906,
         "sha256": "41e6223acb85f37e473af8a3c28029995fecb6d1bb14cf690c11f7467d549cc4",
         "run": "Catalog PASS, onboarding RED and worker expiry RED, ca5852ff-2e39-42dd-9284-1c77eda05200."
+      },
+      {
+        "path": "t012-family-consent-ordering-1.json",
+        "bytes": 173129,
+        "sha256": "8319e0047d0f6e6030b1ef2684fff472915053c4c0265e60471290b0f66393d7",
+        "run": "Probe blocked at the admission fixture before running writer cases, a293f00d-e193-4939-904c-2e64cf70562b."
+      },
+      {
+        "path": "t012-family-consent-ordering-2.json",
+        "bytes": 189357,
+        "sha256": "39d28777fa41dea7bdc7798aa37f146a8695d4d59aa7b35c786f5c16bab87620",
+        "run": "Admission control, role negatives and rollback PASS; both writer orderings RED, 42754f4c-00ca-40bf-9377-a6756cb55b7e."
+      },
+      {
+        "path": "t012-f011-allergy-ordering-1.json",
+        "bytes": 170754,
+        "sha256": "3fc851a3b0d1690903f41099cd1c738dd60df0f3b6f5dd06d57010f0afb6f7ab",
+        "run": "Probe blocked before the positive writer case because onboarding left its fixture person pending, c1ca8a62-874f-4cec-acbd-a4dc19091dd4."
+      },
+      {
+        "path": "t012-f011-allergy-ordering-2.json",
+        "bytes": 32428,
+        "sha256": "26ff226d4bf638e58a17c6bd8940e96c96ffab1f55b421571d31c0ff4bb881f2",
+        "run": "Probe blocked at a Docker inspect during resource admission, e6e3220d-cb2c-45a2-bdb1-067045d4df7e. The retained container was visible on the independent follow-up inspection."
+      },
+      {
+        "path": "t012-f011-allergy-ordering-3.json",
+        "bytes": 181555,
+        "sha256": "6556605a2a1bf91f0160cc6522187f4ba3736ee3b960a38e6d1c69bfcb1f64f7",
+        "run": "Admission control, unrelated-person denial and rollback PASS; both writer orderings RED, 4e5e633e-bab8-4e56-9da3-80475a7a4dc8."
       }
     ]
   },
   "pending": [
-    "Independent-session cases for installed writers beyond onboarding and worker recovery expiry",
-    "Exact external approval, scan and offline writer boundaries",
-    "Future roster, projection and P3 writers in their owning tasks",
-    "Pinned native row-conflict acceptance in T010 and T011"
+    "Independent-session cases for untested installed writers and the remaining lifecycle or predicate variants listed in the coverage matrix",
+    "Exact external approval, scan and offline writer boundaries, including quiescence verification for unparticipating owner paths",
+    "Pre-admission capability restrictions pending T013 repair and proof. Future roster, projection and P3 execution remains in its owning tasks",
+    "Separate pinned native row-conflict acceptance in T010 and T011"
   ],
   "capability": "No F012 writer-dependent capability is admitted."
 }
