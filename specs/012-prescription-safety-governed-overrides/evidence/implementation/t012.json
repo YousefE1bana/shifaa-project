@@ -66,6 +66,18 @@
       "scope": "Installed patient self-report empty-to-first path with synthetic protected envelopes. Clinician create, correction, and content paths remain unexecuted.",
       "correctionOwner": "T013"
     },
+    "encounterParticipantClosure": {
+      "testedHead": "8d58339c0193d844f1b6cc9b334d41b8f073c376",
+      "run": "6e2dff04-8251-4e4c-a91b-b48e576c50d4",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.update_encounter_api_v1(uuid,integer,jsonb)",
+      "admissionControl": "An independent shifaa_api contender returned 55P03 on f012_source_admission.",
+      "admissionFirst": "The encounter update committed while the admission holder stayed open. The encounter and participant advanced from version 1 to 2, the interval closed, and one encounter.updated event committed.",
+      "writerFirst": "Independent admission committed while the update was held open. An independent reader saw the original versions, open interval and zero encounter.updated events after writer rollback.",
+      "negative": "An unrelated clinician received P0002 and left the committed encounter, participant and outbox unchanged.",
+      "scope": "Installed participant interval closure. Appointment, queue and other encounter lifecycle writers have separate outstanding coverage.",
+      "correctionOwner": "T013"
+    },
     "preservation": {
       "containers": 12,
       "volumes": 4,
@@ -128,6 +140,22 @@
         "bytes": 181555,
         "sha256": "6556605a2a1bf91f0160cc6522187f4ba3736ee3b960a38e6d1c69bfcb1f64f7",
         "run": "Admission control, unrelated-person denial and rollback PASS; both writer orderings RED, 4e5e633e-bab8-4e56-9da3-80475a7a4dc8."
+      },
+      {
+        "path": "t012-f010-encounter-participant.json",
+        "bytes": 170981,
+        "sha256": "eb8870ea9c19249caf6a9b68f9823cd51736ef9a88cb7c3f2f6b4eacd18cf92f",
+        "run": "426ad721-e531-48f6-bb72-e11b2c7b6a78",
+        "testedHead": "c0c9956e3a9d0370c444b0db6e71fd0db3a154ad",
+        "result": "BLOCKED at fixture authorization before either writer ordering ran."
+      },
+      {
+        "path": "t012-f010-encounter-participant-retry.json",
+        "bytes": 178997,
+        "sha256": "6388c067feb094e1dbb12b4a4e1d765296d0d0258745501e6f7df2963a1e48fe",
+        "run": "6e2dff04-8251-4e4c-a91b-b48e576c50d4",
+        "testedHead": "8d58339c0193d844f1b6cc9b334d41b8f073c376",
+        "result": "Admission control, unrelated-clinician denial and rollback PASS. Installed participant closure RED in both orderings."
       }
     ]
   },
