@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "record": "F012-T003-MECHANISM-INPUT-ACCEPTANCE/1",
+  "task": "T003",
+  "issue": 514,
+  "pullRequest": 604,
+  "disposition": "LIMITED_EXACT_BYTE_SYNTHETIC_ENGINEERING_ACCEPTANCE",
+  "owner": "Yousef Osama, SHIFAA Product Owner",
+  "recordedBy": "Codex, transcription of the Product Owner decision",
+  "source": {
+    "channel": "Direct Product Owner instruction in the SHIFAA recovery conversation",
+    "messageTitle": "SHIFAA — Final PR Integration & Team Handoff",
+    "section": "2. T003 — PR #604",
+    "date": "2026-11-21",
+    "decision": "The candidate is suitable for limited exact-byte synthetic engineering acceptance, subject to confirming all ten manifest bindings remain unchanged."
+  },
+  "recordedAt": "2026-11-21T12:21:31.5371948Z",
+  "binding": {
+    "reviewedHead": "b13f2d48c462afcd57deccc61312546bd517731f",
+    "manifest": "t003-candidate/manifest.json",
+    "manifestSha256": "0b8809fde28c47900f068d22a7ed4d3d107175f7e747b297c10f56716fd3d5aa",
+    "checkedAt": "2026-11-21T12:17:19.7812865Z",
+    "status": "PASS",
+    "verifiedEntries": 10,
+    "unchangedImmutableOriginals": 5
+  },
+  "disabledEntryVerification": {
+    "status": "PASS",
+    "passed": 5,
+    "node": "24.22.1",
+    "logSha256": "8d76ed94321d77c057a14055e636615f4f483ac7509c7802e9779a34b728711f"
+  },
+  "behavioralVerification": {
+    "status": "NOT_EXECUTED",
+    "plannedAssertions": 313,
+    "executedAssertions": 0,
+    "requiredBeforeRun": "Exact admission of an isolated synthetic harness and its evaluator entry point"
+  },
+  "scope": {
+    "input": "Only the manifest-bound nonclinical synthetic engineering artifacts",
+    "hardDisabledEntry": "runF012MechanismCandidate",
+    "clinicalAssessment": "not_fully_checked",
+    "identity": "Synthetic person-token equality only. Cross-account identity resolution requires separate native evidence.",
+    "approvalExcludes": [
+      "Behavioral result acceptance",
+      "Clinical or professional approval",
+      "Runtime or production activation",
+      "Merge authorization"
+    ],
+    "taskRemainsOpen": true
+  }
+}

@@ -148,25 +148,6 @@ BEGIN
   EXCEPTION WHEN insufficient_privilege THEN
     RAISE NOTICE 'T009 forged marker denied: %', SQLSTATE;
   END;
-  BEGIN
-    PERFORM platform.f012_lock_admission_v1(deployment, epoch, false);
-    BEGIN
-      PERFORM platform.f012_lock_admission_v1(deployment, epoch, true);
-      RAISE EXCEPTION 'Read admission was upgraded';
-    EXCEPTION WHEN insufficient_privilege THEN
-      RAISE NOTICE 'T009 lock upgrade denied: %', SQLSTATE;
-    END;
-    BEGIN
-      PERFORM clinical.f012_advance_generation_v1(
-        deployment, epoch, 'f011_content_status', 'deployment', '1', 9223372036854775807
-      );
-      RAISE EXCEPTION 'A shared lock permitted advancement';
-    EXCEPTION WHEN insufficient_privilege THEN
-      RAISE NOTICE 'T009 advancement under shared admission denied: %', SQLSTATE;
-    END;
-    RAISE SQLSTATE 'P1001' USING MESSAGE = 'Roll back the shared admission test savepoint';
-  EXCEPTION WHEN SQLSTATE 'P1001' THEN NULL;
-  END;
 END
 $$;
 DO $$

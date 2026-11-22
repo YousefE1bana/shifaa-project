@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "record": "F012-T009-RECOVERY-CANDIDATE/2",
+  "sourceCommit": "9ce96f8d126e29b19d4dc657f865a09cdd107507",
+  "historicalPredecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+  "sourceBindings": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "5298a5948bc2d9b4fa1de5ea69fe6e5ee5e795f324f945aac873455c6600b0ff"
+    },
+    {
+      "path": ".github/workflows/f012-migration-chain-candidate.yml",
+      "sha256": "7ca91e89a858d6dacdce3a2c114eafacbfcae0dd1a3756b6a9dac1ef7dbb186a"
+    },
+    {
+      "path": "tools/verify-feature-012-harness.mjs",
+      "sha256": "6f45f089d1d480cf436cf15710160d9fc2b3b45bff4688412aa2aae7ab40f858"
+    },
+    {
+      "path": "tools/verify-feature-012-migration-chain.mjs",
+      "sha256": "266d8b53d223facf581338e77ebbe8cf8d4c46829a178a2a21992a02cf14f96c"
+    },
+    {
+      "path": "tools/verify-feature-012-migration-chain.test.mjs",
+      "sha256": "cbe70070637d7d72a0e6cdd4659e090b702b05e3afbbbe17b85c52d50a8b9ba0"
+    },
+    {
+      "path": "tools/verify-feature-012-native-supabase.mjs",
+      "sha256": "d9f265b05666d6c1bd31268e634a78787b0ba8d4539830f39ee8718eaeb26d1b"
+    },
+    {
+      "path": "supabase/migrations/20261112001200_f012_source_admission.sql",
+      "sha256": "96719e8101fc247df4e2b75b7bb46c1f0709f82985208f50286a5176253d89da"
+    },
+    {
+      "path": "services/api/src/adapters/postgres/feature-012-source-fence.ts",
+      "sha256": "9429020c38a593d4ed81d150f98134db8f57da813731a7fb71944ca7831bb079"
+    },
+    {
+      "path": "infra/db/tests/feature-012-source-fence.sql",
+      "sha256": "9a958de8437acbfd196dd18b9022107a14f93bd4a9b166789be6024136be0389"
+    }
+  ],
+  "localNode": "24.22.1",
+  "localSqlExecutions": [
+    {
+      "command": "node tools/verify-feature-012-harness.mjs --source-fence",
+      "exit": 0,
+      "checkedOutCommitAtExecution": "5a42c30088f1be5270d22f9acb9b0f23e6b20d4c",
+      "harnessSha256": "6f45f089d1d480cf436cf15710160d9fc2b3b45bff4688412aa2aae7ab40f858",
+      "rawReceipt": "source-fence.json",
+      "rawSha256": "6c83e5325a8eadafe3212698a154587afe6a09ae42d64dc71eca3bf78e1b9a12",
+      "status": "PASS_SOURCE_FENCE_SQL",
+      "roleDenials": 4,
+      "scopeDenials": 6,
+      "retainedResources": {
+        "containers": 12,
+        "volumes": 4,
+        "matches": true
+      }
+    },
+    {
+      "command": "node tools/verify-feature-012-harness.mjs --source-fence-upgrade",
+      "exit": 0,
+      "checkedOutCommitAtExecution": "5a42c30088f1be5270d22f9acb9b0f23e6b20d4c",
+      "harnessSha256": "6f45f089d1d480cf436cf15710160d9fc2b3b45bff4688412aa2aae7ab40f858",
+      "rawReceipt": "source-fence-upgrade.json",
+      "rawSha256": "2507aaccaa7da4298152247a4265a628b06f454402f2a3ff12ef4aa168546126",
+      "status": "PASS_SOURCE_FENCE_SQL",
+      "roleDenials": 4,
+      "scopeDenials": 6,
+      "retainedResources": {
+        "containers": 12,
+        "volumes": 4,
+        "matches": true
+      }
+    }
+  ],
+  "localInventoryVerification": {
+    "historical": "PASS",
+    "sealedMigrations": 38,
+    "additionalMigrations": 1,
+    "focusedTestsPassed": 5,
+    "rawSha256": "a287271e7fef1b01f6be0e62d060c48a5fd326c4bc305f7a42c623770a18b177"
+  },
+  "hostedProof": "Use current-head SHIFAA CI logs and the F012 migration-chain candidate artifact for independently executed native and PostgreSQL receipts.",
+  "scopeLimits": [
+    "T009 source-admission foundation only. Actual producer/native authority and F012 coordinator original-key replay remain assigned to later owning tasks.",
+    "The independent T016 precursor proves original-key replay using the sealed F011 runtime.",
+    "Product Owner acceptance and Major Event integration authorization are pending."
+  ],
+  "priorEvidence": ["t009.json", "t009-recovery-v1.json"]
+}
