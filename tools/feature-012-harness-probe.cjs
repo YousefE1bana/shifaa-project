@@ -38,13 +38,21 @@ async function fixtures() {
       }),
     });
     assert.ok(response.ok, 'native signup failed: ' + response.status);
-    const { access_token: token, user } = await response.json();
+    const { access_token: token, refresh_token: refreshToken, user } = await response.json();
     const claims = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
     assert.equal(claims.sub, user.id);
-    persons.push({ subject: user.id, session: claims.session_id, person: randomUUID(), token });
+    persons.push({
+      subject: user.id,
+      session: claims.session_id,
+      person: randomUUID(),
+      token,
+      refreshToken,
+    });
   }
   writeFileSync(fixturePath, JSON.stringify(persons), { flag: 'wx', mode: 0o600 });
-  console.log(JSON.stringify(persons.map(({ token: _token, ...person }) => person)));
+  console.log(
+    JSON.stringify(persons.map(({ subject, session, person }) => ({ subject, session, person }))),
+  );
 }
 
 function connect() {
@@ -195,6 +203,27 @@ async function main() {
     });
     await response.body?.cancel();
     console.log(JSON.stringify({ status: response.status }));
+  } else if (['native-refresh', 'native-refresh-second'].includes(process.argv[2])) {
+    const persons = JSON.parse(readFileSync(fixturePath, 'utf8'));
+    const person = persons[process.argv[2] === 'native-refresh' ? 0 : 1];
+    const response = await fetch(authURL + '/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ refresh_token: person.refreshToken }),
+      redirect: 'error',
+      signal: AbortSignal.timeout(10_000),
+    });
+    const body = await response.json();
+    const result = { status: response.status };
+    if (response.ok) {
+      const claims = JSON.parse(
+        Buffer.from(body.access_token.split('.')[1], 'base64url').toString(),
+      );
+      result.sessionBinding = claims.sub === person.subject && claims.session_id === person.session;
+      result.refreshIssued =
+        typeof body.refresh_token === 'string' && body.refresh_token.length > 0;
+    }
+    console.log(JSON.stringify(result));
   } else {
     throw new Error('unknown admission phase');
   }

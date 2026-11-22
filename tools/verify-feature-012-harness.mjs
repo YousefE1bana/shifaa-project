@@ -226,7 +226,26 @@ function probeSchema() {
   );
 }
 
-function startAuth() {
+const nativeSessionPolicy = {
+  GOTRUE_SESSIONS_TIMEBOX: '23h45m',
+  GOTRUE_SESSIONS_INACTIVITY_TIMEOUT: '45m',
+  GOTRUE_SESSIONS_SINGLE_PER_USER: 'false',
+  GOTRUE_SECURITY_REFRESH_TOKEN_ROTATION_ENABLED: 'true',
+  GOTRUE_SECURITY_REFRESH_TOKEN_REUSE_INTERVAL: '10',
+  GOTRUE_SECURITY_REFRESH_TOKEN_ALLOW_REUSE: 'false',
+  GOTRUE_MFA_TOTP_ENROLL_ENABLED: 'true',
+  GOTRUE_MFA_TOTP_VERIFY_ENABLED: 'true',
+  GOTRUE_MFA_MAX_ENROLLED_FACTORS: '10',
+  GOTRUE_HOOK_MFA_VERIFICATION_ATTEMPT_ENABLED: 'false',
+  GOTRUE_HOOK_PASSWORD_VERIFICATION_ATTEMPT_ENABLED: 'false',
+  GOTRUE_HOOK_CUSTOM_ACCESS_TOKEN_ENABLED: 'false',
+  GOTRUE_HOOK_SEND_EMAIL_ENABLED: 'false',
+  GOTRUE_HOOK_SEND_SMS_ENABLED: 'false',
+  GOTRUE_HOOK_BEFORE_USER_CREATED_ENABLED: 'false',
+  GOTRUE_HOOK_AFTER_USER_CREATED_ENABLED: 'false',
+};
+
+function startAuth(readSessionPolicy) {
   return create('auth', receipt.images.auth, {
     env: {
       API_EXTERNAL_URL: 'http://auth:9999',
@@ -245,10 +264,28 @@ function startAuth() {
       GOTRUE_EXTERNAL_EMAIL_ENABLED: 'true',
       GOTRUE_MAILER_AUTOCONFIRM: 'true',
       GOTRUE_DISABLE_SIGNUP: 'false',
+      ...(readSessionPolicy ? nativeSessionPolicy : {}),
     },
     flags: ['--network-alias', 'auth'],
     command: ['auth'],
   });
+}
+
+function observeNativePolicy(auth) {
+  const configuration = checkContainer(auth).Config;
+  const expected = { ...nativeSessionPolicy, GOTRUE_JWT_EXP: '900' };
+  const actual = Object.fromEntries(
+    configuration.Env.map((entry) => entry.split(/=(.*)/s, 2)).filter(([key]) =>
+      Object.hasOwn(expected, key),
+    ),
+  );
+  assert.deepEqual(actual, expected);
+  const absent = ['GOTRUE_SESSIONS_TAGS', 'GOTRUE_SESSIONS_ALLOW_LOW_AAL'];
+  for (const key of absent) {
+    assert.ok(configuration.Env.every((entry) => !entry.startsWith(key + '=')));
+  }
+  assert.deepEqual(configuration.Cmd, ['auth']);
+  receipt.nativePolicy = { environment: actual, absent, command: configuration.Cmd };
 }
 
 function trial(name, action, expected) {
@@ -536,6 +573,254 @@ async function observeNativeLockConflict(db, relation, reader, mutation, trial) 
   assert.equal(released.exit, 0, released.stderr);
   assert.match(released.stdout, writerFirst ? /^user\|1\nsession\|1$/m : /^(?:UPDATE|DELETE) 1$/m);
   assert.match(released.stdout, /^ROLLBACK$/m);
+}
+
+async function withNativeFixtureLock(db, statement, trial, exercise) {
+  const args = observeSqlCommand(db);
+  const holder = spawn(hostExecutable('docker', settings.options.env), args, {
+    ...settings.options,
+    stdio: ['pipe', 'pipe', 'pipe'],
+  });
+  const closed = once(holder, 'close');
+  let stdout = '';
+  let stderr = '';
+  let timer;
+  holder.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+  try {
+    const ready = new Promise((resolve, reject) => {
+      holder.stdout.setEncoding('utf8').on('data', (chunk) => {
+        stdout += chunk;
+        if (/^T010_NATIVE_FIXTURE_READY$/m.test(stdout)) resolve(true);
+      });
+      holder.stdin.on('error', reject);
+      timer = setTimeout(() => reject(new Error('Native fixture lock was not ready')), 10_000);
+    });
+    holder.stdin.write(`BEGIN;
+      SET LOCAL idle_in_transaction_session_timeout = '20s';
+      SET LOCAL statement_timeout = '3s';
+      SET SESSION AUTHORIZATION supabase_auth_admin;
+      SELECT 'holder', pg_backend_pid();
+      ${statement}
+      \\echo T010_NATIVE_FIXTURE_READY
+    `);
+    assert.equal(await Promise.race([ready, closed]), true, stderr);
+    trial.holder = stdout;
+    const pid = stdout.match(/^holder\|(\d+)$/m)?.[1];
+    assert.ok(pid);
+    await exercise(pid);
+  } finally {
+    clearTimeout(timer);
+    holder.stdin.end('ROLLBACK;\n');
+    const [exit] = await closed;
+    receipt.commands.push({ args, exit });
+    assert.equal(exit, 0, stderr);
+  }
+}
+
+async function nativeRefreshTrials(db, probe, source, fixtures) {
+  const results = (receipt.nativeRefresh = { readerFirst: {}, refreshFirst: {} });
+  const lockRows = ({ subject, session }) => `
+    SELECT 'user', id FROM auth.users WHERE id = '${subject}' FOR SHARE;
+    SELECT 'session', id FROM auth.sessions
+      WHERE id = '${session}' AND user_id = '${subject}' FOR SHARE;`;
+  const sessionState = ({ subject, session }) =>
+    observedSql(
+      db,
+      `SELECT id, user_id, refreshed_at IS NOT NULL
+      FROM auth.sessions WHERE id = '${session}' AND user_id = '${subject}';`,
+    );
+  const [first, second] = fixtures;
+  const firstTrial = results.readerFirst;
+  firstTrial.before = sessionState(first);
+  assert.equal(firstTrial.before.exit, 0, firstTrial.before.stderr);
+  assert.equal(firstTrial.before.stdout, `${first.session}|${first.subject}|f\n`);
+  await withNativeFixtureLock(db, lockRows(first), firstTrial, () => {
+    assert.match(firstTrial.holder, /^user\|.+\nsession\|.+$/m);
+    firstTrial.exhausted = JSON.parse(
+      exec(probe, ['node', '-', 'native-refresh'], { input: source }),
+    );
+    firstTrial.whileHeld = sessionState(first);
+    assert.deepEqual(firstTrial.exhausted, { status: 409 });
+    assert.deepEqual(firstTrial.whileHeld, firstTrial.before);
+  });
+  const success = { status: 200, sessionBinding: true, refreshIssued: true };
+  firstTrial.retry = JSON.parse(exec(probe, ['node', '-', 'native-refresh'], { input: source }));
+  assert.deepEqual(firstTrial.retry, success);
+  firstTrial.after = sessionState(first);
+  assert.equal(firstTrial.after.exit, 0, firstTrial.after.stderr);
+  assert.equal(firstTrial.after.stdout, `${first.session}|${first.subject}|t\n`);
+
+  const secondTrial = results.refreshFirst;
+  let pendingRefresh;
+  try {
+    // The pinned refresh writes its audit entry only after locking the session.
+    await withNativeFixtureLock(
+      db,
+      'LOCK TABLE auth.audit_log_entries IN SHARE MODE;',
+      secondTrial,
+      async (auditHolderPid) => {
+        assert.equal(checkContainer(probe).State.Running, true);
+        const args = [
+          ...settings.prefix,
+          'exec',
+          '-i',
+          probe.id,
+          'node',
+          '-',
+          'native-refresh-second',
+        ];
+        const cli = hostExecutable('docker', settings.options.env);
+        const request = spawn(cli, args, { ...settings.options, stdio: ['pipe', 'pipe', 'pipe'] });
+        let stdout = '';
+        let stderr = '';
+        request.stdout.setEncoding('utf8').on('data', (chunk) => (stdout += chunk));
+        request.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+        pendingRefresh = once(request, 'close').then(([exit]) => {
+          receipt.commands.push({ args, exit });
+          return { exit, stdout, stderr };
+        });
+        request.stdin.on('error', () => request.kill());
+        request.stdin.end(source);
+        const deadline = Date.now() + 4_000;
+        while (Date.now() < deadline) {
+          const wait = observedSql(
+            db,
+            `SELECT pid, wait_event_type FROM pg_stat_activity
+              WHERE usename = 'supabase_auth_admin'
+                AND ${auditHolderPid} = ANY(pg_blocking_pids(pid));`,
+          );
+          assert.equal(wait.exit, 0, wait.stderr);
+          if (wait.stdout) {
+            secondTrial.refreshWait = wait;
+            break;
+          }
+          await delay(80);
+        }
+        assert.match(secondTrial.refreshWait?.stdout ?? '', /^\d+\|Lock\n$/);
+        secondTrial.reader = observedSql(
+          db,
+          `\\set VERBOSITY verbose
+          BEGIN;
+          SET LOCAL lock_timeout = '500ms';
+          SET LOCAL statement_timeout = '3s';
+          SET SESSION AUTHORIZATION supabase_auth_admin;
+          SELECT 'reader', pg_backend_pid();
+          ${lockRows(second)}
+          ROLLBACK;`,
+        );
+        assert.equal(secondTrial.reader.exit, 3, secondTrial.reader.stdout);
+        assert.match(secondTrial.reader.stderr, /55P03:.*lock timeout/);
+        assert.match(secondTrial.reader.stderr, /relation "sessions"/);
+        assert.match(secondTrial.reader.stdout, new RegExp('^user\\|' + second.subject + '$', 'm'));
+      },
+    );
+  } finally {
+    if (pendingRefresh) secondTrial.http = await pendingRefresh;
+  }
+  assert.equal(secondTrial.http.exit, 0, secondTrial.http.stderr);
+  assert.deepEqual(JSON.parse(secondTrial.http.stdout), success);
+  secondTrial.retry = observedSql(db, lockRows(second));
+  assert.equal(secondTrial.retry.exit, 0, secondTrial.retry.stderr);
+  assert.equal(secondTrial.retry.stdout, `user|${second.subject}\nsession|${second.session}\n`);
+  secondTrial.after = sessionState(second);
+  assert.equal(secondTrial.after.exit, 0, secondTrial.after.stderr);
+  assert.equal(secondTrial.after.stdout, `${second.session}|${second.subject}|t\n`);
+}
+
+async function nativeDeadlineTrials(db, { subject, session }) {
+  const results = (receipt.nativeDeadlines = {});
+  const setExpiry = observedSql(
+    db,
+    `UPDATE auth.sessions
+    SET not_after = clock_timestamp() + interval '7 seconds'
+    WHERE id = '${session}' AND user_id = '${subject}'
+    RETURNING not_after::text;`,
+  );
+  assert.equal(setExpiry.exit, 0, setExpiry.stderr);
+  const expiry = setExpiry.stdout.trim().split('\n')[0];
+  assert.match(expiry, /^[\d +:.-]+$/);
+  results.deadline = expiry;
+  results.boundary = observedSql(
+    db,
+    `
+    SELECT clock.as_of < candidate.not_after
+    FROM auth.sessions candidate
+    CROSS JOIN LATERAL (VALUES
+      (1, candidate.not_after - interval '1 microsecond'),
+      (2, candidate.not_after),
+      (3, candidate.not_after + interval '1 microsecond')
+    ) clock(ordinal, as_of)
+    WHERE candidate.id = '${session}' AND candidate.user_id = '${subject}'
+    ORDER BY clock.ordinal;`,
+  );
+  assert.equal(results.boundary.exit, 0, results.boundary.stderr);
+  assert.equal(results.boundary.stdout, 't\nf\nf\n');
+
+  let pendingReader;
+  try {
+    await withNativeFixtureLock(
+      db,
+      `SELECT id FROM auth.sessions WHERE id = '${session}' FOR UPDATE;`,
+      results,
+      async (holderPid) => {
+        const args = observeSqlCommand(db);
+        const reader = spawn(hostExecutable('docker', settings.options.env), args, {
+          ...settings.options,
+          stdio: ['pipe', 'pipe', 'pipe'],
+        });
+        let stdout = '';
+        let stderr = '';
+        reader.stdout.setEncoding('utf8').on('data', (chunk) => (stdout += chunk));
+        reader.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+        pendingReader = once(reader, 'close').then(([exit]) => {
+          receipt.commands.push({ args, exit });
+          return { exit, stdout, stderr };
+        });
+        reader.stdin.on('error', () => reader.kill());
+        reader.stdin.end(`BEGIN;
+          SET LOCAL statement_timeout = '12s';
+          SET SESSION AUTHORIZATION supabase_auth_admin;
+          SELECT 'reader', pg_backend_pid();
+          SELECT id FROM auth.users WHERE id = '${subject}' FOR SHARE;
+          WITH retained AS MATERIALIZED (
+            SELECT not_after FROM auth.sessions
+            WHERE id = '${session}' AND user_id = '${subject}' FOR SHARE
+          )
+          SELECT 'deadline', statement_timestamp() < not_after, clock_timestamp() < not_after
+          FROM retained;
+          ROLLBACK;`);
+        const deadline = Date.now() + 4_000;
+        while (Date.now() < deadline) {
+          const wait = observedSql(
+            db,
+            `SELECT pid, wait_event_type FROM pg_stat_activity
+              WHERE usename = 'supabase_auth_admin'
+                AND ${holderPid} = ANY(pg_blocking_pids(pid));`,
+          );
+          assert.equal(wait.exit, 0, wait.stderr);
+          if (wait.stdout) {
+            results.readerWait = wait;
+            break;
+          }
+          await delay(80);
+        }
+        assert.match(results.readerWait?.stdout ?? '', /^\d+\|Lock\n$/);
+        results.advance = observedSql(
+          db,
+          `SET statement_timeout = '10s'; SELECT pg_sleep_until('${expiry}'::timestamptz);`,
+        );
+        assert.equal(results.advance.exit, 0, results.advance.stderr);
+      },
+    );
+  } finally {
+    if (pendingReader) results.reader = await pendingReader;
+  }
+  assert.equal(results.reader.exit, 0, results.reader.stderr);
+  assert.equal(
+    results.readerWait.stdout.split('|')[0],
+    results.reader.stdout.match(/^reader\|(\d+)$/m)?.[1],
+  );
+  assert.match(results.reader.stdout, /^deadline\|t\|f$/m);
 }
 
 function applySealedF011(db) {
@@ -1075,6 +1360,8 @@ async function admit() {
   const argumentsList = process.argv.slice(2);
   const nativeBaseline =
     argumentsList.length === 1 && argumentsList[0] === '--native-authority-baseline';
+  const nativeRefresh = argumentsList.length === 1 && argumentsList[0] === '--native-refresh';
+  const nativeDeadlines = argumentsList.length === 1 && argumentsList[0] === '--native-deadlines';
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
@@ -1084,7 +1371,7 @@ async function admit() {
     upgrade ||
     (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
   assert.deepEqual(
-    sqlOnly || nativeBaseline ? [] : argumentsList,
+    sqlOnly || nativeBaseline || nativeRefresh || nativeDeadlines ? [] : argumentsList,
     [],
     'This command accepts no external resource arguments',
   );
@@ -1162,7 +1449,7 @@ async function admit() {
     return;
   }
   try {
-    await runNativeAdmission(nativeBaseline);
+    await runNativeAdmission({ nativeBaseline, nativeRefresh, nativeDeadlines });
   } finally {
     teardown();
     assert.deepEqual(inventory(), before);
@@ -1173,12 +1460,15 @@ async function admit() {
     };
   }
   receipt.status = nativeBaseline ? 'PASS_NATIVE_LOCK_PRIMITIVES' : 'PASS_HARNESS_PROBE';
+  if (nativeRefresh) receipt.status = 'PASS_NATIVE_REFRESH_ORDERING';
+  if (nativeDeadlines) receipt.status = 'PASS_NATIVE_DEADLINE_PRIMITIVES';
 }
 
-async function runNativeAdmission(nativeBaseline) {
+async function runNativeAdmission({ nativeBaseline, nativeRefresh, nativeDeadlines }) {
   const db = startDatabase('db', networkId);
   receipt.databaseSystems = { source: db.system };
-  const restore = nativeBaseline ? null : startDatabase('restore', 'none');
+  const restore =
+    nativeBaseline || nativeRefresh || nativeDeadlines ? null : startDatabase('restore', 'none');
   if (restore) {
     receipt.databaseSystems.restore = restore.system;
     trial('mismatched container binding denied', () => checkContainer({ ...db, id: restore.id }), {
@@ -1197,7 +1487,9 @@ async function runNativeAdmission(nativeBaseline) {
   }
   stage = 'bootstrap and native API admission';
   sql(db, "alter role supabase_auth_admin password '" + authPassword + "';\n" + probeSchema());
-  startAuth();
+  const readSessionPolicy = nativeRefresh || nativeDeadlines;
+  const auth = startAuth(readSessionPolicy);
+  if (readSessionPolicy) observeNativePolicy(auth);
   const probe = create('probe', receipt.images.probe, {
     env: { F012_PROBE_PASSWORD: apiPassword },
     tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m' },
@@ -1209,6 +1501,16 @@ async function runNativeAdmission(nativeBaseline) {
   const fixtures = JSON.parse(exec(probe, ['node', '-', 'fixtures'], { input: source }));
   bindFixtures(db, fixtures);
   receipt.syntheticSessions = fixtures;
+  if (nativeRefresh) {
+    stage = 'T010 pinned native refresh ordering';
+    await nativeRefreshTrials(db, probe, source, fixtures);
+    return;
+  }
+  if (nativeDeadlines) {
+    stage = 'T010 session expiry boundary and post-wait clock';
+    await nativeDeadlineTrials(db, fixtures[0]);
+    return;
+  }
   receipt.probe = JSON.parse(exec(probe, ['node', '-', 'probe'], { input: source }));
   if (nativeBaseline) {
     stage = 'T010 native row lock primitives';
