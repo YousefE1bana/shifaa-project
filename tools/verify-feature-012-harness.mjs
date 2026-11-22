@@ -745,9 +745,18 @@ async function runContextWriterOrder(
   } else if (focusedWriters === 'appointmentCancellation') {
     const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
     cases = [appointmentCancellationWriter(db, fixture)];
-  } else if (focusedWriters === 'queueCall') {
+  } else if (focusedWriters === 'queueCall' || focusedWriters === 'encounterCreate') {
     const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
-    cases = [queueCallWriter(db, fixture)];
+    const call = queueCallWriter(db, fixture);
+    if (focusedWriters === 'encounterCreate') {
+      const called = contend(context(delegate) + call.write);
+      receipt.participatingWriters.encounterCreateCalledQueue = called;
+      assert.equal(called.exit, 0, called.stderr);
+      assert.match(called.stdout, call.written);
+      cases = [encounterCreateWriter(fixture, call)];
+    } else {
+      cases = [call];
+    }
   } else if (focusedWriters === 'recoveryRestriction') {
     cases = [recoveryRestrictionWriter(db, patientPerson)];
   } else if (focusedWriters === 'allergyVerification') {
@@ -1363,6 +1372,8 @@ function queueCallWriter(db, fixture) {
   return {
     name: 'F010 independent queue entry call',
     actor: clinician,
+    appointment,
+    queue,
     write: `${encounterWriterContext('queue.manage', 'queue.operation')}
       SELECT 'called', result->>'state', result->>'version'
         FROM clinical.call_queue_entry_v1('${queue}',1) AS result;`,
@@ -1380,6 +1391,36 @@ function queueCallWriter(db, fixture) {
       FROM clinical.queue_entries q WHERE q.id = '${queue}';`,
     before: 'waiting|1|f|t|0|0|0\n',
     after: 'called|2|t|f|1|1|1\n',
+  };
+}
+
+function encounterCreateWriter({ patientPerson, clinician }, { appointment, queue }) {
+  const payload = JSON.stringify({
+    appointmentId: appointment,
+    patientId: patientPerson,
+    encounterType: 'consultation',
+  });
+  return {
+    name: 'F010 independent encounter creation',
+    actor: clinician,
+    write: `${encounterWriterContext('createEncounter')}
+      SELECT 'created', result #>> '{encounter,status}', result #>> '{encounter,version}'
+        FROM clinical.create_encounter_api_v1('${payload}'::jsonb) AS result;`,
+    written: /^created\|open\|1$/m,
+    deniedExit: 3,
+    denied: /42501:.*current treating appointment scope denied/,
+    state: `SELECT a.status, a.version, q.state, q.version, coalesce(e.status, ''),
+      (SELECT count(*) FROM clinical.encounter_participants WHERE encounter_id = e.id),
+      (SELECT count(*) FROM platform.idempotency_records
+        WHERE resource_id = e.id AND route_template = '/v1/encounters' AND state = 'completed'),
+      (SELECT count(*) FROM audit.events WHERE resource_id = e.id AND action_code = 'encounter.created'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = e.id AND event_type = 'clinical.encounter.opened.v1')
+      FROM clinical.appointments a JOIN clinical.queue_entries q ON q.appointment_id = a.id
+      LEFT JOIN clinical.encounters e ON e.appointment_id = a.id
+      WHERE a.id = '${appointment}' AND q.id = '${queue}';`,
+    before: 'checked_in|2|called|2||0|0|0|0\n',
+    after: 'in_consultation|3|in_service|3|open|1|1|1|1\n',
   };
 }
 
@@ -1973,6 +2014,7 @@ async function admit() {
     ['--participating-encounter-completion', 'encounterCompletion'],
     ['--participating-appointment-cancellation', 'appointmentCancellation'],
     ['--participating-queue-call', 'queueCall'],
+    ['--participating-encounter-create', 'encounterCreate'],
     ['--participating-workforce-termination', 'workforceTermination'],
     ['--participating-recovery-restriction', 'recoveryRestriction'],
   ]).get(onlyArgument);
