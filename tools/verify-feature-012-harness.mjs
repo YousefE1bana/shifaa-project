@@ -740,6 +740,9 @@ async function runContextWriterOrder(
     cases = [allergyInsertWriter(patient)];
   } else if (focusedWriters === 'workforceTermination') {
     cases = [workforceTerminationWriter(db, { owner: patientPerson, clinician: delegate })];
+  } else if (focusedWriters === 'appointmentCancellation') {
+    const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
+    cases = [appointmentCancellationWriter(db, fixture)];
   } else if (focusedWriters === 'recoveryRestriction') {
     cases = [recoveryRestrictionWriter(db, patientPerson)];
   } else if (focusedWriters === 'allergyVerification') {
@@ -1192,7 +1195,16 @@ function seedEncounterWriter(db, { patientPerson, clinician, unrelated }) {
   receipt.participatingWriters.encounterFixture = seed;
   assert.equal(seed.exit, 0, seed.stderr);
   assert.match(seed.stdout, /^INSERT 0 2\nCOMMIT\n$/m);
-  return { appointment, encounter, facility, clinician, unrelated, starts };
+  return {
+    appointment,
+    encounter,
+    facility,
+    schedule,
+    patientPerson,
+    clinician,
+    unrelated,
+    starts,
+  };
 }
 
 function encounterWriterContext(action) {
@@ -1207,6 +1219,50 @@ function encounterWriterContext(action) {
     SET LOCAL shifaa.trace_id = '${request}';
     SET LOCAL shifaa.idempotency_key = '${randomUUID()}';
     SET LOCAL shifaa.request_hash = '${'b'.repeat(64)}';`;
+}
+
+function appointmentCancellationWriter(db, { facility, schedule, patientPerson, clinician }) {
+  const appointment = randomUUID();
+  const seed = observedSql(
+    db,
+    `BEGIN;
+    INSERT INTO clinical.appointments
+      (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+       civil_date,local_start,fee_minor_units,currency_code,payment_method,status,created_by_person_id,updated_by_person_id)
+    VALUES ('${appointment}','${patientPerson}','${facility}','${clinician}','${schedule}',
+      '2030-04-06T07:00:00Z','2030-04-06T07:30:00Z','Africa/Cairo','2030-04-06','09:00',100,'EGP',
+      'cash_on_arrival','confirmed','${clinician}','${clinician}');
+    SET LOCAL shifaa.environment = 'local';
+    SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+    -- Initialize the synthetic audit partition before racing the installed writer.
+    SELECT event_id FROM audit.append_event_v1(
+      '${randomUUID()}', '${randomUUID()}', 'appointment.cancelled', 'appointment', 'success',
+      p_actor_person_id => '${clinician}', p_resource_id => '${randomUUID()}');
+    COMMIT;`,
+  );
+  receipt.participatingWriters.appointmentCancellationFixture = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  return {
+    name: 'F010 independent appointment cancellation',
+    actor: clinician,
+    write: `${encounterWriterContext('appointment.manage')}
+      SELECT 'cancelled', result->>'status', result->>'version'
+        FROM clinical.cancel_appointment_v1('${appointment}',1,'Synthetic cancellation') AS result;`,
+    written: /^cancelled\|cancelled\|2$/m,
+    deniedExit: 3,
+    denied: /42501:.*clinic facility, membership, or licence scope denied/,
+    state: `SELECT a.status, a.version, a.cancelled_at IS NOT NULL,
+      (SELECT count(*) FROM platform.idempotency_records
+        WHERE resource_id = a.id AND route_template = '/v1/appointments/{appointmentId}/cancel'
+          AND state = 'completed'),
+      (SELECT count(*) FROM audit.events
+        WHERE resource_id = a.id AND action_code = 'appointment.cancelled'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = a.id AND event_type = 'clinical.appointment.changed.v1')
+      FROM clinical.appointments a WHERE a.id = '${appointment}';`,
+    before: 'confirmed|1|f|0|0|0\n',
+    after: 'cancelled|2|t|1|1|1\n',
+  };
 }
 
 function encounterParticipantWriter({ encounter, clinician, unrelated, starts }) {
@@ -1796,6 +1852,7 @@ async function admit() {
     ['--participating-allergy-verification', 'allergyVerification'],
     ['--participating-encounter-participant', 'encounterParticipant'],
     ['--participating-encounter-completion', 'encounterCompletion'],
+    ['--participating-appointment-cancellation', 'appointmentCancellation'],
     ['--participating-workforce-termination', 'workforceTermination'],
     ['--participating-recovery-restriction', 'recoveryRestriction'],
   ]).get(onlyArgument);
