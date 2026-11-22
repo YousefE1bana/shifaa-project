@@ -12,6 +12,20 @@
     "guardFirst": "PostgreSQL observed a separate supabase_auth_admin backend waiting on the fixture holder. After that holder rolled back, real GoTrue local logout returned HTTP 204. The bound session was absent and the user row remained.",
     "scope": "One guard-first native HTTP logout trial against a retained user and session SHARE lock on disposable rows. The four SQL primitive trials and isolation checks also passed on this run."
   },
+  "nativeRefresh": {
+    "testedHead": "dc09a6db9f36e4685d47086246c46650b489e3ff",
+    "run": "ab01e3e9-a387-4b06-b58d-ef58e858220e",
+    "configuration": "Pinned GoTrue with explicitly bound TOTP, token lifetime, session timebox, inactivity, rotation, reuse and disabled-hook settings read back from the disposable container.",
+    "readerFirst": "GoTrue exhausted its session SKIP LOCKED attempts and returned HTTP 409. Session refreshed_at was unchanged while the independent reader held the row. The same refresh operation returned 200 after release and preserved the verified subject and session binding.",
+    "refreshFirst": "A disposable audit-table holder stopped the native refresh after it took the session row. PostgreSQL reported 55P03 on auth.sessions for the independent reader. After releasing the audit holder, native refresh succeeded and the reader acquired the bound row in a fresh transaction."
+  },
+  "nativeDeadlines": {
+    "testedHead": "702f0fc4798d47ea978fb41aba6a3c45ba822d9e",
+    "run": "69884adf-7a54-4860-a4c7-699b43d25cc6",
+    "boundary": "On a native session row, a strict before comparison was true one microsecond before not_after, false at equality, and false one microsecond after it.",
+    "postWait": "The independent reader PID was observed waiting on the holder. The clock crossed the seeded native deadline before release. The reader measured transaction start before the deadline and post-lock clock after it in the same transaction.",
+    "previousFailure": "The first observer filtered pg_stat_activity by the assumed role. It missed the reader login PID after SET SESSION AUTHORIZATION. The corrected observer matched the actual blocked reader PID."
+  },
   "method": "T002 disposable internal topology with tmpfs, no published ports or retained mounts. Pinned native GoTrue created two distinct synthetic email accounts and matching sessions. Native-owner sessions exercised raw PostgreSQL conflict behavior on those fixtures.",
   "images": {
     "auth": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
@@ -60,6 +74,31 @@
         "path": "t010-native-http-logout.json",
         "bytes": 50099,
         "sha256": "d79a39d2787581979f5741d74c5a915ab058ad1ca74c692500ce71cc068e284d"
+      },
+      {
+        "path": "t010-native-refresh-ordering-1.json",
+        "bytes": 40039,
+        "sha256": "c98893fe6a7b43f54576461112109d25add5c394218df4de1c4dd77692ef0e74",
+        "run": "e8f66206-4f63-4004-a2e5-5f5857ff80e0"
+      },
+      {
+        "path": "t010-native-refresh-bound.json",
+        "bytes": 42484,
+        "sha256": "bc8b5172d580a35c550aa1d81101f69129d586a25a324f226e90b34bc014b22e",
+        "run": "ab01e3e9-a387-4b06-b58d-ef58e858220e"
+      },
+      {
+        "path": "t010-native-deadlines-bound.json",
+        "bytes": 38290,
+        "sha256": "8891a2dcdfa8a4785b113e7437e8d7ea7d1f65dcac71a974ab10f53ff7bb2a31",
+        "run": "dd8d445b-e147-4dfc-a381-e106b9ddbff7",
+        "result": "BLOCKED at the independent reader observation"
+      },
+      {
+        "path": "t010-native-deadlines-retry.json",
+        "bytes": 36025,
+        "sha256": "0535fbe28caddd3ac340651f8ef63575fcc288fcf993ff9b718f5c49e7229afe",
+        "run": "69884adf-7a54-4860-a4c7-699b43d25cc6"
       }
     ]
   },
@@ -69,9 +108,9 @@
     "matches": true
   },
   "remaining": [
-    "Full pinned configuration and remaining actual native HTTP races, including writer-first logout",
-    "Native downgrade and recovery, expiry equality and expiry after a wait, refresh inverse order and SKIP LOCKED exhaustion",
-    "Guard-specific privilege, same-transaction context, current-authority replay and Core API integration evidence"
+    "Current-head native HTTP coverage for writer-first logout, downgrade and recovery, and user-ban interleavings beyond the native-owner SQL results",
+    "Accepted native configuration and integration evidence for the deployed guard's post-wait JWT, session deadline and login-strength decisions",
+    "Current-authority replay, trusted context substitution, multiple-account binding semantics and installed executor/privilege negatives"
   ],
-  "limits": "Native-owner SQL exercised lock primitives on real GoTrue rows. The probe role and API are isolated fixtures. Product NAC-1 guard, forced-RLS executor and bounded retry acceptance remain pending. No T011 or T013 runtime changes are included."
+  "limits": "Native-owner SQL exercised row and clock primitives on real GoTrue rows. The probe role, audit hold and API are isolated fixtures. Product NAC-1 guard, forced-RLS executor and bounded retry acceptance remain pending."
 }
