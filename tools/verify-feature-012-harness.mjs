@@ -752,7 +752,7 @@ async function nativeLogoutFirstTrial(db, probe, source, { subject, session }) {
       trial,
       async (pid) => {
         assert.equal(checkContainer(probe).State.Running, true);
-        const args = [...settings.prefix, 'exec', '-i', probe.id, 'node', '-', 'local-logout'];
+        const args = [...settings.prefix, 'exec', '-i', probe.id, 'node', '-', 'local-logout-held'];
         const cli = hostExecutable('docker', settings.options.env);
         const request = spawn(cli, args, { ...settings.options, stdio: ['pipe', 'pipe', 'pipe'] });
         let stdout = '';

@@ -12,11 +12,11 @@ const role = 'f012_probe';
 const bind = (tx, subject) =>
   tx.unsafe("select set_config('f012_probe.subject', $1, true)", [subject]);
 
-async function auth(path, options) {
+async function auth(path, options, timeoutMs = 2500) {
   return fetch(authURL + path, {
     ...options,
     redirect: 'error',
-    signal: AbortSignal.timeout(2500),
+    signal: AbortSignal.timeout(timeoutMs),
   });
 }
 
@@ -195,12 +195,13 @@ async function main() {
     await fixtures();
   } else if (process.argv[2] === 'probe') {
     await exercise(JSON.parse(readFileSync(fixturePath, 'utf8')));
-  } else if (process.argv[2] === 'local-logout') {
+  } else if (['local-logout', 'local-logout-held'].includes(process.argv[2])) {
     const [person] = JSON.parse(readFileSync(fixturePath, 'utf8'));
-    const response = await auth('/logout?scope=local', {
-      method: 'POST',
-      headers: { authorization: 'Bearer ' + person.token },
-    });
+    const response = await auth(
+      '/logout?scope=local',
+      { method: 'POST', headers: { authorization: 'Bearer ' + person.token } },
+      process.argv[2] === 'local-logout-held' ? 10_000 : undefined,
+    );
     await response.body?.cancel();
     console.log(JSON.stringify({ status: response.status }));
   } else if (['native-refresh', 'native-refresh-second'].includes(process.argv[2])) {
