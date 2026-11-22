@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
-import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { createHash, createHmac, randomBytes, randomUUID } from 'node:crypto';
 import { once } from 'node:events';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -286,6 +286,15 @@ function observeNativePolicy(auth) {
   }
   assert.deepEqual(configuration.Cmd, ['auth']);
   receipt.nativePolicy = { environment: actual, absent, command: configuration.Cmd };
+}
+
+function disposableNativeAdminToken() {
+  const part = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
+  const data = [
+    part({ alg: 'HS256', typ: 'JWT' }),
+    part({ role: 'service_role', exp: Math.floor(Date.now() / 1000) + 180 }),
+  ].join('.');
+  return data + '.' + createHmac('sha256', jwtSecret).update(data).digest('base64url');
 }
 
 function trial(name, action, expected) {
@@ -810,6 +819,164 @@ async function nativeLogoutFirstTrial(db, probe, source, { subject, session }) {
   trial.afterCommit = observedSql(db, read);
   assert.equal(trial.afterCommit.exit, 0, trial.afterCommit.stderr);
   assert.equal(trial.afterCommit.stdout, `user|${subject}\n`);
+}
+
+function startNativeMutation(probe, source, operation, fixtureIndex) {
+  assert.equal(checkContainer(probe).State.Running, true);
+  const args = [
+    ...settings.prefix,
+    'exec',
+    '-i',
+    probe.id,
+    'node',
+    '-',
+    'native-mutation',
+    operation,
+    String(fixtureIndex),
+  ];
+  const cli = hostExecutable('docker', settings.options.env);
+  const request = spawn(cli, args, { ...settings.options, stdio: ['pipe', 'pipe', 'pipe'] });
+  let stdout = '';
+  let stderr = '';
+  request.stdout.setEncoding('utf8').on('data', (chunk) => (stdout += chunk));
+  request.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+  const closed = once(request, 'close').then(([exit]) => {
+    receipt.commands.push({ args, exit });
+    return { exit, stdout, stderr };
+  });
+  request.stdin.on('error', () => request.kill());
+  request.stdin.end(source);
+  return closed;
+}
+
+async function waitForNativeWriter(db, holderPid, expectedEvent) {
+  assert.match(holderPid, /^\d+$/);
+  const deadline = Date.now() + 5_000;
+  while (Date.now() < deadline) {
+    const wait = observedSql(
+      db,
+      `SELECT pid, wait_event FROM pg_stat_activity WHERE usename = 'supabase_auth_admin'
+        AND ${holderPid} = ANY(pg_blocking_pids(pid));`,
+    );
+    assert.equal(wait.exit, 0, wait.stderr);
+    if (wait.stdout) {
+      assert.match(wait.stdout, expectedEvent);
+      return wait;
+    }
+    await delay(80);
+  }
+  throw new Error('Pinned Auth writer did not wait on the expected holder');
+}
+
+async function nativeMutationTrials(db, probe, source, fixtures, operation) {
+  const result = (receipt.nativeMutation = { operation, readerFirst: {}, writerFirst: {} });
+  const details =
+    operation === 'ban'
+      ? []
+      : JSON.parse(
+          exec(probe, ['node', '-', 'prepare-native-mutation', operation], { input: source }),
+        );
+  result.prepared = details;
+  const targetsUser = operation !== 'downgrade';
+  const relation = targetsUser ? 'users' : 'sessions';
+  const initial = { ban: 'f|1\n', downgrade: 'aal2|1\n', recovery: '1|1\n' }[operation];
+  const expected = { ban: 't|1\n', downgrade: 'aal1|0\n', recovery: '0|1\n' }[operation];
+  const expectedHttp =
+    operation === 'downgrade' ? { status: 200 } : { status: 200, previousLogin: 400 };
+  const uuid = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/;
+  for (const fixtureIndex of [0, 1]) {
+    const { subject, session } = fixtures[fixtureIndex];
+    const trial = fixtureIndex === 0 ? result.readerFirst : result.writerFirst;
+    const detail = details[fixtureIndex];
+    const fixtureId = detail?.factor ?? detail?.recoverySession;
+    if (detail) assert.match(fixtureId, uuid);
+    const boundSession = `user_id = '${subject}' AND id = '${session}'`;
+    const lockRows = `
+      SELECT 'user', id FROM auth.users WHERE id = '${subject}' FOR SHARE;
+      SELECT 'session', id FROM auth.sessions WHERE ${boundSession} FOR SHARE;`;
+    const readState = {
+      ban: `SELECT coalesce(banned_until > clock_timestamp(), false),
+        (SELECT count(*) FROM auth.sessions WHERE ${boundSession})
+        FROM auth.users WHERE id = '${subject}';`,
+      downgrade: `SELECT aal, (SELECT count(*) FROM auth.mfa_factors
+        WHERE id = '${fixtureId}' AND user_id = '${subject}') FROM auth.sessions WHERE ${boundSession};`,
+      recovery: `SELECT count(*) FILTER (WHERE id = '${session}'),
+        count(*) FILTER (WHERE id = '${fixtureId}') FROM auth.sessions WHERE user_id = '${subject}';`,
+    }[operation];
+    trial.before = observedSql(db, readState);
+    assert.equal(trial.before.exit, 0, trial.before.stderr);
+    assert.equal(trial.before.stdout, initial);
+
+    let mutation;
+    try {
+      if (fixtureIndex === 0) {
+        await withNativeFixtureLock(db, lockRows, trial, async (holderPid) => {
+          assert.match(trial.holder, /^user\|[\da-f-]+\nsession\|[\da-f-]+$/m);
+          mutation = startNativeMutation(probe, source, operation, fixtureIndex);
+          trial.wait = await waitForNativeWriter(db, holderPid, /^\d+\|(transactionid|tuple)\n$/);
+          assert.deepEqual(observedSql(db, readState), trial.before);
+        });
+      } else {
+        const target = targetsUser ? subject : session;
+        const changedColumn = {
+          ban: 'banned_until',
+          downgrade: 'aal',
+          recovery: 'encrypted_password',
+        }[operation];
+        trial.barrier = observedSql(
+          db,
+          `CREATE FUNCTION auth.t010_mutation_barrier() RETURNS trigger
+            LANGUAGE plpgsql SET search_path = pg_catalog AS $fixture$
+            BEGIN PERFORM pg_advisory_xact_lock(7412, 11); RETURN NULL; END $fixture$;
+          CREATE TRIGGER t010_mutation_barrier AFTER UPDATE OF ${changedColumn}
+            ON auth.${relation} FOR EACH ROW WHEN (OLD.id = '${target}'::uuid)
+            EXECUTE FUNCTION auth.t010_mutation_barrier();`,
+        );
+        assert.equal(trial.barrier.exit, 0, trial.barrier.stderr);
+        await withNativeFixtureLock(
+          db,
+          'SELECT pg_advisory_xact_lock(7412, 11);',
+          trial,
+          async (holderPid) => {
+            mutation = startNativeMutation(probe, source, operation, fixtureIndex);
+            trial.wait = await waitForNativeWriter(db, holderPid, /^\d+\|advisory\n$/);
+            trial.reader = observedSql(
+              db,
+              `\\set VERBOSITY verbose
+            BEGIN;
+            SET LOCAL lock_timeout = '500ms';
+            SET LOCAL statement_timeout = '3s';
+            SET SESSION AUTHORIZATION supabase_auth_admin;
+            SELECT 'reader', pg_backend_pid();
+            ${lockRows}
+            ROLLBACK;`,
+            );
+            assert.equal(trial.reader.exit, 3, trial.reader.stdout);
+            assert.match(trial.reader.stderr, /55P03:.*lock timeout/);
+            assert.ok(trial.reader.stderr.includes('relation "' + relation + '"'));
+            const readerPid = trial.reader.stdout.match(/^reader\|(\d+)$/m)?.[1];
+            assert.ok(readerPid);
+            assert.notEqual(readerPid, trial.wait.stdout.split('|')[0]);
+            assert.deepEqual(observedSql(db, readState), trial.before);
+          },
+        );
+      }
+    } finally {
+      if (mutation) trial.http = await mutation;
+    }
+    assert.equal(trial.http.exit, 0, trial.http.stderr);
+    assert.deepEqual(JSON.parse(trial.http.stdout), expectedHttp);
+    trial.after = observedSql(db, readState);
+    assert.equal(trial.after.exit, 0, trial.after.stderr);
+    assert.equal(trial.after.stdout, expected);
+    trial.freshReader = observedSql(db, lockRows);
+    assert.equal(trial.freshReader.exit, 0, trial.freshReader.stderr);
+    assert.ok(trial.freshReader.stdout.includes(`user|${subject}\n`));
+    assert.equal(
+      trial.freshReader.stdout.includes(`session|${session}\n`),
+      operation !== 'recovery',
+    );
+  }
 }
 
 async function nativeDeadlineTrials(db, { subject, session }) {
@@ -1448,6 +1615,13 @@ async function admit() {
   const nativeDeadlines = argumentsList.length === 1 && argumentsList[0] === '--native-deadlines';
   const nativeLogoutFirst =
     argumentsList.length === 1 && argumentsList[0] === '--native-logout-first';
+  const nativeMutation =
+    argumentsList.length === 1 &&
+    new Map([
+      ['--native-ban', 'ban'],
+      ['--native-downgrade', 'downgrade'],
+      ['--native-recovery', 'recovery'],
+    ]).get(argumentsList[0]);
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
@@ -1457,7 +1631,12 @@ async function admit() {
     upgrade ||
     (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
   assert.deepEqual(
-    sqlOnly || nativeBaseline || nativeRefresh || nativeDeadlines || nativeLogoutFirst
+    sqlOnly ||
+      nativeBaseline ||
+      nativeRefresh ||
+      nativeDeadlines ||
+      nativeLogoutFirst ||
+      nativeMutation
       ? []
       : argumentsList,
     [],
@@ -1537,7 +1716,13 @@ async function admit() {
     return;
   }
   try {
-    await runNativeAdmission({ nativeBaseline, nativeRefresh, nativeDeadlines, nativeLogoutFirst });
+    await runNativeAdmission({
+      nativeBaseline,
+      nativeRefresh,
+      nativeDeadlines,
+      nativeLogoutFirst,
+      nativeMutation,
+    });
   } finally {
     teardown();
     assert.deepEqual(inventory(), before);
@@ -1551,6 +1736,7 @@ async function admit() {
   if (nativeRefresh) receipt.status = 'PASS_NATIVE_REFRESH_ORDERING';
   if (nativeDeadlines) receipt.status = 'PASS_NATIVE_DEADLINE_PRIMITIVES';
   if (nativeLogoutFirst) receipt.status = 'PASS_NATIVE_LOGOUT_FIRST';
+  if (nativeMutation) receipt.status = 'PASS_NATIVE_MUTATION_ORDERING';
 }
 
 async function runNativeAdmission({
@@ -1558,11 +1744,12 @@ async function runNativeAdmission({
   nativeRefresh,
   nativeDeadlines,
   nativeLogoutFirst,
+  nativeMutation,
 }) {
   const db = startDatabase('db', networkId);
   receipt.databaseSystems = { source: db.system };
   const restore =
-    nativeBaseline || nativeRefresh || nativeDeadlines || nativeLogoutFirst
+    nativeBaseline || nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation
       ? null
       : startDatabase('restore', 'none');
   if (restore) {
@@ -1583,11 +1770,16 @@ async function runNativeAdmission({
   }
   stage = 'bootstrap and native API admission';
   sql(db, "alter role supabase_auth_admin password '" + authPassword + "';\n" + probeSchema());
-  const readSessionPolicy = nativeRefresh || nativeDeadlines || nativeLogoutFirst;
+  const readSessionPolicy = nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation;
   const auth = startAuth(readSessionPolicy);
   if (readSessionPolicy) observeNativePolicy(auth);
   const probe = create('probe', receipt.images.probe, {
-    env: { F012_PROBE_PASSWORD: apiPassword },
+    env: {
+      F012_PROBE_PASSWORD: apiPassword,
+      ...(nativeMutation === 'ban' || nativeMutation === 'recovery'
+        ? { F012_NATIVE_ADMIN_TOKEN: disposableNativeAdminToken() }
+        : {}),
+    },
     tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m' },
     flags: ['--read-only', '--cap-drop=ALL', '--user=1000:1000', '--entrypoint=node'],
     command: ['-e', 'setTimeout(() => {}, 180000)'],
@@ -1597,6 +1789,11 @@ async function runNativeAdmission({
   const fixtures = JSON.parse(exec(probe, ['node', '-', 'fixtures'], { input: source }));
   bindFixtures(db, fixtures);
   receipt.syntheticSessions = fixtures;
+  if (nativeMutation) {
+    stage = 'T010 pinned native ' + nativeMutation + ' ordering';
+    await nativeMutationTrials(db, probe, source, fixtures, nativeMutation);
+    return;
+  }
   if (nativeRefresh) {
     stage = 'T010 pinned native refresh ordering';
     await nativeRefreshTrials(db, probe, source, fixtures);
