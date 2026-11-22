@@ -87,7 +87,7 @@ BEGIN
     OR (p_purpose = ANY(pg_catalog.string_to_array(
           pg_catalog.current_setting('shifaa.purposes', true), ','
         ))) IS NOT TRUE
-    OR CASE p_profile
+    OR (CASE p_profile
       WHEN 'workforce_sensitive' THEN
         actor_role IS NULL OR actor_role NOT IN ('CLN', 'PHA') OR p_facility IS NULL
         OR p_claimed_aal <> 2 OR p_totp_at IS NULL
@@ -95,7 +95,7 @@ BEGIN
         actor_role IS DISTINCT FROM 'PAT'
         OR p_action NOT IN ('getPrescription', 'listPatientMedications')
       ELSE true
-    END
+    END)
   THEN
     RAISE EXCEPTION 'NAC-1 current authority denied' USING ERRCODE = '42501';
   END IF;
