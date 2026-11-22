@@ -163,8 +163,14 @@
     "volumes": 4,
     "matches": true
   },
+  "signedContextIntegration": {
+    "testedHead": "8ac8d0b90732c3ee42de37a20d1e651ebe01f051",
+    "job": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45060990852/job/137326652938",
+    "file": "services/api/test/feature-012-native-authority.integration.test.ts",
+    "result": "5 passed at the signed issuer boundary",
+    "scope": "Verified claims and deadlines, separation from user and app metadata, and rejection of missing expiration, expiry equality, a missing session ID and an untrusted issuer."
+  },
   "remaining": [
-    "Run the TypeScript signed-context integration test at the API issuer boundary.",
     "Deployed guard post-wait JWT expiry, session deadline and login-strength checks. The observed native row and clock primitives exercise the underlying contract.",
     "Guard-facing current-authority replay, trusted context substitution and profile separation, multiple-account binding, and installed executor privilege negatives. The T011 helper and retained transaction are absent from this baseline."
   ],
