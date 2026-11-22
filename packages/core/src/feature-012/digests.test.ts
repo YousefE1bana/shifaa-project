@@ -27,6 +27,12 @@ const draftVectors = [
 
 type DraftVectorInput = (typeof draftVectors)[number]['input'];
 
+describe('F012 synthetic digest fixtures', () => {
+  it.each(draftVectors)('matches the reference SHA-256 for $name', ({ canonical, sha256 }) => {
+    expect(createHash('sha256').update(canonical, 'utf8').digest('hex')).toBe(sha256);
+  });
+});
+
 export function defineFeature012DigestCases(encode?: (value: DraftVectorInput) => Uint8Array) {
   describe.skipIf(!encode)('F012 canonical encoding against proposed synthetic vectors', () => {
     it.each(draftVectors)('$name', ({ input, canonical, sha256 }) => {

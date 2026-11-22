@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "task": "T018",
+  "issue": 529,
+  "status": "OPEN_PARTIAL_REFERENCE_VECTORS",
+  "verifiedAt": "2026-11-22",
+  "fixtureBase": "03ff7bb3029799f830a464e0ed210076bc4b484f",
+  "scope": "Three synthetic reference-byte fixtures. The TypeScript suite hashes its explicit UTF-8 canonical strings with Node 24.22.1. Python 3.13.16 independently serializes equivalent typed values using sorted keys, compact separators and exact UTF-8, then computes SHA-256.",
+  "results": {
+    "vitest": { "pass": 3, "fail": 0, "pending": 14 },
+    "independentReferenceVectors": [
+      {
+        "name": "omitted monitoring, UTC and precise decimal",
+        "canonicalBytes": 100,
+        "sha256": "3a3469305cbe50e2e1f9082543db7fbc1a8e00ae98af6d5ab9ce76b6d7f44db9"
+      },
+      {
+        "name": "explicit null monitoring",
+        "canonicalBytes": 118,
+        "sha256": "e064e3785c02dfabe7656ea8b9be98386f131318b0250572c5dcd6a9d24e5474"
+      },
+      {
+        "name": "visually equivalent composed text has different bytes",
+        "canonicalBytes": 99,
+        "sha256": "72ed27bbba729f8286a652030ae8450d892c7f52f129fd19151fb30bb8de5355"
+      }
+    ]
+  },
+  "retainedEvidence": {
+    "relativeDirectory": "SHIFAA-Recovery/2026-11-22 under the SHIFAA engineering workstation's LOCALAPPDATA",
+    "files": [
+      {
+        "path": "t018-reference-vectors-python.json",
+        "bytes": 1097,
+        "sha256": "6ff8b51cf1c96b032d9d68e6f7ec5470bb29720a083615a11aae141737463204"
+      },
+      {
+        "path": "t018-reference-vectors-vitest.json",
+        "bytes": 6518,
+        "sha256": "fb1e38fb6b2a7bbf13cdfa51edf1214459cbec1405308a0292f4f33e34093a9d"
+      }
+    ]
+  },
+  "remaining": "Bind the exact canonical vectors and authored adapter cases to the real implementation and observation surfaces. The 14 pending cases include canonical encoder use, AAD/envelope substitution, F011 executor isolation, redaction, and retention. No product protection or retention claim follows from the reference-vector checks."
+}
