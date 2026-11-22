@@ -964,14 +964,25 @@ function allergyVerificationWriter(db, { patient, clinician, facility, encounter
   const source = 'synthetic.internal_clinician_provenance';
   const producer = 'f011.allergy_evidence_boundary';
   const verifiedAt = '2030-04-05T07:15:00Z';
+  const facilityEvidence = randomUUID();
   const seed = observedSql(
     db,
-    `INSERT INTO clinical.allergy_verification_support
+    `BEGIN;
+    INSERT INTO identity.private_evidence_objects
+      (id,bucket_code,object_key,owner_person_id,facility_id,sha256,mime_type,size_bytes,scan_status,released_at)
+    VALUES ('${facilityEvidence}','facility-license-evidence','synthetic/${facilityEvidence}',
+      '${clinician}','${facility}',repeat('1',64),'application/pdf',10,'released',now());
+    INSERT INTO identity.facility_licenses
+      (facility_id,license_type,number_ciphertext,number_hash,issuer,expires_on,licensed_activities,status,evidence_object_id)
+    VALUES ('${facility}','clinic',decode('01','hex'),decode('01','hex'),'Synthetic issuer',
+      '2035-12-31',ARRAY['consultation'],'verified','${facilityEvidence}');
+    INSERT INTO clinical.allergy_verification_support
     (id,patient_id,allergy_id,previous_revision_id,previous_version,target_status,
       attestor_person_id,source_identity,source_evidence_identity,producer_id,recorded_at,synthetic)
     VALUES ('${evidenceRef}','${patient}','${allergyId}','${previousRevisionId}',1,
       'clinician_confirmed','${clinician}','${source}','${evidenceRef}','${producer}',
-      '${verifiedAt}',true);`,
+      '${verifiedAt}',true);
+    COMMIT;`,
   );
   receipt.participatingWriters.allergyVerificationSupport = seed;
   assert.equal(seed.exit, 0, seed.stderr);
