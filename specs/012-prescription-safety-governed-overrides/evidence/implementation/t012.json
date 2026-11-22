@@ -98,6 +98,26 @@
       "negative": "The unrelated clinician received 42501 and left the original head, revision and outbox unchanged.",
       "correctionOwner": "T013"
     },
+    "workforceTermination": {
+      "testedHead": "a54ebf225332d222ef1f41652d331c811494ff03",
+      "run": "341d1e26-5f71-4442-9f01-2a94e026b44f",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "Core API facility-membership upsert under installed forced RLS",
+      "admissionFirst": "Termination committed the ended membership at version 2 while independent admission remained held.",
+      "writerFirst": "Independent admission committed while termination remained open. Rollback preserved the active membership at version 1.",
+      "negative": "The unrelated person received 42501 and changed no membership.",
+      "correctionOwner": "T013"
+    },
+    "coreRecoveryRestriction": {
+      "testedHead": "fba26d478997a3af39a16d4c7ba645c34f844f97",
+      "run": "f51bd6da-fb51-4bff-b7a7-a49a8d39ab76",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "Core API stageRecoveryRestriction update under installed forced RLS",
+      "admissionFirst": "The F007 proof-required case acquired mfa_enrollment_only at version 2 while independent admission remained held.",
+      "writerFirst": "Independent admission committed while staging remained open. Rollback preserved version 1 and the absence of the restriction.",
+      "negative": "An unrelated person matched zero rows and left the case unchanged.",
+      "correctionOwner": "T013"
+    },
     "preservation": {
       "containers": 12,
       "volumes": 4,
@@ -232,6 +252,22 @@
         "run": "8926b763-9a81-4994-a18d-c1c129fd3268",
         "testedHead": "c7931557f250707426ccdac48518ec7edaae3ed2",
         "result": "F011 clinician verification and allergy head replacement RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      },
+      {
+        "path": "t012-workforce-termination-a54ebf2.json",
+        "bytes": 178027,
+        "sha256": "d93a9e417724f28a6407da4de30f91a15bf6c89406d7cdc83eecd4d55bc6afe0",
+        "run": "341d1e26-5f71-4442-9f01-2a94e026b44f",
+        "testedHead": "a54ebf225332d222ef1f41652d331c811494ff03",
+        "result": "Workforce termination RED in both orders. Admission control, unrelated-actor denial and rollback passed."
+      },
+      {
+        "path": "t012-recovery-restriction-fba26d4.json",
+        "bytes": 178031,
+        "sha256": "da529141b0e5c279f6725541d10b8a4fde5f39a049b00d7e80ea23c5272c4ba2",
+        "run": "f51bd6da-fb51-4bff-b7a7-a49a8d39ab76",
+        "testedHead": "fba26d478997a3af39a16d4c7ba645c34f844f97",
+        "result": "F007 restriction staging RED in both orders. Admission control, unrelated-actor zero-row negative and rollback passed."
       }
     ]
   },
