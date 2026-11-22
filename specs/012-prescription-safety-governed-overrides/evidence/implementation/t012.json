@@ -34,6 +34,16 @@
       "forcedRls": ["identity.people", "identity.patients", "identity.care_relationships"],
       "correctionOwner": "T013"
     },
+    "recoveryWorker": {
+      "testedHead": "813a4efdaa2f4492ac1947937f251d08b579329f",
+      "run": "ca5852ff-2e39-42dd-9284-1c77eda05200",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "platform.purge_expired_continuity_decoys(timestamptz)",
+      "admissionFirst": "The independent shifaa_worker session committed the restricted_enrollment to expired transition while shifaa_api held admission. Case version advanced from 1 to 2 and the worker reported zero decoys removed.",
+      "writerFirst": "The independent shifaa_api session acquired and committed admission while the worker transaction held the case update. Worker rollback preserved the original committed state and version.",
+      "roleCheck": "The same entry point returned 42501 to shifaa_api and left the seeded case unchanged.",
+      "correctionOwner": "T013"
+    },
     "preservation": {
       "containers": 12,
       "volumes": 4,
@@ -60,11 +70,17 @@
         "bytes": 221630,
         "sha256": "5c1f6112e05dbf3f0e1aa8f40a65f398abb2f5ed94657a69b3926c8efe3603bb",
         "run": "Final catalog and onboarding ordering, db2141a7-9340-4b0e-810f-b88a9d9c031a."
+      },
+      {
+        "path": "t012-recovery-worker-rank-zero.json",
+        "bytes": 231906,
+        "sha256": "41e6223acb85f37e473af8a3c28029995fecb6d1bb14cf690c11f7467d549cc4",
+        "run": "Catalog PASS, onboarding RED and worker expiry RED, ca5852ff-2e39-42dd-9284-1c77eda05200."
       }
     ]
   },
   "pending": [
-    "Independent-session cases for the installed non-onboarding writer families",
+    "Independent-session cases for installed writers beyond onboarding and worker recovery expiry",
     "Exact external approval, scan and offline writer boundaries",
     "Future roster, projection and P3 writers in their owning tasks",
     "Pinned native row-conflict acceptance in T010 and T011"
