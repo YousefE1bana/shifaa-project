@@ -738,6 +738,8 @@ async function runContextWriterOrder(
   let cases;
   if (focusedWriters === 'allergy') {
     cases = [allergyInsertWriter(patient)];
+  } else if (focusedWriters === 'workforceTermination') {
+    cases = [workforceTerminationWriter(db, { owner: patientPerson, clinician: delegate })];
   } else if (focusedWriters === 'allergyVerification') {
     const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
     const first = allergyInsertWriter(patient);
@@ -1057,6 +1059,52 @@ function allergyVerificationWriter(db, { patient, clinician, facility, encounter
       WHERE head.id = '${allergyId}';`,
     before: '1|self_reported|1|1\n',
     after: '2|clinician_confirmed|2|2\n',
+  };
+}
+
+function workforceTerminationWriter(db, { owner, clinician }) {
+  const facility = randomUUID();
+  const licence = randomUUID();
+  const membership = randomUUID();
+  const seeded = observedSql(
+    db,
+    `BEGIN;
+    UPDATE identity.people SET profile_status = 'active' WHERE id IN ('${owner}', '${clinician}');
+    INSERT INTO identity.facilities
+      (id,facility_type,name_ar,name_en,facility_status,governorate_code,city,district,address_line,created_by_person_id)
+    VALUES ('${facility}','clinic','عيادة اختبار','Synthetic clinic','active','C','Cairo','Test','Synthetic address','${owner}');
+    INSERT INTO identity.professional_licenses
+      (id,person_id,profession,number_ciphertext,number_hash,issuer,expires_on,status)
+    VALUES ('${licence}','${clinician}','doctor',decode(repeat('12',16),'hex'),decode(repeat('53',32),'hex'),
+      'Synthetic issuer','2035-12-31','verified');
+    INSERT INTO identity.facility_memberships
+      (id,facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id)
+    VALUES ('${membership}','${facility}','${clinician}','doctor','${licence}','2020-01-01','active','${owner}');
+    COMMIT;`,
+  );
+  receipt.participatingWriters.workforceTerminationFixture = seeded;
+  assert.equal(seeded.exit, 0, seeded.stderr);
+  return {
+    name: 'F003 clinical workforce membership termination',
+    actor: owner,
+    write: `SET LOCAL shifaa.actor_role = 'ADM-FACILITY';
+      SET LOCAL shifaa.aal = '2';
+      INSERT INTO identity.facility_memberships
+        (id,facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id,version)
+      VALUES ('${membership}','${facility}','${clinician}','doctor','${licence}','2020-01-01',
+        'ended',platform.context_person_id(),2)
+      ON CONFLICT (id) DO UPDATE SET role_code = excluded.role_code,
+        employment_license_id = excluded.employment_license_id, invite_token_hash = excluded.invite_token_hash,
+        invite_expires_at = excluded.invite_expires_at, valid_from = excluded.valid_from,
+        valid_until = excluded.valid_until, membership_status = excluded.membership_status,
+        version = excluded.version;`,
+    written: /^INSERT 0 1$/m,
+    deniedExit: 3,
+    denied: /42501:.*row-level security/i,
+    state: `SELECT membership_status, version, valid_until IS NOT NULL
+      FROM identity.facility_memberships WHERE id = '${membership}';`,
+    before: 'active|1|f\n',
+    after: 'ended|2|f\n',
   };
 }
 
@@ -1711,6 +1759,7 @@ async function admit() {
     ['--participating-allergy-verification', 'allergyVerification'],
     ['--participating-encounter-participant', 'encounterParticipant'],
     ['--participating-encounter-completion', 'encounterCompletion'],
+    ['--participating-workforce-termination', 'workforceTermination'],
   ]).get(onlyArgument);
   const participatingWriters =
     Boolean(focusedWriters) || onlyArgument === '--participating-writers';
