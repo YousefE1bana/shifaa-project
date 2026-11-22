@@ -78,6 +78,26 @@
       "scope": "Installed participant interval closure. Appointment, queue and other encounter lifecycle writers have separate outstanding coverage.",
       "correctionOwner": "T013"
     },
+    "encounterCompletion": {
+      "testedHead": "016bdacd2e2e60dad99f48f0d98cc9ee130aa2b0",
+      "run": "5554dcbc-2569-4d13-bb1d-9f3e75c23ab9",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.complete_encounter_api_v1",
+      "admissionFirst": "Encounter, appointment, and queue completion committed together with one audit, outbox, and idempotency record while independent admission remained held.",
+      "writerFirst": "Admission committed while the completion transaction remained open. The original versions and states and zero completion receipts remained visible after rollback.",
+      "negative": "The unrelated clinician received P0002. The committed states and completion receipt counts were unchanged.",
+      "correctionOwner": "T013"
+    },
+    "allergyVerification": {
+      "testedHead": "c7931557f250707426ccdac48518ec7edaae3ed2",
+      "run": "8926b763-9a81-4994-a18d-c1c129fd3268",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.verify_allergy_api_v1 with protected receipt finalization",
+      "admissionFirst": "Clinician verification committed version 2, the revised head, and a second allergy revision and outbox event while independent admission remained held.",
+      "writerFirst": "Admission committed while verification remained open. The observer saw the original self-reported head at version 1, one revision and one outbox event after rollback.",
+      "negative": "The unrelated clinician received 42501 and left the original head, revision and outbox unchanged.",
+      "correctionOwner": "T013"
+    },
     "preservation": {
       "containers": 12,
       "volumes": 4,
@@ -156,6 +176,62 @@
         "run": "6e2dff04-8251-4e4c-a91b-b48e576c50d4",
         "testedHead": "8d58339c0193d844f1b6cc9b334d41b8f073c376",
         "result": "Admission control, unrelated-clinician denial and rollback PASS. Installed participant closure RED in both orderings."
+      },
+      {
+        "path": "t012-f010-completion-f414ad0.json",
+        "bytes": 167439,
+        "sha256": "0aac9908ee15ef49243c4e991fc15bc598745e5703e3119ddf57575840eec91f",
+        "run": "8fb90e8d-66b9-4a05-9ce0-ca30ef8950e8",
+        "testedHead": "f414ad02ce72d0e0fef7d27af870ae36a9115022",
+        "result": "BLOCKED before the writer race. Direct fixture insertion into in_service was denied."
+      },
+      {
+        "path": "t012-f010-completion-80d89f7.json",
+        "bytes": 173483,
+        "sha256": "98b1e299b43ed50422c8e900a816575cc23fb3c0c38ef7a5aa17b8e47bc40f5c",
+        "run": "f10adb4c-a120-44df-8e04-78209c30f81a",
+        "testedHead": "80d89f73959a88242a2458c5eb8309599f6513f8",
+        "result": "BLOCKED while the observer waited for first-write audit partition DDL."
+      },
+      {
+        "path": "t012-f010-completion-6ad3dd9.json",
+        "bytes": 173483,
+        "sha256": "fcb8cb59169d2838d9b0041847d6aac3d1131f5e04fe2130976d43f6f653f4af",
+        "run": "f79776a4-502e-4aca-ac4c-e62be86f25ff",
+        "testedHead": "6ad3dd9b06550e6b48dfa8745385856c5ea1bf34",
+        "result": "BLOCKED again at first-write audit partition DDL with a longer fixture timeout."
+      },
+      {
+        "path": "t012-f010-completion-901c042.json",
+        "bytes": 168214,
+        "sha256": "9342faa8357f707e928c0057f7888b1ffc617281bfa8aad69d75fb827876db43",
+        "run": "e0ee195e-e40f-4837-99b0-c43faa102644",
+        "testedHead": "901c042109e668edf68672cdbf1bb3363212ee6b",
+        "result": "BLOCKED before the writer race. The synthetic audit seed used an unsupported outcome."
+      },
+      {
+        "path": "t012-f010-completion-016bdac.json",
+        "bytes": 179408,
+        "sha256": "84b1c107637c1db4ff1b576eff404eb4233bb1b101eccffe717e64589bc3c927",
+        "run": "5554dcbc-2569-4d13-bb1d-9f3e75c23ab9",
+        "testedHead": "016bdacd2e2e60dad99f48f0d98cc9ee130aa2b0",
+        "result": "F010 encounter completion RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      },
+      {
+        "path": "t012-f011-verification-946ca03.json",
+        "bytes": 172651,
+        "sha256": "c7826e9da6badb0fcf244a7578b3d237108b97f9cbd2709eebfda9eb9cdd6a28",
+        "run": "9ec35d01-0e34-4d60-aa34-2090524dc702",
+        "testedHead": "946ca03b380b4c1bdd84b0a6d4e7f05c8da6e42b",
+        "result": "BLOCKED at the installed clinician authority check before the writer race. The fixture lacked a verified facility licence."
+      },
+      {
+        "path": "t012-f011-verification-c793155.json",
+        "bytes": 182018,
+        "sha256": "5e72429735f0f2d28762938954f0aef756ba434188860fbc9a4ff957c6b0864e",
+        "run": "8926b763-9a81-4994-a18d-c1c129fd3268",
+        "testedHead": "c7931557f250707426ccdac48518ec7edaae3ed2",
+        "result": "F011 clinician verification and allergy head replacement RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
       }
     ]
   },

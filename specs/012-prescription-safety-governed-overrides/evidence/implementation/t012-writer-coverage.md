@@ -30,7 +30,7 @@ worker rollback preserved the restricted case and its version. The Core API
 role received `42501` from the worker function and left the case unchanged.
 T013 owns fencing this worker path while preserving its existing role boundary.
 
-The focused runs reproduced RED in both orders for four more paths. Each
+The focused runs reproduced RED in both orders for six more paths. Each
 contender used a different backend and the admission-versus-admission control
 returned `55P03`. In writer-first trials the independent session acquired and
 committed admission while the writer stayed open. Its rollback restored the
@@ -43,17 +43,24 @@ while the admission holder stayed open.
 | Consent append for the installed `care_updates` purpose                          | Original grant at version 1 and appended withdrawal at version 2                                                          | An unrelated person received `42501`                                   |
 | F011 patient's first self-reported allergy, with its protected receipt finalized | Counts of the head, revision and outbox event changed from `0/0/0` to `1/1/1`                                             | An unrelated person received `42501` and committed none of the effects |
 | F010 encounter participant interval closure                                      | Encounter and participant versions advanced from 1 to 2, the interval closed, and one `encounter.updated` event committed | An unrelated clinician received `P0002` and wrote nothing              |
+| F010 encounter completion                                                        | Encounter, appointment and queue completed with one audit, outbox and idempotency record                                  | An unrelated clinician received `P0002` and wrote nothing              |
+| F011 clinician allergy verification and head replacement                         | Head and revision advanced to version 2 with `clinician_confirmed` and a second outbox event                              | An unrelated clinician received `42501` and wrote nothing              |
 
 The first F010 trial stopped at the treating-clinician authorization check with
 no ordering result. The retry seeded the appointment in consultation, reached
 the installed writer, and confirmed both failures. In the writer-first trial,
 the independent observer saw the original versions, open participant interval
-and no outbox event after rollback. T013 owns correction and rerun of both tests.
+and no outbox event after rollback. The completion run used a legal queue
+transition and a pre-provisioned synthetic audit partition. The allergy
+verification run used a verified synthetic facility licence and finalized its
+protected receipt in the writer transaction. T013 owns correction and rerun
+of both independent-session orderings for each writer.
 
 The consent result establishes the behavior of the installed append mechanism
 for the tested purpose. Coverage of the exact F012 consent purposes remains open.
-Family grant and other loss variants, allergy head correction, clinician
-creation and content release lifecycle also require their own trials. The
+Family grant and other loss variants, allergy correction variants beyond
+clinician verification, clinician creation and the content release lifecycle
+also require their own trials. The
 [execution receipt](t012.json) records the command outcomes and hashes of the
 original files, including unsuccessful fixture and resource admission attempts.
 
