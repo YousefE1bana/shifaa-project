@@ -88,6 +88,16 @@
       "negative": "The unrelated clinician received P0002. The committed states and completion receipt counts were unchanged.",
       "correctionOwner": "T013"
     },
+    "appointmentCancellation": {
+      "testedHead": "898582140562e7a979bcb77c6623897c895eeb14",
+      "run": "95e62634-08cd-4294-9885-edb7377c2938",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.cancel_appointment_v1",
+      "admissionFirst": "An independent clinician writer committed a confirmed appointment cancellation at version 2 and one audit, outbox and idempotency record each while admission remained held.",
+      "writerFirst": "Admission committed while cancellation remained open. Rollback preserved confirmed version 1 and zero cancellation effects.",
+      "negative": "An unrelated clinician received 42501 and changed no rows.",
+      "correctionOwner": "T013"
+    },
     "allergyVerification": {
       "testedHead": "c7931557f250707426ccdac48518ec7edaae3ed2",
       "run": "8926b763-9a81-4994-a18d-c1c129fd3268",
@@ -268,6 +278,14 @@
         "run": "f51bd6da-fb51-4bff-b7a7-a49a8d39ab76",
         "testedHead": "fba26d478997a3af39a16d4c7ba645c34f844f97",
         "result": "F007 restriction staging RED in both orders. Admission control, unrelated-actor zero-row negative and rollback passed."
+      },
+      {
+        "path": "t012-f010-cancellation-8985821.json",
+        "bytes": 180297,
+        "sha256": "2c063339eb19ac79eec402fb3ab1458f4b8b7a111670bd83d50ec9d5af892332",
+        "run": "95e62634-08cd-4294-9885-edb7377c2938",
+        "testedHead": "898582140562e7a979bcb77c6623897c895eeb14",
+        "result": "F010 independent appointment cancellation RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
       }
     ]
   },
