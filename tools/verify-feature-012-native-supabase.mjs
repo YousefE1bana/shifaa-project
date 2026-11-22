@@ -41,6 +41,8 @@ assert.equal(
   'unix:///var/run/docker.sock',
 );
 
+let nativeStatus;
+
 async function resetAndExtend(runPnpm) {
   await resetFeature011NativeSupabase(runPnpm);
   const [database] = JSON.parse(docker(['inspect', 'supabase_db_shifaa-local-supabase']));
@@ -93,6 +95,12 @@ async function resetAndExtend(runPnpm) {
     ...additivePaths.map(versionOf),
   ]);
   assert.deepEqual(applied(), versions, 'Unexpected native extended chain');
+  nativeStatus = JSON.parse(runPnpm(['supabase', 'status', '-o', 'json'], true));
+  assert.equal(nativeStatus.API_URL, 'http://127.0.0.1:54321');
+  const databaseUrl = new URL(nativeStatus.DB_URL);
+  assert.equal(databaseUrl.hostname, '127.0.0.1');
+  assert.equal(databaseUrl.port, '54322');
+  assert.equal(databaseUrl.pathname, '/postgres');
 
   const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-source-fence.sql'));
   console.log(sql(fixture).trim());
@@ -104,3 +112,24 @@ async function resetAndExtend(runPnpm) {
 // Run the original F011 suite against the same native Auth/Storage/DB stack
 // after its sealed reset and all bound F012 additions have executed.
 await runFeature011NativeSupabaseTests({ reset: resetAndExtend });
+
+// Use the same disposable native stack to exercise the candidate TypeScript
+// adapter after its protected predecessor suite has completed.
+execFileSync('pnpm', ['install', '--frozen-lockfile'], { cwd: root, stdio: 'inherit' });
+execFileSync(
+  'pnpm',
+  [
+    '--filter',
+    '@shifaa/api',
+    'exec',
+    'vitest',
+    'run',
+    'test/feature-012-native-authority.integration.test.ts',
+    '--testTimeout=30000',
+  ],
+  {
+    cwd: root,
+    stdio: 'inherit',
+    env: { ...process.env, SHIFAA_F012_NATIVE_PROOF: JSON.stringify(nativeStatus) },
+  },
+);
