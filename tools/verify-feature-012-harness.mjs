@@ -727,6 +727,91 @@ async function nativeRefreshTrials(db, probe, source, fixtures) {
   assert.equal(secondTrial.after.stdout, `${second.session}|${second.subject}|t\n`);
 }
 
+async function nativeLogoutFirstTrial(db, probe, source, { subject, session }) {
+  const trial = (receipt.nativeLogoutFirst = {});
+  // Hold a disposable AFTER DELETE barrier to observe the real logout before commit.
+  const barrier = observedSql(
+    db,
+    `CREATE FUNCTION auth.t010_logout_barrier() RETURNS trigger
+      LANGUAGE plpgsql SET search_path = pg_catalog AS $fixture$
+      BEGIN PERFORM pg_advisory_xact_lock(7412, 10); RETURN NULL; END $fixture$;
+    CREATE TRIGGER t010_logout_barrier AFTER DELETE ON auth.sessions FOR EACH ROW
+      WHEN (OLD.id = '${session}'::uuid AND OLD.user_id = '${subject}'::uuid)
+      EXECUTE FUNCTION auth.t010_logout_barrier();`,
+  );
+  trial.barrier = barrier;
+  assert.equal(barrier.exit, 0, barrier.stderr);
+  const read = `SELECT 'user', id FROM auth.users WHERE id = '${subject}' FOR SHARE;
+    SELECT 'session', id FROM auth.sessions
+      WHERE id = '${session}' AND user_id = '${subject}' FOR SHARE;`;
+  let logout;
+  try {
+    await withNativeFixtureLock(
+      db,
+      'SELECT pg_advisory_xact_lock(7412, 10);',
+      trial,
+      async (pid) => {
+        assert.equal(checkContainer(probe).State.Running, true);
+        const args = [...settings.prefix, 'exec', '-i', probe.id, 'node', '-', 'local-logout'];
+        const cli = hostExecutable('docker', settings.options.env);
+        const request = spawn(cli, args, { ...settings.options, stdio: ['pipe', 'pipe', 'pipe'] });
+        let stdout = '';
+        let stderr = '';
+        request.stdout.setEncoding('utf8').on('data', (chunk) => (stdout += chunk));
+        request.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+        logout = once(request, 'close').then(([exit]) => {
+          receipt.commands.push({ args, exit });
+          return { exit, stdout, stderr };
+        });
+        request.stdin.on('error', () => request.kill());
+        request.stdin.end(source);
+
+        const deadline = Date.now() + 4_000;
+        while (Date.now() < deadline) {
+          const wait = observedSql(
+            db,
+            `SELECT pid, wait_event FROM pg_stat_activity WHERE usename = 'supabase_auth_admin'
+            AND ${pid} = ANY(pg_blocking_pids(pid));`,
+          );
+          assert.equal(wait.exit, 0, wait.stderr);
+          if (wait.stdout) {
+            trial.logoutWait = wait;
+            break;
+          }
+          await delay(80);
+        }
+        assert.match(trial.logoutWait?.stdout ?? '', /^\d+\|advisory\n$/);
+        trial.reader = observedSql(
+          db,
+          `\\set VERBOSITY verbose
+          BEGIN;
+          SET LOCAL lock_timeout = '500ms';
+          SET LOCAL statement_timeout = '3s';
+          SET SESSION AUTHORIZATION supabase_auth_admin;
+          SELECT 'reader', pg_backend_pid();
+          ${read}
+          ROLLBACK;`,
+        );
+        assert.equal(trial.reader.exit, 3, trial.reader.stdout);
+        assert.match(trial.reader.stderr, /55P03:.*lock timeout/);
+        assert.match(trial.reader.stderr, /relation "sessions"/);
+        assert.ok(trial.reader.stdout.includes(`user|${subject}\n`));
+        assert.notEqual(
+          trial.reader.stdout.match(/^reader\|(\d+)$/m)?.[1],
+          trial.logoutWait.stdout.split('|')[0],
+        );
+      },
+    );
+  } finally {
+    if (logout) trial.http = await logout;
+  }
+  assert.equal(trial.http.exit, 0, trial.http.stderr);
+  assert.deepEqual(JSON.parse(trial.http.stdout), { status: 204 });
+  trial.afterCommit = observedSql(db, read);
+  assert.equal(trial.afterCommit.exit, 0, trial.afterCommit.stderr);
+  assert.equal(trial.afterCommit.stdout, `user|${subject}\n`);
+}
+
 async function nativeDeadlineTrials(db, { subject, session }) {
   const results = (receipt.nativeDeadlines = {});
   const setExpiry = observedSql(
@@ -1361,6 +1446,8 @@ async function admit() {
     argumentsList.length === 1 && argumentsList[0] === '--native-authority-baseline';
   const nativeRefresh = argumentsList.length === 1 && argumentsList[0] === '--native-refresh';
   const nativeDeadlines = argumentsList.length === 1 && argumentsList[0] === '--native-deadlines';
+  const nativeLogoutFirst =
+    argumentsList.length === 1 && argumentsList[0] === '--native-logout-first';
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
@@ -1370,7 +1457,9 @@ async function admit() {
     upgrade ||
     (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
   assert.deepEqual(
-    sqlOnly || nativeBaseline || nativeRefresh || nativeDeadlines ? [] : argumentsList,
+    sqlOnly || nativeBaseline || nativeRefresh || nativeDeadlines || nativeLogoutFirst
+      ? []
+      : argumentsList,
     [],
     'This command accepts no external resource arguments',
   );
@@ -1448,7 +1537,7 @@ async function admit() {
     return;
   }
   try {
-    await runNativeAdmission({ nativeBaseline, nativeRefresh, nativeDeadlines });
+    await runNativeAdmission({ nativeBaseline, nativeRefresh, nativeDeadlines, nativeLogoutFirst });
   } finally {
     teardown();
     assert.deepEqual(inventory(), before);
@@ -1461,13 +1550,21 @@ async function admit() {
   receipt.status = nativeBaseline ? 'PASS_NATIVE_LOCK_PRIMITIVES' : 'PASS_HARNESS_PROBE';
   if (nativeRefresh) receipt.status = 'PASS_NATIVE_REFRESH_ORDERING';
   if (nativeDeadlines) receipt.status = 'PASS_NATIVE_DEADLINE_PRIMITIVES';
+  if (nativeLogoutFirst) receipt.status = 'PASS_NATIVE_LOGOUT_FIRST';
 }
 
-async function runNativeAdmission({ nativeBaseline, nativeRefresh, nativeDeadlines }) {
+async function runNativeAdmission({
+  nativeBaseline,
+  nativeRefresh,
+  nativeDeadlines,
+  nativeLogoutFirst,
+}) {
   const db = startDatabase('db', networkId);
   receipt.databaseSystems = { source: db.system };
   const restore =
-    nativeBaseline || nativeRefresh || nativeDeadlines ? null : startDatabase('restore', 'none');
+    nativeBaseline || nativeRefresh || nativeDeadlines || nativeLogoutFirst
+      ? null
+      : startDatabase('restore', 'none');
   if (restore) {
     receipt.databaseSystems.restore = restore.system;
     trial('mismatched container binding denied', () => checkContainer({ ...db, id: restore.id }), {
@@ -1486,7 +1583,7 @@ async function runNativeAdmission({ nativeBaseline, nativeRefresh, nativeDeadlin
   }
   stage = 'bootstrap and native API admission';
   sql(db, "alter role supabase_auth_admin password '" + authPassword + "';\n" + probeSchema());
-  const readSessionPolicy = nativeRefresh || nativeDeadlines;
+  const readSessionPolicy = nativeRefresh || nativeDeadlines || nativeLogoutFirst;
   const auth = startAuth(readSessionPolicy);
   if (readSessionPolicy) observeNativePolicy(auth);
   const probe = create('probe', receipt.images.probe, {
@@ -1508,6 +1605,11 @@ async function runNativeAdmission({ nativeBaseline, nativeRefresh, nativeDeadlin
   if (nativeDeadlines) {
     stage = 'T010 session expiry boundary and post-wait clock';
     await nativeDeadlineTrials(db, fixtures[0]);
+    return;
+  }
+  if (nativeLogoutFirst) {
+    stage = 'T010 pinned native logout-first ordering';
+    await nativeLogoutFirstTrial(db, probe, source, fixtures[0]);
     return;
   }
   receipt.probe = JSON.parse(exec(probe, ['node', '-', 'probe'], { input: source }));
