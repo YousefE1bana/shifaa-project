@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { once } from 'node:events';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   dependencyInputs,
@@ -474,6 +474,189 @@ async function sourceFenceLockConflict(db) {
   }
 }
 
+async function runOnboardingWriterOrder(db) {
+  const deployment = '01000000-0000-4000-8000-000000000001';
+  const epoch = '02000000-0000-4000-8000-000000000001';
+  const firstSubject = '74120000-0000-4000-8000-000000000001';
+  const secondSubject = '74120000-0000-4000-8000-000000000002';
+  const deniedSubject = '74120000-0000-4000-8000-000000000003';
+  const admission = `SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', true);`;
+  const onboard = (subject) =>
+    `SELECT 'onboarded', count(*) FROM platform.register_identity_onboarding(
+      '${subject}', '${subject}@t012.invalid', 'en-EG');`;
+  const identity = (subject) =>
+    observedSql(
+      db,
+      `SELECT count(p.id), count(patient.id), count(rel.id)
+       FROM identity.people p
+       LEFT JOIN identity.patients patient ON patient.person_id = p.id
+       LEFT JOIN identity.care_relationships rel ON rel.actor_person_id = p.id
+         AND rel.subject_patient_id = patient.id AND rel.relationship_type = 'self'
+       WHERE p.user_id = '${subject}';`,
+    );
+  const contend = (statement, role = 'shifaa_api') =>
+    observedSql(
+      db,
+      `\\set VERBOSITY verbose
+       BEGIN;
+       SET LOCAL lock_timeout = '250ms';
+       SET LOCAL statement_timeout = '3s';
+       SET SESSION AUTHORIZATION ${role};
+       SELECT 'contender', pg_backend_pid(), session_user;
+       ${statement}
+       COMMIT;`,
+    );
+
+  const writerMigration = 'supabase/migrations/20261112001202_f012_writer_participation.sql';
+  const results = (receipt.participatingWriters = {});
+  if (existsSync(resolve(root, writerMigration))) {
+    const migration = readFileSync(safeSource(root, writerMigration));
+    results.migration = {
+      sha256: createHash('sha256').update(migration).digest('hex'),
+      ...observedSql(db, migration),
+    };
+    assert.equal(results.migration.exit, 0, writerMigration);
+  }
+
+  const catalog = readFileSync(
+    safeSource(root, 'infra/db/tests/feature-012-participating-writers.sql'),
+  );
+  results.catalog = {
+    sha256: createHash('sha256').update(catalog).digest('hex'),
+    ...observedSql(db, catalog),
+  };
+  assert.equal(results.catalog.exit, 0, results.catalog.stderr);
+  const identityTables = ['people', 'patients', 'care_relationships'];
+  for (const table of identityTables) {
+    const relation = results.catalog.stdout
+      .split(/\r?\n/)
+      .find((line) => line.startsWith(`relation|identity.${table}|`));
+    assert.ok(relation, `Missing RLS catalog observation for identity.${table}`);
+    const policy = JSON.parse(relation.slice(relation.lastIndexOf('|') + 1));
+    assert.equal(policy.rls, true, table);
+    assert.equal(policy.forceRls, true, table);
+  }
+
+  function expectIdentity(observation, counts) {
+    assert.equal(observation.exit, 0, observation.stderr);
+    assert.equal(observation.stdout.trim(), counts);
+  }
+  function backendPid(output, label) {
+    const pid = output.match(new RegExp('^' + label + '\\|(\\d+)\\|shifaa_api$', 'm'))?.[1];
+    assert.ok(pid, 'Missing Core API session evidence');
+    return pid;
+  }
+  function expectTimeout(observation) {
+    assert.equal(observation.exit, 3, observation.stdout);
+    assert.match(observation.stderr, /55P03:.*lock timeout/);
+    assert.match(observation.stderr, /relation "f012_source_admission"/);
+  }
+  async function hold(statement, observe) {
+    const args = observeSqlCommand(db);
+    const holder = spawn(hostExecutable('docker', settings.options.env), args, {
+      ...settings.options,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    const closed = once(holder, 'close');
+    let stdout = '';
+    let stderr = '';
+    let timer;
+    holder.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+    try {
+      const ready = new Promise((resolve, reject) => {
+        holder.stdout.setEncoding('utf8').on('data', (chunk) => {
+          stdout += chunk;
+          if (/^T012_HOLDER_READY$/m.test(stdout)) resolve(true);
+        });
+        holder.stdin.on('error', reject);
+        timer = setTimeout(() => reject(new Error('T012 holder did not become ready')), 10_000);
+      });
+      holder.stdin.write(`
+        BEGIN;
+        SET LOCAL idle_in_transaction_session_timeout = '15s';
+        SET LOCAL statement_timeout = '3s';
+        SET SESSION AUTHORIZATION shifaa_api;
+        SELECT 'holder', pg_backend_pid(), session_user;
+        ${statement}
+        \\echo T012_HOLDER_READY
+      `);
+      assert.equal(await Promise.race([ready, closed]), true, stderr);
+      return observe(stdout);
+    } finally {
+      clearTimeout(timer);
+      holder.stdin.end('ROLLBACK;\n');
+      const [exit] = await closed;
+      receipt.commands.push({ args, exit });
+      assert.equal(exit, 0, stderr);
+    }
+  }
+
+  results.initial = [firstSubject, secondSubject, deniedSubject].map(identity);
+  for (const observation of results.initial) expectIdentity(observation, '0|0|0');
+  results.nonCoreApi = contend(onboard(deniedSubject), 'authenticated');
+  assert.equal(results.nonCoreApi.exit, 3);
+  assert.match(results.nonCoreApi.stderr, /42501: permission denied for (schema|function)/);
+  results.deniedIdentity = identity(deniedSubject);
+  expectIdentity(results.deniedIdentity, '0|0|0');
+
+  results.admissionFirst = await hold(admission, (holder) => ({
+    holder,
+    control: contend(admission),
+    writer: contend(onboard(firstSubject)),
+    visible: identity(firstSubject),
+  }));
+  results.writerFirst = await hold(onboard(secondSubject), (holder) => ({
+    holder,
+    contender: contend(admission),
+    visible: identity(secondSubject),
+  }));
+  results.afterRollback = identity(secondSubject);
+  results.released = contend(admission);
+
+  const { admissionFirst, writerFirst } = results;
+  expectTimeout(admissionFirst.control);
+  for (const [trial, contender] of [
+    [admissionFirst, admissionFirst.writer],
+    [writerFirst, writerFirst.contender],
+  ]) {
+    assert.notEqual(backendPid(trial.holder, 'holder'), backendPid(contender.stdout, 'contender'));
+  }
+  assert.match(writerFirst.holder, /^onboarded\|1$/m);
+  expectIdentity(writerFirst.visible, '0|0|0');
+  expectIdentity(results.afterRollback, '0|0|0');
+  assert.equal(results.released.exit, 0, results.released.stderr);
+
+  // Capture both independent orderings before failing the verification.
+  const failures = [];
+  for (const [name, check] of [
+    [
+      'admission first',
+      () => {
+        expectTimeout(admissionFirst.writer);
+        expectIdentity(admissionFirst.visible, '0|0|0');
+      },
+    ],
+    ['writer first', () => expectTimeout(writerFirst.contender)],
+  ]) {
+    try {
+      check();
+    } catch {
+      failures.push(name);
+    }
+  }
+  results.failedOrderings = failures;
+  assert.deepEqual(
+    failures,
+    [],
+    'T012 onboarding must serialize with rank-zero admission in both orders',
+  );
+  results.successAfterRelease = contend(onboard(firstSubject));
+  assert.equal(results.successAfterRelease.exit, 0, results.successAfterRelease.stderr);
+  assert.match(results.successAfterRelease.stdout, /^onboarded\|1$/m);
+  results.committed = identity(firstSubject);
+  expectIdentity(results.committed, '1|1|1');
+}
+
 function sourceFenceRawBypass(db) {
   // Golden negative. The mutator must fail before the generation UPDATE when
   // an API connection skips rank zero. A rollback keeps the probe disposable.
@@ -882,10 +1065,13 @@ function sourceFence(db, red, upgrade) {
 async function admit() {
   const argumentsList = process.argv.slice(2);
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
+  const participatingWriters =
+    argumentsList.length === 1 && argumentsList[0] === '--participating-writers';
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
   const sqlOnly =
     atomicity ||
+    participatingWriters ||
     redOnly ||
     upgrade ||
     (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
@@ -941,7 +1127,7 @@ async function admit() {
       if (atomicity) {
         runAtomicity(source);
       } else {
-        sourceFence(source, redOnly, upgrade);
+        sourceFence(source, redOnly, upgrade || participatingWriters);
         if (!redOnly) {
           await sourceFenceLockConflict(source);
           sourceFenceRawBypass(source);
@@ -949,6 +1135,10 @@ async function admit() {
           sourceFencePrivilegeNegatives(source);
           sourceFenceScopeNegatives(source);
           sourceFenceRlsNegatives(source);
+          if (participatingWriters) {
+            stage = 'T012 participating writers against the disposable migrated database';
+            await runOnboardingWriterOrder(source);
+          }
         }
       }
     } finally {
@@ -962,9 +1152,11 @@ async function admit() {
     }
     receipt.status = atomicity
       ? 'EXECUTED_ATOMICITY_SQL'
-      : redOnly
-        ? 'EXPECTED_RED_SOURCE_FENCE'
-        : 'PASS_SOURCE_FENCE_SQL';
+      : participatingWriters
+        ? 'PASS_T012_ONBOARDING_WRITER_SQL'
+        : redOnly
+          ? 'EXPECTED_RED_SOURCE_FENCE'
+          : 'PASS_SOURCE_FENCE_SQL';
     return;
   }
   const db = startDatabase('db', networkId);
