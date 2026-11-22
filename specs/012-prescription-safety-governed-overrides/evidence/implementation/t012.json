@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "task": "T012",
+  "issue": 523,
+  "pullRequest": 614,
+  "status": "OPEN_PARTIAL_WRITER_VERIFICATION",
+  "verifiedAt": "2026-11-22",
+  "testedHead": "469f96f124512a09b02ab33bb3c5454c29cc4d77",
+  "sources": {
+    "inventory": "writer-inventory.json",
+    "coverage": "t012-writer-coverage.md",
+    "priorOnboarding": "t012-onboarding-lock-order.md"
+  },
+  "runtime": {
+    "postgresImage": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+    "migrationCount": 39,
+    "isolation": "Fresh network-none PostgreSQL on tmpfs within the T002 admission harness",
+    "catalog": {
+      "sha256": "dc59de3f05e24a0c2081d12db2478d9d751e507286c2c203cd98a54b9eceef7e",
+      "relations": 34,
+      "roleDml": 115,
+      "policies": 78,
+      "routines": 46,
+      "triggers": 31,
+      "nativeRelationsAbsent": ["auth.sessions", "auth.mfa_factors", "auth.mfa_amr_claims"]
+    },
+    "onboarding": {
+      "status": "RED_BOTH_ORDERS",
+      "admissionControl": "55P03",
+      "admissionFirst": "Onboarding committed one person, patient and self relationship while the independent session held rank-zero admission.",
+      "writerFirst": "The independent session acquired and committed admission while onboarding held its identity transaction open.",
+      "rollback": "No identity rows survived writer rollback. A fresh admission request succeeded.",
+      "nonCoreApi": "42501 with no identity writes.",
+      "forcedRls": ["identity.people", "identity.patients", "identity.care_relationships"],
+      "correctionOwner": "T013"
+    },
+    "preservation": {
+      "containers": 12,
+      "volumes": 4,
+      "matches": true
+    }
+  },
+  "retainedEvidence": {
+    "relativeDirectory": "SHIFAA-Recovery/2026-11-22 under the SHIFAA engineering workstation's LOCALAPPDATA",
+    "files": [
+      {
+        "path": "t012-expanded-writer-catalog.json",
+        "bytes": 123906,
+        "sha256": "03e71ed0315bb2c501b272345405c05ec06e9cf32bf24146d937a72b008fc507",
+        "run": "Initial expanded probe, failed because GoTrue schema was absent."
+      },
+      {
+        "path": "t012-expanded-writer-catalog-2.json",
+        "bytes": 212453,
+        "sha256": "1755f48c149b5f830711d4913a275c18356065a3e688c552eda9431946ed7889",
+        "run": "Expanded catalog with native absence recorded. Onboarding remained RED."
+      },
+      {
+        "path": "t012-expanded-writer-catalog-final.json",
+        "bytes": 221630,
+        "sha256": "5c1f6112e05dbf3f0e1aa8f40a65f398abb2f5ed94657a69b3926c8efe3603bb",
+        "run": "Final catalog and onboarding ordering, db2141a7-9340-4b0e-810f-b88a9d9c031a."
+      }
+    ]
+  },
+  "pending": [
+    "Independent-session cases for the installed non-onboarding writer families",
+    "Exact external approval, scan and offline writer boundaries",
+    "Future roster, projection and P3 writers in their owning tasks",
+    "Pinned native row-conflict acceptance in T010 and T011"
+  ],
+  "capability": "No F012 writer-dependent capability is admitted."
+}
