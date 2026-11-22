@@ -584,7 +584,7 @@ async function runOnboardingWriterOrder(db, focusedWriters) {
       });
       holder.stdin.write(`
         BEGIN;
-        SET LOCAL idle_in_transaction_session_timeout = '30s';
+        SET LOCAL idle_in_transaction_session_timeout = '15s';
         SET LOCAL statement_timeout = '3s';
         SET SESSION AUTHORIZATION ${role};
         SELECT 'holder', pg_backend_pid(), session_user;
@@ -1045,6 +1045,13 @@ function encounterCompletionWriter(db, { appointment, encounter, facility, clini
         WHERE id = '${queue}';
       SET LOCAL shifaa.clinic_internal_transition = 'f010_create_encounter';
       UPDATE clinical.queue_entries SET state = 'in_service' WHERE id = '${queue}';
+      -- Pre-provision the month with a synthetic event so concurrent audit reads
+      -- observe the transaction without waiting for first-write partition DDL.
+      SET LOCAL shifaa.environment = 'local';
+      SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+      SELECT event_id FROM audit.append_event_v1(
+        '${randomUUID()}', '${randomUUID()}', 'encounter.updated', 'encounter', 'succeeded',
+        p_actor_person_id => '${clinician}', p_resource_id => '${randomUUID()}');
       COMMIT;`,
   );
   receipt.participatingWriters.queueFixture = seed;
