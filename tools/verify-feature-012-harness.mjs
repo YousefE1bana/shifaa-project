@@ -541,9 +541,9 @@ async function runOnboardingWriterOrder(db) {
     assert.equal(observation.exit, 0, observation.stderr);
     assert.equal(observation.stdout.trim(), counts);
   }
-  function backendPid(output, label) {
-    const pid = output.match(new RegExp('^' + label + '\\|(\\d+)\\|shifaa_api$', 'm'))?.[1];
-    assert.ok(pid, 'Missing Core API session evidence');
+  function backendPid(output, label, role = 'shifaa_api') {
+    const pid = output.match(new RegExp('^' + label + '\\|(\\d+)\\|' + role + '$', 'm'))?.[1];
+    assert.ok(pid, 'Missing session evidence for ' + role);
     return pid;
   }
   function expectTimeout(observation) {
@@ -551,7 +551,7 @@ async function runOnboardingWriterOrder(db) {
     assert.match(observation.stderr, /55P03:.*lock timeout/);
     assert.match(observation.stderr, /relation "f012_source_admission"/);
   }
-  async function hold(statement, observe) {
+  async function hold(statement, observe, role = 'shifaa_api') {
     const args = observeSqlCommand(db);
     const holder = spawn(hostExecutable('docker', settings.options.env), args, {
       ...settings.options,
@@ -575,7 +575,7 @@ async function runOnboardingWriterOrder(db) {
         BEGIN;
         SET LOCAL idle_in_transaction_session_timeout = '15s';
         SET LOCAL statement_timeout = '3s';
-        SET SESSION AUTHORIZATION shifaa_api;
+        SET SESSION AUTHORIZATION ${role};
         SELECT 'holder', pg_backend_pid(), session_user;
         ${statement}
         \\echo T012_HOLDER_READY
@@ -645,16 +645,115 @@ async function runOnboardingWriterOrder(db) {
     }
   }
   results.failedOrderings = failures;
+  results.recoveryWorker = await runRecoveryWorkerOrder(db, {
+    admission,
+    onboard,
+    contend,
+    hold,
+    backendPid,
+  });
   assert.deepEqual(
-    failures,
+    [...failures, ...results.recoveryWorker.failedOrderings],
     [],
-    'T012 onboarding must serialize with rank-zero admission in both orders',
+    'T012 onboarding and recovery worker must serialize with rank-zero admission in both orders',
   );
   results.successAfterRelease = contend(onboard(firstSubject));
   assert.equal(results.successAfterRelease.exit, 0, results.successAfterRelease.stderr);
   assert.match(results.successAfterRelease.stdout, /^onboarded\|1$/m);
   results.committed = identity(firstSubject);
   expectIdentity(results.committed, '1|1|1');
+}
+
+async function runRecoveryWorkerOrder(db, { admission, onboard, contend, hold, backendPid }) {
+  const worker = 'shifaa_worker';
+  const subject = '74120000-0000-4000-8000-000000000004';
+  const before = contend(onboard(subject));
+  assert.equal(before.exit, 0, before.stderr);
+  assert.match(before.stdout, /^onboarded\|1$/m);
+  const seed = observedSql(
+    db,
+    `INSERT INTO identity.continuity_cases
+      (case_type, subject_person_id, status, public_token_digest, recovery_handle_digest,
+       token_key_version, restriction_scope, bound_native_session_id, created_at, expires_at)
+      SELECT 'account_recovery', id, 'restricted_enrollment',
+             decode(repeat('a1', 32), 'hex'), decode(repeat('b2', 32), 'hex'),
+             1, 'mfa_enrollment_only', '74120000-0000-4000-8000-000000000005',
+             now() - interval '2 hours', now() - interval '1 hour'
+      FROM identity.people WHERE user_id = '${subject}';`,
+  );
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^INSERT 0 1$/m);
+  const state = () =>
+    observedSql(
+      db,
+      `SELECT c.status, c.version, c.restriction_scope
+    FROM identity.continuity_cases c JOIN identity.people p ON p.id = c.subject_person_id
+    WHERE p.user_id = '${subject}';`,
+    );
+  const expire = "SELECT 'purged', platform.purge_expired_continuity_decoys(clock_timestamp());";
+  const coreApi = contend(expire);
+  assert.equal(coreApi.exit, 3);
+  assert.match(coreApi.stderr, /42501: permission denied for (schema|function)/);
+  const initial = state();
+  assert.equal(initial.stdout, 'restricted_enrollment|1|mfa_enrollment_only\n');
+
+  // Run worker-first before the admission-first trial can commit the expiry.
+  const writerFirst = await hold(
+    expire,
+    (holder) => ({ holder, admission: contend(admission), visible: state() }),
+    worker,
+  );
+  assert.match(writerFirst.holder, /^purged\|0$/m);
+  assert.notEqual(
+    backendPid(writerFirst.holder, 'holder', worker),
+    backendPid(writerFirst.admission.stdout, 'contender'),
+  );
+  assert.deepEqual(writerFirst.visible, initial);
+  const rollback = state();
+  assert.deepEqual(rollback, initial);
+
+  const admissionFirst = await hold(admission, (holder) => ({
+    holder,
+    writer: contend(expire, worker),
+    visible: state(),
+  }));
+  assert.notEqual(
+    backendPid(admissionFirst.holder, 'holder'),
+    backendPid(admissionFirst.writer.stdout, 'contender', worker),
+  );
+  const failedOrderings = [];
+  for (const [name, observation] of [
+    ['worker first', writerFirst.admission],
+    ['admission first with worker', admissionFirst.writer],
+  ]) {
+    if (observation.exit === 3) {
+      assert.match(observation.stderr, /55P03:.*lock timeout/);
+      assert.match(observation.stderr, /relation "f012_source_admission"/);
+    } else {
+      assert.equal(observation.exit, 0, observation.stderr);
+      failedOrderings.push(name);
+    }
+  }
+  const blocked = admissionFirst.writer.exit === 3;
+  assert.equal(
+    admissionFirst.visible.stdout,
+    blocked ? initial.stdout : 'expired|2|mfa_enrollment_only\n',
+  );
+  const retry = blocked ? contend(expire, worker) : null;
+  if (retry) assert.equal(retry.exit, 0, retry.stderr);
+  const committed = state();
+  assert.equal(committed.stdout, 'expired|2|mfa_enrollment_only\n');
+  return {
+    seed,
+    coreApi,
+    initial,
+    writerFirst,
+    rollback,
+    admissionFirst,
+    retry,
+    committed,
+    failedOrderings,
+  };
 }
 
 function sourceFenceRawBypass(db) {
