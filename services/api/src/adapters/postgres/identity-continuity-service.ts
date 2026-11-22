@@ -13,6 +13,11 @@ import type {
   TransitionMutationInput,
 } from '../../modules/identity-continuity/index.js';
 import type { TransitionResult } from '@shifaa/contracts/identity-continuity';
+import {
+  assertNativeAuthorityProfile,
+  type ServerVerifiedNativeContext,
+} from '../../modules/feature-012/native-authority.js';
+import type { NativeAuthorityProfile } from '../../modules/identity-continuity/types.js';
 import { TransientReplayCipher } from '../../modules/identity-continuity/security.js';
 import { ApiPolicyError } from '../../modules/identity-onboarding/errors.js';
 import type { AuthSession, SessionAuthority } from '../../modules/identity-onboarding/ports.js';
@@ -67,6 +72,28 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
     }
   }
 
+  // The caller already holds admission and the required idempotency scope.
+  // Reuse this method before the effect/finalization for a fresh clock check.
+  public async retain(
+    tx: TransactionSql,
+    context: ServerVerifiedNativeContext,
+    profile: NativeAuthorityProfile,
+  ): Promise<void> {
+    this.repository.requireActiveTransaction(tx);
+    assertNativeAuthorityProfile(context, profile);
+    await tx`
+      select platform.f012_retain_native_authority_v1(
+        ${context.deploymentId}::uuid, ${context.admissionEpoch}::uuid, ${context.instanceId}::uuid,
+        ${context.subjectId}::uuid, ${context.sessionId}::uuid, ${context.personId}::uuid,
+        ${context.aal}::integer, ${context.expiresAt}::bigint, ${context.totpAt}::bigint,
+        ${profile}::text, ${context.action}::text, ${context.facilityId}::uuid,
+        ${context.purpose}::text, ${context.caseId}::uuid
+      )`;
+    if (await this.readRestriction(tx, context.personId, context.sessionId)) {
+      throw new ApiPolicyError('access-denied', 403, 'Current authority is required.');
+    }
+  }
+
   public async restrictionForSession(
     sessionId: string,
     subjectId: string,
@@ -82,19 +109,27 @@ export class PostgresIdentityContinuityService implements ContinuityRepository, 
                set_config('shifaa.purposes','',true),
                set_config('shifaa.session_id',${sessionId},true),
                set_config('shifaa.action','refreshSession',true)`;
-      const [row] = await sql<{ restriction: ContinuityRestriction }[]>`
-        select case when status='expired' then 'recovery_expired' else restriction_scope end restriction
-        from identity.continuity_cases
-        where subject_person_id=${mapping.person_id}::uuid
-          and restriction_scope='mfa_enrollment_only'
-          and (
-            (status='proof_required' and bound_native_session_id is null)
-            or (status='restricted_enrollment' and bound_native_session_id=${sessionId}::uuid)
-            or (status='expired' and bound_native_session_id=${sessionId}::uuid)
-          )
-        limit 1`;
-      return row?.restriction ?? null;
+      return this.readRestriction(sql, mapping.person_id, sessionId);
     });
+  }
+
+  private async readRestriction(
+    tx: TransactionSql,
+    personId: string,
+    sessionId: string,
+  ): Promise<ContinuityRestriction> {
+    const [row] = await tx<{ restriction: ContinuityRestriction }[]>`
+      select case when status='expired' then 'recovery_expired' else restriction_scope end restriction
+      from identity.continuity_cases
+      where subject_person_id=${personId}::uuid
+        and restriction_scope='mfa_enrollment_only'
+        and (
+          (status='proof_required' and bound_native_session_id is null)
+          or (status='restricted_enrollment' and bound_native_session_id=${sessionId}::uuid)
+          or (status='expired' and bound_native_session_id=${sessionId}::uuid)
+        )
+      limit 1`;
+    return row?.restriction ?? null;
   }
 
   public async authorize(session: AuthSession): Promise<'allowed' | 'revoked' | 'restricted'> {

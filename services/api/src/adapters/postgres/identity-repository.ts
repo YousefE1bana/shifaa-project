@@ -64,6 +64,12 @@ export class PostgresIdentityRepository implements IdentityRepository {
     return this.sql.begin(async (tx) => this.scope.run({ sql: tx }, () => work(tx))) as Promise<T>;
   }
 
+  public requireActiveTransaction(tx: TransactionSql): void {
+    if (this.scope.getStore()?.sql !== tx) {
+      throw new Error('Native authority requires the active repository transaction.');
+    }
+  }
+
   public async withSessionAdvisoryLock<T>(lockKey: string, work: () => Promise<T>): Promise<T> {
     const sql = await this.sql.reserve();
     try {
