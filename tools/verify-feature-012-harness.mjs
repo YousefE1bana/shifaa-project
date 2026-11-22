@@ -966,6 +966,9 @@ function encounterParticipantWriter(db, { patientPerson, clinician, unrelated })
     VALUES ('${appointment}','${patientPerson}','${facility}','${clinician}','${schedule}',
       '${starts}','2030-04-05T07:30:00Z','Africa/Cairo','2030-04-05','09:00',100,'EGP',
       'cash_on_arrival','confirmed','${clinician}','${clinician}');
+    UPDATE clinical.appointments SET status = 'checked_in' WHERE id = '${appointment}';
+    SET LOCAL shifaa.clinic_internal_transition = 'f010_create_encounter';
+    UPDATE clinical.appointments SET status = 'in_consultation' WHERE id = '${appointment}';
     INSERT INTO clinical.encounters
       (id,patient_person_id,facility_id,appointment_id,responsible_clinician_id,encounter_type,status,started_at)
     VALUES ('${encounter}','${patientPerson}','${facility}','${appointment}','${clinician}','consultation','open','${starts}');
