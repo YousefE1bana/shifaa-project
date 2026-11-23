@@ -32,6 +32,14 @@
     ],
     "preservation": { "containers": 12, "volumes": 4, "matches": true }
   },
+  "hostedAdapterHistory": [
+    {
+      "testedHead": "2ec2b443406405b4cc95c5d8cbceb7ff37bd7893",
+      "job": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45065962499/job/137342037925",
+      "result": "FAIL_FIXTURE_SETUP",
+      "scope": "The extended native chain and predecessor suite ran before the test login received 42501 provisioning the synthetic admission row. The live adapter and same-transaction assertions were not reached."
+    }
+  ],
   "retainedEvidence": {
     "relativeDirectory": "SHIFAA-Recovery/2026-11-22 under the local application-data directory",
     "files": [

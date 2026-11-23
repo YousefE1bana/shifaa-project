@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { readFileSync, realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -104,6 +105,13 @@ async function resetAndExtend(runPnpm) {
 
   const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-source-fence.sql'));
   console.log(sql(fixture).trim());
+  // Provision through the disposable migration-owner path after the
+  // source-fence fixture rolls back.
+  const deploymentId = randomUUID();
+  const admissionEpoch = randomUUID();
+  sql(`INSERT INTO platform.f012_source_admission (deployment_id, admission_epoch)
+       VALUES ('${deploymentId}', '${admissionEpoch}');`);
+  nativeStatus = { ...nativeStatus, deploymentId, admissionEpoch };
   console.log(
     JSON.stringify({ result: 'PASS_NATIVE_EXTENDED_CHAIN', database: database.Id, chain }, null, 2),
   );

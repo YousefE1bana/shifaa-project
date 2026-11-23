@@ -163,6 +163,8 @@ describe.skipIf(!process.env['SHIFAA_F012_NATIVE_PROOF'])(
         ANON_KEY: string;
         SERVICE_ROLE_KEY: string;
         DB_URL: string;
+        deploymentId: string;
+        admissionEpoch: string;
       };
       const url = new URL(status.DB_URL);
       expect(url.hostname).toBe('127.0.0.1');
@@ -202,14 +204,11 @@ describe.skipIf(!process.env['SHIFAA_F012_NATIVE_PROOF'])(
       const admin = postgres(status.DB_URL, { max: 1, onnotice: () => undefined });
       const continuity = new PostgresIdentityContinuityService(repo, Buffer.alloc(32), 'ci');
       try {
-        const deploymentId = randomUUID();
-        const admissionEpoch = randomUUID();
+        const { deploymentId, admissionEpoch } = status;
         const { personId } = await repo.createRegistration(created.user.id, email, 'en-EG');
         const [native] = await admin<{ instance_id: string }[]>`
         select instance_id from auth.users where id = ${created.user.id}::uuid`;
         if (!native) throw new Error('Synthetic instance is absent.');
-        await admin`insert into platform.f012_source_admission values
-        (${deploymentId}::uuid, ${admissionEpoch}::uuid)`;
         const profile = 'subject_projection_read';
         const context = await verifyNativeAuthorityContext(
           nativeAuth,
