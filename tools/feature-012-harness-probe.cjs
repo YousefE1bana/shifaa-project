@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { randomBytes, randomUUID } = require('node:crypto');
+const { createHmac, randomBytes, randomUUID } = require('node:crypto');
 const { readFileSync, writeFileSync } = require('node:fs');
 const { createRequire } = require('node:module');
 
@@ -12,11 +12,11 @@ const role = 'f012_probe';
 const bind = (tx, subject) =>
   tx.unsafe("select set_config('f012_probe.subject', $1, true)", [subject]);
 
-async function auth(path, options) {
+async function auth(path, options, timeoutMs = 2500) {
   return fetch(authURL + path, {
     ...options,
     redirect: 'error',
-    signal: AbortSignal.timeout(2500),
+    signal: AbortSignal.timeout(timeoutMs),
   });
 }
 
@@ -29,22 +29,173 @@ async function fixtures() {
   }
   const persons = [];
   for (let index = 0; index < 2; index += 1) {
+    const email = randomUUID() + '@example.invalid';
+    const password = 'Aa9!' + randomBytes(32).toString('hex');
     const response = await auth('/signup', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        email: randomUUID() + '@example.invalid',
-        password: 'Aa9!' + randomBytes(32).toString('hex'),
-      }),
+      body: JSON.stringify({ email, password }),
     });
     assert.ok(response.ok, 'native signup failed: ' + response.status);
-    const { access_token: token, user } = await response.json();
+    const { access_token: token, refresh_token: refreshToken, user } = await response.json();
     const claims = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
     assert.equal(claims.sub, user.id);
-    persons.push({ subject: user.id, session: claims.session_id, person: randomUUID(), token });
+    persons.push({
+      subject: user.id,
+      session: claims.session_id,
+      person: randomUUID(),
+      token,
+      refreshToken,
+      email,
+      password,
+    });
   }
   writeFileSync(fixturePath, JSON.stringify(persons), { flag: 'wx', mode: 0o600 });
-  console.log(JSON.stringify(persons.map(({ token: _token, ...person }) => person)));
+  console.log(
+    JSON.stringify(persons.map(({ subject, session, person }) => ({ subject, session, person }))),
+  );
+}
+
+function authJson(path, method, body, token) {
+  return auth(
+    path,
+    {
+      method,
+      headers: {
+        'content-type': 'application/json',
+        ...(token ? { authorization: 'Bearer ' + token } : {}),
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    },
+    12_000,
+  );
+}
+
+async function requireAuthJson(path, method, body, token) {
+  const response = await authJson(path, method, body, token);
+  if (!response.ok) {
+    await response.body?.cancel();
+    throw new Error(method + ' ' + path.split('/').slice(0, 2).join('/') + ': ' + response.status);
+  }
+  return response.json();
+}
+
+function totp(secret) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  const decoder = secret.toUpperCase().replace(/=+$/, '');
+  assert.match(decoder, /^[A-Z2-7]+$/);
+  const bits = [...decoder]
+    .map((char) => alphabet.indexOf(char).toString(2).padStart(5, '0'))
+    .join('');
+  const bytes = bits.match(/.{8}/g).map((byte) => Number.parseInt(byte, 2));
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(Date.now() / 30_000)));
+  const digest = createHmac('sha1', Buffer.from(bytes)).update(counter).digest();
+  const offset = digest[digest.length - 1] & 15;
+  return ((digest.readUInt32BE(offset) & 0x7fffffff) % 1_000_000).toString().padStart(6, '0');
+}
+
+function nativeClaims(token) {
+  return JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
+}
+
+async function prepareNativeMutation(operation, persons) {
+  const summaries = [];
+  for (const person of persons) {
+    if (operation === 'downgrade') {
+      const initial = nativeClaims(person.token);
+      assert.equal(initial.aal, 'aal1');
+      assert.ok(initial.amr.some(({ method }) => method === 'password'));
+      const factor = await requireAuthJson(
+        '/factors',
+        'POST',
+        { factor_type: 'totp' },
+        person.token,
+      );
+      const path = '/factors/' + factor.id;
+      const challenge = await requireAuthJson(path + '/challenge', 'POST', {}, person.token);
+      const verified = await requireAuthJson(
+        path + '/verify',
+        'POST',
+        {
+          challenge_id: challenge.id,
+          code: totp(factor.totp.secret),
+        },
+        person.token,
+      );
+      const claims = nativeClaims(verified.access_token);
+      assert.equal(claims.sub, person.subject);
+      assert.equal(claims.session_id, person.session);
+      assert.equal(claims.aal, 'aal2');
+      assert.ok(
+        claims.amr.some(
+          ({ method, timestamp }) => method === 'totp' && Number.isInteger(timestamp),
+        ),
+      );
+      person.factor = factor.id;
+      person.token = verified.access_token;
+      summaries.push({ factor: person.factor, initialAal: initial.aal, verifiedAal: claims.aal });
+    } else {
+      assert.equal(operation, 'recovery');
+      const link = await requireAuthJson(
+        '/admin/generate_link',
+        'POST',
+        {
+          type: 'recovery',
+          email: person.email,
+        },
+        process.env.F012_NATIVE_ADMIN_TOKEN,
+      );
+      const session = await requireAuthJson('/verify', 'POST', {
+        type: 'recovery',
+        token_hash: link.hashed_token,
+      });
+      const claims = nativeClaims(session.access_token);
+      assert.equal(claims.sub, person.subject);
+      assert.notEqual(claims.session_id, person.session);
+      assert.ok(claims.amr.some(({ method }) => method === 'otp'));
+      person.recoveryToken = session.access_token;
+      person.newPassword = 'Aa9!' + randomBytes(32).toString('hex');
+      summaries.push({ recoverySession: claims.session_id, assurance: claims.aal });
+    }
+  }
+  writeFileSync(fixturePath, JSON.stringify(persons), { mode: 0o600 });
+  console.log(JSON.stringify(summaries));
+}
+
+async function mutateNative(operation, person) {
+  let response;
+  if (operation === 'ban') {
+    response = await authJson(
+      '/admin/users/' + person.subject,
+      'PUT',
+      {
+        ban_duration: '5m',
+      },
+      process.env.F012_NATIVE_ADMIN_TOKEN,
+    );
+  } else if (operation === 'downgrade') {
+    response = await authJson('/factors/' + person.factor, 'DELETE', undefined, person.token);
+  } else {
+    assert.equal(operation, 'recovery');
+    response = await authJson(
+      '/user',
+      'PUT',
+      { password: person.newPassword },
+      person.recoveryToken,
+    );
+  }
+  const result = { status: response.status };
+  await response.body?.cancel();
+  if (response.ok && operation !== 'downgrade') {
+    const login = await authJson('/token?grant_type=password', 'POST', {
+      email: person.email,
+      password: person.password,
+    });
+    result.previousLogin = login.status;
+    await login.body?.cancel();
+  }
+  console.log(JSON.stringify(result));
 }
 
 function connect() {
@@ -183,10 +334,48 @@ async function exercise(persons) {
 }
 
 async function main() {
-  if (process.argv[2] === 'fixtures') {
+  const [phase, operation, fixtureIndex] = process.argv.slice(2);
+  if (phase === 'prepare-native-mutation' || phase === 'native-mutation') {
+    const persons = JSON.parse(readFileSync(fixturePath, 'utf8'));
+    if (phase === 'prepare-native-mutation') {
+      await prepareNativeMutation(operation, persons);
+    } else {
+      await mutateNative(operation, persons[Number(fixtureIndex)]);
+    }
+  } else if (phase === 'fixtures') {
     await fixtures();
   } else if (process.argv[2] === 'probe') {
     await exercise(JSON.parse(readFileSync(fixturePath, 'utf8')));
+  } else if (['local-logout', 'local-logout-held'].includes(process.argv[2])) {
+    const [person] = JSON.parse(readFileSync(fixturePath, 'utf8'));
+    const response = await auth(
+      '/logout?scope=local',
+      { method: 'POST', headers: { authorization: 'Bearer ' + person.token } },
+      process.argv[2] === 'local-logout-held' ? 10_000 : undefined,
+    );
+    await response.body?.cancel();
+    console.log(JSON.stringify({ status: response.status }));
+  } else if (['native-refresh', 'native-refresh-second'].includes(process.argv[2])) {
+    const persons = JSON.parse(readFileSync(fixturePath, 'utf8'));
+    const person = persons[process.argv[2] === 'native-refresh' ? 0 : 1];
+    const response = await fetch(authURL + '/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ refresh_token: person.refreshToken }),
+      redirect: 'error',
+      signal: AbortSignal.timeout(10_000),
+    });
+    const body = await response.json();
+    const result = { status: response.status };
+    if (response.ok) {
+      const claims = JSON.parse(
+        Buffer.from(body.access_token.split('.')[1], 'base64url').toString(),
+      );
+      result.sessionBinding = claims.sub === person.subject && claims.session_id === person.session;
+      result.refreshIssued =
+        typeof body.refresh_token === 'string' && body.refresh_token.length > 0;
+    }
+    console.log(JSON.stringify(result));
   } else {
     throw new Error('unknown admission phase');
   }

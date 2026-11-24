@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "task": "T010",
+  "issue": 521,
+  "status": "OPEN_INSTALLED_GUARD_CANDIDATE_TESTED",
+  "verifiedAt": "2026-11-22",
+  "testedHead": "e7d7b7e6907e1622597df13656817f00cb6d6414",
+  "run": "e7017b4b-60f6-49c0-9d8b-df4b0e4203d8",
+  "nativeHttpLogout": {
+    "testedHead": "92586700284f3769f6f3c3a006ea6e4fda853d02",
+    "run": "ed8754e8-6587-4f48-b2c5-a7390c5d8283",
+    "guardFirst": "PostgreSQL observed a separate supabase_auth_admin backend waiting on the fixture holder. After that holder rolled back, real GoTrue local logout returned HTTP 204. The bound session was absent and the user row remained.",
+    "scope": "The guard-first trial used retained user and session SHARE locks on disposable rows. The four SQL primitive trials and isolation checks also passed on that run.",
+    "writerFirst": {
+      "testedHead": "cd97111fd540e1b63e2aa3d627dec4adbd04f1c7",
+      "run": "02122bad-e37e-4884-a82e-a32ea89c50ed",
+      "observation": "The actual GoTrue local logout reached the disposable AFTER DELETE barrier on the bound session. The independent reader locked the user and received 55P03 on auth.sessions. Once the barrier was released, logout returned 204 and a fresh transaction found only the user row.",
+      "previousFailure": "The first trial's 2.5-second HTTP probe deadline expired before the independent SQL check. Retrying with a 10-second bound kept the request alive while preserving the SQL lock timeout and error assertion."
+    }
+  },
+  "nativeRefresh": {
+    "testedHead": "dc09a6db9f36e4685d47086246c46650b489e3ff",
+    "run": "ab01e3e9-a387-4b06-b58d-ef58e858220e",
+    "configuration": "Pinned GoTrue with explicitly bound TOTP, token lifetime, session timebox, inactivity, rotation, reuse and disabled-hook settings read back from the disposable container.",
+    "readerFirst": "GoTrue exhausted its session SKIP LOCKED attempts and returned HTTP 409. Session refreshed_at was unchanged while the independent reader held the row. The same refresh operation returned 200 after release and preserved the verified subject and session binding.",
+    "refreshFirst": "A disposable audit-table holder stopped the native refresh after it took the session row. PostgreSQL reported 55P03 on auth.sessions for the independent reader. After releasing the audit holder, native refresh succeeded and the reader acquired the bound row in a fresh transaction."
+  },
+  "nativeDeadlines": {
+    "testedHead": "702f0fc4798d47ea978fb41aba6a3c45ba822d9e",
+    "run": "69884adf-7a54-4860-a4c7-699b43d25cc6",
+    "boundary": "On a native session row, a strict before comparison was true one microsecond before not_after, false at equality, and false one microsecond after it.",
+    "postWait": "The independent reader PID was observed waiting on the holder. The clock crossed the seeded native deadline before release. The reader measured transaction start before the deadline and post-lock clock after it in the same transaction.",
+    "previousFailure": "The first observer filtered pg_stat_activity by the assumed role. It missed the reader login PID after SET SESSION AUTHORIZATION. The corrected observer matched the actual blocked reader PID."
+  },
+  "nativeMutationOrdering": {
+    "testedHead": "30b1208597fd27dc4a773ab62366368b80e911a5",
+    "method": "Each mode used two distinct GoTrue fixtures on disposable resources. Reader-first SQL retained both native SHARE locks and observed the GoTrue writer blocked. Writer-first held the native writer after its update using a disposable barrier, then observed an independent reader receive 55P03 on the expected relation. The uncommitted post-state was invisible in both directions, and a fresh reader ran after the HTTP response.",
+    "ban": {
+      "run": "fffd2909-9588-4f19-932b-4810dbdadab0",
+      "result": "Both orderings passed on auth.users. The fixture-only GoTrue admin request returned 200, the committed ban deadline was active, and password login returned 400. The original session row remained present."
+    },
+    "downgrade": {
+      "run": "5848fb1a-cfe8-4b97-afc1-f45ce4b013d5",
+      "result": "Both orderings passed on auth.sessions. GoTrue TOTP verification emitted AAL2 and timestamped TOTP for the original AAL1 password session. Native factor removal returned 200, deleted the factor and changed the retained session to AAL1."
+    },
+    "recovery": {
+      "run": "ff3fd239-d4fc-4469-a533-3c7c291ccbd2",
+      "result": "Both orderings passed on auth.users. Redeeming a native synthetic recovery link created a separate AAL1 OTP session. Password update through that session returned 200, removed the original session and retained the recovery session. The old password returned 400."
+    }
+  },
+  "method": "T002 disposable internal topology with tmpfs, no published ports or retained mounts. Pinned native GoTrue created two distinct synthetic email accounts and matching sessions. Native-owner sessions exercised raw PostgreSQL conflict behavior on those fixtures.",
+  "images": {
+    "auth": "sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a",
+    "postgres": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459"
+  },
+  "sqlFixtureSha256": "2e345cd63a9412c2311e85d39a2c71e6285ceabac3cbcdcb94c5dbc073f5d0d2",
+  "observations": {
+    "rowLockOrder": "FOR SHARE on native user, followed by FOR SHARE on its bound session in one transaction.",
+    "conflicts": [
+      {
+        "mutation": "Native-owner user ban UPDATE",
+        "readerFirst": "55P03 on auth.users",
+        "writerFirst": "55P03 on auth.users"
+      },
+      {
+        "mutation": "Native-owner session DELETE",
+        "readerFirst": "55P03 on auth.sessions",
+        "writerFirst": "55P03 on auth.sessions"
+      }
+    ],
+    "afterRelease": "All four independent contenders succeeded with a new transaction after rollback released the holder. Both native fixture rows survived.",
+    "authTableRole": "GoTrue owns both tables as supabase_auth_admin. RLS was enabled with no FORCE and no policies on this disposable Auth baseline.",
+    "probe": "Real bound identities passed separately. Unbound forced-RLS fixture read returned zero rows. Cross-subject request was denied. The non-owner probe role has no native table access. Direct session SELECT and owner SET ROLE were denied with 42501."
+  },
+  "retainedEvidence": {
+    "relativeDirectory": "SHIFAA-Recovery/2026-11-22 under the SHIFAA engineering workstation's LOCALAPPDATA",
+    "files": [
+      {
+        "path": "t010-native-lock-primitives.json",
+        "bytes": 37557,
+        "sha256": "35d668a80da93ab9b017a7f0a1e57d08d74df87d77d28a1add223dc96d48b4d7"
+      },
+      {
+        "path": "t010-native-lock-both-orderings.json",
+        "bytes": 45939,
+        "sha256": "13401981b22f4aba121caef1d85b42982d2db828cbc964f6f42b6e160b2e8fdc"
+      },
+      {
+        "path": "t010-t002-harness-regression.json",
+        "bytes": 39872,
+        "sha256": "71f21670d9c175df766fac89b81e7dd889e4b23ba0dc512541255959435d15ea",
+        "result": "PASS_HARNESS_PROBE with separate disposable restore",
+        "run": "4d3628e6-8de7-47d9-85c8-a28a3d292617"
+      },
+      {
+        "path": "t010-native-http-logout.json",
+        "bytes": 50099,
+        "sha256": "d79a39d2787581979f5741d74c5a915ab058ad1ca74c692500ce71cc068e284d"
+      },
+      {
+        "path": "t010-native-refresh-ordering-1.json",
+        "bytes": 40039,
+        "sha256": "c98893fe6a7b43f54576461112109d25add5c394218df4de1c4dd77692ef0e74",
+        "run": "e8f66206-4f63-4004-a2e5-5f5857ff80e0"
+      },
+      {
+        "path": "t010-native-refresh-bound.json",
+        "bytes": 42484,
+        "sha256": "bc8b5172d580a35c550aa1d81101f69129d586a25a324f226e90b34bc014b22e",
+        "run": "ab01e3e9-a387-4b06-b58d-ef58e858220e"
+      },
+      {
+        "path": "t010-native-deadlines-bound.json",
+        "bytes": 38290,
+        "sha256": "8891a2dcdfa8a4785b113e7437e8d7ea7d1f65dcac71a974ab10f53ff7bb2a31",
+        "run": "dd8d445b-e147-4dfc-a381-e106b9ddbff7",
+        "result": "BLOCKED at the independent reader observation"
+      },
+      {
+        "path": "t010-native-deadlines-retry.json",
+        "bytes": 36025,
+        "sha256": "0535fbe28caddd3ac340651f8ef63575fcc288fcf993ff9b718f5c49e7229afe",
+        "run": "69884adf-7a54-4860-a4c7-699b43d25cc6"
+      },
+      {
+        "path": "t010-native-logout-first.json",
+        "bytes": 35986,
+        "sha256": "8f6a0e8b5245acab3c8abcbc4684e6953665e30cefbc0de40bcc1c7ab0c5dce4",
+        "run": "02fee61f-70d9-40b6-9748-82a1e8f462b4",
+        "result": "BLOCKED after the HTTP client deadline expired"
+      },
+      {
+        "path": "t010-native-logout-first-retry.json",
+        "bytes": 36176,
+        "sha256": "8debebe3b72778fc4f96670c9396b24fdde5caa32418862d311f5011c1d80d18",
+        "run": "02122bad-e37e-4884-a82e-a32ea89c50ed"
+      },
+      {
+        "path": "t010-native-ban-30b1208.json",
+        "bytes": 45832,
+        "sha256": "382f4de0d6ba71bcc2a548d11c2c5a002cbb026f4fb3f5d7729f83a69f5ab8fc",
+        "run": "fffd2909-9588-4f19-932b-4810dbdadab0",
+        "result": "PASS_NATIVE_MUTATION_ORDERING"
+      },
+      {
+        "path": "t010-native-downgrade-30b1208.json",
+        "bytes": 46791,
+        "sha256": "ea564919d19e26226d0c9830e2f68dda2063fde18e4576fa1de72abfc3de6c39",
+        "run": "5848fb1a-cfe8-4b97-afc1-f45ce4b013d5",
+        "result": "PASS_NATIVE_MUTATION_ORDERING"
+      },
+      {
+        "path": "t010-native-recovery-30b1208.json",
+        "bytes": 46699,
+        "sha256": "32bb81c99cb956b83327beee5aaa8a3ce0ef04f2dbcaaaea5a9c2c45f4381a13",
+        "run": "ff3fd239-d4fc-4469-a533-3c7c291ccbd2",
+        "result": "PASS_NATIVE_MUTATION_ORDERING"
+      }
+    ]
+  },
+  "preservation": {
+    "containers": 12,
+    "volumes": 4,
+    "matches": true
+  },
+  "signedContextIntegration": {
+    "testedHead": "8ac8d0b90732c3ee42de37a20d1e651ebe01f051",
+    "job": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45060990852/job/137326652938",
+    "file": "services/api/test/feature-012-native-authority.integration.test.ts",
+    "result": "5 passed at the signed issuer boundary",
+    "scope": "Verified claims and deadlines, separation from user and app metadata, and rejection of missing expiration, expiry equality, a missing session ID and an untrusted issuer."
+  },
+  "installedGuardCandidate": {
+    "issue": 522,
+    "testedHead": "c2c3dd8f749a2ad73964d7c1cdafb45da1667120",
+    "migrationSha256": "440900b4cdcec2fef96d9d1c54897bef55240ef3a64267a4cb438f7dae6606c1",
+    "result": "PASS_NATIVE_GUARD_CONTEXT",
+    "run": "9ce162f6-91ff-4916-a1f7-f71f73163df8",
+    "receipt": {
+      "path": "t011-native-guard-c2c3dd8.json",
+      "bytes": 133481,
+      "sha256": "c779f8f0eeb0d466ff205a7946e1c4331f990d42f3befd8efb85f9baaf00e2cd",
+      "location": "SHIFAA-Recovery/2026-11-22 under the local application-data directory"
+    },
+    "observations": [
+      "Current AAL1 subject and recent-TOTP AAL2 workforce passed on the installed helper. Missing or mismatched context, cross-subject session, wrong instance, profile fallback, missing, stale or future TOTP, and stale AAL after actual native downgrade were denied.",
+      "Four separate backend orderings timed out at the expected users or sessions relation with 55P03. A new transaction acquired the row after the holder rolled back.",
+      "JWT expiry at equality and after a measured independent-session wait were denied. PostgreSQL reported the same blocked backend that later denied the expired access.",
+      "An authorized transaction recovered the original synthetic result. After GoTrue downgraded the native session, replay returned 42501 before exposing the result, with one completed record still present.",
+      "Direct execution as anon, authenticated and worker was denied. The Core API role could neither assume the executor role nor directly select either Auth table."
+    ],
+    "limits": "Installed helper tests used a disposable, pinned native runtime and SQL fixture contexts. Replay used a synthetic result under the existing canonical idempotency table and an explicit guard call before disclosure."
+  },
+  "remaining": [
+    "Complete guard-facing native session deadline and login-strength boundary checks and the remaining executor ACL/RLS negatives on the isolated candidate.",
+    "Verify the same-transaction TypeScript guard boundary and retain its exact candidate linkage before acceptance."
+  ],
+  "limits": "The original Auth race receipts exercise native row primitives. Guard-specific evidence is attributed to the isolated Issue #522 candidate. Full T010 acceptance remains open."
+}
