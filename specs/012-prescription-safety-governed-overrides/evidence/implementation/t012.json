@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "task": "T012",
+  "issue": 523,
+  "pullRequest": 614,
+  "status": "OPEN_PARTIAL_WRITER_VERIFICATION",
+  "verifiedAt": "2026-11-22",
+  "testedHead": "469f96f124512a09b02ab33bb3c5454c29cc4d77",
+  "sources": {
+    "inventory": "writer-inventory.json",
+    "coverage": "t012-writer-coverage.md",
+    "priorOnboarding": "t012-onboarding-lock-order.md"
+  },
+  "runtime": {
+    "postgresImage": "sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459",
+    "migrationCount": 39,
+    "isolation": "Fresh network-none PostgreSQL on tmpfs within the T002 admission harness",
+    "catalog": {
+      "sha256": "dc59de3f05e24a0c2081d12db2478d9d751e507286c2c203cd98a54b9eceef7e",
+      "relations": 34,
+      "roleDml": 115,
+      "policies": 78,
+      "routines": 46,
+      "triggers": 31,
+      "nativeRelationsAbsent": ["auth.sessions", "auth.mfa_factors", "auth.mfa_amr_claims"]
+    },
+    "onboarding": {
+      "status": "RED_BOTH_ORDERS",
+      "admissionControl": "55P03",
+      "admissionFirst": "Onboarding committed one person, patient and self relationship while the independent session held rank-zero admission.",
+      "writerFirst": "The independent session acquired and committed admission while onboarding held its identity transaction open.",
+      "rollback": "No identity rows survived writer rollback. A fresh admission request succeeded.",
+      "nonCoreApi": "42501 with no identity writes.",
+      "forcedRls": ["identity.people", "identity.patients", "identity.care_relationships"],
+      "correctionOwner": "T013"
+    },
+    "recoveryWorker": {
+      "testedHead": "813a4efdaa2f4492ac1947937f251d08b579329f",
+      "run": "ca5852ff-2e39-42dd-9284-1c77eda05200",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "platform.purge_expired_continuity_decoys(timestamptz)",
+      "admissionFirst": "The independent shifaa_worker session committed the restricted_enrollment to expired transition while shifaa_api held admission. Case version advanced from 1 to 2 and the worker reported zero decoys removed.",
+      "writerFirst": "The independent shifaa_api session acquired and committed admission while the worker transaction held the case update. Worker rollback preserved the original committed state and version.",
+      "roleCheck": "The same entry point returned 42501 to shifaa_api and left the seeded case unchanged.",
+      "correctionOwner": "T013"
+    },
+    "familyAndConsent": {
+      "testedHead": "73152692ff1ad00cd2c0fdf33a8ea6ceb5a62b79",
+      "run": "42754f4c-00ca-40bf-9377-a6756cb55b7e",
+      "status": "RED_BOTH_ORDERS",
+      "admissionControl": "Independent Core API backends contending for the seeded admission row returned 55P03 on f012_source_admission.",
+      "admissionFirst": "The Core API role committed family delegation revocation and, in a separate trial, appended a care_updates consent withdrawal while the admission holder remained open.",
+      "writerFirst": "Admission committed while each writer was open. In each trial the independent observer saw the original state until the held writer rolled back.",
+      "negatives": "An unrelated person matched zero revocation rows and received 42501 for the consent append. Neither denial changed committed state.",
+      "scope": "Effective PostgreSQL paths under the Core API role. The consent append used one installed purpose and leaves exact F012 purpose predicates and other relationship or consent mutation variants open.",
+      "correctionOwner": "T013"
+    },
+    "familyGrant": {
+      "testedHead": "ca78bf4c05a1d865f1f4b7cc81824870fb19e58d",
+      "run": "5fc4625f-d23e-4744-8668-9b6724cd3d3f",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "Core API acceptDelegation persistence and existing family mutation audit/outbox under installed RLS",
+      "admissionFirst": "The invitee activated the pending delegation at version 2. The installed record.view predicate became true and one audit and outbox event each committed while admission remained held.",
+      "writerFirst": "Admission committed while the grant remained open. Writer rollback left the invitation pending, the authorization predicate false, and zero accepted events.",
+      "negative": "An unrelated person matched no invitation under installed RLS. The fixture mapped the zero-row update to 42501, with no effects.",
+      "scope": "Installed SQL persistence, authority predicate and audit/outbox. The predecessor application still verifies the invite token before entering this persistence path.",
+      "correctionOwner": "T013"
+    },
+    "allergyInsert": {
+      "testedHead": "46b5db897022b3eda66e4fe07677bf8f0f0fec39",
+      "run": "4e5e633e-bab8-4e56-9da3-80475a7a4dc8",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.create_allergy_api_v1(uuid,jsonb) with same-transaction receipt finalization",
+      "admissionFirst": "The F011 function committed the first head, revision and outbox event together as shifaa_api while an independent backend held admission.",
+      "writerFirst": "Admission committed while the F011 transaction remained open. The independent observer saw none of the three effects before or after the writer rolled back.",
+      "negative": "An unrelated person received 42501 and committed none of the three effects.",
+      "scope": "Installed patient self-report empty-to-first path with synthetic protected envelopes. Clinician create, correction, and content paths remain unexecuted.",
+      "correctionOwner": "T013"
+    },
+    "encounterParticipantClosure": {
+      "testedHead": "8d58339c0193d844f1b6cc9b334d41b8f073c376",
+      "run": "6e2dff04-8251-4e4c-a91b-b48e576c50d4",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.update_encounter_api_v1(uuid,integer,jsonb)",
+      "admissionControl": "An independent shifaa_api contender returned 55P03 on f012_source_admission.",
+      "admissionFirst": "The encounter update committed while the admission holder stayed open. The encounter and participant advanced from version 1 to 2, the interval closed, and one encounter.updated event committed.",
+      "writerFirst": "Independent admission committed while the update was held open. An independent reader saw the original versions, open interval and zero encounter.updated events after writer rollback.",
+      "negative": "An unrelated clinician received P0002 and left the committed encounter, participant and outbox unchanged.",
+      "scope": "Installed participant interval closure. Appointment, queue and other encounter lifecycle writers have separate outstanding coverage.",
+      "correctionOwner": "T013"
+    },
+    "encounterCompletion": {
+      "testedHead": "016bdacd2e2e60dad99f48f0d98cc9ee130aa2b0",
+      "run": "5554dcbc-2569-4d13-bb1d-9f3e75c23ab9",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.complete_encounter_api_v1",
+      "admissionFirst": "Encounter, appointment, and queue completion committed together with one audit, outbox, and idempotency record while independent admission remained held.",
+      "writerFirst": "Admission committed while the completion transaction remained open. The original versions and states and zero completion receipts remained visible after rollback.",
+      "negative": "The unrelated clinician received P0002. The committed states and completion receipt counts were unchanged.",
+      "correctionOwner": "T013"
+    },
+    "appointmentCancellation": {
+      "testedHead": "898582140562e7a979bcb77c6623897c895eeb14",
+      "run": "95e62634-08cd-4294-9885-edb7377c2938",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.cancel_appointment_v1",
+      "admissionFirst": "An independent clinician writer committed a confirmed appointment cancellation at version 2 and one audit, outbox and idempotency record each while admission remained held.",
+      "writerFirst": "Admission committed while cancellation remained open. Rollback preserved confirmed version 1 and zero cancellation effects.",
+      "negative": "An unrelated clinician received 42501 and changed no rows.",
+      "correctionOwner": "T013"
+    },
+    "queueCall": {
+      "testedHead": "35279a5846ec3947c12c89077f61ddd8a6ae8acc",
+      "run": "a4fb0656-da37-4ce6-9467-b9f9d408e3dc",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.call_queue_entry_v1",
+      "admissionFirst": "The queue advanced to called version 2, set the call timestamp, cleared the waiting order, and committed one audit, outbox and idempotency record each while admission remained held.",
+      "writerFirst": "Independent admission committed while the call remained open. Rollback preserved waiting version 1, the original queue ordering and zero call effects.",
+      "negative": "An unrelated clinician received 42501 and changed no rows.",
+      "correctionOwner": "T013"
+    },
+    "encounterCreate": {
+      "testedHead": "35279a5846ec3947c12c89077f61ddd8a6ae8acc",
+      "run": "2fdf3f98-9a44-4182-9c8b-097c172a7fee",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.create_encounter_api_v1",
+      "admissionFirst": "The appointment and queue advanced to in_consultation and in_service at version 3. The open encounter, participant, audit, outbox and idempotency record committed while admission remained held.",
+      "writerFirst": "Independent admission committed while creation remained open. Rollback preserved the checked-in appointment, called queue, and absence of the encounter and effects.",
+      "negative": "An unrelated clinician received 42501 for current treating appointment scope and changed no rows.",
+      "correctionOwner": "T013"
+    },
+    "allergyVerification": {
+      "testedHead": "c7931557f250707426ccdac48518ec7edaae3ed2",
+      "run": "8926b763-9a81-4994-a18d-c1c129fd3268",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.verify_allergy_api_v1 with protected receipt finalization",
+      "admissionFirst": "Clinician verification committed version 2, the revised head, and a second allergy revision and outbox event while independent admission remained held.",
+      "writerFirst": "Admission committed while verification remained open. The observer saw the original self-reported head at version 1, one revision and one outbox event after rollback.",
+      "negative": "The unrelated clinician received 42501 and left the original head, revision and outbox unchanged.",
+      "correctionOwner": "T013"
+    },
+    "workforceTermination": {
+      "testedHead": "a54ebf225332d222ef1f41652d331c811494ff03",
+      "run": "341d1e26-5f71-4442-9f01-2a94e026b44f",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "Core API facility-membership upsert under installed forced RLS",
+      "admissionFirst": "Termination committed the ended membership at version 2 while independent admission remained held.",
+      "writerFirst": "Independent admission committed while termination remained open. Rollback preserved the active membership at version 1.",
+      "negative": "The unrelated person received 42501 and changed no membership.",
+      "correctionOwner": "T013"
+    },
+    "coreRecoveryRestriction": {
+      "testedHead": "fba26d478997a3af39a16d4c7ba645c34f844f97",
+      "run": "f51bd6da-fb51-4bff-b7a7-a49a8d39ab76",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "Core API stageRecoveryRestriction update under installed forced RLS",
+      "admissionFirst": "The F007 proof-required case acquired mfa_enrollment_only at version 2 while independent admission remained held.",
+      "writerFirst": "Independent admission committed while staging remained open. Rollback preserved version 1 and the absence of the restriction.",
+      "negative": "An unrelated person matched zero rows and left the case unchanged.",
+      "correctionOwner": "T013"
+    },
+    "preservation": {
+      "containers": 12,
+      "volumes": 4,
+      "matches": true
+    }
+  },
+  "retainedEvidence": {
+    "relativeDirectory": "SHIFAA-Recovery/2026-11-22 under the SHIFAA engineering workstation's LOCALAPPDATA",
+    "files": [
+      {
+        "path": "t012-expanded-writer-catalog.json",
+        "bytes": 123906,
+        "sha256": "03e71ed0315bb2c501b272345405c05ec06e9cf32bf24146d937a72b008fc507",
+        "run": "Initial expanded probe, failed because GoTrue schema was absent."
+      },
+      {
+        "path": "t012-expanded-writer-catalog-2.json",
+        "bytes": 212453,
+        "sha256": "1755f48c149b5f830711d4913a275c18356065a3e688c552eda9431946ed7889",
+        "run": "Expanded catalog with native absence recorded. Onboarding remained RED."
+      },
+      {
+        "path": "t012-expanded-writer-catalog-final.json",
+        "bytes": 221630,
+        "sha256": "5c1f6112e05dbf3f0e1aa8f40a65f398abb2f5ed94657a69b3926c8efe3603bb",
+        "run": "Final catalog and onboarding ordering, db2141a7-9340-4b0e-810f-b88a9d9c031a."
+      },
+      {
+        "path": "t012-recovery-worker-rank-zero.json",
+        "bytes": 231906,
+        "sha256": "41e6223acb85f37e473af8a3c28029995fecb6d1bb14cf690c11f7467d549cc4",
+        "run": "Catalog PASS, onboarding RED and worker expiry RED, ca5852ff-2e39-42dd-9284-1c77eda05200."
+      },
+      {
+        "path": "t012-family-consent-ordering-1.json",
+        "bytes": 173129,
+        "sha256": "8319e0047d0f6e6030b1ef2684fff472915053c4c0265e60471290b0f66393d7",
+        "run": "Probe blocked at the admission fixture before running writer cases, a293f00d-e193-4939-904c-2e64cf70562b."
+      },
+      {
+        "path": "t012-family-consent-ordering-2.json",
+        "bytes": 189357,
+        "sha256": "39d28777fa41dea7bdc7798aa37f146a8695d4d59aa7b35c786f5c16bab87620",
+        "run": "Admission control, role negatives and rollback PASS; both writer orderings RED, 42754f4c-00ca-40bf-9377-a6756cb55b7e."
+      },
+      {
+        "path": "t012-f011-allergy-ordering-1.json",
+        "bytes": 170754,
+        "sha256": "3fc851a3b0d1690903f41099cd1c738dd60df0f3b6f5dd06d57010f0afb6f7ab",
+        "run": "Probe blocked before the positive writer case because onboarding left its fixture person pending, c1ca8a62-874f-4cec-acbd-a4dc19091dd4."
+      },
+      {
+        "path": "t012-f011-allergy-ordering-2.json",
+        "bytes": 32428,
+        "sha256": "26ff226d4bf638e58a17c6bd8940e96c96ffab1f55b421571d31c0ff4bb881f2",
+        "run": "Probe blocked at a Docker inspect during resource admission, e6e3220d-cb2c-45a2-bdb1-067045d4df7e. The retained container was visible on the independent follow-up inspection."
+      },
+      {
+        "path": "t012-f011-allergy-ordering-3.json",
+        "bytes": 181555,
+        "sha256": "6556605a2a1bf91f0160cc6522187f4ba3736ee3b960a38e6d1c69bfcb1f64f7",
+        "run": "Admission control, unrelated-person denial and rollback PASS; both writer orderings RED, 4e5e633e-bab8-4e56-9da3-80475a7a4dc8."
+      },
+      {
+        "path": "t012-f010-encounter-participant.json",
+        "bytes": 170981,
+        "sha256": "eb8870ea9c19249caf6a9b68f9823cd51736ef9a88cb7c3f2f6b4eacd18cf92f",
+        "run": "426ad721-e531-48f6-bb72-e11b2c7b6a78",
+        "testedHead": "c0c9956e3a9d0370c444b0db6e71fd0db3a154ad",
+        "result": "BLOCKED at fixture authorization before either writer ordering ran."
+      },
+      {
+        "path": "t012-f010-encounter-participant-retry.json",
+        "bytes": 178997,
+        "sha256": "6388c067feb094e1dbb12b4a4e1d765296d0d0258745501e6f7df2963a1e48fe",
+        "run": "6e2dff04-8251-4e4c-a91b-b48e576c50d4",
+        "testedHead": "8d58339c0193d844f1b6cc9b334d41b8f073c376",
+        "result": "Admission control, unrelated-clinician denial and rollback PASS. Installed participant closure RED in both orderings."
+      },
+      {
+        "path": "t012-f010-completion-f414ad0.json",
+        "bytes": 167439,
+        "sha256": "0aac9908ee15ef49243c4e991fc15bc598745e5703e3119ddf57575840eec91f",
+        "run": "8fb90e8d-66b9-4a05-9ce0-ca30ef8950e8",
+        "testedHead": "f414ad02ce72d0e0fef7d27af870ae36a9115022",
+        "result": "BLOCKED before the writer race. Direct fixture insertion into in_service was denied."
+      },
+      {
+        "path": "t012-f010-completion-80d89f7.json",
+        "bytes": 173483,
+        "sha256": "98b1e299b43ed50422c8e900a816575cc23fb3c0c38ef7a5aa17b8e47bc40f5c",
+        "run": "f10adb4c-a120-44df-8e04-78209c30f81a",
+        "testedHead": "80d89f73959a88242a2458c5eb8309599f6513f8",
+        "result": "BLOCKED while the observer waited for first-write audit partition DDL."
+      },
+      {
+        "path": "t012-f010-completion-6ad3dd9.json",
+        "bytes": 173483,
+        "sha256": "fcb8cb59169d2838d9b0041847d6aac3d1131f5e04fe2130976d43f6f653f4af",
+        "run": "f79776a4-502e-4aca-ac4c-e62be86f25ff",
+        "testedHead": "6ad3dd9b06550e6b48dfa8745385856c5ea1bf34",
+        "result": "BLOCKED again at first-write audit partition DDL with a longer fixture timeout."
+      },
+      {
+        "path": "t012-f010-completion-901c042.json",
+        "bytes": 168214,
+        "sha256": "9342faa8357f707e928c0057f7888b1ffc617281bfa8aad69d75fb827876db43",
+        "run": "e0ee195e-e40f-4837-99b0-c43faa102644",
+        "testedHead": "901c042109e668edf68672cdbf1bb3363212ee6b",
+        "result": "BLOCKED before the writer race. The synthetic audit seed used an unsupported outcome."
+      },
+      {
+        "path": "t012-f010-completion-016bdac.json",
+        "bytes": 179408,
+        "sha256": "84b1c107637c1db4ff1b576eff404eb4233bb1b101eccffe717e64589bc3c927",
+        "run": "5554dcbc-2569-4d13-bb1d-9f3e75c23ab9",
+        "testedHead": "016bdacd2e2e60dad99f48f0d98cc9ee130aa2b0",
+        "result": "F010 encounter completion RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      },
+      {
+        "path": "t012-f011-verification-946ca03.json",
+        "bytes": 172651,
+        "sha256": "c7826e9da6badb0fcf244a7578b3d237108b97f9cbd2709eebfda9eb9cdd6a28",
+        "run": "9ec35d01-0e34-4d60-aa34-2090524dc702",
+        "testedHead": "946ca03b380b4c1bdd84b0a6d4e7f05c8da6e42b",
+        "result": "BLOCKED at the installed clinician authority check before the writer race. The fixture lacked a verified facility licence."
+      },
+      {
+        "path": "t012-f011-verification-c793155.json",
+        "bytes": 182018,
+        "sha256": "5e72429735f0f2d28762938954f0aef756ba434188860fbc9a4ff957c6b0864e",
+        "run": "8926b763-9a81-4994-a18d-c1c129fd3268",
+        "testedHead": "c7931557f250707426ccdac48518ec7edaae3ed2",
+        "result": "F011 clinician verification and allergy head replacement RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      },
+      {
+        "path": "t012-workforce-termination-a54ebf2.json",
+        "bytes": 178027,
+        "sha256": "d93a9e417724f28a6407da4de30f91a15bf6c89406d7cdc83eecd4d55bc6afe0",
+        "run": "341d1e26-5f71-4442-9f01-2a94e026b44f",
+        "testedHead": "a54ebf225332d222ef1f41652d331c811494ff03",
+        "result": "Workforce termination RED in both orders. Admission control, unrelated-actor denial and rollback passed."
+      },
+      {
+        "path": "t012-recovery-restriction-fba26d4.json",
+        "bytes": 178031,
+        "sha256": "da529141b0e5c279f6725541d10b8a4fde5f39a049b00d7e80ea23c5272c4ba2",
+        "run": "f51bd6da-fb51-4bff-b7a7-a49a8d39ab76",
+        "testedHead": "fba26d478997a3af39a16d4c7ba645c34f844f97",
+        "result": "F007 restriction staging RED in both orders. Admission control, unrelated-actor zero-row negative and rollback passed."
+      },
+      {
+        "path": "t012-f010-cancellation-8985821.json",
+        "bytes": 180297,
+        "sha256": "2c063339eb19ac79eec402fb3ab1458f4b8b7a111670bd83d50ec9d5af892332",
+        "run": "95e62634-08cd-4294-9885-edb7377c2938",
+        "testedHead": "898582140562e7a979bcb77c6623897c895eeb14",
+        "result": "F010 independent appointment cancellation RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      },
+      {
+        "path": "t012-family-grant-ca78bf4.json",
+        "bytes": 178907,
+        "sha256": "d219737b92aaf3108c3b802a47c3c38885cea1e0a120785e8288323a430a0409",
+        "run": "5fc4625f-d23e-4744-8668-9b6724cd3d3f",
+        "testedHead": "ca78bf4c05a1d865f1f4b7cc81824870fb19e58d",
+        "result": "F004 delegation grant RED in both orders. Admission control, unrelated invitee denial, authorization predicate and atomic rollback passed."
+      },
+      {
+        "path": "t012-f010-queue-call-35279a5.json",
+        "bytes": 181783,
+        "sha256": "708d25d5ca02cf3a174d497d35d30293291f91a2524e979a369a88cca075b004",
+        "run": "a4fb0656-da37-4ce6-9467-b9f9d408e3dc",
+        "testedHead": "35279a5846ec3947c12c89077f61ddd8a6ae8acc",
+        "result": "F010 independent queue call RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      },
+      {
+        "path": "t012-f010-create-35279a5.json",
+        "bytes": 181174,
+        "sha256": "e030fbafd3d49c372372a7c22797f9c383b510304e006e08bc9bb7cea07b810d",
+        "run": "2fdf3f98-9a44-4182-9c8b-097c172a7fee",
+        "testedHead": "35279a5846ec3947c12c89077f61ddd8a6ae8acc",
+        "result": "F010 independent encounter creation RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      }
+    ]
+  },
+  "pending": [
+    "Independent-session cases for untested installed writers and the remaining lifecycle or predicate variants listed in the coverage matrix",
+    "Exact external approval, scan and offline writer boundaries, including quiescence verification for unparticipating owner paths",
+    "Pre-admission capability restrictions pending T013 repair and proof. Future roster, projection and P3 execution remains in its owning tasks",
+    "Separate pinned native row-conflict acceptance in T010 and T011"
+  ],
+  "capability": "No F012 writer-dependent capability is admitted."
+}
