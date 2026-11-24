@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { createHash, createHmac, randomBytes, randomUUID } from 'node:crypto';
 import { once } from 'node:events';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import {
@@ -1108,10 +1108,21 @@ function runAtomicity(db) {
   assert.equal(observed.exit, 0, 'T016 SQL fixture');
 }
 
+const writerFixtureDeployment = '01000000-0000-4000-8000-000000000001';
+const writerFixtureEpoch = '02000000-0000-4000-8000-000000000001';
+
+function seedWriterAdmission(db) {
+  sql(
+    db,
+    `INSERT INTO platform.f012_source_admission
+    VALUES ('${writerFixtureDeployment}', '${writerFixtureEpoch}');`,
+  );
+}
+
 async function sourceFenceLockConflict(db) {
-  const deployment = '01000000-0000-4000-8000-000000000001';
-  const epoch = '02000000-0000-4000-8000-000000000001';
-  sql(db, `INSERT INTO platform.f012_source_admission VALUES ('${deployment}', '${epoch}');`);
+  const deployment = writerFixtureDeployment;
+  const epoch = writerFixtureEpoch;
+  seedWriterAdmission(db);
   receipt.lockTrials = [];
   for (const write of [false, true]) {
     const args = observeSqlCommand(db);
@@ -1200,6 +1211,1117 @@ async function sourceFenceLockConflict(db) {
     receipt.lockTrials.at(-1).released = released;
     assert.equal(released.exit, 0);
   }
+}
+
+async function runOnboardingWriterOrder(db, focusedWriters) {
+  const deployment = writerFixtureDeployment;
+  const epoch = writerFixtureEpoch;
+  const firstSubject = '74120000-0000-4000-8000-000000000001';
+  const secondSubject = '74120000-0000-4000-8000-000000000002';
+  const deniedSubject = '74120000-0000-4000-8000-000000000003';
+  const admission = `SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', true);`;
+  const onboard = (subject) =>
+    `SELECT 'onboarded', count(*) FROM platform.register_identity_onboarding(
+      '${subject}', '${subject}@t012.invalid', 'en-EG');`;
+  const identity = (subject) =>
+    observedSql(
+      db,
+      `SELECT count(p.id), count(patient.id), count(rel.id)
+       FROM identity.people p
+       LEFT JOIN identity.patients patient ON patient.person_id = p.id
+       LEFT JOIN identity.care_relationships rel ON rel.actor_person_id = p.id
+         AND rel.subject_patient_id = patient.id AND rel.relationship_type = 'self'
+       WHERE p.user_id = '${subject}';`,
+    );
+  const contend = (statement, role = 'shifaa_api') =>
+    observedSql(
+      db,
+      `\\set VERBOSITY verbose
+       BEGIN;
+       SET LOCAL lock_timeout = '250ms';
+       SET LOCAL statement_timeout = '3s';
+       SET SESSION AUTHORIZATION ${role};
+       SELECT 'contender', pg_backend_pid(), session_user;
+       ${statement}
+       COMMIT;`,
+    );
+
+  const writerMigration = 'supabase/migrations/20261112001202_f012_writer_participation.sql';
+  const results = (receipt.participatingWriters = {});
+  if (existsSync(resolve(root, writerMigration))) {
+    const migration = readFileSync(safeSource(root, writerMigration));
+    results.migration = {
+      sha256: createHash('sha256').update(migration).digest('hex'),
+      ...observedSql(db, migration),
+    };
+    assert.equal(results.migration.exit, 0, writerMigration);
+  }
+
+  const catalog = readFileSync(
+    safeSource(root, 'infra/db/tests/feature-012-participating-writers.sql'),
+  );
+  results.catalog = {
+    sha256: createHash('sha256').update(catalog).digest('hex'),
+    ...observedSql(db, catalog),
+  };
+  assert.equal(results.catalog.exit, 0, results.catalog.stderr);
+  const identityTables = ['people', 'patients', 'care_relationships'];
+  for (const table of identityTables) {
+    const relation = results.catalog.stdout
+      .split(/\r?\n/)
+      .find((line) => line.startsWith(`relation|identity.${table}|`));
+    assert.ok(relation, `Missing RLS catalog observation for identity.${table}`);
+    const policy = JSON.parse(relation.slice(relation.lastIndexOf('|') + 1));
+    assert.equal(policy.rls, true, table);
+    assert.equal(policy.forceRls, true, table);
+  }
+
+  function expectIdentity(observation, counts) {
+    assert.equal(observation.exit, 0, observation.stderr);
+    assert.equal(observation.stdout.trim(), counts);
+  }
+  function backendPid(output, label, role = 'shifaa_api') {
+    const pid = output.match(new RegExp('^' + label + '\\|(\\d+)\\|' + role + '$', 'm'))?.[1];
+    assert.ok(pid, 'Missing session evidence for ' + role);
+    return pid;
+  }
+  function expectTimeout(observation) {
+    assert.equal(observation.exit, 3, observation.stdout);
+    assert.match(observation.stderr, /55P03:.*lock timeout/);
+    assert.match(observation.stderr, /relation "f012_source_admission"/);
+  }
+  async function hold(statement, observe, role = 'shifaa_api') {
+    const args = observeSqlCommand(db);
+    const holder = spawn(hostExecutable('docker', settings.options.env), args, {
+      ...settings.options,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    const closed = once(holder, 'close');
+    let stdout = '';
+    let stderr = '';
+    let timer;
+    holder.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+    try {
+      const ready = new Promise((resolve, reject) => {
+        holder.stdout.setEncoding('utf8').on('data', (chunk) => {
+          stdout += chunk;
+          if (/^T012_HOLDER_READY$/m.test(stdout)) resolve(true);
+        });
+        holder.stdin.on('error', reject);
+        timer = setTimeout(() => reject(new Error('T012 holder did not become ready')), 10_000);
+      });
+      holder.stdin.write(`
+        BEGIN;
+        SET LOCAL idle_in_transaction_session_timeout = '15s';
+        SET LOCAL statement_timeout = '3s';
+        SET SESSION AUTHORIZATION ${role};
+        SELECT 'holder', pg_backend_pid(), session_user;
+        ${statement}
+        \\echo T012_HOLDER_READY
+      `);
+      assert.equal(await Promise.race([ready, closed]), true, stderr);
+      return observe(stdout);
+    } finally {
+      clearTimeout(timer);
+      holder.stdin.end('ROLLBACK;\n');
+      const [exit] = await closed;
+      receipt.commands.push({ args, exit });
+      assert.equal(exit, 0, stderr);
+    }
+  }
+
+  if (focusedWriters) {
+    seedWriterAdmission(db);
+    results[focusedWriters] = [];
+    await runContextWriterOrder(db, results[focusedWriters], focusedWriters, {
+      admission,
+      onboard,
+      contend,
+      hold,
+      backendPid,
+      expectTimeout,
+    });
+    assert.deepEqual(
+      results[focusedWriters].flatMap(({ failedOrderings }) => failedOrderings),
+      [],
+      'T012 tested writers must serialize with rank-zero admission',
+    );
+    return;
+  }
+
+  results.initial = [firstSubject, secondSubject, deniedSubject].map(identity);
+  for (const observation of results.initial) expectIdentity(observation, '0|0|0');
+  results.nonCoreApi = contend(onboard(deniedSubject), 'authenticated');
+  assert.equal(results.nonCoreApi.exit, 3);
+  assert.match(results.nonCoreApi.stderr, /42501: permission denied for (schema|function)/);
+  results.deniedIdentity = identity(deniedSubject);
+  expectIdentity(results.deniedIdentity, '0|0|0');
+
+  results.admissionFirst = await hold(admission, (holder) => ({
+    holder,
+    control: contend(admission),
+    writer: contend(onboard(firstSubject)),
+    visible: identity(firstSubject),
+  }));
+  results.writerFirst = await hold(onboard(secondSubject), (holder) => ({
+    holder,
+    contender: contend(admission),
+    visible: identity(secondSubject),
+  }));
+  results.afterRollback = identity(secondSubject);
+  results.released = contend(admission);
+
+  const { admissionFirst, writerFirst } = results;
+  expectTimeout(admissionFirst.control);
+  for (const [trial, contender] of [
+    [admissionFirst, admissionFirst.writer],
+    [writerFirst, writerFirst.contender],
+  ]) {
+    assert.notEqual(backendPid(trial.holder, 'holder'), backendPid(contender.stdout, 'contender'));
+  }
+  assert.match(writerFirst.holder, /^onboarded\|1$/m);
+  expectIdentity(writerFirst.visible, '0|0|0');
+  expectIdentity(results.afterRollback, '0|0|0');
+  assert.equal(results.released.exit, 0, results.released.stderr);
+
+  // Capture both independent orderings before failing the verification.
+  const failures = [];
+  for (const [name, check] of [
+    [
+      'admission first',
+      () => {
+        expectTimeout(admissionFirst.writer);
+        expectIdentity(admissionFirst.visible, '0|0|0');
+      },
+    ],
+    ['writer first', () => expectTimeout(writerFirst.contender)],
+  ]) {
+    try {
+      check();
+    } catch {
+      failures.push(name);
+    }
+  }
+  results.failedOrderings = failures;
+  results.recoveryWorker = await runRecoveryWorkerOrder(db, {
+    admission,
+    onboard,
+    contend,
+    hold,
+    backendPid,
+  });
+  assert.deepEqual(
+    [...failures, ...results.recoveryWorker.failedOrderings],
+    [],
+    'T012 onboarding and recovery worker must serialize with rank-zero admission in both orders',
+  );
+  results.successAfterRelease = contend(onboard(firstSubject));
+  assert.equal(results.successAfterRelease.exit, 0, results.successAfterRelease.stderr);
+  assert.match(results.successAfterRelease.stdout, /^onboarded\|1$/m);
+  results.committed = identity(firstSubject);
+  expectIdentity(results.committed, '1|1|1');
+}
+
+async function runContextWriterOrder(
+  db,
+  results,
+  focusedWriters,
+  { admission, onboard, contend, hold, backendPid, expectTimeout },
+) {
+  const prefix = '74120000-0000-4000-8000-0000000000';
+  const ownerSubject = prefix + '11';
+  const delegateSubject = prefix + '12';
+  const unrelatedSubject = prefix + '13';
+  for (const subject of [ownerSubject, delegateSubject, unrelatedSubject]) {
+    const result = contend(onboard(subject));
+    assert.equal(result.exit, 0, result.stderr);
+    assert.match(result.stdout, /^onboarded\|1$/m);
+  }
+  const identities = observedSql(
+    db,
+    `SELECT person.id, patient.id
+    FROM identity.people person JOIN identity.patients patient ON patient.person_id = person.id
+    WHERE person.user_id IN ('${ownerSubject}', '${delegateSubject}', '${unrelatedSubject}')
+    ORDER BY person.user_id;`,
+  );
+  assert.equal(identities.exit, 0, identities.stderr);
+  const rows = identities.stdout.trim().split('\n');
+  assert.equal(rows.length, 3);
+  for (const row of rows) assert.match(row, /^[\da-f-]{36}\|[\da-f-]{36}$/);
+  const [[patientPerson, patient], [delegate], [unrelated]] = rows.map((row) => row.split('|'));
+  if (focusedWriters === 'allergy') {
+    // Onboarding creates a pending profile. F011 self-reporting needs an active person.
+    const activated = observedSql(
+      db,
+      `UPDATE identity.people SET profile_status = 'active'
+       WHERE id = '${patientPerson}' AND profile_status = 'pending';`,
+    );
+    receipt.participatingWriters.allergyFixtureActivation = activated;
+    assert.equal(activated.exit, 0, activated.stderr);
+    assert.match(activated.stdout, /^UPDATE 1$/m);
+  }
+  const context = (person) => `SET LOCAL shifaa.person_id = '${person}';
+    SET LOCAL shifaa.actor_role = 'PAT'; SET LOCAL shifaa.aal = '1';
+    SET LOCAL shifaa.purposes = 'family_support';`;
+  let cases;
+  if (focusedWriters === 'allergy') {
+    cases = [allergyInsertWriter(patient)];
+  } else if (focusedWriters === 'familyGrant') {
+    cases = [familyGrantWriter(db, contend, context, { patientPerson, patient, delegate })];
+  } else if (focusedWriters === 'workforceTermination') {
+    cases = [workforceTerminationWriter(db, { owner: patientPerson, clinician: delegate })];
+  } else if (focusedWriters === 'appointmentCancellation') {
+    const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
+    cases = [appointmentCancellationWriter(db, fixture)];
+  } else if (focusedWriters === 'queueCall' || focusedWriters === 'encounterCreate') {
+    const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
+    const call = queueCallWriter(db, fixture);
+    if (focusedWriters === 'encounterCreate') {
+      const called = contend(context(delegate) + call.write);
+      receipt.participatingWriters.encounterCreateCalledQueue = called;
+      assert.equal(called.exit, 0, called.stderr);
+      assert.match(called.stdout, call.written);
+      cases = [encounterCreateWriter(fixture, call)];
+    } else {
+      cases = [call];
+    }
+  } else if (focusedWriters === 'recoveryRestriction') {
+    cases = [recoveryRestrictionWriter(db, patientPerson)];
+  } else if (focusedWriters === 'allergyVerification') {
+    const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
+    const first = allergyInsertWriter(patient);
+    const seeded = contend(context(patientPerson) + first.write);
+    results.allergyVerificationSeed = seeded;
+    assert.equal(seeded.exit, 0, seeded.stderr);
+    assert.match(seeded.stdout, first.written);
+    cases = [allergyVerificationWriter(db, { ...fixture, patient, first })];
+  } else if (
+    focusedWriters === 'encounterParticipant' ||
+    focusedWriters === 'encounterCompletion'
+  ) {
+    const fixture = seedEncounterWriter(db, { patientPerson, clinician: delegate, unrelated });
+    cases = [
+      focusedWriters === 'encounterCompletion'
+        ? encounterCompletionWriter(db, fixture)
+        : encounterParticipantWriter(fixture),
+    ];
+  } else {
+    cases = familyAndConsentWriters(contend, context, { patientPerson, patient, delegate, prefix });
+  }
+  const admissionControl = await hold(admission, (holder) => ({
+    holder,
+    contender: contend(admission),
+  }));
+  expectTimeout(admissionControl.contender);
+  assert.notEqual(
+    backendPid(admissionControl.holder, 'holder'),
+    backendPid(admissionControl.contender.stdout, 'contender'),
+  );
+  receipt.participatingWriters.focusedAdmissionControl = admissionControl;
+  for (const test of cases) {
+    const state = () => observedSql(db, test.state);
+    const write = context(test.actor ?? patientPerson) + test.write;
+    const initial = state();
+    assert.equal(initial.exit, 0, initial.stderr);
+    assert.equal(initial.stdout, test.before);
+    const unrelatedWriter = contend(context(unrelated) + test.write);
+    assert.equal(unrelatedWriter.exit, test.deniedExit, unrelatedWriter.stderr);
+    assert.match(unrelatedWriter.stdout + unrelatedWriter.stderr, test.denied);
+    assert.deepEqual(state(), initial);
+
+    const writerFirst = await hold(write, (holder) => ({
+      holder,
+      contender: contend(admission),
+      visible: state(),
+    }));
+    assert.match(writerFirst.holder, test.written);
+    assert.deepEqual(writerFirst.visible, initial);
+    assert.deepEqual(state(), initial);
+    const admissionFirst = await hold(admission, (holder) => ({
+      holder,
+      contender: contend(write),
+      visible: state(),
+    }));
+
+    const failedOrderings = [];
+    for (const [order, trial] of Object.entries({ writerFirst, admissionFirst })) {
+      assert.notEqual(
+        backendPid(trial.holder, 'holder'),
+        backendPid(trial.contender.stdout, 'contender'),
+      );
+      if (trial.contender.exit === 3) {
+        expectTimeout(trial.contender);
+      } else {
+        assert.equal(trial.contender.exit, 0, trial.contender.stderr);
+        failedOrderings.push(order);
+      }
+    }
+    const wasBlocked = admissionFirst.contender.exit === 3;
+    if (!wasBlocked) assert.match(admissionFirst.contender.stdout, test.written);
+    assert.equal(admissionFirst.visible.exit, 0, admissionFirst.visible.stderr);
+    assert.equal(admissionFirst.visible.stdout, wasBlocked ? test.before : test.after);
+    const retry = wasBlocked ? contend(write) : null;
+    if (retry) {
+      assert.equal(retry.exit, 0, retry.stderr);
+      assert.match(retry.stdout, test.written);
+    }
+    const committed = state();
+    assert.equal(committed.exit, 0, committed.stderr);
+    assert.equal(committed.stdout, test.after);
+    results.push({
+      name: test.name,
+      unrelatedWriter,
+      initial,
+      writerFirst,
+      admissionFirst,
+      retry,
+      committed,
+      failedOrderings,
+    });
+  }
+}
+
+function familyGrantWriter(db, contend, context, { patientPerson, patient, delegate }) {
+  const relationship = randomUUID();
+  const effect = 'relationship.delegation.accepted';
+  const seed = contend(`${context(patientPerson)}
+    INSERT INTO identity.care_relationships
+      (id,subject_patient_id,actor_person_id,relationship_type,status,purpose_code,
+       valid_from,valid_until,created_by_person_id,invite_token_digest,invite_key_version,invite_expires_at)
+    VALUES ('${relationship}','${patient}','${delegate}','delegation','pending','family_support',
+            now(),now()+interval '1 year','${patientPerson}',decode(repeat('aa',32),'hex'),
+            1,now()+interval '1 day');
+    INSERT INTO identity.care_relationship_permissions
+      (relationship_id,permission_code,created_by_person_id)
+    VALUES ('${relationship}','record.view','${patientPerson}');`);
+  receipt.participatingWriters.familyGrantInvitation = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  const audit = observedSql(
+    db,
+    `SELECT event_id FROM audit.append_event_v1(
+      '${randomUUID()}', '${randomUUID()}', '${effect}', 'family-care', 'success',
+      p_actor_person_id => '${delegate}', p_resource_id => '${randomUUID()}');`,
+  );
+  assert.equal(audit.exit, 0, audit.stderr);
+  return {
+    name: 'F004 invitee activates a pending delegation',
+    actor: delegate,
+    write: `DO $accept$
+    DECLARE accepted_version integer;
+    BEGIN
+      UPDATE identity.care_relationships
+        SET status = 'active', invite_token_digest = NULL, invite_expires_at = NULL, invite_consumed_at = now()
+        WHERE id = '${relationship}' AND version = 1
+        RETURNING version INTO accepted_version;
+      IF NOT FOUND THEN RAISE EXCEPTION 'invitation unavailable' USING ERRCODE = '42501'; END IF;
+      PERFORM platform.append_family_mutation_audit_v1(
+        '${randomUUID()}', '${effect}', '${delegate}', '${patient}', '${relationship}', accepted_version);
+      INSERT INTO platform.outbox_events(aggregate_type,aggregate_id,event_type,payload)
+        VALUES ('family-care','${relationship}','${effect}',
+          jsonb_build_object('version', accepted_version, 'status', 'active', 'permissions', jsonb_build_array('record.view')));
+      RAISE NOTICE 'delegation accepted %', accepted_version;
+    END
+    $accept$;`,
+    written: /^DO$/m,
+    deniedExit: 3,
+    denied: /42501:.*invitation unavailable/,
+    state: `SET shifaa.purposes = 'family_support';
+      SELECT r.status, r.version, r.invite_consumed_at IS NOT NULL,
+        platform.person_has_family_relationship('${patient}', '${delegate}', 'record.view'),
+        (SELECT count(*) FROM audit.events WHERE resource_id = r.id AND action_code = '${effect}'),
+        (SELECT count(*) FROM platform.outbox_events WHERE aggregate_id = r.id AND event_type = '${effect}')
+      FROM identity.care_relationships r WHERE r.id = '${relationship}';`,
+    before: 'SET\npending|1|f|f|0|0\n',
+    after: 'SET\nactive|2|t|t|1|1\n',
+  };
+}
+
+function familyAndConsentWriters(contend, context, { patientPerson, patient, delegate, prefix }) {
+  const relationship = prefix + '14';
+  const granted = prefix + '15';
+  const withdrawn = prefix + '16';
+  const seed = contend(`${context(patientPerson)}
+    INSERT INTO identity.care_relationships
+      (id,subject_patient_id,actor_person_id,relationship_type,status,purpose_code,
+       valid_from,valid_until,created_by_person_id,invite_token_digest,invite_key_version,invite_expires_at)
+    VALUES ('${relationship}','${patient}','${delegate}','delegation','pending','family_support',
+            now(),now()+interval '1 year','${patientPerson}',decode(repeat('aa',32),'hex'),
+            1,now()+interval '1 day');
+    INSERT INTO identity.care_relationship_permissions
+      (relationship_id,permission_code,created_by_person_id)
+    VALUES ('${relationship}','record.view','${patientPerson}');
+    ${context(delegate)}
+    UPDATE identity.care_relationships
+      SET status = 'active', invite_token_digest = NULL, invite_expires_at = NULL, invite_consumed_at = now()
+      WHERE id = '${relationship}' AND version = 1;`);
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^UPDATE 1$/m);
+
+  const seedConsent = contend(`${context(patientPerson)}
+    INSERT INTO consent.records
+      (id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,occurred_at)
+    VALUES ('${granted}','${patientPerson}','care_updates','1.0.0','granted','patient_app','1.0.0',now());`);
+  assert.equal(seedConsent.exit, 0, seedConsent.stderr);
+  return [
+    {
+      name: 'family delegation revocation',
+      write: `UPDATE identity.care_relationships SET status = 'revoked',
+        revoked_by_person_id = '${patientPerson}', revoked_at = now()
+        WHERE id = '${relationship}' AND version = 2;`,
+      written: /^UPDATE 1$/m,
+      deniedExit: 0,
+      denied: /^UPDATE 0$/m,
+      state: `SELECT status, version FROM identity.care_relationships WHERE id = '${relationship}';`,
+      before: 'active|2\n',
+      after: 'revoked|3\n',
+    },
+    {
+      name: 'consent withdrawal append',
+      write: `INSERT INTO consent.records
+        (id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,
+         occurred_at,supersedes_id,version)
+        VALUES ('${withdrawn}','${patientPerson}','care_updates','1.0.0','withdrawn','patient_app',
+                '1.0.0',now(),'${granted}',2);`,
+      written: /^INSERT 0 1$/m,
+      deniedExit: 3,
+      denied: /42501:.*row-level security/,
+      state: `SELECT decision, version FROM consent.records
+        WHERE id IN ('${granted}', '${withdrawn}') ORDER BY version;`,
+      before: 'granted|1\n',
+      after: 'granted|1\nwithdrawn|2\n',
+    },
+  ];
+}
+
+// Structural envelopes use the same synthetic shape as the F011 component fixture.
+function syntheticF011Envelope(contractId, suffix) {
+  return {
+    contractId,
+    keyRef: 'synthetic-kms/' + suffix + '/versions/1',
+    nonce: randomBytes(12).toString('hex'),
+    ciphertext: 'aabb',
+    authTag: '0102030405060708090a0b0c0d0e0f10',
+  };
+}
+
+function allergyInsertWriter(patient) {
+  const allergy = randomUUID();
+  const revision = randomUUID();
+  const request = randomUUID();
+  const key = randomUUID();
+  const payload = {
+    responseLanguage: 'en-EG',
+    responseRequestId: request,
+    preparation: {
+      allergyId: allergy,
+      revisionId: revision,
+      revisionVersion: 1,
+      previousRevisionId: null,
+      protectedFacts: syntheticF011Envelope('SHIFAA-F011-ALLERGY-PROTECTED/1', 'facts'),
+      protectedReason: null,
+      correctsAllergyId: null,
+    },
+  };
+  const finalizer = syntheticF011Envelope('SHIFAA-F011-RECEIPT-PROTECTED/1', 'receipt');
+  return {
+    name: 'F011 allergy empty-to-first insertion',
+    allergy,
+    revision,
+    write: `SET LOCAL shifaa.environment = 'local';
+      SET LOCAL shifaa.action = 'createAllergy';
+      SET LOCAL shifaa.aal = '2';
+      SET LOCAL shifaa.purposes = 'synthetic.feature011';
+      SET LOCAL shifaa.request_id = '${request}';
+      SET LOCAL shifaa.idempotency_key = '${key}';
+      SET LOCAL shifaa.request_hash = '${'a'.repeat(64)}';
+      DO $fixture$
+        DECLARE result jsonb;
+        BEGIN
+          result := clinical.create_allergy_api_v1('${patient}', '${JSON.stringify(payload)}'::jsonb);
+          PERFORM clinical.f011_finalize_receipt_v1(
+            (result->>'receiptId')::uuid, '${JSON.stringify(finalizer)}'::jsonb
+          );
+          IF result->>'resourceVersion' IS DISTINCT FROM '1' THEN
+            RAISE EXCEPTION 'expected first allergy revision';
+          END IF;
+        END
+      $fixture$;`,
+    written: /^DO$/m,
+    deniedExit: 3,
+    denied: /42501:.*(allergy authority|patient)/i,
+    state: `SELECT
+      (SELECT count(*) FROM clinical.allergy_heads WHERE patient_id = '${patient}'),
+      (SELECT count(*) FROM clinical.allergies WHERE patient_id = '${patient}'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = '${allergy}' AND aggregate_type = 'clinical.allergy_revision');`,
+    before: '0|0|0\n',
+    after: '1|1|1\n',
+  };
+}
+
+function allergyVerificationWriter(db, { patient, clinician, facility, encounter, first }) {
+  const allergyId = first.allergy;
+  const previousRevisionId = first.revision;
+  const revisionId = randomUUID();
+  const evidenceRef = randomUUID();
+  const responseRequestId = randomUUID();
+  const source = 'synthetic.internal_clinician_provenance';
+  const producer = 'f011.allergy_evidence_boundary';
+  const verifiedAt = '2030-04-05T07:15:00Z';
+  const facilityEvidence = randomUUID();
+  const seed = observedSql(
+    db,
+    `BEGIN;
+    INSERT INTO identity.private_evidence_objects
+      (id,bucket_code,object_key,owner_person_id,facility_id,sha256,mime_type,size_bytes,scan_status,released_at)
+    VALUES ('${facilityEvidence}','facility-license-evidence','synthetic/${facilityEvidence}',
+      '${clinician}','${facility}',repeat('1',64),'application/pdf',10,'released',now());
+    INSERT INTO identity.facility_licenses
+      (facility_id,license_type,number_ciphertext,number_hash,issuer,expires_on,licensed_activities,status,evidence_object_id)
+    VALUES ('${facility}','clinic',decode('01','hex'),decode('01','hex'),'Synthetic issuer',
+      '2035-12-31',ARRAY['consultation'],'verified','${facilityEvidence}');
+    INSERT INTO clinical.allergy_verification_support
+    (id,patient_id,allergy_id,previous_revision_id,previous_version,target_status,
+      attestor_person_id,source_identity,source_evidence_identity,producer_id,recorded_at,synthetic)
+    VALUES ('${evidenceRef}','${patient}','${allergyId}','${previousRevisionId}',1,
+      'clinician_confirmed','${clinician}','${source}','${evidenceRef}','${producer}',
+      '${verifiedAt}',true);
+    COMMIT;`,
+  );
+  receipt.participatingWriters.allergyVerificationSupport = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  const payload = {
+    responseLanguage: 'en-EG',
+    responseRequestId,
+    preparation: {
+      protectedRevision: {
+        allergyId,
+        revisionId,
+        revisionVersion: 2,
+        previousRevisionId,
+        protectedFacts: syntheticF011Envelope(
+          'SHIFAA-F011-ALLERGY-PROTECTED/1',
+          'verification-facts',
+        ),
+        protectedReason: syntheticF011Envelope(
+          'SHIFAA-F011-ALLERGY-PROTECTED/1',
+          'verification-reason',
+        ),
+      },
+      verifiedEvidence: {
+        contractId: 'SHIFAA-F011-VERIFIED-EVIDENCE-BINDING/1',
+        profile: 'allergy_verification',
+        bindingId: randomUUID(),
+        producerId: producer,
+        verifiedAt,
+        evidenceRef,
+        patientId: patient,
+        allergyId,
+        previousRevisionId,
+        previousVersion: 1,
+        revisionId,
+        revisionVersion: 2,
+        targetStatus: 'clinician_confirmed',
+        attestorPersonId: clinician,
+        sourceIdentity: source,
+        sourceEvidenceIdentity: evidenceRef,
+        synthetic: true,
+      },
+    },
+  };
+  const finalizer = syntheticF011Envelope('SHIFAA-F011-RECEIPT-PROTECTED/1', 'verify-receipt');
+  return {
+    name: 'F011 clinician allergy verification and head replacement',
+    actor: clinician,
+    write: `${encounterWriterContext('verifyAllergy')}
+      SET LOCAL shifaa.request_id = '${responseRequestId}';
+      SET LOCAL shifaa.purposes = 'synthetic.feature011';
+      SET LOCAL shifaa.facility_id = '${facility}';
+      SET LOCAL shifaa.encounter_id = '${encounter}';
+      DO $fixture$
+        DECLARE result jsonb;
+        BEGIN
+          result := clinical.verify_allergy_api_v1('${allergyId}',1,'${JSON.stringify(payload)}'::jsonb);
+          PERFORM clinical.f011_finalize_receipt_v1(
+            (result->>'receiptId')::uuid, '${JSON.stringify(finalizer)}'::jsonb
+          );
+          IF result->>'resourceVersion' IS DISTINCT FROM '2' THEN
+            RAISE EXCEPTION 'expected second allergy revision';
+          END IF;
+        END
+      $fixture$;`,
+    written: /^DO$/m,
+    deniedExit: 3,
+    denied: /42501:.*allergy authority denied/i,
+    state: `SELECT head.current_version, revision.verification_status,
+      (SELECT count(*) FROM clinical.allergies WHERE allergy_id = head.id),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = head.id AND aggregate_type = 'clinical.allergy_revision')
+      FROM clinical.allergy_heads head JOIN clinical.allergies revision ON head.current_revision_id = revision.id
+      WHERE head.id = '${allergyId}';`,
+    before: '1|self_reported|1|1\n',
+    after: '2|clinician_confirmed|2|2\n',
+  };
+}
+
+function recoveryRestrictionWriter(db, person) {
+  const caseId = randomUUID();
+  const seeded = observedSql(
+    db,
+    `INSERT INTO identity.continuity_cases
+      (id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
+       token_key_version,expires_at)
+    VALUES ('${caseId}','account_recovery','${person}','proof_required',
+      decode(repeat('c1',32),'hex'),decode(repeat('d2',32),'hex'),1,now() + interval '1 hour');`,
+  );
+  receipt.participatingWriters.recoveryRestrictionFixture = seeded;
+  assert.equal(seeded.exit, 0, seeded.stderr);
+  return {
+    name: 'F007 Core API recovery restriction staging',
+    actor: person,
+    write: `SET LOCAL shifaa.actor_role = 'PAT';
+      SET LOCAL shifaa.aal = '1';
+      SET LOCAL shifaa.purposes = '';
+      SET LOCAL shifaa.action = 'completeRecovery';
+      SET LOCAL shifaa.case_id = '${caseId}';
+      UPDATE identity.continuity_cases
+      SET restriction_scope = 'mfa_enrollment_only', version = version + 1, updated_at = now()
+      WHERE id = '${caseId}' AND subject_person_id = platform.context_person_id()
+        AND status = 'proof_required'
+      RETURNING id;`,
+    written: /^UPDATE 1$/m,
+    deniedExit: 0,
+    denied: /^UPDATE 0$/m,
+    state: `SELECT status, version, coalesce(restriction_scope, '')
+      FROM identity.continuity_cases WHERE id = '${caseId}';`,
+    before: 'proof_required|1|\n',
+    after: 'proof_required|2|mfa_enrollment_only\n',
+  };
+}
+
+function workforceTerminationWriter(db, { owner, clinician }) {
+  const facility = randomUUID();
+  const licence = randomUUID();
+  const membership = randomUUID();
+  const seeded = observedSql(
+    db,
+    `BEGIN;
+    UPDATE identity.people SET profile_status = 'active' WHERE id IN ('${owner}', '${clinician}');
+    INSERT INTO identity.facilities
+      (id,facility_type,name_ar,name_en,facility_status,governorate_code,city,district,address_line,created_by_person_id)
+    VALUES ('${facility}','clinic','عيادة اختبار','Synthetic clinic','active','C','Cairo','Test','Synthetic address','${owner}');
+    INSERT INTO identity.professional_licenses
+      (id,person_id,profession,number_ciphertext,number_hash,issuer,expires_on,status)
+    VALUES ('${licence}','${clinician}','doctor',decode(repeat('12',16),'hex'),decode(repeat('53',32),'hex'),
+      'Synthetic issuer','2035-12-31','verified');
+    INSERT INTO identity.facility_memberships
+      (id,facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id)
+    VALUES ('${membership}','${facility}','${clinician}','doctor','${licence}','2020-01-01','active','${owner}');
+    COMMIT;`,
+  );
+  receipt.participatingWriters.workforceTerminationFixture = seeded;
+  assert.equal(seeded.exit, 0, seeded.stderr);
+  return {
+    name: 'F003 clinical workforce membership termination',
+    actor: owner,
+    write: `SET LOCAL shifaa.actor_role = 'ADM-FACILITY';
+      SET LOCAL shifaa.aal = '2';
+      INSERT INTO identity.facility_memberships
+        (id,facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id,version)
+      VALUES ('${membership}','${facility}','${clinician}','doctor','${licence}','2020-01-01',
+        'ended',platform.context_person_id(),2)
+      ON CONFLICT (id) DO UPDATE SET role_code = excluded.role_code,
+        employment_license_id = excluded.employment_license_id, invite_token_hash = excluded.invite_token_hash,
+        invite_expires_at = excluded.invite_expires_at, valid_from = excluded.valid_from,
+        valid_until = excluded.valid_until, membership_status = excluded.membership_status,
+        version = excluded.version;`,
+    written: /^INSERT 0 1$/m,
+    deniedExit: 3,
+    denied: /42501:.*row-level security/i,
+    state: `SELECT membership_status, version, valid_until IS NOT NULL
+      FROM identity.facility_memberships WHERE id = '${membership}';`,
+    before: 'active|1|f\n',
+    after: 'ended|2|f\n',
+  };
+}
+
+function seedEncounterWriter(db, { patientPerson, clinician, unrelated }) {
+  const facility = randomUUID();
+  const licence = randomUUID();
+  const schedule = randomUUID();
+  const appointment = randomUUID();
+  const encounter = randomUUID();
+  const starts = '2030-04-05T07:00:00Z';
+  const seed = observedSql(
+    db,
+    `BEGIN;
+    UPDATE identity.people SET profile_status = 'active'
+      WHERE id IN ('${patientPerson}', '${clinician}', '${unrelated}');
+    INSERT INTO identity.facilities
+      (id,facility_type,name_ar,name_en,facility_status,governorate_code,city,district,address_line,created_by_person_id)
+    VALUES ('${facility}','clinic','عيادة اختبار','Synthetic clinic','active','C','Cairo','Test','Synthetic address','${clinician}');
+    INSERT INTO identity.professional_licenses
+      (id,person_id,profession,number_ciphertext,number_hash,issuer,expires_on,status)
+    VALUES ('${licence}','${clinician}','doctor',decode(repeat('12',16),'hex'),decode(repeat('53',32),'hex'),
+      'Synthetic issuer','2035-12-31','verified');
+    INSERT INTO identity.facility_memberships
+      (facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id)
+    VALUES ('${facility}','${clinician}','doctor','${licence}','2020-01-01','active','${clinician}');
+    INSERT INTO clinical.schedules
+      (id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,slot_duration_minutes,
+       fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+    VALUES ('${schedule}','${facility}','${clinician}','Africa/Cairo','2030-04-01','2030-04-30',30,
+      100,'EGP','${clinician}','${clinician}');
+    INSERT INTO clinical.appointments
+      (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+       civil_date,local_start,fee_minor_units,currency_code,payment_method,status,created_by_person_id,updated_by_person_id)
+    VALUES ('${appointment}','${patientPerson}','${facility}','${clinician}','${schedule}',
+      '${starts}','2030-04-05T07:30:00Z','Africa/Cairo','2030-04-05','09:00',100,'EGP',
+      'cash_on_arrival','confirmed','${clinician}','${clinician}');
+    UPDATE clinical.appointments SET status = 'checked_in' WHERE id = '${appointment}';
+    SET LOCAL shifaa.clinic_internal_transition = 'f010_create_encounter';
+    UPDATE clinical.appointments SET status = 'in_consultation' WHERE id = '${appointment}';
+    INSERT INTO clinical.encounters
+      (id,patient_person_id,facility_id,appointment_id,responsible_clinician_id,encounter_type,status,started_at)
+    VALUES ('${encounter}','${patientPerson}','${facility}','${appointment}','${clinician}','consultation','open','${starts}');
+    INSERT INTO clinical.encounter_participants (encounter_id,person_id,role_code,started_at) VALUES
+      ('${encounter}','${clinician}','responsible_clinician','${starts}'),
+      ('${encounter}','${unrelated}','consulting_clinician','${starts}');
+    COMMIT;`,
+  );
+  receipt.participatingWriters.encounterFixture = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^INSERT 0 2\nCOMMIT\n$/m);
+  return {
+    appointment,
+    encounter,
+    facility,
+    schedule,
+    patientPerson,
+    clinician,
+    unrelated,
+    starts,
+  };
+}
+
+function encounterWriterContext(action, purpose = 'appointment.scheduling') {
+  const request = randomUUID();
+  return `SET LOCAL shifaa.environment = 'local';
+    SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+    SET LOCAL shifaa.actor_role = 'CLN';
+    SET LOCAL shifaa.action = '${action}';
+    SET LOCAL shifaa.aal = '2';
+    SET LOCAL shifaa.purposes = '${purpose}';
+    SET LOCAL shifaa.request_id = '${request}';
+    SET LOCAL shifaa.trace_id = '${request}';
+    SET LOCAL shifaa.idempotency_key = '${randomUUID()}';
+    SET LOCAL shifaa.request_hash = '${'b'.repeat(64)}';`;
+}
+
+function standaloneAppointment(db, { facility, schedule, patientPerson, clinician }) {
+  const appointment = randomUUID();
+  const seed = observedSql(
+    db,
+    `INSERT INTO clinical.appointments
+      (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+       civil_date,local_start,fee_minor_units,currency_code,payment_method,status,created_by_person_id,updated_by_person_id)
+    VALUES ('${appointment}','${patientPerson}','${facility}','${clinician}','${schedule}',
+      '2030-04-06T07:00:00Z','2030-04-06T07:30:00Z','Africa/Cairo','2030-04-06','09:00',100,'EGP',
+      'cash_on_arrival','confirmed','${clinician}','${clinician}');`,
+  );
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^INSERT 0 1$/m);
+  return appointment;
+}
+
+function appointmentCancellationWriter(db, fixture) {
+  const { clinician } = fixture;
+  const appointment = standaloneAppointment(db, fixture);
+  const seed = observedSql(
+    db,
+    `BEGIN;
+    SET LOCAL shifaa.environment = 'local';
+    SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+    -- Initialize the synthetic audit partition before racing the installed writer.
+    SELECT event_id FROM audit.append_event_v1(
+      '${randomUUID()}', '${randomUUID()}', 'appointment.cancelled', 'appointment', 'success',
+      p_actor_person_id => '${clinician}', p_resource_id => '${randomUUID()}');
+    COMMIT;`,
+  );
+  receipt.participatingWriters.appointmentCancellationFixture = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  return {
+    name: 'F010 independent appointment cancellation',
+    actor: clinician,
+    write: `${encounterWriterContext('appointment.manage')}
+      SELECT 'cancelled', result->>'status', result->>'version'
+        FROM clinical.cancel_appointment_v1('${appointment}',1,'Synthetic cancellation') AS result;`,
+    written: /^cancelled\|cancelled\|2$/m,
+    deniedExit: 3,
+    denied: /42501:.*clinic facility, membership, or licence scope denied/,
+    state: `SELECT a.status, a.version, a.cancelled_at IS NOT NULL,
+      (SELECT count(*) FROM platform.idempotency_records
+        WHERE resource_id = a.id AND route_template = '/v1/appointments/{appointmentId}/cancel'
+          AND state = 'completed'),
+      (SELECT count(*) FROM audit.events
+        WHERE resource_id = a.id AND action_code = 'appointment.cancelled'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = a.id AND event_type = 'clinical.appointment.changed.v1')
+      FROM clinical.appointments a WHERE a.id = '${appointment}';`,
+    before: 'confirmed|1|f|0|0|0\n',
+    after: 'cancelled|2|t|1|1|1\n',
+  };
+}
+
+function queueCallWriter(db, fixture) {
+  const { facility, clinician } = fixture;
+  const appointment = standaloneAppointment(db, fixture);
+  const scope = randomUUID();
+  const queue = randomUUID();
+  const seed = observedSql(
+    db,
+    `BEGIN;
+    UPDATE clinical.appointments SET status = 'checked_in' WHERE id = '${appointment}';
+    INSERT INTO clinical.queue_scopes(id,facility_id,doctor_person_id,civil_date,timezone_name)
+      VALUES ('${scope}','${facility}','${clinician}','2030-04-06','Africa/Cairo');
+    INSERT INTO clinical.queue_entries
+      (id,queue_scope_id,appointment_id,facility_id,doctor_person_id,civil_date,queue_number,state,waiting_order)
+      VALUES ('${queue}','${scope}','${appointment}','${facility}','${clinician}',
+        '2030-04-06',1,'waiting',1);
+    SET LOCAL shifaa.environment = 'local';
+    SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+    SELECT event_id FROM audit.append_event_v1(
+      '${randomUUID()}', '${randomUUID()}', 'queue.entry.called', 'queue_entry', 'success',
+      p_actor_person_id => '${clinician}', p_resource_id => '${randomUUID()}');
+    COMMIT;`,
+  );
+  receipt.participatingWriters.queueCallFixture = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  return {
+    name: 'F010 independent queue entry call',
+    actor: clinician,
+    appointment,
+    queue,
+    write: `${encounterWriterContext('queue.manage', 'queue.operation')}
+      SELECT 'called', result->>'state', result->>'version'
+        FROM clinical.call_queue_entry_v1('${queue}',1) AS result;`,
+    written: /^called\|called\|2$/m,
+    deniedExit: 3,
+    denied: /42501:.*clinic facility, membership, or licence scope denied/,
+    state: `SELECT q.state, q.version, q.called_at IS NOT NULL, q.waiting_order IS NOT NULL,
+      (SELECT count(*) FROM platform.idempotency_records
+        WHERE resource_id = q.id AND route_template = '/v1/queue-entries/{queueEntryId}/call'
+          AND state = 'completed'),
+      (SELECT count(*) FROM audit.events
+        WHERE resource_id = q.id AND action_code = 'queue.entry.called'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = q.id AND event_type = 'clinical.queue.changed.v1')
+      FROM clinical.queue_entries q WHERE q.id = '${queue}';`,
+    before: 'waiting|1|f|t|0|0|0\n',
+    after: 'called|2|t|f|1|1|1\n',
+  };
+}
+
+function encounterCreateWriter({ patientPerson, clinician }, { appointment, queue }) {
+  const payload = JSON.stringify({
+    appointmentId: appointment,
+    patientId: patientPerson,
+    encounterType: 'consultation',
+  });
+  return {
+    name: 'F010 independent encounter creation',
+    actor: clinician,
+    write: `${encounterWriterContext('createEncounter')}
+      SELECT 'created', result #>> '{encounter,status}', result #>> '{encounter,version}'
+        FROM clinical.create_encounter_api_v1('${payload}'::jsonb) AS result;`,
+    written: /^created\|open\|1$/m,
+    deniedExit: 3,
+    denied: /42501:.*current treating appointment scope denied/,
+    state: `SELECT a.status, a.version, q.state, q.version, coalesce(e.status, ''),
+      (SELECT count(*) FROM clinical.encounter_participants WHERE encounter_id = e.id),
+      (SELECT count(*) FROM platform.idempotency_records
+        WHERE resource_id = e.id AND route_template = '/v1/encounters' AND state = 'completed'),
+      (SELECT count(*) FROM audit.events WHERE resource_id = e.id AND action_code = 'encounter.created'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = e.id AND event_type = 'clinical.encounter.opened.v1')
+      FROM clinical.appointments a JOIN clinical.queue_entries q ON q.appointment_id = a.id
+      LEFT JOIN clinical.encounters e ON e.appointment_id = a.id
+      WHERE a.id = '${appointment}' AND q.id = '${queue}';`,
+    before: 'checked_in|2|called|2||0|0|0|0\n',
+    after: 'in_consultation|3|in_service|3|open|1|1|1|1\n',
+  };
+}
+
+function encounterParticipantWriter({ encounter, clinician, unrelated, starts }) {
+  const payload = JSON.stringify({
+    participantIntervalsEnd: [
+      { personId: unrelated, roleCode: 'consulting_clinician', startedAt: starts },
+    ],
+  });
+  return {
+    name: 'F010 encounter participant interval closure',
+    actor: clinician,
+    write: `${encounterWriterContext('updateEncounter')}
+      SELECT 'updated', clinical.update_encounter_api_v1('${encounter}',1,'${payload}'::jsonb)->>'version';`,
+    written: /^updated\|2$/m,
+    deniedExit: 3,
+    denied: /P0002:.*encounter was not found/,
+    state: `SELECT encounter.version, participant.version, participant.ended_at IS NOT NULL,
+      (SELECT count(*) FROM platform.outbox_events WHERE aggregate_id = encounter.id)
+      FROM clinical.encounters encounter JOIN clinical.encounter_participants participant
+        ON participant.encounter_id = encounter.id
+      WHERE encounter.id = '${encounter}' AND participant.person_id = '${unrelated}';`,
+    before: '1|1|f|0\n',
+    after: '2|2|t|1\n',
+  };
+}
+
+function encounterCompletionWriter(db, { appointment, encounter, facility, clinician, starts }) {
+  const scope = randomUUID();
+  const queue = randomUUID();
+  const seed = observedSql(
+    db,
+    `BEGIN;
+      INSERT INTO clinical.queue_scopes(id,facility_id,doctor_person_id,civil_date,timezone_name)
+        VALUES ('${scope}','${facility}','${clinician}','2030-04-05','Africa/Cairo');
+      INSERT INTO clinical.queue_entries
+        (id,queue_scope_id,appointment_id,facility_id,doctor_person_id,civil_date,queue_number,state,waiting_order)
+        VALUES ('${queue}','${scope}','${appointment}','${facility}','${clinician}',
+          '2030-04-05',1,'waiting',1);
+      UPDATE clinical.queue_entries SET state = 'called', waiting_order = NULL, called_at = '${starts}'
+        WHERE id = '${queue}';
+      SET LOCAL shifaa.clinic_internal_transition = 'f010_create_encounter';
+      UPDATE clinical.queue_entries SET state = 'in_service' WHERE id = '${queue}';
+      -- Pre-provision the month with a synthetic event so concurrent audit reads
+      -- observe the transaction without waiting for first-write partition DDL.
+      SET LOCAL shifaa.environment = 'local';
+      SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+      SELECT event_id FROM audit.append_event_v1(
+        '${randomUUID()}', '${randomUUID()}', 'encounter.updated', 'encounter', 'success',
+        p_actor_person_id => '${clinician}', p_resource_id => '${randomUUID()}');
+      COMMIT;`,
+  );
+  receipt.participatingWriters.queueFixture = seed;
+  assert.equal(seed.exit, 0, seed.stderr);
+  return {
+    name: 'F010 encounter, appointment and queue completion',
+    actor: clinician,
+    write: `${encounterWriterContext('completeEncounter')}
+      SELECT 'completed', result->'encounter'->>'status', result->>'appointmentStatus',
+        result->>'queueStatus'
+      FROM clinical.complete_encounter_api_v1('${encounter}',1,
+        '{"summary":"Synthetic completion","structuralConfirmation":true}'::jsonb) AS result;`,
+    written: /^completed\|completed\|completed\|completed$/m,
+    deniedExit: 3,
+    denied: /P0002:.*encounter was not found/,
+    state: `SELECT encounter.status, encounter.version, appointment.status, appointment.version,
+      queue.state, queue.version,
+      (SELECT count(*) FROM platform.idempotency_records
+        WHERE resource_id = encounter.id AND route_template = '/v1/encounters/{encounterId}/complete'
+          AND state = 'completed'),
+      (SELECT count(*) FROM audit.events
+        WHERE resource_id = encounter.id AND action_code = 'encounter.completed'),
+      (SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id = encounter.id AND event_type = 'clinical.encounter.completed.v1')
+      FROM clinical.encounters encounter
+      JOIN clinical.appointments appointment ON appointment.id = encounter.appointment_id
+      JOIN clinical.queue_entries queue ON queue.appointment_id = appointment.id
+      WHERE encounter.id = '${encounter}';`,
+    before: 'open|1|in_consultation|3|in_service|3|0|0|0\n',
+    after: 'completed|2|completed|4|completed|4|1|1|1\n',
+  };
+}
+
+async function runRecoveryWorkerOrder(db, { admission, onboard, contend, hold, backendPid }) {
+  const worker = 'shifaa_worker';
+  const subject = '74120000-0000-4000-8000-000000000004';
+  const before = contend(onboard(subject));
+  assert.equal(before.exit, 0, before.stderr);
+  assert.match(before.stdout, /^onboarded\|1$/m);
+  const seed = observedSql(
+    db,
+    `INSERT INTO identity.continuity_cases
+      (case_type, subject_person_id, status, public_token_digest, recovery_handle_digest,
+       token_key_version, restriction_scope, bound_native_session_id, created_at, expires_at)
+      SELECT 'account_recovery', id, 'restricted_enrollment',
+             decode(repeat('a1', 32), 'hex'), decode(repeat('b2', 32), 'hex'),
+             1, 'mfa_enrollment_only', '74120000-0000-4000-8000-000000000005',
+             now() - interval '2 hours', now() - interval '1 hour'
+      FROM identity.people WHERE user_id = '${subject}';`,
+  );
+  assert.equal(seed.exit, 0, seed.stderr);
+  assert.match(seed.stdout, /^INSERT 0 1$/m);
+  const state = () =>
+    observedSql(
+      db,
+      `SELECT c.status, c.version, c.restriction_scope
+    FROM identity.continuity_cases c JOIN identity.people p ON p.id = c.subject_person_id
+    WHERE p.user_id = '${subject}';`,
+    );
+  const expire = "SELECT 'purged', platform.purge_expired_continuity_decoys(clock_timestamp());";
+  const coreApi = contend(expire);
+  assert.equal(coreApi.exit, 3);
+  assert.match(coreApi.stderr, /42501: permission denied for (schema|function)/);
+  const initial = state();
+  assert.equal(initial.stdout, 'restricted_enrollment|1|mfa_enrollment_only\n');
+
+  // Run worker-first before the admission-first trial can commit the expiry.
+  const writerFirst = await hold(
+    expire,
+    (holder) => ({ holder, admission: contend(admission), visible: state() }),
+    worker,
+  );
+  assert.match(writerFirst.holder, /^purged\|0$/m);
+  assert.notEqual(
+    backendPid(writerFirst.holder, 'holder', worker),
+    backendPid(writerFirst.admission.stdout, 'contender'),
+  );
+  assert.deepEqual(writerFirst.visible, initial);
+  const rollback = state();
+  assert.deepEqual(rollback, initial);
+
+  const admissionFirst = await hold(admission, (holder) => ({
+    holder,
+    writer: contend(expire, worker),
+    visible: state(),
+  }));
+  assert.notEqual(
+    backendPid(admissionFirst.holder, 'holder'),
+    backendPid(admissionFirst.writer.stdout, 'contender', worker),
+  );
+  const failedOrderings = [];
+  for (const [name, observation] of [
+    ['worker first', writerFirst.admission],
+    ['admission first with worker', admissionFirst.writer],
+  ]) {
+    if (observation.exit === 3) {
+      assert.match(observation.stderr, /55P03:.*lock timeout/);
+      assert.match(observation.stderr, /relation "f012_source_admission"/);
+    } else {
+      assert.equal(observation.exit, 0, observation.stderr);
+      failedOrderings.push(name);
+    }
+  }
+  const blocked = admissionFirst.writer.exit === 3;
+  assert.equal(
+    admissionFirst.visible.stdout,
+    blocked ? initial.stdout : 'expired|2|mfa_enrollment_only\n',
+  );
+  const retry = blocked ? contend(expire, worker) : null;
+  if (retry) assert.equal(retry.exit, 0, retry.stderr);
+  const committed = state();
+  assert.equal(committed.stdout, 'expired|2|mfa_enrollment_only\n');
+  return {
+    seed,
+    coreApi,
+    initial,
+    writerFirst,
+    rollback,
+    admissionFirst,
+    retry,
+    committed,
+    failedOrderings,
+  };
 }
 
 function sourceFenceRawBypass(db) {
@@ -1623,10 +2745,27 @@ async function admit() {
       ['--native-recovery', 'recovery'],
     ]).get(argumentsList[0]);
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
+  const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
+  const focusedWriters = new Map([
+    ['--participating-family-writers', 'familyAndConsent'],
+    ['--participating-family-grant', 'familyGrant'],
+    ['--participating-allergy-writer', 'allergy'],
+    ['--participating-allergy-verification', 'allergyVerification'],
+    ['--participating-encounter-participant', 'encounterParticipant'],
+    ['--participating-encounter-completion', 'encounterCompletion'],
+    ['--participating-appointment-cancellation', 'appointmentCancellation'],
+    ['--participating-queue-call', 'queueCall'],
+    ['--participating-encounter-create', 'encounterCreate'],
+    ['--participating-workforce-termination', 'workforceTermination'],
+    ['--participating-recovery-restriction', 'recoveryRestriction'],
+  ]).get(onlyArgument);
+  const participatingWriters =
+    Boolean(focusedWriters) || onlyArgument === '--participating-writers';
   const redOnly = argumentsList.length === 1 && argumentsList[0] === '--source-fence-red';
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
   const sqlOnly =
     atomicity ||
+    participatingWriters ||
     redOnly ||
     upgrade ||
     (argumentsList.length === 1 && argumentsList[0] === '--source-fence');
@@ -1689,14 +2828,18 @@ async function admit() {
       if (atomicity) {
         runAtomicity(source);
       } else {
-        sourceFence(source, redOnly, upgrade);
-        if (!redOnly) {
+        sourceFence(source, redOnly, upgrade || participatingWriters);
+        if (!redOnly && !focusedWriters) {
           await sourceFenceLockConflict(source);
           sourceFenceRawBypass(source);
           sourceFenceDurability(source);
           sourceFencePrivilegeNegatives(source);
           sourceFenceScopeNegatives(source);
           sourceFenceRlsNegatives(source);
+        }
+        if (participatingWriters) {
+          stage = 'T012 participating writers against the disposable migrated database';
+          await runOnboardingWriterOrder(source, focusedWriters);
         }
       }
     } finally {
@@ -1710,9 +2853,13 @@ async function admit() {
     }
     receipt.status = atomicity
       ? 'EXECUTED_ATOMICITY_SQL'
-      : redOnly
-        ? 'EXPECTED_RED_SOURCE_FENCE'
-        : 'PASS_SOURCE_FENCE_SQL';
+      : focusedWriters
+        ? 'PASS_T012_FOCUSED_WRITER_SQL'
+        : participatingWriters
+          ? 'PASS_T012_ONBOARDING_WRITER_SQL'
+          : redOnly
+            ? 'EXPECTED_RED_SOURCE_FENCE'
+            : 'PASS_SOURCE_FENCE_SQL';
     return;
   }
   try {
