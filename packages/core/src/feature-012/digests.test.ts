@@ -1,5 +1,12 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
+import {
+  clinicalEvidenceDigest,
+  encodeFeature012Canonical,
+  relianceDigest,
+  type Feature012ClinicalEvidence,
+  type Feature012ReviewReliance,
+} from './digests.js';
 
 const text = 'Cafe\u0301 \u062f\u0641\u062a\u0631';
 const expiresAt = '2030-01-01T00:00:00.000Z';
@@ -43,4 +50,52 @@ export function defineFeature012DigestCases(encode?: (value: DraftVectorInput) =
   });
 }
 
-defineFeature012DigestCases();
+defineFeature012DigestCases(encodeFeature012Canonical);
+
+it('binds the required source set independent of input order and request CAS', () => {
+  const allergy = {
+    sourceKind: 'allergy',
+    sourceId: null,
+    projectionScope: 'synthetic-patient',
+    sourceRevisionId: null,
+    sourceVersion: '1',
+    sourceState: 'verified_empty',
+    completeness: 'complete',
+    freshness: 'current',
+  } as const;
+  const medication = { ...allergy, sourceKind: 'medication' } as const;
+  const evidence = {
+    prescriptionRevision: draftVectors[0].input,
+    requiredSources: [allergy, medication],
+    mechanism: null,
+  } satisfies Feature012ClinicalEvidence;
+  const before = { ...evidence, requestVersion: 1 };
+  const oppositeLaneChanged = {
+    ...evidence,
+    requiredSources: [medication, allergy],
+    requestVersion: 2,
+  };
+  expect(clinicalEvidenceDigest(oppositeLaneChanged)).toBe(clinicalEvidenceDigest(before));
+  expect(clinicalEvidenceDigest({ ...evidence, requiredSources: [medication] })).not.toBe(
+    clinicalEvidenceDigest(before),
+  );
+});
+
+it('binds review reliance to the selected lane, assignment and designation', () => {
+  const reliance = {
+    clinicalEvidenceDigest: draftVectors[0].sha256,
+    requestId: 'synthetic-request',
+    requestPayloadDigest: draftVectors[1].sha256,
+    lane: 'pharmacist',
+    assignmentId: 'synthetic-assignment',
+    assignmentVersion: 1,
+    designationId: 'synthetic-designation',
+    designationVersion: 1,
+    rosterRevision: 1,
+  } satisfies Feature012ReviewReliance;
+  const expected = relianceDigest(reliance);
+  expect(relianceDigest({ ...reliance, lane: 'second_physician' })).not.toBe(expected);
+  expect(relianceDigest({ ...reliance, assignmentVersion: 2 })).not.toBe(expected);
+  expect(relianceDigest({ ...reliance, designationVersion: 2 })).not.toBe(expected);
+  expect(relianceDigest({ ...reliance, rosterRevision: 2 })).not.toBe(expected);
+});
