@@ -1,4 +1,10 @@
+import { randomBytes } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
+import {
+  createLocalFeature012PayloadProtection,
+  type Feature012PayloadBinding,
+  type Feature012PayloadEnvelope,
+} from './protection.js';
 
 const plaintext = 'SYNTHETIC_T018 Cafe\u0301 \u062f\u0641\u062a\u0631';
 const surfaces = ['error', 'logs', 'outbox', 'receipt'] as const;
@@ -8,9 +14,12 @@ type EnvelopeChange = 'nonce' | 'keyReference' | 'ciphertext' | 'tag';
 
 // Bind these scenarios to the actual T019 subject and its captured output
 // surfaces when they exist. Every trial creates its own synthetic record.
-type ProtectionFixture = {
+type EnvelopeFixture = {
   read: (input?: { binding?: BindingChange; envelope?: EnvelopeChange }) => Promise<Uint8Array>;
   nonce: Uint8Array;
+};
+
+type ProtectionFixture = EnvelopeFixture & {
   forbiddenValues: readonly string[];
   surfaces: Partial<Record<(typeof surfaces)[number], unknown>>;
   readWithF011Executor: () => Promise<Uint8Array>;
@@ -30,23 +39,27 @@ const rejectedInputs = [
 
 export function defineFeature012ProtectionCases(
   create?: (payload: Uint8Array) => Promise<ProtectionFixture>,
+  createEnvelope: ((payload: Uint8Array) => Promise<EnvelopeFixture>) | undefined = create,
 ) {
   const open = () => create!(Buffer.from(plaintext, 'utf8'));
-  describe.skipIf(!create)('F012 protected payloads through the T019 adapter', () => {
+  const openEnvelope = () => createEnvelope!(Buffer.from(plaintext, 'utf8'));
+  describe.skipIf(!createEnvelope)('F012 protected payload envelopes', () => {
     it('preserves UTF-8 and uses a fresh nonce for the same payload', async () => {
-      const first = await open();
-      const second = await open();
+      const first = await openEnvelope();
+      const second = await openEnvelope();
       expect(Buffer.from(await first.read())).toEqual(Buffer.from(plaintext, 'utf8'));
       expect(Buffer.from(await second.read())).toEqual(Buffer.from(plaintext, 'utf8'));
       expect(first.nonce).not.toEqual(second.nonce);
     });
 
     it.each(rejectedInputs)('denies a mismatched binding or envelope %j', async (change) => {
-      const fixture = await open();
+      const fixture = await openEnvelope();
       expect(Buffer.from(await fixture.read())).toEqual(Buffer.from(plaintext, 'utf8'));
       await expect(fixture.read(change)).rejects.toThrow();
     });
+  });
 
+  describe.skipIf(!create)('F012 protected payload persistence and disclosure', () => {
     it('denies a separately authorized F011 protected executor access to the F012 record', async () => {
       const fixture = await open();
       expect(Buffer.from(await fixture.read())).toEqual(Buffer.from(plaintext, 'utf8'));
@@ -78,4 +91,68 @@ export function defineFeature012ProtectionCases(
   });
 }
 
-defineFeature012ProtectionCases();
+const binding: Feature012PayloadBinding = {
+  field: 'protected_justification',
+  resourceId: '00000000-0000-4000-8000-000000000012',
+  resourceVersion: 1,
+  retentionClass: 'CLINICAL_RECORD',
+};
+const bindingChanges = {
+  field: { field: 'protected_monitoring' },
+  resource: { resourceId: '00000000-0000-4000-8000-000000000013' },
+  version: { resourceVersion: 2 },
+} as const;
+
+function changedBytes(bytes: Uint8Array): Uint8Array {
+  const altered = Uint8Array.from(bytes);
+  altered[0] = altered[0]! ^ 1;
+  return altered;
+}
+
+function changeEnvelope(
+  envelope: Feature012PayloadEnvelope,
+  change: EnvelopeChange,
+): Feature012PayloadEnvelope {
+  switch (change) {
+    case 'keyReference':
+      return { ...envelope, keyRef: 'synthetic-other-key' };
+    case 'nonce':
+      return { ...envelope, nonce: changedBytes(envelope.nonce) };
+    case 'ciphertext':
+      return { ...envelope, ciphertext: changedBytes(envelope.ciphertext) };
+    case 'tag':
+      return { ...envelope, authTag: changedBytes(envelope.authTag) };
+  }
+}
+
+const localProtection = createLocalFeature012PayloadProtection(
+  'synthetic-f012-key',
+  randomBytes(32),
+);
+defineFeature012ProtectionCases(undefined, async (payload) => {
+  const envelope = localProtection.seal(binding, payload);
+  return {
+    nonce: envelope.nonce,
+    read: async (change) =>
+      localProtection.open(
+        change?.binding ? { ...binding, ...bindingChanges[change.binding] } : binding,
+        change?.envelope ? changeEnvelope(envelope, change.envelope) : envelope,
+      ),
+  };
+});
+
+it('authenticates retention class independently of the resource version', () => {
+  const retainedBinding = { ...binding, retentionClass: 'PRESCRIPTION_DISPENSE' } as const;
+  const bytes = Buffer.from(plaintext, 'utf8');
+  const envelope = localProtection.seal(retainedBinding, bytes);
+  expect(localProtection.open(retainedBinding, envelope)).toEqual(bytes);
+  expect(() => localProtection.open(binding, envelope)).toThrow(
+    /^Protected payload is unavailable\.$/,
+  );
+});
+
+it('fails closed with a payload-free error for malformed UTF-8', () => {
+  expect(() => localProtection.seal(binding, Uint8Array.of(0xc3, 0x28))).toThrow(
+    /^Protected payload is unavailable\.$/,
+  );
+});

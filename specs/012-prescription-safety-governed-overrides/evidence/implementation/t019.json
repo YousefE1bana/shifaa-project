@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "task": "T019",
+  "issue": 530,
+  "status": "LOCAL_PARTIAL_CANDIDATE",
+  "reviewedAt": "2026-11-24",
+  "base": "8cf49c10fd0149ce79d6546d2044b2d29669378b",
+  "testedSource": "30ed6c69ff2df1010a1679ba257a172a1035434f",
+  "prerequisite": {
+    "task": "T018",
+    "pullRequest": 617,
+    "result": "INTEGRATED_AUTHORING_ONLY"
+  },
+  "scope": [
+    "Deterministic UTF-8 reference encoding, separate evidence and review reliance digests and independent aggregate CAS.",
+    "Local synthetic AES-256-GCM with supplied key, fresh nonce and contract, key reference, field, resource, version and clinical retention class binding.",
+    "The F012 local adapter has no product route, key provider, repository or deletion path."
+  ],
+  "verification": {
+    "node": "26.13.1",
+    "vitest": "4.1.12",
+    "typescript": "7.0.2",
+    "prettier": "3.6.2",
+    "results": {
+      "strictFocusedTypecheck": "PASS",
+      "formatAndGitDiffCheck": "PASS",
+      "tests": {
+        "passed": 17,
+        "failed": 0,
+        "skipped": 3
+      }
+    },
+    "testFiles": [
+      "packages/core/src/feature-012/digests.test.ts",
+      "services/api/src/modules/feature-012/protection.test.ts"
+    ],
+    "runtimeBoundary": "Focused Windows host execution against the pure encoder and a synthetic in-process adapter. No PostgreSQL, native Auth, network, product route or retained service was used."
+  },
+  "candidateReview": {
+    "source": "6f626ee2af64654c9459201cc58f2f3525842964",
+    "base": "8b16415db048684801453e8bf544a4bca784720b",
+    "status": "LOCAL_IMPLEMENTATION_VERIFIED_INSTALLED_PROOF_OPEN",
+    "results": {
+      "strictFocusedTypecheck": "PASS",
+      "tests": { "passed": 18, "failed": 0, "skipped": 3 },
+      "independentPythonDigestVectors": "PASS"
+    },
+    "notes": [
+      "Vitest exercises the feature entry point with the exact canonical encoder and Python-derived clinical evidence and reliance vectors. The revision projection binds items, substitution and expiry. Request CAS stays outside both digests, and the owning mutation still enforces current CAS.",
+      "Synthetic adapter tests exercise both retention classes, exact UTF-8, altered envelopes and bindings, invalid UTF-8, and a payload-free local failure. Actual application output and persistence are separate observations."
+    ],
+    "integrationFollowUp": {
+      "previousHead": "8dd7f6b47a1806693b22750f9496cf6e3975bf78",
+      "previousArchitectureCheck": "FAIL: a test imported its own workspace package by name.",
+      "correctedSource": "06a93458ed5cc72f196d381d2d140af519a17166",
+      "base": "426f22703e4e0227b301c80733ae4ee8e619ea2f",
+      "checks": "Architecture and strict focused typecheck passed. The relative feature entry point passed all 18 focused cases with three installed skips. Node module resolution separately verified the public export target."
+    }
+  },
+  "remainingInstalledCases": [
+    {
+      "case": "F011 executor denied access to persisted F012 protected record",
+      "prerequisites": "Installed F012 protected relation and envelope under its own forced RLS, a positive authorized F012 read, and a separately authorized real F011 executor.",
+      "owners": "T019 protected adapter acceptance, T020 foundation forced RLS where the covered relation exists, T021 foundation execution, T077 current-head protected-data review. Later installed relations retain their owning schema checks."
+    },
+    {
+      "case": "Protected values absent from actual error, log, outbox, and receipt observations",
+      "prerequisites": "T017 coordinator/receipt composition and an installed protected mutation with real restricted error/log, outbox and receipt capture. T023 and each protected mutation own installed schema and composition as applicable.",
+      "owners": "T019 adapter observation binding, T021 foundation execution where composed, and T077 current-head security review of actual outputs."
+    },
+    {
+      "case": "Persisted protected bytes survive validity expiry",
+      "prerequisites": "An installed immutable protected record held across an actual validity transition and authoritative readback of the same bytes. Applicable history and receipt storage must exist under their owning schema and coordinator tasks.",
+      "owners": "T019 retention binding and adapter acceptance, T021 foundation execution where composed, owning persistence/replay cases and T077 protected-data review. OPEN-LEGAL-002 remains the production retention schedule gate."
+    }
+  ]
+}
