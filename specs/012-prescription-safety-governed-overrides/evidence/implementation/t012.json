@@ -109,6 +109,26 @@
       "negative": "An unrelated clinician received 42501 and changed no rows.",
       "correctionOwner": "T013"
     },
+    "queueCall": {
+      "testedHead": "35279a5846ec3947c12c89077f61ddd8a6ae8acc",
+      "run": "a4fb0656-da37-4ce6-9467-b9f9d408e3dc",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.call_queue_entry_v1",
+      "admissionFirst": "The queue advanced to called version 2, set the call timestamp, cleared the waiting order, and committed one audit, outbox and idempotency record each while admission remained held.",
+      "writerFirst": "Independent admission committed while the call remained open. Rollback preserved waiting version 1, the original queue ordering and zero call effects.",
+      "negative": "An unrelated clinician received 42501 and changed no rows.",
+      "correctionOwner": "T013"
+    },
+    "encounterCreate": {
+      "testedHead": "35279a5846ec3947c12c89077f61ddd8a6ae8acc",
+      "run": "2fdf3f98-9a44-4182-9c8b-097c172a7fee",
+      "status": "RED_BOTH_ORDERS",
+      "entryPoint": "clinical.create_encounter_api_v1",
+      "admissionFirst": "The appointment and queue advanced to in_consultation and in_service at version 3. The open encounter, participant, audit, outbox and idempotency record committed while admission remained held.",
+      "writerFirst": "Independent admission committed while creation remained open. Rollback preserved the checked-in appointment, called queue, and absence of the encounter and effects.",
+      "negative": "An unrelated clinician received 42501 for current treating appointment scope and changed no rows.",
+      "correctionOwner": "T013"
+    },
     "allergyVerification": {
       "testedHead": "c7931557f250707426ccdac48518ec7edaae3ed2",
       "run": "8926b763-9a81-4994-a18d-c1c129fd3268",
@@ -305,6 +325,22 @@
         "run": "5fc4625f-d23e-4744-8668-9b6724cd3d3f",
         "testedHead": "ca78bf4c05a1d865f1f4b7cc81824870fb19e58d",
         "result": "F004 delegation grant RED in both orders. Admission control, unrelated invitee denial, authorization predicate and atomic rollback passed."
+      },
+      {
+        "path": "t012-f010-queue-call-35279a5.json",
+        "bytes": 181783,
+        "sha256": "708d25d5ca02cf3a174d497d35d30293291f91a2524e979a369a88cca075b004",
+        "run": "a4fb0656-da37-4ce6-9467-b9f9d408e3dc",
+        "testedHead": "35279a5846ec3947c12c89077f61ddd8a6ae8acc",
+        "result": "F010 independent queue call RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
+      },
+      {
+        "path": "t012-f010-create-35279a5.json",
+        "bytes": 181174,
+        "sha256": "e030fbafd3d49c372372a7c22797f9c383b510304e006e08bc9bb7cea07b810d",
+        "run": "2fdf3f98-9a44-4182-9c8b-097c172a7fee",
+        "testedHead": "35279a5846ec3947c12c89077f61ddd8a6ae8acc",
+        "result": "F010 independent encounter creation RED in both orders. Admission control, unrelated-clinician denial and rollback passed."
       }
     ]
   },
