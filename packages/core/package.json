@@ -21,7 +21,8 @@
     "./identity-continuity/types": "./src/identity-continuity/types.ts",
     "./audit-admin": "./src/audit-admin/index.ts",
     "./audit-admin/aggregate-policy": "./src/audit-admin/aggregate-policy.ts",
-    "./audit-admin/audit-integrity": "./src/audit-admin/audit-integrity.ts"
+    "./audit-admin/audit-integrity": "./src/audit-admin/audit-integrity.ts",
+    "./feature-012": "./src/feature-012/index.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

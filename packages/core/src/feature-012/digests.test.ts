@@ -1,5 +1,12 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
+import {
+  clinicalEvidenceDigest,
+  encodeFeature012Canonical,
+  relianceDigest,
+  type Feature012ClinicalEvidence,
+  type Feature012ReviewReliance,
+} from './index.js';
 
 const text = 'Cafe\u0301 \u062f\u0641\u062a\u0631';
 const expiresAt = '2030-01-01T00:00:00.000Z';
@@ -43,4 +50,64 @@ export function defineFeature012DigestCases(encode?: (value: DraftVectorInput) =
   });
 }
 
-defineFeature012DigestCases();
+defineFeature012DigestCases(encodeFeature012Canonical);
+
+const allergy = {
+  sourceKind: 'allergy',
+  sourceId: null,
+  projectionScope: 'synthetic-patient',
+  sourceRevisionId: null,
+  sourceVersion: '1',
+  sourceState: 'verified_empty',
+  completeness: 'complete',
+  freshness: 'current',
+} as const;
+const medication = { ...allergy, sourceKind: 'medication' } as const;
+const evidence = {
+  prescriptionRevision: { items: [{ text, quantity }], substitutionAllowed: false, expiresAt },
+  requiredSources: [medication, allergy],
+  mechanism: {
+    context: 'synthetic-context',
+    manifestDigest: '1'.repeat(64),
+    inputDigests: ['2'.repeat(64), '3'.repeat(64)],
+  },
+} satisfies Feature012ClinicalEvidence;
+
+// Produced independently with Python JSON encoding and hashlib SHA-256.
+const expectedEvidence = '36b8ed71336be5f3d5bcf4b7f9a12ed442fd8976da2fff1811c72ad1d6b0a302';
+const expectedReliance = 'b6ec2eb973bdefb2fb9e38472a29b21a28d650b6e89c3382f8719178f45d1676';
+
+it('matches the clinical evidence vector with request CAS and source ordering separate', () => {
+  const before = { ...evidence, requestVersion: 1 };
+  const oppositeLaneChanged = {
+    ...evidence,
+    prescriptionRevision: { ...evidence.prescriptionRevision, requestVersion: 2 },
+    requiredSources: [allergy, medication],
+    requestVersion: 2,
+  };
+  expect(clinicalEvidenceDigest(before)).toBe(expectedEvidence);
+  expect(clinicalEvidenceDigest(oppositeLaneChanged)).toBe(expectedEvidence);
+  expect(clinicalEvidenceDigest({ ...evidence, requiredSources: [medication] })).not.toBe(
+    expectedEvidence,
+  );
+  expect(clinicalEvidenceDigest({ ...evidence, mechanism: null })).not.toBe(expectedEvidence);
+});
+
+it('binds review reliance to the selected lane, assignment and designation', () => {
+  const reliance = {
+    clinicalEvidenceDigest: expectedEvidence,
+    requestId: '00000000-0000-4000-8000-000000000012',
+    requestPayloadDigest: '4'.repeat(64),
+    lane: 'pharmacist',
+    assignmentId: '00000000-0000-4000-8000-000000000013',
+    assignmentVersion: 1,
+    designationId: '00000000-0000-4000-8000-000000000014',
+    designationVersion: 1,
+    rosterRevision: 1,
+  } satisfies Feature012ReviewReliance;
+  expect(relianceDigest(reliance)).toBe(expectedReliance);
+  expect(relianceDigest({ ...reliance, lane: 'second_physician' })).not.toBe(expectedReliance);
+  expect(relianceDigest({ ...reliance, assignmentVersion: 2 })).not.toBe(expectedReliance);
+  expect(relianceDigest({ ...reliance, designationVersion: 2 })).not.toBe(expectedReliance);
+  expect(relianceDigest({ ...reliance, rosterRevision: 2 })).not.toBe(expectedReliance);
+});

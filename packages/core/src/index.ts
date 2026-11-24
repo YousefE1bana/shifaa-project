@@ -7,3 +7,4 @@ export * from './identity-continuity/index.js';
 export * from './audit-admin/index.js';
 export * from './feature-010/encounter-policy.js';
 export * from './feature-011/artifact.js';
+export * from './feature-012/index.js';
