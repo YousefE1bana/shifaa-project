@@ -125,6 +125,7 @@ The Specification supplies J-01…J-05 without P1/P2 priority labels; US1…US5 
 - [ ] T019 [NFR-SEC-002, NFR-PRIV-002, NFR-PRIV-004, NFR-DATA-002, NFR-PORT-001] Implement F012 payload protection port/local adapter and canonical evidence/reliance encoding with separate aggregate CAS; bind retention classes without inventing durations or production key custody and expose the new feature entry point without vendor imports — `services/api/src/modules/feature-012/protection.ts`, `packages/core/src/feature-012/digests.ts`, `packages/core/src/feature-012/index.ts`, `packages/core/src/index.ts`, `packages/core/package.json`
   - Depends on: `T018`
   - Acceptance evidence: `specs/012-prescription-safety-governed-overrides/evidence/implementation/t019.json` — Protection/golden-vector tests pass; all field constraints quoted below preserved; clinicalEvidenceDigest excludes request CAS, relianceDigest binds own lane/assignment/designation, opposite-lane CAS does not change clinical evidence; AC-02, AC-08, AC-14, AC-15.
+  - [Candidate evidence and installed-case prerequisites](evidence/implementation/t019.json) for Issue #530. Local protection and digest vectors passed. Executor separation, application output redaction and persisted retention remain open.
 
   Verbatim model constraints for this task (accepted resolutions above prevail):
 

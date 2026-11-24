@@ -36,9 +36,35 @@
     ],
     "runtimeBoundary": "Focused Windows host execution against the pure encoder and a synthetic in-process adapter. No PostgreSQL, native Auth, network, product route or retained service was used."
   },
-  "remaining": [
-    "Complete exact aggregate input and cross-language digest acceptance against the owning implementation.",
-    "Exercise F011 executor isolation, protected-data redaction across actual outputs, and persisted retention after validity expiry. The three existing integration cases remain skipped until their real fixtures exist.",
-    "Complete affected verification and applicable independent review before technical acceptance. T020, T021 and T077 retain their foundation and security obligations."
+  "candidateReview": {
+    "source": "6f626ee2af64654c9459201cc58f2f3525842964",
+    "base": "8b16415db048684801453e8bf544a4bca784720b",
+    "status": "LOCAL_IMPLEMENTATION_VERIFIED_INSTALLED_PROOF_OPEN",
+    "results": {
+      "strictFocusedTypecheck": "PASS",
+      "tests": { "passed": 18, "failed": 0, "skipped": 3 },
+      "independentPythonDigestVectors": "PASS"
+    },
+    "notes": [
+      "The package subpath runs the exact canonical encoder and Python-derived clinical evidence and reliance vectors in Vitest. The revision projection binds items, substitution and expiry. Request CAS stays outside both digests, and the owning mutation still enforces current CAS.",
+      "Synthetic adapter tests exercise both retention classes, exact UTF-8, altered envelopes and bindings, invalid UTF-8, and a payload-free local failure. Actual application output and persistence are separate observations."
+    ]
+  },
+  "remainingInstalledCases": [
+    {
+      "case": "F011 executor denied access to persisted F012 protected record",
+      "prerequisites": "Installed F012 protected relation and envelope under its own forced RLS, a positive authorized F012 read, and a separately authorized real F011 executor.",
+      "owners": "T019 protected adapter acceptance, T020 foundation forced RLS where the covered relation exists, T021 foundation execution, T077 current-head protected-data review. Later installed relations retain their owning schema checks."
+    },
+    {
+      "case": "Protected values absent from actual error, log, outbox, and receipt observations",
+      "prerequisites": "T017 coordinator/receipt composition and an installed protected mutation with real restricted error/log, outbox and receipt capture. T023 and each protected mutation own installed schema and composition as applicable.",
+      "owners": "T019 adapter observation binding, T021 foundation execution where composed, and T077 current-head security review of actual outputs."
+    },
+    {
+      "case": "Persisted protected bytes survive validity expiry",
+      "prerequisites": "An installed immutable protected record held across an actual validity transition and authoritative readback of the same bytes. Applicable history and receipt storage must exist under their owning schema and coordinator tasks.",
+      "owners": "T019 retention binding and adapter acceptance, T021 foundation execution where composed, owning persistence/replay cases and T077 protected-data review. OPEN-LEGAL-002 remains the production retention schedule gate."
+    }
   ]
 }
