@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "task": "T019",
   "issue": 530,
-  "status": "LOCAL_PARTIAL_CANDIDATE",
+  "status": "ACCEPTED_LOCAL_IMPLEMENTATION",
+  "initialStatus": "LOCAL_PARTIAL_CANDIDATE",
   "reviewedAt": "2026-11-24",
   "base": "8cf49c10fd0149ce79d6546d2044b2d29669378b",
   "testedSource": "30ed6c69ff2df1010a1679ba257a172a1035434f",
@@ -57,21 +58,40 @@
       "checks": "Architecture and strict focused typecheck passed. The relative feature entry point passed all 18 focused cases with three installed skips. Node module resolution separately verified the public export target."
     }
   },
+  "localMilestoneAcceptance": {
+    "date": "2026-11-24",
+    "owner": "Root engineering operator under the standing delivery delegation",
+    "pullRequest": 620,
+    "reviewedHead": "ee85c5da8527bafed72ac5168f402b11368ea272",
+    "integratedSource": "2ce56401f3b6091de227c92dc9ceed73385a504f",
+    "reviewedSourceMatchesIntegratedPaths": true,
+    "ordinaryVerification": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45408011743/job/138493861646",
+    "mandatoryContexts": "6 passed",
+    "latestMetadataVerification": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45408277448/job/138494801798",
+    "authority": [
+      "tasks.md, Task interpretation and evidence contract, separates test authoring from execution at the corresponding checkpoint.",
+      "tasks.md T018 disposition and T019 task and acceptance lines assign local implementation and applicable protection and golden-vector GREEN to T019. T020 depends on T019 and owns independent forced RLS. T021 owns installed foundation execution before any story mutation is enabled.",
+      "plan.md AC-14 and AC-15 and Plan closure consolidated v0.2.0 section 8 retain separate installed verification. T023 and subsequent schema and mutation tasks own constraints and observations that need their installed surfaces.",
+      "Autonomous Engineering Delivery Policy, Standing delegation and Verification by impact, authorizes accepting the exact bounded technical milestone while recording reserved and unexecuted obligations."
+    ],
+    "acceptedScope": "Synthetic local protection, envelope and retention-class binding, byte fidelity and payload-free local errors, canonical evidence and reliance vectors, aggregate CAS separation, and the public core package export.",
+    "activation": "Disabled. The T019 dependency is satisfied for implementation planning. T020 also requires accepted T011, T013, T015 and T017. T021 gates enabling any story mutation. Each affected protected relation and mutation must pass its own installed checks before exposure, with current implemented-head review at T077 and applicable OPEN gates retained."
+  },
   "remainingInstalledCases": [
     {
       "case": "F011 executor denied access to persisted F012 protected record",
       "prerequisites": "Installed F012 protected relation and envelope under its own forced RLS, a positive authorized F012 read, and a separately authorized real F011 executor.",
-      "owners": "T019 protected adapter acceptance, T020 foundation forced RLS where the covered relation exists, T021 foundation execution, T077 current-head protected-data review. Later installed relations retain their owning schema checks."
+      "owners": "T020 owns independent foundation forced RLS and T021 owns its installed harness execution. T023 and each later owning schema checkpoint must observe positive F012 access and denial to the actual F011 executor on the installed relation before exposure. T070 retains independent RLS and T077 retains current-head protected-data review."
     },
     {
       "case": "Protected values absent from actual error, log, outbox, and receipt observations",
       "prerequisites": "T017 coordinator/receipt composition and an installed protected mutation with real restricted error/log, outbox and receipt capture. T023 and each protected mutation own installed schema and composition as applicable.",
-      "owners": "T019 adapter observation binding, T021 foundation execution where composed, and T077 current-head security review of actual outputs."
+      "owners": "T017 owns coordinator and receipt composition and T021 owns foundation output observations where composed. T026 and T030 own the first installed mutation and US1 observations. Each later protected mutation retains actual output verification before exposure. T078 owns observability checks and T077 owns current-head review."
     },
     {
       "case": "Persisted protected bytes survive validity expiry",
       "prerequisites": "An installed immutable protected record held across an actual validity transition and authoritative readback of the same bytes. Applicable history and receipt storage must exist under their owning schema and coordinator tasks.",
-      "owners": "T019 retention binding and adapter acceptance, T021 foundation execution where composed, owning persistence/replay cases and T077 protected-data review. OPEN-LEGAL-002 remains the production retention schedule gate."
+      "owners": "T017 and T021 own the composed foundation receipt and readback where present. T023 owns initial protected persistence, applicable mutation and replay checkpoints own the installed cross-expiry readback before exposure, and T077 owns current-head protected-data review. OPEN-LEGAL-002 remains the production retention schedule gate."
     }
   ]
 }
