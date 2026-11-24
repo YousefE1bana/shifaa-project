@@ -51,8 +51,14 @@ type MechanismBinding = {
   readonly inputDigests: readonly string[];
 };
 
+type PrescriptionRevision = {
+  readonly items: readonly Feature012CanonicalValue[];
+  readonly substitutionAllowed: boolean;
+  readonly expiresAt: string;
+};
+
 export type Feature012ClinicalEvidence = {
-  readonly prescriptionRevision: Feature012CanonicalValue;
+  readonly prescriptionRevision: PrescriptionRevision;
   readonly requiredSources: readonly SourceBinding[];
   readonly mechanism: MechanismBinding | null;
 };
@@ -92,9 +98,10 @@ export function clinicalEvidenceDigest(evidence: Feature012ClinicalEvidence): st
     return { binding, bytes: encodeFeature012Canonical(binding) };
   });
   members.sort((left, right) => Buffer.compare(left.bytes, right.bytes));
+  const { items, substitutionAllowed, expiresAt } = evidence.prescriptionRevision;
   const mechanism = evidence.mechanism;
   return digest({
-    prescriptionRevision: evidence.prescriptionRevision,
+    prescriptionRevision: { items, substitutionAllowed, expiresAt },
     requiredSources: members.map(({ binding }) => binding),
     mechanism: mechanism && {
       context: mechanism.context,

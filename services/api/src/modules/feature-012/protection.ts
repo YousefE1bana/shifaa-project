@@ -62,13 +62,17 @@ export function createLocalFeature012PayloadProtection(
 
   return {
     seal(binding, plaintext) {
-      if (!isUtf8(plaintext)) throw new Feature012PayloadUnavailable();
       const aad = authenticatedBinding(binding, keyRef);
-      const nonce = randomBytes(nonceBytes);
-      const cipher = createCipheriv('aes-256-gcm', key, nonce, { authTagLength: tagBytes });
-      cipher.setAAD(aad);
-      const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
-      return { contractId, keyRef, nonce, ciphertext, authTag: cipher.getAuthTag() };
+      if (!isUtf8(plaintext)) throw new Feature012PayloadUnavailable();
+      try {
+        const nonce = randomBytes(nonceBytes);
+        const cipher = createCipheriv('aes-256-gcm', key, nonce, { authTagLength: tagBytes });
+        cipher.setAAD(aad);
+        const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
+        return { contractId, keyRef, nonce, ciphertext, authTag: cipher.getAuthTag() };
+      } catch {
+        throw new Feature012PayloadUnavailable();
+      }
     },
     open(binding, envelope) {
       if (
@@ -88,8 +92,10 @@ export function createLocalFeature012PayloadProtection(
         decipher.setAAD(aad);
         decipher.setAuthTag(envelope.authTag);
         plaintext = decipher.update(envelope.ciphertext);
-        const remaining = decipher.final();
-        return Buffer.concat([plaintext, remaining]);
+        // GCM has emitted all plaintext from update, but it authenticates at final.
+        decipher.final();
+        if (!isUtf8(plaintext)) throw new Feature012PayloadUnavailable();
+        return Buffer.from(plaintext);
       } catch {
         // Authentication failures must not expose provider errors or evidence.
         throw new Feature012PayloadUnavailable();

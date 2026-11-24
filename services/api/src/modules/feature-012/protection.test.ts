@@ -141,9 +141,18 @@ defineFeature012ProtectionCases(undefined, async (payload) => {
   };
 });
 
-it('rejects a changed retention class with a payload-free error', () => {
-  const envelope = localProtection.seal(binding, Buffer.from(plaintext, 'utf8'));
-  expect(() =>
-    localProtection.open({ ...binding, retentionClass: 'PRESCRIPTION_DISPENSE' }, envelope),
-  ).toThrow(/^Protected payload is unavailable\.$/);
+it('authenticates retention class independently of the resource version', () => {
+  const retainedBinding = { ...binding, retentionClass: 'PRESCRIPTION_DISPENSE' } as const;
+  const bytes = Buffer.from(plaintext, 'utf8');
+  const envelope = localProtection.seal(retainedBinding, bytes);
+  expect(localProtection.open(retainedBinding, envelope)).toEqual(bytes);
+  expect(() => localProtection.open(binding, envelope)).toThrow(
+    /^Protected payload is unavailable\.$/,
+  );
+});
+
+it('fails closed with a payload-free error for malformed UTF-8', () => {
+  expect(() => localProtection.seal(binding, Uint8Array.of(0xc3, 0x28))).toThrow(
+    /^Protected payload is unavailable\.$/,
+  );
 });
