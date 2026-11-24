@@ -14,6 +14,14 @@
   },
   "remaining": [
     "Bind the cases to the real T015 provisioner, designation read path and current person/account mapping. Run the SQL preflight and independent non-owner designation cases in the admitted disposable harness.",
-    "Record exact actor and runtime identities, expected and observed denials, and revision and revocation readback before acceptance. T031 and T032 own lease and takeover."
-  ]
+    "Record exact actor and runtime identities, expected and observed denials, and revision and revocation readback before runtime acceptance. T031 and T032 own lease and takeover."
+  ],
+  "authoringDisposition": {
+    "reviewedHead": "4f59f0429c1ae450b75e34b845eca290b5c317eb",
+    "pullRequest": 619,
+    "result": "ACCEPTED_AUTHORING_ONLY",
+    "basis": "The approved task ledger's Task interpretation and evidence contract separates pre-implementation authoring from corresponding GREEN checkpoints. The sixteen cases and SQL preflight cover the named designation, independence, currentness and manifest requirements at the authored scope.",
+    "executionOwners": "T015 binds the fixture and proves live roster behavior. T020 runs independent non-owner forced-RLS tests. T021 executes the complete foundation checkpoint.",
+    "runtimeStatus": "NOT_EXECUTED"
+  }
 }
