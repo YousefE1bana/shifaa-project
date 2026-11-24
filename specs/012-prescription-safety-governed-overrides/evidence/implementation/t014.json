@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "task": "T014",
+  "issue": 525,
+  "status": "OPEN_AUTHORED_RUNTIME_UNEXECUTED",
+  "reviewedAt": "2026-11-24",
+  "baseline": "c91167bca315384a6ffa8579a4644bbab07b7a15",
+  "prerequisites": ["T002", "T009"],
+  "scope": "Foundation designation identity, facility, lane, deployment, current dates and revocation, trusted manifest and monotonic revision. The SQL preflight checks the two approved relations for forced RLS and absence of Core API direct write privileges.",
+  "verification": {
+    "vitest": "16 installed-roster scenarios discovered and skipped because the T015 fixture is unavailable.",
+    "sql": "Authored preflight. No SQL executed.",
+    "runtime": "NOT_EXECUTED"
+  },
+  "remaining": [
+    "Bind the cases to the real T015 provisioner, designation read path and current person/account mapping. Run the SQL preflight and independent non-owner designation cases in the admitted disposable harness.",
+    "Record exact actor and runtime identities, expected and observed denials, and revision and revocation readback before acceptance. T031 and T032 own lease and takeover."
+  ]
+}
