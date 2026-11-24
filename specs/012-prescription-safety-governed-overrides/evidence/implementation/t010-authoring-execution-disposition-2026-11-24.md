@@ -42,3 +42,21 @@ key and no known immediately available qualified university security
 specialist. There was no new restricted native execution or specialist
 sign-off in this review. The prior failed setup and timeout trials keep their
 original receipts.
+
+## Remaining retry assertions
+
+The following assertions are ready for the owning coordinator and native
+fixtures. These rows record expected behavior without an execution result.
+
+| Outcome at the attempt boundary                                              | Required assertion                                                                                                                                                               |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Confirmed rollback after a retryable lock, deadlock or serialization failure | A fresh whole transaction rechecks current authority and evidence. It retains the original actor, key and body binding. The prior attempt leaves no domain effect or receipt.    |
+| Lock-wait limit, cumulative budget or attempt exhaustion                     | Keep the two-second lock-wait ceiling, five-second total budget and three-total-attempt limit. Stop with the contracted unavailable outcome when the next attempt is ineligible. |
+| Changed authority, elapsed deadline, or invalid CAS or body                  | Return the corresponding closed outcome and make no further attempt. Confirm zero new domain effects and zero new completed receipts.                                            |
+| Unknown commit outcome                                                       | Use original-key reconciliation. Recheck current authority before disclosure and return only the original committed receipt if still authorized.                                 |
+| Protected success after a confirmed rollback                                 | Commit exactly one set of domain, audit, outbox and receipt effects. A subsequent authorized replay returns the original receipt.                                                |
+
+T010 owns native boundary authoring and the outstanding installed verdicts.
+T017 owns coordinator retry and T021 owns foundation execution. T064, T065,
+T069 and T070 retain their affected effect, replay and current-authority
+assertions. The physical key and specialist evidence remain pending.

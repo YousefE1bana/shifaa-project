@@ -27,3 +27,30 @@ The candidate implements internal `retain` on a caller-supplied active repositor
 The [T011 receipt](t011.json) retains the earlier parser failure, earlier native scope, and hosted fixture setup failure with SQLSTATE 42501 before the adapter was reached. Acceptance still requires T010 acceptance and independent review of the actual executor grants, RLS and trusted context. The live adapter run covers the subject path. The workforce path, active local recovery restriction denial, remaining native ordering and clock boundaries, and later protected-effect composition require evidence at their owning checkpoints. Clinical and production capability remains gated.
 
 **Decision for the Product Owner:** keep the candidate isolated while T010 and the technical gaps remain open. Once those requirements are met, the Product Owner must authorize the material authorization change for the exact T011 integration candidate. Identify its head and effective base after T010 integration, obtain the applicable native/adapter evidence, fresh six-context CI and metadata, required independent review and thread resolution, and bind the decision there. Existing runs remain attributable to the tested head; a new revision needs its own applicable verification.
+
+## Main-based preparation after PR #616
+
+The published T010 head and squash commit `f6dfae1` have identical trees.
+The normal merge of `8b16415` into the isolated branch at `d4a5531`
+preserves the original branch and its evidence commits. The resulting diff
+against main contains the T011 implementation, affected verification and
+additive evidence. The integrated T010 test, probe and harness changes are
+excluded from the T011 diff except where T011 extends their behavior.
+
+Six inventory unit cases passed. Readback from the clean historical F011
+worktree verified 2,896 sealed inputs and all 38 predecessor migrations.
+The source inventory check verified all 40 migrations including the two
+F012 additions. This run performed file and Git reads. Native fresh and
+upgrade results and the 43-case guard and eight-case adapter runs remain
+bound to their recorded earlier revisions.
+
+The source review traced the binding through issuer verification, the
+repository's active transaction, the fixed-search-path SQL helper, and
+the forced-RLS read of the subject's continuity restrictions. The candidate
+has no product caller. The repository helper can start a transaction when
+called outside repository scope. The candidate refuses a foreign transaction
+before its guard query, but the detached-call path still needs exact-boundary
+review against NAC-1's active-transaction contract. Also verify the workforce
+and active-recovery cases through the installed adapter. T010 acceptance,
+independent specialist review, exact-candidate CI and the later Major Event
+decision remain outstanding.
