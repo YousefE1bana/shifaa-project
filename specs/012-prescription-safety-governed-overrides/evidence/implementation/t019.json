@@ -46,9 +46,16 @@
       "independentPythonDigestVectors": "PASS"
     },
     "notes": [
-      "The package subpath runs the exact canonical encoder and Python-derived clinical evidence and reliance vectors in Vitest. The revision projection binds items, substitution and expiry. Request CAS stays outside both digests, and the owning mutation still enforces current CAS.",
+      "Vitest exercises the feature entry point with the exact canonical encoder and Python-derived clinical evidence and reliance vectors. The revision projection binds items, substitution and expiry. Request CAS stays outside both digests, and the owning mutation still enforces current CAS.",
       "Synthetic adapter tests exercise both retention classes, exact UTF-8, altered envelopes and bindings, invalid UTF-8, and a payload-free local failure. Actual application output and persistence are separate observations."
-    ]
+    ],
+    "integrationFollowUp": {
+      "previousHead": "8dd7f6b47a1806693b22750f9496cf6e3975bf78",
+      "previousArchitectureCheck": "FAIL: a test imported its own workspace package by name.",
+      "correctedSource": "06a93458ed5cc72f196d381d2d140af519a17166",
+      "base": "426f22703e4e0227b301c80733ae4ee8e619ea2f",
+      "checks": "Architecture and strict focused typecheck passed. The relative feature entry point passed all 18 focused cases with three installed skips. Node module resolution separately verified the public export target."
+    }
   },
   "remainingInstalledCases": [
     {
