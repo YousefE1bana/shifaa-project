@@ -43,6 +43,7 @@ export function defineFeature012ProtectionCases(
 
     it.each(rejectedInputs)('denies a mismatched binding or envelope %j', async (change) => {
       const fixture = await open();
+      expect(Buffer.from(await fixture.read())).toEqual(Buffer.from(plaintext, 'utf8'));
       await expect(fixture.read(change)).rejects.toThrow();
     });
 

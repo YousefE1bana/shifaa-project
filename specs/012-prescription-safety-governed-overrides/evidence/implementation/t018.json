@@ -7,7 +7,11 @@
   "fixtureBase": "03ff7bb3029799f830a464e0ed210076bc4b484f",
   "scope": "Three synthetic reference-byte fixtures. The TypeScript suite hashes its explicit UTF-8 canonical strings with Node 24.22.1. Python 3.13.16 independently serializes equivalent typed values using sorted keys, compact separators and exact UTF-8, then computes SHA-256.",
   "results": {
-    "vitest": { "pass": 3, "fail": 0, "pending": 14 },
+    "vitest": {
+      "pass": 3,
+      "fail": 0,
+      "pending": 14
+    },
     "independentReferenceVectors": [
       {
         "name": "omitted monitoring, UTC and precise decimal",
@@ -41,5 +45,15 @@
       }
     ]
   },
-  "remaining": "Bind the exact canonical vectors and authored adapter cases to the real implementation and observation surfaces. The 14 pending cases include canonical encoder use, AAD/envelope substitution, F011 executor isolation, redaction, and retention. No product protection or retention claim follows from the reference-vector checks."
+  "remaining": "Bind the exact canonical vectors and authored adapter cases to the real implementation and observation surfaces. The 14 pending cases include canonical encoder use, AAD/envelope substitution, F011 executor isolation, redaction, and retention. No product protection or retention claim follows from the reference-vector checks.",
+  "followUp": {
+    "reviewedAt": "2026-11-24",
+    "hostedDiscovery": {
+      "testedHead": "e174baaaea9cba7f3eced3b8d6bd7acfa466eac0",
+      "job": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45055563515/job/137309894222",
+      "result": "3 reference-vector cases passed; 3 encoder and 11 protection cases skipped."
+    },
+    "localScope": "The tamper cases now require a successful untampered read from each fixture before testing its modified binding or envelope.",
+    "localDiscovery": "Vitest 4.1.12 on Node 26.13.1 passed 3 reference cases and discovered 14 skipped cases. No installed T019 adapter or protected observation surface was exercised."
+  }
 }
