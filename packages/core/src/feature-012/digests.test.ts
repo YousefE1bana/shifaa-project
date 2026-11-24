@@ -6,7 +6,7 @@ import {
   relianceDigest,
   type Feature012ClinicalEvidence,
   type Feature012ReviewReliance,
-} from '@shifaa/core/feature-012';
+} from './index.js';
 
 const text = 'Cafe\u0301 \u062f\u0641\u062a\u0631';
 const expiresAt = '2030-01-01T00:00:00.000Z';
