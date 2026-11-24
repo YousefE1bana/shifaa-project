@@ -129,5 +129,27 @@
     "acceptance": "OPEN; T010 is unaccepted and installed guard composition and security evidence remain incomplete.",
     "integration": "MAJOR_EVENT_PRODUCT_OWNER_DECISION_REQUIRED",
     "decisionRecord": "t010-t011-integration-decision.md"
+  },
+  "mainBasedValidation": {
+    "testedHead": "ace490647ac6aa0211fcb414279039cd5c6db7ae",
+    "base": "426f22703e4e0227b301c80733ae4ee8e619ea2f",
+    "candidateWorkflow": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45407904211",
+    "ci": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45407904191",
+    "ordinaryOffline": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45407904239",
+    "metadata": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45407904166",
+    "observations": {
+      "mandatoryContexts": "6 passed",
+      "ordinaryOffline": "PASS",
+      "metadata": "PASS",
+      "hostedAdapterTests": 8,
+      "pinnedGuardCases": 43,
+      "pinnedGuardArtifact": {
+        "name": "native-guard.json",
+        "bytes": 138422,
+        "sha256": "92eda3e2113d96a9f4266d831680af9f3e62581b83b96cd011d7fcfb558c9fd6"
+      },
+      "freshAndUpgradeSourceFence": "PASS"
+    },
+    "scope": "The repeat run covers the same pinned guard and hosted adapter cases and retains their existing exclusions. It is independent of acceptance. Results apply to the tested head and base. The subsequent normal merge of main at 2ce56401f3b6091de227c92dc9ceed73385a504f requires fresh checks."
   }
 }
