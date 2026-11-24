@@ -78,3 +78,28 @@ prospective writers and their runtime tests to their owning tasks. T012 stays
 open for incomplete discovery. Its pre-fix evidence preserves these cases as
 RED. T013 owns correction and both-direction regression proof. The F012
 capabilities that depend on writer admission remain disabled.
+
+## Static reconciliation on 2026-11-24
+
+The receipt accounts for fourteen RED writer paths in both orderings.
+The family-and-consent entry records separate delegation-revocation and consent
+append trials. The catalog and these results retain their original revisions.
+All 24 indexed original receipt files matched their recorded sizes and SHA-256
+values. The historical recovery bundle verifies against its recorded
+prerequisites and retains the earlier T010, T011 and T012 revisions.
+
+The facility evidence upsert in the PostgreSQL adapter and the in-memory
+`releaseEvidenceForSyntheticScanner` hook are separate source paths. The
+integration fixture uses a separate owner update to seed a released evidence
+row. These source findings establish neither a deployed scanner identity nor
+its admission, owner-path quiescence, or runtime lock ordering. The
+`setInventory` adapter update names a processing-policy write, while the
+recorded application-role catalog lacks its UPDATE privilege. Assign no
+effective production writer solely from either reference.
+
+The installed-writer matrix, exact purpose and lifecycle variants, external
+scan and approval attribution, offline/maintenance exclusion and restore
+admission remain open. T012 records test and inventory inputs for repair.
+T013 still requires accepted T011 and T012, performs the fence correction, and
+owns the corresponding two-order GREEN proof. No further runtime result was
+added by this reconciliation.
