@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "task": "T019",
+  "issue": 530,
+  "status": "LOCAL_PARTIAL_CANDIDATE",
+  "reviewedAt": "2026-11-24",
+  "base": "8cf49c10fd0149ce79d6546d2044b2d29669378b",
+  "testedSource": "30ed6c69ff2df1010a1679ba257a172a1035434f",
+  "prerequisite": {
+    "task": "T018",
+    "pullRequest": 617,
+    "result": "INTEGRATED_AUTHORING_ONLY"
+  },
+  "scope": [
+    "Deterministic UTF-8 reference encoding, separate evidence and review reliance digests and independent aggregate CAS.",
+    "Local synthetic AES-256-GCM with supplied key, fresh nonce and contract, key reference, field, resource, version and clinical retention class binding.",
+    "The F012 local adapter has no product route, key provider, repository or deletion path."
+  ],
+  "verification": {
+    "node": "26.13.1",
+    "vitest": "4.1.12",
+    "typescript": "7.0.2",
+    "prettier": "3.6.2",
+    "results": {
+      "strictFocusedTypecheck": "PASS",
+      "formatAndGitDiffCheck": "PASS",
+      "tests": {
+        "passed": 17,
+        "failed": 0,
+        "skipped": 3
+      }
+    },
+    "testFiles": [
+      "packages/core/src/feature-012/digests.test.ts",
+      "services/api/src/modules/feature-012/protection.test.ts"
+    ],
+    "runtimeBoundary": "Focused Windows host execution against the pure encoder and a synthetic in-process adapter. No PostgreSQL, native Auth, network, product route or retained service was used."
+  },
+  "remaining": [
+    "Complete exact aggregate input and cross-language digest acceptance against the owning implementation.",
+    "Exercise F011 executor isolation, protected-data redaction across actual outputs, and persisted retention after validity expiry. The three existing integration cases remain skipped until their real fixtures exist.",
+    "Complete affected verification and applicable independent review before technical acceptance. T020, T021 and T077 retain their foundation and security obligations."
+  ]
+}
