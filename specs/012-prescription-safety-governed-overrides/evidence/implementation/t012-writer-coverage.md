@@ -108,6 +108,10 @@ added by this reconciliation.
 
 The retained receipt is the runtime result. The following assertions are
 authored as an execution matrix. They have no new runtime result.
+Use the [effective writer manifest](t012-effective-writer-manifest.md) for
+source and installed-role attribution and the
+[deployment-owner worksheet](t012-deployment-decision-worksheet.md) to bind
+target and operator scope before comparing deployment metadata.
 
 | Boundary                              | Static source or unknown                                                                                                                                                                  | Required observations and owner                                                                                                                                                                                                                                                                                                                                    |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
