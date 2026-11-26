@@ -584,7 +584,7 @@ async function observeNativeLockConflict(db, relation, reader, mutation, trial) 
   assert.match(released.stdout, /^ROLLBACK$/m);
 }
 
-async function withNativeFixtureLock(db, statement, trial, exercise) {
+async function withNativeFixtureLock(db, statement, trial, exercise, role = 'supabase_auth_admin') {
   const args = observeSqlCommand(db);
   const holder = spawn(hostExecutable('docker', settings.options.env), args, {
     ...settings.options,
@@ -607,7 +607,7 @@ async function withNativeFixtureLock(db, statement, trial, exercise) {
     holder.stdin.write(`BEGIN;
       SET LOCAL idle_in_transaction_session_timeout = '20s';
       SET LOCAL statement_timeout = '3s';
-      SET SESSION AUTHORIZATION supabase_auth_admin;
+      SET SESSION AUTHORIZATION ${role};
       SELECT 'holder', pg_backend_pid();
       ${statement}
       \\echo T010_NATIVE_FIXTURE_READY
@@ -1075,7 +1075,8 @@ async function nativeDeadlineTrials(db, { subject, session }) {
 }
 
 function applySealedF011(db) {
-  assert.equal(db.network, 'none');
+  assert.ok(db.network === 'none' || db.network === networkId);
+  checkContainer(db);
   const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
   const files = git(root, ['ls-tree', '--name-only', predecessor, 'supabase/migrations/'])
     .toString()
@@ -1095,6 +1096,368 @@ function applySealedF011(db) {
     });
     assert.equal(result.exit, 0, path);
   }
+}
+
+async function nativeRetainedGuardTrials(db, probe, source, fixtures) {
+  applySealedF011(db);
+  const result = (receipt.nativeRetainedGuard = { migrations: [], cases: {} });
+  for (const path of [
+    'supabase/migrations/20261112001200_f012_source_admission.sql',
+    'supabase/migrations/20261112001201_f012_native_guard.sql',
+  ]) {
+    const bytes = readFileSync(safeSource(root, path));
+    const migration = observedSql(db, bytes);
+    result.migrations.push({
+      path,
+      sha256: createHash('sha256').update(bytes).digest('hex'),
+      ...migration,
+    });
+    assert.equal(migration.exit, 0, migration.stderr);
+  }
+  const [fixture, other] = fixtures;
+  const deployment = randomUUID();
+  const epoch = randomUUID();
+  const seeded = observedSql(
+    db,
+    `INSERT INTO platform.f012_source_admission VALUES ('${deployment}', '${epoch}');
+      SET SESSION AUTHORIZATION shifaa_api;
+      SELECT person_id FROM platform.register_identity_onboarding(
+        '${fixture.subject}', 'native-guard-${fixture.subject}', 'en-EG'
+      );
+      SELECT person_id FROM platform.register_identity_onboarding(
+        '${other.subject}', 'native-guard-${other.subject}', 'en-EG'
+      );
+      RESET SESSION AUTHORIZATION;
+      SELECT instance_id FROM auth.users WHERE id = '${fixture.subject}';`,
+  );
+  result.seed = seeded;
+  assert.equal(seeded.exit, 0, seeded.stderr);
+  const [person, otherPerson, instance] = seeded.stdout
+    .trim()
+    .split('\n')
+    .filter((line) => /^[\da-f-]{36}$/.test(line));
+  assert.ok(person && otherPerson && instance, 'Expected exact native instance and both mappings');
+
+  const admission = `SELECT platform.f012_lock_admission_v1('${deployment}', '${epoch}', false);`;
+  const facility = randomUUID();
+  const context = (actorPerson, role = 'PAT', aal = 1) => `
+    SET LOCAL shifaa.person_id = '${actorPerson}';
+    SET LOCAL shifaa.principal = '${fixture.subject}';
+    SET LOCAL shifaa.session_id = '${fixture.session}';
+    SET LOCAL shifaa.aal = '${aal}';
+    SET LOCAL shifaa.actor_role = '${role}';
+    SET LOCAL shifaa.action = 'getPrescription';
+    SET LOCAL shifaa.facility_id = '${role === 'PAT' ? '' : facility}';
+    SET LOCAL shifaa.purposes = 'synthetic.feature012';`;
+  const guard = ({
+    actorPerson = person,
+    nativeInstance = instance,
+    nativeSession = fixture.session,
+    expiresAt = 'floor(extract(epoch from clock_timestamp()))::bigint + 60',
+    aal = 1,
+    totpAt = 'NULL',
+    profile = 'subject_projection_read',
+  } = {}) => `SELECT platform.f012_retain_native_authority_v1(
+      '${deployment}', '${epoch}', '${nativeInstance}', '${fixture.subject}',
+      '${nativeSession}', '${actorPerson}', ${aal}, ${expiresAt}, ${totpAt},
+      '${profile}', 'getPrescription',
+      ${profile === 'workforce_sensitive' ? "'" + facility + "'" : 'NULL'}, 'synthetic.feature012', NULL
+    );`;
+  function execute(name, statement, expected = null, role = 'shifaa_api') {
+    const observed = observedSql(
+      db,
+      `\\set VERBOSITY verbose
+        BEGIN; SET SESSION AUTHORIZATION ${role};
+        SET LOCAL lock_timeout = '500ms'; SET LOCAL statement_timeout = '3s';
+        SELECT 'contender', pg_backend_pid();
+        ${statement}
+        COMMIT;`,
+    );
+    result.cases[name] = observed;
+    if (expected) {
+      assert.equal(observed.exit, 3, observed.stdout);
+      assert.match(observed.stderr, expected);
+    } else {
+      assert.equal(observed.exit, 0, observed.stderr);
+      assert.match(observed.stdout, /^COMMIT$/m);
+    }
+    return observed;
+  }
+  const denied = /42501:/;
+  execute('current subject at AAL1', admission + context(person) + guard());
+  execute('missing retained admission', context(person) + guard(), denied);
+  execute('missing trusted context', admission + guard(), denied);
+  execute(
+    'substituted case context',
+    admission + context(person) + `SET LOCAL shifaa.case_id = '${randomUUID()}';` + guard(),
+    denied,
+  );
+  const absentSession = randomUUID();
+  execute(
+    'bound session row is absent',
+    admission +
+      context(person).replace(fixture.session, absentSession) +
+      guard({ nativeSession: absentSession }),
+    denied,
+  );
+  execute(
+    'signed subject and mapped person mismatch',
+    admission + context(otherPerson) + guard({ actorPerson: otherPerson }),
+    denied,
+  );
+  execute(
+    'session context mismatch',
+    admission + context(person) + guard({ nativeSession: other.session }),
+    denied,
+  );
+  execute(
+    'cross-subject session row',
+    admission +
+      context(person).replace(fixture.session, other.session) +
+      guard({ nativeSession: other.session }),
+    denied,
+  );
+  execute(
+    'instance mismatch',
+    admission + context(person) + guard({ nativeInstance: randomUUID() }),
+    denied,
+  );
+  execute(
+    'workforce cannot fall back to subject',
+    admission + context(person, 'CLN') + guard(),
+    denied,
+  );
+  execute(
+    'access expiry equality',
+    admission +
+      context(person) +
+      guard({ expiresAt: 'floor(extract(epoch from clock_timestamp()))::bigint' }),
+    denied,
+  );
+  for (const role of ['anon', 'authenticated', 'service_role', 'shifaa_worker']) {
+    execute(
+      `${role} cannot execute with matching settings`,
+      context(person) + guard(),
+      denied,
+      role,
+    );
+  }
+  execute('Core API cannot assume executor role', 'SET ROLE shifaa_f012_native_executor;', denied);
+  execute('Core API cannot read Auth users', 'SELECT id FROM auth.users;', denied);
+  execute('Core API cannot read Auth sessions', 'SELECT id FROM auth.sessions;', denied);
+  execute('Core API cannot update Auth users', 'UPDATE auth.users SET id = id;', denied);
+  execute('Core API cannot update Auth sessions', 'UPDATE auth.sessions SET id = id;', denied);
+  const boundRows = `SET LOCAL shifaa.f012_bound_subject = '${fixture.subject}';
+    SET LOCAL shifaa.f012_bound_session = '${fixture.session}';`;
+  const executor = 'shifaa_f012_native_executor';
+  for (const [relation, id] of [
+    ['users', fixture.subject],
+    ['sessions', fixture.session],
+  ]) {
+    const visible = execute(
+      `executor sees only the bound ${relation} row`,
+      boundRows + `SELECT id FROM auth.${relation};`,
+      null,
+      executor,
+    );
+    assert.deepEqual(visible.stdout.match(/^[\da-f-]{36}$/gm), [id]);
+    execute(
+      `executor RLS rejects an actual ${relation} update`,
+      boundRows + `UPDATE auth.${relation} SET id = id WHERE id = '${id}';`,
+      /42501:.*row-level security/,
+      executor,
+    );
+  }
+  const patientRead = admission + context(person) + guard();
+  const timeout = /55P03:.*lock timeout/;
+  result.locks = {};
+  for (const [relation, write] of [
+    [
+      'users',
+      `UPDATE auth.users SET banned_until = clock_timestamp() + interval '1 minute' WHERE id = '${fixture.subject}';`,
+    ],
+    [
+      'sessions',
+      `UPDATE auth.sessions SET not_after = clock_timestamp() WHERE id = '${fixture.session}';`,
+    ],
+  ]) {
+    const evidence = (result.locks[relation] = { guardFirst: {}, writerFirst: {} });
+    const proveConflict = (name, statement, role, pid) => {
+      const contender = execute(name, statement, timeout, role);
+      assert.match(contender.stderr, new RegExp('relation "' + relation + '"'));
+      assert.notEqual(contender.stdout.match(/^contender\|(\d+)$/m)?.[1], pid);
+    };
+    await withNativeFixtureLock(
+      db,
+      patientRead,
+      evidence.guardFirst,
+      (pid) =>
+        proveConflict(`guard-first ${relation} writer waits`, write, 'supabase_auth_admin', pid),
+      'shifaa_api',
+    );
+    await withNativeFixtureLock(db, write, evidence.writerFirst, (pid) =>
+      proveConflict(`writer-first ${relation} guard waits`, patientRead, 'shifaa_api', pid),
+    );
+    execute(`fresh retry after ${relation} rollback`, patientRead);
+  }
+
+  result.mfa = JSON.parse(
+    exec(probe, ['node', '-', 'prepare-native-mutation', 'downgrade'], { input: source }),
+  );
+  assert.equal(result.mfa[0].verifiedAal, 'aal2');
+  const workforce = (totpAt) =>
+    admission +
+    context(person, 'CLN', 2) +
+    guard({ aal: 2, profile: 'workforce_sensitive', totpAt });
+  const seconds = 'floor(extract(epoch from statement_timestamp()))::bigint';
+  execute('native AAL2 with recent TOTP', workforce(seconds + ' - 120'));
+  execute(
+    'native AAL2 at inclusive five-minute TOTP boundary',
+    "SELECT pg_sleep_until(date_trunc('second', clock_timestamp()) + interval '1 second');" +
+      workforce(seconds + ' - 300'),
+  );
+  execute('workforce without qualifying TOTP', workforce('NULL'), denied);
+  execute('workforce with stale TOTP', workforce(seconds + ' - 301'), denied);
+  execute('workforce with future TOTP', workforce(seconds + ' + 5'), denied);
+  execute('AAL1 claim no longer matches current native session', patientRead, denied);
+
+  // The existing idempotency row is claimed before native locks, then its
+  // synthetic response can be read only after the same transaction retains them.
+  const responseMarker = randomUUID();
+  const principalHash = randomBytes(32).toString('hex');
+  const requestHash = randomBytes(32).toString('hex');
+  const keyHash = randomBytes(32).toString('hex');
+  const responseId = randomUUID();
+  const scope = `SET LOCAL shifaa.principal_hash = '${principalHash}';`;
+  const retainedWorkforce =
+    context(person, 'CLN', 2) +
+    guard({ aal: 2, profile: 'workforce_sensitive', totpAt: seconds + ' - 120' });
+  execute(
+    'guarded synthetic idempotent result',
+    admission +
+      scope +
+      `
+    INSERT INTO platform.idempotency_records
+      (id, principal_type, principal_hash, method, route_template, key_hash,
+       request_hash, state, expires_at)
+    VALUES ('${responseId}', 'sha256-v1', '${principalHash}', 'POST', '/synthetic-f012-guard',
+      '${keyHash}', '${requestHash}', 'processing', clock_timestamp() + interval '1 minute');` +
+      retainedWorkforce +
+      `
+    UPDATE platform.idempotency_records
+    SET state = 'completed', response_status = 200,
+        response_body = jsonb_build_object('marker', '${responseMarker}')
+    WHERE id = '${responseId}' AND state = 'processing';`,
+  );
+  const replay =
+    admission +
+    scope +
+    `
+    SELECT id FROM platform.idempotency_records
+    WHERE id = '${responseId}' AND request_hash = '${requestHash}' FOR UPDATE;` +
+    retainedWorkforce +
+    `
+    SELECT response_body->>'marker' FROM platform.idempotency_records
+    WHERE id = '${responseId}' AND state = 'completed';`;
+  const currentReplay = execute('fresh authority can replay original synthetic result', replay);
+  assert.ok(currentReplay.stdout.split('\n').includes(responseMarker));
+  result.downgrade = await startNativeMutation(probe, source, 'downgrade', 0);
+  assert.equal(result.downgrade.exit, 0, result.downgrade.stderr);
+  assert.equal(JSON.parse(result.downgrade.stdout).status, 200);
+  execute(
+    'stale workforce claim after committed native downgrade',
+    workforce(seconds + ' - 120'),
+    denied,
+  );
+  execute('current subject after committed native downgrade', patientRead);
+  const revokedReplay = execute(
+    'downgraded authority cannot replay original result',
+    replay,
+    denied,
+  );
+  assert.ok(!revokedReplay.stdout.includes(responseMarker));
+  result.replayReceipt = observedSql(
+    db,
+    `SELECT count(*), min(state) FROM platform.idempotency_records WHERE id = '${responseId}';`,
+  );
+  assert.equal(result.replayReceipt.stdout, '1|completed\n', result.replayReceipt.stderr);
+  await nativeGuardExpiryAfterWait(
+    db,
+    fixture.session,
+    (deadline) => admission + context(person) + guard({ expiresAt: deadline }),
+    (result.expiryAfterWait = {}),
+  );
+  const endSession = execute(
+    'fixture stores elapsed native NotAfter',
+    `UPDATE auth.sessions SET not_after = clock_timestamp() WHERE id = '${fixture.session}';`,
+    null,
+    'supabase_auth_admin',
+  );
+  assert.match(endSession.stdout, /^UPDATE 1$/m);
+  execute('current JWT cannot outlive native NotAfter', patientRead, denied);
+}
+
+async function nativeGuardExpiryAfterWait(db, session, guard, trial) {
+  const expiry = sql(db, 'select floor(extract(epoch from clock_timestamp()))::bigint + 7;').trim();
+  assert.match(expiry, /^\d+$/);
+  let pending;
+  try {
+    await withNativeFixtureLock(
+      db,
+      `SELECT id FROM auth.sessions WHERE id = '${session}' FOR UPDATE;`,
+      trial,
+      async (holderPid) => {
+        const args = observeSqlCommand(db);
+        const reader = spawn(hostExecutable('docker', settings.options.env), args, {
+          ...settings.options,
+          stdio: ['pipe', 'pipe', 'pipe'],
+        });
+        let stdout = '';
+        let stderr = '';
+        reader.stdout.setEncoding('utf8').on('data', (chunk) => (stdout += chunk));
+        reader.stderr.setEncoding('utf8').on('data', (chunk) => (stderr += chunk));
+        pending = once(reader, 'close').then(([exit]) => {
+          receipt.commands.push({ args, exit });
+          return { exit, stdout, stderr };
+        });
+        reader.stdin.on('error', () => reader.kill());
+        reader.stdin.end(`\\set VERBOSITY verbose
+          BEGIN; SET LOCAL statement_timeout = '12s';
+          SET SESSION AUTHORIZATION shifaa_api;
+          SELECT 'reader', pg_backend_pid(), floor(extract(epoch from clock_timestamp()))::bigint < ${expiry};
+          ${guard(expiry)}
+          SELECT 'effect admitted';
+          COMMIT;`);
+        const waitDeadline = Date.now() + 4_000;
+        while (Date.now() < waitDeadline) {
+          const wait = observedSql(
+            db,
+            `SELECT pid, wait_event_type FROM pg_stat_activity
+            WHERE ${holderPid} = ANY(pg_blocking_pids(pid));`,
+          );
+          assert.equal(wait.exit, 0, wait.stderr);
+          if (wait.stdout) {
+            trial.wait = wait;
+            break;
+          }
+          await delay(80);
+        }
+        assert.match(trial.wait?.stdout ?? '', /^\d+\|Lock\n$/);
+        trial.clock = observedSql(
+          db,
+          `SET statement_timeout = '10s';
+          SELECT pg_sleep_until(to_timestamp(${expiry}));`,
+        );
+        assert.equal(trial.clock.exit, 0, trial.clock.stderr);
+      },
+    );
+  } finally {
+    if (pending) trial.reader = await pending;
+  }
+  assert.equal(trial.reader.exit, 3, trial.reader.stdout);
+  assert.match(trial.reader.stderr, /42501: NAC-1 current authority denied/);
+  assert.ok(trial.reader.stdout.includes(`reader|${trial.wait.stdout.split('|')[0]}|t\n`));
+  assert.ok(!trial.reader.stdout.includes('effect admitted'));
 }
 
 function runAtomicity(db) {
@@ -2758,6 +3121,8 @@ async function admit() {
   const nativeDeadlines = argumentsList.length === 1 && argumentsList[0] === '--native-deadlines';
   const nativeLogoutFirst =
     argumentsList.length === 1 && argumentsList[0] === '--native-logout-first';
+  const nativeRetainedGuard =
+    argumentsList.length === 1 && argumentsList[0] === '--native-retained-guard';
   const nativeMutation =
     argumentsList.length === 1 &&
     new Map([
@@ -2798,6 +3163,7 @@ async function admit() {
       nativeRefresh ||
       nativeDeadlines ||
       nativeLogoutFirst ||
+      nativeRetainedGuard ||
       nativeMutation
       ? []
       : argumentsList,
@@ -2896,6 +3262,7 @@ async function admit() {
       nativeRefresh,
       nativeDeadlines,
       nativeLogoutFirst,
+      nativeRetainedGuard,
       nativeMutation,
     });
   } finally {
@@ -2911,6 +3278,7 @@ async function admit() {
   if (nativeRefresh) receipt.status = 'PASS_NATIVE_REFRESH_ORDERING';
   if (nativeDeadlines) receipt.status = 'PASS_NATIVE_DEADLINE_PRIMITIVES';
   if (nativeLogoutFirst) receipt.status = 'PASS_NATIVE_LOGOUT_FIRST';
+  if (nativeRetainedGuard) receipt.status = 'PASS_NATIVE_GUARD_CONTEXT';
   if (nativeMutation) receipt.status = 'PASS_NATIVE_MUTATION_ORDERING';
 }
 
@@ -2919,12 +3287,18 @@ async function runNativeAdmission({
   nativeRefresh,
   nativeDeadlines,
   nativeLogoutFirst,
+  nativeRetainedGuard,
   nativeMutation,
 }) {
   const db = startDatabase('db', networkId);
   receipt.databaseSystems = { source: db.system };
   const restore =
-    nativeBaseline || nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation
+    nativeBaseline ||
+    nativeRefresh ||
+    nativeDeadlines ||
+    nativeLogoutFirst ||
+    nativeRetainedGuard ||
+    nativeMutation
       ? null
       : startDatabase('restore', 'none');
   if (restore) {
@@ -2945,7 +3319,8 @@ async function runNativeAdmission({
   }
   stage = 'bootstrap and native API admission';
   sql(db, "alter role supabase_auth_admin password '" + authPassword + "';\n" + probeSchema());
-  const readSessionPolicy = nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation;
+  const readSessionPolicy =
+    nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeRetainedGuard || nativeMutation;
   const auth = startAuth(readSessionPolicy);
   if (readSessionPolicy) observeNativePolicy(auth);
   const probe = create('probe', receipt.images.probe, {
@@ -2964,6 +3339,11 @@ async function runNativeAdmission({
   const fixtures = JSON.parse(exec(probe, ['node', '-', 'fixtures'], { input: source }));
   bindFixtures(db, fixtures);
   receipt.syntheticSessions = fixtures;
+  if (nativeRetainedGuard) {
+    stage = 'T011 installed NAC-1 context and privileges';
+    await nativeRetainedGuardTrials(db, probe, source, fixtures);
+    return;
+  }
   if (nativeMutation) {
     stage = 'T010 pinned native ' + nativeMutation + ' ordering';
     await nativeMutationTrials(db, probe, source, fixtures, nativeMutation);

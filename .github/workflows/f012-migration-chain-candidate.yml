@@ -5,6 +5,7 @@ on:
       - '.github/workflows/f012-migration-chain-candidate.yml'
       - '.github/workflows/ci.yml'
       - 'supabase/migrations/20261112001200_f012_source_admission.sql'
+      - 'supabase/migrations/20261112001201_f012_native_guard.sql'
       - 'infra/db/tests/feature-012-source-fence.sql'
       - 'tools/verify-feature-012-harness.mjs'
       - 'tools/verify-feature-012-migration-chain.mjs'
@@ -38,11 +39,16 @@ jobs:
           mkdir -p .tmp/f012-candidate-evidence
           git worktree add --detach .tmp/f012-historical-f011 fbd2b5312a5038aad21db0001a17dac22bdcbf7e
           node tools/verify-feature-012-migration-chain.mjs .tmp/f012-historical-f011 > .tmp/f012-candidate-evidence/chain.json
-      - name: Apply the extended chain from scratch and from the sealed baseline
+      - name: Apply the source fence from scratch and from the sealed baseline
         run: |
           docker pull public.ecr.aws/supabase/postgres@sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459
           node tools/verify-feature-012-harness.mjs --source-fence > .tmp/f012-candidate-evidence/fresh.json
           node tools/verify-feature-012-harness.mjs --source-fence-upgrade > .tmp/f012-candidate-evidence/upgrade.json
+      - name: Verify the installed guard with pinned Auth in the disposable harness
+        run: |
+          docker pull public.ecr.aws/supabase/gotrue@sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a
+          node tools/verify.mjs prepare
+          node tools/verify-feature-012-harness.mjs --native-retained-guard > .tmp/f012-candidate-evidence/native-guard.json
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: always()
         with:

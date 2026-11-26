@@ -20,6 +20,19 @@ import type {
 } from '@shifaa/contracts/identity-continuity';
 import type { NativeSessionProjection } from '@shifaa/auth';
 
+export type NativeAuthorityProfile = 'workforce_sensitive' | 'subject_projection_read';
+
+export interface NativeAuthorityBinding {
+  readonly deploymentId: string;
+  readonly admissionEpoch: string;
+  readonly instanceId: string;
+  readonly personId: string;
+  readonly action: string;
+  readonly facilityId: string | null;
+  readonly purpose: string;
+  readonly caseId: string | null;
+}
+
 export type ContinuityRestriction = 'mfa_enrollment_only' | 'recovery_expired' | null;
 
 export const guardianshipReviewPurpose = 'guardianship_review' as const;

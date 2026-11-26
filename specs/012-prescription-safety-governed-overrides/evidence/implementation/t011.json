@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "task": "T011",
+  "issue": 522,
+  "status": "OPEN_ISOLATED_CANDIDATE",
+  "prerequisite": {
+    "task": "T010",
+    "issue": 521,
+    "pullRequest": 616,
+    "status": "OPEN",
+    "scope": "The Product Owner authorized building an isolated T011 candidate to execute T010 guard-facing verification while T010 remains open."
+  },
+  "candidate": {
+    "branch": "codex/issue-522-f012-t011",
+    "base": "8ac8d0b90732c3ee42de37a20d1e651ebe01f051",
+    "migration": "supabase/migrations/20261112001201_f012_native_guard.sql",
+    "migrationSha256": "440900b4cdcec2fef96d9d1c54897bef55240ef3a64267a4cb438f7dae6606c1",
+    "scope": "Internal native authority retention on a supplied active repository transaction. The caller supplies trusted action context and retains the source admission before entering NAC-1. No clinical feature or route is activated.",
+    "testedHead": "550f7443351cd28d151e926c482ab02df80724f1"
+  },
+  "pinnedNative": {
+    "testedHead": "90546816e81d0a3f26807f69ef25bdd8afea8915",
+    "run": "780370b7-ab6c-4da1-9feb-453786643d43",
+    "result": "PASS_NATIVE_GUARD_CONTEXT",
+    "cases": 43,
+    "command": "node tools/verify-feature-012-harness.mjs --native-retained-guard",
+    "resultScope": [
+      "Both independent guard-first and writer-first conflicts on users and sessions returned 55P03 at the expected native relation. Fresh transactions succeeded after rollback.",
+      "Bound subject, session, person, instance, case and profile were enforced. Current AAL1 subject and AAL2 workforce with recent TOTP passed, including inclusive 300-second freshness. Missing, future and stale TOTP denied.",
+      "PostgreSQL observed the same reader wait on a native lock and deny after the access deadline. Access expiry at equality and elapsed native NotAfter denied.",
+      "An authorized replay returned the original synthetic idempotency marker. After actual pinned GoTrue downgrade, replay denied without revealing it, and the one completed record remained.",
+      "Anonymous, authenticated, service and worker roles could not call the helper. The Core API role had no direct native-table read or update or executor membership. The isolated executor saw only its bound rows and WITH CHECK prevented actual updates."
+    ],
+    "preservation": {
+      "containers": 12,
+      "volumes": 4,
+      "matches": true
+    }
+  },
+  "hostedAdapterHistory": [
+    {
+      "testedHead": "2ec2b443406405b4cc95c5d8cbceb7ff37bd7893",
+      "job": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45065962499/job/137342037925",
+      "result": "FAIL_FIXTURE_SETUP",
+      "scope": "The extended native chain and predecessor suite ran before the test login received 42501 provisioning the synthetic admission row. The live adapter and same-transaction assertions were not reached."
+    },
+    {
+      "testedHead": "550f7443351cd28d151e926c482ab02df80724f1",
+      "job": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45190563617/job/137747477164",
+      "result": "PASS_HOSTED_ADAPTER",
+      "testsPassed": 8,
+      "scope": "The test file ran through the installed native chain on disposable GitHub-hosted Linux. The live AAL1 subject case rejected another repository transaction, kept the same backend PID and transaction ID, blocked a separate session-row update with 55P03, and allowed it after commit.",
+      "exclusions": "The live adapter case did not exercise a workforce transaction, an active local recovery restriction, an actual F012 effect or receipt, or the full native writer and retry matrix.",
+      "checkout": "2a749bb564e1084fe005dbe4e730b07744cae951"
+    }
+  ],
+  "retainedEvidence": {
+    "relativeDirectory": "SHIFAA-Recovery/2026-11-22 under the local application-data directory",
+    "files": [
+      {
+        "path": "t011-native-guard-ca1c0fd.json",
+        "testedHead": "ca1c0fd14a9770a3ab7e0713580f5c25eb36bd84",
+        "run": "3f36d4f6-63fb-4b04-a5c1-11f273bd966c",
+        "bytes": 85586,
+        "sha256": "09f3d1a006fbdbecb465dec47c78e9f6d0dd853b9f39f6ce408d33c826b8425b",
+        "result": "BLOCKED at guard migration parser before guard tests."
+      },
+      {
+        "path": "t011-native-guard-4ce2806.json",
+        "testedHead": "4ce280655a2324176c277b1393af3cd28a8e6e25",
+        "run": "5705c203-50db-4a8d-be6b-aa5d1a643bd6",
+        "bytes": 103657,
+        "sha256": "828259ec72b157daf7360e573cf218ae200452b03d09b55d7a2363b3e56aadf2",
+        "result": "PASS installed guard context and initial privilege cases."
+      },
+      {
+        "path": "t011-native-guard-585dd7a.json",
+        "testedHead": "585dd7ac403ab652b41669a55486b56554f1b5f5",
+        "run": "3a4dc469-7f0f-4471-96bc-d37fbec31a91",
+        "bytes": 124622,
+        "sha256": "5824873fecc943a8c999c7eaed2634ff10863fbb426ee7444fd4bf275a8dfca6",
+        "result": "PASS installed users/session conflicts and pinned native MFA changes."
+      },
+      {
+        "path": "t011-native-guard-c2c3dd8.json",
+        "testedHead": "c2c3dd8f749a2ad73964d7c1cdafb45da1667120",
+        "run": "9ce162f6-91ff-4916-a1f7-f71f73163df8",
+        "bytes": 133481,
+        "sha256": "c779f8f0eeb0d466ff205a7946e1c4331f990d42f3befd8efb85f9baaf00e2cd",
+        "result": "PASS installed guard and synthetic replay, including access expiry during a measured lock wait."
+      },
+      {
+        "path": "t011-native-guard-9054681.json",
+        "testedHead": "90546816e81d0a3f26807f69ef25bdd8afea8915",
+        "run": "780370b7-ab6c-4da1-9feb-453786643d43",
+        "bytes": 146541,
+        "sha256": "9850fafddb06da663f232560ec945d01292b0a53098a8f4c6716052122565039",
+        "result": "PASS 43 installed guard cases and post-wait expiry on pinned Auth."
+      }
+    ]
+  },
+  "remaining": [
+    "Accept T010 against its approved matrix.",
+    "Review the exact installed native grants, RLS, fixed search path, server context and caller assumptions independently. Verify the workforce adapter path, active local recovery restriction denial and the remaining native authority negatives.",
+    "Prove the contracted pre-effect and pre-finalization clock rechecks, no network under protected locks, and guarded retry and current-authority replay at the owning coordinator and product checkpoints before dependent activation.",
+    "After T010 integration, identify the exact T011 integration head and base and verify applicable native and adapter evidence, all six CI contexts, fresh metadata, required independent review and resolved blocking threads. Obtain the Product Owner Major Event authorization for the actual integration candidate."
+  ],
+  "hostedPinnedNative": {
+    "testedHead": "550f7443351cd28d151e926c482ab02df80724f1",
+    "workflow": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45190563688",
+    "artifact": "f012-migration-chain-candidate/native-guard.json",
+    "bytes": 138422,
+    "sha256": "9a2f2628b92e2ede26bd5cb5598a77e25deb9d365906abb282f018da53b5b912",
+    "run": "aa30735f-413a-4557-8f88-358c690af85d",
+    "result": "PASS_NATIVE_GUARD_CONTEXT",
+    "cases": 43,
+    "scope": "Pinned native runtime. Bound non-owner context and ACL/RLS, users and sessions conflicts in both orders and fresh retries, AAL/TOTP boundaries, JWT equality and post-wait expiry, elapsed NotAfter, and synthetic replay denial after native downgrade."
+  },
+  "reconciliation": {
+    "reviewedAt": "2026-11-24",
+    "stackedOn": {
+      "pullRequest": 616,
+      "head": "17c397554cafd988ca32f407927e99b0e2d39456"
+    },
+    "ci": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45190563617",
+    "mandatoryContexts": "6 passed",
+    "metadata": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45190563745",
+    "implementation": "Internal candidate implemented. The candidate has no product F012 caller.",
+    "acceptance": "OPEN; T010 is unaccepted and installed guard composition and security evidence remain incomplete.",
+    "integration": "MAJOR_EVENT_PRODUCT_OWNER_DECISION_REQUIRED",
+    "decisionRecord": "t010-t011-integration-decision.md"
+  },
+  "mainBasedValidation": {
+    "testedHead": "ace490647ac6aa0211fcb414279039cd5c6db7ae",
+    "base": "426f22703e4e0227b301c80733ae4ee8e619ea2f",
+    "candidateWorkflow": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45407904211",
+    "ci": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45407904191",
+    "ordinaryOffline": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45407904239",
+    "metadata": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45407904166",
+    "observations": {
+      "mandatoryContexts": "6 passed",
+      "ordinaryOffline": "PASS",
+      "metadata": "PASS",
+      "hostedAdapterTests": 8,
+      "pinnedGuardCases": 43,
+      "pinnedGuardArtifact": {
+        "name": "native-guard.json",
+        "bytes": 138422,
+        "sha256": "92eda3e2113d96a9f4266d831680af9f3e62581b83b96cd011d7fcfb558c9fd6"
+      },
+      "freshAndUpgradeSourceFence": "PASS"
+    },
+    "scope": "The repeat run covers the same pinned guard and hosted adapter cases and retains their existing exclusions. It is independent of acceptance. Results apply to the tested head and base. The subsequent normal merge of main at 2ce56401f3b6091de227c92dc9ceed73385a504f requires fresh checks."
+  }
+}

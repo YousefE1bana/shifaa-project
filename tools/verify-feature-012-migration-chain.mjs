@@ -1,4 +1,4 @@
-// Verify the sealed F011 source and the separately bound additive F012 migration.
+// Verify the sealed F011 source and the separately bound additive F012 migrations.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -16,8 +16,17 @@ const governanceInputs = new Set([
   'SHIFAA-Implementation-Plan-MASTER.md',
 ]);
 const directory = 'supabase/migrations';
-export const addition = `${directory}/20261112001200_f012_source_admission.sql`;
-const additionSha256 = '96719e8101fc247df4e2b75b7bb46c1f0709f82985208f50286a5176253d89da';
+const additions = new Map([
+  [
+    `${directory}/20261112001200_f012_source_admission.sql`,
+    '96719e8101fc247df4e2b75b7bb46c1f0709f82985208f50286a5176253d89da',
+  ],
+  [
+    `${directory}/20261112001201_f012_native_guard.sql`,
+    '440900b4cdcec2fef96d9d1c54897bef55240ef3a64267a4cb438f7dae6606c1',
+  ],
+]);
+export const additivePaths = Object.freeze([...additions.keys()]);
 const ciWorkflow = '.github/workflows/ci.yml';
 const verifier = 'tools/verify-feature-011-contracts.mjs';
 const f011 = 'specs/011-allergies-clinical-content-governance';
@@ -60,7 +69,7 @@ function sha256(input) {
 
 export function assertExactMigrationInventory(actual, sealed) {
   assert.equal(sealed.length, 38, 'Original F011 migration inventory has drifted');
-  const expected = [...sealed, addition];
+  const expected = [...sealed, ...additivePaths];
   const versions = expected.map((file) => {
     const format = /^supabase\/migrations\/(\d{14})_[a-z0-9_]+\.sql$/;
     const match = format.exec(file);
@@ -71,12 +80,13 @@ export function assertExactMigrationInventory(actual, sealed) {
     versions.every((version, i) => i === 0 || version > versions[i - 1]),
     'Migration versions must be unique and increasing',
   );
-  assert.deepEqual(actual, [...sealed, addition], 'Migration inventory has unexpected changes');
+  assert.deepEqual(actual, expected, 'Migration inventory has unexpected changes');
 }
 
-export function readCandidateMigration(candidateRoot) {
-  const migration = bytes(candidateRoot, addition);
-  assert.equal(sha256(migration), additionSha256, 'F012 migration bytes differ from the candidate');
+export function readCandidateMigration(candidateRoot, path) {
+  assert.ok(additions.has(path), `Path is outside the exact F012 migration inventory: ${path}`);
+  const migration = bytes(candidateRoot, path);
+  assert.equal(sha256(migration), additions.get(path), `F012 migration bytes differ: ${path}`);
   return migration;
 }
 
@@ -113,7 +123,7 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
     'tools/feature-011-native-supabase-bootstrap.mjs',
   ]);
   // The pinned F011 verifier sees the original workflow. The candidate workflow
-  // is bound separately because it orchestrates both the 38- and 39-file views.
+  // is bound separately because it orchestrates historical and extended views.
   assert(sealedInputs.delete(ciWorkflow), 'Missing historical workflow binding');
   assertSealedBytes(historical, ciWorkflow, blobs.get(ciWorkflow), gitFormat);
   assert.equal(
@@ -133,7 +143,9 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
     path: file,
     sha256: sha256(bytes(candidate, file)),
   }));
-  extended.push({ path: addition, sha256: sha256(readCandidateMigration(candidate)) });
+  for (const path of additivePaths) {
+    extended.push({ path, sha256: sha256(readCandidateMigration(candidate, path)) });
+  }
   return {
     historical: {
       result: original.result,

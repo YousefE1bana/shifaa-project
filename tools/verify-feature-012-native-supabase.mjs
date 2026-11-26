@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { readFileSync, realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
-  addition,
+  additivePaths,
   readCandidateMigration,
   verifyExtendedChain,
 } from './verify-feature-012-migration-chain.mjs';
@@ -22,7 +23,6 @@ const root = resolve(import.meta.dirname, '..');
 assert.equal(root, realpathSync(process.env.GITHUB_WORKSPACE));
 const historical = realpathSync(join(process.env.RUNNER_TEMP, 'shifaa-f011'));
 const chain = await verifyExtendedChain(historical, root);
-const migration = readCandidateMigration(root);
 const versionOf = (path) => path.split('/').at(-1).split('_')[0];
 const versions = chain.extended.migrations.map(({ path }) => versionOf(path));
 
@@ -41,6 +41,8 @@ assert.equal(
   docker(['context', 'inspect', 'default', '--format', '{{.Endpoints.docker.Host}}']).trim(),
   'unix:///var/run/docker.sock',
 );
+
+let nativeStatus;
 
 async function resetAndExtend(runPnpm) {
   await resetFeature011NativeSupabase(runPnpm);
@@ -73,8 +75,14 @@ async function resetAndExtend(runPnpm) {
     sql('SELECT version FROM supabase_migrations.schema_migrations ORDER BY version;')
       .trim()
       .split('\n');
-  assert.deepEqual(applied(), versions.slice(0, -1), 'Unexpected native predecessor chain');
-  console.log(sql(migration).trim());
+  assert.deepEqual(
+    applied(),
+    versions.slice(0, -additivePaths.length),
+    'Unexpected native predecessor chain',
+  );
+  for (const path of additivePaths) {
+    console.log(sql(readCandidateMigration(root, path)).trim());
+  }
   runPnpm([
     'exec',
     'supabase',
@@ -85,17 +93,51 @@ async function resetAndExtend(runPnpm) {
     '--local',
     '--status',
     'applied',
-    versionOf(addition),
+    ...additivePaths.map(versionOf),
   ]);
   assert.deepEqual(applied(), versions, 'Unexpected native extended chain');
+  nativeStatus = JSON.parse(runPnpm(['supabase', 'status', '-o', 'json'], true));
+  assert.equal(nativeStatus.API_URL, 'http://127.0.0.1:54321');
+  const databaseUrl = new URL(nativeStatus.DB_URL);
+  assert.equal(databaseUrl.hostname, '127.0.0.1');
+  assert.equal(databaseUrl.port, '54322');
+  assert.equal(databaseUrl.pathname, '/postgres');
 
   const fixture = readFileSync(safeSource(root, 'infra/db/tests/feature-012-source-fence.sql'));
   console.log(sql(fixture).trim());
+  // Provision through the disposable migration-owner path after the
+  // source-fence fixture rolls back.
+  const deploymentId = randomUUID();
+  const admissionEpoch = randomUUID();
+  sql(`INSERT INTO platform.f012_source_admission (deployment_id, admission_epoch)
+       VALUES ('${deploymentId}', '${admissionEpoch}');`);
+  nativeStatus = { ...nativeStatus, deploymentId, admissionEpoch };
   console.log(
     JSON.stringify({ result: 'PASS_NATIVE_EXTENDED_CHAIN', database: database.Id, chain }, null, 2),
   );
 }
 
 // Run the original F011 suite against the same native Auth/Storage/DB stack
-// after its sealed reset and the F012 addition have both executed.
+// after its sealed reset and all bound F012 additions have executed.
 await runFeature011NativeSupabaseTests({ reset: resetAndExtend });
+
+// Use the same disposable native stack to exercise the candidate TypeScript
+// adapter after its protected predecessor suite has completed.
+execFileSync('pnpm', ['install', '--frozen-lockfile'], { cwd: root, stdio: 'inherit' });
+execFileSync(
+  'pnpm',
+  [
+    '--filter',
+    '@shifaa/api',
+    'exec',
+    'vitest',
+    'run',
+    'test/feature-012-native-authority.integration.test.ts',
+    '--testTimeout=30000',
+  ],
+  {
+    cwd: root,
+    stdio: 'inherit',
+    env: { ...process.env, SHIFAA_F012_NATIVE_PROOF: JSON.stringify(nativeStatus) },
+  },
+);

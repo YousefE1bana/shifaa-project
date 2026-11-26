@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "task": "T010",
   "issue": 521,
-  "status": "OPEN_INSTALLED_GUARD_CANDIDATE_TESTED",
+  "status": "OPEN_PARTIAL_NATIVE_BASELINE",
   "verifiedAt": "2026-11-22",
   "testedHead": "e7d7b7e6907e1622597df13656817f00cb6d6414",
   "run": "e7017b4b-60f6-49c0-9d8b-df4b0e4203d8",
@@ -163,37 +163,45 @@
     "volumes": 4,
     "matches": true
   },
-  "signedContextIntegration": {
-    "testedHead": "8ac8d0b90732c3ee42de37a20d1e651ebe01f051",
-    "job": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45060990852/job/137326652938",
-    "file": "services/api/test/feature-012-native-authority.integration.test.ts",
-    "result": "5 passed at the signed issuer boundary",
-    "scope": "Verified claims and deadlines, separation from user and app metadata, and rejection of missing expiration, expiry equality, a missing session ID and an untrusted issuer."
-  },
-  "installedGuardCandidate": {
-    "issue": 522,
-    "testedHead": "c2c3dd8f749a2ad73964d7c1cdafb45da1667120",
-    "migrationSha256": "440900b4cdcec2fef96d9d1c54897bef55240ef3a64267a4cb438f7dae6606c1",
-    "result": "PASS_NATIVE_GUARD_CONTEXT",
-    "run": "9ce162f6-91ff-4916-a1f7-f71f73163df8",
-    "receipt": {
-      "path": "t011-native-guard-c2c3dd8.json",
-      "bytes": 133481,
-      "sha256": "c779f8f0eeb0d466ff205a7946e1c4331f990d42f3befd8efb85f9baaf00e2cd",
-      "location": "SHIFAA-Recovery/2026-11-22 under the local application-data directory"
-    },
-    "observations": [
-      "Current AAL1 subject and recent-TOTP AAL2 workforce passed on the installed helper. Missing or mismatched context, cross-subject session, wrong instance, profile fallback, missing, stale or future TOTP, and stale AAL after actual native downgrade were denied.",
-      "Four separate backend orderings timed out at the expected users or sessions relation with 55P03. A new transaction acquired the row after the holder rolled back.",
-      "JWT expiry at equality and after a measured independent-session wait were denied. PostgreSQL reported the same blocked backend that later denied the expired access.",
-      "An authorized transaction recovered the original synthetic result. After GoTrue downgraded the native session, replay returned 42501 before exposing the result, with one completed record still present.",
-      "Direct execution as anon, authenticated and worker was denied. The Core API role could neither assume the executor role nor directly select either Auth table."
-    ],
-    "limits": "Installed helper tests used a disposable, pinned native runtime and SQL fixture contexts. Replay used a synthetic result under the existing canonical idempotency table and an explicit guard call before disclosure."
-  },
   "remaining": [
-    "Complete guard-facing native session deadline and login-strength boundary checks and the remaining executor ACL/RLS negatives on the isolated candidate.",
-    "Verify the same-transaction TypeScript guard boundary and retain its exact candidate linkage before acceptance."
+    "Close the installed-guard evidence gap for native NotAfter at equality and crossing its deadline during a lock wait. The owner primitive exercises equality; the exact installed candidate proves elapsed NotAfter and JWT post-wait expiry.",
+    "Bind actual GoTrue ban, logout/session removal, recovery and refresh inverse order and SKIP LOCKED exhaustion to the installed guard and fresh authority decision. The retained real-native observations used primitive readers. Actual native downgrade is covered on the installed candidate.",
+    "Prove the bounded whole-transaction abort and retry outcomes, including the remaining inverse-refresh deadlock victim outcome and current authorization on retry. Existing 55P03 trials and fresh SQL transactions are narrower.",
+    "Obtain exact-candidate independent security review of the existing evidence, context and privilege boundary and close the remaining criteria before accepting T010. Product effect, finalization and replay coverage belongs to the guarded coordinator and its later checkpoints."
   ],
-  "limits": "The original Auth race receipts exercise native row primitives. Guard-specific evidence is attributed to the isolated Issue #522 candidate. Full T010 acceptance remains open."
+  "limits": "Native-owner SQL exercised row and clock primitives on real GoTrue rows. The probe role, audit hold and API are isolated fixtures. Product NAC-1 guard, forced-RLS executor and bounded retry acceptance remain pending.",
+  "reconciliation": {
+    "reviewedAt": "2026-11-24",
+    "pullRequestHead": "17c397554cafd988ca32f407927e99b0e2d39456",
+    "ci": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45064496598",
+    "mandatoryContexts": "6 passed",
+    "metadata": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45064496577",
+    "candidateWorkflow": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45064496702",
+    "candidateWorkflowScope": "Sealed predecessor, additive inventory and source-fence proof. The T010 head contains no installed T011 guard or live adapter result.",
+    "guardEvidence": {
+      "pullRequest": 618,
+      "installedNative": {
+        "testedHead": "550f7443351cd28d151e926c482ab02df80724f1",
+        "workflow": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45190563688",
+        "artifact": "f012-migration-chain-candidate/native-guard.json",
+        "bytes": 138422,
+        "sha256": "9a2f2628b92e2ede26bd5cb5598a77e25deb9d365906abb282f018da53b5b912",
+        "run": "aa30735f-413a-4557-8f88-358c690af85d",
+        "result": "PASS_NATIVE_GUARD_CONTEXT",
+        "cases": 43,
+        "scope": "Pinned native runtime. Bound non-owner context and ACL/RLS, users and sessions conflicts in both orders and fresh retries, AAL/TOTP boundaries, JWT equality and post-wait expiry, elapsed NotAfter, and synthetic replay denial after native downgrade."
+      },
+      "hostedAdapter": {
+        "testedHead": "550f7443351cd28d151e926c482ab02df80724f1",
+        "job": "https://github.com/YousefE1bana/shifaa-project/actions/runs/45190563617/job/137747477164",
+        "result": "PASS_HOSTED_ADAPTER",
+        "testsPassed": 8,
+        "scope": "The test file ran through the installed native chain on disposable GitHub-hosted Linux. The live AAL1 subject case rejected another repository transaction, kept the same backend PID and transaction ID, blocked a separate session-row update with 55P03, and allowed it after commit.",
+        "exclusions": "The live adapter case did not exercise a workforce transaction, an active local recovery restriction, an actual F012 effect or receipt, or the full native writer and retry matrix.",
+        "checkout": "2a749bb564e1084fe005dbe4e730b07744cae951"
+      }
+    },
+    "decision": "OPEN_ACCEPTANCE_CRITERIA_UNVERIFIED",
+    "ciNativeCheckout": "e47c95356e87afe0d1262545bd3e540c7b9a3e60"
+  }
 }
