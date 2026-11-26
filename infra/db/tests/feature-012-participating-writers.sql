@@ -18,6 +18,7 @@ WITH relations(oid) AS (
     ('clinical.content_governance_authorities'::regclass),
     ('clinical.content_reviewer_designations'::regclass),
     ('clinical.content_admissibility_evidence'::regclass),
+    ('clinical.content_artifact_admissibility_bindings'::regclass),
     ('clinical.encounters'::regclass),
     ('clinical.encounter_participants'::regclass),
     ('clinical.appointments'::regclass),
@@ -39,6 +40,7 @@ WITH relations(oid) AS (
     ('identity.continuity_cases'::regclass),
     ('consent.records'::regclass),
     ('consent.processing_inventory'::regclass),
+    ('consent.purpose_versions'::regclass),
     ('platform.f012_source_admission'::regclass),
     ('clinical.safety_source_generations'::regclass)
 ),
@@ -148,4 +150,32 @@ catalog AS (
 SELECT kind, object_name, detail
 FROM catalog
 ORDER BY kind, object_name, detail;
+
+SELECT 'catalog-session', current_database(), jsonb_build_object(
+  'sessionUser', session_user, 'executor', current_user,
+  'databaseOwner', pg_get_userbyid(datdba), 'readOnly', current_setting('transaction_read_only')
+)
+FROM pg_database WHERE datname = current_database();
+
+SELECT 'role', rolname, jsonb_build_object(
+  'canLogin', rolcanlogin, 'superuser', rolsuper, 'bypassRls', rolbypassrls
+)
+FROM pg_roles
+WHERE rolname IN ('shifaa_api', 'shifaa_worker', 'supabase_admin', 'supabase_auth_admin',
+                  'shifaa_f011_executor', 'shifaa_f012_fence_executor')
+ORDER BY rolname;
+
+SELECT 'scheduler', 'pg_cron', jsonb_build_object(
+  'extensionInstalled', EXISTS (SELECT FROM pg_extension WHERE extname = 'pg_cron'),
+  'jobCatalogPresent', to_regclass('cron.job') IS NOT NULL
+);
+SELECT $sql$
+  SELECT 'f007-expiry-job', 'pg_cron', jsonb_build_object('role', username, 'active', active)
+  FROM cron.job
+  WHERE database = current_database() AND command ILIKE '%purge_expired_continuity_decoys%'
+  ORDER BY jobid;
+$sql$
+WHERE to_regclass('cron.job') IS NOT NULL
+\gexec
+
 ROLLBACK;

@@ -1213,6 +1213,44 @@ async function sourceFenceLockConflict(db) {
   }
 }
 
+function captureWriterCatalog(db) {
+  const catalog = readFileSync(
+    safeSource(root, 'infra/db/tests/feature-012-participating-writers.sql'),
+  );
+  const result = {
+    sha256: createHash('sha256').update(catalog).digest('hex'),
+    ...observedSql(db, catalog),
+  };
+  (receipt.participatingWriters ??= {}).catalog = result;
+  assert.equal(result.exit, 0, result.stderr);
+  const rows = result.stdout.split(/\r?\n/);
+  for (const name of [
+    'identity.people',
+    'identity.patients',
+    'identity.care_relationships',
+    'clinical.content_artifact_admissibility_bindings',
+    'consent.purpose_versions',
+  ]) {
+    const prefix = `relation|${name}|`;
+    const relation = rows.find((line) => line.startsWith(prefix));
+    assert.ok(relation, `Missing RLS catalog observation for ${name}`);
+    const policy = JSON.parse(relation.slice(prefix.length));
+    assert.equal(policy.rls, true, name);
+    assert.equal(policy.forceRls, true, name);
+  }
+}
+
+function runWriterCatalog(db) {
+  applySealedF011(db);
+  const migration = readFileSync(
+    safeSource(root, 'supabase/migrations/20261112001200_f012_source_admission.sql'),
+  );
+  receipt.migrationSha256 = createHash('sha256').update(migration).digest('hex');
+  receipt.migration = observedSql(db, migration);
+  assert.equal(receipt.migration.exit, 0, 'F012 source fence migration');
+  captureWriterCatalog(db);
+}
+
 async function runOnboardingWriterOrder(db, focusedWriters) {
   const deployment = writerFixtureDeployment;
   const epoch = writerFixtureEpoch;
@@ -1257,24 +1295,7 @@ async function runOnboardingWriterOrder(db, focusedWriters) {
     assert.equal(results.migration.exit, 0, writerMigration);
   }
 
-  const catalog = readFileSync(
-    safeSource(root, 'infra/db/tests/feature-012-participating-writers.sql'),
-  );
-  results.catalog = {
-    sha256: createHash('sha256').update(catalog).digest('hex'),
-    ...observedSql(db, catalog),
-  };
-  assert.equal(results.catalog.exit, 0, results.catalog.stderr);
-  const identityTables = ['people', 'patients', 'care_relationships'];
-  for (const table of identityTables) {
-    const relation = results.catalog.stdout
-      .split(/\r?\n/)
-      .find((line) => line.startsWith(`relation|identity.${table}|`));
-    assert.ok(relation, `Missing RLS catalog observation for identity.${table}`);
-    const policy = JSON.parse(relation.slice(relation.lastIndexOf('|') + 1));
-    assert.equal(policy.rls, true, table);
-    assert.equal(policy.forceRls, true, table);
-  }
+  captureWriterCatalog(db);
 
   function expectIdentity(observation, counts) {
     assert.equal(observation.exit, 0, observation.stderr);
@@ -2746,6 +2767,7 @@ async function admit() {
     ]).get(argumentsList[0]);
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
+  const writerCatalog = onlyArgument === '--participating-writer-catalog';
   const focusedWriters = new Map([
     ['--participating-family-writers', 'familyAndConsent'],
     ['--participating-family-grant', 'familyGrant'],
@@ -2765,6 +2787,7 @@ async function admit() {
   const upgrade = argumentsList.length === 1 && argumentsList[0] === '--source-fence-upgrade';
   const sqlOnly =
     atomicity ||
+    writerCatalog ||
     participatingWriters ||
     redOnly ||
     upgrade ||
@@ -2827,6 +2850,9 @@ async function admit() {
       }
       if (atomicity) {
         runAtomicity(source);
+      } else if (writerCatalog) {
+        stage = 'T012 read-only catalog on the disposable migrated database';
+        runWriterCatalog(source);
       } else {
         sourceFence(source, redOnly, upgrade || participatingWriters);
         if (!redOnly && !focusedWriters) {
@@ -2853,13 +2879,15 @@ async function admit() {
     }
     receipt.status = atomicity
       ? 'EXECUTED_ATOMICITY_SQL'
-      : focusedWriters
-        ? 'PASS_T012_FOCUSED_WRITER_SQL'
-        : participatingWriters
-          ? 'PASS_T012_ONBOARDING_WRITER_SQL'
-          : redOnly
-            ? 'EXPECTED_RED_SOURCE_FENCE'
-            : 'PASS_SOURCE_FENCE_SQL';
+      : writerCatalog
+        ? 'PASS_T012_WRITER_CATALOG'
+        : focusedWriters
+          ? 'PASS_T012_FOCUSED_WRITER_SQL'
+          : participatingWriters
+            ? 'PASS_T012_ONBOARDING_WRITER_SQL'
+            : redOnly
+              ? 'EXPECTED_RED_SOURCE_FENCE'
+              : 'PASS_SOURCE_FENCE_SQL';
     return;
   }
   try {

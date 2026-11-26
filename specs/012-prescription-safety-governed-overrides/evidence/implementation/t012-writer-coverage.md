@@ -108,6 +108,10 @@ added by this reconciliation.
 
 The retained receipt is the runtime result. The following assertions are
 authored as an execution matrix. They have no new runtime result.
+Use the [effective writer manifest](t012-effective-writer-manifest.md) for
+source and installed-role attribution and the
+[deployment-owner worksheet](t012-deployment-decision-worksheet.md) to bind
+target and operator scope before comparing deployment metadata.
 
 | Boundary                              | Static source or unknown                                                                                                                                                                  | Required observations and owner                                                                                                                                                                                                                                                                                                                                    |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -123,3 +127,23 @@ predicate and generation scope, both independent transaction orderings,
 rollback, and the applicable audit, outbox and idempotency effects. Validate
 that unresolved writer attribution leaves the affected capability disabled.
 Issue #523 retains the unexecuted inventory and authoring work.
+
+## Predecessor restore entry points
+
+Source comparison at `28dcfc46d5e68dc0e1bbee94e74087c632100b7a` and
+`4ee6b1f301a15fc9120eb9c1ee9f0380bdd46530` matched all three runner blobs.
+Each runner can write predecessor data under its local database owner. Their
+target selection matters when attributing a restore to an F012 deployment.
+
+| Runner                                                                                  | Observed write target and boundary                                                                                                                                                                                                                                                                                         |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [F008 audit restore](../../../../tools/run-audit-admin-restore-test.mjs#L33)            | Uses two fixed synthetic database names in the Compose `postgres` service. The creation helper first drops any existing database with the same name. A deployment manifest must distinguish these owner operations from approved maintenance on the admitted target.                                                       |
+| [F009 scheduling restore](../../../../tools/run-clinic-scheduling-restore-test.mjs#L13) | Creates a source and target with a run ID in the Compose `postgres` service. It restores the target and replays the scheduling worker there. Its database cleanup is limited to names recorded as created by the run.                                                                                                      |
+| [F010 encounter restore](../../../../tools/run-feature-010-restore-test.mjs#L590)       | Creates randomly named source and target databases inside each selected local cluster, using `shifaa_owner` or `supabase_admin` as configured. It loads the bounded F010 migration chain and restores into the newly created target. Cluster membership alone does not identify the database as the F012 admission target. |
+
+No restore or database mutation was performed for this source comparison.
+T012 still needs deployment-specific attribution of the actual restore entry
+point, executing principal and target database. The
+[source admission contract](../../contract-amendment/plan-closure-consolidated-v0.2.0.md#3-single-sourcetransactionlinearization-contract)
+requires exposure to be disabled and drained for unadmitted owner work. T013
+owns that exclusion and T084 owns the restore readback and new admission epoch.
