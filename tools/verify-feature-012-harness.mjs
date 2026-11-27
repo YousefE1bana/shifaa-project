@@ -1256,7 +1256,7 @@ function captureWriterCatalog(db) {
   }
 }
 
-function runWriterCatalog(db, coreApiPeers) {
+function applyWriterBaseline(db, coreApiPeers) {
   applySealedF011(db, coreApiPeers);
   const migration = readFileSync(
     safeSource(root, 'supabase/migrations/20261112001200_f012_source_admission.sql'),
@@ -1264,7 +1264,134 @@ function runWriterCatalog(db, coreApiPeers) {
   receipt.migrationSha256 = createHash('sha256').update(migration).digest('hex');
   receipt.migration = observedSql(db, migration);
   assert.equal(receipt.migration.exit, 0, 'F012 source fence migration');
+}
+
+function runWriterCatalog(db, coreApiPeers) {
+  applyWriterBaseline(db, coreApiPeers);
   captureWriterCatalog(db);
+}
+
+function runPredecessorWriterBehaviors(db) {
+  applyWriterBaseline(db);
+  const paths = [
+    'infra/db/tests/clinic-scheduling-schema.sql',
+    'infra/db/tests/facility-onboarding-rls.sql',
+    'infra/db/tests/feature-012-predecessor-family.sql',
+    'infra/db/tests/feature-012-predecessor-recovery.sql',
+    'infra/db/tests/feature-012-predecessor-governance.sql',
+  ];
+  receipt.predecessorWriterBehaviors = paths.map((path) => {
+    const fixture = readFileSync(safeSource(root, path));
+    assert.deepEqual(fixture, git(root, ['show', receipt.base + ':' + path]), path);
+    return {
+      path,
+      sha256: createHash('sha256').update(fixture).digest('hex'),
+      ...observedSql(db, fixture),
+    };
+  });
+  const failed = receipt.predecessorWriterBehaviors.filter(
+    (result) => result.exit !== 0 || !/^ROLLBACK$/m.test(result.stdout),
+  );
+  assert.equal(failed.length, 0, failed.map(({ path }) => path).join(', '));
+}
+
+function runPredecessorAllergyWriters(db) {
+  applyWriterBaseline(db);
+  const results = (receipt.predecessorAllergy = {});
+  const patientPerson = randomUUID();
+  const patient = randomUUID();
+  const clinician = randomUUID();
+  const unrelated = randomUUID();
+  results.people = observedSql(
+    db,
+    `BEGIN;
+     INSERT INTO identity.people(id,user_id,display_name,profile_status)
+     SELECT person,gen_random_uuid(),'Synthetic T012 actor','active'
+     FROM unnest(ARRAY['${patientPerson}','${clinician}','${unrelated}']::uuid[]) person;
+     INSERT INTO identity.patients(id,person_id,medical_record_number,record_status)
+     VALUES ('${patient}','${patientPerson}','T012-allergy-writers','active');
+     COMMIT;`,
+  );
+  assert.equal(results.people.exit, 0, results.people.stderr);
+  const fixture = seedEncounterWriter(db, { patientPerson, clinician, unrelated }, results);
+  const { facility, encounter } = fixture;
+  const facilityEvidence = randomUUID();
+  const observeWriter = (writer) =>
+    observedSql(
+      db,
+      `\\set VERBOSITY verbose
+       BEGIN;
+       SET SESSION AUTHORIZATION shifaa_api;
+       SELECT 'writer', session_user, current_user;
+       SET LOCAL shifaa.person_id = '${clinician}';
+       SET LOCAL shifaa.actor_role = 'CLN';
+       SET LOCAL shifaa.test_now = '2030-04-05T08:00:00Z';
+       SET LOCAL shifaa.facility_id = '${facility}';
+       SET LOCAL shifaa.encounter_id = '${encounter}';
+       ${writer.write}
+       COMMIT;`,
+    );
+  results.licence = observedSql(
+    db,
+    `BEGIN;${syntheticFacilityLicence(facilityEvidence, facility, clinician)} COMMIT;`,
+  );
+  assert.equal(results.licence.exit, 0, results.licence.stderr);
+  const first = allergyInsertWriter(patient);
+  const correction = allergyInsertWriter(patient, first.allergy);
+  results.create = observeWriter(first);
+  assert.equal(results.create.exit, 0, results.create.stderr);
+  results.prematureCorrection = observeWriter(correction);
+  assert.equal(results.prematureCorrection.exit, 3);
+  assert.match(
+    results.prematureCorrection.stderr,
+    /23514: allergy correction target is not current terminal error/,
+  );
+  results.afterDenial = observedSql(db, first.state);
+  assert.equal(results.afterDenial.exit, 0, results.afterDenial.stderr);
+  assert.equal(results.afterDenial.stdout, first.after);
+
+  const terminal = allergyVerificationWriter(db, {
+    ...fixture,
+    patient,
+    first,
+    results,
+    targetStatus: 'entered_in_error',
+    facilityEvidence,
+  });
+  results.enteredInError = observeWriter(terminal);
+  assert.equal(results.enteredInError.exit, 0, results.enteredInError.stderr);
+  results.correction = observeWriter(correction);
+  assert.equal(results.correction.exit, 0, results.correction.stderr);
+  results.effects = observedSql(
+    db,
+    `SELECT
+       original_head.current_version,
+       original_revision.verification_status,
+       replacement_head.current_version,
+       replacement_revision.verification_status,
+       replacement_head.corrects_allergy_id = original_head.id,
+       replacement_revision.corrects_allergy_id = original_head.id,
+       replacement_revision.action_actor_person_id = '${clinician}',
+       replacement_revision.facility_id = '${facility}',
+       replacement_revision.encounter_id = '${encounter}',
+       (SELECT count(*) FROM clinical.allergies WHERE patient_id = '${patient}'),
+       (SELECT count(*) FROM audit.events WHERE resource_id IN (original_head.id,replacement_head.id)),
+       (SELECT count(*) FROM platform.outbox_events
+         WHERE aggregate_type='clinical.allergy_revision' AND aggregate_id IN (original_head.id,replacement_head.id)),
+       (SELECT count(*) FROM clinical.mutation_receipts receipt
+         JOIN platform.idempotency_records idem ON idem.id=receipt.idempotency_record_id AND idem.state='completed'
+         WHERE receipt.resource_id IN (original_head.id,replacement_head.id))
+     FROM clinical.allergy_heads original_head
+     JOIN clinical.allergies original_revision ON original_revision.id=original_head.current_revision_id
+     CROSS JOIN clinical.allergy_heads replacement_head
+     JOIN clinical.allergies replacement_revision ON replacement_revision.id=replacement_head.current_revision_id
+     WHERE original_head.id='${first.allergy}' AND replacement_head.id='${correction.allergy}';`,
+  );
+  assert.equal(results.effects.exit, 0, results.effects.stderr);
+  assert.equal(
+    results.effects.stdout.trim(),
+    '2|entered_in_error|1|self_reported|t|t|t|t|t|3|3|3|3',
+  );
 }
 
 async function runOnboardingWriterOrder(db, focusedWriters) {
@@ -1741,7 +1868,7 @@ function syntheticF011Envelope(contractId, suffix) {
   };
 }
 
-function allergyInsertWriter(patient) {
+function allergyInsertWriter(patient, correctsAllergyId = null) {
   const allergy = randomUUID();
   const revision = randomUUID();
   const request = randomUUID();
@@ -1756,7 +1883,7 @@ function allergyInsertWriter(patient) {
       previousRevisionId: null,
       protectedFacts: syntheticF011Envelope('SHIFAA-F011-ALLERGY-PROTECTED/1', 'facts'),
       protectedReason: null,
-      correctsAllergyId: null,
+      correctsAllergyId,
     },
   };
   const finalizer = syntheticF011Envelope('SHIFAA-F011-RECEIPT-PROTECTED/1', 'receipt');
@@ -1796,7 +1923,30 @@ function allergyInsertWriter(patient) {
   };
 }
 
-function allergyVerificationWriter(db, { patient, clinician, facility, encounter, first }) {
+function syntheticFacilityLicence(evidence, facility, clinician) {
+  return `INSERT INTO identity.private_evidence_objects
+      (id,bucket_code,object_key,owner_person_id,facility_id,sha256,mime_type,size_bytes,scan_status,released_at)
+    VALUES ('${evidence}','facility-license-evidence','synthetic/${evidence}',
+      '${clinician}','${facility}',repeat('1',64),'application/pdf',10,'released',now());
+    INSERT INTO identity.facility_licenses
+      (facility_id,license_type,number_ciphertext,number_hash,issuer,expires_on,licensed_activities,status,evidence_object_id)
+    VALUES ('${facility}','clinic',decode('01','hex'),decode('01','hex'),'Synthetic issuer',
+      '2035-12-31',ARRAY['consultation'],'verified','${evidence}');`;
+}
+
+function allergyVerificationWriter(
+  db,
+  {
+    patient,
+    clinician,
+    facility,
+    encounter,
+    first,
+    results = receipt.participatingWriters,
+    targetStatus = 'clinician_confirmed',
+    facilityEvidence,
+  },
+) {
   const allergyId = first.allergy;
   const previousRevisionId = first.revision;
   const revisionId = randomUUID();
@@ -1805,27 +1955,19 @@ function allergyVerificationWriter(db, { patient, clinician, facility, encounter
   const source = 'synthetic.internal_clinician_provenance';
   const producer = 'f011.allergy_evidence_boundary';
   const verifiedAt = '2030-04-05T07:15:00Z';
-  const facilityEvidence = randomUUID();
   const seed = observedSql(
     db,
     `BEGIN;
-    INSERT INTO identity.private_evidence_objects
-      (id,bucket_code,object_key,owner_person_id,facility_id,sha256,mime_type,size_bytes,scan_status,released_at)
-    VALUES ('${facilityEvidence}','facility-license-evidence','synthetic/${facilityEvidence}',
-      '${clinician}','${facility}',repeat('1',64),'application/pdf',10,'released',now());
-    INSERT INTO identity.facility_licenses
-      (facility_id,license_type,number_ciphertext,number_hash,issuer,expires_on,licensed_activities,status,evidence_object_id)
-    VALUES ('${facility}','clinic',decode('01','hex'),decode('01','hex'),'Synthetic issuer',
-      '2035-12-31',ARRAY['consultation'],'verified','${facilityEvidence}');
+    ${facilityEvidence ? '' : syntheticFacilityLicence(randomUUID(), facility, clinician)}
     INSERT INTO clinical.allergy_verification_support
     (id,patient_id,allergy_id,previous_revision_id,previous_version,target_status,
       attestor_person_id,source_identity,source_evidence_identity,producer_id,recorded_at,synthetic)
     VALUES ('${evidenceRef}','${patient}','${allergyId}','${previousRevisionId}',1,
-      'clinician_confirmed','${clinician}','${source}','${evidenceRef}','${producer}',
+      '${targetStatus}','${clinician}','${source}','${evidenceRef}','${producer}',
       '${verifiedAt}',true);
     COMMIT;`,
   );
-  receipt.participatingWriters.allergyVerificationSupport = seed;
+  results.allergyVerificationSupport = seed;
   assert.equal(seed.exit, 0, seed.stderr);
   const payload = {
     responseLanguage: 'en-EG',
@@ -1858,7 +2000,7 @@ function allergyVerificationWriter(db, { patient, clinician, facility, encounter
         previousVersion: 1,
         revisionId,
         revisionVersion: 2,
-        targetStatus: 'clinician_confirmed',
+        targetStatus,
         attestorPersonId: clinician,
         sourceIdentity: source,
         sourceEvidenceIdentity: evidenceRef,
@@ -1897,7 +2039,7 @@ function allergyVerificationWriter(db, { patient, clinician, facility, encounter
       FROM clinical.allergy_heads head JOIN clinical.allergies revision ON head.current_revision_id = revision.id
       WHERE head.id = '${allergyId}';`,
     before: '1|self_reported|1|1\n',
-    after: '2|clinician_confirmed|2|2\n',
+    after: `2|${targetStatus}|2|2\n`,
   };
 }
 
@@ -1982,7 +2124,11 @@ function workforceTerminationWriter(db, { owner, clinician }) {
   };
 }
 
-function seedEncounterWriter(db, { patientPerson, clinician, unrelated }) {
+function seedEncounterWriter(
+  db,
+  { patientPerson, clinician, unrelated },
+  results = receipt.participatingWriters,
+) {
   const facility = randomUUID();
   const licence = randomUUID();
   const schedule = randomUUID();
@@ -2026,7 +2172,7 @@ function seedEncounterWriter(db, { patientPerson, clinician, unrelated }) {
       ('${encounter}','${unrelated}','consulting_clinician','${starts}');
     COMMIT;`,
   );
-  receipt.participatingWriters.encounterFixture = seed;
+  results.encounterFixture = seed;
   assert.equal(seed.exit, 0, seed.stderr);
   assert.match(seed.stdout, /^INSERT 0 2\nCOMMIT\n$/m);
   return {
@@ -2892,6 +3038,8 @@ async function admit() {
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
   const writerCatalog = onlyArgument === '--participating-writer-catalog';
+  const predecessorBehaviors = onlyArgument === '--predecessor-writer-behaviors';
+  const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
   const applicationWriter =
     authenticatedWriter || onlyArgument === '--participating-core-api-writer';
@@ -2915,6 +3063,8 @@ async function admit() {
   const sqlOnly =
     atomicity ||
     writerCatalog ||
+    predecessorBehaviors ||
+    predecessorAllergy ||
     participatingWriters ||
     redOnly ||
     upgrade ||
@@ -2963,9 +3113,22 @@ async function admit() {
   receipt.networkId = networkId;
   checkNetwork();
   if (sqlOnly) {
-    stage = atomicity ? 'isolated structural atomicity SQL' : 'isolated PostgreSQL source fence';
+    stage = predecessorAllergy
+      ? 'isolated PostgreSQL predecessor allergy writers'
+      : predecessorBehaviors
+        ? 'isolated PostgreSQL predecessor writer behaviors'
+        : atomicity
+          ? 'isolated structural atomicity SQL'
+          : 'isolated PostgreSQL source fence';
     try {
-      const source = startDatabase(atomicity ? 'atomicity' : 'source-fence', 'none');
+      const source = startDatabase(
+        predecessorBehaviors || predecessorAllergy
+          ? 'predecessor-writers'
+          : atomicity
+            ? 'atomicity'
+            : 'source-fence',
+        'none',
+      );
       receipt.databaseSystems = atomicity
         ? { atomicity: source.system }
         : { source: source.system };
@@ -2978,6 +3141,10 @@ async function admit() {
       }
       if (atomicity) {
         runAtomicity(source);
+      } else if (predecessorAllergy) {
+        runPredecessorAllergyWriters(source);
+      } else if (predecessorBehaviors) {
+        runPredecessorWriterBehaviors(source);
       } else if (writerCatalog) {
         stage = 'T012 read-only catalog on the disposable migrated database';
         runWriterCatalog(source);
@@ -3004,6 +3171,14 @@ async function admit() {
         volumes: before.volumes.length,
         matches: true,
       };
+    }
+    if (predecessorBehaviors) {
+      receipt.status = 'PASS_T012_PREDECESSOR_WRITER_BEHAVIORS';
+      return;
+    }
+    if (predecessorAllergy) {
+      receipt.status = 'PASS_T012_PREDECESSOR_ALLERGY_WRITERS';
+      return;
     }
     receipt.status = atomicity
       ? 'EXECUTED_ATOMICITY_SQL'

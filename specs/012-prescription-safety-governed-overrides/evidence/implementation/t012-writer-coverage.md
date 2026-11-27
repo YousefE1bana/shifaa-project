@@ -130,6 +130,56 @@ rollback, and the applicable audit, outbox and idempotency effects. Validate
 that unresolved writer attribution leaves the affected capability disabled.
 Issue #523 retains the unexecuted inventory and authoring work.
 
+## Installed predecessor behavior on the approved disposable database
+
+Run `9fd6c267-4d21-47bc-8573-d92d33b90065` at
+`8d8577711b6190f76c27a26db4fcc3fcb0398b5c` completed all five SQL fixtures.
+It used pinned PostgreSQL on network `none`, the 38 sealed F011 migrations,
+and T009 with SHA-256
+`96719e8101fc247df4e2b75b7bb46c1f0709f82985208f50286a5176253d89da`.
+Each fixture ended with `ROLLBACK`. The run exited 0, its launcher stderr
+was empty, and the inventory still matched all 12 retained containers and
+four volumes. The private receipt is
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t012-predecessor-behaviors-8d857771/predecessor-behaviors.json`
+(79,760 bytes, SHA-256
+`24c8559d7fdc087994a11791af9cc36e75c7a0c0d24a4c48ff9d0dc1cf165a49`).
+
+| Matrix family                        | Installed observation                                                                                                                                                                                                                                                                                                                                                                                               | Remaining observation                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F011 current content                 | The installed eligibility helper returned false for an absent release under `shifaa_f011_executor`.                                                                                                                                                                                                                                                                                                                 | Publication, supersession and the changes that remove a previously eligible release still need distinct observations.                                                                                                                                                                                                                                |
+| F010 appointments and queue          | The existing [scheduling SQL suite](../../../../infra/db/tests/clinic-scheduling-schema.sql) exercised booking, rescheduling, check-in, queue-only completion, reorder, and absence-driven queue removal on the installed chain. The fixture uses an owner-authenticated session for its routine calls and separately checks the online role's direct table denial.                                                 | Attribute the remaining calls to the online role or route and record the exact F012 consumed care/scope predicates. Existing historical encounter and queue results remain separately attributable.                                                                                                                                                  |
+| Family, purpose and consent          | The [delegation fixture](../../../../infra/db/tests/feature-012-predecessor-family.sql) used `shifaa_api`. The installed F004 predicate denied before the start, allowed at the start and immediately before the end, and denied at and after the end. Wrong purpose and revoked rows denied throughout. The fixture controls the transaction timestamp relative to each row's validity interval deterministically. | Distinct guardianship/evidence loss, current versus historical consent and remaining accepted purpose changes. Neither authenticated consent case was repeated.                                                                                                                                                                                      |
+| Workforce, licence and scanning      | The [facility RLS suite](../../../../infra/db/tests/facility-onboarding-rls.sql) verified member isolation, released facility/professional evidence projections under the respective purpose, and denial with insufficient assurance or wrong purpose under `shifaa_api`. The evidence rows were synthetic fixtures.                                                                                                | Membership and licence lifecycle variants and evidence release/rejection/loss against each relevant current predicate. The scanner remains fixture-only in the approved configuration.                                                                                                                                                               |
+| F007 local recovery                  | The [local release fixture](../../../../infra/db/tests/feature-012-predecessor-recovery.sql) ran the SQL transition used by the [continuity adapter](../../../../services/api/src/adapters/postgres/identity-continuity-service.ts) under `shifaa_api`. An unbound session matched zero rows, the bound session completed version 2 and cleared restriction and binding, and replay matched zero rows.              | The fixture used synthetic session IDs. The actual repository's audit and outbox, native session integration and distinct dependent-transition effects retain their own verification. The scheduler disposition remains in the [deployment record](t012-deployment-attribution-disposition.md#f007-scheduling-and-privileged-operation-disposition). |
+| Offline provisioning and maintenance | The [governance fixture](../../../../infra/db/tests/feature-012-predecessor-governance.sql) verified forced RLS on designations and signing authorities, no direct insert/update/delete or executor membership for the inspected online roles, and a confined NOLOGIN eligibility executor.                                                                                                                         | No privileged provisioning, maintenance or restore was invoked by this run. An authorized online or offline invocation requires separate entry-point and operator evidence. T013 retains drain/exclusion and T084 retains restore reconciliation.                                                                                                    |
+
+Run `48729b78-fea4-4175-ac3c-b401accce0da` at
+`6e8660f246f4be38de40d2d5570bb4ebc08dcd20` used the same database
+boundary to call the installed F011 allergy writers as `shifaa_api`. The
+CLN fixture created the initial allergy under a current encounter and
+synthetic verified facility licence. Attempting to create a linked
+correction against that live head denied with `23514`. The head, revision
+and outbox counts remained one each. After the existing verification
+routine made the original revision `entered_in_error`, the same
+correction request succeeded. Independent readback found the original
+terminal version 2 and a linked new version 1, the exact clinician,
+facility and encounter, and three revisions, three audit events, three
+outbox events and three completed idempotency receipts. The fixture supplied
+the evidence support and structural protected envelopes. Core API route,
+external provenance, other verification edges and the current content
+release lifecycle retain their own evidence requirements.
+
+The allergy run exited 0 with empty launcher stderr and the same retained
+inventory. The private receipt is
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t012-predecessor-allergy-6e8660f2/predecessor-allergy.json`
+(78,955 bytes, SHA-256
+`84bf2a05ae668ac7261f4d143884fd2db80a29d385e84aba1a2facb321c8c6ad`).
+
+These fixture results establish predecessor behavior and role boundaries. The
+matrix still tracks authenticated calls, the exact consumed predicate and
+independent ordering where required. T013 retains fence implementation and
+subsequent regression.
+
 ## Predecessor restore entry points
 
 Source comparison at `28dcfc46d5e68dc0e1bbee94e74087c632100b7a` and
