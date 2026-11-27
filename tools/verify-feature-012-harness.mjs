@@ -23,6 +23,19 @@ const authImage =
 const kongImage =
   'public.ecr.aws/supabase/kong@sha256:1b53405d8680a09d6f44494b7990bf7da2ea43f84a258c59717d4539abf09f6d';
 const recoveryGateway = 'http://kong:8000';
+const mailpitImage =
+  'public.ecr.aws/supabase/mailpit@sha256:37a38e48e9338cd7e89dfeb487f37b02ebfcd9cb23111bed2d345e79d37d6dd6';
+
+function startRecoveryMail() {
+  const mail = create('mailpit', receipt.images.mailpit, {
+    tmpfs: { '/tmp': 'rw,nosuid,nodev,size=32m,mode=1777' },
+    flags: ['--network-alias', 'mailpit', '--read-only', '--cap-drop=ALL', '--user=1000:1000'],
+  });
+  const host = checkContainer(mail).HostConfig;
+  assert.equal(host.ReadonlyRootfs, true);
+  assert.deepEqual(host.CapDrop, ['ALL']);
+  return mail;
+}
 const label = 'shifaa.f012.admission';
 const dataDir = '/var/lib/postgresql/data';
 const fullId = /^[a-f0-9]{64}$/;
@@ -251,7 +264,12 @@ const nativeSessionPolicy = {
   GOTRUE_HOOK_AFTER_USER_CREATED_ENABLED: 'false',
 };
 
-function startAuth(readSessionPolicy, signingKey, issuer = 'http://auth:9999') {
+function startAuth(
+  readSessionPolicy,
+  signingKey,
+  issuer = 'http://auth:9999',
+  recoveryMail = false,
+) {
   return create('auth', receipt.images.auth, {
     env: {
       API_EXTERNAL_URL: issuer,
@@ -272,6 +290,16 @@ function startAuth(readSessionPolicy, signingKey, issuer = 'http://auth:9999') {
       GOTRUE_MAILER_AUTOCONFIRM: 'true',
       GOTRUE_DISABLE_SIGNUP: 'false',
       ...(readSessionPolicy ? nativeSessionPolicy : {}),
+      ...(recoveryMail
+        ? {
+            GOTRUE_SMTP_HOST: 'mailpit',
+            GOTRUE_SMTP_PORT: '1025',
+            GOTRUE_SMTP_ADMIN_EMAIL: 'auth@synthetic.shifaa.test',
+            GOTRUE_SMTP_SENDER_NAME: 'SHIFAA disposable recovery',
+            GOTRUE_MAILER_SUBJECTS_RECOVERY: 'SHIFAA local recovery code',
+            GOTRUE_MAILER_TEMPLATES_RECOVERY: 'http://probe:8123/f007-recovery.html',
+          }
+        : {}),
     },
     flags: ['--network-alias', 'auth'],
     command: ['auth'],
@@ -1129,11 +1157,17 @@ async function nativeDeadlineTrials(db, { subject, session }) {
 
 function applySealedF011(db, coreApiPeers) {
   if (coreApiPeers) {
-    const [auth, probe, gateway] = coreApiPeers;
-    const peers = gateway ? [db, auth, gateway, probe] : [db, auth, probe];
+    const [auth, probe, gateway, mail] = coreApiPeers;
+    const peers = mail
+      ? [db, mail, auth, gateway, probe]
+      : [db, auth, ...(gateway ? [gateway] : []), probe];
     assert.deepEqual(
       peers.map(({ role }) => role),
-      gateway ? ['db', 'auth', 'kong', 'probe'] : ['db', 'auth', 'probe'],
+      mail
+        ? ['db', 'mailpit', 'auth', 'kong', 'probe']
+        : gateway
+          ? ['db', 'auth', 'kong', 'probe']
+          : ['db', 'auth', 'probe'],
     );
     assert.deepEqual(
       receipt.containers.map(({ id }) => id),
@@ -3301,8 +3335,8 @@ function readyRecoveryGateway(gateway, probe) {
   );
 }
 
-function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
-  applyWriterBaseline(db, [auth, probe, gateway]);
+function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
+  applyWriterBaseline(db, [auth, probe, gateway, mail]);
   const report = (receipt.predecessorNative = { inputs: [] });
   preparePredecessorActors(db, report, fixtures, [2, 1, 8, 4]);
   const seedPath = 'infra/db/tests/feature-012-predecessor-encounter-setup.sql';
@@ -3318,7 +3352,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   const recoveryActor = 'f0110000-0000-4000-8000-000000000004';
   const { subject, session } = fixtures[3];
   assert.match(session, /^[a-f0-9-]{36}$/);
-  if (mode !== 'recovery-intake')
+  if (mode !== 'recovery-intake' && mode !== 'recovery-mail-api')
     sql(
       db,
       `INSERT INTO identity.continuity_cases(
@@ -3333,6 +3367,8 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     entry,
     'tools/feature-012-predecessor-identity.mjs',
     'tools/feature-012-harness-probe.cjs',
+    'tools/feature-012-recovery-mail.mjs',
+    ...(mail ? ['supabase/templates/recovery.html'] : []),
   ]);
   const invoke = (phase, input) => {
     report.lastStep = phase;
@@ -3361,6 +3397,41 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'recovery-mail-api') {
+    const recovered = (report.recoveryMail = invoke(mode));
+    for (const value of [recovered.caseId, recovered.session, recovered.requestId]) {
+      assert.match(value, /^[a-f0-9-]{36}$/);
+    }
+    assert.equal(recovered.subject, subject);
+    assert.notEqual(recovered.session, session);
+    recovered.effects = read(`SELECT json_build_object(
+      'status',c.status,'version',c.version,'boundPerson',c.subject_person_id='${recoveryActor}',
+      'hasRestriction',c.restriction_scope IS NOT NULL,'hasNativeBinding',c.bound_native_session_id IS NOT NULL,
+      'completed',c.completed_at IS NOT NULL,
+      'oldSessions',(SELECT count(*) FROM auth.sessions WHERE id='${session}' AND user_id='${subject}'),
+      'freshSessions',(SELECT count(*) FROM auth.sessions WHERE id='${recovered.session}' AND user_id='${subject}'),
+      'audit',(SELECT count(*) FROM audit.events WHERE resource_id=c.id
+        AND actor_person_id=c.subject_person_id AND request_id='${recovered.requestId}'
+        AND action_code='identity.recovery.completed'),
+      'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=c.id
+        AND event_type='identity.recovery.completed' AND aggregate_version=c.version
+        AND payload ? 'action_time' AND payload->>'support_action'='completed'
+        AND payload - 'action_time' - 'support_action'='{}'::jsonb))
+      FROM identity.continuity_cases c WHERE c.id='${recovered.caseId}' AND c.case_type='account_recovery';`);
+    assert.deepEqual(recovered.effects, {
+      status: 'completed',
+      version: 4,
+      boundPerson: true,
+      hasRestriction: false,
+      hasNativeBinding: false,
+      completed: true,
+      oldSessions: 0,
+      freshSessions: 1,
+      audit: 1,
+      outbox: 1,
+    });
+    return;
+  }
   if (mode === 'recovery-intake') {
     const intake = (report.recoveryIntake = invoke(mode));
     assert.match(intake.caseId, /^[a-f0-9-]{36}$/);
@@ -4090,7 +4161,13 @@ function publicationWriter(db, auth, probe, fixtures, signingKeyId, mode) {
   const owner = create('offline-fixture', receipt.images.probe, {
     env: { F012_FIXTURE_OWNER_PASSWORD: dbPassword },
     tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m' },
-    flags: ['--read-only', '--cap-drop=ALL', '--user=1000:1000', '--entrypoint=node'],
+    flags: [
+      '--read-only',
+      '--cap-drop=ALL',
+      '--user=1000:1000',
+      '--entrypoint=node',
+      ...(mail ? ['--network-alias', 'probe'] : []),
+    ],
     command: ['-e', 'setTimeout(() => {}, 180000)'],
   });
   report.offlineSourceArchiveSha256 = stageLinkedCoreApi(owner, [offlineEntry, offlineSource]);
@@ -4219,6 +4296,7 @@ async function admit() {
     ['--predecessor-native-repositories', 'repositories'],
     ['--predecessor-native-scheduling', 'scheduling'],
     ['--predecessor-native-recovery-api', 'recovery-api'],
+    ['--predecessor-native-recovery-mail-api', 'recovery-mail-api'],
     ['--predecessor-native-recovery-intake', 'recovery-intake'],
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
@@ -4284,7 +4362,10 @@ async function admit() {
     postgres: pinnedImage(dbImage),
     ...(sqlOnly ? {} : { auth: pinnedImage(authImage) }),
     ...(sqlOnly ? {} : { probe: pinnedImage('shifaa/verify:' + inputs, inputs) }),
-    ...(predecessorNative === 'recovery-api' ? { kong: pinnedImage(kongImage) } : {}),
+    ...(['recovery-api', 'recovery-mail-api'].includes(predecessorNative)
+      ? { kong: pinnedImage(kongImage) }
+      : {}),
+    ...(predecessorNative === 'recovery-mail-api' ? { mailpit: pinnedImage(mailpitImage) } : {}),
   };
   receipt.dependencyInputs = inputs;
   receipt.noneNetworkId = inspect('network', 'none').Id;
@@ -4483,12 +4564,14 @@ async function runNativeAdmission({
           key_ops: ['sign', 'verify'],
         }
       : undefined;
-  const useRecoveryGateway = predecessorNative === 'recovery-api';
+  const mail = predecessorNative === 'recovery-mail-api' ? startRecoveryMail() : undefined;
+  const useRecoveryGateway = Boolean(mail) || predecessorNative === 'recovery-api';
   const recoveryAnonKey = useRecoveryGateway ? disposableNativeToken('anon') : null;
   const auth = startAuth(
     readSessionPolicy,
     signingKey,
     useRecoveryGateway ? recoveryGateway + '/auth/v1' : undefined,
+    Boolean(mail),
   );
   if (readSessionPolicy) observeNativePolicy(auth);
   const gateway = useRecoveryGateway ? startRecoveryGateway(recoveryAnonKey) : undefined;
@@ -4497,6 +4580,7 @@ async function runNativeAdmission({
       F012_PROBE_PASSWORD: apiPassword,
       ...(applicationWriter ? { F012_CORE_API_PASSWORD: coreApiPassword } : {}),
       ...(useRecoveryGateway ? { F012_RECOVERY_ANON_KEY: recoveryAnonKey } : {}),
+      ...(mail ? { F012_RECOVERY_MAIL: 'true' } : {}),
       ...(nativeMutation === 'ban' || nativeMutation === 'recovery'
         ? { F012_NATIVE_ADMIN_TOKEN: disposableNativeToken('service_role') }
         : {}),
@@ -4523,7 +4607,7 @@ async function runNativeAdmission({
   }
   if (predecessorNative) {
     stage = 'predecessor Core API and repository fixtures with native Auth';
-    runPredecessorNative(db, auth, probe, fixtures, predecessorNative, gateway);
+    runPredecessorNative(db, auth, probe, fixtures, predecessorNative, gateway, mail);
     return;
   }
   if (applicationWriter) {
