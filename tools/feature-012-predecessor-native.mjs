@@ -29,6 +29,7 @@ const config = loadConfig({
 });
 const { app, repository } = await buildApp({ config });
 let checkpoint = 'database binding';
+let transport;
 try {
   const actorBindings = await repository.withRawTransaction(async (tx) => {
     const [row] = await tx`SELECT session_user AS login,current_user AS effective,
@@ -57,6 +58,7 @@ try {
     JSON.stringify({
       failure: {
         checkpoint,
+        ...(transport ? { transport } : {}),
         ...(typeof error.actual === 'number' ? { actual: error.actual } : {}),
         ...(typeof error.expected === 'number' ? { expected: error.expected } : {}),
         ...(apiCode ? { apiCode } : {}),
@@ -179,7 +181,9 @@ async function participantApi({ encounterId, consultantId, startedAt }) {
       (actor) => actor.personId === consultantId && actor.roleCode === 'consulting_clinician',
     );
   const before = await invoke('active participant read', consultant, read, 200);
-  assert.equal(project(before)?.endedAt, null);
+  const active = project(before);
+  assert.ok(active);
+  assert.equal(active.endedAt, undefined);
   const close = (version, time) => ({
     method: 'PATCH',
     payload: {
@@ -312,6 +316,20 @@ async function recoveryApi() {
   const blocked = await history(fixture.token);
   assert.equal(blocked.statusCode, 403);
   assert.equal(blocked.json().code, 'recovery-mfa-enrollment-required');
+  const userPath = async (path) => {
+    const result = await fetch(issuer + path, {
+      headers: { authorization: 'Bearer ' + fixture.token },
+      redirect: 'error',
+      signal: AbortSignal.timeout(10_000),
+    });
+    await result.body?.cancel();
+    return result.status;
+  };
+  transport = {
+    directNativeUser: await userPath('/user'),
+    configuredSdkUser: await userPath('/auth/v1/user'),
+    restrictedOrdinaryRead: blocked.statusCode,
+  };
   const submit = async (url, payload) => {
     checkpoint = url;
     const requestId = randomUUID();
