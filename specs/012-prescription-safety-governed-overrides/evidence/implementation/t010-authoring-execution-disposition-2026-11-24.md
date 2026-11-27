@@ -64,7 +64,11 @@ On release at the deadline the guard denied with SQLSTATE `42501` before the
 effect marker. A fresh request also denied. The independent clock observation
 confirmed NotAfter elapsed while the access deadline remained live. PostgreSQL
 comparison at one microsecond before, at and after the stored deadline gave
-`t|f|f`. Exact equality inside the helper remains unobserved.
+`t|f|f`. Exact equality inside the installed helper remains unexecuted.
+The helper samples `pg_catalog.clock_timestamp()` internally after the
+session lock. The caller cannot supply that sample or read it back. The
+observed lock-wait crossing and controlled SQL comparison do not establish
+equality at that internal sample.
 
 The private raw receipt is
 `LOCALAPPDATA/SHIFAA-Recovery/2026-11-26-t010-installed-session-deadline-ddfa02ae/native-deadline.json`
