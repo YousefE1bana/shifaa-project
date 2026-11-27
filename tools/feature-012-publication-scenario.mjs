@@ -203,7 +203,7 @@ export function publicationScenario({ invoke, offline, read, report }) {
     committed,
     'Valid ancestor cannot become current again',
   );
-  report.offline.push(offline('revoke-designation', { designation }));
+  report.offline.push(offline('advance-designation', { designation }));
   const finalPredecessor = effects(initial.releaseId);
   assert.deepEqual(finalPredecessor, { ...committed, eligible: false });
   assert.deepEqual(current(), []);
@@ -212,6 +212,6 @@ export function publicationScenario({ invoke, offline, read, report }) {
     'distinct authenticated publisher committed the initial release and replayed its single receipt',
     'draft successor leaves the initial release current; publishing selects the successor',
     'loss of the successor’s exact admission removes current eligibility without falling back to an otherwise eligible ancestor',
-    'revoked exact reviewer designation invalidates historical approval without rewriting receipts or signatures',
+    'advancing the exact reviewer designation invalidates its older approval without rewriting receipts or signatures',
   ];
 }

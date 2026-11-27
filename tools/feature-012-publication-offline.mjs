@@ -24,7 +24,7 @@ const pool = postgres({
 const actorPersonId = 'f0110000-0000-4000-8000-000000000008';
 const now = () => new Date().toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
 const profile = operation === 'admit' ? 'admissibility' : 'designation';
-assert.ok(['admit', 'revoke-admission', 'revoke-designation'].includes(operation));
+assert.ok(['admit', 'revoke-admission', 'advance-designation'].includes(operation));
 const session = {
   pool,
   actorPersonId,
@@ -101,7 +101,7 @@ try {
   } else {
     const current = input.designation;
     const info = { mode: 'isolated-synthetic', sourceIdentity: current.sourceIdentity, now };
-    const designationBasis = { ...current, status: 'revoked', version: current.version + 1 };
+    const designationBasis = { ...current, version: current.version + 1 };
     await provisionGovernance(
       info,
       neutralSource(info.sourceIdentity),
