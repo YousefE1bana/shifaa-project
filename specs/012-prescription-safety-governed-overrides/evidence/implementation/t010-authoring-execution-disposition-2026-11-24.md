@@ -167,6 +167,23 @@ containers and four volumes matched. The private receipt is
 This is installed guard evidence. The hosted adapter and specialist review
 remain open.
 
+### NAC-1 exact installed NotAfter equality
+
+At installed candidate `74dd511612d90d1d6c12c4c842ec0698888eace4`,
+`supabase/migrations/20261112001201_f012_native_guard.sql` defines the
+guard. It locks the user and session rows before assigning
+`pg_catalog.clock_timestamp()` to a private PL/pgSQL variable. It compares the
+locked session's `not_after` to that sample and returns a generic denial when
+the deadline is at or before it. The session lock prevents another transaction
+from changing the deadline between those operations.
+
+The admitted harness exposes statement and lock outcomes. It has no input or
+output for the private sample and cannot synchronize a deadline with it.
+Deterministic proof needs an independently approved internal observation method
+that preserves the installed helper and its behavior. The executed elapsed
+deadline and expiry-during-wait cases retain their individual verdicts. Exact
+installed equality is unexecuted and remains open for specialist review.
+
 ## Remaining retry assertions
 
 The following assertions are ready for the owning coordinator and native
