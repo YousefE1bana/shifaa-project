@@ -308,6 +308,7 @@ services:
       KONG_PROXY_LISTEN: '0.0.0.0:8000',
       KONG_ADMIN_LISTEN: 'off',
       KONG_STATUS_LISTEN: 'off',
+      KONG_NGINX_WORKER_PROCESSES: '1',
       KONG_PLUGINS: 'request-transformer,cors',
       KONG_DNS_ORDER: 'LAST,A,CNAME',
     },
@@ -3124,14 +3125,13 @@ function stageLinkedCoreApi(resource, entries) {
   return sha256;
 }
 
-function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
-  if (gateway) {
-    const keyPath = '/.well-known/jwks.json';
-    const readiness = JSON.parse(
-      exec(probe, [
-        'node',
-        '-e',
-        `(async () => {
+function readyRecoveryGateway(gateway, probe) {
+  const keyPath = '/.well-known/jwks.json';
+  const readiness = JSON.parse(
+    exec(probe, [
+      'node',
+      '-e',
+      `(async () => {
           const check = async (endpoint) => {
             let status = null;
             try {
@@ -3157,21 +3157,23 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
           }
           console.log(JSON.stringify({ direct, routed }));
         })();`,
-        'http://auth:9999' + keyPath,
-        recoveryGateway + '/auth/v1' + keyPath,
-      ]),
-    );
-    const state = checkContainer(gateway).State;
-    receipt.recoveryGateway = { running: state.Running, exit: state.ExitCode, jwks: readiness };
-    assert.equal(state.Running, true, 'The disposable Auth gateway stopped before Core API startup');
-    assert.equal(readiness.direct.es256, true, 'GoTrue did not serve its configured signing key');
-    assert.equal(readiness.routed.status, 200, 'The gateway JWKS endpoint is unavailable');
-    assert.equal(
-      readiness.routed.es256,
-      true,
-      'The gateway did not serve the configured Auth signing key',
-    );
-  }
+      'http://auth:9999' + keyPath,
+      recoveryGateway + '/auth/v1' + keyPath,
+    ]),
+  );
+  const state = checkContainer(gateway).State;
+  receipt.recoveryGateway = { running: state.Running, exit: state.ExitCode, jwks: readiness };
+  assert.equal(state.Running, true, 'The disposable Auth gateway stopped before Core API startup');
+  assert.equal(readiness.direct.es256, true, 'GoTrue did not serve its configured signing key');
+  assert.equal(readiness.routed.status, 200, 'The gateway JWKS endpoint is unavailable');
+  assert.equal(
+    readiness.routed.es256,
+    true,
+    'The gateway did not serve the configured Auth signing key',
+  );
+}
+
+function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   applyWriterBaseline(db, [auth, probe, gateway]);
   const report = (receipt.predecessorNative = { inputs: [] });
   preparePredecessorActors(db, report, fixtures, [2, 1, 8, 4]);
@@ -4034,6 +4036,10 @@ async function runNativeAdmission({
     command: ['-e', 'setTimeout(() => {}, 180000)'],
   });
   const source = readFileSync(safeSource(root, 'tools/feature-012-harness-probe.cjs'));
+  if (gateway) {
+    stage = 'disposable Auth gateway readiness';
+    readyRecoveryGateway(gateway, probe);
+  }
   receipt.probeSha256 = createHash('sha256').update(source).digest('hex');
   const nativeClinicalFixture = publication || predecessorNative;
   const phase = nativeClinicalFixture ? 'clinical-fixtures' : 'fixtures';

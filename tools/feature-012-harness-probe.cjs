@@ -7,7 +7,9 @@ const appRequire = createRequire('/opt/deps/services/api/package.json');
 const postgres = appRequire('postgres');
 const Fastify = appRequire('fastify');
 const fixturePath = '/tmp/f012-admission-fixtures.json';
-const authURL = 'http://auth:9999';
+const authURL = process.env.F012_RECOVERY_ANON_KEY
+  ? 'http://kong:8000/auth/v1'
+  : 'http://auth:9999';
 const role = 'f012_probe';
 const bind = (tx, subject) =>
   tx.unsafe("select set_config('f012_probe.subject', $1, true)", [subject]);
@@ -15,6 +17,10 @@ const bind = (tx, subject) =>
 async function auth(path, options, timeoutMs = 2500) {
   return fetch(authURL + path, {
     ...options,
+    headers: {
+      ...options?.headers,
+      ...(process.env.F012_RECOVERY_ANON_KEY ? { apikey: process.env.F012_RECOVERY_ANON_KEY } : {}),
+    },
     redirect: 'error',
     signal: AbortSignal.timeout(timeoutMs),
   });
@@ -40,6 +46,12 @@ async function fixtures(clinical = false) {
     const { access_token: token, refresh_token: refreshToken, user } = await response.json();
     const claims = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
     assert.equal(claims.sub, user.id);
+    if (process.env.F012_RECOVERY_ANON_KEY) {
+      assert.ok(
+        claims.iss === authURL,
+        'Native signup issuer did not match the configured gateway',
+      );
+    }
     persons.push({
       subject: user.id,
       session: claims.session_id,
@@ -119,6 +131,9 @@ async function enrollTotp(person) {
   const claims = nativeClaims(verified.access_token);
   assert.equal(claims.sub, person.subject);
   assert.equal(claims.session_id, person.session);
+  if (process.env.F012_RECOVERY_ANON_KEY) {
+    assert.ok(claims.iss === authURL, 'Native MFA issuer did not match the configured gateway');
+  }
   assert.equal(claims.aal, 'aal2');
   assert.ok(
     claims.amr.some(({ method, timestamp }) => method === 'totp' && Number.isInteger(timestamp)),
