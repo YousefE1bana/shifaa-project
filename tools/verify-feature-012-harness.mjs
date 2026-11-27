@@ -299,7 +299,7 @@ services:
               - "Authorization: Bearer ${anonToken}"
 `;
   const gateway = create('kong', receipt.images.kong, {
-    tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m,uid=100,gid=101' },
+    tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m,mode=1777' },
     env: {
       F012_KONG_ROUTE: route,
       KONG_DATABASE: 'off',
@@ -3125,6 +3125,34 @@ function stageLinkedCoreApi(resource, entries) {
 }
 
 function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
+  if (gateway) {
+    const state = checkContainer(gateway).State;
+    receipt.recoveryGateway = { running: state.Running, exit: state.ExitCode };
+    assert.equal(state.Running, true, 'The disposable Auth gateway stopped before Core API startup');
+    const endpoint = recoveryGateway + '/auth/v1/.well-known/jwks.json';
+    const readiness = JSON.parse(
+      exec(probe, [
+        'node',
+        '-e',
+        `(async () => {
+          try {
+            const reply = await fetch(process.argv[1], { signal: AbortSignal.timeout(5000) });
+            const keys = reply.ok ? (await reply.json()).keys : null;
+            console.log(JSON.stringify({ status: reply.status, es256: !!keys?.some((key) =>
+              key.kty === 'EC' && key.crv === 'P-256' && key.alg === 'ES256') }));
+          } catch (error) {
+            const code = error.cause?.code;
+            console.log(JSON.stringify({ status: null, es256: false,
+              code: typeof code === 'string' && /^[A-Z0-9_]{1,35}$/.test(code) ? code : null }));
+          }
+        })();`,
+        endpoint,
+      ]),
+    );
+    receipt.recoveryGateway.jwks = readiness;
+    assert.equal(readiness.status, 200, 'The gateway JWKS endpoint is unavailable');
+    assert.equal(readiness.es256, true, 'The gateway did not serve the configured Auth signing key');
+  }
   applyWriterBaseline(db, [auth, probe, gateway]);
   const report = (receipt.predecessorNative = { inputs: [] });
   preparePredecessorActors(db, report, fixtures, [2, 1, 8, 4]);
