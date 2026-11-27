@@ -45,6 +45,7 @@ try {
     'recovery-api': recoveryApi,
     'participant-api': () => participantApi(JSON.parse(fixtureInput)),
     'booking-api': () => bookingApi(JSON.parse(fixtureInput)),
+    'absence-api': () => absenceApi(JSON.parse(fixtureInput)),
     scheduling: () => scheduling(JSON.parse(fixtureInput)),
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
@@ -240,6 +241,47 @@ async function bookingApi({ booking, nextSlot, secondId }) {
     [secondEntryId, firstId],
   );
   return { calls, appointmentId: created.id, firstId, secondEntryId };
+}
+
+async function absenceApi({ facilityId, doctorId, appointmentId, ...interval }) {
+  const [clinician, patient] = fixtures;
+  const calls = [];
+  const invoke = async (name, actor, url, payload, expected, headers = {}) => {
+    checkpoint = name;
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method: 'POST',
+      url,
+      ...(payload ? { payload } : {}),
+      headers: {
+        authorization: 'Bearer ' + actor.token,
+        'x-request-id': requestId,
+        'idempotency-key': randomUUID(),
+        ...headers,
+      },
+    });
+    const body = response.json();
+    calls.push({ name, status: response.statusCode, requestId });
+    assert.equal(response.statusCode, expected, name + ' (' + body.code + ')');
+    return body;
+  };
+  const checked = await invoke(
+    'subject checks in appointment for absence fixture',
+    patient,
+    '/v1/appointments/' + appointmentId + '/check-in',
+    null,
+    200,
+    { 'if-match': '"1"' },
+  );
+  assert.equal(checked.queueEntry.state, 'waiting');
+  const queueEntryId = checked.queueEntry.id;
+  const url = '/v1/clinics/' + facilityId + '/doctors/' + doctorId + '/absence';
+  const payload = { ...interval, reason: 'Synthetic clinician absence' };
+  await invoke('patient cannot declare clinician absence', patient, url, payload, 403);
+  const result = await invoke('clinician declares absence', clinician, url, payload, 200);
+  assert.deepEqual(result.affectedAppointmentIds, [appointmentId]);
+  assert.deepEqual(result.removedQueueEntryIds, [queueEntryId]);
+  return { calls, queueEntryId, absenceId: result.absenceId };
 }
 
 async function participantApi({ encounterId, consultantId, startedAt }) {
