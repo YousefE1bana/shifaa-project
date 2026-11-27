@@ -3422,7 +3422,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
   });
 }
 
-function publicationWriter(db, auth, probe, fixtures, signingKeyId) {
+function publicationWriter(db, auth, probe, fixtures, signingKeyId, mode) {
   applyWriterBaseline(db, [auth, probe]);
   const report = (receipt.publication = { inputs: [], requests: [], offline: [], readback: [] });
   const sealed = receipt.predecessor.commit;
@@ -3484,6 +3484,7 @@ function publicationWriter(db, auth, probe, fixtures, signingKeyId) {
     return JSON.parse(outcome);
   };
   publicationScenario({
+    clockOnly: mode === 'clock',
     invoke(action, input) {
       const observed = runStep(
         action + ':' + input.actor,
@@ -3577,7 +3578,10 @@ async function admit() {
   ]).get(onlyArgument);
   const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
-  const publication = onlyArgument === '--predecessor-publication-api';
+  const publication = new Map([
+    ['--predecessor-publication-api', 'lifecycle'],
+    ['--predecessor-publication-clock', 'clock'],
+  ]).get(onlyArgument);
   const predecessorNative = new Map([
     ['--predecessor-native-repositories', 'repositories'],
     ['--predecessor-native-scheduling', 'scheduling'],
@@ -3768,7 +3772,12 @@ async function admit() {
   if (nativeMutation) receipt.status = 'PASS_NATIVE_MUTATION_ORDERING';
   if (applicationWriter) receipt.status = 'PASS_T012_CORE_API_WRITER';
   if (authenticatedWriter) receipt.status = 'PASS_T012_AUTHENTICATED_CORE_API_WRITER';
-  if (publication) receipt.status = 'PASS_T012_PREDECESSOR_PUBLICATION_API';
+  if (publication) {
+    receipt.status =
+      publication === 'clock'
+        ? 'PASS_T012_PREDECESSOR_PUBLICATION_CLOCK'
+        : 'PASS_T012_PREDECESSOR_PUBLICATION_API';
+  }
   if (predecessorNative)
     receipt.status =
       'PASS_T012_PREDECESSOR_NATIVE_' + predecessorNative.replace('-', '_').toUpperCase();
@@ -3851,7 +3860,7 @@ async function runNativeAdmission({
   receipt.syntheticSessions = fixtures;
   if (publication) {
     stage = 'F011 publication in the disposable Core API and Auth topology';
-    publicationWriter(db, auth, probe, fixtures, signingKey.kid);
+    publicationWriter(db, auth, probe, fixtures, signingKey.kid, publication);
     return;
   }
   if (predecessorNative) {

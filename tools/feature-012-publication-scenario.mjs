@@ -58,7 +58,7 @@ function signingSelection(read, draft, actor, capacity) {
   return { ...release, basis: { credentialBasis, designationBasis, authorityBasis } };
 }
 
-export function publicationScenario({ invoke, offline, read, report }) {
+export function publicationScenario({ invoke, offline, read, report, clockOnly = false }) {
   const request = (action, actor, payload, status) => {
     const outcome = invoke(action, { actor, requestId: randomUUID(), ...payload });
     report.requests.push({ action, actor: person(actor), ...outcome });
@@ -172,6 +172,42 @@ export function publicationScenario({ invoke, offline, read, report }) {
   };
   const { draft: initial } = prepare();
   const firstInput = publicationInput(initial);
+  if (clockOnly) {
+    const admission = offline('admit', { releaseId: initial.releaseId, clockOnly });
+    report.offline.push(admission);
+    publish(initial, firstInput, null);
+    const committed = effects(initial.releaseId);
+    assert.deepEqual(current(), [initial.releaseId]);
+    const approvalId = literalId(admission.approvalId);
+    const clockState = () =>
+      read(`WITH sample AS MATERIALIZED (SELECT clock_timestamp() AS instant)
+      SELECT json_build_object('deadline',a.valid_until,'sample',sample.instant,
+        'elapsed',sample.instant >= a.valid_until,'version',a.version,'status',a.status,
+        'boundDeadline',b.approval_valid_until)
+      FROM clinical.content_admissibility_evidence a
+      JOIN clinical.content_artifact_admissibility_bindings b ON b.approval_id=a.id
+      CROSS JOIN sample WHERE a.id=${approvalId};`);
+    const before = clockState();
+    report.clock = { before };
+    assert.equal(before.elapsed, false);
+    assert.equal(before.deadline, before.boundDeadline);
+    const wait = read(`WITH wait AS MATERIALIZED (
+      SELECT pg_sleep_until(valid_until + interval '1 millisecond')
+      FROM clinical.content_admissibility_evidence WHERE id=${approvalId})
+      SELECT json_build_object('waited',count(*)=1) FROM wait;`);
+    assert.equal(wait.waited, true);
+    const after = clockState();
+    report.clock.after = after;
+    assert.deepEqual(after, { ...before, sample: after.sample, elapsed: true });
+    assert.deepEqual(current(), []);
+    const expired = effects(initial.releaseId);
+    assert.deepEqual(expired, { ...committed, eligible: false });
+    report.readback.push(expired);
+    report.assertions = [
+      'elapsed bound admissibility removes current eligibility while preserving the publication and durable effects',
+    ];
+    return;
+  }
   const beforeAdmission = effects(initial.releaseId);
   request('publish', 6, firstInput, 403);
   assert.deepEqual(effects(initial.releaseId), beforeAdmission);
