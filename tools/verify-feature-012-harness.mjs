@@ -3307,6 +3307,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     verifyPredecessorFacilityScope(report, invoke, read);
     return;
   }
+  if (mode === 'professional-review-api') {
+    verifyPredecessorProfessionalReview(report, invoke, read);
+    return;
+  }
   if (mode === 'facility-evidence-loss') {
     verifyPredecessorFacility(report, invoke, read, true);
     return;
@@ -3612,6 +3616,39 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   report.consent = invoke('consent');
 
   verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorProfessionalReview(report, invoke, read) {
+  const cases = invoke('professional-review-api').cases;
+  report.professionalReview = cases;
+  for (const fixture of cases) {
+    const { licenceId, objectId, decision } = fixture;
+    for (const id of [licenceId, objectId]) assert.match(id, /^[a-f0-9-]{36}$/);
+    fixture.fixtureRelease = read(`WITH released AS (
+      UPDATE identity.private_evidence_objects SET scan_status='released',released_at=now()
+      WHERE id='${objectId}' AND scan_status='quarantined' RETURNING id
+      ) SELECT json_build_object('role',session_user,'rows',count(*)) FROM released;`);
+    assert.deepEqual(fixture.fixtureRelease, { role: 'supabase_admin', rows: 1 });
+    const reviewed = (fixture.reviewed = invoke('professional-review-api', fixture));
+    assert.match(reviewed.requestId, /^[a-f0-9-]{36}$/);
+    const state = decision === 'verify' ? 'verified' : 'rejected';
+    fixture.effects = read(`SELECT json_build_object(
+      'status',l.status,'version',l.version,'evidence',e.scan_status,
+      'decisionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=l.id
+        AND request_id='${reviewed.requestId}' AND action_code='professional_license.${state}'
+        AND actor_person_id='f0110000-0000-4000-8000-000000000008'),
+      'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=l.id
+        AND event_type='professional_license.changed'))
+      FROM identity.professional_licenses l JOIN identity.private_evidence_objects e ON e.id=l.evidence_object_id
+      WHERE l.id='${licenceId}' AND e.id='${objectId}';`);
+    assert.deepEqual(fixture.effects, {
+      status: state,
+      version: 3,
+      evidence: 'released',
+      decisionAudit: 1,
+      outbox: 3,
+    });
+  }
 }
 
 function verifyPredecessorFacilityScope(report, invoke, read) {
@@ -4095,6 +4132,7 @@ async function admit() {
     ['--predecessor-licence-scope-api', 'licence-scope-api'],
     ['--predecessor-membership-scope-api', 'membership-scope-api'],
     ['--predecessor-facility-scope-api', 'facility-scope-api'],
+    ['--predecessor-professional-review-api', 'professional-review-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
