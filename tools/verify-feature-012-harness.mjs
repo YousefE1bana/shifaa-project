@@ -3066,6 +3066,13 @@ async function admit() {
         paths: ['infra/db/tests/feature-012-predecessor-scheduling.sql'],
       },
     ],
+    [
+      '--predecessor-family-continuity',
+      {
+        status: 'PASS_T012_PREDECESSOR_FAMILY_CONTINUITY',
+        paths: ['infra/db/tests/family-care-rls.sql', 'infra/db/tests/identity-continuity-rls.sql'],
+      },
+    ],
   ]).get(onlyArgument);
   const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
