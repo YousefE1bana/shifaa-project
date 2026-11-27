@@ -106,8 +106,10 @@ added by this reconciliation.
 
 ## Outstanding test assertions and owners
 
-The retained receipt is the runtime result. The following assertions are
-authored as an execution matrix. They have no new runtime result.
+The retained receipt is the original runtime result. The subsequent
+[authenticated Core API consent receipt](t012-deployment-attribution-disposition.md#2026-11-27-authenticated-core-api-consent)
+verifies the installed consent writer and withdrawal through their existing
+routes. The assertions below track the remaining predicate and writer cases.
 Use the [effective writer manifest](t012-effective-writer-manifest.md) for
 source and installed-role attribution and the
 [deployment-owner worksheet](t012-deployment-decision-worksheet.md) to bind

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
-import { createHash, createHmac, randomBytes, randomUUID } from 'node:crypto';
+import { createHash, createHmac, generateKeyPairSync, randomBytes, randomUUID } from 'node:crypto';
 import { once } from 'node:events';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -247,7 +247,7 @@ const nativeSessionPolicy = {
   GOTRUE_HOOK_AFTER_USER_CREATED_ENABLED: 'false',
 };
 
-function startAuth(readSessionPolicy) {
+function startAuth(readSessionPolicy, signingKey) {
   return create('auth', receipt.images.auth, {
     env: {
       API_EXTERNAL_URL: 'http://auth:9999',
@@ -259,6 +259,7 @@ function startAuth(readSessionPolicy) {
         'postgres://supabase_auth_admin:' + authPassword + '@db:5432/postgres?sslmode=disable',
       GOTRUE_DB_MIGRATIONS_PATH: '/usr/local/etc/auth/migrations',
       GOTRUE_JWT_SECRET: jwtSecret,
+      ...(signingKey ? { GOTRUE_JWT_KEYS: JSON.stringify([signingKey]) } : {}),
       GOTRUE_JWT_ISSUER: 'http://auth:9999',
       GOTRUE_JWT_EXP: '900',
       GOTRUE_JWT_AUD: 'authenticated',
@@ -2765,7 +2766,7 @@ function sourceFence(db, red, upgrade) {
   }
 }
 
-function coreApiWriter(db, probe, fixture) {
+function coreApiWriter(db, probe, fixture, signingKeyId) {
   const api = 'services/api';
   const workspaces = [
     api,
@@ -2802,6 +2803,7 @@ function coreApiWriter(db, probe, fixture) {
       '/opt/deps/services/api/node_modules/tsx/dist/loader.mjs',
       `${target}/${entry}`,
       fixture.subject,
+      signingKeyId ?? 'local-fixture',
       ...workspaces,
     ]),
   );
@@ -2832,6 +2834,44 @@ function coreApiWriter(db, probe, fixture) {
   };
   assert.equal(effect.exit, 0, effect.stderr);
   assert.equal(effect.stdout, '1|1|1|1\n');
+  if (signingKeyId) {
+    assert.equal(outcome.authenticated?.session, fixture.session);
+    assert.equal(outcome.authenticated.keyId, signingKeyId);
+    const { consent, requestId, withdrawal, withdrawalRequestId } = outcome.authenticated;
+    for (const id of [consent, requestId, withdrawal, withdrawalRequestId]) {
+      assert.match(id, /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/);
+    }
+    const consentEffect = observedSql(
+      db,
+      `SELECT count(DISTINCT c.id), count(DISTINCT a.id), count(DISTINCT o.id)
+      FROM consent.records c
+      JOIN identity.people p ON p.id = c.person_id
+      JOIN audit.events a ON a.resource_id = c.id AND a.actor_person_id = p.id
+        AND a.action_code = 'consent.decision.recorded' AND a.request_id = '${requestId}'
+      JOIN platform.outbox_events o ON o.aggregate_id = c.id AND o.event_type = 'consent.changed'
+      WHERE c.id = '${consent}' AND p.user_id = '${fixture.subject}'
+        AND c.purpose_code = 'care_updates' AND c.decision = 'granted'
+        AND c.version = 1 AND c.supersedes_id IS NULL;`,
+    );
+    receipt.coreApiWriter.consentEffect = consentEffect;
+    assert.equal(consentEffect.exit, 0, consentEffect.stderr);
+    assert.equal(consentEffect.stdout, '1|1|1\n');
+    const withdrawalEffect = observedSql(
+      db,
+      `SELECT count(DISTINCT c.id), count(DISTINCT a.id), count(DISTINCT o.id)
+      FROM consent.records c
+      JOIN identity.people p ON p.id = c.person_id
+      JOIN audit.events a ON a.resource_id = c.id AND a.actor_person_id = p.id
+        AND a.action_code = 'consent.withdrawn' AND a.request_id = '${withdrawalRequestId}'
+      JOIN platform.outbox_events o ON o.aggregate_id = c.id AND o.event_type = 'consent.changed'
+      WHERE c.id = '${withdrawal}' AND p.user_id = '${fixture.subject}'
+        AND c.purpose_code = 'care_updates' AND c.decision = 'withdrawn'
+        AND c.version = 2 AND c.supersedes_id = '${consent}';`,
+    );
+    receipt.coreApiWriter.withdrawalEffect = withdrawalEffect;
+    assert.equal(withdrawalEffect.exit, 0, withdrawalEffect.stderr);
+    assert.equal(withdrawalEffect.stdout, '1|1|1\n');
+  }
 }
 
 async function admit() {
@@ -2852,7 +2892,9 @@ async function admit() {
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
   const writerCatalog = onlyArgument === '--participating-writer-catalog';
-  const applicationWriter = onlyArgument === '--participating-core-api-writer';
+  const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
+  const applicationWriter =
+    authenticatedWriter || onlyArgument === '--participating-core-api-writer';
   const focusedWriters = new Map([
     ['--participating-family-writers', 'familyAndConsent'],
     ['--participating-family-grant', 'familyGrant'],
@@ -2984,6 +3026,7 @@ async function admit() {
       nativeLogoutFirst,
       nativeMutation,
       applicationWriter,
+      authenticatedWriter,
     });
   } finally {
     teardown();
@@ -3000,6 +3043,7 @@ async function admit() {
   if (nativeLogoutFirst) receipt.status = 'PASS_NATIVE_LOGOUT_FIRST';
   if (nativeMutation) receipt.status = 'PASS_NATIVE_MUTATION_ORDERING';
   if (applicationWriter) receipt.status = 'PASS_T012_CORE_API_WRITER';
+  if (authenticatedWriter) receipt.status = 'PASS_T012_AUTHENTICATED_CORE_API_WRITER';
 }
 
 async function runNativeAdmission({
@@ -3009,6 +3053,7 @@ async function runNativeAdmission({
   nativeLogoutFirst,
   nativeMutation,
   applicationWriter,
+  authenticatedWriter,
 }) {
   const db = startDatabase('db', networkId);
   receipt.databaseSystems = { source: db.system };
@@ -3041,7 +3086,16 @@ async function runNativeAdmission({
   sql(db, "alter role supabase_auth_admin password '" + authPassword + "';\n" + probeSchema());
   const readSessionPolicy =
     nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation || applicationWriter;
-  const auth = startAuth(readSessionPolicy);
+  const signingKey = authenticatedWriter
+    ? {
+        ...generateKeyPairSync('ec', { namedCurve: 'P-256' }).privateKey.export({ format: 'jwk' }),
+        alg: 'ES256',
+        kid: randomUUID(),
+        use: 'sig',
+        key_ops: ['sign', 'verify'],
+      }
+    : undefined;
+  const auth = startAuth(readSessionPolicy, signingKey);
   if (readSessionPolicy) observeNativePolicy(auth);
   const probe = create('probe', receipt.images.probe, {
     env: {
@@ -3064,7 +3118,7 @@ async function runNativeAdmission({
     stage = 'T012 combined Core API and native Auth writer attribution';
     runWriterCatalog(db, [auth, probe]);
     sql(db, `ALTER ROLE shifaa_api PASSWORD '${coreApiPassword}';`);
-    coreApiWriter(db, probe, fixtures[0]);
+    coreApiWriter(db, probe, fixtures[0], signingKey?.kid);
     return;
   }
   if (nativeMutation) {
