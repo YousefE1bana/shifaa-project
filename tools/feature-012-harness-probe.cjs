@@ -20,7 +20,7 @@ async function auth(path, options, timeoutMs = 2500) {
   });
 }
 
-async function fixtures(publication = false) {
+async function fixtures(clinical = false) {
   const deadline = Date.now() + 45_000;
   while (Date.now() < deadline) {
     const response = await auth('/health').catch(() => null);
@@ -28,7 +28,7 @@ async function fixtures(publication = false) {
     await new Promise((resume) => setTimeout(resume, 750));
   }
   const persons = [];
-  for (let index = 0; index < (publication ? 4 : 2); index += 1) {
+  for (let index = 0; index < (clinical ? 4 : 2); index += 1) {
     const email = randomUUID() + '@example.invalid';
     const password = 'Aa9!' + randomBytes(32).toString('hex');
     const response = await auth('/signup', {
@@ -50,7 +50,7 @@ async function fixtures(publication = false) {
       password,
     });
   }
-  if (publication) for (const person of persons) await enrollTotp(person);
+  if (clinical) for (const person of persons) await enrollTotp(person);
   writeFileSync(fixturePath, JSON.stringify(persons), { flag: 'wx', mode: 0o600 });
   console.log(
     JSON.stringify(persons.map(({ subject, session, person }) => ({ subject, session, person }))),
@@ -340,8 +340,8 @@ async function main() {
     } else {
       await mutateNative(operation, persons[Number(fixtureIndex)]);
     }
-  } else if (phase === 'fixtures' || phase === 'publication-fixtures') {
-    await fixtures(phase === 'publication-fixtures');
+  } else if (phase === 'fixtures' || phase === 'clinical-fixtures') {
+    await fixtures(phase === 'clinical-fixtures');
   } else if (process.argv[2] === 'probe') {
     await exercise(JSON.parse(readFileSync(fixturePath, 'utf8')));
   } else if (['local-logout', 'local-logout-held'].includes(process.argv[2])) {
