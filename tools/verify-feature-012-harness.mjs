@@ -1342,7 +1342,7 @@ function runPredecessorSqlFixtures(db, paths) {
   assert.equal(failed.length, 0, failed.map(({ path }) => path).join(', '));
 }
 
-function runPredecessorAllergyWriters(db) {
+function runPredecessorAllergyWriters(db, refutationOnly) {
   applyWriterBaseline(db);
   const results = (receipt.predecessorAllergy = {});
   const patientPerson = randomUUID();
@@ -1384,9 +1384,43 @@ function runPredecessorAllergyWriters(db) {
   );
   assert.equal(results.licence.exit, 0, results.licence.stderr);
   const first = allergyInsertWriter(patient);
-  const correction = allergyInsertWriter(patient, first.allergy);
   results.create = observeWriter(first);
   assert.equal(results.create.exit, 0, results.create.stderr);
+  if (refutationOnly) {
+    const verification = allergyVerificationWriter(db, {
+      ...fixture,
+      patient,
+      first,
+      results,
+      targetStatus: 'refuted',
+      facilityEvidence,
+    });
+    results.refutation = observeWriter(verification);
+    assert.equal(results.refutation.exit, 0, results.refutation.stderr);
+    results.head = observedSql(db, verification.state);
+    assert.equal(results.head.exit, 0, results.head.stderr);
+    assert.equal(results.head.stdout, verification.after);
+    results.refutationEffects = observedSql(
+      db,
+      `SELECT previous.verification_status,
+        current_revision.action_actor_person_id='${clinician}',
+        s.previous_revision_id=previous.id, s.target_status=current_revision.verification_status,
+        (SELECT count(*) FROM audit.events WHERE resource_id=h.id),
+        (SELECT count(*) FROM clinical.mutation_receipts mr
+         JOIN platform.idempotency_records ir ON ir.id=mr.idempotency_record_id AND ir.state='completed'
+         WHERE mr.resource_id=h.id AND mr.resource_version=2 AND mr.operation_id='verifyAllergy')
+      FROM clinical.allergy_heads h
+      JOIN clinical.allergies current_revision ON current_revision.id=h.current_revision_id
+      JOIN clinical.allergies previous ON previous.id='${first.revision}'
+      JOIN clinical.allergy_verification_bindings b ON b.revision_id=current_revision.id
+      JOIN clinical.allergy_verification_support s ON s.id=b.evidence_ref
+      WHERE h.id='${first.allergy}' AND current_revision.verification_status='refuted';`,
+    );
+    assert.equal(results.refutationEffects.exit, 0, results.refutationEffects.stderr);
+    assert.equal(results.refutationEffects.stdout.trim(), 'self_reported|t|t|t|2|1');
+    return;
+  }
+  const correction = allergyInsertWriter(patient, first.allergy);
   results.prematureCorrection = observeWriter(correction);
   assert.equal(results.prematureCorrection.exit, 3);
   assert.match(
@@ -3190,15 +3224,16 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   const recoveryActor = 'f0110000-0000-4000-8000-000000000004';
   const { subject, session } = fixtures[3];
   assert.match(session, /^[a-f0-9-]{36}$/);
-  sql(
-    db,
-    `INSERT INTO identity.continuity_cases(
+  if (mode !== 'recovery-intake')
+    sql(
+      db,
+      `INSERT INTO identity.continuity_cases(
     id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
     token_key_version,restriction_scope,bound_native_session_id,created_at,expires_at
   ) VALUES ('${recoveryCase}','account_recovery','${recoveryActor}','restricted_enrollment',
     decode(repeat('21',32),'hex'),decode(repeat('22',32),'hex'),1,'mfa_enrollment_only',
     '${session}',now(),now()+interval '15 minutes');`,
-  );
+    );
   const entry = 'tools/feature-012-predecessor-native.mjs';
   report.sourceArchiveSha256 = stageLinkedCoreApi(probe, [
     entry,
@@ -3232,12 +3267,44 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'recovery-intake') {
+    const intake = (report.recoveryIntake = invoke(mode));
+    assert.match(intake.caseId, /^[a-f0-9-]{36}$/);
+    assert.equal(intake.subject, subject);
+    assert.equal(intake.personId, recoveryActor);
+    intake.effects = read(`SELECT json_build_object(
+      'status',status,'version',version,'boundPerson',subject_person_id='${recoveryActor}',
+      'hasRestriction',restriction_scope IS NOT NULL,'hasNativeBinding',bound_native_session_id IS NOT NULL,
+      'completed',completed_at IS NOT NULL,
+      'audit',(SELECT count(*) FROM audit.events WHERE resource_id=cc.id),
+      'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=cc.id))
+      FROM identity.continuity_cases cc WHERE cc.id='${intake.caseId}' AND case_type='account_recovery';`);
+    assert.deepEqual(intake.effects, {
+      status: 'proof_required',
+      version: 2,
+      boundPerson: true,
+      hasRestriction: false,
+      hasNativeBinding: false,
+      completed: false,
+      audit: 0,
+      outbox: 0,
+    });
+    return;
+  }
   if (mode === 'guardianship-api') {
     verifyPredecessorGuardianship(report, db, invoke, read);
     return;
   }
   if (mode === 'licence-scope-api') {
     verifyPredecessorLicenceScope(report, db, invoke, read);
+    return;
+  }
+  if (mode === 'membership-scope-api') {
+    verifyPredecessorMembershipScope(report, db, invoke, read);
+    return;
+  }
+  if (mode === 'facility-scope-api') {
+    verifyPredecessorFacilityScope(report, invoke, read);
     return;
   }
   if (mode === 'facility-evidence-loss') {
@@ -3545,6 +3612,112 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   report.consent = invoke('consent');
 
   verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorFacilityScope(report, invoke, read) {
+  const facility = 'f0110000-0000-4000-8200-000000000001';
+  const evidence = 'f011c000-0000-4000-8000-000000000001';
+  const reviewer = 'f0110000-0000-4000-8000-000000000008';
+  const result = (report.facilityScope = invoke('facility-scope-api', { facility, evidence }));
+  for (const id of [result.id, result.suspend.requestId, result.complete.requestId]) {
+    assert.match(id, /^[a-f0-9-]{36}$/);
+  }
+  result.effects = read(`SELECT json_build_object(
+    'facility',f.facility_status,'facilityVersion',f.version,'evidence',ev.scan_status,
+    'membership',m.membership_status,'licence',l.status,'encounter',e.status,
+    'encounterVersion',e.version,'appointment',a.status,'queue',q.state,
+    'suspensionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=f.id
+      AND request_id='${result.suspend.requestId}' AND actor_person_id='${reviewer}'
+      AND action_code='facility.suspended'),
+    'suspensionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=f.id
+      AND event_type='facility.changed'),
+    'completionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=e.id
+      AND request_id='${result.complete.requestId}' AND action_code='encounter.completed'),
+    'completionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=e.id
+      AND event_type='clinical.encounter.completed.v1'),
+    'completionReceipt',(SELECT count(*) FROM platform.idempotency_records WHERE resource_id=e.id
+      AND route_template='/v1/encounters/{encounterId}/complete'))
+    FROM clinical.encounters e JOIN clinical.appointments a ON a.id=e.appointment_id
+    JOIN clinical.queue_entries q ON q.appointment_id=a.id
+    JOIN identity.facilities f ON f.id=e.facility_id
+    JOIN identity.private_evidence_objects ev ON ev.facility_id=f.id
+    JOIN identity.facility_memberships m ON m.facility_id=f.id AND m.person_id=e.responsible_clinician_id
+    JOIN identity.professional_licenses l ON l.id=m.employment_license_id
+    WHERE e.id='${result.id}' AND f.id='${facility}' AND ev.id='${evidence}';`);
+  assert.deepEqual(result.effects, {
+    facility: 'suspended',
+    facilityVersion: 2,
+    evidence: 'released',
+    membership: 'active',
+    licence: 'verified',
+    encounter: 'open',
+    encounterVersion: result.version,
+    appointment: 'in_consultation',
+    queue: 'in_service',
+    suspensionAudit: 1,
+    suspensionOutbox: 1,
+    completionAudit: 0,
+    completionOutbox: 0,
+    completionReceipt: 0,
+  });
+}
+
+function verifyPredecessorMembershipScope(report, db, invoke, read) {
+  const facility = 'f0110000-0000-4000-8200-000000000001';
+  const facilityOwner = 'f0110000-0000-4000-8000-000000000004';
+  const clinician = 'f0110000-0000-4000-8000-000000000002';
+  // Distinct run-local owner and treating clinician, using their existing F003 roles.
+  sql(
+    db,
+    `UPDATE identity.facilities SET created_by_person_id='${facilityOwner}'
+    WHERE id='${facility}' AND created_by_person_id='${clinician}';`,
+  );
+  const membership = read(`SELECT to_json(m.id) FROM identity.facility_memberships m
+    JOIN identity.facilities f ON f.id=m.facility_id
+    WHERE f.id='${facility}' AND f.created_by_person_id='${facilityOwner}'
+      AND m.person_id='${clinician}' AND m.role_code='doctor' AND m.membership_status='active';`);
+  assert.match(membership, /^[a-f0-9-]{36}$/);
+  const result = (report.membershipScope = invoke('membership-scope-api', {
+    membership,
+    facility,
+    facilityOwner,
+  }));
+  for (const id of [membership, result.id, result.end.requestId, result.complete.requestId]) {
+    assert.match(id, /^[a-f0-9-]{36}$/);
+  }
+  result.effects = read(`SELECT json_build_object(
+    'membership',m.membership_status,'membershipVersion',m.version,'licence',l.status,
+    'encounter',e.status,'encounterVersion',e.version,'appointment',a.status,'queue',q.state,
+    'endAudit',(SELECT count(*) FROM audit.events WHERE resource_id=m.id
+      AND request_id='${result.end.requestId}' AND actor_person_id='${facilityOwner}'
+      AND action_code='membership.ended'),
+    'endOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=m.id
+      AND event_type='membership.changed'),
+    'completionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=e.id
+      AND request_id='${result.complete.requestId}' AND action_code='encounter.completed'),
+    'completionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=e.id
+      AND event_type='clinical.encounter.completed.v1'),
+    'completionReceipt',(SELECT count(*) FROM platform.idempotency_records WHERE resource_id=e.id
+      AND route_template='/v1/encounters/{encounterId}/complete'))
+    FROM clinical.encounters e JOIN clinical.appointments a ON a.id=e.appointment_id
+    JOIN clinical.queue_entries q ON q.appointment_id=a.id
+    JOIN identity.facility_memberships m ON m.facility_id=e.facility_id AND m.person_id=e.responsible_clinician_id
+    JOIN identity.professional_licenses l ON l.id=m.employment_license_id
+    WHERE e.id='${result.id}' AND m.id='${membership}';`);
+  assert.deepEqual(result.effects, {
+    membership: 'ended',
+    membershipVersion: 2,
+    licence: 'verified',
+    encounter: 'open',
+    encounterVersion: result.version,
+    appointment: 'in_consultation',
+    queue: 'in_service',
+    endAudit: 1,
+    endOutbox: 1,
+    completionAudit: 0,
+    completionOutbox: 0,
+    completionReceipt: 0,
+  });
 }
 
 function verifyPredecessorLicenceScope(report, db, invoke, read) {
@@ -3901,7 +4074,9 @@ async function admit() {
       },
     ],
   ]).get(onlyArgument);
-  const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
+  const predecessorRefutation = onlyArgument === '--predecessor-allergy-refutation';
+  const predecessorAllergy =
+    predecessorRefutation || onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
   const publication = new Map([
     ['--predecessor-publication-api', 'lifecycle'],
@@ -3911,12 +4086,15 @@ async function admit() {
     ['--predecessor-native-repositories', 'repositories'],
     ['--predecessor-native-scheduling', 'scheduling'],
     ['--predecessor-native-recovery-api', 'recovery-api'],
+    ['--predecessor-native-recovery-intake', 'recovery-intake'],
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
     ['--predecessor-guardianship-api', 'guardianship-api'],
     ['--predecessor-licence-scope-api', 'licence-scope-api'],
+    ['--predecessor-membership-scope-api', 'membership-scope-api'],
+    ['--predecessor-facility-scope-api', 'facility-scope-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
@@ -4023,7 +4201,7 @@ async function admit() {
       if (atomicity) {
         runAtomicity(source);
       } else if (predecessorAllergy) {
-        runPredecessorAllergyWriters(source);
+        runPredecessorAllergyWriters(source, predecessorRefutation);
       } else if (predecessorSql) {
         runPredecessorSqlFixtures(source, predecessorSql.paths);
       } else if (writerCatalog) {
@@ -4058,7 +4236,9 @@ async function admit() {
       return;
     }
     if (predecessorAllergy) {
-      receipt.status = 'PASS_T012_PREDECESSOR_ALLERGY_WRITERS';
+      receipt.status = predecessorRefutation
+        ? 'PASS_T012_PREDECESSOR_ALLERGY_REFUTATION'
+        : 'PASS_T012_PREDECESSOR_ALLERGY_WRITERS';
       return;
     }
     receipt.status = atomicity

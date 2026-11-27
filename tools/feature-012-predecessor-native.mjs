@@ -1,6 +1,6 @@
 // Real native sessions, ordinary Core API routes, and the F007 local repository.
 import assert from 'node:assert/strict';
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { buildApp } from '../services/api/src/app.ts';
 import { loadConfig } from '../services/api/src/config.ts';
@@ -51,6 +51,7 @@ try {
   const checks = {
     encounter,
     recovery,
+    'recovery-intake': recoveryIntake,
     'recovery-api': recoveryApi,
     'participant-api': () => participantApi(JSON.parse(fixtureInput)),
     'booking-api': () => bookingApi(JSON.parse(fixtureInput)),
@@ -59,6 +60,8 @@ try {
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
     'guardianship-api': () => guardianshipReview(app, JSON.parse(fixtureInput)),
     'licence-scope-api': () => licenceScope(JSON.parse(fixtureInput)),
+    'membership-scope-api': () => membershipScope(JSON.parse(fixtureInput)),
+    'facility-scope-api': () => facilityScope(JSON.parse(fixtureInput)),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
@@ -166,7 +169,7 @@ async function encounter() {
   return { calls, ...identifiers };
 }
 
-async function licenceScope({ licence }) {
+async function encounterAuthorityLoss(changeAuthority) {
   const [clinician] = fixtures;
   const action = async (url, token, payload, expected, headers) => {
     checkpoint = url;
@@ -199,20 +202,11 @@ async function licenceScope({ licence }) {
   );
   const { id, version, status } = created.body.encounter;
   assert.equal(status, 'open');
-  const suspended = await action(
-    '/v1/admin/professional-licenses/' + licence + '/decision',
-    'synthetic-admin:facility_approver:f0110000-0000-4000-8000-000000000008',
-    { decision: 'suspend', reason: 'Synthetic professional review' },
-    200,
-    { 'x-purpose': 'professional_license_review', 'x-aal': '2', 'if-match': '"1"' },
-  );
-  assert.equal(suspended.body.id, licence);
-  assert.equal(suspended.body.status, 'suspended');
-  assert.equal(suspended.body.version, 2);
+  const change = await changeAuthority(action);
   const denied = await action(
     '/v1/encounters/' + id + '/complete',
     clinician.token,
-    { summary: 'Synthetic completion after licence suspension.', structuralConfirmation: true },
+    { summary: 'Synthetic completion after care scope loss.', structuralConfirmation: true },
     404,
     { 'x-purpose': 'appointment.scheduling', 'if-match': '"' + version + '"' },
   );
@@ -221,9 +215,64 @@ async function licenceScope({ licence }) {
     id,
     version,
     create: { requestId: created.requestId, status: created.status },
-    suspend: { requestId: suspended.requestId, status: suspended.status },
+    change: { requestId: change.requestId, status: change.status },
     complete: { requestId: denied.requestId, status: denied.status, code: denied.body.code },
   };
+}
+
+async function licenceScope({ licence }) {
+  const { change, ...result } = await encounterAuthorityLoss(async (action) => {
+    const suspended = await action(
+      '/v1/admin/professional-licenses/' + licence + '/decision',
+      'synthetic-admin:facility_approver:f0110000-0000-4000-8000-000000000008',
+      { decision: 'suspend', reason: 'Synthetic professional review' },
+      200,
+      { 'x-purpose': 'professional_license_review', 'x-aal': '2', 'if-match': '"1"' },
+    );
+    assert.equal(suspended.body.id, licence);
+    assert.equal(suspended.body.status, 'suspended');
+    assert.equal(suspended.body.version, 2);
+    return suspended;
+  });
+  return { ...result, suspend: change };
+}
+
+async function membershipScope({ membership, facility, facilityOwner }) {
+  const { change, ...result } = await encounterAuthorityLoss(async (action) => {
+    const ended = await action(
+      '/v1/facilities/' + facility + '/memberships/' + membership + '/end',
+      'synthetic-person:' + facilityOwner,
+      { reason: 'Synthetic end of current workforce membership' },
+      200,
+      { 'if-match': '"1"', 'x-aal': '2' },
+    );
+    assert.equal(ended.body.id, membership);
+    assert.equal(ended.body.status, 'ended');
+    assert.equal(ended.body.version, 2);
+    return ended;
+  });
+  return { ...result, end: change };
+}
+
+async function facilityScope({ facility, evidence }) {
+  const { change, ...result } = await encounterAuthorityLoss(async (action) => {
+    const suspended = await action(
+      '/v1/admin/facilities/' + facility + '/decision',
+      'synthetic-admin:facility_approver:f0110000-0000-4000-8000-000000000008',
+      {
+        decision: 'suspend',
+        reason: 'Synthetic facility review',
+        evidence_object_id: evidence,
+      },
+      200,
+      { 'x-purpose': 'facility_approval', 'x-aal': '2', 'if-match': '"1"' },
+    );
+    assert.equal(suspended.body.id, facility);
+    assert.equal(suspended.body.facility_status, 'suspended');
+    assert.equal(suspended.body.version, 2);
+    return suspended;
+  });
+  return { ...result, suspend: change };
 }
 
 async function bookingApi({ booking, nextSlot, secondId }) {
@@ -457,6 +506,52 @@ async function scheduling({ checkInId, cancelId }) {
   });
   assert.equal(cancelled.status, 'cancelled');
   return { calls, queueId: id };
+}
+
+async function recoveryIntake() {
+  const fixture = fixtures[3];
+  const native = new SupabaseAuthIssuer({
+    url: issuer,
+    anonKey: config.supabaseAnonKey,
+    jwksUrl: config.supabaseJwksUrl,
+    issuer,
+    audience: config.supabaseJwtAudience,
+  });
+  await native.ready();
+  const claims = await native.resolveSession(fixture.token);
+  assert.equal(claims?.subjectId, fixture.subject);
+  assert.equal(claims.sessionId, fixture.session);
+  const continuity = new PostgresIdentityContinuityService(
+    repository,
+    config.identityEncryptionKey,
+    'ci',
+  );
+  const intake = {
+    caseId: randomUUID(),
+    handleDigest: randomBytes(32),
+    caseTokenDigest: randomBytes(32),
+    expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+  };
+  await continuity.createRecoveryIntake(intake);
+  checkpoint = 'reject invalid recovery intake digest';
+  const bindingInput = { ...intake, subjectId: claims.subjectId };
+  const invalidToken = Buffer.from(intake.caseTokenDigest);
+  invalidToken[0] ^= 1;
+  await assert.rejects(
+    continuity.bindRecoveryIntake({ ...bindingInput, caseTokenDigest: invalidToken }),
+    (error) => error?.status === 401 && error?.code === 'recovery-challenge-invalid',
+  );
+  // This is the repository boundary. GoTrue OTP redemption belongs to the HTTP flow.
+  checkpoint = 'bind recovery intake to the resolved owner';
+  const bound = await continuity.bindRecoveryIntake(bindingInput);
+  assert.deepEqual(await continuity.bindRecoveryIntake(bindingInput), bound);
+  return {
+    caseId: intake.caseId,
+    subject: claims.subjectId,
+    personId: bound.personId,
+    invalidDigest: 'denied',
+    repeatedBinding: 'same-person',
+  };
 }
 
 async function recovery() {
