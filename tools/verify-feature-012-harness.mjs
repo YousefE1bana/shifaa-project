@@ -1392,7 +1392,7 @@ function verifyPredecessorCarePredicates(
       assert.match(output.stderr, /42501:.*allergy authority denied/);
     } else {
       assert.equal(output.exit, 0, output.stderr);
-      assert.ok(output.stdout.endsWith(expected + '\\nROLLBACK\\n'), name);
+      assert.ok(output.stdout.endsWith(expected + '\nROLLBACK\n'), name);
     }
   };
 
