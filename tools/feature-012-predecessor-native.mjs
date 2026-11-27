@@ -277,7 +277,14 @@ async function absenceApi({ facilityId, doctorId, appointmentId, ...interval }) 
   const queueEntryId = checked.queueEntry.id;
   const url = '/v1/clinics/' + facilityId + '/doctors/' + doctorId + '/absence';
   const payload = { ...interval, reason: 'Synthetic clinician absence' };
-  await invoke('patient cannot declare clinician absence', patient, url, payload, 403);
+  const denied = await invoke(
+    'patient cannot declare clinician absence',
+    patient,
+    url,
+    payload,
+    404,
+  );
+  assert.equal(denied.code, 'not-found');
   const result = await invoke('clinician declares absence', clinician, url, payload, 200);
   assert.deepEqual(result.affectedAppointmentIds, [appointmentId]);
   assert.deepEqual(result.removedQueueEntryIds, [queueEntryId]);
