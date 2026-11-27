@@ -1342,7 +1342,7 @@ function runPredecessorSqlFixtures(db, paths) {
   assert.equal(failed.length, 0, failed.map(({ path }) => path).join(', '));
 }
 
-function runPredecessorAllergyWriters(db) {
+function runPredecessorAllergyWriters(db, refutationOnly) {
   applyWriterBaseline(db);
   const results = (receipt.predecessorAllergy = {});
   const patientPerson = randomUUID();
@@ -1384,9 +1384,43 @@ function runPredecessorAllergyWriters(db) {
   );
   assert.equal(results.licence.exit, 0, results.licence.stderr);
   const first = allergyInsertWriter(patient);
-  const correction = allergyInsertWriter(patient, first.allergy);
   results.create = observeWriter(first);
   assert.equal(results.create.exit, 0, results.create.stderr);
+  if (refutationOnly) {
+    const verification = allergyVerificationWriter(db, {
+      ...fixture,
+      patient,
+      first,
+      results,
+      targetStatus: 'refuted',
+      facilityEvidence,
+    });
+    results.refutation = observeWriter(verification);
+    assert.equal(results.refutation.exit, 0, results.refutation.stderr);
+    results.head = observedSql(db, verification.state);
+    assert.equal(results.head.exit, 0, results.head.stderr);
+    assert.equal(results.head.stdout, verification.after);
+    results.refutationEffects = observedSql(
+      db,
+      `SELECT previous.verification_status,
+        current_revision.action_actor_person_id='${clinician}',
+        s.previous_revision_id=previous.id, s.target_status=current_revision.verification_status,
+        (SELECT count(*) FROM audit.events WHERE resource_id=h.id),
+        (SELECT count(*) FROM clinical.mutation_receipts mr
+         JOIN platform.idempotency_records ir ON ir.id=mr.idempotency_record_id AND ir.state='completed'
+         WHERE mr.resource_id=h.id AND mr.resource_version=2 AND mr.operation_id='verifyAllergy')
+      FROM clinical.allergy_heads h
+      JOIN clinical.allergies current_revision ON current_revision.id=h.current_revision_id
+      JOIN clinical.allergies previous ON previous.id='${first.revision}'
+      JOIN clinical.allergy_verification_bindings b ON b.revision_id=current_revision.id
+      JOIN clinical.allergy_verification_support s ON s.id=b.evidence_ref
+      WHERE h.id='${first.allergy}' AND current_revision.verification_status='refuted';`,
+    );
+    assert.equal(results.refutationEffects.exit, 0, results.refutationEffects.stderr);
+    assert.equal(results.refutationEffects.stdout.trim(), 'self_reported|t|t|t|2|1');
+    return;
+  }
+  const correction = allergyInsertWriter(patient, first.allergy);
   results.prematureCorrection = observeWriter(correction);
   assert.equal(results.prematureCorrection.exit, 3);
   assert.match(
@@ -3581,8 +3615,11 @@ function verifyPredecessorMembershipScope(report, db, invoke, read) {
   const facilityOwner = 'f0110000-0000-4000-8000-000000000004';
   const clinician = 'f0110000-0000-4000-8000-000000000002';
   // Distinct run-local owner and treating clinician, using their existing F003 roles.
-  sql(db, `UPDATE identity.facilities SET created_by_person_id='${facilityOwner}'
-    WHERE id='${facility}' AND created_by_person_id='${clinician}';`);
+  sql(
+    db,
+    `UPDATE identity.facilities SET created_by_person_id='${facilityOwner}'
+    WHERE id='${facility}' AND created_by_person_id='${clinician}';`,
+  );
   const membership = read(`SELECT to_json(m.id) FROM identity.facility_memberships m
     JOIN identity.facilities f ON f.id=m.facility_id
     WHERE f.id='${facility}' AND f.created_by_person_id='${facilityOwner}'
@@ -3985,7 +4022,9 @@ async function admit() {
       },
     ],
   ]).get(onlyArgument);
-  const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
+  const predecessorRefutation = onlyArgument === '--predecessor-allergy-refutation';
+  const predecessorAllergy =
+    predecessorRefutation || onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
   const publication = new Map([
     ['--predecessor-publication-api', 'lifecycle'],
@@ -4109,7 +4148,7 @@ async function admit() {
       if (atomicity) {
         runAtomicity(source);
       } else if (predecessorAllergy) {
-        runPredecessorAllergyWriters(source);
+        runPredecessorAllergyWriters(source, predecessorRefutation);
       } else if (predecessorSql) {
         runPredecessorSqlFixtures(source, predecessorSql.paths);
       } else if (writerCatalog) {
@@ -4144,7 +4183,9 @@ async function admit() {
       return;
     }
     if (predecessorAllergy) {
-      receipt.status = 'PASS_T012_PREDECESSOR_ALLERGY_WRITERS';
+      receipt.status = predecessorRefutation
+        ? 'PASS_T012_PREDECESSOR_ALLERGY_REFUTATION'
+        : 'PASS_T012_PREDECESSOR_ALLERGY_WRITERS';
       return;
     }
     receipt.status = atomicity
