@@ -3052,6 +3052,13 @@ async function admit() {
         paths: ['infra/db/tests/feature-012-predecessor-workforce.sql'],
       },
     ],
+    [
+      '--predecessor-purpose-projection',
+      {
+        status: 'PASS_T012_PREDECESSOR_PURPOSE_PROJECTION',
+        paths: ['infra/db/tests/feature-012-predecessor-purpose.sql'],
+      },
+    ],
   ]).get(onlyArgument);
   const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
