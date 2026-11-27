@@ -3102,6 +3102,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
   report.sourceArchiveSha256 = stageLinkedCoreApi(probe, [
     entry,
     'tools/feature-012-predecessor-identity.mjs',
+    'tools/feature-012-harness-probe.cjs',
   ]);
   const invoke = (phase, input) => {
     report.lastStep = phase;
@@ -3115,6 +3116,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
         ...(input ? [JSON.stringify(input)] : []),
       ]),
     );
+    if (outcome.failure) {
+      report.failure = outcome.failure;
+      throw new Error('Predecessor API assertion failed during ' + phase);
+    }
     assert.equal(
       outcome.actorBindings.address,
       checkContainer(db).NetworkSettings.Networks[networkName].IPAddress,
@@ -3126,6 +3131,159 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'booking-api') {
+    const scheduleId = 'f0120100-0000-4000-8600-000000000003';
+    const secondId = 'f0120100-0000-4000-8500-000000000004';
+    const setup = read(`WITH anchor AS (
+      SELECT a.facility_id,a.doctor_person_id,a.patient_person_id,
+        (now() AT TIME ZONE 'Africa/Cairo')::date+2 AS civil
+      FROM clinical.appointments a WHERE a.id='f0120100-0000-4000-8500-000000000001'
+    )
+    SELECT json_build_object('facilityId',facility_id,'doctorId',doctor_person_id,'patientId',patient_person_id,
+      'civilDate',civil,'timezone','Africa/Cairo',
+      'startsAt',(civil+time '14:00') AT TIME ZONE 'Africa/Cairo',
+      'endsAt',(civil+time '14:30') AT TIME ZONE 'Africa/Cairo',
+      'rescheduledStart',(civil+time '14:30') AT TIME ZONE 'Africa/Cairo',
+      'rescheduledEnd',(civil+time '15:00') AT TIME ZONE 'Africa/Cairo') FROM anchor;`);
+    assert.match(setup.civilDate, /^\d{4}-\d{2}-\d{2}$/);
+    const d = setup.civilDate;
+    sql(
+      db,
+      `BEGIN;
+      INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,
+          slot_duration_minutes,fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+      SELECT '${scheduleId}',facility_id,doctor_person_id,'Africa/Cairo','${d}','${d}',30,0,'EGP',
+        doctor_person_id,doctor_person_id FROM clinical.appointments
+        WHERE id='f0120100-0000-4000-8500-000000000001';
+      INSERT INTO clinical.schedule_windows(schedule_id,iso_weekday,local_start,local_end)
+      VALUES ('${scheduleId}',extract(isodow from '${d}'::date)::smallint,'14:00','16:00');
+      INSERT INTO clinical.appointments
+        (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+          civil_date,local_start,fee_minor_units,currency_code,status,created_by_person_id,updated_by_person_id)
+      SELECT '${secondId}',patient_person_id,facility_id,doctor_person_id,'${scheduleId}',
+        ('${d}'::date+time '15:00') AT TIME ZONE 'Africa/Cairo',
+        ('${d}'::date+time '15:30') AT TIME ZONE 'Africa/Cairo','Africa/Cairo',
+        '${d}','15:00',0,'EGP','confirmed',patient_person_id,patient_person_id
+      FROM clinical.appointments WHERE id='f0120100-0000-4000-8500-000000000001';
+      COMMIT;`,
+    );
+    const { rescheduledStart, rescheduledEnd, ...booking } = setup;
+    report.booking = invoke(mode, {
+      booking: { ...booking, paymentMethod: 'cash_on_arrival' },
+      nextSlot: {
+        startsAt: rescheduledStart,
+        endsAt: rescheduledEnd,
+        timezone: booking.timezone,
+        civilDate: d,
+        reason: 'Synthetic booking reschedule',
+      },
+      secondId,
+    });
+    const { appointmentId, firstId, secondEntryId } = report.booking;
+    for (const id of [appointmentId, firstId, secondEntryId]) assert.match(id, /^[a-f0-9-]{36}$/);
+    report.booking.effects = read(`SELECT json_build_object(
+      'status',a.status,'version',a.version,'rescheduled',a.local_start=time '14:30',
+      'order',(SELECT json_agg(q.id ORDER BY q.waiting_order) FROM clinical.queue_entries q
+        WHERE q.id IN ('${firstId}','${secondEntryId}') AND q.state='waiting'),
+      'audit',(SELECT json_agg(action_code ORDER BY action_code) FROM audit.events
+        WHERE resource_id IN(a.id,'${secondId}','${firstId}','${secondEntryId}')),
+      'outbox',(SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id IN(a.id,'${secondId}','${firstId}','${secondEntryId}')))
+      FROM clinical.appointments a WHERE a.id='${appointmentId}' AND a.schedule_id='${scheduleId}';`);
+    assert.deepEqual(report.booking.effects, {
+      status: 'checked_in',
+      version: 3,
+      rescheduled: true,
+      order: [secondEntryId, firstId],
+      audit: [
+        'appointment.checked_in',
+        'appointment.checked_in',
+        'appointment.created',
+        'appointment.rescheduled',
+        'queue.entry.created',
+        'queue.entry.created',
+        'queue.entry.reordered',
+      ],
+      outbox: 7,
+    });
+    return;
+  }
+  if (mode === 'participant-api') {
+    const encounterId = 'f0110000-0000-4000-8400-000000000001';
+    const consultantId = 'f0110000-0000-4000-8000-000000000008';
+    const facilityId = 'f0110000-0000-4000-8200-000000000001';
+    const licenceId = 'f0120100-0000-4000-8300-000000000001';
+    const startedAt = '2020-01-01T00:00:00.000Z';
+    sql(
+      db,
+      `BEGIN;
+      INSERT INTO identity.professional_licenses(id,person_id,profession,number_ciphertext,number_hash,issuer,expires_on,status)
+      VALUES ('${licenceId}','${consultantId}','doctor',decode(repeat('31',16),'hex'),decode(repeat('31',32),'hex'),
+        'Synthetic issuer','2099-12-31','verified');
+      INSERT INTO identity.facility_memberships(facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id)
+      SELECT '${facilityId}','${consultantId}','doctor','${licenceId}','${startedAt}','active',e.responsible_clinician_id
+      FROM clinical.encounters e WHERE e.id='${encounterId}';
+      INSERT INTO clinical.encounter_participants(encounter_id,person_id,role_code,started_at)
+      VALUES ('${encounterId}','${consultantId}','consulting_clinician','${startedAt}');
+      COMMIT;`,
+    );
+    report.participant = invoke(mode, { encounterId, consultantId, startedAt });
+    report.participant.effects = read(`SELECT json_build_object(
+      'participantVersion',p.version,'ended',p.ended_at>p.started_at,
+      'responsibleActive',(SELECT count(*) FROM clinical.encounter_participants r
+        WHERE r.encounter_id=e.id AND r.person_id=e.responsible_clinician_id AND r.ended_at IS NULL),
+      'encounterVersion',e.version,
+      'audit',(SELECT count(*) FROM audit.events a WHERE a.resource_id=e.id AND a.resource_version=e.version
+        AND a.actor_person_id=e.responsible_clinician_id AND a.action_code='encounter.updated'),
+      'outbox',(SELECT count(*) FROM platform.outbox_events o WHERE o.aggregate_id=e.id AND o.event_type='clinical.encounter.updated.v1'),
+      'idempotency',(SELECT count(*) FROM platform.idempotency_records i WHERE i.resource_id=e.id AND i.state='completed'))
+      FROM clinical.encounter_participants p JOIN clinical.encounters e ON e.id=p.encounter_id
+      WHERE p.encounter_id='${encounterId}' AND p.person_id='${consultantId}'
+        AND p.role_code='consulting_clinician' AND p.started_at='${startedAt}';`);
+    assert.deepEqual(report.participant.effects, {
+      participantVersion: 2,
+      ended: true,
+      responsibleActive: 1,
+      encounterVersion: report.participant.version,
+      audit: 1,
+      outbox: 1,
+      idempotency: 1,
+    });
+    return;
+  }
+  if (mode === 'recovery-api') {
+    report.recoveryApi = invoke(mode);
+    const { factorId, verify, begin } = report.recoveryApi;
+    assert.equal(report.recoveryApi.subject, subject);
+    assert.equal(report.recoveryApi.session, session);
+    for (const id of [factorId, verify.requestId, begin.requestId])
+      assert.match(id, /^[a-f0-9-]{36}$/);
+    report.recoveryApi.effects = read(`SELECT json_build_object(
+      'completed',c.status='completed' AND c.version=2 AND c.completed_at IS NOT NULL,
+      'restriction',c.restriction_scope,'binding',c.bound_native_session_id,
+      'nativeFactor',(SELECT status::text FROM auth.mfa_factors WHERE id='${factorId}' AND user_id='${subject}'),
+      'recoveryAudit',(SELECT count(*) FROM audit.events WHERE resource_id=c.id AND actor_person_id=c.subject_person_id
+        AND request_id='${verify.requestId}' AND action_code='identity.recovery.enrollment_completed'),
+      'factorAudit',(SELECT count(*) FROM audit.events WHERE actor_person_id=c.subject_person_id
+        AND request_id='${verify.requestId}' AND action_code='identity.factor.verified'),
+      'beginAudit',(SELECT count(*) FROM audit.events WHERE actor_person_id=c.subject_person_id
+        AND request_id='${begin.requestId}' AND action_code='identity.factor.enrollment_started'),
+      'recoveryOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=c.id AND event_type='identity.recovery.completed'),
+      'factorOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id='${factorId}' AND event_type='identity.factor.changed'))
+      FROM identity.continuity_cases c WHERE c.id='${recoveryCase}';`);
+    assert.deepEqual(report.recoveryApi.effects, {
+      completed: true,
+      restriction: null,
+      binding: null,
+      nativeFactor: 'verified',
+      recoveryAudit: 1,
+      factorAudit: 1,
+      beginAudit: 1,
+      recoveryOutbox: 1,
+      factorOutbox: 1,
+    });
+    return;
+  }
   if (mode === 'scheduling') {
     const checkInId = 'f0120100-0000-4000-8500-000000000002';
     const cancelId = 'f0120100-0000-4000-8500-000000000003';
@@ -3423,6 +3581,9 @@ async function admit() {
   const predecessorNative = new Map([
     ['--predecessor-native-repositories', 'repositories'],
     ['--predecessor-native-scheduling', 'scheduling'],
+    ['--predecessor-native-recovery-api', 'recovery-api'],
+    ['--predecessor-native-participant-api', 'participant-api'],
+    ['--predecessor-native-booking-api', 'booking-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
@@ -3610,9 +3771,7 @@ async function admit() {
   if (publication) receipt.status = 'PASS_T012_PREDECESSOR_PUBLICATION_API';
   if (predecessorNative)
     receipt.status =
-      predecessorNative === 'scheduling'
-        ? 'PASS_T012_PREDECESSOR_NATIVE_SCHEDULING'
-        : 'PASS_T012_PREDECESSOR_NATIVE_REPOSITORIES';
+      'PASS_T012_PREDECESSOR_NATIVE_' + predecessorNative.replace('-', '_').toUpperCase();
 }
 
 async function runNativeAdmission({

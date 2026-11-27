@@ -6,6 +6,7 @@ import { buildApp } from '../services/api/src/app.ts';
 import { loadConfig } from '../services/api/src/config.ts';
 import { SupabaseAuthIssuer } from '../services/api/src/adapters/supabase-auth.ts';
 import { PostgresIdentityContinuityService } from '../services/api/src/adapters/postgres/identity-continuity-service.ts';
+import probe from './feature-012-harness-probe.cjs';
 import { consentHistory, facilityReview } from './feature-012-predecessor-identity.mjs';
 
 assert.equal(import.meta.dirname, '/tmp/f012-core-api/tools');
@@ -27,6 +28,8 @@ const config = loadConfig({
   SUPABASE_JWT_ISSUER: issuer,
 });
 const { app, repository } = await buildApp({ config });
+let checkpoint = 'database binding';
+let transport;
 try {
   const actorBindings = await repository.withRawTransaction(async (tx) => {
     const [row] = await tx`SELECT session_user AS login,current_user AS effective,
@@ -39,13 +42,33 @@ try {
   const checks = {
     encounter,
     recovery,
+    'recovery-api': recoveryApi,
+    'participant-api': () => participantApi(JSON.parse(fixtureInput)),
+    'booking-api': () => bookingApi(JSON.parse(fixtureInput)),
     scheduling: () => scheduling(JSON.parse(fixtureInput)),
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
+  checkpoint = phase;
   const result = await checks[phase]();
   console.log(JSON.stringify({ actorBindings, ...result }));
+} catch (error) {
+  const apiCode = /\(([a-z0-9-]{1,70})\)$/.exec(error.message)?.[1];
+  console.log(
+    JSON.stringify({
+      failure: {
+        checkpoint,
+        ...(transport ? { transport } : {}),
+        ...(typeof error.actual === 'number' ? { actual: error.actual } : {}),
+        ...(typeof error.expected === 'number' ? { expected: error.expected } : {}),
+        ...(apiCode ? { apiCode } : {}),
+        ...(typeof error.code === 'string' && /^[A-Z0-9_]{1,45}$/.test(error.code)
+          ? { code: error.code }
+          : {}),
+      },
+    }),
+  );
 } finally {
   await app.close();
 }
@@ -131,6 +154,152 @@ async function encounter() {
   return { calls, ...identifiers };
 }
 
+async function bookingApi({ booking, nextSlot, secondId }) {
+  const [clinician, patient] = fixtures;
+  const calls = [];
+  const invoke = async (name, fixture, method, url, expected, version, payload) => {
+    checkpoint = name;
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method,
+      url,
+      ...(payload ? { payload } : {}),
+      headers: {
+        authorization: 'Bearer ' + fixture.token,
+        'x-request-id': requestId,
+        ...(method === 'POST' ? { 'idempotency-key': randomUUID() } : {}),
+        ...(version ? { 'if-match': '"' + version + '"' } : {}),
+      },
+    });
+    const body = response.json();
+    calls.push({ name, requestId, status: response.statusCode, code: body.code });
+    assert.equal(response.statusCode, expected, name + ' (' + body.code + ')');
+    return body;
+  };
+  const appointments = '/v1/appointments';
+  const created = await invoke('book', patient, 'POST', appointments, 201, null, booking);
+  assert.equal(created.status, 'confirmed');
+  const path = appointments + '/' + created.id;
+  const changed = await invoke(
+    'reschedule',
+    patient,
+    'POST',
+    path + '/reschedule',
+    200,
+    created.version,
+    nextSlot,
+  );
+  assert.equal(changed.id, created.id);
+  assert.equal(changed.version, created.version + 1);
+  assert.equal(Date.parse(changed.startsAt), Date.parse(nextSlot.startsAt));
+  const first = await invoke(
+    'check in rescheduled booking',
+    patient,
+    'POST',
+    path + '/check-in',
+    200,
+    changed.version,
+  );
+  const second = await invoke(
+    'check in second appointment',
+    patient,
+    'POST',
+    appointments + '/' + secondId + '/check-in',
+    200,
+    1,
+  );
+  const queuePath =
+    '/v1/clinics/' +
+    booking.facilityId +
+    '/queues?' +
+    new URLSearchParams({
+      doctorId: booking.doctorId,
+      date: booking.civilDate,
+    });
+  const queue = await invoke('read waiting order', clinician, 'GET', queuePath, 200);
+  const [firstId, secondEntryId] = [first.queueEntry.id, second.queueEntry.id];
+  assert.deepEqual(
+    queue.entries.map((entry) => entry.id),
+    [firstId, secondEntryId],
+  );
+  const reordered = await invoke(
+    'reorder waiting entry',
+    clinician,
+    'POST',
+    '/v1/queue-entries/' + secondEntryId + '/reorder',
+    200,
+    second.queueEntry.version,
+    {
+      targetPosition: 1,
+      queueVersion: queue.version,
+      reason: 'Synthetic waiting order adjustment',
+    },
+  );
+  assert.deepEqual(
+    reordered.entries.map((entry) => entry.id),
+    [secondEntryId, firstId],
+  );
+  return { calls, appointmentId: created.id, firstId, secondEntryId };
+}
+
+async function participantApi({ encounterId, consultantId, startedAt }) {
+  const [responsible, , consultant] = fixtures;
+  const url = '/v1/encounters/' + encounterId;
+  const calls = [];
+  const invoke = async (name, actor, options, expected) => {
+    checkpoint = name;
+    const requestId = randomUUID();
+    const response = await app.inject({
+      url,
+      ...options,
+      headers: {
+        ...options.headers,
+        authorization: 'Bearer ' + actor.token,
+        'x-purpose': 'appointment.scheduling',
+        'x-request-id': requestId,
+      },
+    });
+    const body = response.json();
+    calls.push({ name, requestId, status: response.statusCode, code: body.code });
+    assert.equal(response.statusCode, expected, name + ' (' + body.code + ')');
+    return body;
+  };
+  const read = { method: 'GET', url: url + '?fields=participants' };
+  const project = (body) =>
+    body.participants.find(
+      (actor) => actor.personId === consultantId && actor.roleCode === 'consulting_clinician',
+    );
+  const before = await invoke('active participant read', consultant, read, 200);
+  const active = project(before);
+  assert.ok(active);
+  assert.equal(active.endedAt, undefined);
+  const close = (version, time) => ({
+    method: 'PATCH',
+    payload: {
+      participantIntervalsEnd: [
+        { personId: consultantId, roleCode: 'consulting_clinician', startedAt: time },
+      ],
+    },
+    headers: { 'if-match': '"' + version + '"', 'idempotency-key': randomUUID() },
+  });
+  await invoke(
+    'nonmatching interval close',
+    responsible,
+    close(before.version, '2020-01-02T00:00:00.000Z'),
+    409,
+  );
+  const changed = await invoke(
+    'responsible clinician closes interval',
+    responsible,
+    close(before.version, startedAt),
+    200,
+  );
+  assert.equal(changed.version, before.version + 1);
+  assert.ok(Date.parse(project(changed)?.endedAt) > Date.parse(startedAt));
+  await invoke('closed participant read', consultant, read, 404);
+  return { calls, version: changed.version };
+}
+
 async function scheduling({ checkInId, cancelId }) {
   const [clinician, patient] = fixtures;
   const calls = [];
@@ -213,5 +382,85 @@ async function recovery() {
     before,
     after,
     replay: 'denied',
+  };
+}
+
+async function recoveryApi() {
+  const fixture = fixtures[3];
+  const client = new SupabaseAuthIssuer({
+    url: issuer,
+    anonKey: config.supabaseAnonKey,
+    jwksUrl: config.supabaseJwksUrl,
+    issuer,
+    audience: config.supabaseJwtAudience,
+  });
+  await client.ready();
+  const history = async (token) =>
+    app.inject({
+      method: 'GET',
+      url: '/v1/privacy/consents',
+      headers: { authorization: 'Bearer ' + token },
+    });
+  checkpoint = 'restricted ordinary read';
+  const blocked = await history(fixture.token);
+  assert.equal(blocked.statusCode, 403);
+  assert.equal(blocked.json().code, 'recovery-mfa-enrollment-required');
+  const userPath = async (path) => {
+    const result = await fetch(issuer + path, {
+      headers: { authorization: 'Bearer ' + fixture.token },
+      redirect: 'error',
+      signal: AbortSignal.timeout(10_000),
+    });
+    await result.body?.cancel();
+    return result.status;
+  };
+  transport = {
+    directNativeUser: await userPath('/user'),
+    configuredSdkUser: await userPath('/auth/v1/user'),
+    restrictedOrdinaryRead: blocked.statusCode,
+  };
+  const submit = async (url, payload) => {
+    checkpoint = url;
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method: 'POST',
+      url,
+      payload,
+      headers: {
+        authorization: 'Bearer ' + fixture.token,
+        'x-request-id': requestId,
+        'idempotency-key': randomUUID(),
+      },
+    });
+    const body = response.json();
+    assert.equal(response.statusCode, 200, url + ' (' + body.code + ')');
+    return { body, requestId, status: response.statusCode };
+  };
+  const path = '/v1/auth/mfa/enroll';
+  const begin = await submit(path, { factorType: 'totp', friendlyName: 'Disposable replacement' });
+  const verified = await submit(path + '/verify', {
+    enrollmentId: begin.body.enrollmentId,
+    code: probe.totp(begin.body.secret),
+  });
+  assert.equal(verified.body.factor.id, begin.body.enrollmentId);
+  assert.equal(verified.body.factor.status, 'verified');
+  assert.equal(verified.body.assurance, 'aal2');
+  assert.equal(verified.body.session.restriction, null);
+  const session = await client.resolveSession(verified.body.session.accessToken);
+  assert.equal(session?.subjectId, fixture.subject);
+  assert.equal(session.sessionId, fixture.session);
+  assert.equal(session.aal, 2);
+  checkpoint = 'ordinary read after verification';
+  const after = await history(verified.body.session.accessToken);
+  assert.equal(after.statusCode, 200);
+  return {
+    subject: session.subjectId,
+    session: session.sessionId,
+    aal: session.aal,
+    factorId: verified.body.factor.id,
+    begin: { status: begin.status, requestId: begin.requestId },
+    verify: { status: verified.status, requestId: verified.requestId },
+    ordinaryRouteBefore: blocked.statusCode,
+    ordinaryRouteAfter: after.statusCode,
   };
 }
