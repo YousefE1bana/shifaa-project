@@ -1256,7 +1256,7 @@ function captureWriterCatalog(db) {
   }
 }
 
-function runWriterCatalog(db, coreApiPeers) {
+function applyWriterBaseline(db, coreApiPeers) {
   applySealedF011(db, coreApiPeers);
   const migration = readFileSync(
     safeSource(root, 'supabase/migrations/20261112001200_f012_source_admission.sql'),
@@ -1264,7 +1264,35 @@ function runWriterCatalog(db, coreApiPeers) {
   receipt.migrationSha256 = createHash('sha256').update(migration).digest('hex');
   receipt.migration = observedSql(db, migration);
   assert.equal(receipt.migration.exit, 0, 'F012 source fence migration');
+}
+
+function runWriterCatalog(db, coreApiPeers) {
+  applyWriterBaseline(db, coreApiPeers);
   captureWriterCatalog(db);
+}
+
+function runPredecessorWriterBehaviors(db) {
+  applyWriterBaseline(db);
+  const paths = [
+    'infra/db/tests/clinic-scheduling-schema.sql',
+    'infra/db/tests/facility-onboarding-rls.sql',
+    'infra/db/tests/feature-012-predecessor-family.sql',
+    'infra/db/tests/feature-012-predecessor-recovery.sql',
+    'infra/db/tests/feature-012-predecessor-governance.sql',
+  ];
+  receipt.predecessorWriterBehaviors = paths.map((path) => {
+    const fixture = readFileSync(safeSource(root, path));
+    assert.deepEqual(fixture, git(root, ['show', receipt.base + ':' + path]), path);
+    return {
+      path,
+      sha256: createHash('sha256').update(fixture).digest('hex'),
+      ...observedSql(db, fixture),
+    };
+  });
+  const failed = receipt.predecessorWriterBehaviors.filter(
+    (result) => result.exit !== 0 || !/^ROLLBACK$/m.test(result.stdout),
+  );
+  assert.equal(failed.length, 0, failed.map(({ path }) => path).join(', '));
 }
 
 async function runOnboardingWriterOrder(db, focusedWriters) {
@@ -2892,6 +2920,7 @@ async function admit() {
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
   const writerCatalog = onlyArgument === '--participating-writer-catalog';
+  const predecessorBehaviors = onlyArgument === '--predecessor-writer-behaviors';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
   const applicationWriter =
     authenticatedWriter || onlyArgument === '--participating-core-api-writer';
@@ -2915,6 +2944,7 @@ async function admit() {
   const sqlOnly =
     atomicity ||
     writerCatalog ||
+    predecessorBehaviors ||
     participatingWriters ||
     redOnly ||
     upgrade ||
@@ -2963,9 +2993,16 @@ async function admit() {
   receipt.networkId = networkId;
   checkNetwork();
   if (sqlOnly) {
-    stage = atomicity ? 'isolated structural atomicity SQL' : 'isolated PostgreSQL source fence';
+    stage = predecessorBehaviors
+      ? 'isolated PostgreSQL predecessor writer behaviors'
+      : atomicity
+        ? 'isolated structural atomicity SQL'
+        : 'isolated PostgreSQL source fence';
     try {
-      const source = startDatabase(atomicity ? 'atomicity' : 'source-fence', 'none');
+      const source = startDatabase(
+        predecessorBehaviors ? 'predecessor-writers' : atomicity ? 'atomicity' : 'source-fence',
+        'none',
+      );
       receipt.databaseSystems = atomicity
         ? { atomicity: source.system }
         : { source: source.system };
@@ -2978,6 +3015,8 @@ async function admit() {
       }
       if (atomicity) {
         runAtomicity(source);
+      } else if (predecessorBehaviors) {
+        runPredecessorWriterBehaviors(source);
       } else if (writerCatalog) {
         stage = 'T012 read-only catalog on the disposable migrated database';
         runWriterCatalog(source);
@@ -3004,6 +3043,10 @@ async function admit() {
         volumes: before.volumes.length,
         matches: true,
       };
+    }
+    if (predecessorBehaviors) {
+      receipt.status = 'PASS_T012_PREDECESSOR_WRITER_BEHAVIORS';
+      return;
     }
     receipt.status = atomicity
       ? 'EXECUTED_ATOMICITY_SQL'
