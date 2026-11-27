@@ -180,6 +180,97 @@ matrix still tracks authenticated calls, the exact consumed predicate and
 independent ordering where required. T013 retains fence implementation and
 subsequent regression.
 
+### Effective purpose and clinician scope
+
+The [purpose fixture](../../../../infra/db/tests/feature-012-predecessor-purpose.sql)
+ran as a `shifaa_api` database session. It saw only version `1.1.0`, effective
+at the transaction timestamp. An independent owner read verified that the
+retired and one-microsecond-future versions remained present. The run
+`069d986a-bca7-4f59-8f7d-3debe4d5ff68` at
+`827c681c1e0bf03580fd96f9a1f030e45008eb15` passed with exit 0 and rolled back.
+The private receipt at
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t012-purpose-projection-827c681c/purpose-projection.json`
+is 69,705 bytes with SHA-256
+`b5e64c99a1b6bf339e9975e3536cf684c607e5e61219587f4eb894a15dda42cc`.
+The fixture adds installed purpose projection evidence. Post-bootstrap
+purpose-writer attribution, current versus historical consent consumption,
+and separate guardianship and evidence loss remain open.
+
+The [workforce fixture](../../../../infra/db/tests/feature-012-predecessor-workforce.sql)
+passed 15 cases through `clinical.f011_lock_clinician_scope_v1` under
+`shifaa_f011_executor`. It covered effective membership start and end,
+suspension, facility status, both professional and facility licence expiry
+and suspension, and loss of eligibility after facility evidence quarantine
+or rejection and professional evidence rejection. Each case rolled back
+its synthetic fixture change. Run `c2f05d94-3d1b-4103-a73e-9d2a1d8c6fe2` at
+`ad24b32a5127edbceef8fcfdbe7945d3474d5f83` exited 0. The private receipt at
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t012-workforce-predicate-ad24b32a/workforce-predicate.json`
+is 71,470 bytes with SHA-256
+`1da177c6f748732e479cd8cabc7075667a05539829abb8c0327e318b60e2af5f`.
+The fixture owner supplied the synthetic evidence state. Online writer
+entry points, distinct release paths, and the exact consuming F012
+predicate and generation still need their own evidence. The scanner
+disposition remains fixture-only.
+
+Both runs used the same sealed predecessor chain and T009 hash recorded
+above. Both launchers had empty stderr and preserved the inventory of
+12 retained containers and four volumes.
+
+### Scheduling routine calls under the API database role
+
+The [scheduling writer fixture](../../../../infra/db/tests/feature-012-predecessor-scheduling.sql)
+used the current patient and clinic staff contexts with
+`SET SESSION AUTHORIZATION shifaa_api`. It verified booking and canonical
+replay, rescheduling, two check-ins, displaced queue order, calling and
+queue-only completion. The independent owner read confirmed that two
+appointments remained checked in, no encounter was created, and the
+operations left seven completed idempotency records, nine audit events
+and nine outbox events for the fixture resources.
+
+Run `45faab3d-c4ae-4998-b074-1c55102783e0` at
+`69106b831ed26a7c80002a8d4a2889f9a27ca28c` exited 0 and rolled back.
+The private receipt at
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t012-scheduling-writers-69106b83/scheduling-writers.json`
+is 70,694 bytes with SHA-256
+`26f0df4df2237c72f424d47460eaad3db2baa6dcad835333a48a455cb50b65ba`.
+The sealed migrations matched the catalog, launcher stderr was empty,
+and inventory still matched all 12 retained containers and four volumes.
+This proof covers installed database routine calls with synthetic request
+context. Authenticated routes, encounter lifecycle, remaining scheduling
+variants and the exact consumed F012 predicate retain their own proof.
+
+The four earlier attempts are retained under `LOCALAPPDATA/SHIFAA-Recovery`,
+each as `scheduling-writers.json` in the directory shown.
+
+| Directory                                           | Result                                                                                | SHA-256                                                            |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `2026-11-27-t012-scheduling-writers-07724e36`       | Fixture request identifier did not match the audit UUID input.                        | `c28fa72c0c641ff6f6bda8ed4ab3081d5ba4bbefc01c259bbcff651114d146f4` |
+| `2026-11-27-t012-scheduling-writers-631ee8b5`       | The reschedule fixture was already in the past under the server clock.                | `01ea3b149e8751bfab26bf53122beae068b4ee48299c0c95c9d6d810fc3860d6` |
+| `2026-11-27-t012-scheduling-writers-9df23666`       | The database command for a sealed migration returned no exit code before the fixture. | `6791746be76b0b32c357d0478b8bd706f002d98e83a1c2f4c31f22ca5d254f78` |
+| `2026-11-27-t012-scheduling-writers-9df23666-retry` | Routine calls ran. Owner readback queried a pre-privacy-migration column name.        | `562bcce9d9c543f75be19f385f62d950dda40bc2999216ba760b5fa824e57345` |
+
+### F011 publication and offline evidence from the predecessor project
+
+The F011 [publication receipt](../../../011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publish-api.json)
+records 63 passing checks in each historical runtime. It covers initial
+publication, successor reservation, loss of current eligibility without
+ancestor fallback, and audited synthetic offline designation, authority
+and exact-artifact admissibility changes. The
+[publication boundary receipt](../../../011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publication-boundaries.json)
+also records ambiguity denial and admissibility expiry during a real wait.
+These original receipts are Git blobs
+`cf3331faefe369158e63eb97406f52a75680874f` and
+`93f03bbd6d8c899a16e4876ffe05f8e6a2209c61` respectively.
+
+A comparison of the receipts' ten F011 migration digests with the T012
+disposable catalog found three exact matches. Seven differ, including the
+publication functions and their grants. The recorded publication route
+digest also differs from the sealed F011 route. LF and CRLF normalization
+did not explain the differences. The published results establish historical
+synthetic behavior. Publication, supersession and eligibility loss on the
+T012-installed bytes still require their own observation and actor
+attribution. The existing F011 runner targets retained local clusters.
+
 ## Predecessor restore entry points
 
 Source comparison at `28dcfc46d5e68dc0e1bbee94e74087c632100b7a` and
