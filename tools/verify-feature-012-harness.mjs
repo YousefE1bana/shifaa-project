@@ -1342,7 +1342,97 @@ function runPredecessorSqlFixtures(db, paths) {
   assert.equal(failed.length, 0, failed.map(({ path }) => path).join(', '));
 }
 
-function runPredecessorAllergyWriters(db, refutationOnly) {
+function verifyPredecessorCarePredicates(
+  db,
+  { patient, clinician, unrelated, facility, encounter, starts },
+  results,
+) {
+  const otherPatient = randomUUID();
+  const otherFacility = randomUUID();
+  results.careFixture = observedSql(
+    db,
+    `BEGIN;
+    INSERT INTO identity.patients(id,person_id,medical_record_number,record_status)
+    VALUES ('${otherPatient}','${unrelated}','T012-other-care-subject','active');
+    INSERT INTO identity.facilities
+      (id,facility_type,name_ar,name_en,facility_status,governorate_code,city,district,address_line,created_by_person_id)
+    VALUES ('${otherFacility}','clinic','عيادة اختبار','Other synthetic clinic','active',
+      'C','Cairo','Test','Synthetic address','${clinician}');
+    COMMIT;`,
+  );
+  assert.equal(results.careFixture.exit, 0, results.careFixture.stderr);
+  results.carePredicates = [];
+
+  const check = (
+    name,
+    { action, actor = clinician, at = starts, scope = facility, subject = patient, expected },
+  ) => {
+    const statement =
+      action === 'getEncounter'
+        ? `SELECT clinical.feature_010_authorize_v1('getEncounter','${encounter}');`
+        : `SELECT jsonb_typeof(clinical.list_allergies_api_v1('${subject}','{}'::jsonb));`;
+    const output = observedSql(
+      db,
+      `\\set VERBOSITY verbose
+      BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SELECT session_user,current_user;
+      ${encounterWriterContext(action, action === 'getEncounter' ? 'appointment.scheduling' : 'synthetic.feature011')}
+      SET LOCAL shifaa.test_now = '${at}';
+      SET LOCAL shifaa.person_id = '${actor}';
+      SET LOCAL shifaa.facility_id = '${scope}';
+      SET LOCAL shifaa.encounter_id = '${encounter}';
+      ${statement}
+      ROLLBACK;`,
+    );
+    results.carePredicates.push({ name, ...output });
+    assert.match(output.stdout, /^shifaa_api\|shifaa_api$/m);
+    if (expected === '42501') {
+      assert.equal(output.exit, 3);
+      assert.match(output.stderr, /42501:.*allergy authority denied/);
+    } else {
+      assert.equal(output.exit, 0, output.stderr);
+      assert.ok(output.stdout.endsWith(expected + '\nROLLBACK\n'), name);
+    }
+  };
+
+  check('responsible participant before start', {
+    action: 'getEncounter',
+    at: '2030-04-05T06:59:59.999999Z',
+    expected: 'f',
+  });
+  check('responsible participant at start', { action: 'getEncounter', expected: 't' });
+  check('consulting participant without workforce authority', {
+    action: 'getEncounter',
+    actor: unrelated,
+    expected: 'f',
+  });
+  check('linked patient and facility', { action: 'listAllergies', expected: 'object' });
+  check('different active patient', {
+    action: 'listAllergies',
+    subject: otherPatient,
+    expected: '42501',
+  });
+  check('different active facility', {
+    action: 'listAllergies',
+    scope: otherFacility,
+    expected: '42501',
+  });
+
+  results.careReadback = observedSql(
+    db,
+    `SELECT e.status,e.version,a.status,
+    (SELECT count(*) FROM clinical.encounter_participants p WHERE p.encounter_id=e.id AND p.ended_at IS NULL),
+    (SELECT count(*) FROM audit.events WHERE resource_id IN (e.id,a.id)),
+    (SELECT count(*) FROM platform.outbox_events WHERE aggregate_id IN (e.id,a.id))
+    FROM clinical.encounters e JOIN clinical.appointments a ON a.id=e.appointment_id
+    WHERE e.id='${encounter}';`,
+  );
+  assert.equal(results.careReadback.exit, 0, results.careReadback.stderr);
+  assert.equal(results.careReadback.stdout.trim(), 'open|1|in_consultation|2|0|0');
+}
+
+function runPredecessorAllergyWriters(db, mode) {
   applyWriterBaseline(db);
   const results = (receipt.predecessorAllergy = {});
   const patientPerson = randomUUID();
@@ -1383,10 +1473,14 @@ function runPredecessorAllergyWriters(db, refutationOnly) {
     `BEGIN;${syntheticFacilityLicence(facilityEvidence, facility, clinician)} COMMIT;`,
   );
   assert.equal(results.licence.exit, 0, results.licence.stderr);
+  if (mode === 'care-predicates') {
+    verifyPredecessorCarePredicates(db, { ...fixture, patient }, results);
+    return;
+  }
   const first = allergyInsertWriter(patient);
   results.create = observeWriter(first);
   assert.equal(results.create.exit, 0, results.create.stderr);
-  if (refutationOnly) {
+  if (mode === 'refutation') {
     const verification = allergyVerificationWriter(db, {
       ...fixture,
       patient,
@@ -4111,9 +4205,11 @@ async function admit() {
       },
     ],
   ]).get(onlyArgument);
-  const predecessorRefutation = onlyArgument === '--predecessor-allergy-refutation';
-  const predecessorAllergy =
-    predecessorRefutation || onlyArgument === '--predecessor-allergy-writers';
+  const predecessorAllergy = new Map([
+    ['--predecessor-allergy-refutation', 'refutation'],
+    ['--predecessor-allergy-writers', 'writers'],
+    ['--predecessor-care-predicates', 'care-predicates'],
+  ]).get(onlyArgument);
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
   const publication = new Map([
     ['--predecessor-publication-api', 'lifecycle'],
@@ -4239,7 +4335,7 @@ async function admit() {
       if (atomicity) {
         runAtomicity(source);
       } else if (predecessorAllergy) {
-        runPredecessorAllergyWriters(source, predecessorRefutation);
+        runPredecessorAllergyWriters(source, predecessorAllergy);
       } else if (predecessorSql) {
         runPredecessorSqlFixtures(source, predecessorSql.paths);
       } else if (writerCatalog) {
@@ -4274,9 +4370,11 @@ async function admit() {
       return;
     }
     if (predecessorAllergy) {
-      receipt.status = predecessorRefutation
-        ? 'PASS_T012_PREDECESSOR_ALLERGY_REFUTATION'
-        : 'PASS_T012_PREDECESSOR_ALLERGY_WRITERS';
+      receipt.status = {
+        refutation: 'PASS_T012_PREDECESSOR_ALLERGY_REFUTATION',
+        writers: 'PASS_T012_PREDECESSOR_ALLERGY_WRITERS',
+        'care-predicates': 'PASS_T012_PREDECESSOR_CARE_PREDICATES',
+      }[predecessorAllergy];
       return;
     }
     receipt.status = atomicity
