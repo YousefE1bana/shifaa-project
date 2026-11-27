@@ -28,6 +28,7 @@ const config = loadConfig({
   SUPABASE_JWT_ISSUER: issuer,
 });
 const { app, repository } = await buildApp({ config });
+let checkpoint = 'database binding';
 try {
   const actorBindings = await repository.withRawTransaction(async (tx) => {
     const [row] = await tx`SELECT session_user AS login,current_user AS effective,
@@ -47,8 +48,24 @@ try {
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
+  checkpoint = phase;
   const result = await checks[phase]();
   console.log(JSON.stringify({ actorBindings, ...result }));
+} catch (error) {
+  const apiCode = /\(([a-z0-9-]{1,70})\)$/.exec(error.message)?.[1];
+  console.log(
+    JSON.stringify({
+      failure: {
+        checkpoint,
+        ...(typeof error.actual === 'number' ? { actual: error.actual } : {}),
+        ...(typeof error.expected === 'number' ? { expected: error.expected } : {}),
+        ...(apiCode ? { apiCode } : {}),
+        ...(typeof error.code === 'string' && /^[A-Z0-9_]{1,45}$/.test(error.code)
+          ? { code: error.code }
+          : {}),
+      },
+    }),
+  );
 } finally {
   await app.close();
 }
@@ -139,6 +156,7 @@ async function participantApi({ encounterId, consultantId, startedAt }) {
   const url = '/v1/encounters/' + encounterId;
   const calls = [];
   const invoke = async (name, actor, options, expected) => {
+    checkpoint = name;
     const requestId = randomUUID();
     const response = await app.inject({
       url,
@@ -290,10 +308,12 @@ async function recoveryApi() {
       url: '/v1/privacy/consents',
       headers: { authorization: 'Bearer ' + token },
     });
+  checkpoint = 'restricted ordinary read';
   const blocked = await history(fixture.token);
   assert.equal(blocked.statusCode, 403);
   assert.equal(blocked.json().code, 'recovery-mfa-enrollment-required');
   const submit = async (url, payload) => {
+    checkpoint = url;
     const requestId = randomUUID();
     const response = await app.inject({
       method: 'POST',
@@ -323,6 +343,7 @@ async function recoveryApi() {
   assert.equal(session?.subjectId, fixture.subject);
   assert.equal(session.sessionId, fixture.session);
   assert.equal(session.aal, 2);
+  checkpoint = 'ordinary read after verification';
   const after = await history(verified.body.session.accessToken);
   assert.equal(after.statusCode, 200);
   return {

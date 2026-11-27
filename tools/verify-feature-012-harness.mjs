@@ -3116,6 +3116,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
         ...(input ? [JSON.stringify(input)] : []),
       ]),
     );
+    if (outcome.failure) {
+      report.failure = outcome.failure;
+      throw new Error('Predecessor API assertion failed during ' + phase);
+    }
     assert.equal(
       outcome.actorBindings.address,
       checkContainer(db).NetworkSettings.Networks[networkName].IPAddress,
