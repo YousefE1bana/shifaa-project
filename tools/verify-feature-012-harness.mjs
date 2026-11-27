@@ -1076,8 +1076,21 @@ async function nativeDeadlineTrials(db, { subject, session }) {
   assert.match(results.reader.stdout, /^deadline\|t\|f$/m);
 }
 
-function applySealedF011(db) {
-  assert.equal(db.network, 'none');
+function applySealedF011(db, coreApiPeers) {
+  if (coreApiPeers) {
+    const [auth, probe] = coreApiPeers;
+    assert.deepEqual([db.role, auth.role, probe.role], ['db', 'auth', 'probe']);
+    assert.deepEqual(
+      receipt.containers.map(({ id }) => id),
+      [db.id, auth.id, probe.id],
+    );
+    for (const resource of [db, auth, probe]) {
+      assert.equal(resource.network, networkId);
+      assert.equal(checkContainer(resource).State.Running, true);
+    }
+  } else {
+    assert.equal(db.network, 'none');
+  }
   const predecessor = 'fbd2b5312a5038aad21db0001a17dac22bdcbf7e';
   const files = git(root, ['ls-tree', '--name-only', predecessor, 'supabase/migrations/'])
     .toString()
@@ -1242,8 +1255,8 @@ function captureWriterCatalog(db) {
   }
 }
 
-function runWriterCatalog(db) {
-  applySealedF011(db);
+function runWriterCatalog(db, coreApiPeers) {
+  applySealedF011(db, coreApiPeers);
   const migration = readFileSync(
     safeSource(root, 'supabase/migrations/20261112001200_f012_source_admission.sql'),
   );
@@ -3047,7 +3060,7 @@ async function runNativeAdmission({
   receipt.syntheticSessions = fixtures;
   if (applicationWriter) {
     stage = 'T012 combined Core API and native Auth writer attribution';
-    runWriterCatalog(db);
+    runWriterCatalog(db, [auth, probe]);
     sql(db, `ALTER ROLE shifaa_api PASSWORD '${coreApiPassword}';`);
     coreApiWriter(db, probe, fixtures[0]);
     return;
