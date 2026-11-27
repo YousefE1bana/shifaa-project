@@ -101,8 +101,8 @@ async function exerciseAuthenticatedConsent() {
   });
   assert.equal(notice.statusCode, 200);
   const { purposes, version } = notice.json();
-  const purpose = purposes.find((entry) => entry.purpose_code === 'identity_proofing');
-  assert.ok(purpose, 'Expected the migrated identity proofing purpose');
+  const purpose = purposes.find((entry) => entry.purpose_code === 'care_updates');
+  assert.ok(purpose, 'Expected the migrated care updates purpose');
 
   const requestId = randomUUID();
   const route = {
@@ -118,14 +118,35 @@ async function exerciseAuthenticatedConsent() {
   };
   const denied = await app.inject(route);
   assert.equal(denied.statusCode, 401);
+  const authorization = `Bearer ${fixture.token}`;
   const authorized = await app.inject({
     ...route,
-    headers: { ...route.headers, authorization: `Bearer ${fixture.token}` },
+    headers: { ...route.headers, authorization },
   });
   assert.equal(authorized.statusCode, 201, 'Native session consent write');
-  const { id: consent, decision } = authorized.json();
+  const { id: consent, version: grantedVersion, decision } = authorized.json();
   assert.match(consent, uuid);
   assert.equal(decision, 'granted');
+  assert.equal(grantedVersion, 1);
+
+  const withdrawalRequestId = randomUUID();
+  const withdrawal = await app.inject({
+    method: 'POST',
+    url: `/v1/privacy/consents/${consent}/withdraw`,
+    headers: {
+      authorization,
+      'if-match': '"1"',
+      'idempotency-key': randomUUID(),
+      'x-request-id': withdrawalRequestId,
+    },
+  });
+  assert.equal(withdrawal.statusCode, 200, 'Native session consent withdrawal');
+  const withdrawn = withdrawal.json();
+  assert.match(withdrawn.id, uuid);
+  assert.notEqual(withdrawn.id, consent);
+  assert.equal(withdrawn.supersedes_id, consent);
+  assert.equal(withdrawn.version, 2);
+  assert.equal(withdrawn.decision, 'withdrawn');
   return {
     issuer,
     algorithm: alg,
@@ -133,7 +154,10 @@ async function exerciseAuthenticatedConsent() {
     session: fixture.session,
     requestId,
     consent,
+    withdrawal: withdrawn.id,
+    withdrawalRequestId,
     deniedStatus: denied.statusCode,
     authorizedStatus: authorized.statusCode,
+    withdrawalStatus: withdrawal.statusCode,
   };
 }

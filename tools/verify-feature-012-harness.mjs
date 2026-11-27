@@ -2837,8 +2837,8 @@ function coreApiWriter(db, probe, fixture, signingKeyId) {
   if (signingKeyId) {
     assert.equal(outcome.authenticated?.session, fixture.session);
     assert.equal(outcome.authenticated.keyId, signingKeyId);
-    const { consent, requestId } = outcome.authenticated;
-    for (const id of [consent, requestId]) {
+    const { consent, requestId, withdrawal, withdrawalRequestId } = outcome.authenticated;
+    for (const id of [consent, requestId, withdrawal, withdrawalRequestId]) {
       assert.match(id, /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/);
     }
     const consentEffect = observedSql(
@@ -2850,11 +2850,27 @@ function coreApiWriter(db, probe, fixture, signingKeyId) {
         AND a.action_code = 'consent.decision.recorded' AND a.request_id = '${requestId}'
       JOIN platform.outbox_events o ON o.aggregate_id = c.id AND o.event_type = 'consent.changed'
       WHERE c.id = '${consent}' AND p.user_id = '${fixture.subject}'
-        AND c.purpose_code = 'identity_proofing' AND c.decision = 'granted';`,
+        AND c.purpose_code = 'care_updates' AND c.decision = 'granted'
+        AND c.version = 1 AND c.supersedes_id IS NULL;`,
     );
     receipt.coreApiWriter.consentEffect = consentEffect;
     assert.equal(consentEffect.exit, 0, consentEffect.stderr);
     assert.equal(consentEffect.stdout, '1|1|1\n');
+    const withdrawalEffect = observedSql(
+      db,
+      `SELECT count(DISTINCT c.id), count(DISTINCT a.id), count(DISTINCT o.id)
+      FROM consent.records c
+      JOIN identity.people p ON p.id = c.person_id
+      JOIN audit.events a ON a.resource_id = c.id AND a.actor_person_id = p.id
+        AND a.action_code = 'consent.withdrawn' AND a.request_id = '${withdrawalRequestId}'
+      JOIN platform.outbox_events o ON o.aggregate_id = c.id AND o.event_type = 'consent.changed'
+      WHERE c.id = '${withdrawal}' AND p.user_id = '${fixture.subject}'
+        AND c.purpose_code = 'care_updates' AND c.decision = 'withdrawn'
+        AND c.version = 2 AND c.supersedes_id = '${consent}';`,
+    );
+    receipt.coreApiWriter.withdrawalEffect = withdrawalEffect;
+    assert.equal(withdrawalEffect.exit, 0, withdrawalEffect.stderr);
+    assert.equal(withdrawalEffect.stdout, '1|1|1\n');
   }
 }
 
