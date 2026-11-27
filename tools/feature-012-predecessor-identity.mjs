@@ -86,6 +86,70 @@ export async function guardianshipReview(app, { phase, patient, relationship }) 
   return { requestId, status: response.statusCode, state: body.status, version: body.version };
 }
 
+export async function professionalReview(app, fixture, reportStep) {
+  const owner = 'synthetic-person:' + person(5);
+  const approver = 'synthetic-admin:facility_approver:' + person(8);
+  const post = async (url, token, payload, expected, headers = {}) => {
+    reportStep(url);
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method: 'POST',
+      url,
+      payload,
+      headers: {
+        authorization: 'Bearer ' + token,
+        'x-request-id': requestId,
+        'x-aal': '2',
+        'idempotency-key': randomUUID(),
+        ...headers,
+      },
+    });
+    const body = response.json();
+    assert.equal(response.statusCode, expected, url + ' (' + body.code + ')');
+    return { body, requestId, status: response.statusCode };
+  };
+  if (!fixture) {
+    const cases = [];
+    for (const decision of ['verify', 'reject']) {
+      const created = await post(
+        '/v1/people/me/professional-licenses',
+        owner,
+        {
+          profession: 'doctor',
+          specialty_code: null,
+          license_number: 'SYN-' + randomUUID(),
+          issuer: 'Synthetic professional authority',
+          expires_on: '2099-01-01',
+        },
+        201,
+      );
+      const licence = created.body;
+      assert.equal(licence.status, 'pending');
+      assert.equal(licence.version, 1);
+      const uploaded = await post(
+        '/v1/professional-licenses/' + licence.id + '/upload-intent',
+        owner,
+        { mime_type: 'application/pdf', size_bytes: 100, sha256: '1'.repeat(64) },
+        201,
+      );
+      assert.equal(uploaded.body.scan_status, 'quarantined');
+      cases.push({ decision, licenceId: licence.id, objectId: uploaded.body.object_id });
+    }
+    return { cases };
+  }
+  const reviewed = await post(
+    '/v1/admin/professional-licenses/' + fixture.licenceId + '/decision',
+    approver,
+    { decision: fixture.decision, reason: 'Independent synthetic professional review' },
+    200,
+    { 'x-purpose': 'professional_license_review', 'if-match': '"2"' },
+  );
+  assert.equal(reviewed.body.id, fixture.licenceId);
+  assert.equal(reviewed.body.status, fixture.decision === 'verify' ? 'verified' : 'rejected');
+  assert.equal(reviewed.body.version, 3);
+  return { requestId: reviewed.requestId, status: reviewed.status, state: reviewed.body.status };
+}
+
 // Facility onboarding accepts its documented seeded-synthetic adapter only.
 // The runner supplies a separate owner-controlled fixture evidence transition.
 export async function facilityReview(app, pending) {

@@ -11,6 +11,7 @@ import {
   consentHistory,
   facilityReview,
   guardianshipReview,
+  professionalReview,
 } from './feature-012-predecessor-identity.mjs';
 
 assert.equal(import.meta.dirname, '/tmp/f012-core-api/tools');
@@ -62,6 +63,10 @@ try {
     'licence-scope-api': () => licenceScope(JSON.parse(fixtureInput)),
     'membership-scope-api': () => membershipScope(JSON.parse(fixtureInput)),
     'facility-scope-api': () => facilityScope(JSON.parse(fixtureInput)),
+    'professional-review-api': () =>
+      professionalReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined, (step) => {
+        checkpoint = step;
+      }),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
