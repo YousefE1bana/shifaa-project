@@ -3190,15 +3190,16 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   const recoveryActor = 'f0110000-0000-4000-8000-000000000004';
   const { subject, session } = fixtures[3];
   assert.match(session, /^[a-f0-9-]{36}$/);
-  sql(
-    db,
-    `INSERT INTO identity.continuity_cases(
+  if (mode !== 'recovery-intake')
+    sql(
+      db,
+      `INSERT INTO identity.continuity_cases(
     id,case_type,subject_person_id,status,public_token_digest,recovery_handle_digest,
     token_key_version,restriction_scope,bound_native_session_id,created_at,expires_at
   ) VALUES ('${recoveryCase}','account_recovery','${recoveryActor}','restricted_enrollment',
     decode(repeat('21',32),'hex'),decode(repeat('22',32),'hex'),1,'mfa_enrollment_only',
     '${session}',now(),now()+interval '15 minutes');`,
-  );
+    );
   const entry = 'tools/feature-012-predecessor-native.mjs';
   report.sourceArchiveSha256 = stageLinkedCoreApi(probe, [
     entry,
@@ -3232,6 +3233,30 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'recovery-intake') {
+    const intake = (report.recoveryIntake = invoke(mode));
+    assert.match(intake.caseId, /^[a-f0-9-]{36}$/);
+    assert.equal(intake.subject, subject);
+    assert.equal(intake.personId, recoveryActor);
+    intake.effects = read(`SELECT json_build_object(
+      'status',status,'version',version,'boundPerson',subject_person_id='${recoveryActor}',
+      'hasRestriction',restriction_scope IS NOT NULL,'hasNativeBinding',bound_native_session_id IS NOT NULL,
+      'completed',completed_at IS NOT NULL,
+      'audit',(SELECT count(*) FROM audit.events WHERE resource_id=cc.id),
+      'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=cc.id))
+      FROM identity.continuity_cases cc WHERE cc.id='${intake.caseId}' AND case_type='account_recovery';`);
+    assert.deepEqual(intake.effects, {
+      status: 'proof_required',
+      version: 2,
+      boundPerson: true,
+      hasRestriction: false,
+      hasNativeBinding: false,
+      completed: false,
+      audit: 0,
+      outbox: 0,
+    });
+    return;
+  }
   if (mode === 'guardianship-api') {
     verifyPredecessorGuardianship(report, db, invoke, read);
     return;
@@ -3911,6 +3936,7 @@ async function admit() {
     ['--predecessor-native-repositories', 'repositories'],
     ['--predecessor-native-scheduling', 'scheduling'],
     ['--predecessor-native-recovery-api', 'recovery-api'],
+    ['--predecessor-native-recovery-intake', 'recovery-intake'],
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],

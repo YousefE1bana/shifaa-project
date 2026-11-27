@@ -1,6 +1,6 @@
 // Real native sessions, ordinary Core API routes, and the F007 local repository.
 import assert from 'node:assert/strict';
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { buildApp } from '../services/api/src/app.ts';
 import { loadConfig } from '../services/api/src/config.ts';
@@ -51,6 +51,7 @@ try {
   const checks = {
     encounter,
     recovery,
+    'recovery-intake': recoveryIntake,
     'recovery-api': recoveryApi,
     'participant-api': () => participantApi(JSON.parse(fixtureInput)),
     'booking-api': () => bookingApi(JSON.parse(fixtureInput)),
@@ -457,6 +458,50 @@ async function scheduling({ checkInId, cancelId }) {
   });
   assert.equal(cancelled.status, 'cancelled');
   return { calls, queueId: id };
+}
+
+async function recoveryIntake() {
+  const fixture = fixtures[3];
+  const native = new SupabaseAuthIssuer({
+    url: issuer,
+    anonKey: config.supabaseAnonKey,
+    jwksUrl: config.supabaseJwksUrl,
+    issuer,
+    audience: config.supabaseJwtAudience,
+  });
+  await native.ready();
+  const claims = await native.resolveSession(fixture.token);
+  assert.equal(claims?.subjectId, fixture.subject);
+  assert.equal(claims.sessionId, fixture.session);
+  const continuity = new PostgresIdentityContinuityService(
+    repository,
+    config.identityEncryptionKey,
+    'ci',
+  );
+  const intake = {
+    caseId: randomUUID(),
+    handleDigest: randomBytes(32),
+    caseTokenDigest: randomBytes(32),
+    expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+  };
+  await continuity.createRecoveryIntake(intake);
+  const bindingInput = { ...intake, subjectId: claims.subjectId };
+  const invalidToken = Buffer.from(intake.caseTokenDigest);
+  invalidToken[0] ^= 1;
+  await assert.rejects(
+    continuity.bindRecoveryIntake({ ...bindingInput, caseTokenDigest: invalidToken }),
+    (error) => error?.statusCode === 401 && error?.code === 'recovery-challenge-invalid',
+  );
+  // This is the repository boundary. GoTrue OTP redemption belongs to the HTTP flow.
+  const bound = await continuity.bindRecoveryIntake(bindingInput);
+  assert.deepEqual(await continuity.bindRecoveryIntake(bindingInput), bound);
+  return {
+    caseId: intake.caseId,
+    subject: claims.subjectId,
+    personId: bound.personId,
+    invalidDigest: 'denied',
+    repeatedBinding: 'same-person',
+  };
 }
 
 async function recovery() {
