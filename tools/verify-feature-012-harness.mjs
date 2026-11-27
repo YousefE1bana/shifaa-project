@@ -5,6 +5,7 @@ import { once } from 'node:events';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
+import { publicationScenario } from './feature-012-publication-scenario.mjs';
 import {
   dependencyInputs,
   excluded,
@@ -2905,18 +2906,9 @@ function sourceFence(db, red, upgrade) {
   }
 }
 
-function coreApiWriter(db, probe, fixture, signingKeyId) {
-  const api = 'services/api';
-  const workspaces = [
-    api,
-    'packages/auth',
-    'packages/contracts',
-    'packages/core',
-    'packages/observability',
-  ];
-  const entry = 'tools/feature-012-core-api-writer.mjs';
+function stageCoreApi(probe, workspaces, sources) {
   const paths = [
-    entry,
+    ...sources,
     ...workspaces.flatMap((workspace) => [workspace + '/package.json', workspace + '/src']),
   ];
   const entries = git(root, ['ls-tree', '-rz', receipt.base, '--', ...paths])
@@ -2935,6 +2927,24 @@ function coreApiWriter(db, probe, fixture, signingKeyId) {
   const target = '/tmp/f012-core-api';
   exec(probe, ['mkdir', target]);
   exec(probe, ['tar', '-xf', '-', '-C', target], { input: archive });
+  return createHash('sha256').update(archive).digest('hex');
+}
+
+function coreApiWriter(db, probe, fixture, signingKeyId) {
+  const api = 'services/api';
+  const workspaces = [
+    api,
+    'packages/auth',
+    'packages/contracts',
+    'packages/core',
+    'packages/observability',
+  ];
+  const entry = 'tools/feature-012-core-api-writer.mjs';
+  const sourceArchiveSha256 = stageCoreApi(probe, workspaces, [
+    entry,
+    'tools/feature-012-probe-workspaces.mjs',
+  ]);
+  const target = '/tmp/f012-core-api';
   const outcome = JSON.parse(
     exec(probe, [
       'node',
@@ -2967,7 +2977,7 @@ function coreApiWriter(db, probe, fixture, signingKeyId) {
     WHERE p.user_id = '${fixture.subject}';`,
   );
   receipt.coreApiWriter = {
-    sourceArchiveSha256: createHash('sha256').update(archive).digest('hex'),
+    sourceArchiveSha256,
     outcome,
     effect,
   };
@@ -3011,6 +3021,140 @@ function coreApiWriter(db, probe, fixture, signingKeyId) {
     assert.equal(withdrawalEffect.exit, 0, withdrawalEffect.stderr);
     assert.equal(withdrawalEffect.stdout, '1|1|1\n');
   }
+}
+
+function publicationWriter(db, auth, probe, fixtures, signingKeyId) {
+  applyWriterBaseline(db, [auth, probe]);
+  const report = (receipt.publication = { inputs: [], requests: [], offline: [], readback: [] });
+  const sealed = receipt.predecessor.commit;
+  const fixturePaths = [
+    'infra/db/fixtures/feature-011.sql',
+    'infra/db/fixtures/feature-011-k06.sql',
+  ];
+  const vector =
+    'specs/011-allergies-clinical-content-governance/contracts/artifact-canonicalization-v1-vectors.json';
+  const k17Path =
+    'specs/011-allergies-clinical-content-governance/evidence/fresh-implementation/K17/publish-api.json';
+  const k17 = git(root, ['show', receipt.base + ':' + k17Path]);
+  const historical = JSON.parse(k17).physicalSourceDigests;
+  report.historical = {
+    path: k17Path,
+    sha256: createHash('sha256').update(k17).digest('hex'),
+    migrations: receipt.predecessor.migrations
+      .filter(({ path }) => path.includes('_f011_'))
+      .map(({ path, sha256 }) => ({ path, installed: sha256, historical: historical[path] })),
+  };
+  assert.equal(report.historical.migrations.length, 10);
+  assert.ok(
+    report.historical.migrations.every(({ historical }) => /^[a-f0-9]{64}$/.test(historical)),
+  );
+  assert.equal(report.historical.migrations.filter((x) => x.installed !== x.historical).length, 7);
+
+  for (const path of fixturePaths) {
+    const bytes = git(root, ['show', sealed + ':' + path]);
+    const result = observedSql(db, bytes);
+    report.inputs.push({ path, sha256: createHash('sha256').update(bytes).digest('hex'), result });
+    assert.equal(result.exit, 0, path);
+  }
+  for (const [index, number] of [2, 3, 5, 6].entries()) {
+    const { subject } = fixtures[index];
+    assert.match(subject, /^[a-f0-9-]{36}$/);
+    const roleMapping = sql(
+      db,
+      `UPDATE identity.people SET user_id='${subject}'::uuid
+      WHERE id='f0110000-0000-4000-8000-${String(number).padStart(12, '0')}'::uuid
+      RETURNING user_id;`,
+    );
+    assert.equal(roleMapping.trim().split(/\r?\n/)[0], subject);
+  }
+  sql(db, `ALTER ROLE shifaa_api PASSWORD '${coreApiPassword}';`);
+
+  const workers = [
+    'services/api',
+    'packages/auth',
+    'packages/contracts',
+    'packages/core',
+    'packages/observability',
+  ];
+  const onlineEntry = 'tools/feature-012-publication-api.mjs';
+  const offlineEntry = 'tools/feature-012-publication-offline.mjs';
+  const linkEntry = 'tools/feature-012-probe-workspaces.mjs';
+  const offlineSource = 'tools/provision-feature-011-evidence.mjs';
+  for (const path of [vector, offlineSource]) {
+    const original = git(root, ['show', sealed + ':' + path]);
+    assert.deepEqual(git(root, ['show', receipt.base + ':' + path]), original);
+    report.inputs.push({ path, sha256: createHash('sha256').update(original).digest('hex') });
+  }
+  const target = '/tmp/f012-core-api';
+  const stage = (resource, entries) => {
+    const sha256 = stageCoreApi(resource, workers, [linkEntry, ...entries]);
+    exec(resource, [
+      'node',
+      '--input-type=module',
+      '-e',
+      "import { linkProbeWorkspaces } from '/tmp/f012-core-api/tools/feature-012-probe-workspaces.mjs'; linkProbeWorkspaces(process.argv[1], process.argv.slice(2));",
+      target,
+      ...workers,
+    ]);
+    return sha256;
+  };
+  report.apiSourceArchiveSha256 = stage(probe, [onlineEntry, vector]);
+  exec(probe, [
+    'node',
+    '-e',
+    "require('fs').writeFileSync('/tmp/f012-publication-key', require('crypto').randomBytes(32), { mode: 0o600, flag: 'wx' });",
+  ]);
+  const owner = create('offline-fixture', receipt.images.probe, {
+    env: { F012_FIXTURE_OWNER_PASSWORD: dbPassword },
+    tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m' },
+    flags: ['--read-only', '--cap-drop=ALL', '--user=1000:1000', '--entrypoint=node'],
+    command: ['-e', 'setTimeout(() => {}, 180000)'],
+  });
+  report.offlineSourceArchiveSha256 = stage(owner, [offlineEntry, offlineSource]);
+  const runStep = (step, resource, entry, args, payload) => {
+    report.lastStep = step;
+    const outcome = exec(
+      resource,
+      [
+        'node',
+        '--import',
+        '/opt/deps/services/api/node_modules/tsx/dist/loader.mjs',
+        `${target}/${entry}`,
+        ...args,
+      ],
+      { input: JSON.stringify(payload) },
+    );
+    return JSON.parse(outcome);
+  };
+  publicationScenario({
+    invoke(action, input) {
+      const observed = runStep(
+        action + ':' + input.actor,
+        probe,
+        onlineEntry,
+        [action, signingKeyId],
+        input,
+      );
+      const expected = fixtures[[2, 3, 5, 6].indexOf(input.actor)];
+      assert.equal(observed.subject, expected.subject);
+      assert.equal(observed.session, expected.session);
+      assert.equal(observed.aal, 'aal2');
+      assert.equal(
+        observed.binding.address,
+        checkContainer(db).NetworkSettings.Networks[networkName].IPAddress,
+      );
+      return observed;
+    },
+    offline(action, input) {
+      return runStep(action, owner, offlineEntry, [action], input);
+    },
+    read(query) {
+      const result = observedSql(db, query);
+      assert.equal(result.exit, 0, result.stderr);
+      return JSON.parse(result.stdout);
+    },
+    report,
+  });
 }
 
 async function admit() {
@@ -3076,8 +3220,9 @@ async function admit() {
   ]).get(onlyArgument);
   const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
+  const publication = onlyArgument === '--predecessor-publication-api';
   const applicationWriter =
-    authenticatedWriter || onlyArgument === '--participating-core-api-writer';
+    publication || authenticatedWriter || onlyArgument === '--participating-core-api-writer';
   const focusedWriters = new Map([
     ['--participating-family-writers', 'familyAndConsent'],
     ['--participating-family-grant', 'familyGrant'],
@@ -3237,6 +3382,7 @@ async function admit() {
       nativeMutation,
       applicationWriter,
       authenticatedWriter,
+      publication,
     });
   } finally {
     teardown();
@@ -3254,6 +3400,7 @@ async function admit() {
   if (nativeMutation) receipt.status = 'PASS_NATIVE_MUTATION_ORDERING';
   if (applicationWriter) receipt.status = 'PASS_T012_CORE_API_WRITER';
   if (authenticatedWriter) receipt.status = 'PASS_T012_AUTHENTICATED_CORE_API_WRITER';
+  if (publication) receipt.status = 'PASS_T012_PREDECESSOR_PUBLICATION_API';
 }
 
 async function runNativeAdmission({
@@ -3264,6 +3411,7 @@ async function runNativeAdmission({
   nativeMutation,
   applicationWriter,
   authenticatedWriter,
+  publication,
 }) {
   const db = startDatabase('db', networkId);
   receipt.databaseSystems = { source: db.system };
@@ -3296,15 +3444,18 @@ async function runNativeAdmission({
   sql(db, "alter role supabase_auth_admin password '" + authPassword + "';\n" + probeSchema());
   const readSessionPolicy =
     nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation || applicationWriter;
-  const signingKey = authenticatedWriter
-    ? {
-        ...generateKeyPairSync('ec', { namedCurve: 'P-256' }).privateKey.export({ format: 'jwk' }),
-        alg: 'ES256',
-        kid: randomUUID(),
-        use: 'sig',
-        key_ops: ['sign', 'verify'],
-      }
-    : undefined;
+  const signingKey =
+    authenticatedWriter || publication
+      ? {
+          ...generateKeyPairSync('ec', { namedCurve: 'P-256' }).privateKey.export({
+            format: 'jwk',
+          }),
+          alg: 'ES256',
+          kid: randomUUID(),
+          use: 'sig',
+          key_ops: ['sign', 'verify'],
+        }
+      : undefined;
   const auth = startAuth(readSessionPolicy, signingKey);
   if (readSessionPolicy) observeNativePolicy(auth);
   const probe = create('probe', receipt.images.probe, {
@@ -3321,9 +3472,15 @@ async function runNativeAdmission({
   });
   const source = readFileSync(safeSource(root, 'tools/feature-012-harness-probe.cjs'));
   receipt.probeSha256 = createHash('sha256').update(source).digest('hex');
-  const fixtures = JSON.parse(exec(probe, ['node', '-', 'fixtures'], { input: source }));
-  bindFixtures(db, fixtures);
+  const phase = publication ? 'publication-fixtures' : 'fixtures';
+  const fixtures = JSON.parse(exec(probe, ['node', '-', phase], { input: source }));
+  bindFixtures(db, fixtures, publication ? 4 : 2);
   receipt.syntheticSessions = fixtures;
+  if (publication) {
+    stage = 'F011 publication in the disposable Core API and Auth topology';
+    publicationWriter(db, auth, probe, fixtures, signingKey.kid);
+    return;
+  }
   if (applicationWriter) {
     stage = 'T012 combined Core API and native Auth writer attribution';
     runWriterCatalog(db, [auth, probe]);
@@ -3361,12 +3518,12 @@ async function runNativeAdmission({
   }
 }
 
-function bindFixtures(db, fixtures) {
-  assert.equal(fixtures.length, 2);
+function bindFixtures(db, fixtures, count) {
+  assert.equal(fixtures.length, count);
   const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/;
   for (const field of ['subject', 'person', 'session']) {
     assert.ok(fixtures.every((entry) => uuid.test(entry[field])));
-    assert.notEqual(fixtures[0][field], fixtures[1][field]);
+    assert.equal(new Set(fixtures.map((entry) => entry[field])).size, count);
   }
   for (const { subject, person, session } of fixtures) {
     const match = sql(
