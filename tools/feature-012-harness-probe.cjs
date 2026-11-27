@@ -139,6 +139,10 @@ async function enrollTotp(person) {
     claims.amr.some(({ method, timestamp }) => method === 'totp' && Number.isInteger(timestamp)),
   );
   person.factor = factor.id;
+  if (process.env.F012_RECOVERY_MAIL === 'true') {
+    person.factorSecret = factor.totp.secret;
+    person.refreshToken = verified.refresh_token;
+  }
   person.token = verified.access_token;
   return { factor: person.factor, initialAal: initial.aal, verifiedAal: claims.aal };
 }

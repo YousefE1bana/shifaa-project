@@ -7,6 +7,7 @@ import { loadConfig } from '../services/api/src/config.ts';
 import { SupabaseAuthIssuer } from '../services/api/src/adapters/supabase-auth.ts';
 import { PostgresIdentityContinuityService } from '../services/api/src/adapters/postgres/identity-continuity-service.ts';
 import probe from './feature-012-harness-probe.cjs';
+import { verifyMailedRecovery } from './feature-012-recovery-mail.mjs';
 import {
   consentHistory,
   facilityReview,
@@ -20,7 +21,7 @@ const fixtures = JSON.parse(readFileSync('/tmp/f012-admission-fixtures.json', 'u
 const password = process.env.F012_CORE_API_PASSWORD;
 assert.match(password, /^[a-f0-9]{64}$/);
 const directAuth = 'http://auth:9999';
-const recoveryHttp = phase === 'recovery-api';
+const recoveryHttp = phase === 'recovery-api' || phase === 'recovery-mail-api';
 const supabaseUrl = recoveryHttp ? 'http://kong:8000' : directAuth;
 const issuer = recoveryHttp ? supabaseUrl + '/auth/v1' : directAuth;
 const anonKey = recoveryHttp ? process.env.F012_RECOVERY_ANON_KEY : 'unused-disposable-anon-key';
@@ -54,6 +55,10 @@ try {
     recovery,
     'recovery-intake': recoveryIntake,
     'recovery-api': recoveryApi,
+    'recovery-mail-api': () =>
+      verifyMailedRecovery(app, config, fixtures[3], probe.totp, (step) => {
+        checkpoint = step;
+      }),
     'participant-api': () => participantApi(JSON.parse(fixtureInput)),
     'booking-api': () => bookingApi(JSON.parse(fixtureInput)),
     'absence-api': () => absenceApi(JSON.parse(fixtureInput)),
