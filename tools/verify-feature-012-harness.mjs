@@ -7,6 +7,7 @@ import { resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import {
   dependencyInputs,
+  excluded,
   git,
   hostExecutable,
   localDocker,
@@ -27,6 +28,7 @@ const password = () => randomBytes(32).toString('hex');
 const dbPassword = password();
 const authPassword = password();
 const apiPassword = password();
+const coreApiPassword = password();
 const jwtSecret = password();
 const receipt = { run, containers: [], commands: [], negatives: [] };
 
@@ -2750,6 +2752,73 @@ function sourceFence(db, red, upgrade) {
   }
 }
 
+function coreApiWriter(db, probe, fixture) {
+  const api = 'services/api';
+  const workspaces = [
+    api,
+    'packages/auth',
+    'packages/contracts',
+    'packages/core',
+    'packages/observability',
+  ];
+  const entry = 'tools/feature-012-core-api-writer.mjs';
+  const paths = [
+    entry,
+    ...workspaces.flatMap((workspace) => [workspace + '/package.json', workspace + '/src']),
+  ];
+  const entries = git(root, ['ls-tree', '-rz', receipt.base, '--', ...paths])
+    .toString()
+    .split('\0')
+    .filter(Boolean);
+  assert.ok(entries.length > paths.length);
+  for (const entry of entries) {
+    const [mode, path] = entry.split('\t');
+    assert.match(mode, /^100(?:644|755) blob [a-f0-9]+$/);
+    assert.ok(path && !excluded(path), 'Unexpected Core API source path');
+    safeSource(root, path);
+  }
+  const archive = git(root, ['archive', '--format=tar', receipt.base, '--', ...paths]);
+  assert.ok(archive.length < 16 * 1024 * 1024, 'Core API source exceeds disposable budget');
+  const target = '/tmp/f012-core-api';
+  exec(probe, ['mkdir', target]);
+  exec(probe, ['tar', '-xf', '-', '-C', target], { input: archive });
+  const outcome = JSON.parse(
+    exec(probe, [
+      'node',
+      '--import',
+      '/opt/deps/services/api/node_modules/tsx/dist/loader.mjs',
+      `${target}/${entry}`,
+      fixture.subject,
+      ...workspaces,
+    ]),
+  );
+  assert.equal(outcome.sessionRole, 'shifaa_api');
+  assert.equal(outcome.effectiveRole, 'shifaa_api');
+  assert.equal(outcome.database, 'postgres');
+  assert.equal(outcome.serverAddress, outcome.configuredAddress);
+  assert.equal(outcome.serverPort, 5432);
+  assert.ok(Number.isInteger(outcome.backend) && outcome.backend > 0);
+  const effect = observedSql(
+    db,
+    `SELECT count(DISTINCT p.id), count(DISTINCT pt.id),
+      count(DISTINCT cr.id), count(DISTINCT a.id)
+    FROM identity.people p
+    JOIN identity.patients pt ON pt.person_id = p.id
+    JOIN identity.care_relationships cr ON cr.actor_person_id = p.id
+      AND cr.subject_patient_id = pt.id AND cr.relationship_type = 'self'
+    JOIN audit.events a ON a.resource_id = p.id AND a.actor_person_id = p.id
+      AND a.action = 'identity.registration.created' AND a.outcome = 'allowed'
+    WHERE p.user_id = '${fixture.subject}';`,
+  );
+  receipt.coreApiWriter = {
+    sourceArchiveSha256: createHash('sha256').update(archive).digest('hex'),
+    outcome,
+    effect,
+  };
+  assert.equal(effect.exit, 0, effect.stderr);
+  assert.equal(effect.stdout, '1|1|1|1\n');
+}
+
 async function admit() {
   const argumentsList = process.argv.slice(2);
   const nativeBaseline =
@@ -2768,6 +2837,7 @@ async function admit() {
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
   const writerCatalog = onlyArgument === '--participating-writer-catalog';
+  const applicationWriter = onlyArgument === '--participating-core-api-writer';
   const focusedWriters = new Map([
     ['--participating-family-writers', 'familyAndConsent'],
     ['--participating-family-grant', 'familyGrant'],
@@ -2798,6 +2868,7 @@ async function admit() {
       nativeRefresh ||
       nativeDeadlines ||
       nativeLogoutFirst ||
+      applicationWriter ||
       nativeMutation
       ? []
       : argumentsList,
@@ -2897,6 +2968,7 @@ async function admit() {
       nativeDeadlines,
       nativeLogoutFirst,
       nativeMutation,
+      applicationWriter,
     });
   } finally {
     teardown();
@@ -2912,6 +2984,7 @@ async function admit() {
   if (nativeDeadlines) receipt.status = 'PASS_NATIVE_DEADLINE_PRIMITIVES';
   if (nativeLogoutFirst) receipt.status = 'PASS_NATIVE_LOGOUT_FIRST';
   if (nativeMutation) receipt.status = 'PASS_NATIVE_MUTATION_ORDERING';
+  if (applicationWriter) receipt.status = 'PASS_T012_CORE_API_WRITER';
 }
 
 async function runNativeAdmission({
@@ -2920,11 +2993,17 @@ async function runNativeAdmission({
   nativeDeadlines,
   nativeLogoutFirst,
   nativeMutation,
+  applicationWriter,
 }) {
   const db = startDatabase('db', networkId);
   receipt.databaseSystems = { source: db.system };
   const restore =
-    nativeBaseline || nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation
+    nativeBaseline ||
+    nativeRefresh ||
+    nativeDeadlines ||
+    nativeLogoutFirst ||
+    nativeMutation ||
+    applicationWriter
       ? null
       : startDatabase('restore', 'none');
   if (restore) {
@@ -2945,12 +3024,14 @@ async function runNativeAdmission({
   }
   stage = 'bootstrap and native API admission';
   sql(db, "alter role supabase_auth_admin password '" + authPassword + "';\n" + probeSchema());
-  const readSessionPolicy = nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation;
+  const readSessionPolicy =
+    nativeRefresh || nativeDeadlines || nativeLogoutFirst || nativeMutation || applicationWriter;
   const auth = startAuth(readSessionPolicy);
   if (readSessionPolicy) observeNativePolicy(auth);
   const probe = create('probe', receipt.images.probe, {
     env: {
       F012_PROBE_PASSWORD: apiPassword,
+      ...(applicationWriter ? { F012_CORE_API_PASSWORD: coreApiPassword } : {}),
       ...(nativeMutation === 'ban' || nativeMutation === 'recovery'
         ? { F012_NATIVE_ADMIN_TOKEN: disposableNativeAdminToken() }
         : {}),
@@ -2964,6 +3045,13 @@ async function runNativeAdmission({
   const fixtures = JSON.parse(exec(probe, ['node', '-', 'fixtures'], { input: source }));
   bindFixtures(db, fixtures);
   receipt.syntheticSessions = fixtures;
+  if (applicationWriter) {
+    stage = 'T012 combined Core API and native Auth writer attribution';
+    runWriterCatalog(db);
+    sql(db, `ALTER ROLE shifaa_api PASSWORD '${coreApiPassword}';`);
+    coreApiWriter(db, probe, fixtures[0]);
+    return;
+  }
   if (nativeMutation) {
     stage = 'T010 pinned native ' + nativeMutation + ' ordering';
     await nativeMutationTrials(db, probe, source, fixtures, nativeMutation);
