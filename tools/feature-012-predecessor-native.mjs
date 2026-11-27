@@ -485,14 +485,16 @@ async function recoveryIntake() {
     expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
   };
   await continuity.createRecoveryIntake(intake);
+  checkpoint = 'reject invalid recovery intake digest';
   const bindingInput = { ...intake, subjectId: claims.subjectId };
   const invalidToken = Buffer.from(intake.caseTokenDigest);
   invalidToken[0] ^= 1;
   await assert.rejects(
     continuity.bindRecoveryIntake({ ...bindingInput, caseTokenDigest: invalidToken }),
-    (error) => error?.statusCode === 401 && error?.code === 'recovery-challenge-invalid',
+    (error) => error?.status === 401 && error?.code === 'recovery-challenge-invalid',
   );
   // This is the repository boundary. GoTrue OTP redemption belongs to the HTTP flow.
+  checkpoint = 'bind recovery intake to the resolved owner';
   const bound = await continuity.bindRecoveryIntake(bindingInput);
   assert.deepEqual(await continuity.bindRecoveryIntake(bindingInput), bound);
   return {
