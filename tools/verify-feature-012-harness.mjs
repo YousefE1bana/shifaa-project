@@ -46,6 +46,7 @@ const dbPassword = password();
 const authPassword = password();
 const apiPassword = password();
 const coreApiPassword = password();
+const workerPassword = password();
 const jwtSecret = password();
 const receipt = { run, containers: [], commands: [], negatives: [] };
 
@@ -3263,7 +3264,7 @@ function preparePredecessorActors(db, report, fixtures, actors) {
   sql(db, `ALTER ROLE shifaa_api PASSWORD '${coreApiPassword}';`);
 }
 
-function stageLinkedCoreApi(resource, entries) {
+function stageLinkedCoreApi(resource, entries, extraWorkspaces = []) {
   const target = '/tmp/f012-core-api';
   const workspaces = [
     'services/api',
@@ -3271,6 +3272,7 @@ function stageLinkedCoreApi(resource, entries) {
     'packages/contracts',
     'packages/core',
     'packages/observability',
+    ...extraWorkspaces,
   ];
   const sha256 = stageCoreApi(resource, workspaces, [
     'tools/feature-012-probe-workspaces.mjs',
@@ -3363,13 +3365,21 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     '${session}',now(),now()+interval '15 minutes');`,
     );
   const entry = 'tools/feature-012-predecessor-native.mjs';
-  report.sourceArchiveSha256 = stageLinkedCoreApi(probe, [
+  const entries = [
     entry,
     'tools/feature-012-predecessor-identity.mjs',
     'tools/feature-012-harness-probe.cjs',
     'tools/feature-012-recovery-mail.mjs',
     ...(mail ? ['supabase/templates/recovery.html'] : []),
-  ]);
+  ];
+  const worker = mode === 'recovery-worker';
+  const workerEntry = 'tools/feature-012-recovery-worker.mjs';
+  if (worker) entries.push(workerEntry);
+  report.sourceArchiveSha256 = stageLinkedCoreApi(
+    probe,
+    entries,
+    worker ? ['services/worker'] : [],
+  );
   const invoke = (phase, input) => {
     report.lastStep = phase;
     const outcome = JSON.parse(
@@ -3429,6 +3439,54 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
       freshSessions: 1,
       audit: 1,
       outbox: 1,
+    });
+    return;
+  }
+  if (worker) {
+    sql(db, `ALTER ROLE shifaa_worker PASSWORD '${workerPassword}';`);
+    report.recovery = invoke('recovery');
+    assert.equal(report.recovery.subject, subject);
+    assert.equal(report.recovery.session, session);
+    const outbox = read(`SELECT json_build_object(
+      'id',e.id,'state',e.state,'caseStatus',c.status,'subjectMatch',c.subject_person_id='${recoveryActor}',
+      'fields',e.payload)
+      FROM platform.outbox_events e JOIN identity.continuity_cases c ON c.id=e.aggregate_id
+      WHERE c.id='${recoveryCase}' AND e.aggregate_version=c.version
+        AND e.event_type='identity.recovery.completed';`);
+    assert.match(outbox.id, /^[a-f0-9-]{36}$/);
+    assert.equal(outbox.state, 'pending');
+    assert.equal(outbox.caseStatus, 'completed');
+    assert.equal(outbox.subjectMatch, true);
+    assert.deepEqual(Object.keys(outbox.fields).sort(), ['action_time', 'support_action']);
+    assert.equal(outbox.fields.support_action, 'completed');
+    report.worker = JSON.parse(
+      exec(probe, [
+        'node',
+        '--import',
+        '/opt/deps/services/api/node_modules/tsx/dist/loader.mjs',
+        '/tmp/f012-core-api/' + workerEntry,
+      ]),
+    );
+    assert.equal(
+      report.worker.address,
+      checkContainer(db).NetworkSettings.Networks[networkName].IPAddress,
+    );
+    report.worker.effects = read(`SELECT json_build_object(
+      'outbox',e.state,'notification',n.status,'recipientType',n.recipient_type,
+      'subjectMatch',n.recipient_person_id='${recoveryActor}','sameFields',n.field_values=e.payload,
+      'attempts',(SELECT count(*) FROM platform.notification_delivery_attempts d
+        WHERE d.source_event_id=e.id AND d.adapter_code='local-synthetic' AND d.outcome='delivered'),
+      'notifications',(SELECT count(*) FROM platform.notifications nn WHERE nn.source_event_id=e.id))
+      FROM platform.outbox_events e JOIN platform.notifications n ON n.source_event_id=e.id
+      WHERE e.id='${outbox.id}';`);
+    assert.deepEqual(report.worker.effects, {
+      outbox: 'delivered',
+      notification: 'delivered',
+      recipientType: 'patient',
+      subjectMatch: true,
+      sameFields: true,
+      attempts: 1,
+      notifications: 1,
     });
     return;
   }
@@ -4292,6 +4350,7 @@ async function admit() {
     ['--predecessor-native-recovery-api', 'recovery-api'],
     ['--predecessor-native-recovery-mail-api', 'recovery-mail-api'],
     ['--predecessor-native-recovery-intake', 'recovery-intake'],
+    ['--predecessor-native-recovery-worker', 'recovery-worker'],
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
@@ -4572,6 +4631,7 @@ async function runNativeAdmission({
   const probe = create('probe', receipt.images.probe, {
     env: {
       F012_PROBE_PASSWORD: apiPassword,
+      ...(predecessorNative === 'recovery-worker' ? { F012_WORKER_PASSWORD: workerPassword } : {}),
       ...(applicationWriter ? { F012_CORE_API_PASSWORD: coreApiPassword } : {}),
       ...(useRecoveryGateway ? { F012_RECOVERY_ANON_KEY: recoveryAnonKey } : {}),
       ...(mail ? { F012_RECOVERY_MAIL: 'true' } : {}),
