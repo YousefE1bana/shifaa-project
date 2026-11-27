@@ -3126,32 +3126,51 @@ function stageLinkedCoreApi(resource, entries) {
 
 function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   if (gateway) {
-    const state = checkContainer(gateway).State;
-    receipt.recoveryGateway = { running: state.Running, exit: state.ExitCode };
-    assert.equal(state.Running, true, 'The disposable Auth gateway stopped before Core API startup');
-    const endpoint = recoveryGateway + '/auth/v1/.well-known/jwks.json';
+    const keyPath = '/.well-known/jwks.json';
     const readiness = JSON.parse(
       exec(probe, [
         'node',
         '-e',
         `(async () => {
-          try {
-            const reply = await fetch(process.argv[1], { signal: AbortSignal.timeout(5000) });
-            const keys = reply.ok ? (await reply.json()).keys : null;
-            console.log(JSON.stringify({ status: reply.status, es256: !!keys?.some((key) =>
-              key.kty === 'EC' && key.crv === 'P-256' && key.alg === 'ES256') }));
-          } catch (error) {
-            const code = error.cause?.code;
-            console.log(JSON.stringify({ status: null, es256: false,
-              code: typeof code === 'string' && /^[A-Z0-9_]{1,35}$/.test(code) ? code : null }));
+          const check = async (endpoint) => {
+            let status = null;
+            try {
+              const reply = await fetch(endpoint, { signal: AbortSignal.timeout(3000) });
+              status = reply.status;
+              const keys = reply.ok ? (await reply.json()).keys : null;
+              if (!reply.ok) await reply.body?.cancel();
+              return { status, es256: !!keys?.some((key) =>
+                key.kty === 'EC' && key.crv === 'P-256' && key.alg === 'ES256') };
+            } catch (error) {
+              const errors = error.cause?.errors ?? [error.cause ?? error];
+              return { status, es256: false, errors: errors.map(({code, name}) =>
+                [code, name].filter((value) => typeof value === 'string' &&
+                  /^[A-Za-z0-9_]{1,35}$/.test(value))) };
+            }
+          };
+          const direct = await check(process.argv[1]);
+          let routed;
+          for (let attempt = 0; attempt < 5; attempt++) {
+            routed = await check(process.argv[2]);
+            if (routed.es256) break;
+            await new Promise((resolve) => setTimeout(resolve, 1000));
           }
+          console.log(JSON.stringify({ direct, routed }));
         })();`,
-        endpoint,
+        'http://auth:9999' + keyPath,
+        recoveryGateway + '/auth/v1' + keyPath,
       ]),
     );
-    receipt.recoveryGateway.jwks = readiness;
-    assert.equal(readiness.status, 200, 'The gateway JWKS endpoint is unavailable');
-    assert.equal(readiness.es256, true, 'The gateway did not serve the configured Auth signing key');
+    const state = checkContainer(gateway).State;
+    receipt.recoveryGateway = { running: state.Running, exit: state.ExitCode, jwks: readiness };
+    assert.equal(state.Running, true, 'The disposable Auth gateway stopped before Core API startup');
+    assert.equal(readiness.direct.es256, true, 'GoTrue did not serve its configured signing key');
+    assert.equal(readiness.routed.status, 200, 'The gateway JWKS endpoint is unavailable');
+    assert.equal(
+      readiness.routed.es256,
+      true,
+      'The gateway did not serve the configured Auth signing key',
+    );
   }
   applyWriterBaseline(db, [auth, probe, gateway]);
   const report = (receipt.predecessorNative = { inputs: [] });
