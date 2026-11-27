@@ -371,6 +371,15 @@ matching audit and outbox effects. The dates came from the disposable
 database's civil calendar. Predecessor admission and current writer
 claims continue to use their own scoped evidence.
 
+The authenticated F010 absence route returned 404 with the contracted
+concealment code for the patient and 200 for the scoped clinician. The
+patient had first checked in the appointment. The clinician's request
+moved it to `reschedule_required` and removed its waiting queue entry.
+Independent readback matched the clinician, exact facility and doctor
+scope, three audit events, three outbox events and one completed
+idempotency record. The denied request created no absence audit. The
+first fixture incorrectly expected 403 instead of the route's 404.
+
 F007's bound native session received 403 on the ordinary consent route
 before replacement enrollment. The actual Core API enrollment handler
 returned 503. The same authenticated session reached the pinned GoTrue
@@ -393,6 +402,8 @@ conventions as the run index above.
 | `native-repositories-participant-api-7e973b3` | `7e973b31ac0da71ef37add985af037f2d456360b` / `0446838b-e9db-4dd2-8b1b-cebc075393c5` | Exit 0. Exact interval closure, denied mismatched interval, revoked participant read and independent effects passed. | `333af82e2fa8cb119657bd788fd243bf8b1611a5b939b4af93f63d59f0dadead` |
 | `native-repositories-recovery-api-7e973b3`    | `7e973b31ac0da71ef37add985af037f2d456360b` / `e21c4cf5-a551-4a6b-9b5f-cc6281a69065` | Exit 2. Restricted route 403. Direct provider 200, configured SDK path 404, enrollment 503.                          | `95aa5cdd1a33108d5282238642dd0a8114b2ee920dccb7ce426bb60cfe563c66` |
 | `native-repositories-booking-api-42359a5`     | `42359a56160143a5bc4327eb0bb07f7cdc575e4a` / `5f2c9d64-87c3-4076-b2d4-f3bb02a8bcea` | Exit 0. Booking, reschedule, check-ins, queue read and reorder with independent audit and outbox readback.           | `ff46cbc1b44d9d0011ab06553a2bfbe5ff4a244c9187a00a8147bd79b1ba9448` |
+| `native-repositories-absence-api-8ed7064`     | `8ed70640f361d38cd5c84aab815657e4256da0b6` / `8f98b1e3-977b-4059-a414-be75f87910de` | Exit 2. The patient was denied with the contracted 404. The fixture expected 403.                                    | `85c32651cb73ebf3616ca6b132e0657b0120c95dc04f1b033860cfc387109e64` |
+| `native-repositories-absence-api-dbdcbe0`     | `dbdcbe0af27155eb9182b7b3d0a1ad3b789c0845` / `99bb528d-f1bc-40ff-8e79-043e5f105d82` | Exit 0. Scoped absence, concealed patient denial and atomic appointment, queue and receipt effects.                  | `ed613de85d8f933753081c2abb81e22c0eca81090cdeeddcb1181917a34ba249` |
 
 ### Family and continuity policy transitions
 

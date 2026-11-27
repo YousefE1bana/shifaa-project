@@ -3131,6 +3131,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'facility-evidence-loss') {
+    verifyPredecessorFacility(report, invoke, read, true);
+    return;
+  }
   if (mode === 'booking-api' || mode === 'absence-api') {
     const scheduleId = 'f0120100-0000-4000-8600-000000000003';
     const secondId = 'f0120100-0000-4000-8500-000000000004';
@@ -3431,6 +3435,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
   );
   report.consent = invoke('consent');
 
+  verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorFacility(report, invoke, read, evidenceLoss = false) {
   report.facility = invoke('facility');
   const { facilityId, objectId } = report.facility;
   for (const value of [facilityId, objectId]) assert.match(value, /^[a-f0-9-]{36}$/);
@@ -3451,6 +3459,26 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     WHERE id='${objectId}' AND facility_id='${facilityId}' AND scan_status='quarantined' RETURNING id
     ) SELECT json_build_object('role',current_user,'rows',count(*)) FROM changed;`);
   assert.deepEqual(report.facility.fixtureRelease, { role: 'supabase_admin', rows: 1 });
+  if (evidenceLoss) {
+    report.facility.submission = invoke('facility', { facilityId, phase: 'submit-only' });
+    const submitted = facilityEffects();
+    assert.equal(submitted.facility, 'pending_review');
+    assert.equal(submitted.licence, 'pending');
+    report.lastStep = 'fixture-owner-evidence-loss';
+    report.facility.fixtureLoss = read(`WITH changed AS (
+      UPDATE identity.private_evidence_objects SET scan_status='rejected',released_at=NULL
+      WHERE id='${objectId}' AND facility_id='${facilityId}' AND scan_status='released' RETURNING id
+      ) SELECT json_build_object('role',current_user,'rows',count(*)) FROM changed;`);
+    assert.deepEqual(report.facility.fixtureLoss, { role: 'supabase_admin', rows: 1 });
+    report.facility.review = invoke('facility', {
+      facilityId,
+      phase: 'review-after-evidence-loss',
+    });
+    report.facility.effects = facilityEffects();
+    assert.deepEqual(report.facility.effects, { ...submitted, scan: 'rejected', released: false });
+    assert.equal(report.facility.effects.reviewer, null);
+    return;
+  }
   report.facility.review = invoke('facility', { facilityId });
   report.facility.effects = facilityEffects();
   assert.deepEqual(report.facility.effects, {
@@ -3633,6 +3661,7 @@ async function admit() {
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
+    ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
