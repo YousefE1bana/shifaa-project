@@ -3504,7 +3504,10 @@ function publicationWriter(db, auth, probe, fixtures, signingKeyId, mode) {
       return observed;
     },
     offline(action, input) {
-      return runStep(action, owner, offlineEntry, [action], input);
+      const outcome = runStep(action, owner, offlineEntry, [action], input);
+      if (outcome.failed) report.offlineFailure = { action, sqlState: outcome.sqlState };
+      assert.equal(outcome.failed, undefined, 'Offline publication fixture failed');
+      return outcome;
     },
     read(query) {
       const result = observedSql(db, query);
