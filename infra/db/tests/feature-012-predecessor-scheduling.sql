@@ -43,8 +43,8 @@ DECLARE
 BEGIN
   PERFORM set_config('shifaa.person_id',patient::text,true),
           set_config('shifaa.aal','2',true),
-          set_config('shifaa.request_id','t012-scheduling',true),
-          set_config('shifaa.trace_id','t012-scheduling',true),
+          set_config('shifaa.request_id','f0120000-0000-4000-9900-000000000041',true),
+          set_config('shifaa.trace_id','t012-synthetic-scheduling',true),
           set_config('shifaa.action','appointment.manage',true),
           set_config('shifaa.purposes','appointment.scheduling',true),
           set_config('shifaa.idempotency_key','t012-book',true),
