@@ -1271,15 +1271,8 @@ function runWriterCatalog(db, coreApiPeers) {
   captureWriterCatalog(db);
 }
 
-function runPredecessorWriterBehaviors(db) {
+function runPredecessorSqlFixtures(db, paths) {
   applyWriterBaseline(db);
-  const paths = [
-    'infra/db/tests/clinic-scheduling-schema.sql',
-    'infra/db/tests/facility-onboarding-rls.sql',
-    'infra/db/tests/feature-012-predecessor-family.sql',
-    'infra/db/tests/feature-012-predecessor-recovery.sql',
-    'infra/db/tests/feature-012-predecessor-governance.sql',
-  ];
   receipt.predecessorWriterBehaviors = paths.map((path) => {
     const fixture = readFileSync(safeSource(root, path));
     assert.deepEqual(fixture, git(root, ['show', receipt.base + ':' + path]), path);
@@ -3038,7 +3031,28 @@ async function admit() {
   const atomicity = argumentsList.length === 1 && argumentsList[0] === '--atomicity';
   const onlyArgument = argumentsList.length === 1 ? argumentsList[0] : undefined;
   const writerCatalog = onlyArgument === '--participating-writer-catalog';
-  const predecessorBehaviors = onlyArgument === '--predecessor-writer-behaviors';
+  const predecessorSql = new Map([
+    [
+      '--predecessor-writer-behaviors',
+      {
+        status: 'PASS_T012_PREDECESSOR_WRITER_BEHAVIORS',
+        paths: [
+          'infra/db/tests/clinic-scheduling-schema.sql',
+          'infra/db/tests/facility-onboarding-rls.sql',
+          'infra/db/tests/feature-012-predecessor-family.sql',
+          'infra/db/tests/feature-012-predecessor-recovery.sql',
+          'infra/db/tests/feature-012-predecessor-governance.sql',
+        ],
+      },
+    ],
+    [
+      '--predecessor-workforce-predicate',
+      {
+        status: 'PASS_T012_PREDECESSOR_WORKFORCE_PREDICATE',
+        paths: ['infra/db/tests/feature-012-predecessor-workforce.sql'],
+      },
+    ],
+  ]).get(onlyArgument);
   const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
   const applicationWriter =
@@ -3063,7 +3077,7 @@ async function admit() {
   const sqlOnly =
     atomicity ||
     writerCatalog ||
-    predecessorBehaviors ||
+    Boolean(predecessorSql) ||
     predecessorAllergy ||
     participatingWriters ||
     redOnly ||
@@ -3115,14 +3129,14 @@ async function admit() {
   if (sqlOnly) {
     stage = predecessorAllergy
       ? 'isolated PostgreSQL predecessor allergy writers'
-      : predecessorBehaviors
+      : predecessorSql
         ? 'isolated PostgreSQL predecessor writer behaviors'
         : atomicity
           ? 'isolated structural atomicity SQL'
           : 'isolated PostgreSQL source fence';
     try {
       const source = startDatabase(
-        predecessorBehaviors || predecessorAllergy
+        predecessorSql || predecessorAllergy
           ? 'predecessor-writers'
           : atomicity
             ? 'atomicity'
@@ -3143,8 +3157,8 @@ async function admit() {
         runAtomicity(source);
       } else if (predecessorAllergy) {
         runPredecessorAllergyWriters(source);
-      } else if (predecessorBehaviors) {
-        runPredecessorWriterBehaviors(source);
+      } else if (predecessorSql) {
+        runPredecessorSqlFixtures(source, predecessorSql.paths);
       } else if (writerCatalog) {
         stage = 'T012 read-only catalog on the disposable migrated database';
         runWriterCatalog(source);
@@ -3172,8 +3186,8 @@ async function admit() {
         matches: true,
       };
     }
-    if (predecessorBehaviors) {
-      receipt.status = 'PASS_T012_PREDECESSOR_WRITER_BEHAVIORS';
+    if (predecessorSql) {
+      receipt.status = predecessorSql.status;
       return;
     }
     if (predecessorAllergy) {
