@@ -3072,7 +3072,7 @@ function stageLinkedCoreApi(resource, entries) {
   return sha256;
 }
 
-function runPredecessorNative(db, auth, probe, fixtures) {
+function runPredecessorNative(db, auth, probe, fixtures, mode) {
   applyWriterBaseline(db, [auth, probe]);
   const report = (receipt.predecessorNative = { inputs: [] });
   preparePredecessorActors(db, report, fixtures, [2, 1, 8, 4]);
@@ -3126,6 +3126,48 @@ function runPredecessorNative(db, auth, probe, fixtures) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'scheduling') {
+    const checkInId = 'f0120100-0000-4000-8500-000000000002';
+    const cancelId = 'f0120100-0000-4000-8500-000000000003';
+    sql(
+      db,
+      `INSERT INTO clinical.appointments
+      (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+       civil_date,local_start,fee_minor_units,currency_code,status,created_by_person_id,updated_by_person_id)
+      SELECT seed.id,a.patient_person_id,a.facility_id,a.doctor_person_id,a.schedule_id,
+        (seed.civil+time '14:00') AT TIME ZONE 'Africa/Cairo',
+        (seed.civil+time '14:30') AT TIME ZONE 'Africa/Cairo','Africa/Cairo',
+        seed.civil,'14:00',0,'EGP','confirmed',a.patient_person_id,a.patient_person_id
+      FROM clinical.appointments a CROSS JOIN (VALUES
+       ('${checkInId}'::uuid,(now() AT TIME ZONE 'Africa/Cairo')::date),
+       ('${cancelId}'::uuid,(now() AT TIME ZONE 'Africa/Cairo')::date+1)
+      ) AS seed(id,civil) WHERE a.id='f0120100-0000-4000-8500-000000000001';`,
+    );
+    report.scheduling = invoke('scheduling', { checkInId, cancelId });
+    const { queueId } = report.scheduling;
+    assert.match(queueId, /^[a-f0-9-]{36}$/);
+    report.scheduling.effects = read(`SELECT json_build_object(
+      'checkedIn',a.status,'cancelled',c.status,'queue',q.state,
+      'audit',(SELECT json_agg(action_code ORDER BY action_code) FROM audit.events
+        WHERE resource_id IN (a.id,c.id,q.id)),
+      'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id IN (a.id,c.id,q.id)))
+      FROM clinical.appointments a JOIN clinical.queue_entries q ON q.appointment_id=a.id
+      CROSS JOIN clinical.appointments c WHERE a.id='${checkInId}' AND c.id='${cancelId}' AND q.id='${queueId}';`);
+    assert.deepEqual(report.scheduling.effects, {
+      checkedIn: 'checked_in',
+      cancelled: 'cancelled',
+      queue: 'completed',
+      audit: [
+        'appointment.cancelled',
+        'appointment.checked_in',
+        'queue.entry.called',
+        'queue.entry.completed',
+        'queue.entry.created',
+      ],
+      outbox: 5,
+    });
+    return;
+  }
   report.encounter = invoke('encounter');
   const { id, queueId } = report.encounter;
   for (const value of [id, queueId]) assert.match(value, /^[a-f0-9-]{36}$/);
@@ -3378,7 +3420,10 @@ async function admit() {
   const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
   const publication = onlyArgument === '--predecessor-publication-api';
-  const predecessorNative = onlyArgument === '--predecessor-native-repositories';
+  const predecessorNative = new Map([
+    ['--predecessor-native-repositories', 'repositories'],
+    ['--predecessor-native-scheduling', 'scheduling'],
+  ]).get(onlyArgument);
   const applicationWriter =
     publication ||
     predecessorNative ||
@@ -3563,7 +3608,11 @@ async function admit() {
   if (applicationWriter) receipt.status = 'PASS_T012_CORE_API_WRITER';
   if (authenticatedWriter) receipt.status = 'PASS_T012_AUTHENTICATED_CORE_API_WRITER';
   if (publication) receipt.status = 'PASS_T012_PREDECESSOR_PUBLICATION_API';
-  if (predecessorNative) receipt.status = 'PASS_T012_PREDECESSOR_NATIVE_REPOSITORIES';
+  if (predecessorNative)
+    receipt.status =
+      predecessorNative === 'scheduling'
+        ? 'PASS_T012_PREDECESSOR_NATIVE_SCHEDULING'
+        : 'PASS_T012_PREDECESSOR_NATIVE_REPOSITORIES';
 }
 
 async function runNativeAdmission({
@@ -3647,8 +3696,8 @@ async function runNativeAdmission({
     return;
   }
   if (predecessorNative) {
-    stage = 'F010 encounter and F007 continuity with native Auth';
-    runPredecessorNative(db, auth, probe, fixtures);
+    stage = 'predecessor Core API and repository fixtures with native Auth';
+    runPredecessorNative(db, auth, probe, fixtures, predecessorNative);
     return;
   }
   if (applicationWriter) {

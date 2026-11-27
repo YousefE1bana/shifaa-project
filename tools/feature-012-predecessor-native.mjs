@@ -39,6 +39,7 @@ try {
   const checks = {
     encounter,
     recovery,
+    scheduling: () => scheduling(JSON.parse(fixtureInput)),
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
@@ -128,6 +129,45 @@ async function encounter() {
     409,
   );
   return { calls, ...identifiers };
+}
+
+async function scheduling({ checkInId, cancelId }) {
+  const [clinician, patient] = fixtures;
+  const calls = [];
+  const action = async (fixture, url, version, payload) => {
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method: 'POST',
+      url,
+      ...(payload ? { payload } : {}),
+      headers: {
+        authorization: 'Bearer ' + fixture.token,
+        'x-request-id': requestId,
+        'if-match': '"' + version + '"',
+        'idempotency-key': randomUUID(),
+        'accept-language': 'en-EG',
+      },
+    });
+    const body = response.json();
+    calls.push({ url, requestId, status: response.statusCode, code: body.code });
+    assert.equal(response.statusCode, 200, url + ' (' + body.code + ')');
+    return body;
+  };
+  const appointment = '/v1/appointments/';
+  const checked = await action(patient, appointment + checkInId + '/check-in', 1);
+  assert.equal(checked.appointment.status, 'checked_in');
+  assert.equal(checked.queueEntry.state, 'waiting');
+  const { id, version } = checked.queueEntry;
+  const queue = '/v1/queue-entries/' + id;
+  const called = await action(clinician, queue + '/call', version);
+  assert.equal(called.state, 'called');
+  const complete = await action(clinician, queue + '/complete', called.version);
+  assert.equal(complete.state, 'completed');
+  const cancelled = await action(patient, appointment + cancelId + '/cancel', 1, {
+    reason: 'Synthetic appointment cancellation',
+  });
+  assert.equal(cancelled.status, 'cancelled');
+  return { calls, queueId: id };
 }
 
 async function recovery() {
