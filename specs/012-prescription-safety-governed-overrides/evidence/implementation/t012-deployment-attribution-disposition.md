@@ -99,6 +99,13 @@ fresh epoch verification remain unexecuted under T013 and T084.
 
 ## 2026-11-27 authenticated Core API consent
 
+The [sealed-chain application follow-up](t012-writer-coverage.md#sealed-chain-application-observations)
+adds publication, scheduling, participant and encounter actions using the
+same native issuer and Core API database boundary. It also records the
+separate synthetic F011 owner provisioner and the F007 provider transport
+limit. D3/D4 operational approval and operator assignments remain those
+documented above.
+
 The `--participating-authenticated-core-api-writer` focus used the existing
 disposable internal bridge, pinned PostgreSQL and GoTrue, and a probe running
 the committed Core API with its Supabase Auth and PostgreSQL adapters. GoTrue
