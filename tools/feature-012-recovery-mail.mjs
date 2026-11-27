@@ -35,8 +35,9 @@ async function findRecoveryOtp(email, previous, checkpoint) {
       const detail = await mailboxJson('/api/v1/message/' + encodeURIComponent(message.ID));
       // The existing project template is HTML-only. Read the named code in
       // either decoded representation rather than matching a digit in a URL.
-      const rendered = detail.Text || detail.HTML || '';
-      const code = /Your recovery code is\s*(?:<strong>)?(\d{6})\b/i.exec(rendered)?.[1];
+      const codePattern = /Your recovery code is\s*(?:<strong>)?(\d{6})\b/i;
+      const code =
+        codePattern.exec(detail.Text ?? '')?.[1] ?? codePattern.exec(detail.HTML ?? '')?.[1];
       if (code) return code;
       checkpoint('mail recovery message did not contain the project code template');
       throw new Error('Disposable recovery email template mismatch');
@@ -50,8 +51,10 @@ export async function verifyMailedRecovery(app, config, fixture, totp, checkpoin
   assert.equal(process.env.F012_RECOVERY_MAIL, 'true');
   assert.match(fixture.email, /^[0-9a-f-]{36}@example\.invalid$/);
   const template = readFileSync(new URL('../supabase/templates/recovery.html', import.meta.url));
+  let templateRequests = 0;
   const templateServer = createServer((request, response) => {
     if (request.method === 'GET' && request.url === '/f007-recovery.html') {
+      templateRequests += 1;
       response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }).end(template);
     } else {
       response.writeHead(404).end();
@@ -95,6 +98,8 @@ export async function verifyMailedRecovery(app, config, fixture, totp, checkpoin
       202,
     );
     assert.equal(intake.body.status, 'accepted');
+    checkpoint('Auth fetched the project recovery template');
+    assert.equal(templateRequests, 1);
     const { caseId, caseToken } = intake.body;
     assert.match(caseId, /^[a-f0-9-]{36}$/);
     checkpoint('mail recovery OTP delivery');
@@ -159,6 +164,7 @@ export async function verifyMailedRecovery(app, config, fixture, totp, checkpoin
       subject: fresh.subjectId,
       session: fresh.sessionId,
       intake: intake.status,
+      templateRequests,
       complete: completed.status,
       originalRouteBefore: initialHistory.statusCode,
       originalRouteAfter: oldHistory.statusCode,

@@ -4161,13 +4161,7 @@ function publicationWriter(db, auth, probe, fixtures, signingKeyId, mode) {
   const owner = create('offline-fixture', receipt.images.probe, {
     env: { F012_FIXTURE_OWNER_PASSWORD: dbPassword },
     tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m' },
-    flags: [
-      '--read-only',
-      '--cap-drop=ALL',
-      '--user=1000:1000',
-      '--entrypoint=node',
-      ...(mail ? ['--network-alias', 'probe'] : []),
-    ],
+    flags: ['--read-only', '--cap-drop=ALL', '--user=1000:1000', '--entrypoint=node'],
     command: ['-e', 'setTimeout(() => {}, 180000)'],
   });
   report.offlineSourceArchiveSha256 = stageLinkedCoreApi(owner, [offlineEntry, offlineSource]);
@@ -4586,9 +4580,20 @@ async function runNativeAdmission({
         : {}),
     },
     tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m' },
-    flags: ['--read-only', '--cap-drop=ALL', '--user=1000:1000', '--entrypoint=node'],
+    flags: [
+      '--read-only',
+      '--cap-drop=ALL',
+      '--user=1000:1000',
+      '--entrypoint=node',
+      ...(mail ? ['--network-alias', 'probe'] : []),
+    ],
     command: ['-e', 'setTimeout(() => {}, 180000)'],
   });
+  if (mail) {
+    const aliases = checkContainer(probe).NetworkSettings.Networks[networkName].Aliases;
+    assert.ok(aliases.includes('probe'), 'Auth recovery template host alias is unavailable');
+    receipt.recoveryTemplateTransport = { privateProbeAlias: true };
+  }
   const source = readFileSync(safeSource(root, 'tools/feature-012-harness-probe.cjs'));
   if (gateway) {
     stage = 'disposable Auth gateway readiness';
