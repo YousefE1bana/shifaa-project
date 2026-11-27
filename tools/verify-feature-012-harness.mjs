@@ -3131,7 +3131,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
-  if (mode === 'booking-api') {
+  if (mode === 'booking-api' || mode === 'absence-api') {
     const scheduleId = 'f0120100-0000-4000-8600-000000000003';
     const secondId = 'f0120100-0000-4000-8500-000000000004';
     const setup = read(`WITH anchor AS (
@@ -3167,6 +3167,47 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
       FROM clinical.appointments WHERE id='f0120100-0000-4000-8500-000000000001';
       COMMIT;`,
     );
+    if (mode === 'absence-api') {
+      const interval = read(`SELECT json_build_object('facilityId',facility_id,
+        'doctorId',doctor_person_id,'appointmentId',id,'civilDate',civil_date,
+        'startsAt',starts_at,'endsAt',ends_at) FROM clinical.appointments WHERE id='${secondId}';`);
+      report.absence = invoke(mode, interval);
+      const { absenceId, queueEntryId, calls } = report.absence;
+      for (const value of [absenceId, queueEntryId, ...calls.map((call) => call.requestId)]) {
+        assert.match(value, /^[a-f0-9-]{36}$/);
+      }
+      report.absence.effects = read(`SELECT json_build_object(
+        'appointment',a.status,'queue',q.state,'sameScope',e.facility_id=a.facility_id AND e.doctor_person_id=a.doctor_person_id,
+        'clinicianActor',e.created_by_person_id=a.doctor_person_id,
+        'audit',(SELECT json_agg(action_code ORDER BY action_code) FROM audit.events
+          WHERE request_id='${calls[2].requestId}' AND actor_person_id=a.doctor_person_id
+            AND resource_id IN(e.id,a.id,q.id)),
+        'deniedAudit',(SELECT count(*) FROM audit.events WHERE request_id='${calls[1].requestId}'
+          AND action_code='doctor.absence.declared'),
+        'outbox',(SELECT count(*) FROM platform.outbox_events
+          WHERE aggregate_id IN(e.id,a.id,q.id) AND (event_type='clinical.doctor_absence.declared.v1'
+            OR (aggregate_id=a.id AND aggregate_version=a.version)
+            OR (aggregate_id=q.id AND aggregate_version=q.version))),
+        'idempotency',(SELECT count(*) FROM platform.idempotency_records WHERE resource_id=e.id AND state='completed'))
+        FROM clinical.appointments a JOIN clinical.queue_entries q ON q.appointment_id=a.id
+        JOIN clinical.schedule_exceptions e ON e.id='${absenceId}' AND e.exception_type='absence'
+        WHERE a.id='${secondId}' AND q.id='${queueEntryId}';`);
+      assert.deepEqual(report.absence.effects, {
+        appointment: 'reschedule_required',
+        queue: 'removed',
+        sameScope: true,
+        clinicianActor: true,
+        audit: [
+          'appointment.reschedule_required',
+          'doctor.absence.declared',
+          'queue.entry.removed',
+        ],
+        deniedAudit: 0,
+        outbox: 3,
+        idempotency: 1,
+      });
+      return;
+    }
     const { rescheduledStart, rescheduledEnd, ...booking } = setup;
     report.booking = invoke(mode, {
       booking: { ...booking, paymentMethod: 'cash_on_arrival' },
@@ -3584,6 +3625,7 @@ async function admit() {
     ['--predecessor-native-recovery-api', 'recovery-api'],
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
+    ['--predecessor-native-absence-api', 'absence-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
