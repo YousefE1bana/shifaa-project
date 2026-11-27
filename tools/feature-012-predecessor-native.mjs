@@ -7,7 +7,11 @@ import { loadConfig } from '../services/api/src/config.ts';
 import { SupabaseAuthIssuer } from '../services/api/src/adapters/supabase-auth.ts';
 import { PostgresIdentityContinuityService } from '../services/api/src/adapters/postgres/identity-continuity-service.ts';
 import probe from './feature-012-harness-probe.cjs';
-import { consentHistory, facilityReview } from './feature-012-predecessor-identity.mjs';
+import {
+  consentHistory,
+  facilityReview,
+  guardianshipReview,
+} from './feature-012-predecessor-identity.mjs';
 
 assert.equal(import.meta.dirname, '/tmp/f012-core-api/tools');
 const [phase, fixtureInput] = process.argv.slice(2);
@@ -53,6 +57,8 @@ try {
     'absence-api': () => absenceApi(JSON.parse(fixtureInput)),
     scheduling: () => scheduling(JSON.parse(fixtureInput)),
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
+    'guardianship-api': () => guardianshipReview(app, JSON.parse(fixtureInput)),
+    'licence-scope-api': () => licenceScope(JSON.parse(fixtureInput)),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
@@ -158,6 +164,66 @@ async function encounter() {
     409,
   );
   return { calls, ...identifiers };
+}
+
+async function licenceScope({ licence }) {
+  const [clinician] = fixtures;
+  const action = async (url, token, payload, expected, headers) => {
+    checkpoint = url;
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method: 'POST',
+      url,
+      payload,
+      headers: {
+        authorization: 'Bearer ' + token,
+        'x-request-id': requestId,
+        'idempotency-key': randomUUID(),
+        ...headers,
+      },
+    });
+    const body = response.json();
+    assert.equal(response.statusCode, expected, url + ' (' + body.code + ')');
+    return { body, requestId, status: response.statusCode };
+  };
+  const created = await action(
+    '/v1/encounters',
+    clinician.token,
+    {
+      appointmentId: 'f0120100-0000-4000-8500-000000000001',
+      patientId: 'f0110000-0000-4000-8000-000000000001',
+      encounterType: 'consultation',
+    },
+    201,
+    { 'x-purpose': 'appointment.scheduling' },
+  );
+  const { id, version, status } = created.body.encounter;
+  assert.equal(status, 'open');
+  const suspended = await action(
+    '/v1/admin/professional-licenses/' + licence + '/decision',
+    'synthetic-admin:facility_approver:f0110000-0000-4000-8000-000000000008',
+    { decision: 'suspend', reason: 'Synthetic professional review' },
+    200,
+    { 'x-purpose': 'professional_license_review', 'x-aal': '2', 'if-match': '"1"' },
+  );
+  assert.equal(suspended.body.id, licence);
+  assert.equal(suspended.body.status, 'suspended');
+  assert.equal(suspended.body.version, 2);
+  const denied = await action(
+    '/v1/encounters/' + id + '/complete',
+    clinician.token,
+    { summary: 'Synthetic completion after licence suspension.', structuralConfirmation: true },
+    404,
+    { 'x-purpose': 'appointment.scheduling', 'if-match': '"' + version + '"' },
+  );
+  assert.equal(denied.body.code, 'not-found');
+  return {
+    id,
+    version,
+    create: { requestId: created.requestId, status: created.status },
+    suspend: { requestId: suspended.requestId, status: suspended.status },
+    complete: { requestId: denied.requestId, status: denied.status, code: denied.body.code },
+  };
 }
 
 async function bookingApi({ booking, nextSlot, secondId }) {

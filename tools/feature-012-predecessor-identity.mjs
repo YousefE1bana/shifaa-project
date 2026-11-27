@@ -50,6 +50,42 @@ export async function consentHistory(app, subject, unrelated) {
   };
 }
 
+export async function guardianshipReview(app, { phase, patient, relationship }) {
+  const reviewer = '40000000-0000-4000-8000-000000000006';
+  const approve = phase === 'approve';
+  const requestId = randomUUID();
+  const response = await app.inject({
+    method: 'POST',
+    url: approve
+      ? '/v1/admin/guardianships/' + relationship + '/decision'
+      : '/v1/relationships/' + relationship + '/revoke',
+    payload: approve
+      ? {
+          decision: 'approved',
+          reason_code: 'synthetic_approved',
+          valid_until: new Date(Date.now() + 86_400_000).toISOString(),
+          approved_permissions: ['profile.view', 'appointment.manage', 'record.view'],
+        }
+      : { reason_code: 'synthetic_evidence_rejected' },
+    headers: {
+      authorization: 'Bearer synthetic-admin:support_admin:' + reviewer,
+      'x-shifaa-patient-context': patient,
+      'x-request-id': requestId,
+      'x-aal': '2',
+      'x-purpose': 'guardianship_review',
+      'if-match': approve ? '"1"' : '"2"',
+      'idempotency-key': randomUUID(),
+    },
+  });
+  const body = response.json();
+  assert.equal(response.statusCode, 200, phase + ' (' + body.code + ')');
+  assert.equal(body.id, relationship);
+  assert.equal(body.managed_patient_id, patient);
+  assert.equal(body.status, approve ? 'active' : 'revoked');
+  assert.equal(body.version, approve ? 2 : 3);
+  return { requestId, status: response.statusCode, state: body.status, version: body.version };
+}
+
 // Facility onboarding accepts its documented seeded-synthetic adapter only.
 // The runner supplies a separate owner-controlled fixture evidence transition.
 export async function facilityReview(app, pending) {

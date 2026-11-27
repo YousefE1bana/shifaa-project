@@ -3232,6 +3232,14 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'guardianship-api') {
+    verifyPredecessorGuardianship(report, db, invoke, read);
+    return;
+  }
+  if (mode === 'licence-scope-api') {
+    verifyPredecessorLicenceScope(report, db, invoke, read);
+    return;
+  }
   if (mode === 'facility-evidence-loss') {
     verifyPredecessorFacility(report, invoke, read, true);
     return;
@@ -3539,6 +3547,150 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   verifyPredecessorFacility(report, invoke, read);
 }
 
+function verifyPredecessorLicenceScope(report, db, invoke, read) {
+  const licence = 'f0110000-0000-4000-8300-000000000002';
+  const doctor = 'f0110000-0000-4000-8000-000000000002';
+  const reviewer = 'f0110000-0000-4000-8000-000000000008';
+  const evidence = 'f0120100-0000-4000-8300-000000000008';
+  sql(
+    db,
+    `BEGIN;
+    INSERT INTO identity.private_evidence_objects
+      (id,bucket_code,object_key,owner_person_id,sha256,mime_type,size_bytes,scan_status,released_at)
+    VALUES ('${evidence}','professional-license-evidence','synthetic/t012-scope','${doctor}',
+      repeat('4',64),'application/pdf',10,'released',now());
+    UPDATE identity.professional_licenses SET evidence_object_id='${evidence}'
+    WHERE id='${licence}' AND person_id='${doctor}';
+    COMMIT;`,
+  );
+  const result = (report.licenceScope = invoke('licence-scope-api', { licence }));
+  for (const id of [result.id, result.suspend.requestId, result.complete.requestId]) {
+    assert.match(id, /^[a-f0-9-]{36}$/);
+  }
+  result.effects = read(`SELECT json_build_object(
+    'licence',l.status,'licenceVersion',l.version,'evidence',ev.scan_status,
+    'encounter',e.status,'encounterVersion',e.version,'appointment',a.status,'queue',q.state,
+    'suspensionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=l.id
+      AND request_id='${result.suspend.requestId}' AND actor_person_id='${reviewer}'
+      AND action_code='professional_license.suspended'),
+    'suspensionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=l.id
+      AND event_type='professional_license.changed'),
+    'completionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=e.id
+      AND request_id='${result.complete.requestId}' AND action_code='encounter.completed'),
+    'completionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=e.id
+      AND event_type='clinical.encounter.completed.v1'),
+    'completionReceipt',(SELECT count(*) FROM platform.idempotency_records WHERE resource_id=e.id
+      AND route_template='/v1/encounters/{encounterId}/complete'))
+    FROM clinical.encounters e JOIN clinical.appointments a ON a.id=e.appointment_id
+    JOIN clinical.queue_entries q ON q.appointment_id=a.id
+    JOIN identity.professional_licenses l ON l.person_id=e.responsible_clinician_id
+    JOIN identity.private_evidence_objects ev ON ev.id=l.evidence_object_id
+    WHERE e.id='${result.id}' AND l.id='${licence}' AND ev.id='${evidence}';`);
+  assert.deepEqual(result.effects, {
+    licence: 'suspended',
+    licenceVersion: 2,
+    evidence: 'released',
+    encounter: 'open',
+    encounterVersion: result.version,
+    appointment: 'in_consultation',
+    queue: 'in_service',
+    suspensionAudit: 1,
+    suspensionOutbox: 1,
+    completionAudit: 0,
+    completionOutbox: 0,
+    completionReceipt: 0,
+  });
+}
+
+function verifyPredecessorGuardianship(report, db, invoke, read) {
+  // Fixed F004 synthetic fixtures from the sealed chain.
+  const relationship = '43000000-0000-4000-8000-000000000002';
+  const patient = '41000000-0000-4000-8000-000000000002';
+  const guardian = '40000000-0000-4000-8000-000000000003';
+  const reviewer = '40000000-0000-4000-8000-000000000006';
+  const evidence = '42000000-0000-4000-8000-000000000001';
+  const authority = () => {
+    const verdict = observedSql(
+      db,
+      `BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SET LOCAL shifaa.purposes = 'dependent_care';
+      SELECT session_user,current_user,platform.person_has_family_relationship(
+        '${patient}','${guardian}','record.view');
+      ROLLBACK;`,
+    );
+    assert.equal(verdict.exit, 0, verdict.stderr);
+    return verdict.stdout.split(/\r?\n/).find((line) => line.startsWith('shifaa_api|'));
+  };
+  const allergyAuthority = () =>
+    observedSql(
+      db,
+      `\\set VERBOSITY verbose
+      BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SET LOCAL shifaa.environment = 'local';
+      SET LOCAL shifaa.person_id = '${guardian}';
+      SET LOCAL shifaa.actor_role = 'GUA';
+      SET LOCAL shifaa.aal = '2';
+      SET LOCAL shifaa.purposes = 'dependent_care';
+      SET LOCAL shifaa.action = 'listAllergies';
+      SELECT session_user,current_user,
+        jsonb_typeof(clinical.list_allergies_api_v1('${patient}','{}'::jsonb));
+      ROLLBACK;`,
+    );
+
+  const result = (report.guardianship = {});
+  result.approval = invoke('guardianship-api', { phase: 'approve', patient, relationship });
+  result.approvedAuthority = authority();
+  assert.equal(result.approvedAuthority, 'shifaa_api|shifaa_api|t');
+  result.approvedAllergyAuthority = allergyAuthority();
+  assert.equal(result.approvedAllergyAuthority.exit, 0, result.approvedAllergyAuthority.stderr);
+  assert.match(result.approvedAllergyAuthority.stdout, /^shifaa_api\|shifaa_api\|object$/m);
+  result.fixtureEvidenceLoss = read(`WITH rejected AS (
+    UPDATE identity.private_evidence_objects SET scan_status='rejected',released_at=NULL
+    WHERE id='${evidence}' AND scan_status='released' RETURNING id
+    ) SELECT json_build_object('role',session_user,'rows',count(*)) FROM rejected;`);
+  assert.deepEqual(result.fixtureEvidenceLoss, { role: 'supabase_admin', rows: 1 });
+  result.evidenceLossBeforeRevocation =
+    read(`SELECT json_build_object('status',status,'version',version)
+    FROM identity.care_relationships WHERE id='${relationship}' AND evidence_object_id='${evidence}';`);
+  assert.deepEqual(result.evidenceLossBeforeRevocation, { status: 'active', version: 2 });
+  result.rejectedAllergyAuthority = allergyAuthority();
+  assert.equal(result.rejectedAllergyAuthority.exit, 3);
+  assert.match(
+    result.rejectedAllergyAuthority.stderr,
+    /42501: Feature 011 allergy authority denied/,
+  );
+  result.revocation = invoke('guardianship-api', { phase: 'revoke', patient, relationship });
+  result.revokedAuthority = authority();
+  assert.equal(result.revokedAuthority, 'shifaa_api|shifaa_api|f');
+  for (const id of [result.approval.requestId, result.revocation.requestId]) {
+    assert.match(id, /^[a-f0-9-]{36}$/);
+  }
+  result.effects = read(`SELECT json_build_object(
+    'state',r.status,'version',r.version,'approvalActor',r.reviewed_by_person_id='${reviewer}',
+    'revocationActor',r.revoked_by_person_id='${reviewer}','revoked',r.revoked_at IS NOT NULL,
+    'evidence',e.scan_status,'evidenceReleased',e.released_at IS NOT NULL,
+    'audit',(SELECT count(*) FROM audit.events WHERE resource_id=r.id AND actor_person_id='${reviewer}'
+      AND ((request_id='${result.approval.requestId}' AND action_code='relationship.guardianship.active')
+        OR (request_id='${result.revocation.requestId}' AND action_code='relationship.guardianship.revoked'))),
+    'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=r.id AND
+      event_type IN ('relationship.guardianship.active','relationship.guardianship.revoked')))
+    FROM identity.care_relationships r JOIN identity.private_evidence_objects e ON e.id=r.evidence_object_id
+    WHERE r.id='${relationship}' AND e.id='${evidence}';`);
+  assert.deepEqual(result.effects, {
+    state: 'revoked',
+    version: 3,
+    approvalActor: true,
+    revocationActor: true,
+    revoked: true,
+    evidence: 'rejected',
+    evidenceReleased: false,
+    audit: 2,
+    outbox: 2,
+  });
+}
+
 function verifyPredecessorFacility(report, invoke, read, evidenceLoss = false) {
   report.facility = invoke('facility');
   const { facilityId, objectId } = report.facility;
@@ -3763,6 +3915,8 @@ async function admit() {
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
+    ['--predecessor-guardianship-api', 'guardianship-api'],
+    ['--predecessor-licence-scope-api', 'licence-scope-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
