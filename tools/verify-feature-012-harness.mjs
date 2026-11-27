@@ -3131,7 +3131,11 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
-  if (mode === 'booking-api') {
+  if (mode === 'facility-evidence-loss') {
+    verifyPredecessorFacility(report, invoke, read, true);
+    return;
+  }
+  if (mode === 'booking-api' || mode === 'absence-api') {
     const scheduleId = 'f0120100-0000-4000-8600-000000000003';
     const secondId = 'f0120100-0000-4000-8500-000000000004';
     const setup = read(`WITH anchor AS (
@@ -3167,6 +3171,47 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
       FROM clinical.appointments WHERE id='f0120100-0000-4000-8500-000000000001';
       COMMIT;`,
     );
+    if (mode === 'absence-api') {
+      const interval = read(`SELECT json_build_object('facilityId',facility_id,
+        'doctorId',doctor_person_id,'appointmentId',id,'civilDate',civil_date,
+        'startsAt',starts_at,'endsAt',ends_at) FROM clinical.appointments WHERE id='${secondId}';`);
+      report.absence = invoke(mode, interval);
+      const { absenceId, queueEntryId, calls } = report.absence;
+      for (const value of [absenceId, queueEntryId, ...calls.map((call) => call.requestId)]) {
+        assert.match(value, /^[a-f0-9-]{36}$/);
+      }
+      report.absence.effects = read(`SELECT json_build_object(
+        'appointment',a.status,'queue',q.state,'sameScope',e.facility_id=a.facility_id AND e.doctor_person_id=a.doctor_person_id,
+        'clinicianActor',e.created_by_person_id=a.doctor_person_id,
+        'audit',(SELECT json_agg(action_code ORDER BY action_code) FROM audit.events
+          WHERE request_id='${calls[2].requestId}' AND actor_person_id=a.doctor_person_id
+            AND resource_id IN(e.id,a.id,q.id)),
+        'deniedAudit',(SELECT count(*) FROM audit.events WHERE request_id='${calls[1].requestId}'
+          AND action_code='doctor.absence.declared'),
+        'outbox',(SELECT count(*) FROM platform.outbox_events
+          WHERE aggregate_id IN(e.id,a.id,q.id) AND (event_type='clinical.doctor_absence.declared.v1'
+            OR (aggregate_id=a.id AND aggregate_version=a.version)
+            OR (aggregate_id=q.id AND aggregate_version=q.version))),
+        'idempotency',(SELECT count(*) FROM platform.idempotency_records WHERE resource_id=e.id AND state='completed'))
+        FROM clinical.appointments a JOIN clinical.queue_entries q ON q.appointment_id=a.id
+        JOIN clinical.schedule_exceptions e ON e.id='${absenceId}' AND e.exception_type='absence'
+        WHERE a.id='${secondId}' AND q.id='${queueEntryId}';`);
+      assert.deepEqual(report.absence.effects, {
+        appointment: 'reschedule_required',
+        queue: 'removed',
+        sameScope: true,
+        clinicianActor: true,
+        audit: [
+          'appointment.reschedule_required',
+          'doctor.absence.declared',
+          'queue.entry.removed',
+        ],
+        deniedAudit: 0,
+        outbox: 3,
+        idempotency: 1,
+      });
+      return;
+    }
     const { rescheduledStart, rescheduledEnd, ...booking } = setup;
     report.booking = invoke(mode, {
       booking: { ...booking, paymentMethod: 'cash_on_arrival' },
@@ -3390,6 +3435,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
   );
   report.consent = invoke('consent');
 
+  verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorFacility(report, invoke, read, evidenceLoss = false) {
   report.facility = invoke('facility');
   const { facilityId, objectId } = report.facility;
   for (const value of [facilityId, objectId]) assert.match(value, /^[a-f0-9-]{36}$/);
@@ -3410,6 +3459,26 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     WHERE id='${objectId}' AND facility_id='${facilityId}' AND scan_status='quarantined' RETURNING id
     ) SELECT json_build_object('role',current_user,'rows',count(*)) FROM changed;`);
   assert.deepEqual(report.facility.fixtureRelease, { role: 'supabase_admin', rows: 1 });
+  if (evidenceLoss) {
+    report.facility.submission = invoke('facility', { facilityId, phase: 'submit-only' });
+    const submitted = facilityEffects();
+    assert.equal(submitted.facility, 'pending_review');
+    assert.equal(submitted.licence, 'pending');
+    report.lastStep = 'fixture-owner-evidence-loss';
+    report.facility.fixtureLoss = read(`WITH changed AS (
+      UPDATE identity.private_evidence_objects SET scan_status='rejected',released_at=NULL
+      WHERE id='${objectId}' AND facility_id='${facilityId}' AND scan_status='released' RETURNING id
+      ) SELECT json_build_object('role',current_user,'rows',count(*)) FROM changed;`);
+    assert.deepEqual(report.facility.fixtureLoss, { role: 'supabase_admin', rows: 1 });
+    report.facility.review = invoke('facility', {
+      facilityId,
+      phase: 'review-after-evidence-loss',
+    });
+    report.facility.effects = facilityEffects();
+    assert.deepEqual(report.facility.effects, { ...submitted, scan: 'rejected', released: false });
+    assert.equal(report.facility.effects.reviewer, null);
+    return;
+  }
   report.facility.review = invoke('facility', { facilityId });
   report.facility.effects = facilityEffects();
   assert.deepEqual(report.facility.effects, {
@@ -3422,7 +3491,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
   });
 }
 
-function publicationWriter(db, auth, probe, fixtures, signingKeyId) {
+function publicationWriter(db, auth, probe, fixtures, signingKeyId, mode) {
   applyWriterBaseline(db, [auth, probe]);
   const report = (receipt.publication = { inputs: [], requests: [], offline: [], readback: [] });
   const sealed = receipt.predecessor.commit;
@@ -3484,6 +3553,7 @@ function publicationWriter(db, auth, probe, fixtures, signingKeyId) {
     return JSON.parse(outcome);
   };
   publicationScenario({
+    clockOnly: mode === 'clock',
     invoke(action, input) {
       const observed = runStep(
         action + ':' + input.actor,
@@ -3503,7 +3573,10 @@ function publicationWriter(db, auth, probe, fixtures, signingKeyId) {
       return observed;
     },
     offline(action, input) {
-      return runStep(action, owner, offlineEntry, [action], input);
+      const outcome = runStep(action, owner, offlineEntry, [action], input);
+      if (outcome.failed) report.offlineFailure = { action, sqlState: outcome.sqlState };
+      assert.equal(outcome.failed, undefined, 'Offline publication fixture failed');
+      return outcome;
     },
     read(query) {
       const result = observedSql(db, query);
@@ -3577,13 +3650,18 @@ async function admit() {
   ]).get(onlyArgument);
   const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
-  const publication = onlyArgument === '--predecessor-publication-api';
+  const publication = new Map([
+    ['--predecessor-publication-api', 'lifecycle'],
+    ['--predecessor-publication-clock', 'clock'],
+  ]).get(onlyArgument);
   const predecessorNative = new Map([
     ['--predecessor-native-repositories', 'repositories'],
     ['--predecessor-native-scheduling', 'scheduling'],
     ['--predecessor-native-recovery-api', 'recovery-api'],
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
+    ['--predecessor-native-absence-api', 'absence-api'],
+    ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
@@ -3768,7 +3846,12 @@ async function admit() {
   if (nativeMutation) receipt.status = 'PASS_NATIVE_MUTATION_ORDERING';
   if (applicationWriter) receipt.status = 'PASS_T012_CORE_API_WRITER';
   if (authenticatedWriter) receipt.status = 'PASS_T012_AUTHENTICATED_CORE_API_WRITER';
-  if (publication) receipt.status = 'PASS_T012_PREDECESSOR_PUBLICATION_API';
+  if (publication) {
+    receipt.status =
+      publication === 'clock'
+        ? 'PASS_T012_PREDECESSOR_PUBLICATION_CLOCK'
+        : 'PASS_T012_PREDECESSOR_PUBLICATION_API';
+  }
   if (predecessorNative)
     receipt.status =
       'PASS_T012_PREDECESSOR_NATIVE_' + predecessorNative.replace('-', '_').toUpperCase();
@@ -3851,7 +3934,7 @@ async function runNativeAdmission({
   receipt.syntheticSessions = fixtures;
   if (publication) {
     stage = 'F011 publication in the disposable Core API and Auth topology';
-    publicationWriter(db, auth, probe, fixtures, signingKey.kid);
+    publicationWriter(db, auth, probe, fixtures, signingKey.kid, publication);
     return;
   }
   if (predecessorNative) {

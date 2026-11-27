@@ -109,8 +109,12 @@ export async function facilityReview(app, pending) {
     assert.equal(evidence.scan_status, 'quarantined');
     return { facilityId: facility.id, objectId: evidence.object_id, calls };
   }
-  const { facilityId } = pending;
-  await post('/v1/facilities/' + facilityId + '/submit', owner, {}, 200, 2);
+  const { facilityId, phase } = pending;
+  if (phase !== 'review-after-evidence-loss') {
+    await post('/v1/facilities/' + facilityId + '/submit', owner, {}, 200, 2);
+    if (phase === 'submit-only') return { calls };
+  }
+  const evidenceLost = phase === 'review-after-evidence-loss';
   const reviewed = await post(
     '/v1/admin/facilities/' + facilityId + '/decision',
     approver,
@@ -118,10 +122,11 @@ export async function facilityReview(app, pending) {
       decision: 'approve',
       reason: 'Independent synthetic predecessor review',
     },
-    200,
+    evidenceLost ? 409 : 200,
     3,
     'facility_approval',
   );
-  assert.equal(reviewed.facility_status, 'active');
+  if (evidenceLost) assert.equal(reviewed.code, 'evidence-quarantined');
+  else assert.equal(reviewed.facility_status, 'active');
   return { calls };
 }

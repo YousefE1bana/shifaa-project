@@ -46,15 +46,17 @@ try {
   assert.deepEqual(role, { login: 'supabase_admin', effective: 'supabase_admin' });
   if (operation === 'admit') {
     const sourceIdentity = 'synthetic.exact-admission';
+    const lifetimeSeconds = input.clockOnly === true ? 25 : null;
     const [r] = await pool`INSERT INTO clinical.content_admissibility_evidence
       (id,release_id,artifact_version,artifact_digest,content_type,governed_content_key,effective_scope_key,
        policy_ref,policy_version,policy_sha256,source_admission_ref,category_admission_ref,
        code_admission_ref,test_vector_admission_ref,source_identity,source_evidence_identity,
-       synthetic,status,valid_from,version)
+       synthetic,status,valid_from,valid_until,version)
       SELECT ${randomUUID()}::uuid,r.id,r.artifact_version,r.artifact_digest,s.content_type,s.governed_content_key,
         s.effective_scope_key,${randomUUID()}::uuid,'synthetic-policy-v1',decode(repeat('b',64),'hex'),
         ${randomUUID()}::uuid,${randomUUID()}::uuid,${randomUUID()}::uuid,${randomUUID()}::uuid,
-        ${sourceIdentity},${randomUUID()},true,'active','2020-01-01',1
+        ${sourceIdentity},${randomUUID()},true,'active','2020-01-01',
+        date_trunc('milliseconds',clock_timestamp())+make_interval(secs=>${lifetimeSeconds}::double precision),1
       FROM clinical.content_releases r JOIN clinical.content_series s ON s.id=r.series_id
       WHERE r.id=${input.releaseId}::uuid AND r.status='draft'
       RETURNING *,encode(artifact_digest,'hex') AS digest,encode(policy_sha256,'hex') AS policy_hash`;
@@ -114,6 +116,9 @@ try {
       JSON.stringify({ role, designationId: current.id, version: designationBasis.version }),
     );
   }
+} catch (error) {
+  const sqlState = /^[0-9A-Z]{5}$/.test(error?.code) ? error.code : null;
+  console.log(JSON.stringify({ failed: true, sqlState }));
 } finally {
   await pool.end({ timeout: 2 });
 }
