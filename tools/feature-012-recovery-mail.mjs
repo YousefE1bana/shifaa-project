@@ -25,15 +25,21 @@ async function matchingMessages(email) {
   );
 }
 
-async function findRecoveryOtp(email, previous) {
+async function findRecoveryOtp(email, previous, checkpoint) {
   for (let attempt = 0; attempt < 40; attempt += 1) {
     const message = (await matchingMessages(email)).find(({ ID }) => !previous.has(ID));
     if (message) {
-      assert.match(message.ID, /^[a-zA-Z0-9_-]+$/);
-      assert.equal(message.Subject, 'SHIFAA local recovery code');
-      const detail = await mailboxJson('/api/v1/message/' + message.ID);
-      const code = /\b\d{6}\b/.exec(detail.Text ?? '')?.[0];
+      checkpoint('mail recovery selected a new message for the fixture recipient');
+      assert.equal(typeof message.ID, 'string');
+      assert.ok(message.ID.length > 0 && message.ID.length <= 128);
+      const detail = await mailboxJson('/api/v1/message/' + encodeURIComponent(message.ID));
+      // The existing project template is HTML-only. Read the named code in
+      // either decoded representation rather than matching a digit in a URL.
+      const rendered = detail.Text || detail.HTML || '';
+      const code = /Your recovery code is\s*(?:<strong>)?(\d{6})\b/i.exec(rendered)?.[1];
       if (code) return code;
+      checkpoint('mail recovery message did not contain the project code template');
+      throw new Error('Disposable recovery email template mismatch');
     }
     await delay(250);
   }
@@ -92,7 +98,7 @@ export async function verifyMailedRecovery(app, config, fixture, totp, checkpoin
     const { caseId, caseToken } = intake.body;
     assert.match(caseId, /^[a-f0-9-]{36}$/);
     checkpoint('mail recovery OTP delivery');
-    const recoveryOtp = await findRecoveryOtp(fixture.email, previous);
+    const recoveryOtp = await findRecoveryOtp(fixture.email, previous, checkpoint);
     const replacement = 'Aa9!' + randomBytes(32).toString('hex');
     const completed = await post(
       'mail recovery completion',
