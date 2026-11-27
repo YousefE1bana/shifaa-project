@@ -64,7 +64,11 @@ On release at the deadline the guard denied with SQLSTATE `42501` before the
 effect marker. A fresh request also denied. The independent clock observation
 confirmed NotAfter elapsed while the access deadline remained live. PostgreSQL
 comparison at one microsecond before, at and after the stored deadline gave
-`t|f|f`. Exact equality inside the helper remains unobserved.
+`t|f|f`. Exact equality inside the installed helper remains unexecuted.
+The helper samples `pg_catalog.clock_timestamp()` internally after the
+session lock. The caller cannot supply that sample or read it back. The
+observed lock-wait crossing and controlled SQL comparison do not establish
+equality at that internal sample.
 
 The private raw receipt is
 `LOCALAPPDATA/SHIFAA-Recovery/2026-11-26-t010-installed-session-deadline-ddfa02ae/native-deadline.json`
@@ -143,6 +147,25 @@ The run exited 0 with empty stderr and the retained inventory matched.
 Exact clock equality inside the installed helper and independent specialist
 review remain outstanding. The hosted adapter cases still require the
 existing hosted runner.
+
+### Installed MFA downgrade in both orders
+
+The focused native run `19c7603e-5b43-446d-9d23-32f69965a627` on
+test-only revision `b6e54140c402daefaf475e5646f6b6e81daececf` passed.
+Both installed migration hashes matched the exact candidate. Each
+fixture established a real GoTrue AAL2 session using TOTP. In guard-first
+order, native factor removal waited on the retained transaction. In
+native-first order, an independent guard timed out on `auth.sessions`
+with `55P03`. Both native calls returned HTTP 200 and changed the bound
+session to AAL1 with the factor gone. Both fresh workforce guard requests
+denied with `42501` before the effect marker.
+
+The run exited 0 with empty stderr and the retained inventory of 12
+containers and four volumes matched. The private receipt is
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t010-installed-downgrade-b6e54140/native-downgrade.json`
+(106,003 bytes, SHA-256 `98d5c6c86470ab633b11e5b3eca7f5fd0360b8bcbdede2d2eb6021368f59f301`).
+This is installed guard evidence. The hosted adapter and specialist review
+remain open.
 
 ## Remaining retry assertions
 
