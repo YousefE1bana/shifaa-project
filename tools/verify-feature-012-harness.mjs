@@ -2811,6 +2811,7 @@ function coreApiWriter(db, probe, fixture) {
   assert.equal(outcome.serverAddress, outcome.configuredAddress);
   assert.equal(outcome.serverPort, 5432);
   assert.ok(Number.isInteger(outcome.backend) && outcome.backend > 0);
+  assert.match(outcome.requestId, /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/);
   const effect = observedSql(
     db,
     `SELECT count(DISTINCT p.id), count(DISTINCT pt.id),
@@ -2820,7 +2821,8 @@ function coreApiWriter(db, probe, fixture) {
     JOIN identity.care_relationships cr ON cr.actor_person_id = p.id
       AND cr.subject_patient_id = pt.id AND cr.relationship_type = 'self'
     JOIN audit.events a ON a.resource_id = p.id AND a.actor_person_id = p.id
-      AND a.action = 'identity.registration.created' AND a.outcome = 'allowed'
+      AND a.action_code = 'identity.registration.created' AND a.outcome = 'success'
+      AND a.request_id = '${outcome.requestId}'
     WHERE p.user_id = '${fixture.subject}';`,
   );
   receipt.coreApiWriter = {

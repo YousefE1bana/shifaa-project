@@ -53,15 +53,16 @@ try {
       host(inet_server_addr()) as "serverAddress", inet_server_port() as "serverPort",
       pg_backend_pid() as backend, pg_current_xact_id()::text as transaction`;
     const challengeId = randomUUID();
+    const requestId = randomUUID();
     const result = await service.completeRegistration(
-      { handle: `t012-${subject}@example.invalid`, locale: 'en-EG', requestId: randomUUID() },
+      { handle: `t012-${subject}@example.invalid`, locale: 'en-EG', requestId },
       { subjectId: subject, challengeId },
     );
     assert.equal(result.challenge_id, challengeId);
     const [after] =
       await tx`select pg_backend_pid() as backend, pg_current_xact_id()::text as transaction`;
     assert.deepEqual(after, { backend: binding.backend, transaction: binding.transaction });
-    return binding;
+    return { ...binding, requestId };
   });
   console.log(JSON.stringify({ ...evidence, configuredAddress: address }));
 } finally {
