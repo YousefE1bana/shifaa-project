@@ -379,7 +379,10 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error('Probe failed: ' + (error.code ?? error.name));
-  process.exitCode = 1;
-});
+module.exports = { totp };
+if (require.main === module || process.argv[1] === '-') {
+  main().catch((error) => {
+    console.error('Probe failed: ' + (error.code ?? error.name));
+    process.exitCode = 1;
+  });
+}

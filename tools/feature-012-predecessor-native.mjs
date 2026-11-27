@@ -6,6 +6,7 @@ import { buildApp } from '../services/api/src/app.ts';
 import { loadConfig } from '../services/api/src/config.ts';
 import { SupabaseAuthIssuer } from '../services/api/src/adapters/supabase-auth.ts';
 import { PostgresIdentityContinuityService } from '../services/api/src/adapters/postgres/identity-continuity-service.ts';
+import probe from './feature-012-harness-probe.cjs';
 import { consentHistory, facilityReview } from './feature-012-predecessor-identity.mjs';
 
 assert.equal(import.meta.dirname, '/tmp/f012-core-api/tools');
@@ -39,6 +40,7 @@ try {
   const checks = {
     encounter,
     recovery,
+    'recovery-api': recoveryApi,
     scheduling: () => scheduling(JSON.parse(fixtureInput)),
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
@@ -213,5 +215,68 @@ async function recovery() {
     before,
     after,
     replay: 'denied',
+  };
+}
+
+async function recoveryApi() {
+  const fixture = fixtures[3];
+  const client = new SupabaseAuthIssuer({
+    url: issuer,
+    anonKey: config.supabaseAnonKey,
+    jwksUrl: config.supabaseJwksUrl,
+    issuer,
+    audience: config.supabaseJwtAudience,
+  });
+  await client.ready();
+  const history = async (token) =>
+    app.inject({
+      method: 'GET',
+      url: '/v1/privacy/consents',
+      headers: { authorization: 'Bearer ' + token },
+    });
+  const blocked = await history(fixture.token);
+  assert.equal(blocked.statusCode, 403);
+  assert.equal(blocked.json().code, 'recovery-mfa-enrollment-required');
+  const submit = async (url, payload) => {
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method: 'POST',
+      url,
+      payload,
+      headers: {
+        authorization: 'Bearer ' + fixture.token,
+        'x-request-id': requestId,
+        'idempotency-key': randomUUID(),
+      },
+    });
+    const body = response.json();
+    assert.equal(response.statusCode, 200, url + ' (' + body.code + ')');
+    return { body, requestId, status: response.statusCode };
+  };
+  const path = '/v1/auth/mfa/enroll';
+  const begin = await submit(path, { factorType: 'totp', friendlyName: 'Disposable replacement' });
+  const verified = await submit(path + '/verify', {
+    enrollmentId: begin.body.enrollmentId,
+    code: probe.totp(begin.body.secret),
+  });
+  assert.equal(verified.body.factor.id, begin.body.enrollmentId);
+  assert.equal(verified.body.factor.status, 'verified');
+  assert.equal(verified.body.assurance, 'aal2');
+  assert.equal(verified.body.session.restriction, null);
+  const session = await client.resolveSession(verified.body.session.accessToken);
+  assert.equal(session?.subjectId, fixture.subject);
+  assert.equal(session.sessionId, fixture.session);
+  assert.equal(session.aal, 2);
+  const after = await history(verified.body.session.accessToken);
+  assert.equal(after.statusCode, 200);
+  return {
+    subject: session.subjectId,
+    session: session.sessionId,
+    aal: session.aal,
+    factorId: verified.body.factor.id,
+    begin: { status: begin.status, requestId: begin.requestId },
+    verify: { status: verified.status, requestId: verified.requestId },
+    ordinaryRouteBefore: blocked.statusCode,
+    ordinaryRouteAfter: after.statusCode,
   };
 }

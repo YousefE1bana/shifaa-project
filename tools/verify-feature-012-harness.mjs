@@ -3102,6 +3102,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
   report.sourceArchiveSha256 = stageLinkedCoreApi(probe, [
     entry,
     'tools/feature-012-predecessor-identity.mjs',
+    'tools/feature-012-harness-probe.cjs',
   ]);
   const invoke = (phase, input) => {
     report.lastStep = phase;
@@ -3126,6 +3127,39 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'recovery-api') {
+    report.recoveryApi = invoke(mode);
+    const { factorId, verify, begin } = report.recoveryApi;
+    assert.equal(report.recoveryApi.subject, subject);
+    assert.equal(report.recoveryApi.session, session);
+    for (const id of [factorId, verify.requestId, begin.requestId])
+      assert.match(id, /^[a-f0-9-]{36}$/);
+    report.recoveryApi.effects = read(`SELECT json_build_object(
+      'completed',c.status='completed' AND c.version=2 AND c.completed_at IS NOT NULL,
+      'restriction',c.restriction_scope,'binding',c.bound_native_session_id,
+      'nativeFactor',(SELECT status::text FROM auth.mfa_factors WHERE id='${factorId}' AND user_id='${subject}'),
+      'recoveryAudit',(SELECT count(*) FROM audit.events WHERE resource_id=c.id AND actor_person_id=c.subject_person_id
+        AND request_id='${verify.requestId}' AND action_code='identity.recovery.enrollment_completed'),
+      'factorAudit',(SELECT count(*) FROM audit.events WHERE actor_person_id=c.subject_person_id
+        AND request_id='${verify.requestId}' AND action_code='identity.factor.verified'),
+      'beginAudit',(SELECT count(*) FROM audit.events WHERE actor_person_id=c.subject_person_id
+        AND request_id='${begin.requestId}' AND action_code='identity.factor.enrollment_started'),
+      'recoveryOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=c.id AND event_type='identity.recovery.completed'),
+      'factorOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id='${factorId}' AND event_type='identity.factor.changed'))
+      FROM identity.continuity_cases c WHERE c.id='${recoveryCase}';`);
+    assert.deepEqual(report.recoveryApi.effects, {
+      completed: true,
+      restriction: null,
+      binding: null,
+      nativeFactor: 'verified',
+      recoveryAudit: 1,
+      factorAudit: 1,
+      beginAudit: 1,
+      recoveryOutbox: 1,
+      factorOutbox: 1,
+    });
+    return;
+  }
   if (mode === 'scheduling') {
     const checkInId = 'f0120100-0000-4000-8500-000000000002';
     const cancelId = 'f0120100-0000-4000-8500-000000000003';
@@ -3423,6 +3457,7 @@ async function admit() {
   const predecessorNative = new Map([
     ['--predecessor-native-repositories', 'repositories'],
     ['--predecessor-native-scheduling', 'scheduling'],
+    ['--predecessor-native-recovery-api', 'recovery-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
@@ -3610,9 +3645,7 @@ async function admit() {
   if (publication) receipt.status = 'PASS_T012_PREDECESSOR_PUBLICATION_API';
   if (predecessorNative)
     receipt.status =
-      predecessorNative === 'scheduling'
-        ? 'PASS_T012_PREDECESSOR_NATIVE_SCHEDULING'
-        : 'PASS_T012_PREDECESSOR_NATIVE_REPOSITORIES';
+      'PASS_T012_PREDECESSOR_NATIVE_' + predecessorNative.replace('-', '_').toUpperCase();
 }
 
 async function runNativeAdmission({
