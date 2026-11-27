@@ -3127,6 +3127,49 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'participant-api') {
+    const encounterId = 'f0110000-0000-4000-8400-000000000001';
+    const consultantId = 'f0110000-0000-4000-8000-000000000008';
+    const facilityId = 'f0110000-0000-4000-8200-000000000001';
+    const licenceId = 'f0120100-0000-4000-8300-000000000001';
+    const startedAt = '2020-01-01T00:00:00.000Z';
+    sql(
+      db,
+      `BEGIN;
+      INSERT INTO identity.professional_licenses(id,person_id,profession,number_ciphertext,number_hash,issuer,expires_on,status)
+      VALUES ('${licenceId}','${consultantId}','doctor',decode(repeat('31',16),'hex'),decode(repeat('31',32),'hex'),
+        'Synthetic issuer','2099-12-31','verified');
+      INSERT INTO identity.facility_memberships(facility_id,person_id,role_code,employment_license_id,valid_from,membership_status,created_by_person_id)
+      SELECT '${facilityId}','${consultantId}','doctor','${licenceId}','${startedAt}','active',e.responsible_clinician_id
+      FROM clinical.encounters e WHERE e.id='${encounterId}';
+      INSERT INTO clinical.encounter_participants(encounter_id,person_id,role_code,started_at)
+      VALUES ('${encounterId}','${consultantId}','consulting_clinician','${startedAt}');
+      COMMIT;`,
+    );
+    report.participant = invoke(mode, { encounterId, consultantId, startedAt });
+    report.participant.effects = read(`SELECT json_build_object(
+      'participantVersion',p.version,'ended',p.ended_at>p.started_at,
+      'responsibleActive',(SELECT count(*) FROM clinical.encounter_participants r
+        WHERE r.encounter_id=e.id AND r.person_id=e.responsible_clinician_id AND r.ended_at IS NULL),
+      'encounterVersion',e.version,
+      'audit',(SELECT count(*) FROM audit.events a WHERE a.resource_id=e.id AND a.resource_version=e.version
+        AND a.actor_person_id=e.responsible_clinician_id AND a.action_code='encounter.updated'),
+      'outbox',(SELECT count(*) FROM platform.outbox_events o WHERE o.aggregate_id=e.id AND o.event_type='clinical.encounter.updated.v1'),
+      'idempotency',(SELECT count(*) FROM platform.idempotency_records i WHERE i.resource_id=e.id AND i.state='completed'))
+      FROM clinical.encounter_participants p JOIN clinical.encounters e ON e.id=p.encounter_id
+      WHERE p.encounter_id='${encounterId}' AND p.person_id='${consultantId}'
+        AND p.role_code='consulting_clinician' AND p.started_at='${startedAt}';`);
+    assert.deepEqual(report.participant.effects, {
+      participantVersion: 2,
+      ended: true,
+      responsibleActive: 1,
+      encounterVersion: report.participant.version,
+      audit: 1,
+      outbox: 1,
+      idempotency: 1,
+    });
+    return;
+  }
   if (mode === 'recovery-api') {
     report.recoveryApi = invoke(mode);
     const { factorId, verify, begin } = report.recoveryApi;
@@ -3458,6 +3501,7 @@ async function admit() {
     ['--predecessor-native-repositories', 'repositories'],
     ['--predecessor-native-scheduling', 'scheduling'],
     ['--predecessor-native-recovery-api', 'recovery-api'],
+    ['--predecessor-native-participant-api', 'participant-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||

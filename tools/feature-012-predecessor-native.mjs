@@ -41,6 +41,7 @@ try {
     encounter,
     recovery,
     'recovery-api': recoveryApi,
+    'participant-api': () => participantApi(JSON.parse(fixtureInput)),
     scheduling: () => scheduling(JSON.parse(fixtureInput)),
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
@@ -131,6 +132,61 @@ async function encounter() {
     409,
   );
   return { calls, ...identifiers };
+}
+
+async function participantApi({ encounterId, consultantId, startedAt }) {
+  const [responsible, , consultant] = fixtures;
+  const url = '/v1/encounters/' + encounterId;
+  const calls = [];
+  const invoke = async (name, actor, options, expected) => {
+    const requestId = randomUUID();
+    const response = await app.inject({
+      url,
+      ...options,
+      headers: {
+        ...options.headers,
+        authorization: 'Bearer ' + actor.token,
+        'x-purpose': 'appointment.scheduling',
+        'x-request-id': requestId,
+      },
+    });
+    const body = response.json();
+    calls.push({ name, requestId, status: response.statusCode, code: body.code });
+    assert.equal(response.statusCode, expected, name + ' (' + body.code + ')');
+    return body;
+  };
+  const read = { method: 'GET', url: url + '?fields=participants' };
+  const project = (body) =>
+    body.participants.find(
+      (actor) => actor.personId === consultantId && actor.roleCode === 'consulting_clinician',
+    );
+  const before = await invoke('active participant read', consultant, read, 200);
+  assert.equal(project(before)?.endedAt, null);
+  const close = (version, time) => ({
+    method: 'PATCH',
+    payload: {
+      participantIntervalsEnd: [
+        { personId: consultantId, roleCode: 'consulting_clinician', startedAt: time },
+      ],
+    },
+    headers: { 'if-match': '"' + version + '"', 'idempotency-key': randomUUID() },
+  });
+  await invoke(
+    'nonmatching interval close',
+    responsible,
+    close(before.version, '2020-01-02T00:00:00.000Z'),
+    409,
+  );
+  const changed = await invoke(
+    'responsible clinician closes interval',
+    responsible,
+    close(before.version, startedAt),
+    200,
+  );
+  assert.equal(changed.version, before.version + 1);
+  assert.ok(Date.parse(project(changed)?.endedAt) > Date.parse(startedAt));
+  await invoke('closed participant read', consultant, read, 404);
+  return { calls, version: changed.version };
 }
 
 async function scheduling({ checkInId, cancelId }) {
