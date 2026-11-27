@@ -47,6 +47,8 @@ BEGIN
           set_config('shifaa.trace_id','t012-synthetic-scheduling',true),
           set_config('shifaa.action','appointment.manage',true),
           set_config('shifaa.purposes','appointment.scheduling',true),
+          set_config('shifaa.environment','local',true),
+          set_config('shifaa.test_now','2026-09-12T08:00:00Z',true),
           set_config('shifaa.idempotency_key','t012-book',true),
           set_config('shifaa.request_hash',repeat('a',64),true);
   first_response := clinical.create_appointment_v1(booking);
