@@ -320,6 +320,7 @@ services:
   const gatewayHost = checkContainer(gateway).HostConfig;
   assert.equal(gatewayHost.ReadonlyRootfs, true);
   assert.deepEqual(gatewayHost.CapDrop, ['ALL']);
+  return gateway;
 }
 
 function observeNativePolicy(auth) {
@@ -1127,13 +1128,17 @@ async function nativeDeadlineTrials(db, { subject, session }) {
 
 function applySealedF011(db, coreApiPeers) {
   if (coreApiPeers) {
-    const [auth, probe] = coreApiPeers;
-    assert.deepEqual([db.role, auth.role, probe.role], ['db', 'auth', 'probe']);
+    const [auth, probe, gateway] = coreApiPeers;
+    const peers = gateway ? [db, auth, gateway, probe] : [db, auth, probe];
+    assert.deepEqual(
+      peers.map(({ role }) => role),
+      gateway ? ['db', 'auth', 'kong', 'probe'] : ['db', 'auth', 'probe'],
+    );
     assert.deepEqual(
       receipt.containers.map(({ id }) => id),
-      [db.id, auth.id, probe.id],
+      peers.map(({ id }) => id),
     );
-    for (const resource of [db, auth, probe]) {
+    for (const resource of peers) {
       assert.equal(resource.network, networkId);
       assert.equal(checkContainer(resource).State.Running, true);
     }
@@ -3119,8 +3124,8 @@ function stageLinkedCoreApi(resource, entries) {
   return sha256;
 }
 
-function runPredecessorNative(db, auth, probe, fixtures, mode) {
-  applyWriterBaseline(db, [auth, probe]);
+function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
+  applyWriterBaseline(db, [auth, probe, gateway]);
   const report = (receipt.predecessorNative = { inputs: [] });
   preparePredecessorActors(db, report, fixtures, [2, 1, 8, 4]);
   const seedPath = 'infra/db/tests/feature-012-predecessor-encounter-setup.sql';
@@ -3967,7 +3972,7 @@ async function runNativeAdmission({
     useRecoveryGateway ? recoveryGateway + '/auth/v1' : undefined,
   );
   if (readSessionPolicy) observeNativePolicy(auth);
-  if (useRecoveryGateway) startRecoveryGateway(recoveryAnonKey);
+  const gateway = useRecoveryGateway ? startRecoveryGateway(recoveryAnonKey) : undefined;
   const probe = create('probe', receipt.images.probe, {
     env: {
       F012_PROBE_PASSWORD: apiPassword,
@@ -3995,7 +4000,7 @@ async function runNativeAdmission({
   }
   if (predecessorNative) {
     stage = 'predecessor Core API and repository fixtures with native Auth';
-    runPredecessorNative(db, auth, probe, fixtures, predecessorNative);
+    runPredecessorNative(db, auth, probe, fixtures, predecessorNative, gateway);
     return;
   }
   if (applicationWriter) {
