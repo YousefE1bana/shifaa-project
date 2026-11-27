@@ -104,19 +104,28 @@ $api_writers$;
 RESET SESSION AUTHORIZATION;
 
 DO $effects$
+DECLARE
+  fixture_facility constant uuid := 'f0120000-0000-4000-8100-000000000041';
+  resources uuid[];
 BEGIN
+  SELECT array_agg(id) INTO resources
+  FROM (
+    SELECT id FROM clinical.appointments WHERE facility_id=fixture_facility
+    UNION ALL
+    SELECT id FROM clinical.queue_entries WHERE facility_id=fixture_facility
+  ) AS fixture_resources;
   IF (SELECT count(*) FROM clinical.appointments
-      WHERE facility_id='f0120000-0000-4000-8100-000000000041' AND status='checked_in')<>2
-     OR EXISTS (SELECT 1 FROM clinical.encounters
-                WHERE facility_id='f0120000-0000-4000-8100-000000000041')
+      WHERE facility_id=fixture_facility AND status='checked_in')<>2
+     OR EXISTS (SELECT 1 FROM clinical.encounters WHERE facility_id=fixture_facility)
      OR (SELECT count(*) FROM platform.idempotency_records
-         WHERE idempotency_key LIKE 't012-%' AND state='completed')<>7
-     OR (SELECT count(*) FROM audit.events WHERE action_code IN (
+         WHERE resource_id=ANY(resources) AND state='completed')<>7
+     OR (SELECT count(*) FROM audit.events WHERE resource_id=ANY(resources) AND action_code IN (
            'appointment.created','appointment.rescheduled','appointment.checked_in',
            'queue.entry.created','queue.entry.reordered','queue.entry.called','queue.entry.completed'
          ))<>9
      OR (SELECT count(*) FROM platform.outbox_events
-         WHERE event_type IN ('clinical.appointment.changed.v1','clinical.queue.changed.v1'))<>9 THEN
+         WHERE aggregate_id=ANY(resources)
+           AND event_type IN ('clinical.appointment.changed.v1','clinical.queue.changed.v1'))<>9 THEN
     RAISE EXCEPTION 'scheduling domain, audit, outbox or idempotency effects were incomplete';
   END IF;
   RAISE NOTICE 'owner verified checked-in appointments, no encounter, seven idempotency records and nine audit/outbox effects';
