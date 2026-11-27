@@ -3467,10 +3467,14 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
         '/tmp/f012-core-api/' + workerEntry,
       ]),
     );
+    assert.equal(report.worker.failureCode, undefined, 'Worker phase ' + report.worker.phase);
     assert.equal(
-      report.worker.address,
+      report.worker.identity.address,
       checkContainer(db).NetworkSettings.Networks[networkName].IPAddress,
     );
+    assert.deepEqual(report.worker.outcomes, ['delivered', 'idle']);
+    assert.equal(report.worker.syntheticDeliveries, 1);
+    assert.equal(report.worker.syntheticAttempts, 1);
     report.worker.effects = read(`SELECT json_build_object(
       'outbox',e.state,'notification',n.status,'recipientType',n.recipient_type,
       'subjectMatch',n.recipient_person_id='${recoveryActor}','sameFields',n.field_values=e.payload,
