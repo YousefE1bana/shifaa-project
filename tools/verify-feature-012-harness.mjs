@@ -3232,6 +3232,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'guardianship-api') {
+    verifyPredecessorGuardianship(report, db, invoke, read);
+    return;
+  }
   if (mode === 'facility-evidence-loss') {
     verifyPredecessorFacility(report, invoke, read, true);
     return;
@@ -3539,6 +3543,65 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   verifyPredecessorFacility(report, invoke, read);
 }
 
+function verifyPredecessorGuardianship(report, db, invoke, read) {
+  // Fixed F004 synthetic fixtures from the sealed chain.
+  const relationship = '43000000-0000-4000-8000-000000000002';
+  const patient = '41000000-0000-4000-8000-000000000002';
+  const guardian = '40000000-0000-4000-8000-000000000003';
+  const reviewer = '40000000-0000-4000-8000-000000000006';
+  const evidence = '42000000-0000-4000-8000-000000000001';
+  const authority = () => {
+    const verdict = observedSql(
+      db,
+      `BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SET LOCAL shifaa.purposes = 'dependent_care';
+      SELECT session_user,current_user,platform.person_has_family_relationship(
+        '${patient}','${guardian}','record.view');
+      ROLLBACK;`,
+    );
+    assert.equal(verdict.exit, 0, verdict.stderr);
+    return verdict.stdout.split(/\r?\n/).find((line) => line.startsWith('shifaa_api|'));
+  };
+  const result = (report.guardianship = {});
+  result.approval = invoke('guardianship-api', { phase: 'approve', patient, relationship });
+  result.approvedAuthority = authority();
+  assert.equal(result.approvedAuthority, 'shifaa_api|shifaa_api|t');
+  result.fixtureEvidenceLoss = read(`WITH rejected AS (
+    UPDATE identity.private_evidence_objects SET scan_status='rejected',released_at=NULL
+    WHERE id='${evidence}' AND scan_status='released' RETURNING id
+    ) SELECT json_build_object('role',session_user,'rows',count(*)) FROM rejected;`);
+  assert.deepEqual(result.fixtureEvidenceLoss, { role: 'supabase_admin', rows: 1 });
+  result.revocation = invoke('guardianship-api', { phase: 'revoke', patient, relationship });
+  result.revokedAuthority = authority();
+  assert.equal(result.revokedAuthority, 'shifaa_api|shifaa_api|f');
+  for (const id of [result.approval.requestId, result.revocation.requestId]) {
+    assert.match(id, /^[a-f0-9-]{36}$/);
+  }
+  result.effects = read(`SELECT json_build_object(
+    'state',r.status,'version',r.version,'approvalActor',r.reviewed_by_person_id='${reviewer}',
+    'revocationActor',r.revoked_by_person_id='${reviewer}','revoked',r.revoked_at IS NOT NULL,
+    'evidence',e.scan_status,'evidenceReleased',e.released_at IS NOT NULL,
+    'audit',(SELECT count(*) FROM audit.events WHERE resource_id=r.id AND actor_person_id='${reviewer}'
+      AND ((request_id='${result.approval.requestId}' AND action_code='relationship.guardianship.active')
+        OR (request_id='${result.revocation.requestId}' AND action_code='relationship.guardianship.revoked'))),
+    'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=r.id AND
+      event_type IN ('relationship.guardianship.active','relationship.guardianship.revoked')))
+    FROM identity.care_relationships r JOIN identity.private_evidence_objects e ON e.id=r.evidence_object_id
+    WHERE r.id='${relationship}' AND e.id='${evidence}';`);
+  assert.deepEqual(result.effects, {
+    state: 'revoked',
+    version: 3,
+    approvalActor: true,
+    revocationActor: true,
+    revoked: true,
+    evidence: 'rejected',
+    evidenceReleased: false,
+    audit: 2,
+    outbox: 2,
+  });
+}
+
 function verifyPredecessorFacility(report, invoke, read, evidenceLoss = false) {
   report.facility = invoke('facility');
   const { facilityId, objectId } = report.facility;
@@ -3763,6 +3826,7 @@ async function admit() {
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
+    ['--predecessor-guardianship-api', 'guardianship-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||

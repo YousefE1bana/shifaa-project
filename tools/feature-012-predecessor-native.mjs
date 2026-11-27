@@ -7,7 +7,11 @@ import { loadConfig } from '../services/api/src/config.ts';
 import { SupabaseAuthIssuer } from '../services/api/src/adapters/supabase-auth.ts';
 import { PostgresIdentityContinuityService } from '../services/api/src/adapters/postgres/identity-continuity-service.ts';
 import probe from './feature-012-harness-probe.cjs';
-import { consentHistory, facilityReview } from './feature-012-predecessor-identity.mjs';
+import {
+  consentHistory,
+  facilityReview,
+  guardianshipReview,
+} from './feature-012-predecessor-identity.mjs';
 
 assert.equal(import.meta.dirname, '/tmp/f012-core-api/tools');
 const [phase, fixtureInput] = process.argv.slice(2);
@@ -53,6 +57,7 @@ try {
     'absence-api': () => absenceApi(JSON.parse(fixtureInput)),
     scheduling: () => scheduling(JSON.parse(fixtureInput)),
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
+    'guardianship-api': () => guardianshipReview(app, JSON.parse(fixtureInput)),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
