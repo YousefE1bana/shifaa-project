@@ -77,3 +77,48 @@ The run exited 0 with empty stderr and preserved the retained inventory of
 12 containers and four volumes. Two earlier blocked setup receipts remain
 under `2026-11-27-t012-core-api-writer-cfd5bbde` and
 `2026-11-27-t012-core-api-writer-eeb534cf`.
+
+## F007 scheduling and privileged operation disposition
+
+The inspected disposable topology has no scheduler container, installed
+`pg_cron` extension or job catalog. Its F007 scheduler path is absent. Any
+external trigger is unobserved and excluded from admitted capabilities. The
+routine is installed and its historical manual invocation as `shifaa_worker`
+is verified separately. There is no scheduled invocation to execute for this
+topology. The [source-consumption contract §3](../../contract-amendment/source-consumption-successor-v0.1.0.md#3-participating-writer-and-trust-inventory)
+requires any future scheduler or external invocation to be identified and
+verified before affected capabilities can rely on it.
+
+The documented offline provisioner remains subject to its existing approved
+source and operator checks. No actual post-bootstrap approval or invocation
+was observed for this topology. Unverified concurrent provisioning and
+owner/maintenance activity remain excluded. The contract requires a verified
+participating writer or controlled quiescence. T002 executed a separate,
+isolated synthetic restore. F012 admission drain, restore preservation and
+fresh epoch verification remain unexecuted under T013 and T084.
+
+## 2026-11-27 authenticated Core API consent
+
+The `--participating-authenticated-core-api-writer` focus used the existing
+disposable internal bridge, pinned PostgreSQL and GoTrue, and a probe running
+the committed Core API with its Supabase Auth and PostgreSQL adapters. GoTrue
+got a fresh ES256 key for each run and issued the session token consumed by
+the Core API using the run-local JWKS. This signing configuration is confined
+to the disposable test. The API retained login `shifaa_api` on the run-owned
+database and GoTrue used `supabase_auth_admin`. The 38 sealed predecessor
+migration hashes matched the earlier capture.
+
+| Run and test revision                                                               | Actual outcome                                                                                                                                                                                                                                              | Private receipt under `LOCALAPPDATA/SHIFAA-Recovery`                                                                                                                     |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `81e7674b-50db-4c83-84b7-05ccb252008d` · `79c649a1223b3ccac0b7f3a1dcebb3d14c9fb226` | The real Core API consent route returned 401 without a bearer and 201 with the native session. Independent readback found one `identity_proofing` grant, one audit event and one outbox event.                                                              | `2026-11-27-t012-authenticated-consent-79c649a1/authenticated-consent.json` · 185,404 bytes · SHA-256 `7b075029e0b1e3578ed6b9b4c8207ac953d539665a6366912d93caca20493168` |
+| `8c5c6ba4-2984-4a7b-bc52-a926d09f81ad` · `ca3e93446b20f1848caff412bd38df410c30ccbb` | The grant returned 401 without a bearer and 201 with the native session. The authenticated withdrawal returned 200. Readback found the `care_updates` version 1 grant and its linked version 2 withdrawal. Each had exactly one audit and one outbox event. | `2026-11-27-t012-authenticated-consent-ca3e9344/authenticated-consent.json` · 185,674 bytes · SHA-256 `a85ed91deba38337cc89554df556adcaba49fad11581e64a847101db1595ce26` |
+
+Both runs returned `PASS_T012_AUTHENTICATED_CORE_API_WRITER` with exit 0 and
+empty stderr. Each preserved the before/after inventory of 12 retained
+containers and four volumes. The second Core API source archive SHA-256
+was `8e43198f282e7d9ad0ee270123bb3d569931e8928c9138a6f57cb32b5f53630b`.
+The onboarding step still uses a run-local service fixture to establish the
+profile. The consent requests use the live issuer, and the receipt covers
+their normal route effects. Predicate mapping, its distinct effective-date
+and authority cases, and later admission-order proof retain their existing
+task ownership.
