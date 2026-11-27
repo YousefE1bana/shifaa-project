@@ -3265,6 +3265,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     verifyPredecessorLicenceScope(report, db, invoke, read);
     return;
   }
+  if (mode === 'membership-scope-api') {
+    verifyPredecessorMembershipScope(report, invoke, read);
+    return;
+  }
   if (mode === 'facility-evidence-loss') {
     verifyPredecessorFacility(report, invoke, read, true);
     return;
@@ -3570,6 +3574,56 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   report.consent = invoke('consent');
 
   verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorMembershipScope(report, invoke, read) {
+  const facility = 'f0110000-0000-4000-8200-000000000001';
+  const facilityOwner = 'f0110000-0000-4000-8000-000000000002';
+  const membership = read(`SELECT to_json(m.id) FROM identity.facility_memberships m
+    JOIN identity.facilities f ON f.id=m.facility_id
+    WHERE f.id='${facility}' AND f.created_by_person_id='${facilityOwner}'
+      AND m.person_id='${facilityOwner}' AND m.role_code='doctor' AND m.membership_status='active';`);
+  const result = (report.membershipScope = invoke('membership-scope-api', {
+    membership,
+    facility,
+    facilityOwner,
+  }));
+  for (const id of [membership, result.id, result.end.requestId, result.complete.requestId]) {
+    assert.match(id, /^[a-f0-9-]{36}$/);
+  }
+  result.effects = read(`SELECT json_build_object(
+    'membership',m.membership_status,'membershipVersion',m.version,'licence',l.status,
+    'encounter',e.status,'encounterVersion',e.version,'appointment',a.status,'queue',q.state,
+    'endAudit',(SELECT count(*) FROM audit.events WHERE resource_id=m.id
+      AND request_id='${result.end.requestId}' AND actor_person_id='${facilityOwner}'
+      AND action_code='membership.ended'),
+    'endOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=m.id
+      AND event_type='membership.changed'),
+    'completionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=e.id
+      AND request_id='${result.complete.requestId}' AND action_code='encounter.completed'),
+    'completionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=e.id
+      AND event_type='clinical.encounter.completed.v1'),
+    'completionReceipt',(SELECT count(*) FROM platform.idempotency_records WHERE resource_id=e.id
+      AND route_template='/v1/encounters/{encounterId}/complete'))
+    FROM clinical.encounters e JOIN clinical.appointments a ON a.id=e.appointment_id
+    JOIN clinical.queue_entries q ON q.appointment_id=a.id
+    JOIN identity.facility_memberships m ON m.facility_id=e.facility_id AND m.person_id=e.responsible_clinician_id
+    JOIN identity.professional_licenses l ON l.id=m.employment_license_id
+    WHERE e.id='${result.id}' AND m.id='${membership}';`);
+  assert.deepEqual(result.effects, {
+    membership: 'ended',
+    membershipVersion: 2,
+    licence: 'verified',
+    encounter: 'open',
+    encounterVersion: result.version,
+    appointment: 'in_consultation',
+    queue: 'in_service',
+    endAudit: 1,
+    endOutbox: 1,
+    completionAudit: 0,
+    completionOutbox: 0,
+    completionReceipt: 0,
+  });
 }
 
 function verifyPredecessorLicenceScope(report, db, invoke, read) {
@@ -3943,6 +3997,7 @@ async function admit() {
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
     ['--predecessor-guardianship-api', 'guardianship-api'],
     ['--predecessor-licence-scope-api', 'licence-scope-api'],
+    ['--predecessor-membership-scope-api', 'membership-scope-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
