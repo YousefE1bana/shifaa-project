@@ -271,6 +271,34 @@ synthetic behavior. Publication, supersession and eligibility loss on the
 T012-installed bytes still require their own observation and actor
 attribution. The existing F011 runner targets retained local clusters.
 
+### Family and continuity policy transitions
+
+Run `17a5818c-5f24-4102-902e-cc643402c935` at
+`f0acfc0eef3a9c959683a0fe02e25b3d0d700a70` ran the existing
+[family](../../../../infra/db/tests/family-care-rls.sql) and
+[continuity](../../../../infra/db/tests/identity-continuity-rls.sql)
+fixtures on the sealed predecessor chain and T009. Both exited 0 and
+rolled back individually. The family fixture exercised
+`shifaa_api` guardianship intake and review, denied quarantined or
+wrong-patient evidence at intake, verified purpose and permission bounds,
+and covered emergency contact confirmation and delegation isolation.
+The continuity fixture exercised `platform.decide_dependent_transition`
+as `shifaa_api`, denied an unassigned reviewer, and verified that the
+assigned reviewer approved version 2. Independent readback verified the
+same person, patient, record number and self relationship, loss of the
+former guardian's authority, and only the scope of the separate later
+grant. It also checked the restricted `shifaa_worker` outbox projection.
+
+The private receipt at
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t012-family-continuity-f0acfc0e/family-continuity.json`
+is 72,120 bytes with SHA-256
+`e285954c5a4bb0a3645d6e07cff72b1cca8267d2f2a440f38a78696cd44087ce`.
+The launcher stderr was empty, and all 12 retained containers and four
+volumes matched. This is installed predecessor-role evidence. The
+fixtures used SQL actor context. Authenticated route evidence,
+post-approval evidence loss, F012 consumption of current consent and
+the separate real-session local recovery path remain open.
+
 ## Predecessor restore entry points
 
 Source comparison at `28dcfc46d5e68dc0e1bbee94e74087c632100b7a` and
