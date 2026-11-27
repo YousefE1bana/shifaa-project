@@ -3131,6 +3131,83 @@ function runPredecessorNative(db, auth, probe, fixtures, mode) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (mode === 'booking-api') {
+    const scheduleId = 'f0120100-0000-4000-8600-000000000003';
+    const secondId = 'f0120100-0000-4000-8500-000000000004';
+    const setup = read(`WITH anchor AS (
+      SELECT a.facility_id,a.doctor_person_id,a.patient_person_id,
+        (now() AT TIME ZONE 'Africa/Cairo')::date+2 AS civil
+      FROM clinical.appointments a WHERE a.id='f0120100-0000-4000-8500-000000000001'
+    )
+    SELECT json_build_object('facilityId',facility_id,'doctorId',doctor_person_id,'patientId',patient_person_id,
+      'civilDate',civil,'timezone','Africa/Cairo',
+      'startsAt',(civil+time '14:00') AT TIME ZONE 'Africa/Cairo',
+      'endsAt',(civil+time '14:30') AT TIME ZONE 'Africa/Cairo',
+      'rescheduledStart',(civil+time '14:30') AT TIME ZONE 'Africa/Cairo',
+      'rescheduledEnd',(civil+time '15:00') AT TIME ZONE 'Africa/Cairo') FROM anchor;`);
+    assert.match(setup.civilDate, /^\d{4}-\d{2}-\d{2}$/);
+    const d = setup.civilDate;
+    sql(
+      db,
+      `BEGIN;
+      INSERT INTO clinical.schedules(id,facility_id,doctor_person_id,timezone_name,valid_from,valid_to,
+          slot_duration_minutes,fee_minor_units,currency_code,created_by_person_id,updated_by_person_id)
+      SELECT '${scheduleId}',facility_id,doctor_person_id,'Africa/Cairo','${d}','${d}',30,0,'EGP',
+        doctor_person_id,doctor_person_id FROM clinical.appointments
+        WHERE id='f0120100-0000-4000-8500-000000000001';
+      INSERT INTO clinical.schedule_windows(schedule_id,iso_weekday,local_start,local_end)
+      VALUES ('${scheduleId}',extract(isodow from '${d}'::date)::smallint,'14:00','16:00');
+      INSERT INTO clinical.appointments
+        (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+          civil_date,local_start,fee_minor_units,currency_code,status,created_by_person_id,updated_by_person_id)
+      SELECT '${secondId}',patient_person_id,facility_id,doctor_person_id,'${scheduleId}',
+        ('${d}'::date+time '15:00') AT TIME ZONE 'Africa/Cairo',
+        ('${d}'::date+time '15:30') AT TIME ZONE 'Africa/Cairo','Africa/Cairo',
+        '${d}','15:00',0,'EGP','confirmed',patient_person_id,patient_person_id
+      FROM clinical.appointments WHERE id='f0120100-0000-4000-8500-000000000001';
+      COMMIT;`,
+    );
+    const { rescheduledStart, rescheduledEnd, ...booking } = setup;
+    report.booking = invoke(mode, {
+      booking: { ...booking, paymentMethod: 'cash_on_arrival' },
+      nextSlot: {
+        startsAt: rescheduledStart,
+        endsAt: rescheduledEnd,
+        timezone: booking.timezone,
+        civilDate: d,
+        reason: 'Synthetic booking reschedule',
+      },
+      secondId,
+    });
+    const { appointmentId, firstId, secondEntryId } = report.booking;
+    for (const id of [appointmentId, firstId, secondEntryId]) assert.match(id, /^[a-f0-9-]{36}$/);
+    report.booking.effects = read(`SELECT json_build_object(
+      'status',a.status,'version',a.version,'rescheduled',a.local_start=time '14:30',
+      'order',(SELECT json_agg(q.id ORDER BY q.waiting_order) FROM clinical.queue_entries q
+        WHERE q.id IN ('${firstId}','${secondEntryId}') AND q.state='waiting'),
+      'audit',(SELECT json_agg(action_code ORDER BY action_code) FROM audit.events
+        WHERE resource_id IN(a.id,'${secondId}','${firstId}','${secondEntryId}')),
+      'outbox',(SELECT count(*) FROM platform.outbox_events
+        WHERE aggregate_id IN(a.id,'${secondId}','${firstId}','${secondEntryId}')))
+      FROM clinical.appointments a WHERE a.id='${appointmentId}' AND a.schedule_id='${scheduleId}';`);
+    assert.deepEqual(report.booking.effects, {
+      status: 'checked_in',
+      version: 3,
+      rescheduled: true,
+      order: [secondEntryId, firstId],
+      audit: [
+        'appointment.checked_in',
+        'appointment.checked_in',
+        'appointment.created',
+        'appointment.rescheduled',
+        'queue.entry.created',
+        'queue.entry.created',
+        'queue.entry.reordered',
+      ],
+      outbox: 7,
+    });
+    return;
+  }
   if (mode === 'participant-api') {
     const encounterId = 'f0110000-0000-4000-8400-000000000001';
     const consultantId = 'f0110000-0000-4000-8000-000000000008';
@@ -3506,6 +3583,7 @@ async function admit() {
     ['--predecessor-native-scheduling', 'scheduling'],
     ['--predecessor-native-recovery-api', 'recovery-api'],
     ['--predecessor-native-participant-api', 'participant-api'],
+    ['--predecessor-native-booking-api', 'booking-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||

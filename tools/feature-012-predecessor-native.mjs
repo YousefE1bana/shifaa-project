@@ -44,6 +44,7 @@ try {
     recovery,
     'recovery-api': recoveryApi,
     'participant-api': () => participantApi(JSON.parse(fixtureInput)),
+    'booking-api': () => bookingApi(JSON.parse(fixtureInput)),
     scheduling: () => scheduling(JSON.parse(fixtureInput)),
     consent: () => consentHistory(app, fixtures[1], fixtures[2]),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
@@ -151,6 +152,94 @@ async function encounter() {
     409,
   );
   return { calls, ...identifiers };
+}
+
+async function bookingApi({ booking, nextSlot, secondId }) {
+  const [clinician, patient] = fixtures;
+  const calls = [];
+  const invoke = async (name, fixture, method, url, expected, version, payload) => {
+    checkpoint = name;
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method,
+      url,
+      ...(payload ? { payload } : {}),
+      headers: {
+        authorization: 'Bearer ' + fixture.token,
+        'x-request-id': requestId,
+        ...(method === 'POST' ? { 'idempotency-key': randomUUID() } : {}),
+        ...(version ? { 'if-match': '"' + version + '"' } : {}),
+      },
+    });
+    const body = response.json();
+    calls.push({ name, requestId, status: response.statusCode, code: body.code });
+    assert.equal(response.statusCode, expected, name + ' (' + body.code + ')');
+    return body;
+  };
+  const appointments = '/v1/appointments';
+  const created = await invoke('book', patient, 'POST', appointments, 201, null, booking);
+  assert.equal(created.status, 'confirmed');
+  const path = appointments + '/' + created.id;
+  const changed = await invoke(
+    'reschedule',
+    patient,
+    'POST',
+    path + '/reschedule',
+    200,
+    created.version,
+    nextSlot,
+  );
+  assert.equal(changed.id, created.id);
+  assert.equal(changed.version, created.version + 1);
+  assert.equal(Date.parse(changed.startsAt), Date.parse(nextSlot.startsAt));
+  const first = await invoke(
+    'check in rescheduled booking',
+    patient,
+    'POST',
+    path + '/check-in',
+    200,
+    changed.version,
+  );
+  const second = await invoke(
+    'check in second appointment',
+    patient,
+    'POST',
+    appointments + '/' + secondId + '/check-in',
+    200,
+    1,
+  );
+  const queuePath =
+    '/v1/clinics/' +
+    booking.facilityId +
+    '/queues?' +
+    new URLSearchParams({
+      doctorId: booking.doctorId,
+      date: booking.civilDate,
+    });
+  const queue = await invoke('read waiting order', clinician, 'GET', queuePath, 200);
+  const [firstId, secondEntryId] = [first.queueEntry.id, second.queueEntry.id];
+  assert.deepEqual(
+    queue.entries.map((entry) => entry.id),
+    [firstId, secondEntryId],
+  );
+  const reordered = await invoke(
+    'reorder waiting entry',
+    clinician,
+    'POST',
+    '/v1/queue-entries/' + secondEntryId + '/reorder',
+    200,
+    second.queueEntry.version,
+    {
+      targetPosition: 1,
+      queueVersion: queue.version,
+      reason: 'Synthetic waiting order adjustment',
+    },
+  );
+  assert.deepEqual(
+    reordered.entries.map((entry) => entry.id),
+    [secondEntryId, firstId],
+  );
+  return { calls, appointmentId: created.id, firstId, secondEntryId };
 }
 
 async function participantApi({ encounterId, consultantId, startedAt }) {
