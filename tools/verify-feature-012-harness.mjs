@@ -20,6 +20,9 @@ const dbImage =
   'public.ecr.aws/supabase/postgres@sha256:99b1729aeb0bac314445024fc149fbd39306170b61dd50800ccf180327ab3459';
 const authImage =
   'public.ecr.aws/supabase/gotrue@sha256:362659ca70eaa75ba05bbaf963caa84c1c5afe5e8fbf0777e17b830dd5f0f60a';
+const kongImage =
+  'public.ecr.aws/supabase/kong@sha256:1b53405d8680a09d6f44494b7990bf7da2ea43f84a258c59717d4539abf09f6d';
+const recoveryGateway = 'http://kong:8000';
 const label = 'shifaa.f012.admission';
 const dataDir = '/var/lib/postgresql/data';
 const fullId = /^[a-f0-9]{64}$/;
@@ -248,10 +251,10 @@ const nativeSessionPolicy = {
   GOTRUE_HOOK_AFTER_USER_CREATED_ENABLED: 'false',
 };
 
-function startAuth(readSessionPolicy, signingKey) {
+function startAuth(readSessionPolicy, signingKey, issuer = 'http://auth:9999') {
   return create('auth', receipt.images.auth, {
     env: {
-      API_EXTERNAL_URL: 'http://auth:9999',
+      API_EXTERNAL_URL: issuer,
       GOTRUE_SITE_URL: 'http://auth:9999',
       GOTRUE_API_HOST: '0.0.0.0',
       GOTRUE_API_PORT: '9999',
@@ -261,7 +264,7 @@ function startAuth(readSessionPolicy, signingKey) {
       GOTRUE_DB_MIGRATIONS_PATH: '/usr/local/etc/auth/migrations',
       GOTRUE_JWT_SECRET: jwtSecret,
       ...(signingKey ? { GOTRUE_JWT_KEYS: JSON.stringify([signingKey]) } : {}),
-      GOTRUE_JWT_ISSUER: 'http://auth:9999',
+      GOTRUE_JWT_ISSUER: issuer,
       GOTRUE_JWT_EXP: '900',
       GOTRUE_JWT_AUD: 'authenticated',
       GOTRUE_JWT_DEFAULT_GROUP_NAME: 'authenticated',
@@ -273,6 +276,52 @@ function startAuth(readSessionPolicy, signingKey) {
     flags: ['--network-alias', 'auth'],
     command: ['auth'],
   });
+}
+
+function startRecoveryGateway(anonToken) {
+  // Auth route from the pinned Supabase CLI's Kong declaration. The other
+  // CLI services and its dashboard are outside this disposable focus.
+  const route = `_format_version: "1.1"
+services:
+  - name: auth-v1
+    url: http://auth:9999/
+    routes:
+      - name: auth-v1-all
+        strip_path: true
+        paths:
+          - /auth/v1/
+    plugins:
+      - name: cors
+      - name: request-transformer
+        config:
+          add:
+            headers:
+              - "Authorization: Bearer ${anonToken}"
+`;
+  const gateway = create('kong', receipt.images.kong, {
+    tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m,mode=1777' },
+    env: {
+      F012_KONG_ROUTE: route,
+      KONG_DATABASE: 'off',
+      KONG_PREFIX: '/tmp/kong',
+      KONG_DECLARATIVE_CONFIG: '/tmp/f012-kong.yml',
+      KONG_PROXY_LISTEN: '0.0.0.0:8000',
+      KONG_ADMIN_LISTEN: 'off',
+      KONG_STATUS_LISTEN: 'off',
+      KONG_NGINX_WORKER_PROCESSES: '1',
+      KONG_PLUGINS: 'request-transformer,cors',
+      KONG_DNS_ORDER: 'LAST,A,CNAME',
+    },
+    flags: ['--network-alias', 'kong', '--read-only', '--cap-drop=ALL', '--entrypoint=/bin/sh'],
+    command: [
+      '-ec',
+      'umask 077; printf "%s" "$F012_KONG_ROUTE" > "$KONG_DECLARATIVE_CONFIG"; unset F012_KONG_ROUTE; exec /docker-entrypoint.sh kong docker-start',
+    ],
+  });
+  const gatewayHost = checkContainer(gateway).HostConfig;
+  assert.equal(gatewayHost.ReadonlyRootfs, true);
+  assert.deepEqual(gatewayHost.CapDrop, ['ALL']);
+  return gateway;
 }
 
 function observeNativePolicy(auth) {
@@ -292,11 +341,11 @@ function observeNativePolicy(auth) {
   receipt.nativePolicy = { environment: actual, absent, command: configuration.Cmd };
 }
 
-function disposableNativeAdminToken() {
+function disposableNativeToken(role) {
   const part = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
   const data = [
     part({ alg: 'HS256', typ: 'JWT' }),
-    part({ role: 'service_role', exp: Math.floor(Date.now() / 1000) + 180 }),
+    part({ role, exp: Math.floor(Date.now() / 1000) + 180 }),
   ].join('.');
   return data + '.' + createHmac('sha256', jwtSecret).update(data).digest('base64url');
 }
@@ -1080,13 +1129,17 @@ async function nativeDeadlineTrials(db, { subject, session }) {
 
 function applySealedF011(db, coreApiPeers) {
   if (coreApiPeers) {
-    const [auth, probe] = coreApiPeers;
-    assert.deepEqual([db.role, auth.role, probe.role], ['db', 'auth', 'probe']);
+    const [auth, probe, gateway] = coreApiPeers;
+    const peers = gateway ? [db, auth, gateway, probe] : [db, auth, probe];
+    assert.deepEqual(
+      peers.map(({ role }) => role),
+      gateway ? ['db', 'auth', 'kong', 'probe'] : ['db', 'auth', 'probe'],
+    );
     assert.deepEqual(
       receipt.containers.map(({ id }) => id),
-      [db.id, auth.id, probe.id],
+      peers.map(({ id }) => id),
     );
-    for (const resource of [db, auth, probe]) {
+    for (const resource of peers) {
       assert.equal(resource.network, networkId);
       assert.equal(checkContainer(resource).State.Running, true);
     }
@@ -3072,8 +3125,56 @@ function stageLinkedCoreApi(resource, entries) {
   return sha256;
 }
 
-function runPredecessorNative(db, auth, probe, fixtures, mode) {
-  applyWriterBaseline(db, [auth, probe]);
+function readyRecoveryGateway(gateway, probe) {
+  const keyPath = '/.well-known/jwks.json';
+  const readiness = JSON.parse(
+    exec(probe, [
+      'node',
+      '-e',
+      `(async () => {
+          const check = async (endpoint) => {
+            let status = null;
+            try {
+              const reply = await fetch(endpoint, { signal: AbortSignal.timeout(3000) });
+              status = reply.status;
+              const keys = reply.ok ? (await reply.json()).keys : null;
+              if (!reply.ok) await reply.body?.cancel();
+              return { status, es256: !!keys?.some((key) =>
+                key.kty === 'EC' && key.crv === 'P-256' && key.alg === 'ES256') };
+            } catch (error) {
+              const errors = error.cause?.errors ?? [error.cause ?? error];
+              return { status, es256: false, errors: errors.map(({code, name}) =>
+                [code, name].filter((value) => typeof value === 'string' &&
+                  /^[A-Za-z0-9_]{1,35}$/.test(value))) };
+            }
+          };
+          const direct = await check(process.argv[1]);
+          let routed;
+          for (let attempt = 0; attempt < 5; attempt++) {
+            routed = await check(process.argv[2]);
+            if (routed.es256) break;
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+          console.log(JSON.stringify({ direct, routed }));
+        })();`,
+      'http://auth:9999' + keyPath,
+      recoveryGateway + '/auth/v1' + keyPath,
+    ]),
+  );
+  const state = checkContainer(gateway).State;
+  receipt.recoveryGateway = { running: state.Running, exit: state.ExitCode, jwks: readiness };
+  assert.equal(state.Running, true, 'The disposable Auth gateway stopped before Core API startup');
+  assert.equal(readiness.direct.es256, true, 'GoTrue did not serve its configured signing key');
+  assert.equal(readiness.routed.status, 200, 'The gateway JWKS endpoint is unavailable');
+  assert.equal(
+    readiness.routed.es256,
+    true,
+    'The gateway did not serve the configured Auth signing key',
+  );
+}
+
+function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
+  applyWriterBaseline(db, [auth, probe, gateway]);
   const report = (receipt.predecessorNative = { inputs: [] });
   preparePredecessorActors(db, report, fixtures, [2, 1, 8, 4]);
   const seedPath = 'infra/db/tests/feature-012-predecessor-encounter-setup.sql';
@@ -3717,6 +3818,7 @@ async function admit() {
     postgres: pinnedImage(dbImage),
     ...(sqlOnly ? {} : { auth: pinnedImage(authImage) }),
     ...(sqlOnly ? {} : { probe: pinnedImage('shifaa/verify:' + inputs, inputs) }),
+    ...(predecessorNative === 'recovery-api' ? { kong: pinnedImage(kongImage) } : {}),
   };
   receipt.dependencyInputs = inputs;
   receipt.noneNetworkId = inspect('network', 'none').Id;
@@ -3911,14 +4013,22 @@ async function runNativeAdmission({
           key_ops: ['sign', 'verify'],
         }
       : undefined;
-  const auth = startAuth(readSessionPolicy, signingKey);
+  const useRecoveryGateway = predecessorNative === 'recovery-api';
+  const recoveryAnonKey = useRecoveryGateway ? disposableNativeToken('anon') : null;
+  const auth = startAuth(
+    readSessionPolicy,
+    signingKey,
+    useRecoveryGateway ? recoveryGateway + '/auth/v1' : undefined,
+  );
   if (readSessionPolicy) observeNativePolicy(auth);
+  const gateway = useRecoveryGateway ? startRecoveryGateway(recoveryAnonKey) : undefined;
   const probe = create('probe', receipt.images.probe, {
     env: {
       F012_PROBE_PASSWORD: apiPassword,
       ...(applicationWriter ? { F012_CORE_API_PASSWORD: coreApiPassword } : {}),
+      ...(useRecoveryGateway ? { F012_RECOVERY_ANON_KEY: recoveryAnonKey } : {}),
       ...(nativeMutation === 'ban' || nativeMutation === 'recovery'
-        ? { F012_NATIVE_ADMIN_TOKEN: disposableNativeAdminToken() }
+        ? { F012_NATIVE_ADMIN_TOKEN: disposableNativeToken('service_role') }
         : {}),
     },
     tmpfs: { '/tmp': 'rw,nosuid,nodev,size=48m' },
@@ -3926,6 +4036,10 @@ async function runNativeAdmission({
     command: ['-e', 'setTimeout(() => {}, 180000)'],
   });
   const source = readFileSync(safeSource(root, 'tools/feature-012-harness-probe.cjs'));
+  if (gateway) {
+    stage = 'disposable Auth gateway readiness';
+    readyRecoveryGateway(gateway, probe);
+  }
   receipt.probeSha256 = createHash('sha256').update(source).digest('hex');
   const nativeClinicalFixture = publication || predecessorNative;
   const phase = nativeClinicalFixture ? 'clinical-fixtures' : 'fixtures';
@@ -3939,7 +4053,7 @@ async function runNativeAdmission({
   }
   if (predecessorNative) {
     stage = 'predecessor Core API and repository fixtures with native Auth';
-    runPredecessorNative(db, auth, probe, fixtures, predecessorNative);
+    runPredecessorNative(db, auth, probe, fixtures, predecessorNative, gateway);
     return;
   }
   if (applicationWriter) {

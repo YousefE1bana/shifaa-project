@@ -102,8 +102,13 @@ fresh epoch verification remain unexecuted under T013 and T084.
 The [sealed-chain application follow-up](t012-writer-coverage.md#sealed-chain-application-observations)
 adds publication, scheduling, participant and encounter actions using the
 same native issuer and Core API database boundary. It also records the
-separate synthetic F011 owner provisioner and the F007 provider transport
-limit. D3/D4 operational approval and operator assignments remain those
+separate synthetic F011 owner provisioner. The
+[F007 gateway-backed run](t012-writer-coverage.md#gateway-backed-f007-replacement-enrollment)
+resolved the disposable provider transport failure using the existing
+pinned Kong Auth route. Kong routes Auth HTTP and holds no database writer
+authority. The run verified the API's `shifaa_api` login and effective role.
+The gateway reused the same run-local GoTrue service and did not create a
+scheduler, scanner or recurring privileged operation. D3/D4 operational approval and operator assignments remain those
 documented above.
 
 The `--participating-authenticated-core-api-writer` focus used the existing

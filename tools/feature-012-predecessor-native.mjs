@@ -14,15 +14,20 @@ const [phase, fixtureInput] = process.argv.slice(2);
 const fixtures = JSON.parse(readFileSync('/tmp/f012-admission-fixtures.json', 'utf8'));
 const password = process.env.F012_CORE_API_PASSWORD;
 assert.match(password, /^[a-f0-9]{64}$/);
-const issuer = 'http://auth:9999';
+const directAuth = 'http://auth:9999';
+const recoveryHttp = phase === 'recovery-api';
+const supabaseUrl = recoveryHttp ? 'http://kong:8000' : directAuth;
+const issuer = recoveryHttp ? supabaseUrl + '/auth/v1' : directAuth;
+const anonKey = recoveryHttp ? process.env.F012_RECOVERY_ANON_KEY : 'unused-disposable-anon-key';
+if (recoveryHttp) assert.match(anonKey, /^[\w-]+\.[\w-]+\.[\w-]+$/);
 const config = loadConfig({
   NODE_ENV: 'test',
   SHIFAA_SYNTHETIC_MODE: 'true',
   AUTH_ADAPTER: 'supabase',
   REPOSITORY_ADAPTER: 'postgres',
   DATABASE_URL: `postgresql://shifaa_api:${password}@db:5432/postgres`,
-  SUPABASE_URL: issuer,
-  SUPABASE_ANON_KEY: 'unused-disposable-anon-key',
+  SUPABASE_URL: supabaseUrl,
+  SUPABASE_ANON_KEY: anonKey,
   SUPABASE_SERVICE_ROLE_KEY: 'unused-disposable-service-key',
   SUPABASE_JWKS_URL: issuer + '/.well-known/jwks.json',
   SUPABASE_JWT_ISSUER: issuer,
@@ -437,7 +442,7 @@ async function recovery() {
 async function recoveryApi() {
   const fixture = fixtures[3];
   const client = new SupabaseAuthIssuer({
-    url: issuer,
+    url: supabaseUrl,
     anonKey: config.supabaseAnonKey,
     jwksUrl: config.supabaseJwksUrl,
     issuer,
@@ -454,9 +459,10 @@ async function recoveryApi() {
   const blocked = await history(fixture.token);
   assert.equal(blocked.statusCode, 403);
   assert.equal(blocked.json().code, 'recovery-mfa-enrollment-required');
-  const userPath = async (path) => {
-    const result = await fetch(issuer + path, {
-      headers: { authorization: 'Bearer ' + fixture.token },
+  checkpoint = 'recovery gateway transport';
+  const userPath = async (url, token) => {
+    const result = await fetch(url, {
+      headers: { apikey: anonKey, ...(token ? { authorization: 'Bearer ' + token } : {}) },
       redirect: 'error',
       signal: AbortSignal.timeout(10_000),
     });
@@ -464,10 +470,19 @@ async function recoveryApi() {
     return result.status;
   };
   transport = {
-    directNativeUser: await userPath('/user'),
-    configuredSdkUser: await userPath('/auth/v1/user'),
+    sdkBaseUrl: supabaseUrl,
+    issuer,
+    jwksUrl: config.supabaseJwksUrl,
+    directNativeUser: await userPath(directAuth + '/user', fixture.token),
+    configuredSdkUser: await userPath(issuer + '/user', fixture.token),
+    gatewayUserWithoutSession: await userPath(issuer + '/user'),
+    gatewayUnmappedRoot: await userPath(supabaseUrl + '/user', fixture.token),
     restrictedOrdinaryRead: blocked.statusCode,
   };
+  assert.equal(transport.directNativeUser, 200);
+  assert.equal(transport.configuredSdkUser, 200);
+  assert.ok([401, 403].includes(transport.gatewayUserWithoutSession));
+  assert.equal(transport.gatewayUnmappedRoot, 404);
   const submit = async (url, payload) => {
     checkpoint = url;
     const requestId = randomUUID();
@@ -503,6 +518,7 @@ async function recoveryApi() {
   const after = await history(verified.body.session.accessToken);
   assert.equal(after.statusCode, 200);
   return {
+    transport,
     subject: session.subjectId,
     session: session.sessionId,
     aal: session.aal,
