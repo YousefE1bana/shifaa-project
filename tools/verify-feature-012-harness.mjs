@@ -3622,15 +3622,45 @@ function verifyPredecessorGuardianship(report, db, invoke, read) {
     assert.equal(verdict.exit, 0, verdict.stderr);
     return verdict.stdout.split(/\r?\n/).find((line) => line.startsWith('shifaa_api|'));
   };
+  const allergyAuthority = () =>
+    observedSql(
+      db,
+      `\\set VERBOSITY verbose
+      BEGIN;
+      SET SESSION AUTHORIZATION shifaa_api;
+      SET LOCAL shifaa.environment = 'local';
+      SET LOCAL shifaa.person_id = '${guardian}';
+      SET LOCAL shifaa.actor_role = 'GUA';
+      SET LOCAL shifaa.aal = '2';
+      SET LOCAL shifaa.purposes = 'dependent_care';
+      SET LOCAL shifaa.action = 'listAllergies';
+      SELECT session_user,current_user,
+        jsonb_typeof(clinical.list_allergies_api_v1('${patient}','{}'::jsonb));
+      ROLLBACK;`,
+    );
+
   const result = (report.guardianship = {});
   result.approval = invoke('guardianship-api', { phase: 'approve', patient, relationship });
   result.approvedAuthority = authority();
   assert.equal(result.approvedAuthority, 'shifaa_api|shifaa_api|t');
+  result.approvedAllergyAuthority = allergyAuthority();
+  assert.equal(result.approvedAllergyAuthority.exit, 0, result.approvedAllergyAuthority.stderr);
+  assert.match(result.approvedAllergyAuthority.stdout, /^shifaa_api\|shifaa_api\|object$/m);
   result.fixtureEvidenceLoss = read(`WITH rejected AS (
     UPDATE identity.private_evidence_objects SET scan_status='rejected',released_at=NULL
     WHERE id='${evidence}' AND scan_status='released' RETURNING id
     ) SELECT json_build_object('role',session_user,'rows',count(*)) FROM rejected;`);
   assert.deepEqual(result.fixtureEvidenceLoss, { role: 'supabase_admin', rows: 1 });
+  result.evidenceLossBeforeRevocation =
+    read(`SELECT json_build_object('status',status,'version',version)
+    FROM identity.care_relationships WHERE id='${relationship}' AND evidence_object_id='${evidence}';`);
+  assert.deepEqual(result.evidenceLossBeforeRevocation, { status: 'active', version: 2 });
+  result.rejectedAllergyAuthority = allergyAuthority();
+  assert.equal(result.rejectedAllergyAuthority.exit, 3);
+  assert.match(
+    result.rejectedAllergyAuthority.stderr,
+    /42501: Feature 011 allergy authority denied/,
+  );
   result.revocation = invoke('guardianship-api', { phase: 'revoke', patient, relationship });
   result.revokedAuthority = authority();
   assert.equal(result.revokedAuthority, 'shifaa_api|shifaa_api|f');
