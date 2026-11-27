@@ -144,6 +144,25 @@ Exact clock equality inside the installed helper and independent specialist
 review remain outstanding. The hosted adapter cases still require the
 existing hosted runner.
 
+### Installed MFA downgrade in both orders
+
+The focused native run `19c7603e-5b43-446d-9d23-32f69965a627` on
+test-only revision `b6e54140c402daefaf475e5646f6b6e81daececf` passed.
+Both installed migration hashes matched the exact candidate. Each
+fixture established a real GoTrue AAL2 session using TOTP. In guard-first
+order, native factor removal waited on the retained transaction. In
+native-first order, an independent guard timed out on `auth.sessions`
+with `55P03`. Both native calls returned HTTP 200 and changed the bound
+session to AAL1 with the factor gone. Both fresh workforce guard requests
+denied with `42501` before the effect marker.
+
+The run exited 0 with empty stderr and the retained inventory of 12
+containers and four volumes matched. The private receipt is
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t010-installed-downgrade-b6e54140/native-downgrade.json`
+(106,003 bytes, SHA-256 `98d5c6c86470ab633b11e5b3eca7f5fd0360b8bcbdede2d2eb6021368f59f301`).
+This is installed guard evidence. The hosted adapter and specialist review
+remain open.
+
 ## Remaining retry assertions
 
 The following assertions are ready for the owning coordinator and native
