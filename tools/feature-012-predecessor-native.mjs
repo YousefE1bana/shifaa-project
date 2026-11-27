@@ -64,7 +64,9 @@ try {
     'membership-scope-api': () => membershipScope(JSON.parse(fixtureInput)),
     'facility-scope-api': () => facilityScope(JSON.parse(fixtureInput)),
     'professional-review-api': () =>
-      professionalReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
+      professionalReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined, (step) => {
+        checkpoint = step;
+      }),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));

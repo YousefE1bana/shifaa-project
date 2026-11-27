@@ -86,10 +86,11 @@ export async function guardianshipReview(app, { phase, patient, relationship }) 
   return { requestId, status: response.statusCode, state: body.status, version: body.version };
 }
 
-export async function professionalReview(app, fixture) {
+export async function professionalReview(app, fixture, reportStep) {
   const owner = 'synthetic-person:' + person(5);
   const approver = 'synthetic-admin:facility_approver:' + person(8);
   const post = async (url, token, payload, expected, headers = {}) => {
+    reportStep(url);
     const requestId = randomUUID();
     const response = await app.inject({
       method: 'POST',
@@ -115,6 +116,7 @@ export async function professionalReview(app, fixture) {
         owner,
         {
           profession: 'doctor',
+          specialty_code: null,
           license_number: 'SYN-' + randomUUID(),
           issuer: 'Synthetic professional authority',
           expires_on: '2099-01-01',
