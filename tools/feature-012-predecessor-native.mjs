@@ -61,6 +61,7 @@ try {
     'guardianship-api': () => guardianshipReview(app, JSON.parse(fixtureInput)),
     'licence-scope-api': () => licenceScope(JSON.parse(fixtureInput)),
     'membership-scope-api': () => membershipScope(JSON.parse(fixtureInput)),
+    'facility-scope-api': () => facilityScope(JSON.parse(fixtureInput)),
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
@@ -251,6 +252,27 @@ async function membershipScope({ membership, facility, facilityOwner }) {
     return ended;
   });
   return { ...result, end: change };
+}
+
+async function facilityScope({ facility, evidence }) {
+  const { change, ...result } = await encounterAuthorityLoss(async (action) => {
+    const suspended = await action(
+      '/v1/admin/facilities/' + facility + '/decision',
+      'synthetic-admin:facility_approver:f0110000-0000-4000-8000-000000000008',
+      {
+        decision: 'suspend',
+        reason: 'Synthetic facility review',
+        evidence_object_id: evidence,
+      },
+      200,
+      { 'x-purpose': 'facility_approval', 'x-aal': '2', 'if-match': '"1"' },
+    );
+    assert.equal(suspended.body.id, facility);
+    assert.equal(suspended.body.facility_status, 'suspended');
+    assert.equal(suspended.body.version, 2);
+    return suspended;
+  });
+  return { ...result, suspend: change };
 }
 
 async function bookingApi({ booking, nextSlot, secondId }) {

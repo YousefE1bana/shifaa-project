@@ -3303,6 +3303,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     verifyPredecessorMembershipScope(report, db, invoke, read);
     return;
   }
+  if (mode === 'facility-scope-api') {
+    verifyPredecessorFacilityScope(report, invoke, read);
+    return;
+  }
   if (mode === 'facility-evidence-loss') {
     verifyPredecessorFacility(report, invoke, read, true);
     return;
@@ -3608,6 +3612,54 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   report.consent = invoke('consent');
 
   verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorFacilityScope(report, invoke, read) {
+  const facility = 'f0110000-0000-4000-8200-000000000001';
+  const evidence = 'f011c000-0000-4000-8000-000000000001';
+  const reviewer = 'f0110000-0000-4000-8000-000000000008';
+  const result = (report.facilityScope = invoke('facility-scope-api', { facility, evidence }));
+  for (const id of [result.id, result.suspend.requestId, result.complete.requestId]) {
+    assert.match(id, /^[a-f0-9-]{36}$/);
+  }
+  result.effects = read(`SELECT json_build_object(
+    'facility',f.facility_status,'facilityVersion',f.version,'evidence',ev.scan_status,
+    'membership',m.membership_status,'licence',l.status,'encounter',e.status,
+    'encounterVersion',e.version,'appointment',a.status,'queue',q.state,
+    'suspensionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=f.id
+      AND request_id='${result.suspend.requestId}' AND actor_person_id='${reviewer}'
+      AND action_code='facility.suspended'),
+    'suspensionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=f.id
+      AND event_type='facility.changed'),
+    'completionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=e.id
+      AND request_id='${result.complete.requestId}' AND action_code='encounter.completed'),
+    'completionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=e.id
+      AND event_type='clinical.encounter.completed.v1'),
+    'completionReceipt',(SELECT count(*) FROM platform.idempotency_records WHERE resource_id=e.id
+      AND route_template='/v1/encounters/{encounterId}/complete'))
+    FROM clinical.encounters e JOIN clinical.appointments a ON a.id=e.appointment_id
+    JOIN clinical.queue_entries q ON q.appointment_id=a.id
+    JOIN identity.facilities f ON f.id=e.facility_id
+    JOIN identity.private_evidence_objects ev ON ev.facility_id=f.id
+    JOIN identity.facility_memberships m ON m.facility_id=f.id AND m.person_id=e.responsible_clinician_id
+    JOIN identity.professional_licenses l ON l.id=m.employment_license_id
+    WHERE e.id='${result.id}' AND f.id='${facility}' AND ev.id='${evidence}';`);
+  assert.deepEqual(result.effects, {
+    facility: 'suspended',
+    facilityVersion: 2,
+    evidence: 'released',
+    membership: 'active',
+    licence: 'verified',
+    encounter: 'open',
+    encounterVersion: result.version,
+    appointment: 'in_consultation',
+    queue: 'in_service',
+    suspensionAudit: 1,
+    suspensionOutbox: 1,
+    completionAudit: 0,
+    completionOutbox: 0,
+    completionReceipt: 0,
+  });
 }
 
 function verifyPredecessorMembershipScope(report, db, invoke, read) {
@@ -4042,6 +4094,7 @@ async function admit() {
     ['--predecessor-guardianship-api', 'guardianship-api'],
     ['--predecessor-licence-scope-api', 'licence-scope-api'],
     ['--predecessor-membership-scope-api', 'membership-scope-api'],
+    ['--predecessor-facility-scope-api', 'facility-scope-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
