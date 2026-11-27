@@ -3236,6 +3236,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     verifyPredecessorGuardianship(report, db, invoke, read);
     return;
   }
+  if (mode === 'licence-scope-api') {
+    verifyPredecessorLicenceScope(report, db, invoke, read);
+    return;
+  }
   if (mode === 'facility-evidence-loss') {
     verifyPredecessorFacility(report, invoke, read, true);
     return;
@@ -3543,6 +3547,61 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   verifyPredecessorFacility(report, invoke, read);
 }
 
+function verifyPredecessorLicenceScope(report, db, invoke, read) {
+  const licence = 'f0110000-0000-4000-8300-000000000002';
+  const doctor = 'f0110000-0000-4000-8000-000000000002';
+  const reviewer = 'f0110000-0000-4000-8000-000000000008';
+  const evidence = 'f0120100-0000-4000-8300-000000000008';
+  sql(
+    db,
+    `BEGIN;
+    INSERT INTO identity.private_evidence_objects
+      (id,bucket_code,object_key,owner_person_id,sha256,mime_type,size_bytes,scan_status,released_at)
+    VALUES ('${evidence}','professional-license-evidence','synthetic/t012-scope','${doctor}',
+      repeat('4',64),'application/pdf',10,'released',now());
+    UPDATE identity.professional_licenses SET evidence_object_id='${evidence}'
+    WHERE id='${licence}' AND person_id='${doctor}';
+    COMMIT;`,
+  );
+  const result = (report.licenceScope = invoke('licence-scope-api', { licence }));
+  for (const id of [result.id, result.suspend.requestId, result.complete.requestId]) {
+    assert.match(id, /^[a-f0-9-]{36}$/);
+  }
+  result.effects = read(`SELECT json_build_object(
+    'licence',l.status,'licenceVersion',l.version,'evidence',ev.scan_status,
+    'encounter',e.status,'encounterVersion',e.version,'appointment',a.status,'queue',q.state,
+    'suspensionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=l.id
+      AND request_id='${result.suspend.requestId}' AND actor_person_id='${reviewer}'
+      AND action_code='professional_license.suspended'),
+    'suspensionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=l.id
+      AND event_type='professional_license.changed'),
+    'completionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=e.id
+      AND request_id='${result.complete.requestId}' AND action_code='encounter.completed'),
+    'completionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=e.id
+      AND event_type='clinical.encounter.completed.v1'),
+    'completionReceipt',(SELECT count(*) FROM platform.idempotency_records WHERE resource_id=e.id
+      AND route_template='/v1/encounters/{encounterId}/complete'))
+    FROM clinical.encounters e JOIN clinical.appointments a ON a.id=e.appointment_id
+    JOIN clinical.queue_entries q ON q.appointment_id=a.id
+    JOIN identity.professional_licenses l ON l.person_id=e.responsible_clinician_id
+    JOIN identity.private_evidence_objects ev ON ev.id=l.evidence_object_id
+    WHERE e.id='${result.id}' AND l.id='${licence}' AND ev.id='${evidence}';`);
+  assert.deepEqual(result.effects, {
+    licence: 'suspended',
+    licenceVersion: 2,
+    evidence: 'released',
+    encounter: 'open',
+    encounterVersion: result.version,
+    appointment: 'in_consultation',
+    queue: 'in_service',
+    suspensionAudit: 1,
+    suspensionOutbox: 1,
+    completionAudit: 0,
+    completionOutbox: 0,
+    completionReceipt: 0,
+  });
+}
+
 function verifyPredecessorGuardianship(report, db, invoke, read) {
   // Fixed F004 synthetic fixtures from the sealed chain.
   const relationship = '43000000-0000-4000-8000-000000000002';
@@ -3827,6 +3886,7 @@ async function admit() {
     ['--predecessor-native-absence-api', 'absence-api'],
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
     ['--predecessor-guardianship-api', 'guardianship-api'],
+    ['--predecessor-licence-scope-api', 'licence-scope-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||
