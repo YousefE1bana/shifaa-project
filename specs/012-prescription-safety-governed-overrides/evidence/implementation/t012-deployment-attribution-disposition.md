@@ -6,12 +6,12 @@ The Product Owner’s 2026-11-26 “SHIFAA — T012 Product Owner Decisions” i
 
 The target is the existing disposable synthetic topology defined by the [T002 harness receipt](harness-admission.json) and [harness](../../../../tools/verify-feature-012-harness.mjs). T002 records source revision `a19c07047acf154dda9b02862196a1af829e9d91`, a run-local API probe, Auth and PostgreSQL on a fresh internal bridge with no published ports, and a separate synthetic restore destination on network `none`. The later native guard receipt confirms the pinned native configuration. The supplemental catalog used the SQL-only configuration on network `none`. Local Compose, retained Supabase and hosted verification are separate configurations.
 
-| Component | Observed role and scope                                                                                                                                                                                                                      | Evidence still needed                                                                                                        |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| API       | T002’s Fastify probe connected as `f012_probe`. Historical T012 transactions and T011 native guard used `shifaa_api` as effective SQL session authorization. The [Core API adapter](../../../../services/api/src/app.ts) is source-verified. | The combined admitted target needs an application-backed receipt for the actual Core API login and connection binding.       |
-| Worker    | `shifaa_worker` executed the F007 expiry routine in a historical disposable SQL case. The supplemental catalog confirms a login role and the installed routine grant. `supabase_admin` owns the definer.                                     | An actual worker service or scheduled invocation was unobserved.                                                             |
-| Auth      | T002 and the native guard run used pinned GoTrue as PostgreSQL `supabase_auth_admin`. The native guard receipt records effective session, MFA, refresh and hook settings.                                                                    | This operating evidence is limited to the pinned Auth configuration. The SQL-only catalog does not install native relations. |
-| Database  | Database owner `postgres`; catalog current and session role `supabase_admin`; read-only transaction. `shifaa_f011_executor` and `shifaa_f012_fence_executor` are NOLOGIN, non-superuser and NOBYPASSRLS.                                     | Ownership, ACL eligibility and actual invocation each require their own evidence.                                            |
+| Component | Observed role and scope                                                                                                                                                                                                                      | Evidence still needed                                                                                                                                                                                                        |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| API       | T002’s Fastify probe connected as `f012_probe`. Historical T012 transactions and T011 native guard used `shifaa_api` as effective SQL session authorization. The [Core API adapter](../../../../services/api/src/app.ts) is source-verified. | The [2026-11-27 capture](#2026-11-27-combined-core-api-and-native-auth-capture) verifies the Core API PostgreSQL login and onboarding transaction. The live issuer and authenticated-route binding require further evidence. |
+| Worker    | `shifaa_worker` executed the F007 expiry routine in a historical disposable SQL case. The supplemental catalog confirms a login role and the installed routine grant. `supabase_admin` owns the definer.                                     | An actual worker service or scheduled invocation was unobserved.                                                                                                                                                             |
+| Auth      | T002 and the native guard run used pinned GoTrue as PostgreSQL `supabase_auth_admin`. The native guard receipt records effective session, MFA, refresh and hook settings.                                                                    | This operating evidence is limited to the pinned Auth configuration. The SQL-only catalog does not install native relations.                                                                                                 |
+| Database  | Database owner `postgres`; catalog current and session role `supabase_admin`; read-only transaction. `shifaa_f011_executor` and `shifaa_f012_fence_executor` are NOLOGIN, non-superuser and NOBYPASSRLS.                                     | Ownership, ACL eligibility and actual invocation each require their own evidence.                                                                                                                                            |
 
 | Receipt                | Run and exact revision                                                                                            | Scope                                                                                                                                                                                                                                                                                                                                      |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -38,4 +38,42 @@ The original RED observations, both orderings and 24 receipt checksums remain in
 
 ## D5–D6 · Engineering disposition
 
-The next T012 evidence needed is an application-backed Core API connection and writer catalog comparison in the admitted synthetic configuration, plus the remaining [writer and predicate cases](t012-writer-coverage.md#outstanding-test-assertions-and-owners). Each newly established privileged invocation requires its documented approval, actual role and operator. T013 requires acceptance of both T011 and T012. The deferred Spec Kit upgrade is tracked [on maintenance issue #502](https://github.com/YousefE1bana/shifaa-project/issues/502#issuecomment-7196184880) for after F012 closure and before F013 in a separate tooling PR.
+The combined capture below supplies an application-backed onboarding connection and read-only writer catalog. The remaining [writer and predicate cases](t012-writer-coverage.md#outstanding-test-assertions-and-owners) require their own verdicts. Each newly established privileged invocation requires its documented approval, actual role and operator. T013 requires acceptance of both T011 and T012. The deferred Spec Kit upgrade is tracked [on maintenance issue #502](https://github.com/YousefE1bana/shifaa-project/issues/502#issuecomment-7196184880) for after F012 closure and before F013 in a separate tooling PR.
+
+## 2026-11-27 combined Core API and native Auth capture
+
+`--participating-core-api-writer` returned `PASS_T012_CORE_API_WRITER` in run
+`7ae9d5a4-85c4-42fa-956e-ea76ecc65456` at test revision
+`f9c45cc3770c2496ad813c5f46972865fd0f45cb`. The approved disposable internal
+bridge held the database, pinned GoTrue and the probe container. The harness
+streamed the committed Core API sources into probe tmpfs and used the pinned
+dependency image. The 38 sealed F011 migrations and T009 matched the earlier
+catalog capture byte for byte.
+
+The existing Core API assembly selected its PostgreSQL repository. Its
+connection reported `session_user = current_user = shifaa_api` on the owned
+database endpoint. The onboarding service completed registration for a
+synthetic subject established by pinned GoTrue. The service used the same
+backend and transaction observed by the probe. Independent readback found one
+person, one patient, one self-care relationship and one successful registration
+audit event for the exact request. The test enters at the service boundary
+after fixture Auth signup. Full Core API issuer and live authenticated-route
+binding remain to be verified.
+
+The read-only capture recorded 39 relations, 136 role/DML entries, 80 policies,
+47 routines and 32 triggers. All five listed Auth relations were present and
+owned by `supabase_auth_admin`. The onboarding routine was owned by
+`supabase_admin` with execution available to `shifaa_api` and the owner.
+The catalog again showed the F007 expiry routine available to `shifaa_worker`
+and the owner. An actual scheduler invocation remains unobserved. Neither the
+`pg_cron` extension nor its job catalog was present in this disposable run.
+
+The private receipt is
+`LOCALAPPDATA/SHIFAA-Recovery/2026-11-27-t012-core-api-writer-f9c45cc3/core-api-writer.json`
+(183,258 bytes, SHA-256 `75c15d501b6976082e71b0fbd75fd1f93af2daa635aaa9069c903f1844b7c714`).
+The source archive SHA-256 is
+`87e98ffcfb07b0aa2513585fb6d078f1077dddd96316dfd80c72b0e20a6d4cd9`.
+The run exited 0 with empty stderr and preserved the retained inventory of
+12 containers and four volumes. Two earlier blocked setup receipts remain
+under `2026-11-27-t012-core-api-writer-cfd5bbde` and
+`2026-11-27-t012-core-api-writer-eeb534cf`.
