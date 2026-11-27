@@ -6,6 +6,12 @@ This is the attribution record for all 13 families in the [source inventory](wri
 
 The Product Owner has since designated the existing disposable synthetic topology. The [deployment attribution disposition](t012-deployment-attribution-disposition.md) records D1–D6, scoped installed identities and supplemental catalog evidence. The original manifest below establishes the attribution baseline.
 
+The [sealed-chain application observations](t012-writer-coverage.md#sealed-chain-application-observations)
+add observed entry points for F011 publication and offline provisioning, F010
+encounter and scheduling, consent history, seeded facility review and the F007
+local repository. They bind the disposable database roles and distinguish
+the native authentication paths from fixture-only approval and scan state.
+
 ## Evidence and deployment scope
 
 | Evidence class                | Bound context                                                                                                                                                                                                                                                                                                                                                                                                                                                         | What it establishes                                                                                                                                                                                                                                                                                                                                                                                                   |

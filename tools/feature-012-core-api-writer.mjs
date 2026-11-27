@@ -2,9 +2,10 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { lookup } from 'node:dns/promises';
-import { mkdirSync, readdirSync, readFileSync, symlinkSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { linkProbeWorkspaces } from './feature-012-probe-workspaces.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 assert.equal(root, '/tmp/f012-core-api');
@@ -16,23 +17,7 @@ if (authenticated) assert.match(signingProfile, uuid);
 const password = process.env.F012_CORE_API_PASSWORD;
 assert.ok(password && /^[a-f0-9]{64}$/.test(password), 'Generated Core API password required');
 
-for (const workspace of workspaces) {
-  const installed = join('/opt/deps', workspace, 'node_modules');
-  const target = join(root, workspace, 'node_modules');
-  mkdirSync(join(target, '@shifaa'), { recursive: true });
-  for (const dependency of readdirSync(installed)) {
-    if (dependency.startsWith('.')) continue;
-    if (dependency === '@shifaa') {
-      for (const name of readdirSync(join(installed, dependency))) {
-        if (workspaces.includes('packages/' + name)) {
-          symlinkSync(join(root, 'packages', name), join(target, dependency, name));
-        }
-      }
-    } else {
-      symlinkSync(join(installed, dependency), join(target, dependency));
-    }
-  }
-}
+linkProbeWorkspaces(root, workspaces);
 
 const { buildApp } = await import(pathToFileURL(join(root, 'services/api/src/app.ts')));
 const { loadConfig } = await import(pathToFileURL(join(root, 'services/api/src/config.ts')));

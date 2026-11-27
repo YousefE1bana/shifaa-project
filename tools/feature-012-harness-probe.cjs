@@ -20,7 +20,7 @@ async function auth(path, options, timeoutMs = 2500) {
   });
 }
 
-async function fixtures() {
+async function fixtures(clinical = false) {
   const deadline = Date.now() + 45_000;
   while (Date.now() < deadline) {
     const response = await auth('/health').catch(() => null);
@@ -28,7 +28,7 @@ async function fixtures() {
     await new Promise((resume) => setTimeout(resume, 750));
   }
   const persons = [];
-  for (let index = 0; index < 2; index += 1) {
+  for (let index = 0; index < (clinical ? 4 : 2); index += 1) {
     const email = randomUUID() + '@example.invalid';
     const password = 'Aa9!' + randomBytes(32).toString('hex');
     const response = await auth('/signup', {
@@ -50,6 +50,7 @@ async function fixtures() {
       password,
     });
   }
+  if (clinical) for (const person of persons) await enrollTotp(person);
   writeFileSync(fixturePath, JSON.stringify(persons), { flag: 'wx', mode: 0o600 });
   console.log(
     JSON.stringify(persons.map(({ subject, session, person }) => ({ subject, session, person }))),
@@ -99,42 +100,39 @@ function nativeClaims(token) {
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
 }
 
+async function enrollTotp(person) {
+  const initial = nativeClaims(person.token);
+  assert.equal(initial.aal, 'aal1');
+  assert.ok(initial.amr.some(({ method }) => method === 'password'));
+  const factor = await requireAuthJson('/factors', 'POST', { factor_type: 'totp' }, person.token);
+  const path = '/factors/' + factor.id;
+  const challenge = await requireAuthJson(path + '/challenge', 'POST', {}, person.token);
+  const verified = await requireAuthJson(
+    path + '/verify',
+    'POST',
+    {
+      challenge_id: challenge.id,
+      code: totp(factor.totp.secret),
+    },
+    person.token,
+  );
+  const claims = nativeClaims(verified.access_token);
+  assert.equal(claims.sub, person.subject);
+  assert.equal(claims.session_id, person.session);
+  assert.equal(claims.aal, 'aal2');
+  assert.ok(
+    claims.amr.some(({ method, timestamp }) => method === 'totp' && Number.isInteger(timestamp)),
+  );
+  person.factor = factor.id;
+  person.token = verified.access_token;
+  return { factor: person.factor, initialAal: initial.aal, verifiedAal: claims.aal };
+}
+
 async function prepareNativeMutation(operation, persons) {
   const summaries = [];
   for (const person of persons) {
     if (operation === 'downgrade') {
-      const initial = nativeClaims(person.token);
-      assert.equal(initial.aal, 'aal1');
-      assert.ok(initial.amr.some(({ method }) => method === 'password'));
-      const factor = await requireAuthJson(
-        '/factors',
-        'POST',
-        { factor_type: 'totp' },
-        person.token,
-      );
-      const path = '/factors/' + factor.id;
-      const challenge = await requireAuthJson(path + '/challenge', 'POST', {}, person.token);
-      const verified = await requireAuthJson(
-        path + '/verify',
-        'POST',
-        {
-          challenge_id: challenge.id,
-          code: totp(factor.totp.secret),
-        },
-        person.token,
-      );
-      const claims = nativeClaims(verified.access_token);
-      assert.equal(claims.sub, person.subject);
-      assert.equal(claims.session_id, person.session);
-      assert.equal(claims.aal, 'aal2');
-      assert.ok(
-        claims.amr.some(
-          ({ method, timestamp }) => method === 'totp' && Number.isInteger(timestamp),
-        ),
-      );
-      person.factor = factor.id;
-      person.token = verified.access_token;
-      summaries.push({ factor: person.factor, initialAal: initial.aal, verifiedAal: claims.aal });
+      summaries.push(await enrollTotp(person));
     } else {
       assert.equal(operation, 'recovery');
       const link = await requireAuthJson(
@@ -342,8 +340,8 @@ async function main() {
     } else {
       await mutateNative(operation, persons[Number(fixtureIndex)]);
     }
-  } else if (phase === 'fixtures') {
-    await fixtures();
+  } else if (phase === 'fixtures' || phase === 'clinical-fixtures') {
+    await fixtures(phase === 'clinical-fixtures');
   } else if (process.argv[2] === 'probe') {
     await exercise(JSON.parse(readFileSync(fixturePath, 'utf8')));
   } else if (['local-logout', 'local-logout-held'].includes(process.argv[2])) {
