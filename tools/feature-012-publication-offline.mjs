@@ -24,7 +24,7 @@ const pool = postgres({
 const actorPersonId = 'f0110000-0000-4000-8000-000000000008';
 const now = () => new Date().toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
 const profile = operation === 'admit' ? 'admissibility' : 'designation';
-assert.ok(['admit', 'revoke-designation'].includes(operation));
+assert.ok(['admit', 'revoke-admission', 'revoke-designation'].includes(operation));
 const session = {
   pool,
   actorPersonId,
@@ -90,6 +90,14 @@ try {
       value,
     );
     console.log(JSON.stringify({ role, approvalId: r.id, releaseId: r.release_id }));
+  } else if (operation === 'revoke-admission') {
+    // K17 uses owner DML to model lost upstream evidence.
+    const [revoked] = await pool`UPDATE clinical.content_admissibility_evidence
+      SET status='revoked',version=version+1
+      WHERE id=${input.approvalId}::uuid AND synthetic AND status='active' AND version=1
+      RETURNING id,version,status`;
+    assert.deepEqual(revoked, { id: input.approvalId, version: 2, status: 'revoked' });
+    console.log(JSON.stringify({ role, ...revoked }));
   } else {
     const current = input.designation;
     const info = { mode: 'isolated-synthetic', sourceIdentity: current.sourceIdentity, now };

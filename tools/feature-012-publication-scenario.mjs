@@ -145,7 +145,7 @@ export function publicationScenario({ invoke, offline, read, report }) {
   });
   const publish = (draft, input, parent) => {
     const result = request('publish', 6, input, 200);
-    assert.equal(result.eligibility, 'current');
+    assert.equal(result.eligibility, 'effective', 'Published backdated fixture is effective');
     assert.equal(result.workflowVersion, 4);
     const saved = effects(draft.releaseId);
     report.readback.push(saved);
@@ -193,17 +193,25 @@ export function publicationScenario({ invoke, offline, read, report }) {
   assert.deepEqual(effects(initial.releaseId), committed);
 
   const beforeLoss = effects(successor.releaseId);
-  report.offline.push(offline('revoke-designation', { designation }));
+  report.offline.push(offline('revoke-admission', { approvalId: report.offline[1].approvalId }));
   assert.deepEqual(current(), []);
   const afterLoss = effects(successor.releaseId);
   report.readback.push(afterLoss);
   assert.deepEqual(afterLoss, { ...beforeLoss, eligible: false });
+  assert.deepEqual(
+    effects(initial.releaseId),
+    committed,
+    'Valid ancestor cannot become current again',
+  );
+  report.offline.push(offline('revoke-designation', { designation }));
   const finalPredecessor = effects(initial.releaseId);
   assert.deepEqual(finalPredecessor, { ...committed, eligible: false });
+  assert.deepEqual(current(), []);
   report.assertions = [
     'missing exact admission denied without publication effect',
     'distinct authenticated publisher committed the initial release and replayed its single receipt',
     'draft successor leaves the initial release current; publishing selects the successor',
-    'revoked exact reviewer designation removes eligibility without selecting an ancestor or rewriting history',
+    'loss of the successor’s exact admission removes current eligibility without falling back to an otherwise eligible ancestor',
+    'revoked exact reviewer designation invalidates historical approval without rewriting receipts or signatures',
   ];
 }
