@@ -3266,7 +3266,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
     return;
   }
   if (mode === 'membership-scope-api') {
-    verifyPredecessorMembershipScope(report, invoke, read);
+    verifyPredecessorMembershipScope(report, db, invoke, read);
     return;
   }
   if (mode === 'facility-evidence-loss') {
@@ -3576,13 +3576,18 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway) {
   verifyPredecessorFacility(report, invoke, read);
 }
 
-function verifyPredecessorMembershipScope(report, invoke, read) {
+function verifyPredecessorMembershipScope(report, db, invoke, read) {
   const facility = 'f0110000-0000-4000-8200-000000000001';
-  const facilityOwner = 'f0110000-0000-4000-8000-000000000002';
+  const facilityOwner = 'f0110000-0000-4000-8000-000000000004';
+  const clinician = 'f0110000-0000-4000-8000-000000000002';
+  // Distinct run-local owner and treating clinician, using their existing F003 roles.
+  sql(db, `UPDATE identity.facilities SET created_by_person_id='${facilityOwner}'
+    WHERE id='${facility}' AND created_by_person_id='${clinician}';`);
   const membership = read(`SELECT to_json(m.id) FROM identity.facility_memberships m
     JOIN identity.facilities f ON f.id=m.facility_id
     WHERE f.id='${facility}' AND f.created_by_person_id='${facilityOwner}'
-      AND m.person_id='${facilityOwner}' AND m.role_code='doctor' AND m.membership_status='active';`);
+      AND m.person_id='${clinician}' AND m.role_code='doctor' AND m.membership_status='active';`);
+  assert.match(membership, /^[a-f0-9-]{36}$/);
   const result = (report.membershipScope = invoke('membership-scope-api', {
     membership,
     facility,
