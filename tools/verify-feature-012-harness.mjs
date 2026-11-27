@@ -3059,6 +3059,13 @@ async function admit() {
         paths: ['infra/db/tests/feature-012-predecessor-purpose.sql'],
       },
     ],
+    [
+      '--predecessor-scheduling-writers',
+      {
+        status: 'PASS_T012_PREDECESSOR_SCHEDULING_WRITERS',
+        paths: ['infra/db/tests/feature-012-predecessor-scheduling.sql'],
+      },
+    ],
   ]).get(onlyArgument);
   const predecessorAllergy = onlyArgument === '--predecessor-allergy-writers';
   const authenticatedWriter = onlyArgument === '--participating-authenticated-core-api-writer';
