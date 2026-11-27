@@ -3099,8 +3099,11 @@ function runPredecessorNative(db, auth, probe, fixtures) {
     '${session}',now(),now()+interval '15 minutes');`,
   );
   const entry = 'tools/feature-012-predecessor-native.mjs';
-  report.sourceArchiveSha256 = stageLinkedCoreApi(probe, [entry]);
-  const invoke = (phase) => {
+  report.sourceArchiveSha256 = stageLinkedCoreApi(probe, [
+    entry,
+    'tools/feature-012-predecessor-identity.mjs',
+  ]);
+  const invoke = (phase, input) => {
     report.lastStep = phase;
     const outcome = JSON.parse(
       exec(probe, [
@@ -3109,6 +3112,7 @@ function runPredecessorNative(db, auth, probe, fixtures) {
         '/opt/deps/services/api/node_modules/tsx/dist/loader.mjs',
         '/tmp/f012-core-api/' + entry,
         phase,
+        ...(input ? [JSON.stringify(input)] : []),
       ]),
     );
     assert.equal(
@@ -3172,6 +3176,49 @@ function runPredecessorNative(db, auth, probe, fixtures) {
     completed: true,
     audit: 1,
     outbox: 1,
+  });
+  sql(
+    db,
+    `INSERT INTO consent.records(
+    id,person_id,purpose_code,purpose_version,decision,capture_channel,notice_version,occurred_at,supersedes_id,version
+    ) VALUES
+    ('f0120400-0000-4000-8100-000000000001','f0110000-0000-4000-8000-000000000001',
+     'care_updates','1.0.0','granted','patient_app','1.0.0',now()-interval '2 minutes',NULL,1),
+    ('f0120400-0000-4000-8100-000000000002','f0110000-0000-4000-8000-000000000001',
+     'care_updates','1.0.0','withdrawn','patient_app','1.0.0',now()-interval '1 minute',
+     'f0120400-0000-4000-8100-000000000001',2);`,
+  );
+  report.consent = invoke('consent');
+
+  report.facility = invoke('facility');
+  const { facilityId, objectId } = report.facility;
+  for (const value of [facilityId, objectId]) assert.match(value, /^[a-f0-9-]{36}$/);
+  const facilityEffects = () =>
+    read(`SELECT json_build_object(
+    'facility',f.facility_status,'licence',l.status,'scan',e.scan_status,'released',e.released_at IS NOT NULL,
+    'reviewer',(SELECT actor_person_id FROM audit.events
+      WHERE resource_id=f.id AND action_code='facility.active'),'owner',f.created_by_person_id)
+    FROM identity.facilities f JOIN identity.facility_licenses l ON l.facility_id=f.id
+    JOIN identity.private_evidence_objects e ON e.id=l.evidence_object_id
+    WHERE f.id='${facilityId}' AND e.id='${objectId}';`);
+  const before = facilityEffects();
+  assert.equal(before.scan, 'quarantined');
+  assert.equal(before.released, false);
+  report.lastStep = 'fixture-owner-release';
+  report.facility.fixtureRelease = read(`WITH changed AS (
+    UPDATE identity.private_evidence_objects SET scan_status='released',released_at=now()
+    WHERE id='${objectId}' AND facility_id='${facilityId}' AND scan_status='quarantined' RETURNING id
+    ) SELECT json_build_object('role',current_user,'rows',count(*)) FROM changed;`);
+  assert.deepEqual(report.facility.fixtureRelease, { role: 'supabase_admin', rows: 1 });
+  report.facility.review = invoke('facility', { facilityId });
+  report.facility.effects = facilityEffects();
+  assert.deepEqual(report.facility.effects, {
+    facility: 'active',
+    licence: 'verified',
+    scan: 'released',
+    released: true,
+    reviewer: 'f0110000-0000-4000-8000-000000000008',
+    owner: 'f0110000-0000-4000-8000-000000000005',
   });
 }
 

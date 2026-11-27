@@ -207,6 +207,24 @@ export function publicationScenario({ invoke, offline, read, report }) {
   const finalPredecessor = effects(initial.releaseId);
   assert.deepEqual(finalPredecessor, { ...committed, eligible: false });
   assert.deepEqual(current(), []);
+  report.provisioningAudit = [
+    [report.offline[0].approvalId, 1],
+    [report.offline[1].approvalId, 1],
+    [report.offline[3].designationId, report.offline[3].version],
+  ].map(([id, version]) => {
+    assert.ok(Number.isSafeInteger(version) && version > 0);
+    const event = read(`SELECT json_build_object(
+      'count',count(*),'id',min(e.id::text),'actor',min(e.actor_person_id::text),
+      'purpose',min(e.purpose_code),'outcome',min(e.outcome))
+      FROM audit.events e WHERE e.resource_id=${literalId(id)} AND e.resource_version=${version}
+      AND e.action_code='clinical_content_evidence.provisioned';`);
+    assert.equal(event.count, 1);
+    assert.match(event.id, uuid);
+    assert.equal(event.actor, person(8));
+    assert.equal(event.purpose, 'governed.feature011.provision');
+    assert.equal(event.outcome, 'success');
+    return { resourceId: id, version, ...event };
+  });
   report.assertions = [
     'missing exact admission denied without publication effect',
     'distinct authenticated publisher committed the initial release and replayed its single receipt',

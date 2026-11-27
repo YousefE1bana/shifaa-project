@@ -6,9 +6,10 @@ import { buildApp } from '../services/api/src/app.ts';
 import { loadConfig } from '../services/api/src/config.ts';
 import { SupabaseAuthIssuer } from '../services/api/src/adapters/supabase-auth.ts';
 import { PostgresIdentityContinuityService } from '../services/api/src/adapters/postgres/identity-continuity-service.ts';
+import { consentHistory, facilityReview } from './feature-012-predecessor-identity.mjs';
 
 assert.equal(import.meta.dirname, '/tmp/f012-core-api/tools');
-const [phase] = process.argv.slice(2);
+const [phase, fixtureInput] = process.argv.slice(2);
 const fixtures = JSON.parse(readFileSync('/tmp/f012-admission-fixtures.json', 'utf8'));
 const password = process.env.F012_CORE_API_PASSWORD;
 assert.match(password, /^[a-f0-9]{64}$/);
@@ -35,8 +36,14 @@ try {
     assert.equal(row.database, 'postgres');
     return row;
   });
-  assert.ok(['encounter', 'recovery'].includes(phase));
-  const result = phase === 'encounter' ? await encounter() : await recovery();
+  const checks = {
+    encounter,
+    recovery,
+    consent: () => consentHistory(app, fixtures[1], fixtures[2]),
+    facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
+  };
+  assert.ok(Object.hasOwn(checks, phase));
+  const result = await checks[phase]();
   console.log(JSON.stringify({ actorBindings, ...result }));
 } finally {
   await app.close();
