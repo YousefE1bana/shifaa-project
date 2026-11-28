@@ -1,11 +1,20 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  rmdirSync,
+  unlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import {
   addition,
   assertExactMigrationInventory,
+  readApprovedFacilitySuccessor,
   readCandidateMigration,
 } from './verify-feature-012-migration-chain.mjs';
 
@@ -62,4 +71,27 @@ test('denies a missing or altered candidate SQL file even with the canonical fil
   assert.throws(() => readCandidateMigration(workspace), { code: 'ENOENT' });
   writeFileSync(sql, 'SELECT 1;\n', { flag: 'wx' });
   assert.throws(() => readCandidateMigration(workspace), /F012 migration bytes differ/);
+});
+
+test('requires both exact F003 successor records', (t) => {
+  const workspace = mkdtempSync(join(tmpdir(), 'shifaa-f012-approval-test-'));
+  t.after(() => rmSync(workspace, { recursive: true }));
+  const directory = 'specs/012-prescription-safety-governed-overrides/decisions';
+  mkdirSync(join(workspace, directory), { recursive: true });
+  const records = [
+    ['f003-workforce-persistence-approval-v1.json', /exact Product Owner approval record/],
+    ['f003-workforce-persistence-successor-v1.json', /exact approved successor binding/],
+  ].map(([name, error]) => {
+    const path = join(workspace, directory, name);
+    const original = readFileSync(new URL(`../${directory}/${name}`, import.meta.url));
+    return { path, original, error };
+  });
+  for (const { path, original } of records) writeFileSync(path, original);
+  const approval = readApprovedFacilitySuccessor(workspace);
+  assert.equal(approval.owningIssues.join(','), '643,644');
+  for (const { path, original, error } of records) {
+    writeFileSync(path, Buffer.concat([original, Buffer.from(' ')]));
+    assert.throws(() => readApprovedFacilitySuccessor(workspace), error);
+    writeFileSync(path, original);
+  }
 });
