@@ -46,6 +46,7 @@ const dbPassword = password();
 const authPassword = password();
 const apiPassword = password();
 const coreApiPassword = password();
+const workerPassword = password();
 const jwtSecret = password();
 const receipt = { run, containers: [], commands: [], negatives: [] };
 
@@ -3263,7 +3264,7 @@ function preparePredecessorActors(db, report, fixtures, actors) {
   sql(db, `ALTER ROLE shifaa_api PASSWORD '${coreApiPassword}';`);
 }
 
-function stageLinkedCoreApi(resource, entries) {
+function stageLinkedCoreApi(resource, entries, extraWorkspaces = []) {
   const target = '/tmp/f012-core-api';
   const workspaces = [
     'services/api',
@@ -3271,6 +3272,7 @@ function stageLinkedCoreApi(resource, entries) {
     'packages/contracts',
     'packages/core',
     'packages/observability',
+    ...extraWorkspaces,
   ];
   const sha256 = stageCoreApi(resource, workspaces, [
     'tools/feature-012-probe-workspaces.mjs',
@@ -3363,13 +3365,21 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     '${session}',now(),now()+interval '15 minutes');`,
     );
   const entry = 'tools/feature-012-predecessor-native.mjs';
-  report.sourceArchiveSha256 = stageLinkedCoreApi(probe, [
+  const entries = [
     entry,
     'tools/feature-012-predecessor-identity.mjs',
     'tools/feature-012-harness-probe.cjs',
     'tools/feature-012-recovery-mail.mjs',
     ...(mail ? ['supabase/templates/recovery.html'] : []),
-  ]);
+  ];
+  const worker = mode === 'recovery-worker';
+  const workerEntry = 'tools/feature-012-recovery-worker.mjs';
+  if (worker) entries.push(workerEntry);
+  report.sourceArchiveSha256 = stageLinkedCoreApi(
+    probe,
+    entries,
+    worker ? ['services/worker'] : [],
+  );
   const invoke = (phase, input) => {
     report.lastStep = phase;
     const outcome = JSON.parse(
@@ -3432,6 +3442,71 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     });
     return;
   }
+  if (worker) {
+    sql(
+      db,
+      `ALTER ROLE shifaa_worker PASSWORD '${workerPassword}';
+      UPDATE identity.people SET email_normalized='f012-worker-recipient@synthetic.shifaa.test'
+      WHERE id='${recoveryActor}' AND email_normalized IS NULL;`,
+    );
+    report.workerRecipient = read(`SELECT json_build_object(
+      'active',profile_status='active',
+      'hasSyntheticAddress',email_normalized='f012-worker-recipient@synthetic.shifaa.test')
+      FROM identity.people WHERE id='${recoveryActor}';`);
+    assert.deepEqual(report.workerRecipient, { active: true, hasSyntheticAddress: true });
+    report.recovery = invoke('recovery');
+    assert.equal(report.recovery.subject, subject);
+    assert.equal(report.recovery.session, session);
+    const outbox = read(`SELECT json_build_object(
+      'id',e.id,'state',e.state,'caseStatus',c.status,'subjectMatch',c.subject_person_id='${recoveryActor}',
+      'fields',e.payload)
+      FROM platform.outbox_events e JOIN identity.continuity_cases c ON c.id=e.aggregate_id
+      WHERE c.id='${recoveryCase}' AND e.aggregate_version=c.version
+        AND e.event_type='identity.recovery.completed';`);
+    assert.match(outbox.id, /^[a-f0-9-]{36}$/);
+    assert.equal(outbox.state, 'pending');
+    assert.equal(outbox.caseStatus, 'completed');
+    assert.equal(outbox.subjectMatch, true);
+    assert.deepEqual(Object.keys(outbox.fields).sort(), ['action_time', 'support_action']);
+    assert.equal(outbox.fields.support_action, 'completed');
+    report.worker = JSON.parse(
+      exec(probe, [
+        'node',
+        '--import',
+        '/opt/deps/services/api/node_modules/tsx/dist/loader.mjs',
+        '/tmp/f012-core-api/' + workerEntry,
+      ]),
+    );
+    assert.equal(report.worker.failureCode, undefined, 'Worker phase ' + report.worker.phase);
+    assert.equal(
+      report.worker.identity.address,
+      checkContainer(db).NetworkSettings.Networks[networkName].IPAddress,
+    );
+    assert.deepEqual(report.worker.outcomes, ['delivered', 'idle']);
+    assert.equal(report.worker.syntheticDeliveries, 1);
+    assert.equal(report.worker.syntheticAttempts, 1);
+    report.worker.effects = read(`SELECT json_build_object(
+      'outbox',e.state,'notification',n.status,'recipientType',n.recipient_type,
+      'subjectMatch',n.recipient_person_id='${recoveryActor}','sameFields',n.field_values=e.payload,
+      'attempts',(SELECT count(*) FROM platform.notification_delivery_attempts d
+        WHERE d.source_event_id=e.id AND d.adapter_code='local-synthetic' AND d.outcome='delivered'),
+      'receipts',(SELECT count(*) FROM platform.event_receipts r WHERE r.event_id=e.id
+        AND r.consumer='identity-continuity-notification' AND r.result_code='delivered'),
+      'notifications',(SELECT count(*) FROM platform.notifications nn WHERE nn.source_event_id=e.id))
+      FROM platform.outbox_events e JOIN platform.notifications n ON n.source_event_id=e.id
+      WHERE e.id='${outbox.id}';`);
+    assert.deepEqual(report.worker.effects, {
+      outbox: 'delivered',
+      notification: 'delivered',
+      recipientType: 'patient',
+      subjectMatch: true,
+      sameFields: true,
+      attempts: 1,
+      receipts: 1,
+      notifications: 1,
+    });
+    return;
+  }
   if (mode === 'recovery-intake') {
     const intake = (report.recoveryIntake = invoke(mode));
     assert.match(intake.caseId, /^[a-f0-9-]{36}$/);
@@ -3474,6 +3549,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
   }
   if (mode === 'professional-review-api') {
     verifyPredecessorProfessionalReview(report, invoke, read);
+    return;
+  }
+  if (mode === 'appointment-link-api') {
+    verifyPredecessorAppointmentLink(report, db, invoke, read);
     return;
   }
   if (mode === 'facility-evidence-loss') {
@@ -3781,6 +3860,80 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
   report.consent = invoke('consent');
 
   verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorAppointmentLink(report, db, invoke, read) {
+  const linked = 'f0120100-0000-4000-8500-000000000001';
+  const missing = 'f0120100-0000-4000-8500-000000000005';
+  const waiting = 'f0120100-0000-4000-8500-000000000006';
+  const confirmed = 'f0120100-0000-4000-8500-000000000007';
+  const patient = 'f0110000-0000-4000-8000-000000000001';
+  const unrelated = 'f0110000-0000-4000-8000-000000000004';
+  const stateIds = [linked, missing, waiting, confirmed].map((id) => "'" + id + "'").join(',');
+  sql(
+    db,
+    `BEGIN;
+    INSERT INTO clinical.appointments
+      (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+       civil_date,local_start,fee_minor_units,currency_code,status,created_by_person_id,updated_by_person_id)
+    SELECT s.id, a.patient_person_id,a.facility_id,a.doctor_person_id,a.schedule_id,
+      (a.civil_date+s.starts) AT TIME ZONE a.timezone_name,
+      (a.civil_date+s.starts+interval '30 minutes') AT TIME ZONE a.timezone_name,
+      a.timezone_name,a.civil_date,s.starts,0,'EGP','confirmed',a.doctor_person_id,a.doctor_person_id
+    FROM clinical.appointments a CROSS JOIN (VALUES
+      ('${missing}'::uuid,time '16:00'),('${waiting}'::uuid,time '16:30'),('${confirmed}'::uuid,time '17:00')
+    ) AS s(id,starts) WHERE a.id='${linked}';
+    SELECT set_config('shifaa.clinic_internal_transition','allowed',true);
+    UPDATE clinical.appointments SET status='checked_in' WHERE id IN ('${missing}','${waiting}');
+    INSERT INTO clinical.queue_entries(queue_scope_id,appointment_id,facility_id,doctor_person_id,
+      civil_date,queue_number,waiting_order,state)
+      SELECT queue_scope_id,'${waiting}',facility_id,doctor_person_id,civil_date,2,1,'waiting'
+      FROM clinical.queue_entries WHERE appointment_id='${linked}';
+    COMMIT;`,
+  );
+  const snapshot = `SELECT json_build_object(
+    'states',(SELECT json_agg(json_build_array(a.status,q.state) ORDER BY a.id)
+      FROM clinical.appointments a LEFT JOIN clinical.queue_entries q ON q.appointment_id=a.id
+      WHERE a.id IN (${stateIds})),
+    'versions',(SELECT json_agg(json_build_array(a.version,q.version) ORDER BY a.id)
+      FROM clinical.appointments a LEFT JOIN clinical.queue_entries q ON q.appointment_id=a.id
+      WHERE a.id IN (${stateIds})),
+    'encounters',(SELECT count(*) FROM clinical.encounters WHERE appointment_id IN (${stateIds})),
+    'audit',(SELECT count(*) FROM audit.events),
+    'outbox',(SELECT count(*) FROM platform.outbox_events),
+    'idempotency',(SELECT count(*) FROM platform.idempotency_records));`;
+  const before = read(snapshot);
+  assert.deepEqual(before.states, [
+    ['checked_in', 'called'],
+    ['checked_in', null],
+    ['checked_in', 'waiting'],
+    ['confirmed', null],
+  ]);
+  assert.equal(before.encounters, 0);
+  const cases = [
+    {
+      name: 'different patient',
+      appointmentId: linked,
+      patientId: unrelated,
+      status: 403,
+      code: 'forbidden',
+    },
+    ...[
+      ['missing queue', missing],
+      ['waiting queue', waiting],
+      ['confirmed appointment', confirmed],
+    ].map(([name, appointmentId]) => ({
+      name,
+      appointmentId,
+      patientId: patient,
+      status: 409,
+      code: 'state-transition-invalid',
+    })),
+  ];
+  report.appointmentLink = invoke('appointment-link-api', cases);
+  const after = read(snapshot);
+  assert.deepEqual(after, before);
+  Object.assign(report.appointmentLink, { before, after });
 }
 
 function verifyPredecessorProfessionalReview(report, invoke, read) {
@@ -4292,7 +4445,9 @@ async function admit() {
     ['--predecessor-native-recovery-api', 'recovery-api'],
     ['--predecessor-native-recovery-mail-api', 'recovery-mail-api'],
     ['--predecessor-native-recovery-intake', 'recovery-intake'],
+    ['--predecessor-native-recovery-worker', 'recovery-worker'],
     ['--predecessor-native-participant-api', 'participant-api'],
+    ['--predecessor-native-appointment-link-api', 'appointment-link-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
@@ -4572,6 +4727,7 @@ async function runNativeAdmission({
   const probe = create('probe', receipt.images.probe, {
     env: {
       F012_PROBE_PASSWORD: apiPassword,
+      ...(predecessorNative === 'recovery-worker' ? { F012_WORKER_PASSWORD: workerPassword } : {}),
       ...(applicationWriter ? { F012_CORE_API_PASSWORD: coreApiPassword } : {}),
       ...(useRecoveryGateway ? { F012_RECOVERY_ANON_KEY: recoveryAnonKey } : {}),
       ...(mail ? { F012_RECOVERY_MAIL: 'true' } : {}),
