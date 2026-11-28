@@ -100,6 +100,9 @@ export class PostgresFacilityOnboardingService {
       const existingFacilityLicenseIds = new Set<string>(delegate.facilityLicenses.keys());
       const existingGrantIds = new Set<string>(delegate.grants.keys());
       const existingRevocationIds = new Set<string>(delegate.revocations.keys());
+      const professionalLicenseVersions = new Map<string, number>(
+        [...delegate.professionalLicenses.values()].map((licence) => [licence.id, licence.version]),
+      );
       const result = (await (delegate[method] as (...values: unknown[]) => unknown)(
         actor,
         ...args,
@@ -153,6 +156,7 @@ export class PostgresFacilityOnboardingService {
           existingFacilityLicenseIds,
           existingGrantIds,
           existingRevocationIds,
+          professionalLicenseVersions,
         );
       this.delegate = delegate;
       return result;
@@ -322,6 +326,7 @@ export class PostgresFacilityOnboardingService {
     existingFacilityLicenseIds: Set<string>,
     existingGrantIds: Set<string>,
     existingRevocationIds: Set<string>,
+    professionalLicenseVersions: ReadonlyMap<string, number>,
   ) {
     const d = delegate as any;
     for (const f of d.facilities.values()) {
@@ -338,11 +343,12 @@ export class PostgresFacilityOnboardingService {
         [...d.facilityEvidence.entries()].find((x: any) => x[1] === e.objectId)?.[0] ?? null;
       await sql`insert into identity.private_evidence_objects(id,bucket_code,object_key,owner_person_id,facility_id,sha256,mime_type,size_bytes,scan_status) values(${e.objectId}::uuid,${facilityId ? 'facility-license-evidence' : 'professional-license-evidence'},${`synthetic/${e.objectId}`},${e.ownerId}::uuid,${facilityId}::uuid,${e.sha256},'application/pdf',1,${e.scan}) on conflict(id) do update set scan_status=excluded.scan_status,released_at=case when excluded.scan_status='released' then now() else null end`;
     }
-    for (const l of d.professionalLicenses.values()) {
+    for (const l of delegate.professionalLicenses.values()) {
+      if (professionalLicenseVersions.get(l.id) === l.version) continue;
       const secret = professionalSecrets.get(l.id);
       const protectedValue = this.protect(secret ?? l.id);
       const evidenceId = d.professionalEvidence.get(l.id) ?? null;
-      await sql`insert into identity.professional_licenses(id,person_id,profession,specialty_code,number_ciphertext,number_hash,masked_license_number,issuer,expires_on,status,evidence_object_id,decision_reason,version) values(${l.id}::uuid,${l.person_id}::uuid,${l.profession},${l.specialty_code},${protectedValue.ciphertext},${protectedValue.hash},${l.masked_license_number},${l.issuer},${l.expires_on}::date,${l.status},${evidenceId}::uuid,${l.decision_reason},${l.version}) on conflict(id) do update set status=excluded.status,evidence_object_id=excluded.evidence_object_id,decision_reason=excluded.decision_reason,version=excluded.version`;
+      await sql`insert into identity.professional_licenses(id,person_id,profession,specialty_code,number_ciphertext,number_hash,masked_license_number,issuer,expires_on,status,evidence_object_id,decision_reason,version) values(${l.id}::uuid,${l.person_id}::uuid,${l.profession},${l.specialty_code ?? null},${protectedValue.ciphertext},${protectedValue.hash},${l.masked_license_number},${l.issuer},${l.expires_on}::date,${l.status},${evidenceId}::uuid,${l.decision_reason},${l.version}) on conflict(id) do update set status=excluded.status,evidence_object_id=excluded.evidence_object_id,decision_reason=excluded.decision_reason,version=excluded.version`;
     }
     for (const m of d.memberships.values()) {
       const tokenHash = m.invite_token

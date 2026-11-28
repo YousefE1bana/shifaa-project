@@ -3550,8 +3550,14 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     verifyPredecessorLicenceScope(report, db, invoke, read);
     return;
   }
-  if (mode === 'membership-scope-api') {
-    verifyPredecessorMembershipScope(report, db, invoke, read);
+  if (mode === 'membership-scope-api' || mode === 'membership-owner-clinician-api') {
+    verifyPredecessorMembershipScope(
+      report,
+      db,
+      invoke,
+      read,
+      mode === 'membership-owner-clinician-api',
+    );
     return;
   }
   if (mode === 'membership-invite-api') {
@@ -3560,6 +3566,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
   }
   if (mode === 'facility-scope-api') {
     verifyPredecessorFacilityScope(report, invoke, read);
+    return;
+  }
+  if (mode === 'professional-omitted-specialty-api') {
+    verifyPredecessorProfessionalOmittedSpecialty(report, invoke, read);
     return;
   }
   if (mode === 'professional-review-api') {
@@ -4131,6 +4141,33 @@ function verifyPredecessorAppointmentLink(report, db, invoke, read) {
   Object.assign(report.appointmentLink, { before, after });
 }
 
+function verifyPredecessorProfessionalOmittedSpecialty(report, invoke, read) {
+  const result = (report.professionalOmittedSpecialty = invoke(
+    'professional-omitted-specialty-api',
+  ));
+  for (const id of [result.id, result.requestId]) assert.match(id, /^[a-f0-9-]{36}$/);
+  result.effects = read(`SELECT json_build_object(
+    'omittedSpecialtyIsNull',l.specialty_code IS NULL,'status',l.status,'version',l.version,
+    'audit',(SELECT count(*) FROM audit.events WHERE resource_id=l.id
+      AND request_id='${result.requestId}' AND action_code='professional_license.created'
+      AND actor_person_id=l.person_id),
+    'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=l.id
+      AND event_type='professional_license.changed'),
+    'receipt',(SELECT count(*) FROM platform.idempotency_records
+      WHERE route_template='/v1/people/me/professional-licenses'
+      AND state='completed' AND response_status=201))
+    FROM identity.professional_licenses l
+    WHERE l.id='${result.id}' AND l.person_id='f0110000-0000-4000-8000-000000000005';`);
+  assert.deepEqual(result.effects, {
+    omittedSpecialtyIsNull: true,
+    status: 'pending',
+    version: 1,
+    audit: 1,
+    outbox: 1,
+    receipt: 1,
+  });
+}
+
 function verifyPredecessorProfessionalReview(report, invoke, read) {
   const cases = invoke('professional-review-api').cases;
   report.professionalReview = cases;
@@ -4212,26 +4249,36 @@ function verifyPredecessorFacilityScope(report, invoke, read) {
   });
 }
 
-function verifyPredecessorMembershipScope(report, db, invoke, read) {
+function verifyPredecessorMembershipScope(report, db, invoke, read, ownerIsClinician) {
   const facility = 'f0110000-0000-4000-8200-000000000001';
-  const facilityOwner = 'f0110000-0000-4000-8000-000000000004';
   const clinician = 'f0110000-0000-4000-8000-000000000002';
-  // Distinct run-local owner and treating clinician, using their existing F003 roles.
-  sql(
-    db,
-    `UPDATE identity.facilities SET created_by_person_id='${facilityOwner}'
+  const facilityOwner = ownerIsClinician ? clinician : 'f0110000-0000-4000-8000-000000000004';
+  // The distinct owner variant changes only the run-local fixture's owner.
+  if (!ownerIsClinician)
+    sql(
+      db,
+      `UPDATE identity.facilities SET created_by_person_id='${facilityOwner}'
     WHERE id='${facility}' AND created_by_person_id='${clinician}';`,
-  );
+    );
   const membership = read(`SELECT to_json(m.id) FROM identity.facility_memberships m
     JOIN identity.facilities f ON f.id=m.facility_id
     WHERE f.id='${facility}' AND f.created_by_person_id='${facilityOwner}'
       AND m.person_id='${clinician}' AND m.role_code='doctor' AND m.membership_status='active';`);
   assert.match(membership, /^[a-f0-9-]{36}$/);
+  const licenceFingerprint = () =>
+    read(`SELECT to_json(md5(row_to_json(l)::text))
+    FROM identity.facility_memberships m JOIN identity.professional_licenses l
+      ON l.id=m.employment_license_id WHERE m.id='${membership}';`);
+  const before = licenceFingerprint();
   const result = (report.membershipScope = invoke('membership-scope-api', {
     membership,
     facility,
     facilityOwner,
+    ownerIsClinician,
   }));
+  assert.match(before, /^[a-f0-9]{32}$/);
+  result.licenceUnchanged = licenceFingerprint() === before;
+  assert.equal(result.licenceUnchanged, true);
   for (const id of [membership, result.id, result.end.requestId, result.complete.requestId]) {
     assert.match(id, /^[a-f0-9-]{36}$/);
   }
@@ -4243,6 +4290,9 @@ function verifyPredecessorMembershipScope(report, db, invoke, read) {
       AND action_code='membership.ended'),
     'endOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=m.id
       AND event_type='membership.changed'),
+    'endReceipt',(SELECT count(*) FROM platform.idempotency_records
+      WHERE route_template='/v1/facilities/:facilityId/memberships/:membershipId/end'
+      AND state='completed' AND response_status=200),
     'completionAudit',(SELECT count(*) FROM audit.events WHERE resource_id=e.id
       AND request_id='${result.complete.requestId}' AND action_code='encounter.completed'),
     'completionOutbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=e.id
@@ -4264,6 +4314,7 @@ function verifyPredecessorMembershipScope(report, db, invoke, read) {
     queue: 'in_service',
     endAudit: 1,
     endOutbox: 1,
+    endReceipt: 1,
     completionAudit: 0,
     completionOutbox: 0,
     completionReceipt: 0,
@@ -4651,9 +4702,11 @@ async function admit() {
     ['--predecessor-guardianship-api', 'guardianship-api'],
     ['--predecessor-licence-scope-api', 'licence-scope-api'],
     ['--predecessor-membership-scope-api', 'membership-scope-api'],
+    ['--predecessor-membership-owner-clinician-api', 'membership-owner-clinician-api'],
     ['--predecessor-membership-invite-api', 'membership-invite-api'],
     ['--predecessor-facility-scope-api', 'facility-scope-api'],
     ['--predecessor-professional-review-api', 'professional-review-api'],
+    ['--predecessor-professional-omitted-specialty-api', 'professional-omitted-specialty-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||

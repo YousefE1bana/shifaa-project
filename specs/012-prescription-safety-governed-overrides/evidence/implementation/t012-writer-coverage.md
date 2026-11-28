@@ -106,6 +106,15 @@ added by this reconciliation.
 
 ## Outstanding test assertions and owners
 
+The [F003 persistence compatibility candidate](../../decisions/f003-workforce-persistence-successor-v1.md)
+verified combined owner/clinician termination and valid omitted-specialty
+creation on the exact corrected runtime. Independent readback verified one
+mutation effect per accepted request, an unchanged protected licence during
+termination, and unchanged denial of F010 completion after authority loss.
+These observations are pending successor integration. The sealed control
+failure receipts, remaining workforce assertions including #642, and the
+original admission-order evidence retain their dispositions.
+
 The retained receipt is the original runtime result. The subsequent
 [authenticated Core API consent receipt](t012-deployment-attribution-disposition.md#2026-11-27-authenticated-core-api-consent)
 verifies the installed consent writer and withdrawal through their existing

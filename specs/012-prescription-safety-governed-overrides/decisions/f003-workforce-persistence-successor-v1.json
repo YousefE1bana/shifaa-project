@@ -1,0 +1,24 @@
+{
+  "bindingId": "SHIFAA-F012-F003-WORKFORCE-PERSISTENCE-SUCCESSOR@1.0.0",
+  "version": "1.0.0",
+  "disposition": "PREPARED_FOR_EXACT_APPROVAL",
+  "predecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+  "integrationBase": "79bcfad43b0f4b5c2174b5f168c192e0c0988fb5",
+  "candidateRevision": "90de58378ead7aac17d2aefa076c26a04974c505",
+  "input": {
+    "path": "services/api/src/adapters/postgres/facility-service.ts",
+    "historical": {
+      "blob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+      "sha256": "f9b334be8aafefcc28ae82eaeca5ba17d5483f473839f2fba11c1ad1bb2863e4"
+    },
+    "candidate": {
+      "blob": "15997a1af6b4e645a85593abe2afc6828fcc0418",
+      "sha256": "7491490b5490c282d6807f3da660ca9f8925a40e8c9457e0993e0aabdc01925b"
+    }
+  },
+  "owningIssues": [643, 644],
+  "authorization": null,
+  "migrationChanges": [],
+  "clinicalAuthority": false,
+  "lifecycleAuthorization": false
+}

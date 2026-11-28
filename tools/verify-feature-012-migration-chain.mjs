@@ -21,6 +21,7 @@ const additionSha256 = '96719e8101fc247df4e2b75b7bb46c1f0709f82985208f50286a5176
 const ciWorkflow = '.github/workflows/ci.yml';
 const verifier = 'tools/verify-feature-011-contracts.mjs';
 const f011 = 'specs/011-allergies-clinical-content-governance';
+const decisionDirectory = 'specs/012-prescription-safety-governed-overrides/decisions';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 function git(cwd, ...args) {
@@ -80,9 +81,43 @@ export function readCandidateMigration(candidateRoot) {
   return migration;
 }
 
+export function readApprovedFacilitySuccessor(candidateRoot) {
+  const approvalBytes = bytes(
+    candidateRoot,
+    `${decisionDirectory}/f003-workforce-persistence-approval-v1.json`,
+  );
+  assert.equal(
+    sha256(approvalBytes),
+    '66f4fdfee4bf2a7bb1892208b385b3687d9b1f7010ee19272ae864fe83d4d8fb',
+    'The exact Product Owner approval record has changed',
+  );
+  const approval = JSON.parse(approvalBytes);
+  const bindingBytes = bytes(
+    candidateRoot,
+    `${decisionDirectory}/f003-workforce-persistence-successor-v1.json`,
+  );
+  assert.equal(
+    sha256(bindingBytes),
+    approval.bindingSha256,
+    'The exact approved successor binding has changed',
+  );
+  const binding = JSON.parse(bindingBytes);
+  assert.equal(approval.decision, 'APPROVED_FOR_VERIFICATION_COMPATIBILITY');
+  assert.equal(binding.predecessor, predecessor);
+  for (const field of ['bindingId', 'predecessor', 'candidateRevision', 'integrationBase']) {
+    assert.equal(approval[field], binding[field], `Approval binding differs at ${field}`);
+  }
+  assert.equal(approval.bindingVersion, binding.version);
+  assert.deepEqual(approval.owningIssues, binding.owningIssues);
+  assert.deepEqual(approval.input, binding.input);
+  return approval;
+}
+
 export async function verifyExtendedChain(predecessorRoot, candidateRoot = root) {
   const historical = realpathSync(predecessorRoot);
   const candidate = realpathSync(candidateRoot);
+  const approval = readApprovedFacilitySuccessor(candidate);
+  const { input } = approval;
   assert.notEqual(historical, candidate, 'Separate predecessor view required');
   assert.equal(git(historical, 'rev-parse', 'HEAD').toString().trim(), predecessor);
   assert.equal(git(historical, 'status', '--porcelain=v1').toString(), '', 'Dirty predecessor');
@@ -121,13 +156,18 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
     f012CiWorkflowSha256,
     'The exact additive CI workflow has changed',
   );
+  assert(sealedInputs.has(input.path), 'Expected one original sealed input');
+  assert.equal(blobs.get(input.path), input.historical.blob);
+  assert.equal(sha256(bytes(historical, input.path)), input.historical.sha256);
+  assert.equal(sha256(bytes(candidate, input.path)), input.candidate.sha256);
   for (const file of sealedInputs) {
     assertSealedBytes(historical, file, blobs.get(file), gitFormat);
     // PR #609 ratified exact appendices on these three documents.
     const candidateBlob = governanceInputs.has(file)
       ? git(candidate, 'rev-parse', `${governanceSuccessor}:${file}`).toString().trim()
       : blobs.get(file);
-    assertSealedBytes(candidate, file, candidateBlob, gitFormat);
+    const expectedBlob = file === input.path ? input.candidate.blob : candidateBlob;
+    assertSealedBytes(candidate, file, expectedBlob, gitFormat);
   }
   const extended = sealed.map((file) => ({
     path: file,
@@ -143,6 +183,9 @@ export async function verifyExtendedChain(predecessorRoot, candidateRoot = root)
     },
     extended: {
       result: 'SOURCE_INVENTORY_PASS',
+      approvedBinding: approval.bindingId,
+      approval: approval.approvalId,
+      approvedRuntimeCandidate: approval.candidateRevision,
       migrations: extended,
       ciWorkflowSha256: f012CiWorkflowSha256,
       governanceSuccessor,

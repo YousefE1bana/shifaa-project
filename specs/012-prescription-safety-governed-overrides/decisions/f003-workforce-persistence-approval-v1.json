@@ -1,0 +1,38 @@
+{
+  "approvalId": "SHIFAA-F012-F003-WORKFORCE-PERSISTENCE-APPROVAL@1.0.0",
+  "version": "1.0.0",
+  "decision": "APPROVED_FOR_VERIFICATION_COMPATIBILITY",
+  "productOwner": "Yousef Osama",
+  "source": {
+    "title": "SHIFAA — Formal Product Owner Decision / F003 Compatibility Approval and #642 Design Disposition",
+    "decisions": [1, 2],
+    "date": "2026-11-28"
+  },
+  "bindingId": "SHIFAA-F012-F003-WORKFORCE-PERSISTENCE-SUCCESSOR@1.0.0",
+  "bindingVersion": "1.0.0",
+  "bindingSha256": "f502f8ec393a52639d7363e48609ebd777f75e5b3b4e15de75319f3a58f2734e",
+  "reviewedPackageCommit": "78d6d64e1ae4db92095e162003e77d26fce3b269",
+  "candidateRevision": "90de58378ead7aac17d2aefa076c26a04974c505",
+  "integrationBase": "79bcfad43b0f4b5c2174b5f168c192e0c0988fb5",
+  "predecessor": "fbd2b5312a5038aad21db0001a17dac22bdcbf7e",
+  "owningIssues": [643, 644],
+  "input": {
+    "path": "services/api/src/adapters/postgres/facility-service.ts",
+    "historical": {
+      "blob": "f047363280c3615ae068ecb0c2066b42b21c91b2",
+      "sha256": "f9b334be8aafefcc28ae82eaeca5ba17d5483f473839f2fba11c1ad1bb2863e4"
+    },
+    "candidate": {
+      "blob": "15997a1af6b4e645a85593abe2afc6828fcc0418",
+      "sha256": "7491490b5490c282d6807f3da660ca9f8925a40e8c9457e0993e0aabdc01925b"
+    }
+  },
+  "scope": [
+    "Persist only new or version-changed professional licence records.",
+    "Bind omitted optional specialty as SQL NULL."
+  ],
+  "migrationChanges": [],
+  "lifecycleAuthorization": false,
+  "clinicalAuthority": false,
+  "productionAuthority": false
+}

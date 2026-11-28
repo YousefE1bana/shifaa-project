@@ -89,6 +89,7 @@ try {
       professionalReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined, (step) => {
         checkpoint = step;
       }),
+    'professional-omitted-specialty-api': professionalOmittedSpecialty,
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
@@ -308,21 +309,94 @@ async function membershipInviteApi({ facility, owner, invitee, licence }) {
   return { invite: invite.result, accept: accepted.result, id: invite.body.id };
 }
 
-async function membershipScope({ membership, facility, facilityOwner }) {
+async function professionalOmittedSpecialty() {
+  const url = '/v1/people/me/professional-licenses';
+  checkpoint = url;
+  const requestId = randomUUID();
+  const request = {
+    method: 'POST',
+    url,
+    payload: {
+      profession: 'doctor',
+      license_number: 'SYN-' + randomUUID(),
+      issuer: 'Synthetic professional authority',
+      expires_on: '2099-01-01',
+    },
+    headers: {
+      authorization: 'Bearer synthetic-person:f0110000-0000-4000-8000-000000000005',
+      'x-request-id': requestId,
+      'x-aal': '2',
+      'idempotency-key': randomUUID(),
+    },
+  };
+  const created = await app.inject(request);
+  const licence = created.json();
+  assert.equal(created.statusCode, 201, url + ' (' + licence.code + ')');
+  assert.equal(licence.status, 'pending');
+  assert.equal(licence.version, 1);
+  const replay = await app.inject({
+    ...request,
+    headers: { ...request.headers, 'x-request-id': randomUUID() },
+  });
+  assert.equal(replay.statusCode, 201);
+  assert.deepEqual(replay.json(), licence);
+  const read = {
+    method: 'GET',
+    url: '/v1/professional-licenses/' + licence.id,
+    headers: { authorization: request.headers.authorization, 'x-aal': '2' },
+  };
+  const subject = await app.inject(read);
+  assert.equal(subject.statusCode, 200);
+  assert.equal(subject.json().id, licence.id);
+  for (const field of [
+    'license_number',
+    'number_ciphertext',
+    'number_hash',
+    'evidence_object_id',
+  ]) {
+    assert.equal(Object.hasOwn(subject.json(), field), false, field);
+  }
+  const other = await app.inject({
+    ...read,
+    headers: {
+      ...read.headers,
+      authorization: 'Bearer synthetic-person:f0110000-0000-4000-8000-000000000002',
+    },
+  });
+  assert.equal(other.statusCode, 404);
+  assert.equal(other.json().code, 'not-found');
+  return {
+    id: licence.id,
+    requestId,
+    status: created.statusCode,
+    replay: replay.statusCode,
+    subjectRead: subject.statusCode,
+    otherPersonRead: other.statusCode,
+  };
+}
+
+async function membershipScope({ membership, facility, facilityOwner, ownerIsClinician }) {
+  let resultReplay;
   const { change, ...result } = await encounterAuthorityLoss(async (action) => {
-    const ended = await action(
-      '/v1/facilities/' + facility + '/memberships/' + membership + '/end',
-      'synthetic-person:' + facilityOwner,
-      { reason: 'Synthetic end of current workforce membership' },
-      200,
-      { 'if-match': '"1"', 'x-aal': '2' },
-    );
+    const url = '/v1/facilities/' + facility + '/memberships/' + membership + '/end';
+    const actor = 'synthetic-person:' + facilityOwner;
+    const body = { reason: 'Synthetic end of current workforce membership' };
+    const headers = { 'if-match': '"1"', 'x-aal': '2' };
+    if (ownerIsClinician) {
+      const stale = await action(url, actor, body, 409, { ...headers, 'if-match': '"2"' });
+      assert.equal(stale.body.code, 'version-conflict');
+    }
+    const mutationHeaders = { ...headers, 'idempotency-key': randomUUID() };
+    const ended = await action(url, actor, body, 200, mutationHeaders);
+    const replay = await action(url, actor, body, 200, mutationHeaders);
+    assert.deepEqual(replay.body, ended.body);
+    resultReplay = replay.status;
     assert.equal(ended.body.id, membership);
     assert.equal(ended.body.status, 'ended');
     assert.equal(ended.body.version, 2);
     return ended;
   });
-  return { ...result, end: change };
+  return { ...result, end: change, replay: resultReplay };
 }
 
 async function facilityScope({ facility, evidence }) {
