@@ -308,15 +308,17 @@ async function membershipInviteApi({ facility, owner, invitee, licence }) {
   return { invite: invite.result, accept: accepted.result, id: invite.body.id };
 }
 
-async function membershipScope({ membership, facility, facilityOwner }) {
+async function membershipScope({ membership, facility, facilityOwner, ownerIsClinician }) {
   const { change, ...result } = await encounterAuthorityLoss(async (action) => {
-    const ended = await action(
-      '/v1/facilities/' + facility + '/memberships/' + membership + '/end',
-      'synthetic-person:' + facilityOwner,
-      { reason: 'Synthetic end of current workforce membership' },
-      200,
-      { 'if-match': '"1"', 'x-aal': '2' },
-    );
+    const url = '/v1/facilities/' + facility + '/memberships/' + membership + '/end';
+    const actor = 'synthetic-person:' + facilityOwner;
+    const body = { reason: 'Synthetic end of current workforce membership' };
+    const headers = { 'if-match': '"1"', 'x-aal': '2' };
+    if (ownerIsClinician) {
+      const stale = await action(url, actor, body, 409, { ...headers, 'if-match': '"2"' });
+      assert.equal(stale.body.code, 'version-conflict');
+    }
+    const ended = await action(url, actor, body, 200, headers);
     assert.equal(ended.body.id, membership);
     assert.equal(ended.body.status, 'ended');
     assert.equal(ended.body.version, 2);
