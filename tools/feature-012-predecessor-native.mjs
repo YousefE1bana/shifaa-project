@@ -60,6 +60,7 @@ try {
         checkpoint = step;
       }),
     'participant-api': () => participantApi(JSON.parse(fixtureInput)),
+    'appointment-link-api': () => appointmentLinkApi(JSON.parse(fixtureInput)),
     'booking-api': () => bookingApi(JSON.parse(fixtureInput)),
     'absence-api': () => absenceApi(JSON.parse(fixtureInput)),
     scheduling: () => scheduling(JSON.parse(fixtureInput)),
@@ -419,6 +420,31 @@ async function absenceApi({ facilityId, doctorId, appointmentId, ...interval }) 
   assert.deepEqual(result.affectedAppointmentIds, [appointmentId]);
   assert.deepEqual(result.removedQueueEntryIds, [queueEntryId]);
   return { calls, queueEntryId, absenceId: result.absenceId };
+}
+
+async function appointmentLinkApi(cases) {
+  const [clinician] = fixtures;
+  const calls = [];
+  for (const { name, appointmentId, patientId, status, code } of cases) {
+    checkpoint = name;
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method: 'POST',
+      url: '/v1/encounters',
+      payload: { appointmentId, patientId, encounterType: 'consultation' },
+      headers: {
+        authorization: 'Bearer ' + clinician.token,
+        'x-purpose': 'appointment.scheduling',
+        'x-request-id': requestId,
+        'idempotency-key': randomUUID(),
+      },
+    });
+    const actual = { name, requestId, status: response.statusCode, code: response.json().code };
+    assert.equal(actual.status, status, name + ': ' + actual.code);
+    assert.equal(actual.code, code);
+    calls.push(actual);
+  }
+  return { calls };
 }
 
 async function participantApi({ encounterId, consultantId, startedAt }) {

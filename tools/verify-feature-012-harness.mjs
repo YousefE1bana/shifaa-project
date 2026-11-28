@@ -3551,6 +3551,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     verifyPredecessorProfessionalReview(report, invoke, read);
     return;
   }
+  if (mode === 'appointment-link-api') {
+    verifyPredecessorAppointmentLink(report, db, invoke, read);
+    return;
+  }
   if (mode === 'facility-evidence-loss') {
     verifyPredecessorFacility(report, invoke, read, true);
     return;
@@ -3856,6 +3860,80 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
   report.consent = invoke('consent');
 
   verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorAppointmentLink(report, db, invoke, read) {
+  const linked = 'f0120100-0000-4000-8500-000000000001';
+  const missing = 'f0120100-0000-4000-8500-000000000005';
+  const waiting = 'f0120100-0000-4000-8500-000000000006';
+  const confirmed = 'f0120100-0000-4000-8500-000000000007';
+  const patient = 'f0110000-0000-4000-8000-000000000001';
+  const unrelated = 'f0110000-0000-4000-8000-000000000004';
+  const stateIds = [linked, missing, waiting, confirmed].map((id) => "'" + id + "'").join(',');
+  sql(
+    db,
+    `BEGIN;
+    INSERT INTO clinical.appointments
+      (id,patient_person_id,facility_id,doctor_person_id,schedule_id,starts_at,ends_at,timezone_name,
+       civil_date,local_start,fee_minor_units,currency_code,status,created_by_person_id,updated_by_person_id)
+    SELECT s.id, a.patient_person_id,a.facility_id,a.doctor_person_id,a.schedule_id,
+      (a.civil_date+s.starts) AT TIME ZONE a.timezone_name,
+      (a.civil_date+s.starts+interval '30 minutes') AT TIME ZONE a.timezone_name,
+      a.timezone_name,a.civil_date,s.starts,0,'EGP','confirmed',a.doctor_person_id,a.doctor_person_id
+    FROM clinical.appointments a CROSS JOIN (VALUES
+      ('${missing}'::uuid,time '16:00'),('${waiting}'::uuid,time '16:30'),('${confirmed}'::uuid,time '17:00')
+    ) AS s(id,starts) WHERE a.id='${linked}';
+    SELECT set_config('shifaa.clinic_internal_transition','allowed',true);
+    UPDATE clinical.appointments SET status='checked_in' WHERE id IN ('${missing}','${waiting}');
+    INSERT INTO clinical.queue_entries(queue_scope_id,appointment_id,facility_id,doctor_person_id,
+      civil_date,queue_number,waiting_order,state)
+      SELECT queue_scope_id,'${waiting}',facility_id,doctor_person_id,civil_date,2,1,'waiting'
+      FROM clinical.queue_entries WHERE appointment_id='${linked}';
+    COMMIT;`,
+  );
+  const snapshot = `SELECT json_build_object(
+    'states',(SELECT json_agg(json_build_array(a.status,q.state) ORDER BY a.id)
+      FROM clinical.appointments a LEFT JOIN clinical.queue_entries q ON q.appointment_id=a.id
+      WHERE a.id IN (${stateIds})),
+    'versions',(SELECT json_agg(json_build_array(a.version,q.version) ORDER BY a.id)
+      FROM clinical.appointments a LEFT JOIN clinical.queue_entries q ON q.appointment_id=a.id
+      WHERE a.id IN (${stateIds})),
+    'encounters',(SELECT count(*) FROM clinical.encounters WHERE appointment_id IN (${stateIds})),
+    'audit',(SELECT count(*) FROM audit.events),
+    'outbox',(SELECT count(*) FROM platform.outbox_events),
+    'idempotency',(SELECT count(*) FROM platform.idempotency_records));`;
+  const before = read(snapshot);
+  assert.deepEqual(before.states, [
+    ['checked_in', 'called'],
+    ['checked_in', null],
+    ['checked_in', 'waiting'],
+    ['confirmed', null],
+  ]);
+  assert.equal(before.encounters, 0);
+  const cases = [
+    {
+      name: 'different patient',
+      appointmentId: linked,
+      patientId: unrelated,
+      status: 403,
+      code: 'forbidden',
+    },
+    ...[
+      ['missing queue', missing],
+      ['waiting queue', waiting],
+      ['confirmed appointment', confirmed],
+    ].map(([name, appointmentId]) => ({
+      name,
+      appointmentId,
+      patientId: patient,
+      status: 409,
+      code: 'state-transition-invalid',
+    })),
+  ];
+  report.appointmentLink = invoke('appointment-link-api', cases);
+  const after = read(snapshot);
+  assert.deepEqual(after, before);
+  Object.assign(report.appointmentLink, { before, after });
 }
 
 function verifyPredecessorProfessionalReview(report, invoke, read) {
@@ -4369,6 +4447,7 @@ async function admit() {
     ['--predecessor-native-recovery-intake', 'recovery-intake'],
     ['--predecessor-native-recovery-worker', 'recovery-worker'],
     ['--predecessor-native-participant-api', 'participant-api'],
+    ['--predecessor-native-appointment-link-api', 'appointment-link-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],
