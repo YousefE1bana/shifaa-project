@@ -3443,7 +3443,17 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     return;
   }
   if (worker) {
-    sql(db, `ALTER ROLE shifaa_worker PASSWORD '${workerPassword}';`);
+    sql(
+      db,
+      `ALTER ROLE shifaa_worker PASSWORD '${workerPassword}';
+      UPDATE identity.people SET email_normalized='f012-worker-recipient@synthetic.shifaa.test'
+      WHERE id='${recoveryActor}' AND email_normalized IS NULL;`,
+    );
+    report.workerRecipient = read(`SELECT json_build_object(
+      'active',profile_status='active',
+      'hasSyntheticAddress',email_normalized='f012-worker-recipient@synthetic.shifaa.test')
+      FROM identity.people WHERE id='${recoveryActor}';`);
+    assert.deepEqual(report.workerRecipient, { active: true, hasSyntheticAddress: true });
     report.recovery = invoke('recovery');
     assert.equal(report.recovery.subject, subject);
     assert.equal(report.recovery.session, session);
@@ -3480,6 +3490,8 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
       'subjectMatch',n.recipient_person_id='${recoveryActor}','sameFields',n.field_values=e.payload,
       'attempts',(SELECT count(*) FROM platform.notification_delivery_attempts d
         WHERE d.source_event_id=e.id AND d.adapter_code='local-synthetic' AND d.outcome='delivered'),
+      'receipts',(SELECT count(*) FROM platform.event_receipts r WHERE r.event_id=e.id
+        AND r.consumer='identity-continuity-notification' AND r.result_code='delivered'),
       'notifications',(SELECT count(*) FROM platform.notifications nn WHERE nn.source_event_id=e.id))
       FROM platform.outbox_events e JOIN platform.notifications n ON n.source_event_id=e.id
       WHERE e.id='${outbox.id}';`);
@@ -3490,6 +3502,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
       subjectMatch: true,
       sameFields: true,
       attempts: 1,
+      receipts: 1,
       notifications: 1,
     });
     return;
