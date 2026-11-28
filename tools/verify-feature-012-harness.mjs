@@ -3543,6 +3543,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     verifyPredecessorMembershipScope(report, db, invoke, read);
     return;
   }
+  if (mode === 'membership-invite-api') {
+    verifyPredecessorMembershipInvite(report, db, invoke, read);
+    return;
+  }
   if (mode === 'facility-scope-api') {
     verifyPredecessorFacilityScope(report, invoke, read);
     return;
@@ -3860,6 +3864,54 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
   report.consent = invoke('consent');
 
   verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorMembershipInvite(report, db, invoke, read) {
+  const facility = 'f0110000-0000-4000-8200-000000000001';
+  const owner = 'f0110000-0000-4000-8000-000000000004';
+  const invitee = 'f0110000-0000-4000-8000-000000000003';
+  const licence = 'f0110000-0000-4000-8300-000000000003';
+  sql(db, `UPDATE identity.facilities SET created_by_person_id='${owner}' WHERE id='${facility}';`);
+  const preflight = read(`SELECT json_build_object(
+    'active',f.facility_status='active','ownerMatch',f.created_by_person_id='${owner}',
+    'eligible',l.person_id='${invitee}' AND l.profession='pharmacist'
+      AND l.status='verified' AND l.expires_on>current_date)
+    FROM identity.facilities f CROSS JOIN identity.professional_licenses l
+    WHERE f.id='${facility}' AND l.id='${licence}';`);
+  assert.deepEqual(preflight, { active: true, ownerMatch: true, eligible: true });
+  const snapshot = `SELECT json_build_object(
+    'membership',(SELECT json_agg(json_build_object('id',id,'status',membership_status,
+      'role',role_code,'version',version,'licenceMatch',employment_license_id='${licence}',
+      'hasInvite',invite_token_hash IS NOT NULL))
+      FROM identity.facility_memberships WHERE facility_id='${facility}' AND person_id='${invitee}'),
+    'audit',(SELECT count(*) FROM audit.events),
+    'outbox',(SELECT count(*) FROM platform.outbox_events),
+    'idempotency',(SELECT count(*) FROM platform.idempotency_records));`;
+  const before = read(snapshot);
+  assert.equal(before.membership, null);
+  const result = invoke('membership-invite-api', { facility, owner, invitee, licence });
+  const after = read(snapshot);
+  report.membershipInvite = { preflight, before, result, after };
+  if (result.invite.status !== 201) {
+    assert.deepEqual(after, before);
+    assert.fail(
+      'Facility owner invitation returned ' + result.invite.status + ' ' + result.invite.code,
+    );
+  }
+  assert.equal(result.accept.status, 200);
+  assert.deepEqual(after.membership, [
+    {
+      id: result.id,
+      status: 'active',
+      role: 'pharmacist',
+      version: 2,
+      licenceMatch: true,
+      hasInvite: false,
+    },
+  ]);
+  assert.equal(after.audit - before.audit, 2);
+  assert.equal(after.outbox - before.outbox, 2);
+  assert.equal(after.idempotency - before.idempotency, 2);
 }
 
 function verifyPredecessorAppointmentLink(report, db, invoke, read) {
@@ -4454,6 +4506,7 @@ async function admit() {
     ['--predecessor-guardianship-api', 'guardianship-api'],
     ['--predecessor-licence-scope-api', 'licence-scope-api'],
     ['--predecessor-membership-scope-api', 'membership-scope-api'],
+    ['--predecessor-membership-invite-api', 'membership-invite-api'],
     ['--predecessor-facility-scope-api', 'facility-scope-api'],
     ['--predecessor-professional-review-api', 'professional-review-api'],
   ]).get(onlyArgument);
