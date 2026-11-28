@@ -3373,7 +3373,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     ...(mail ? ['supabase/templates/recovery.html'] : []),
   ];
   const worker = mode === 'recovery-worker';
-  const allergy = mode === 'allergy-verification-api';
+  const allergy = ['allergy-verification-api', 'allergy-clinician-api'].includes(mode);
   const workerEntry = 'tools/feature-012-recovery-worker.mjs';
   if (worker) entries.push(workerEntry);
   if (allergy) entries.push('tools/feature-012-predecessor-allergy.mjs');
@@ -3415,7 +3415,7 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
       '-e',
       "require('fs').writeFileSync('/tmp/f012-allergy-key', require('crypto').randomBytes(32), { mode: 0o600, flag: 'wx' });",
     ]);
-    verifyPredecessorAllergyApi(report, db, invoke, read);
+    verifyPredecessorAllergyApi(report, db, invoke, read, mode === 'allergy-clinician-api');
     return;
   }
   if (mode === 'recovery-mail-api') {
@@ -3877,9 +3877,11 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
   verifyPredecessorFacility(report, invoke, read);
 }
 
-function verifyPredecessorAllergyApi(report, db, invoke, read) {
+function verifyPredecessorAllergyApi(report, db, invoke, read, clinicianReport) {
   const patient = 'f0110000-0000-4000-8100-000000000001';
   const clinician = 'f0110000-0000-4000-8000-000000000002';
+  const facility = 'f0110000-0000-4000-8200-000000000001';
+  const encounter = 'f0110000-0000-4000-8400-000000000001';
   const mode = 'allergy-verification-api';
   const snapshot = () =>
     read(`SELECT json_build_object(
@@ -3919,12 +3921,26 @@ function verifyPredecessorAllergyApi(report, db, invoke, read) {
   const hashRevision = (id) =>
     read(`SELECT to_json(encode(
     sha256(convert_to(to_jsonb(r)::text,'UTF8')),'hex')) FROM clinical.allergies r WHERE id='${id}';`);
-  const [initial] = call('patient self-report', { action: 'create' }, 201, 'new');
+  const reporter = clinicianReport ? 'clinician' : 'patient';
+  const checkClinicianReport = (revision) => {
+    const result = read(`SELECT json_build_object(
+      'actor',r.action_actor_person_id='${clinician}' AND r.original_recorder_person_id='${clinician}',
+      'care',r.facility_id='${facility}' AND r.encounter_id='${encounter}',
+      'receipt',EXISTS(SELECT 1 FROM clinical.mutation_receipts mr
+        WHERE mr.resource_id=r.allergy_id AND mr.resource_version=1 AND mr.operation_id='createAllergy'))
+      FROM clinical.allergies r WHERE r.id='${revision.revisionId}';`);
+    calls.at(-1).readback = result;
+    assert.deepEqual(result, { actor: true, care: true, receipt: true });
+  };
+  const [initial] = call(reporter + ' report', { action: 'create', reporter }, 201, 'new');
   assert.equal(initial.status, 'self_reported');
   assert.equal(initial.version, 1);
+  if (clinicianReport) checkClinicianReport(initial);
   const initialHash = hashRevision(initial.revisionId);
   assert.match(initialHash, /^[a-f0-9]{64}$/);
-  const targets = ['clinician_confirmed', 'refuted', 'clinician_confirmed', 'entered_in_error'];
+  const targets = clinicianReport
+    ? ['entered_in_error']
+    : ['clinician_confirmed', 'refuted', 'clinician_confirmed', 'entered_in_error'];
   let current = initial;
   for (const targetStatus of targets) {
     const support = {
@@ -3961,8 +3977,8 @@ function verifyPredecessorAllergyApi(report, db, invoke, read) {
     current = next;
   }
   const [corrected] = call(
-    'patient linked correction',
-    { action: 'correct', allergyId: initial.allergyId },
+    reporter + ' linked correction',
+    { action: 'correct', allergyId: initial.allergyId, reporter },
     201,
     'new',
   );
@@ -3970,6 +3986,7 @@ function verifyPredecessorAllergyApi(report, db, invoke, read) {
   assert.equal(corrected.correctsAllergyId, initial.allergyId);
   assert.equal(corrected.status, 'self_reported');
   assert.equal(corrected.version, 1);
+  if (clinicianReport) checkClinicianReport(corrected);
   const history = call(
     'patient immutable history',
     { action: 'history', allergyId: initial.allergyId },
@@ -4627,6 +4644,7 @@ async function admit() {
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-appointment-link-api', 'appointment-link-api'],
     ['--predecessor-native-allergy-verification-api', 'allergy-verification-api'],
+    ['--predecessor-native-allergy-clinician-api', 'allergy-clinician-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],

@@ -79,6 +79,7 @@ export async function allergyApi(app, fixtures, input) {
   const listing = '/v1/patients/' + patient + '/allergies';
   const verify = input.action === 'verify';
   const history = input.action === 'history';
+  const clinicalActor = verify || input.reporter === 'clinician';
   const correctsAllergyId = input.action === 'correct' ? input.allergyId : undefined;
   const requestId = randomUUID();
   const response = await app.inject({
@@ -87,7 +88,7 @@ export async function allergyApi(app, fixtures, input) {
       ? '/v1/allergies/' + input.support.allergyId + '/verification'
       : listing + (history ? '?view=history&allergyId=' + input.allergyId : ''),
     headers: {
-      authorization: 'Bearer ' + fixtures[verify ? 0 : 1].token,
+      authorization: 'Bearer ' + fixtures[clinicalActor ? 0 : 1].token,
       'accept-language': 'en-EG',
       'x-purpose': 'synthetic.feature011',
       'x-request-id': requestId,
@@ -107,6 +108,7 @@ export async function allergyApi(app, fixtures, input) {
             : {
                 substance: { identity: 'synthetic-neutral', display: 'K13 neutral fixture' },
                 source: { display: 'Synthetic self report' },
+                ...(clinicalActor ? { encounterId: encounter } : {}),
                 ...(correctsAllergyId ? { correctsAllergyId } : {}),
               },
         }),
