@@ -79,6 +79,13 @@ execution. Preserve this as an unsuccessful aggregate receipt.
 `ordinary.log` SHA-256 is
 `7f3025254495c7b32bffaf3acb7ad695e96b1ca5d61f792e43b8daa7414d97d5`.
 
+The clean rerun at `f9c5ff654b72450c8d3c1e28bbc84c6c2813f3e4` passed all nine ordinary checks
+and the launcher's source-preservation check (exit 0). The API workforce
+integration suite passed its five cases. The unexecuted F012 route cases
+and other excluded checks retain their original dispositions.
+`ordinary-clean-f9c5ff6.log` SHA-256 is
+`510a7084fed74c8aa1cb19d52554812a64882f085f9d9767393b4d20161a1ff5`.
+
 Fresh raw artifacts are restricted local evidence in
 `SHIFAA-Recovery/2026-11-28-f003-643-644-90de583`. Preserve the original
 directories and receipts independently.
