@@ -89,6 +89,7 @@ try {
       professionalReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined, (step) => {
         checkpoint = step;
       }),
+    'professional-omitted-specialty-api': professionalOmittedSpecialty,
     facility: () => facilityReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined),
   };
   assert.ok(Object.hasOwn(checks, phase));
@@ -306,6 +307,40 @@ async function membershipInviteApi({ facility, owner, invitee, licence }) {
     assert.equal(accepted.body.invite_token, undefined);
   }
   return { invite: invite.result, accept: accepted.result, id: invite.body.id };
+}
+
+async function professionalOmittedSpecialty() {
+  const url = '/v1/people/me/professional-licenses';
+  checkpoint = url;
+  const requestId = randomUUID();
+  const request = {
+    method: 'POST',
+    url,
+    payload: {
+      profession: 'doctor',
+      license_number: 'SYN-' + randomUUID(),
+      issuer: 'Synthetic professional authority',
+      expires_on: '2099-01-01',
+    },
+    headers: {
+      authorization: 'Bearer synthetic-person:f0110000-0000-4000-8000-000000000005',
+      'x-request-id': requestId,
+      'x-aal': '2',
+      'idempotency-key': randomUUID(),
+    },
+  };
+  const created = await app.inject(request);
+  const licence = created.json();
+  assert.equal(created.statusCode, 201, url + ' (' + licence.code + ')');
+  assert.equal(licence.status, 'pending');
+  assert.equal(licence.version, 1);
+  const replay = await app.inject({
+    ...request,
+    headers: { ...request.headers, 'x-request-id': randomUUID() },
+  });
+  assert.equal(replay.statusCode, 201);
+  assert.deepEqual(replay.json(), licence);
+  return { id: licence.id, requestId, status: created.statusCode, replay: replay.statusCode };
 }
 
 async function membershipScope({ membership, facility, facilityOwner, ownerIsClinician }) {

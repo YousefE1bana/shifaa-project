@@ -3568,6 +3568,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     verifyPredecessorFacilityScope(report, invoke, read);
     return;
   }
+  if (mode === 'professional-omitted-specialty-api') {
+    verifyPredecessorProfessionalOmittedSpecialty(report, invoke, read);
+    return;
+  }
   if (mode === 'professional-review-api') {
     verifyPredecessorProfessionalReview(report, invoke, read);
     return;
@@ -4137,6 +4141,33 @@ function verifyPredecessorAppointmentLink(report, db, invoke, read) {
   Object.assign(report.appointmentLink, { before, after });
 }
 
+function verifyPredecessorProfessionalOmittedSpecialty(report, invoke, read) {
+  const result = (report.professionalOmittedSpecialty = invoke(
+    'professional-omitted-specialty-api',
+  ));
+  for (const id of [result.id, result.requestId]) assert.match(id, /^[a-f0-9-]{36}$/);
+  result.effects = read(`SELECT json_build_object(
+    'omittedSpecialtyIsNull',l.specialty_code IS NULL,'status',l.status,'version',l.version,
+    'audit',(SELECT count(*) FROM audit.events WHERE resource_id=l.id
+      AND request_id='${result.requestId}' AND action_code='professional_license.created'
+      AND actor_person_id=l.person_id),
+    'outbox',(SELECT count(*) FROM platform.outbox_events WHERE aggregate_id=l.id
+      AND event_type='professional_license.changed'),
+    'receipt',(SELECT count(*) FROM platform.idempotency_records
+      WHERE route_template='/v1/people/me/professional-licenses'
+      AND state='completed' AND response_status=201))
+    FROM identity.professional_licenses l
+    WHERE l.id='${result.id}' AND l.person_id='f0110000-0000-4000-8000-000000000005';`);
+  assert.deepEqual(result.effects, {
+    omittedSpecialtyIsNull: true,
+    status: 'pending',
+    version: 1,
+    audit: 1,
+    outbox: 1,
+    receipt: 1,
+  });
+}
+
 function verifyPredecessorProfessionalReview(report, invoke, read) {
   const cases = invoke('professional-review-api').cases;
   report.professionalReview = cases;
@@ -4675,6 +4706,7 @@ async function admit() {
     ['--predecessor-membership-invite-api', 'membership-invite-api'],
     ['--predecessor-facility-scope-api', 'facility-scope-api'],
     ['--predecessor-professional-review-api', 'professional-review-api'],
+    ['--predecessor-professional-omitted-specialty-api', 'professional-omitted-specialty-api'],
   ]).get(onlyArgument);
   const applicationWriter =
     publication ||

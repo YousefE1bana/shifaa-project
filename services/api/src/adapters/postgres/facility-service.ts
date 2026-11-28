@@ -348,7 +348,7 @@ export class PostgresFacilityOnboardingService {
       const secret = professionalSecrets.get(l.id);
       const protectedValue = this.protect(secret ?? l.id);
       const evidenceId = d.professionalEvidence.get(l.id) ?? null;
-      await sql`insert into identity.professional_licenses(id,person_id,profession,specialty_code,number_ciphertext,number_hash,masked_license_number,issuer,expires_on,status,evidence_object_id,decision_reason,version) values(${l.id}::uuid,${l.person_id}::uuid,${l.profession},${l.specialty_code},${protectedValue.ciphertext},${protectedValue.hash},${l.masked_license_number},${l.issuer},${l.expires_on}::date,${l.status},${evidenceId}::uuid,${l.decision_reason},${l.version}) on conflict(id) do update set status=excluded.status,evidence_object_id=excluded.evidence_object_id,decision_reason=excluded.decision_reason,version=excluded.version`;
+      await sql`insert into identity.professional_licenses(id,person_id,profession,specialty_code,number_ciphertext,number_hash,masked_license_number,issuer,expires_on,status,evidence_object_id,decision_reason,version) values(${l.id}::uuid,${l.person_id}::uuid,${l.profession},${l.specialty_code ?? null},${protectedValue.ciphertext},${protectedValue.hash},${l.masked_license_number},${l.issuer},${l.expires_on}::date,${l.status},${evidenceId}::uuid,${l.decision_reason},${l.version}) on conflict(id) do update set status=excluded.status,evidence_object_id=excluded.evidence_object_id,decision_reason=excluded.decision_reason,version=excluded.version`;
     }
     for (const m of d.memberships.values()) {
       const tokenHash = m.invite_token
