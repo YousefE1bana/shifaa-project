@@ -149,9 +149,9 @@ BEGIN
         'facility', (SELECT to_jsonb(l) FROM identity.facility_licenses l WHERE l.id = facility_licence)
       ) INTO licences_before;
       IF licences_before->'professional'->>'expires_on' IS DISTINCT FROM
-          CASE WHEN scenario = 'professional licence clock-only expiry' THEN '2030-04-05' ELSE '2035-12-31' END
+          (CASE WHEN scenario = 'professional licence clock-only expiry' THEN '2030-04-05' ELSE '2035-12-31' END)
         OR licences_before->'facility'->>'expires_on' IS DISTINCT FROM
-          CASE WHEN scenario = 'facility licence clock-only expiry' THEN '2030-04-05' ELSE '2035-12-31' END THEN
+          (CASE WHEN scenario = 'facility licence clock-only expiry' THEN '2030-04-05' ELSE '2035-12-31' END) THEN
         RAISE EXCEPTION 'clock-only fixture did not isolate one licence';
       END IF;
       SELECT COALESCE(sum(n_tup_ins + n_tup_upd + n_tup_del), 0) INTO writes_before
