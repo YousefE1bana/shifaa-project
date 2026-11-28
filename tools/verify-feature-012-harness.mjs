@@ -3373,8 +3373,10 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     ...(mail ? ['supabase/templates/recovery.html'] : []),
   ];
   const worker = mode === 'recovery-worker';
+  const allergy = ['allergy-verification-api', 'allergy-clinician-api'].includes(mode);
   const workerEntry = 'tools/feature-012-recovery-worker.mjs';
   if (worker) entries.push(workerEntry);
+  if (allergy) entries.push('tools/feature-012-predecessor-allergy.mjs');
   report.sourceArchiveSha256 = stageLinkedCoreApi(
     probe,
     entries,
@@ -3407,6 +3409,15 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
     assert.equal(result.exit, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
+  if (allergy) {
+    exec(probe, [
+      'node',
+      '-e',
+      "require('fs').writeFileSync('/tmp/f012-allergy-key', require('crypto').randomBytes(32), { mode: 0o600, flag: 'wx' });",
+    ]);
+    verifyPredecessorAllergyApi(report, db, invoke, read, mode === 'allergy-clinician-api');
+    return;
+  }
   if (mode === 'recovery-mail-api') {
     const recovered = (report.recoveryMail = invoke(mode));
     for (const value of [recovered.caseId, recovered.session, recovered.requestId]) {
@@ -3864,6 +3875,138 @@ function runPredecessorNative(db, auth, probe, fixtures, mode, gateway, mail) {
   report.consent = invoke('consent');
 
   verifyPredecessorFacility(report, invoke, read);
+}
+
+function verifyPredecessorAllergyApi(report, db, invoke, read, clinicianReport) {
+  const patient = 'f0110000-0000-4000-8100-000000000001';
+  const clinician = 'f0110000-0000-4000-8000-000000000002';
+  const facility = 'f0110000-0000-4000-8200-000000000001';
+  const encounter = 'f0110000-0000-4000-8400-000000000001';
+  const mode = 'allergy-verification-api';
+  const snapshot = () =>
+    read(`SELECT json_build_object(
+    'heads',(SELECT count(*) FROM clinical.allergy_heads),
+    'revisions',(SELECT count(*) FROM clinical.allergies),
+    'audit',(SELECT count(*) FROM audit.events),
+    'outbox',(SELECT count(*) FROM platform.outbox_events),
+    'receipts',(SELECT count(*) FROM clinical.mutation_receipts),
+    'obligations',(SELECT count(*) FROM clinical.mutation_commit_obligations),
+    'idempotency',(SELECT count(*) FROM platform.idempotency_records WHERE state='completed'));`);
+  const calls = (report.allergyApi = { calls: [] }).calls;
+  const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
+  const call = (name, input, status, effect) => {
+    const before = snapshot();
+    const { result } = invoke(mode, input);
+    const after = snapshot();
+    const delta = Object.fromEntries(
+      Object.keys(before).map((key) => [key, after[key] - before[key]]),
+    );
+    calls.push({ name, ...result, delta });
+    assert.equal(result.status, status, name + ': ' + result.code);
+    assert.deepEqual(delta, {
+      heads: effect === 'new' ? 1 : 0,
+      revisions: effect ? 1 : 0,
+      audit: effect ? 1 : 0,
+      outbox: effect ? 1 : 0,
+      receipts: effect ? 1 : 0,
+      obligations: effect ? 1 : 0,
+      idempotency: effect ? 1 : 0,
+    });
+    for (const revision of result.revisions ?? []) {
+      assert.match(revision.allergyId, uuid);
+      assert.match(revision.revisionId, uuid);
+    }
+    return result.revisions;
+  };
+  const hashRevision = (id) =>
+    read(`SELECT to_json(encode(
+    sha256(convert_to(to_jsonb(r)::text,'UTF8')),'hex')) FROM clinical.allergies r WHERE id='${id}';`);
+  const reporter = clinicianReport ? 'clinician' : 'patient';
+  const checkClinicianReport = (revision) => {
+    const result = read(`SELECT json_build_object(
+      'actor',r.action_actor_person_id='${clinician}' AND r.original_recorder_person_id='${clinician}',
+      'care',r.facility_id='${facility}' AND r.encounter_id='${encounter}',
+      'receipt',EXISTS(SELECT 1 FROM clinical.mutation_receipts mr
+        WHERE mr.resource_id=r.allergy_id AND mr.resource_version=1 AND mr.operation_id='createAllergy'))
+      FROM clinical.allergies r WHERE r.id='${revision.revisionId}';`);
+    calls.at(-1).readback = result;
+    assert.deepEqual(result, { actor: true, care: true, receipt: true });
+  };
+  const [initial] = call(reporter + ' report', { action: 'create', reporter }, 201, 'new');
+  assert.equal(initial.status, 'self_reported');
+  assert.equal(initial.version, 1);
+  if (clinicianReport) checkClinicianReport(initial);
+  const initialHash = hashRevision(initial.revisionId);
+  assert.match(initialHash, /^[a-f0-9]{64}$/);
+  const targets = clinicianReport
+    ? ['entered_in_error']
+    : ['clinician_confirmed', 'refuted', 'clinician_confirmed', 'entered_in_error'];
+  let current = initial;
+  for (const targetStatus of targets) {
+    const support = {
+      id: randomUUID(),
+      allergyId: current.allergyId,
+      previousRevisionId: current.revisionId,
+      previousVersion: current.version,
+      targetStatus,
+      verifiedAt: new Date().toISOString().replace(/\.(\d{3})Z$/, '.$1000Z'),
+    };
+    sql(
+      db,
+      `INSERT INTO clinical.allergy_verification_support
+      (id,patient_id,allergy_id,previous_revision_id,previous_version,target_status,attestor_person_id,
+       source_identity,source_evidence_identity,producer_id,recorded_at,synthetic)
+      VALUES ('${support.id}','${patient}','${support.allergyId}','${support.previousRevisionId}',
+       ${support.previousVersion},'${targetStatus}','${clinician}','synthetic.internal_clinician_provenance',
+       '${support.id}','f011.allergy_evidence_boundary','${support.verifiedAt}',true);`,
+    );
+    const [next] = call(targetStatus, { action: 'verify', support }, 200, 'revision');
+    assert.equal(next.previousRevisionId, current.revisionId);
+    assert.equal(next.version, current.version + 1);
+    assert.equal(next.allergyId, current.allergyId);
+    assert.equal(next.status, targetStatus);
+    const binding = read(`SELECT json_build_object('head',h.current_revision_id=r.id,
+      'actor',r.action_actor_person_id='${clinician}','evidence',b.evidence_ref='${support.id}',
+      'receipt',EXISTS(SELECT 1 FROM clinical.mutation_receipts mr
+        WHERE mr.resource_id=h.id AND mr.resource_version=r.version AND mr.operation_id='verifyAllergy'))
+      FROM clinical.allergy_heads h JOIN clinical.allergies r ON r.id=h.current_revision_id
+      JOIN clinical.allergy_verification_bindings b ON b.revision_id=r.id
+      WHERE h.id='${next.allergyId}' AND r.id='${next.revisionId}';`);
+    calls.at(-1).readback = binding;
+    assert.deepEqual(binding, { head: true, actor: true, evidence: true, receipt: true });
+    current = next;
+  }
+  const [corrected] = call(
+    reporter + ' linked correction',
+    { action: 'correct', allergyId: initial.allergyId, reporter },
+    201,
+    'new',
+  );
+  assert.notEqual(corrected.allergyId, initial.allergyId);
+  assert.equal(corrected.correctsAllergyId, initial.allergyId);
+  assert.equal(corrected.status, 'self_reported');
+  assert.equal(corrected.version, 1);
+  if (clinicianReport) checkClinicianReport(corrected);
+  const history = call(
+    'patient immutable history',
+    { action: 'history', allergyId: initial.allergyId },
+    200,
+  );
+  assert.deepEqual(
+    history.sort((a, b) => a.version - b.version).map((revision) => revision.status),
+    ['self_reported', ...targets],
+  );
+  assert.equal(hashRevision(initial.revisionId), initialHash);
+  report.allergyApi.initialRevisionUnchanged = true;
+  const lineage =
+    read(`SELECT json_build_object('linked',correction.corrects_allergy_id=original.id,
+    'oldHead',original.current_revision_id='${current.revisionId}',
+    'newHead',correction.current_revision_id='${corrected.revisionId}')
+    FROM clinical.allergy_heads original JOIN clinical.allergy_heads correction
+      ON correction.corrects_allergy_id=original.id
+    WHERE original.id='${initial.allergyId}' AND correction.id='${corrected.allergyId}';`);
+  report.allergyApi.lineage = lineage;
+  assert.deepEqual(lineage, { linked: true, oldHead: true, newHead: true });
 }
 
 function verifyPredecessorMembershipInvite(report, db, invoke, read) {
@@ -4500,6 +4643,8 @@ async function admit() {
     ['--predecessor-native-recovery-worker', 'recovery-worker'],
     ['--predecessor-native-participant-api', 'participant-api'],
     ['--predecessor-native-appointment-link-api', 'appointment-link-api'],
+    ['--predecessor-native-allergy-verification-api', 'allergy-verification-api'],
+    ['--predecessor-native-allergy-clinician-api', 'allergy-clinician-api'],
     ['--predecessor-native-booking-api', 'booking-api'],
     ['--predecessor-native-absence-api', 'absence-api'],
     ['--predecessor-native-facility-evidence-loss', 'facility-evidence-loss'],

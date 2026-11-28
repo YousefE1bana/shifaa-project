@@ -20,6 +20,7 @@ const [phase, fixtureInput] = process.argv.slice(2);
 const fixtures = JSON.parse(readFileSync('/tmp/f012-admission-fixtures.json', 'utf8'));
 const password = process.env.F012_CORE_API_PASSWORD;
 assert.match(password, /^[a-f0-9]{64}$/);
+const allergy = phase === 'allergy-verification-api';
 const directAuth = 'http://auth:9999';
 const recoveryHttp = phase === 'recovery-api' || phase === 'recovery-mail-api';
 const supabaseUrl = recoveryHttp ? 'http://kong:8000' : directAuth;
@@ -37,8 +38,21 @@ const config = loadConfig({
   SUPABASE_SERVICE_ROLE_KEY: 'unused-disposable-service-key',
   SUPABASE_JWKS_URL: issuer + '/.well-known/jwks.json',
   SUPABASE_JWT_ISSUER: issuer,
+  ...(allergy
+    ? {
+        FEATURE_011_ENABLED: 'true',
+        FEATURE_011_ISOLATED_TEST: 'true',
+        FEATURE_011_KILL_SWITCH: 'false',
+      }
+    : {}),
 });
-const { app, repository } = await buildApp({ config });
+const allergyModule = allergy ? await import('./feature-012-predecessor-allergy.mjs') : null;
+const allergyInput = allergy ? JSON.parse(fixtureInput) : null;
+const allergyFixture = allergyModule?.openAllergyFixture(config, allergyInput.support);
+const { app, repository } = await buildApp({
+  config,
+  feature011Allergies: allergyFixture?.service,
+});
 let checkpoint = 'database binding';
 let transport;
 try {
@@ -60,6 +74,7 @@ try {
         checkpoint = step;
       }),
     'participant-api': () => participantApi(JSON.parse(fixtureInput)),
+    'allergy-verification-api': () => allergyModule.allergyApi(app, fixtures, allergyInput),
     'appointment-link-api': () => appointmentLinkApi(JSON.parse(fixtureInput)),
     'booking-api': () => bookingApi(JSON.parse(fixtureInput)),
     'absence-api': () => absenceApi(JSON.parse(fixtureInput)),
@@ -98,6 +113,7 @@ try {
   );
 } finally {
   await app.close();
+  await allergyFixture?.close();
 }
 
 async function encounter() {
