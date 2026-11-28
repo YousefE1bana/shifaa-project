@@ -340,10 +340,43 @@ async function professionalOmittedSpecialty() {
   });
   assert.equal(replay.statusCode, 201);
   assert.deepEqual(replay.json(), licence);
-  return { id: licence.id, requestId, status: created.statusCode, replay: replay.statusCode };
+  const read = {
+    method: 'GET',
+    url: '/v1/professional-licenses/' + licence.id,
+    headers: { authorization: request.headers.authorization, 'x-aal': '2' },
+  };
+  const subject = await app.inject(read);
+  assert.equal(subject.statusCode, 200);
+  assert.equal(subject.json().id, licence.id);
+  for (const field of [
+    'license_number',
+    'number_ciphertext',
+    'number_hash',
+    'evidence_object_id',
+  ]) {
+    assert.equal(Object.hasOwn(subject.json(), field), false, field);
+  }
+  const other = await app.inject({
+    ...read,
+    headers: {
+      ...read.headers,
+      authorization: 'Bearer synthetic-person:f0110000-0000-4000-8000-000000000002',
+    },
+  });
+  assert.equal(other.statusCode, 404);
+  assert.equal(other.json().code, 'not-found');
+  return {
+    id: licence.id,
+    requestId,
+    status: created.statusCode,
+    replay: replay.statusCode,
+    subjectRead: subject.statusCode,
+    otherPersonRead: other.statusCode,
+  };
 }
 
 async function membershipScope({ membership, facility, facilityOwner, ownerIsClinician }) {
+  let resultReplay;
   const { change, ...result } = await encounterAuthorityLoss(async (action) => {
     const url = '/v1/facilities/' + facility + '/memberships/' + membership + '/end';
     const actor = 'synthetic-person:' + facilityOwner;
@@ -353,13 +386,17 @@ async function membershipScope({ membership, facility, facilityOwner, ownerIsCli
       const stale = await action(url, actor, body, 409, { ...headers, 'if-match': '"2"' });
       assert.equal(stale.body.code, 'version-conflict');
     }
-    const ended = await action(url, actor, body, 200, headers);
+    const mutationHeaders = { ...headers, 'idempotency-key': randomUUID() };
+    const ended = await action(url, actor, body, 200, mutationHeaders);
+    const replay = await action(url, actor, body, 200, mutationHeaders);
+    assert.deepEqual(replay.body, ended.body);
+    resultReplay = replay.status;
     assert.equal(ended.body.id, membership);
     assert.equal(ended.body.status, 'ended');
     assert.equal(ended.body.version, 2);
     return ended;
   });
-  return { ...result, end: change };
+  return { ...result, end: change, replay: resultReplay };
 }
 
 async function facilityScope({ facility, evidence }) {
