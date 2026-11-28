@@ -111,4 +111,102 @@ BEGIN
   END LOOP;
 END
 $clinician_scope$;
+
+-- Keep each licence unchanged across UTC midnight. The earlier date cases
+-- change fixture rows at one fixed clock and cannot establish clock-only loss.
+DO $credential_clock_loss$
+DECLARE
+  clinician constant uuid := '74124000-0000-4000-8000-000000000001';
+  facility constant uuid := '74124000-0000-4000-8100-000000000001';
+  encounter_scope constant uuid := '74124000-0000-4000-8500-000000000001';
+  professional_licence constant uuid := '74124000-0000-4000-8300-000000000002';
+  facility_licence constant uuid := '74124000-0000-4000-8300-000000000001';
+  before_midnight constant timestamptz := '2030-04-05T23:59:59.999999Z';
+  at_midnight constant timestamptz := '2030-04-06T00:00:00Z';
+  scenario text;
+  actual boolean;
+  changed integer;
+  licences_before jsonb;
+  licences_after jsonb;
+  writes_before numeric;
+  writes_after numeric;
+  verified_cases integer := 0;
+BEGIN
+  FOREACH scenario IN ARRAY ARRAY['professional licence clock-only expiry', 'facility licence clock-only expiry'] LOOP
+    BEGIN
+      IF scenario = 'professional licence clock-only expiry' THEN
+        UPDATE identity.professional_licenses SET expires_on = '2030-04-05' WHERE id = professional_licence;
+      ELSE
+        UPDATE identity.facility_licenses SET expires_on = '2030-04-05' WHERE id = facility_licence;
+      END IF;
+      GET DIAGNOSTICS changed = ROW_COUNT;
+      IF changed <> 1 THEN
+        RAISE EXCEPTION 'fixture did not produce %', scenario;
+      END IF;
+
+      SELECT jsonb_build_object(
+        'professional', (SELECT to_jsonb(l) FROM identity.professional_licenses l WHERE l.id = professional_licence),
+        'facility', (SELECT to_jsonb(l) FROM identity.facility_licenses l WHERE l.id = facility_licence)
+      ) INTO licences_before;
+      IF licences_before->'professional'->>'expires_on' IS DISTINCT FROM
+          CASE WHEN scenario = 'professional licence clock-only expiry' THEN '2030-04-05' ELSE '2035-12-31' END
+        OR licences_before->'facility'->>'expires_on' IS DISTINCT FROM
+          CASE WHEN scenario = 'facility licence clock-only expiry' THEN '2030-04-05' ELSE '2035-12-31' END THEN
+        RAISE EXCEPTION 'clock-only fixture did not isolate one licence';
+      END IF;
+      SELECT COALESCE(sum(n_tup_ins + n_tup_upd + n_tup_del), 0) INTO writes_before
+      FROM pg_catalog.pg_stat_xact_user_tables
+      WHERE schemaname IN ('identity', 'clinical', 'consent', 'audit', 'platform');
+
+      PERFORM set_config('shifaa.test_now', before_midnight::text, true);
+      SET LOCAL ROLE shifaa_f011_executor;
+      IF current_user <> 'shifaa_f011_executor'
+        OR platform.context_environment() IS DISTINCT FROM 'local'
+        OR platform.context_now() IS DISTINCT FROM before_midnight THEN
+        RAISE EXCEPTION 'clock-only predicate caller or local clock mismatch';
+      END IF;
+      actual := clinical.f011_lock_clinician_scope_v1(facility, encounter_scope, clinician);
+      RESET ROLE;
+      IF actual IS DISTINCT FROM true THEN
+        RAISE EXCEPTION '% denied on the inclusive expiry date', scenario;
+      END IF;
+
+      PERFORM set_config('shifaa.test_now', at_midnight::text, true);
+      SET LOCAL ROLE shifaa_f011_executor;
+      IF current_user <> 'shifaa_f011_executor'
+        OR platform.context_environment() IS DISTINCT FROM 'local'
+        OR platform.context_now() IS DISTINCT FROM at_midnight THEN
+        RAISE EXCEPTION 'clock-only predicate caller or local clock mismatch';
+      END IF;
+      actual := clinical.f011_lock_clinician_scope_v1(facility, encounter_scope, clinician);
+      RESET ROLE;
+      IF actual IS DISTINCT FROM false THEN
+        RAISE EXCEPTION '% remained eligible at the next UTC date', scenario;
+      END IF;
+
+      SELECT jsonb_build_object(
+        'professional', (SELECT to_jsonb(l) FROM identity.professional_licenses l WHERE l.id = professional_licence),
+        'facility', (SELECT to_jsonb(l) FROM identity.facility_licenses l WHERE l.id = facility_licence)
+      ) INTO licences_after;
+      SELECT COALESCE(sum(n_tup_ins + n_tup_upd + n_tup_del), 0) INTO writes_after
+      FROM pg_catalog.pg_stat_xact_user_tables
+      WHERE schemaname IN ('identity', 'clinical', 'consent', 'audit', 'platform');
+      IF licences_after IS DISTINCT FROM licences_before OR writes_after IS DISTINCT FROM writes_before THEN
+        RAISE EXCEPTION '% changed licence records or wrote domain effects', scenario;
+      END IF;
+
+      verified_cases := verified_cases + 1;
+      RAISE NOTICE 'scope %: before UTC midnight true, at UTC midnight false; unchanged licences; zero domain writes', scenario;
+      -- Restore the companion licence, original clock and per-case locks so
+      -- the next case isolates its own credential instead of the earlier loss.
+      RAISE SQLSTATE 'T1202' USING MESSAGE = 'rollback synthetic clock-only case';
+    EXCEPTION WHEN SQLSTATE 'T1202' THEN CONTINUE;
+    END;
+  END LOOP;
+  IF verified_cases <> 2 THEN
+    RAISE EXCEPTION 'clock-only fixture verified % cases instead of 2', verified_cases;
+  END IF;
+  RAISE NOTICE 'clock-only credential cases verified: %; predicate observations: 4', verified_cases;
+END
+$credential_clock_loss$;
 ROLLBACK;
