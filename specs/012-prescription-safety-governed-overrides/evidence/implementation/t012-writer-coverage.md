@@ -260,6 +260,33 @@ Both runs used the same sealed predecessor chain and T009 hash recorded
 above. Both launchers had empty stderr and preserved the inventory of
 12 retained containers and four volumes.
 
+### Credential eligibility at UTC date rollover
+
+The expanded [workforce fixture](../../../../infra/db/tests/feature-012-predecessor-workforce.sql)
+tested clock-only loss independently for the professional licence and the
+facility licence. On each run of the predicate, the caller was
+`shifaa_f011_executor` and the local fixture clock matched the intended instant.
+The licence was eligible at `2030-04-05T23:59:59.999999Z` and ineligible at
+`2030-04-06T00:00:00Z`. Both licence rows and the domain write counters were
+unchanged between the observations in each case. The other licence stayed valid.
+
+The successful run executed the sealed 38-migration predecessor followed by
+T009. All 17 fixture cases passed, including the two new clock-only cases with
+four Boolean observations. The fixture SHA-256 was
+`52eba4f1e3f0bb6fa12264600d4ae791f224970816535be100025ae0ffed44b3`.
+Both attempts preserved the 12 retained containers and four volumes. The
+private receipts are under `LOCALAPPDATA/SHIFAA-Recovery/2026-11-28-t012-workforce-clock/`.
+
+| Attempt                               | Candidate and run ID                                                                | Result                                                                                                     | Receipt SHA-256                                                    |
+| ------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `t012-workforce-clock-attempt-1.json` | `5a634eadd426406b3e5f87009b49c11c27a3c116` / `4a0ebf96-f5bc-4fed-a22d-2bf9cdc66167` | Fixture exit 3. The original 15 verdicts were emitted before a PL/pgSQL parse error in the new assertions. | `5e00a0a0acb2aabf7ee7cfbd2dc89701dde6a5a97d9836fdfa268e42f6847f45` |
+| `t012-workforce-clock-attempt-2.json` | `3b878c64de9468b01fa43f9c9424ef6b5e826618` / `0d1d0dcb-796e-44fa-b222-3ded6e9a16d8` | Exit 0 after parenthesizing the fixture's conditional expressions. Both new cases passed.                  | `997cefe81d5f08b2a3d22aaf679b02cf553e768483fcf4ea9f47f5ed419fa3e7` |
+
+This satisfies the predecessor clock-only credential predicate assertion.
+The workforce row remains open for corrected invitation and acceptance
+compatibility, the applicable operational writer dispositions and the remaining
+T012 admission evidence. T013 owns the correction and GREEN regression.
+
 ### Scheduling routine calls under the API database role
 
 The [scheduling writer fixture](../../../../infra/db/tests/feature-012-predecessor-scheduling.sql)
