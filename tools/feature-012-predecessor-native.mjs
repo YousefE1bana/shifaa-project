@@ -68,6 +68,7 @@ try {
     'guardianship-api': () => guardianshipReview(app, JSON.parse(fixtureInput)),
     'licence-scope-api': () => licenceScope(JSON.parse(fixtureInput)),
     'membership-scope-api': () => membershipScope(JSON.parse(fixtureInput)),
+    'membership-invite-api': () => membershipInviteApi(JSON.parse(fixtureInput)),
     'facility-scope-api': () => facilityScope(JSON.parse(fixtureInput)),
     'professional-review-api': () =>
       professionalReview(app, fixtureInput ? JSON.parse(fixtureInput) : undefined, (step) => {
@@ -246,6 +247,49 @@ async function licenceScope({ licence }) {
     return suspended;
   });
   return { ...result, suspend: change };
+}
+
+async function membershipInviteApi({ facility, owner, invitee, licence }) {
+  const post = async (url, person, payload) => {
+    const requestId = randomUUID();
+    const response = await app.inject({
+      method: 'POST',
+      url,
+      payload,
+      headers: {
+        authorization: 'Bearer synthetic-person:' + person,
+        'x-aal': '2',
+        'x-request-id': requestId,
+        'idempotency-key': randomUUID(),
+      },
+    });
+    const body = response.json();
+    return { body, result: { status: response.statusCode, code: body.code, requestId } };
+  };
+  checkpoint = 'facility-owner invitation';
+  const invite = await post('/v1/facilities/' + facility + '/memberships', owner, {
+    person_id: invitee,
+    role_code: 'pharmacist',
+    employment_license_id: licence,
+    valid_from: '2020-01-01T00:00:00Z',
+  });
+  if (invite.result.status !== 201) return { invite: invite.result };
+  assert.equal(invite.body.status, 'invited');
+  assert.equal(invite.body.version, 1);
+  assert.ok(typeof invite.body.invite_token === 'string');
+  checkpoint = 'bound invitee acceptance';
+  const accepted = await post(
+    '/v1/facility-membership-invites/' + encodeURIComponent(invite.body.invite_token) + '/accept',
+    invitee,
+    {},
+  );
+  if (accepted.result.status === 200) {
+    assert.equal(accepted.body.id, invite.body.id);
+    assert.equal(accepted.body.status, 'active');
+    assert.equal(accepted.body.version, 2);
+    assert.equal(accepted.body.invite_token, undefined);
+  }
+  return { invite: invite.result, accept: accepted.result, id: invite.body.id };
 }
 
 async function membershipScope({ membership, facility, facilityOwner }) {
